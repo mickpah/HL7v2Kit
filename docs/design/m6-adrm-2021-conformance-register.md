@@ -16,8 +16,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
 | SHIPPED | 74 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 17 | partly enforced — see each row's note for what is not |
-| BASE | 10 | already enforced by the base model; overlay deliberately silent |
+| PARTIAL | 18 | partly enforced — see each row's note for what is not |
+| BASE | 9 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 8 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
@@ -104,7 +104,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (17)
+## PARTIAL (18)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -124,9 +124,10 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.10.1.6` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | ED subtype => type enforced for the 0291 subtypes whose 0191 main type §3.20.5 states; unstated ones skip |
 | `HL7au:00044.11.1.5` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.5 |
 | `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.6 |
+| `HL7au:00060.1` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of R (required) must be valued. | P8b-4: with `messageStructureSeverity` set, a v2.4 ORU^R01, ORM^O01 or REF^I12 is also matched against the ADRM-2021 structure (pp 205, 279, 324; `Resources/structures/profiles/au-adrm-2021/`) and a segment it requires and the message lacks is reported; removed base segments are not findings (decision 7). The field and component half is the Validator core. Not enforced: RRI^I12 (p 325 makes MSA required), the Appendix 8 simplified REF structure (p 484), the ORR^O02 print (pp 280 to 281, unbalanced bracket) and the prose-only PV1 mandate on ORU^R01 (pp 17, 205); permanent-limitations register section E, P8b-4 addendum |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | authority => qualifier pairs enforced for the closed AU authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor authorities are open-ended examples and skip |
 
-## BASE (10)
+## BASE (9)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -138,7 +139,6 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00046.1.4` |  | Senders | Orders, Results, Referrals | Senders must escape '~' characters as '\R\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.5` | r2 | Senders | Orders, Results, Referrals | Senders must escape '\' characters as '\E\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.3` |  | Senders | Orders, Results, Referrals | All fields required by HL7 segments table must be validly valued. | R-optionality enforcement is the Validator core |
-| `HL7au:00060.1` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of R (required) must be valued. | R-optionality enforcement is the Validator core |
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 
 ## REGISTERED (8)

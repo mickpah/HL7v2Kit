@@ -200,15 +200,54 @@ os.mkdir(os.path.join(S, 'v2.9'))"
 accept "overrides.json under Resources/structures (P8b-2a)" "$PRE
 save('overrides.json', {'groupNames': [], 'sharedTriggers': load('overrides.json')['sharedTriggers']})"
 
-accept "profiles directory under Resources/structures (G9)" "$PRE
-os.makedirs(os.path.join(S, 'profiles', 'au-adrm-2021'))"
+accept "an empty profile directory under Resources/structures/profiles (G9)" "$PRE
+os.makedirs(os.path.join(S, 'profiles', 'au-test'))"
 
 reject "overrides.json as a directory" 'unexpected entry' "$PRE
 os.remove(os.path.join(S, 'overrides.json')) if os.path.exists(os.path.join(S, 'overrides.json')) else None
 os.mkdir(os.path.join(S, 'overrides.json'))"
 
 reject "profiles as a file" 'unexpected entry' "$PRE
+import shutil; shutil.rmtree(os.path.join(S, 'profiles'))
 save('profiles', {})"
+
+# P8b-4: a profile structure (ADR-019 data model, ruling G9). The profile keys are accepted only
+# under profiles/<profile>/, all three are required, and the structure must constrain a loaded
+# base structure of the same ID and version, printing only triggers the base prints.
+AU='
+def au(change):
+    d = load("profiles/au-adrm-2021/ORU_R01.json"); change(d); save("profiles/au-adrm-2021/ORU_R01.json", d)
+'
+reject "profile key in a version file" 'unknown key(s) ["profile"]' "$PRE
+d = load('v2.4/ORU_R01.json'); d['profile'] = 'au-adrm-2021'; save('v2.4/ORU_R01.json', d)"
+
+reject "profile structure without a rule" 'needs "profile", "baseVersion" and "rule"' "$PRE$AU
+au(lambda d: d.pop('rule'))"
+
+reject "profile tag differs from its directory" 'does not match its directory au-adrm-2021' "$PRE$AU
+au(lambda d: d.update(profile='au-other'))"
+
+reject "baseVersion differs from version" 'baseVersion 2.5.1 differs from version 2.4' "$PRE$AU
+au(lambda d: d.update(baseVersion='2.5.1'))"
+
+reject "bad rule" 'bad rule' "$PRE$AU
+au(lambda d: d.update(rule='00060.1'))"
+
+reject "profile structure with no base structure" 'no base v2.4 structure ORU_R02 to constrain' "$PRE
+d = load('profiles/au-adrm-2021/ORU_R01.json'); d['structure'] = 'ORU_R02'
+os.remove(os.path.join(S, 'profiles/au-adrm-2021/ORU_R01.json')); save('profiles/au-adrm-2021/ORU_R02.json', d)"
+
+reject "profile trigger the base does not print" 'are not printed for the base v2.4 ORU_R01' "$PRE$AU
+au(lambda d: d.update(triggers=['ORU^R01', 'ORU^R30']))"
+
+reject "profile structure breaking a structure-file rule" 'is not cited' "$PRE$AU
+au(lambda d: d.update(citation=d['citation'].replace('PD1_GROUP (synthesised', 'PD1_GROUP (made up')))"
+
+reject "stray file in profiles" 'holds only profile directories' "$PRE
+save('profiles/notes.json', {})"
+
+reject "profile directory name not lower-case hyphenated" 'holds only profile directories' "$PRE
+os.makedirs(os.path.join(S, 'profiles', 'AU_ADRM'))"
 
 # P8b-6: the choice element. ACK's MSA becomes a choice; an accepted choice must render as one.
 CH='

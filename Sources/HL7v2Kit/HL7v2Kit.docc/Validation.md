@@ -151,6 +151,8 @@ let report = Validator(options: options).validate(message)
 
 Look structures up with ``MessageStructureTable``.
 
+Under ``HL7Locale/auLocalisation`` the check also applies HL7au:00060.1 (P8b-4): a v2.4 ORU^R01, ORM^O01 or REF^I12 is matched against the constrained structure the ADRM-2021 prints for it (pp 205, 279 and 324) as well as the base v2.4 one, and a segment the ADRM structure requires and the message lacks (PID in each ORU^R01 result, PV1 beside PD1, NK1 or PV2, an order detail segment in each ORM^O01 order, RF1 and PV1 in REF^I12) is reported as ``IssueCode/profileConstraintViolation(localeRule:)`` with `"HL7au:00060.1"`, at the same severity. A base segment the ADRM removed (NTE, FT1, CTI) is not a finding, and a segment the base check already reports missing is not reported twice. RRI^I12, the Appendix 8 simplified REF structure and the ORR^O02 print are not modelled (permanent-limitations register section E).
+
 Batch input (`FHS`/`BHS` ... `BTS`/`FTS`) must go through ``BatchParser`` and ``BatchValidator``, which give one report per contained message; a batch trailer (`BTS`, `FTS`) left on a message passed to the plain ``Parser`` is reported as an unexpected segment when the structure check is on.
 
 ## What the validator does not check

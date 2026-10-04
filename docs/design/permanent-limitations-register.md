@@ -524,6 +524,32 @@ OUL_R21, RCI_I05, REF_I12, RPA_I08, RQA_I08 and RRI_I12) and are matched by the 
 with at most one finding and no group spans (among them ORU_R01, whose v2.4 OBSERVATION group
 is `{[OBX] [{NTE}]}`).
 
+### Addendum to §E — HL7au:00060.1 through the ADRM-2021 structures (P8b-4, 2026-10-04)
+
+Under `.auLocalisation` with `messageStructureSeverity` set, a v2.4 message whose base structure
+resolves to ORU_R01, ORM_O01 or REF_I12, and whose MSH-9.1^9.2 the ADRM-2021 prints for it, is
+also matched against the ADRM structure in `Resources/structures/profiles/au-adrm-2021/`
+(ORU^R01 pp 205 to 206, reprinted pp 17 to 18; ORM^O01 pp 279 to 280; REF^I12 pp 324 to 325). A
+segment the ADRM structure requires and the message lacks is reported as
+`profileConstraintViolation(localeRule: "HL7au:00060.1")`; a removed base segment is not a
+finding (ADR-019 decision 7), and one the base match already reports missing at the same place is
+not reported again. The conformance register classes 00060.1 PARTIAL. What is not enforced, each
+blocking spec-completeness of the segment half of 00060.1:
+
+| Gap | Print | Why it is not enforced |
+|---|---|---|
+| ORU^R01 PV1 when PD1, NK1 and PV2 are all absent | p 17 ("in Australia PV1 has been made mandatory") and p 205 ("The PV1 segment is also mandatory"), against the prints on pp 17 and 205, which place PV1 inside `[ [PD1] [{NK1}] PV1 [PV2] ]` | Print and prose disagree. The print is enforced (PV1 required when the group is present), which every reading agrees on; a PID with no visit group at all draws nothing. A ruling (print or prose) would close it |
+| RRI^I12 | p 325: `MSH MSA [ERR] RF1 {PRD} PID`, MSA unbracketed (base v2.4 `[MSA]`); the prose makes the RF1, PRD and PID group optional "for backward compatibility" | Outside P8b-4's three structures (the brief's scope, from ADR-019's survey of captions naming "Message Structure"). MSA required is unambiguous and could be modelled; the optional RF1/PRD/PID group relaxes the base, which a missing-only overlay cannot express |
+| Appendix 8 simplified REF structure | pp 484 to 485 ("Constrained REF_I12 message structure", normative; the OBR group and OBX required) | It applies only to messages declaring the simplified REF profile in MSH-12 (pp 483 to 484); the overlay has no MSH-12-gated structure variant |
+| ORR^O02 | pp 280 to 281: `[ [PID ... {ORC OBR} ]`, one `[` unclosed | The bracket erratum leaves PID's optionality undecidable; with the order detail read as the base choice (as for ORM^O01, p 280) nothing else is added over the base |
+| Narrowed maxima | REF^I12 p 324 prints `[IN1]` where the base repeats the insurance group | 00060.1 is about required elements; an ADRM maximum below the base is not enforced (the overlay drops `unexpected` and beyond-maximum findings) |
+| Segments and relaxations the ADRM adds | REF^I12 p 324 (IAM; the pharmacy, problem, goal and pathway groups); the order status response p 281 (OBX; PID optional) | The base v2.4 match reports them (unexpected, or missing) under either locale; the overlay does not suppress base findings |
+
+The other ADRM prints add nothing over the base for a missing segment: ACK^R01 (p 206) and
+ACK^O01 (p 280) print MSH MSA [ERR], the base ACK; OSQ^Q06 (p 281) is the base; the order status
+response (p 281, captioned "OSQ^Q06^OSQ_Q06 Order Status Response", for OSR^Q06) requires, with
+the order detail read as the base choice, nothing the base does not.
+
 ## F. Excluded HL7 v2.x versions (ADR-018)
 
 A message declaring one of these parses, falls back to the v2.5.1 grammar, and carries

@@ -2,7 +2,8 @@
 // P8b-7 decoder parity: the corpus tests' decoder accepts and rejects
 // exactly the structure files the codegen does. Every structure-file case of
 // scripts/check-structure-codegen.sh (the completeness and directory cases
-// concern the codegen's walk, not one file) is rebuilt here from the
+// concern the codegen's walk, not one file, and the P8b-4 profile-file cases
+// concern files the corpus decoder never reads) is rebuilt here from the
 // committed pilots and fed through StructureJSONDecoder, expecting the
 // script's verdict and, for a rejection, the same error text.
 
@@ -112,6 +113,10 @@ struct StructureJSONDecoderTests {
         }
         var adt = try Self.load("ADT_A01"); adt["comment"] = "x"
         try reject("unknown key in a structure file", "unknown key(s) [\"comment\"]", adt, "ADT_A01")
+        // P8b-4: the profile keys belong to profiles/<profile>/ files only (the script's other
+        // profile cases concern those files, which the corpus decoder never reads).
+        var tagged = try Self.load("ADT_A01"); tagged["profile"] = "au-adrm-2021"
+        try reject("profile key in a version file", "unknown key(s) [\"profile\"]", tagged, "ADT_A01")
         try reject("unknown key in an element", "unknown key(s) [\"repeat\"]",
                    Self.element(try Self.load("ADT_A01"), 1) { $0["repeat"] = true }, "ADT_A01")
         try reject("missing max", "missing key \"max\"", Self.element(try Self.load("ACK"), 0) { $0["max"] = nil }, "ACK")
@@ -166,7 +171,7 @@ struct StructureJSONDecoderTests {
         try reject("segment with alternatives", "cannot have elements, alternatives or a nameSource",
                    Self.element(try Self.load("ACK"), 2) { $0["alternatives"] = [JSON]() }, "ACK")
 
-        #expect(cases.count == 29)
+        #expect(cases.count == 30)
         for c in cases {
             if let expected = c.expected {
                 #expect(c.verdict?.contains(expected) == true, "\(c.label): \(c.verdict ?? "accepted")")

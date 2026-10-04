@@ -155,18 +155,32 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// one-pass matcher (P8b-12). The codegen lints each structure it emits
     /// and renders the result; a test re-lints every generated structure.
     let requiresExactMatch: Bool
+    /// The profile a constrained structure belongs to (`"au-adrm-2021"`), or
+    /// nil for a base structure (P8b-4, ADR-019 data model, ruling G9).
+    let profile: String?
+    /// The base version a profile structure constrains (`"2.4"`); nil for a
+    /// base structure.
+    let baseVersion: String?
+    /// The conformance point a profile structure enforces
+    /// (`"HL7au:00060.1"`); nil for a base structure.
+    let rule: String?
 
     // Internal (P8 final review): there is no public matcher, so a structure
-    // built outside the package has no use, and the AU overlay will add
-    // fields. The generated table and the tests (`@testable`) use it.
-    // `requiresExactMatch` nil means "lint now" (tests and synthetic
-    // structures); the generated table always passes the codegen's result.
+    // built outside the package has no use. The generated tables and the
+    // tests (`@testable`) use it. `requiresExactMatch` nil means "lint now"
+    // (tests and synthetic structures); the generated tables always pass the
+    // codegen's result. The profile tags are set only for the generated
+    // profile tables (P8b-4).
     init(id: String, version: String, triggers: [String], citation: String,
+         profile: String? = nil, baseVersion: String? = nil, rule: String? = nil,
          requiresExactMatch: Bool? = nil, elements: [StructureElement]) {
         self.id = id
         self.version = version
         self.triggers = triggers
         self.citation = citation
+        self.profile = profile
+        self.baseVersion = baseVersion
+        self.rule = rule
         self.elements = elements
         self.requiresExactMatch = requiresExactMatch ?? !StructureMatcher.lint(elements).isDeterministic
     }
@@ -217,6 +231,17 @@ public enum MessageStructureTable {
     /// lists, that are registered as not modelled, keyed by ID (P8b-9).
     static func notModelled(for version: Version) -> [String: NotModelledStructure] {
         generatedNotModelled(for: version)
+    }
+
+    /// The constrained structures `locale`'s profile prints, keyed by the
+    /// base structure ID they constrain (P8b-4): the ADRM-2021 structures for
+    /// ``HL7Locale/auLocalisation``, none otherwise. Generated from
+    /// `Resources/structures/profiles/<locale raw value>/`.
+    static func profileStructures(for locale: HL7Locale) -> [String: MessageStructure] {
+        switch locale {
+        case .auLocalisation: return auADRM2021
+        case .international: return [:]
+        }
     }
 }
 

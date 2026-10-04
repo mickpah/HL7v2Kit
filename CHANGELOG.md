@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-4: HL7au:00060.1 required segments through the ADRM-2021 structures
+
+- Under the AU locale with `messageStructureSeverity` set, a v2.4 ORU^R01, ORM^O01 or REF^I12
+  is also matched against the structure the ADRM-2021 prints for it (pp 205, 279, 324), and a
+  segment that structure requires and the message lacks is reported as
+  `profileConstraintViolation(localeRule: "HL7au:00060.1")` at that severity: PID in each
+  ORU^R01 result, PV1 beside PD1, NK1 or PV2, an order detail segment in each ORM^O01 order,
+  RF1 and PV1 in REF^I12. A base segment the ADRM removed is not a finding (ADR-019 decision 7),
+  and a segment the base check already reports missing is not reported twice. Default output is
+  unchanged.
+- The structures are hand-authored with page citations in
+  `Resources/structures/profiles/au-adrm-2021/`; the codegen accepts the `profile`,
+  `baseVersion` and `rule` keys only there and checks each structure against the base v2.4
+  structure it constrains.
+- HL7au:00060.1 moves from BASE to PARTIAL in the conformance register: RRI^I12, the Appendix 8
+  simplified REF structure, the ORR^O02 print and the prose-only PV1 mandate are registered
+  (register section E).
+
 ### Added — P8b-13: HL7 v2.4 message structures complete
 
 - With `messageStructureSeverity` set, every v2.4 message structure is now checked: 146

@@ -62,28 +62,44 @@ struct StructureElementSchema: Decodable {
     }
 }
 
-/// One structure file.
+/// One structure file. The profile keys (`profile`, `baseVersion`, `rule`; ADR-019 data
+/// model) are accepted only when the decoder's `userInfo` carries
+/// `structureProfileKeysAllowed`, which the codegen sets for files under the profiles
+/// directory alone (P8b-4, ruling G9); in a version file they are unknown keys.
 struct MessageStructureSchema: Decodable {
     let structure: String
     let version: String
     let citation: String
     let triggers: [String]
     let elements: [StructureElementSchema]
+    let profile: String?
+    let baseVersion: String?
+    let rule: String?
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case structure, version, citation, triggers, elements
+        case structure, version, citation, triggers, elements, profile, baseVersion, rule
     }
 
+    private static let profileKeys: Set<CodingKeys> = [.profile, .baseVersion, .rule]
+
     init(from decoder: any Decoder) throws {
-        try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "structure")
+        let profileFile = decoder.userInfo[structureProfileKeysAllowed] as? Bool == true
+        let allowed = CodingKeys.allCases.filter { profileFile || !Self.profileKeys.contains($0) }
+        try rejectUnknownKeys(decoder, allowed: Set(allowed.map(\.rawValue)), in: "structure")
         let c = try decoder.container(keyedBy: CodingKeys.self)
         structure = try c.decode(String.self, forKey: .structure)
         version = try c.decode(String.self, forKey: .version)
         citation = try c.decode(String.self, forKey: .citation)
         triggers = try c.decode([String].self, forKey: .triggers)
         elements = try c.decode([StructureElementSchema].self, forKey: .elements)
+        profile = try c.decodeIfPresent(String.self, forKey: .profile)
+        baseVersion = try c.decodeIfPresent(String.self, forKey: .baseVersion)
+        rule = try c.decodeIfPresent(String.self, forKey: .rule)
     }
 }
+
+/// The `JSONDecoder.userInfo` key that admits the profile keys; see `MessageStructureSchema`.
+let structureProfileKeysAllowed = CodingUserInfoKey(rawValue: "structureProfileKeysAllowed")!
 
 struct StructureSchemaError: Error, CustomStringConvertible {
     let description: String
@@ -216,6 +232,16 @@ func renderStructureTable(versionSwiftName: String, sourceDir: String, structure
             "        version: \(escapeStringLiteral(s.version)),",
             "        triggers: [\(triggers)],",
             "        citation: \(escapeStringLiteral(s.citation)),",
+        ]
+        // P8b-4: a profile structure carries its profile, base version and rule.
+        if let profile = s.profile, let baseVersion = s.baseVersion, let rule = s.rule {
+            lines += [
+                "        profile: \(escapeStringLiteral(profile)),",
+                "        baseVersion: \(escapeStringLiteral(baseVersion)),",
+                "        rule: \(escapeStringLiteral(rule)),",
+            ]
+        }
+        lines += [
             // P8b-12: the determinism lint, run here so the Validator never lints a message.
             "        requiresExactMatch: \(!structureIsDeterministic(s.elements)),",
             "        elements: [",
@@ -264,8 +290,8 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
     for entry in try fm.contentsOfDirectory(at: root, includingPropertiesForKeys: [.isDirectoryKey]) {
         let name = entry.lastPathComponent
         let isDirectory = (try? entry.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
-        // The extractor's overrides.json (P8b-2a) and the AU profiles directory (G9) are read
-        // by other tools, not by the codegen.
+        // The extractor's overrides.json (P8b-2a) is read by other tools; the profiles
+        // directory (G9) is rendered after the versions, against the base it constrains (P8b-4).
         let skipped = name.hasPrefix(".")
             || (!isDirectory && [structureCompletenessFileName, structureOverridesFileName].contains(name))
             || (isDirectory && name == structureProfilesDirectoryName)
@@ -281,6 +307,7 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
     var structureCounts: [String: Int] = [:]
     var structureIDs: [String: Set<String>] = [:]
     var owners: [String: [String: Set<String>]] = [:]
+    var loaded: [String: [String: MessageStructureSchema]] = [:]
     for dirURL in dirs {
         let version = String(dirURL.lastPathComponent.dropFirst())
         var structures: [MessageStructureSchema] = []
@@ -304,6 +331,7 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
         print("rendered \(swiftName) (\(structures.count) structure(s))")
         structureCounts[version] = structures.count
         structureIDs[version] = Set(structures.map(\.structure))
+        loaded[version] = Dictionary(uniqueKeysWithValues: structures.map { ($0.structure, $0) })
         for s in structures {
             for trigger in s.triggers { owners[version, default: [:]][trigger, default: []].insert(s.structure) }
         }
@@ -329,6 +357,7 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
     } catch {
         throw structureFailure(root.appendingPathComponent(structureOverridesFileName).path, error)
     }
+    rendered += try renderProfileStructureTables(from: root, to: outputRoot, base: loaded)
     rendered.append((outputRoot.appendingPathComponent("MessageStructureTable+Versions.swift"),
                      renderStructureVersions(completeness, structureCounts: structureCounts)))
     try writeGeneratedDirectory(rendered, into: outputRoot)

@@ -1,0 +1,75 @@
+{
+  "structure": "REF_I12",
+  "version": "2.4",
+  "profile": "au-adrm-2021",
+  "baseVersion": "2.4",
+  "rule": "HL7au:00060.1",
+  "citation": "HL7AUSD-STD-OO-ADRM-2021.1, section 7.2.1 Patient Referral Message Structure (REF_I12), pp 324 to 325. Caption erratum: the caption prints 'REF^I12^REF_I2'; the section title and section 7.3.1.9 (p 326: MSH-9 'must be valued as: REF^I12^REF_I12') give REF_I12. 'Australian localisation of the REF_I12 message structure is at variance from HL7 International V2.4 REF_I12 definition' (p 325). Constrains HL7 v2.4 Chapter 11, section 11.5.1, pp 11-16 to 11-17: RF1 and PV1 are required, both optional in the base; base segments the print omits are not findings (ADR-019 decision 7). The segments and groups it adds (IAM, and the pharmacy, problem, goal and pathway groups) are matched here only. Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.4/REF_I12.xsd, REF_I12.OBSERVATION.CONTENT), the base group with the same head segment; ORC_GROUP (synthesised), RXO_GROUP (synthesised), RXE_GROUP (synthesised), RXD_GROUP (synthesised), RXA_GROUP (synthesised), PRB_GROUP (synthesised), ROL_GROUP (synthesised), GOL_GROUP (synthesised) and PTH_GROUP (synthesised), groups the base REF_I12 does not have.",
+  "triggers": ["REF^I12"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "RF1", "min": 1, "max": 1 },
+    { "segment": "PRD", "min": 1, "max": null },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "segment": "IN1", "min": 0, "max": 1 },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "segment": "IAM", "min": 0, "max": null },
+    { "group": "OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "OBX", "min": 0, "max": null }
+    ]},
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "group": "ORC_GROUP", "nameSource": "synthesised", "min": 0, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "RXO_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null },
+        { "segment": "OBX", "min": 0, "max": null }
+      ]},
+      { "group": "RXE_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+        { "segment": "RXE", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null },
+        { "segment": "OBX", "min": 0, "max": null }
+      ]},
+      { "group": "RXD_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+        { "segment": "RXD", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]},
+      { "group": "RXA_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+        { "segment": "RXA", "min": 1, "max": null },
+        { "segment": "RXR", "min": 1, "max": 1 }
+      ]}
+    ]},
+    { "group": "PRB_GROUP", "nameSource": "synthesised", "min": 0, "max": null, "elements": [
+      { "segment": "PRB", "min": 1, "max": 1 },
+      { "segment": "VAR", "min": 0, "max": 1 },
+      { "group": "ROL_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+        { "segment": "ROL", "min": 1, "max": 1 },
+        { "segment": "VAR", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "GOL_GROUP", "nameSource": "synthesised", "min": 0, "max": null, "elements": [
+      { "segment": "GOL", "min": 1, "max": 1 },
+      { "segment": "VAR", "min": 0, "max": 1 },
+      { "group": "ROL_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+        { "segment": "ROL", "min": 1, "max": 1 },
+        { "segment": "VAR", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "PTH_GROUP", "nameSource": "synthesised", "min": 0, "max": null, "elements": [
+      { "segment": "PTH", "min": 1, "max": 1 },
+      { "segment": "VAR", "min": 0, "max": 1 },
+      { "group": "ROL_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+        { "segment": "ROL", "min": 1, "max": 1 },
+        { "segment": "VAR", "min": 0, "max": 1 }
+      ]}
+    ]}
+  ]
+}

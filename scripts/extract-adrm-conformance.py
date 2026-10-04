@@ -175,6 +175,16 @@ SHIPPED = {
 # point names, or only one half of a two-part rule (presence but not
 # code-table membership).
 PARTIAL = {
+    # P8b-4 (ADR-019 decisions 7 and 8): the segment half through the ADRM-2021 structures.
+    'HL7au:00060.1': 'P8b-4: with `messageStructureSeverity` set, a v2.4 ORU^R01, ORM^O01 or '
+                     'REF^I12 is also matched against the ADRM-2021 structure (pp 205, 279, 324; '
+                     '`Resources/structures/profiles/au-adrm-2021/`) and a segment it requires '
+                     'and the message lacks is reported; removed base segments are not findings '
+                     '(decision 7). The field and component half is the Validator core. Not '
+                     'enforced: RRI^I12 (p 325 makes MSA required), the Appendix 8 simplified REF '
+                     'structure (p 484), the ORR^O02 print (pp 280 to 281, unbalanced bracket) and '
+                     'the prose-only PV1 mandate on ORU^R01 (pp 17, 205); permanent-limitations '
+                     'register section E, P8b-4 addendum',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
                       '(`auNASHTransport`); the "registered organisation name in HI service" half '
                       'needs the HPOS/HI directory and stays out',
@@ -254,7 +264,6 @@ BASE = {
     'HL7au:000008.1.2': 'definitional — states how a display segment is '
                         'identified; implemented as the overlay gate',
     'HL7au:00046.3': 'R-optionality enforcement is the Validator core',
-    'HL7au:00060.1': 'R-optionality enforcement is the Validator core',
     'HL7au:00060.3': 'conditional predicates are the same-segment DSL',
     'HL7au:00046.1.1': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.2': 'escaping is `Serializer` behaviour, already correct',

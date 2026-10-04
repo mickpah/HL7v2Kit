@@ -180,9 +180,9 @@ structure file ever exists; the pilot waits for the extractor.
    on every version. `Resources/structures/overrides.json` holds print errata and group
    names the print omits; every entry cites version, chapter and section.
 3. **AU structures hand-authored as profile data.** The ADRM-2021 constrained structures
-   live under `Resources/profiles/au-adrm-2021/structures/` in the same JSON shape, each with
-   a page citation. They are profile data, like the existing
-   `Resources/profiles/au-adrm-2021/vmr-table.json`, not base grammar.
+   live under `Resources/structures/profiles/au-adrm-2021/` (ruling G9; amended in P8b-4,
+   the draft placed them under `Resources/profiles/au-adrm-2021/structures/`) in the same JSON
+   shape, each with a page citation. They are profile data, not base grammar.
 
 ### Option D — Import a third-party rendering (not recommended)
 
@@ -202,7 +202,7 @@ provisional by construction.
 ## Data model
 
 One file per structure: `Resources/structures/v<ver>/<STRUCT>.json` for base HL7,
-`Resources/profiles/au-adrm-2021/structures/<STRUCT>.json` for AU.
+`Resources/structures/profiles/au-adrm-2021/<STRUCT>.json` for AU (ruling G9, amended in P8b-4).
 
 ```json
 {
@@ -646,7 +646,7 @@ the original does (`AcknowledgmentBuilderTests` pins it).
   `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` and
   `BuilderError.acknowledgedMessageControlIDMissing`.
 - New generated directory `Sources/HL7v2Kit/Structures/Generated/`; new resource trees
-  `Resources/structures/` and `Resources/profiles/au-adrm-2021/structures/`; the working-notes
+  `Resources/structures/` and `Resources/structures/profiles/au-adrm-2021/` (G9); the working-notes
   never-hand-edit list and the codegen-drift job extended.
 - Default output is unchanged by the pilot. It changes in two stated places: when a version
   switches to span-derived groups (R9, with a Migration.md row) and when the owner
@@ -1167,3 +1167,38 @@ compiling a structure per message.
   is a G6 placeholder (this registered ERP_R09 on v2.5.1 as well, 171 modelled there); a
   syntax-cell erratum may carry an `occurrence`. Apart from ERP_R09 on v2.5.1, none changes
   another version's report.
+
+## Amendment 2026-10-04 — HL7au:00060.1 through the ADRM-2021 structures (P8b-4)
+
+- **Path (ruling G9).** The AU structures live in `Resources/structures/profiles/au-adrm-2021/`
+  (ORU_R01, ORM_O01, REF_I12), not `Resources/profiles/au-adrm-2021/structures/`. The codegen
+  renders each `profiles/<profile>/` directory into `MessageStructureTable+<PROFILE>.swift`
+  (`static let auADRM2021`, internal) after the version directories. The keys `profile`,
+  `baseVersion` and `rule` are accepted there only, and all three are required; `baseVersion`
+  equals `version`, and a profile structure must constrain a loaded base structure of the same
+  ID whose triggers include its own (`scripts/check-structure-codegen.sh` covers each rule).
+  `MessageStructure` carries the three as internal stored properties; no public API changes.
+- **Matching.** The ADRM structure is matched only after the base structure resolves (so every
+  version, lookup, mismatch and fragment rule has passed), when the profile constrains that base
+  structure and prints MSH-9.1^9.2 (REF^I13 shares REF_I12 in the base but the ADRM prints only
+  I12). Decision 7 is realised by passing over every segment the ADRM structure does not name, as
+  a segment outside the version grammar is, and by dropping `unexpected` and beyond-maximum
+  findings; only `missing` findings are reported, as `profileConstraintViolation(localeRule:
+  "HL7au:00060.1")` at the configured severity. A segment the base match already reports
+  missing at the same place is not reported again. A missing finding that the one-pass matcher's
+  recovery places after segments it skipped, with nothing consumed between, is located before the
+  first skipped segment, where the element was already expected (the dropped `unexpected`
+  findings would otherwise have carried that position).
+- **Readings of the print.** ORU^R01 (pp 205 to 206 and 17 to 18, which agree): PID required in
+  each PATIENT_RESULT and PV1 required inside the optional `[ [PD1] [{NK1}] PV1 [PV2] ]` group as
+  printed; the prose's stronger "PV1 mandatory" is registered. ORM^O01 (pp 279 to 280): the order
+  detail place prints OBR and the prose on p 280 says OBR "is replaced with other order detail
+  segments" for medication and diet orders, so it is the base choice (OBR, RQD, RQ1, RXO, ODS,
+  ODT), required; `[IN3` read as `[IN3]`. REF^I12 (pp 324 to 325): the caption erratum
+  `REF^I12^REF_I2` is cited; RF1 and PV1 are required. Groups the print does not name take the
+  base v2.4 bundle name where the head segment matches, else a synthesised `<FIRSTSEG>_GROUP`.
+- **Scope found larger than three.** The ADRM also prints RRI^I12 (p 325, MSA required),
+  ORR^O02 (pp 280 to 281, an unclosed bracket), the order status query and response (p 281),
+  ACK^R01 and ACK^O01 (pp 206, 280) and the Appendix 8 simplified REF structure (p 484, gated on
+  the MSH-12 profile). Those that add a required segment are registered (permanent-limitations
+  register section E, P8b-4 addendum); 00060.1 is PARTIAL in the conformance register.

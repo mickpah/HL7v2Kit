@@ -9,7 +9,9 @@ extension Validator {
         let resolution = resolveStructure(message, severity: severity)
         issues += resolution.issues
         guard let structure = resolution.structure else { return }
-        issues += matchStructure(structure, message: message, severity: severity)
+        let findings = matchStructure(structure, message: message, severity: severity)
+        issues += findings
+        issues += matchProfileStructure(over: structure, baseFindings: findings, message: message, severity: severity)
     }
 
     /// The structure to match, or the one issue saying why none is matched.
@@ -168,16 +170,7 @@ extension Validator {
         let outside = Set(ids.filter { grammar[$0] == nil })
         let match = StructureMatcherCache.shared.matcher(for: structure).match(ids, transparent: outside)
         guard !match.findings.isEmpty, !ids.isEmpty else { return [] }
-
-        var seen: [String: Int] = [:]
-        let occurrence = ids.map { id -> Int in
-            let n = (seen[id] ?? 0) + 1
-            seen[id] = n
-            return n
-        }
-        func location(_ index: Int) -> IssueLocation {
-            IssueLocation(segmentID: ids[index], segmentIndex: occurrence[index])
-        }
+        let location = Self.segmentLocations(ids)
 
         return match.findings.map { finding in
             let atEnd = finding.index >= ids.count

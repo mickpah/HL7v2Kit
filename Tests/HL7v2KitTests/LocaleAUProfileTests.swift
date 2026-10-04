@@ -2455,3 +2455,31 @@ struct AU00060_4PartialTests {
         #expect(!report.issues.contains { $0.code == .conditionalFieldProhibited && $0.location.segmentID == "OBR" })
     }
 }
+
+// P8b-4 — HL7au:00060.1 leaves BASE: its segment half is enforced through the ADRM-2021
+// structures (LocaleAUStructureTests). It is PARTIAL, not SHIPPED: RRI^I12, the Appendix 8
+// simplified REF structure, the ORR^O02 print and the prose-only PV1 mandate on ORU^R01 are
+// registered, not enforced (permanent-limitations register section E, P8b-4 addendum).
+@Suite("AU HL7au:00060.1 register row (P8b-4)")
+struct AU00060_1RegisterRowTests {
+
+    @Test("The generated conformance register classes HL7au:00060.1 PARTIAL with the P8b-4 note")
+    func registerRow() throws {
+        let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().appendingPathComponent("docs/design/m6-adrm-2021-conformance-register.md")
+        var section = ""
+        var verdict: String?
+        var note = ""
+        for line in try String(contentsOf: url, encoding: .utf8).split(separator: "\n") {
+            if line.hasPrefix("## ") { section = String(line.dropFirst(3).prefix { $0 != " " }) }
+            if line.hasPrefix("| `HL7au:00060.1` |") {
+                #expect(verdict == nil, "HL7au:00060.1 has one row")
+                verdict = section
+                note = String(line)
+            }
+        }
+        #expect(verdict == "PARTIAL")
+        #expect(note.contains("P8b-4"))
+        #expect(note.contains("RRI^I12"))
+    }
+}
