@@ -6,7 +6,8 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
-private extension IssueCode {
+// Shared by the test target: P8b-18 tests that are about another rule set structure findings aside.
+extension IssueCode {
     var isMessageStructure: Bool {
         switch self {
         case .messageStructureSegmentMissing, .messageStructureSegmentUnexpected,
@@ -48,17 +49,27 @@ struct MessageStructureValidationTests {
 
     // MARK: - Gating and presets
 
-    @Test("Off by default: an ADT_A01 with no EVN raises no structure issue")
-    func offByDefault() throws {
+    @Test("Off when the severity is nil (.lenient): an ADT_A01 with no EVN raises no structure issue")
+    func offWhenNil() throws {
         let message = try Parser().parse(Self.wire("ADT^A01^ADT_A01", [Self.pid, Self.pv1]))
-        #expect(Validator().validate(message).issues.filter(\.code.isMessageStructure).isEmpty)
+        #expect(Validator(options: .lenient).validate(message).issues.filter(\.code.isMessageStructure).isEmpty)
     }
 
-    @Test("All three presets leave the check off")
-    func presetsOff() {
-        #expect(ValidationOptions.default.messageStructureSeverity == nil)
-        #expect(ValidationOptions.strict.messageStructureSeverity == nil)
+    @Test("Presets per owner decision G2 (b), P8b-18: .default warning, .strict error, .lenient off")
+    func presets() {
+        #expect(ValidationOptions.default.messageStructureSeverity == .warning)
+        #expect(ValidationOptions().messageStructureSeverity == .warning)
+        #expect(ValidationOptions.strict.messageStructureSeverity == .error)
         #expect(ValidationOptions.lenient.messageStructureSeverity == nil)
+    }
+
+    @Test("Default and strict presets report a missing EVN at their severity (P8b-18)")
+    func presetsReport() throws {
+        let message = try Parser().parse(Self.wire("ADT^A01^ADT_A01", [Self.pid, Self.pv1]))
+        for (options, severity) in [(ValidationOptions.default, IssueSeverity.warning), (.strict, .error)] {
+            let found = Validator(options: options).validate(message).issues.filter(\.code.isMessageStructure)
+            #expect(found.map(\.severity) == [severity], "\(found.map(\.message))")
+        }
     }
 
     @Test("The configured severity is used")

@@ -197,14 +197,18 @@ struct AcknowledgmentBuilderTests {
         #expect(ack.version == .v2_5_1)
         #expect(ack["MSH-9.3"] == "ACK")
         let codes = Validator().validate(try Parser().parse(Data(ack.serialize()))).issues.map(\.code)
-        #expect(codes == [.versionNotRecognised(wireValue: "2.9")])
+        // P8b-18: the default preset adds the structure check's info issue (MSH-12 does not resolve).
+        #expect(codes == [.versionNotRecognised(wireValue: "2.9"), .messageStructureNotModelled(structure: "ACK")])
     }
 
     @Test("An empty MSH-12 is echoed empty; the required-field check reports it, as on the original")
     func emptyVersion() throws {
         let ack = try Self.ack(Self.original(version: ""))
         #expect((ack["MSH-12"] ?? "").isEmpty)
-        let issues = Validator().validate(try Parser().parse(Data(ack.serialize()))).issues
+        // P8b-18: the default preset adds the structure check's info issue (MSH-12 is empty).
+        let all = Validator().validate(try Parser().parse(Data(ack.serialize()))).issues
+        #expect(all.filter(\.code.isMessageStructure).map(\.code) == [.messageStructureNotModelled(structure: "ACK")])
+        let issues = all.filter { !$0.code.isMessageStructure }
         #expect(issues.count == 1)
         #expect(issues.first?.location.fieldIndex == 12)
     }

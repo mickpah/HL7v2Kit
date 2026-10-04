@@ -74,11 +74,11 @@ struct SignatureCompatibilityTests {
         #expect(make("NM") == .valueFormatInvalid(dataType: "NM"))
     }
 
-    @Test("P8-5 message-structure setting and issue codes are additive; the check is off in every preset")
+    @Test("P8-5 message-structure setting and issue codes are additive; presets per G2 (b) since P8b-18")
     func messageStructure() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.messageStructureSeverity
-        #expect(ValidationOptions.default[keyPath: severity] == nil)
-        #expect(ValidationOptions.strict[keyPath: severity] == nil)
+        #expect(ValidationOptions.default[keyPath: severity] == .warning)
+        #expect(ValidationOptions.strict[keyPath: severity] == .error)
         #expect(ValidationOptions.lenient[keyPath: severity] == nil)
         let missing: (String, String, String?) -> IssueCode = IssueCode.messageStructureSegmentMissing(structure:segmentID:group:)
         let unexpected: (String, String) -> IssueCode = IssueCode.messageStructureSegmentUnexpected(structure:segmentID:)

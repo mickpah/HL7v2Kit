@@ -34,14 +34,21 @@ struct ValidationDigestTests {
         }
         // P8-5: VALIDATION_DIGEST_STRUCTURE_SEVERITY=warning (or error) turns the
         // opt-in message-structure check on in both variants, for the corpus run.
-        let structureSeverity: IssueSeverity? = switch env["VALIDATION_DIGEST_STRUCTURE_SEVERITY"] {
-        case "warning": .warning
-        case "error": .error
-        default: nil
+        // P8b-18: with the variable unset the preset's own severity stands, so the
+        // digest shows what each preset reports; `off` forces the check off.
+        // P8b-17: VALIDATION_DIGEST_PRESET=strict starts from the `.strict` preset;
+        // P8b-18 adds `lenient`.
+        var base: ValidationOptions = switch env["VALIDATION_DIGEST_PRESET"] {
+        case "strict": .strict
+        case "lenient": .lenient
+        default: .default
         }
-        // P8b-17: VALIDATION_DIGEST_PRESET=strict starts from the `.strict` preset.
-        var base = env["VALIDATION_DIGEST_PRESET"] == "strict" ? ValidationOptions.strict : .default
-        base.messageStructureSeverity = structureSeverity
+        switch env["VALIDATION_DIGEST_STRUCTURE_SEVERITY"] {
+        case "warning": base.messageStructureSeverity = .warning
+        case "error": base.messageStructureSeverity = .error
+        case "off": base.messageStructureSeverity = nil
+        default: break
+        }
         var asserted = base
         asserted.auPathologySender = true
         asserted.auDisplayIntended = true

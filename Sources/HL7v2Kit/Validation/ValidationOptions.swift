@@ -84,8 +84,10 @@ public struct ValidationOptions: Sendable {
     /// Severity for the abstract-message-syntax check (ADR-019): segment
     /// order, required segments and groups, and repetition for the message's
     /// structure, plus an MSH-9.3 that names a structure its MSH-9.1^9.2 is
-    /// not printed under. `nil`, the default in every preset, leaves the
-    /// check off. Only the structures generated from `Resources/structures/`
+    /// not printed under. `.warning` in ``default`` (and for a memberwise
+    /// `ValidationOptions()`), `.error` in ``strict`` and `nil`, the check
+    /// off, in ``lenient`` (owner decision G2 (b), P8b-18; before P8b-18 it
+    /// was `nil` in every preset). Only the structures generated from `Resources/structures/`
     /// are modelled; a message with no structure applied (unmodelled
     /// structure or version, an MSH-12 that does not resolve or differs from
     /// ``Message/version``, a fragment) gets one
@@ -99,7 +101,7 @@ public struct ValidationOptions: Sendable {
     /// "HL7au:00060.1")` at this severity (P8b-4), and a base structure
     /// finding the ADRM structure accepts at that point is dropped (P8b-4a).
     /// Not an init parameter. P8-5.
-    public var messageStructureSeverity: IssueSeverity? = nil
+    public var messageStructureSeverity: IssueSeverity? = .warning
 
     /// The caller asserts that the message comes from a pathology sender.
     /// ADRM-2021 scopes HL7au:00050.1.5 (OBX-6.3 Units coding system must
@@ -225,6 +227,8 @@ public struct ValidationOptions: Sendable {
 
     /// Grammar checks on; Z-segments silently tolerated. Suitable for
     /// general AU clinical traffic where Z-segments are routine.
+    /// Message-structure findings are warnings (receiver-side use, v2.5.1
+    /// CH02 2.6.2; owner decision G2 (b), P8b-18).
     public static let `default` = ValidationOptions()
 
     /// All checks on; Z-segments rejected. Useful for sender-side outgoing
@@ -232,14 +236,20 @@ public struct ValidationOptions: Sendable {
     /// Z-segments. The length severities (`fieldLengthSeverity`,
     /// `normativeLengthSeverity`), `valueFormatSeverity` and
     /// `repetitionBoundSeverity` stay `.warning` here as in `default` (owner gate G4).
-    public static let strict = ValidationOptions(
-        zSegmentPolicy: .reject,
-        checkRequiredFields: true,
-        checkConditionalFields: true,
-        checkComponentGrammar: true,
-        checkCardinality: true,
-        warnDeprecatedFields: true
-    )
+    /// Message-structure findings (`messageStructureSeverity`) are `.error`
+    /// here, sender-side conformance (owner decision G2 (b), P8b-18).
+    public static let strict: ValidationOptions = {
+        var options = ValidationOptions(
+            zSegmentPolicy: .reject,
+            checkRequiredFields: true,
+            checkConditionalFields: true,
+            checkComponentGrammar: true,
+            checkCardinality: true,
+            warnDeprecatedFields: true
+        )
+        options.messageStructureSeverity = .error
+        return options
+    }()
 
     /// Only structural / grammar-required checks. No Z-segment chatter,
     /// no deprecated-field warnings, no conditional-field evaluation, no
@@ -251,7 +261,7 @@ public struct ValidationOptions: Sendable {
     /// the extra-component check (`extraComponentsSeverity`), the value-format
     /// check (`valueFormatSeverity`) and the repetition-bound check
     /// (`repetitionBoundSeverity`), and it sets `messageStructureSeverity`
-    /// to `nil` explicitly (off in every preset today). `checkCardinality`
+    /// to `nil` explicitly (`.warning` in `default`, `.error` in `strict`). `checkCardinality`
     /// is already `false` here, which also silences the single-cardinality
     /// error.
     public static let lenient: ValidationOptions = {

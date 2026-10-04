@@ -196,8 +196,9 @@ struct ConditionalProhibitionTests {
         // filter can never fail on a populated field, since that code only
         // fires on an unpopulated one).
         let satisfied = wire("POMD^Performing Organization Medical Director^HL70912", prt14: "ORG^Acme^HL70448")
+        // P8b-18: the partial message draws structure findings under the default preset; not this test's subject.
         let prtIssues = Validator().validate(try Parser().parse(satisfied)).issues.filter {
-            $0.location.segmentID == "PRT"
+            $0.location.segmentID == "PRT" && !$0.code.isMessageStructure
         }
         #expect(prtIssues.isEmpty, "unexpected PRT issues: \(prtIssues.map(\.message))")
     }

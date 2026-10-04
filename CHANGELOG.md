@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P8b-18: the message-structure check is on in `.default` and `.strict`
+
+- **Default output changes (owner decision G2 (b), ADR-019 "Later preset change"):**
+  `ValidationOptions.messageStructureSeverity` is `.warning` in `.default` (and for a memberwise
+  `ValidationOptions()`), `.error` in `.strict`, and `nil` in `.lenient`. On the spec's printed
+  examples and the fixtures the default digest gains 4,284 lines: 3,428 info issues (no structure
+  applied, with the reason) and 856 warnings on 167 messages, each a genuine example or fixture
+  defect (`p8b-18-classes.tsv`); `.strict` gains the same lines at error; `.lenient` is unchanged.
+  Migration.md has the row and a section. The preset pins changed (MessageStructureValidationTests,
+  SignatureCompatibilityTests); five tests whose subject is another rule now set the structure
+  findings aside, and two acknowledgment-builder tests expect the info issue.
+- **Performance (spec 9.5):** the AU REF^I12 re-match (P8b-4a) passes over every segment the base
+  structure names nowhere in one pass (an 805-segment REF^I12: about 1.0 s to 0.38 s); structure
+  resolution reads a trigger index built once per version (resolve 106 us to 14 us). Validating one
+  message with the check at `.warning` takes about 0.75 ms (budget 2 ms), 1,000 messages 0.75 s
+  (budget 10 s); a 5,000-segment ORU^R01 1.6 s (v2.5.1) and 1.8 s (v2.8.2), inside a budget of
+  3.3 s scaled from 9.5. `PerformanceStructureTests` (gated by `RUN_PERF_TESTS`) records them.
+- The validation digest keeps a preset's own severity unless `VALIDATION_DIGEST_STRUCTURE_SEVERITY`
+  is set (`off` forces it off) and accepts `VALIDATION_DIGEST_PRESET=lenient`.
+
 ### Changed — P8b-17: structure group spans scope the group-dependent predicates
 
 - Default output changes on purpose (ADR-019 decision 5): on every complete version a message

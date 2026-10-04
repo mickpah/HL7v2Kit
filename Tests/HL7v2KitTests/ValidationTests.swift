@@ -156,7 +156,8 @@ struct ValidationTests {
         let message = try Parser().parse(wire)
         let options = ValidationOptions(warnDeprecatedFields: false)
         let report = Validator(options: options).validate(message)
-        #expect(report.warnings.isEmpty)
+        // P8b-18: the memberwise options report message structure (no EVN, PV1) at .warning.
+        #expect(report.warnings.filter { !$0.code.isMessageStructure }.isEmpty)
     }
 
     // MARK: - Report shape
@@ -441,7 +442,8 @@ struct ValidationTests {
     @Test("RDT: many plain columns are silent; column 1 stays required")
     func rdtColumnsSilentAndColumnOneRequired() throws {
         let clean = Validator().validate(try Parser().parse(TestWires.adt("RDT|a|b|c|d|e|f")))
-        #expect(clean.issues.filter { $0.location.segmentID == "RDT" }.isEmpty)
+        // P8b-18: structure findings (RDT where ADT_A01 has none) are not this test's subject.
+        #expect(clean.issues.filter { $0.location.segmentID == "RDT" && !$0.code.isMessageStructure }.isEmpty)
 
         let missing = Validator().validate(try Parser().parse(TestWires.adt("RDT||b|c")))
         let issue = try #require(missing.issues.first { $0.code == .requiredFieldMissing && $0.location.segmentID == "RDT" })
@@ -453,7 +455,7 @@ struct ValidationTests {
     @Test("RDT: the empty-column-2 case does not fire; ADD columns are optional")
     func rdtEmptyMiddleColumnAndAdd() throws {
         let rdt = Validator().validate(try Parser().parse(TestWires.adt("RDT|a||c")))
-        #expect(rdt.issues.filter { $0.location.segmentID == "RDT" }.isEmpty)
+        #expect(rdt.issues.filter { $0.location.segmentID == "RDT" && !$0.code.isMessageStructure }.isEmpty)
         let add = Validator().validate(try Parser().parse(TestWires.adt("ADD||x~y")))
         #expect(!add.issues.contains { $0.code == .requiredFieldMissing && $0.location.segmentID == "ADD" })
         #expect(add.issues.contains { $0.code == .cardinalityExceeded && $0.location.segmentID == "ADD" && $0.location.fieldIndex == 2 })

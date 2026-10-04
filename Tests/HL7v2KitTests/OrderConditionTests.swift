@@ -69,8 +69,9 @@ struct OrderConditionTests {
         // TQ2-10 is ID, LEN 1 (v2.8.2 1..1); "S" is a table 0506 code (P6-6
         // corrected the earlier non-conformant "RR2^SYS").
         let both = tq2(version, [3: "PL2^SYS", 6: "ES", 10: "S"])
+        // P8b-18: the partial message draws structure findings under the default preset; not this test's subject.
         let tq2Issues = Validator().validate(try Parser().parse(both)).issues.filter {
-            $0.location.segmentID == "TQ2"
+            $0.location.segmentID == "TQ2" && !$0.code.isMessageStructure
         }
         #expect(tq2Issues.isEmpty, "v\(version) unexpected TQ2 issues: \(tq2Issues.map(\.message))")
     }
