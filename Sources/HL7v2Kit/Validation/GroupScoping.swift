@@ -18,35 +18,48 @@ enum GroupScoping: Sendable {
 /// The group spans of one message (ADR-019): every group instance of a clean
 /// match, in pre-order, with the structure they were matched against.
 ///
-/// The scope rule (P8b-17, fix round 2), for one lookup of a peer segment ID
-/// `peer` from an anchor segment whose ID is `anchor`:
+/// The scope rule (P8b-17, fix rounds 2 to 4) is one principle: **a group or
+/// named choice that occurs at most once per occurrence of its parent is
+/// transparent, for the anchor, the peer and the group scope alike; only a
+/// repeating nested group that pairs is a boundary; a peer never comes from a
+/// repeating sibling.** For one lookup of a peer ID `peer` from an anchor whose
+/// ID is `anchor`:
 ///
 /// - **Own level.** A group's own level is its segments and those of the
 ///   unnamed choices in it (an unnamed choice opens no span), not those of
 ///   nested groups or named choices.
-/// - **Transparency.** A child group or named choice that occurs at most once
-///   per occurrence of its parent (maximum 1) is transparent: its own-level
-///   segments count as part of the parent's own level, recursively (a
-///   transparent child's transparent children too). A bracket that cannot
-///   repeat makes segments optional together; it is not a scope of its own, and
-///   it is never a pairing boundary (fix round 3: the v2.8.2 COMMON_ORDER
-///   { ORC ... [ORDER_DOCUMENT { OBX ... TXA }] } belongs to its order).
-/// - **Pairing boundary.** A *repeating* group or named choice N (maximum not
-///   1) is a pairing boundary for the lookup when it claims its own segments:
-///   N's own level holds `peer` and some `anchor` segment inside N (at N's own
-///   level, or in a nested group whose own level does not hold `peer`) first
-///   finds `peer` at N's own level. ORDER_PRIOR { [ORC] OBR ...
-///   {OBSERVATION_PRIOR { OBX }} } is one for ORC, OBR and OBX anchors.
+/// - **Transparency.** A child group or named choice with maximum 1 is
+///   transparent: its own-level segments count as part of its parent's own
+///   level, recursively. A bracket that cannot repeat makes segments optional
+///   together; it is not a scope of its own and never a pairing boundary.
+/// - **Pairing boundary.** A *repeating* nested group or named choice N is a
+///   boundary for the lookup when it claims its own segments: N's extended own
+///   level holds `peer`, and some `anchor` inside N first finds `peer` there
+///   (the anchor sits at N's extended own level, or in a nested repeating group
+///   whose extended own level does not hold `peer`). Transparency applies here
+///   too: v2.4 OML_O21 ORDER { ORC ... [OBSERVATION_REQUEST { OBR ...
+///   [{OBSERVATION { OBX }}] }] } claims its OBR for OBX anchors, so a
+///   container OBX of the enclosing ORDER_GENERAL does not take it.
+///   ORDER_PRIOR { ORC OBR ... {OBSERVATION_PRIOR { OBX }} } is one for ORC, OBR
+///   and OBX anchors.
 /// - **Extended own level** of a group: its own level plus that of every
 ///   transparent descendant reached through transparent groups only.
+/// - **The anchor's scope.** The anchor's innermost group occurrence, lifted
+///   through transparent groups to the nearest repeating enclosing occurrence
+///   (fix round 4): an OBR in DFT `[ORDER { OBR }]` is scoped at its
+///   COMMON_ORDER occurrence. It is never lifted to the message: when every
+///   enclosing group is transparent up to the root, the scope is the innermost
+///   group occurrence itself, as before fix round 4.
 ///
-/// The peer is taken (`context(around:of:for:)`) from the first of: the
-/// extended own level of the anchor's innermost group; anywhere inside that
-/// group except nested pairing boundaries; the extended own level of each
-/// enclosing group, outward to the top level (the message). The first of these
-/// whose definition holds `peer` decides; if its occurrence has none, the peer
-/// is absent. So a peer is never taken from a repeating sibling group (a
-/// cousin), nor from a nested pairing boundary.
+/// The peer (`context(around:of:for:)`) is taken from the anchor's scope when
+/// its definition holds `peer` anywhere outside nested pairing boundaries:
+/// first from its extended own level, then from the rest of its occurrence
+/// except nested pairing boundaries. Otherwise from the extended own level of
+/// each enclosing group, outward to the message. The first of these whose
+/// definition holds `peer` decides; if its occurrence has none, the peer is
+/// absent. So a peer comes from the anchor's scope or the extended own level of
+/// a group enclosing it, never from a repeating sibling of the scope, nor from a
+/// nested pairing boundary.
 ///
 /// Termination: `context` and `group` move strictly outward along the span
 /// parent chain, which ends at the message (nil). Every `ScopeLookup` function
@@ -66,9 +79,12 @@ struct GroupSpanIndex: Sendable {
     /// `anchor` (whose ID is `anchorID`) may be taken from: the scope rule above.
     func context(around anchor: Int, of anchorID: String, for peer: String) -> [Int] {
         let lookup = ScopeLookup(anchor: anchorID, peer: peer)
-        let own = spans.lastIndex { $0.indices.contains(anchor) }
-        if lookup.extended(children(own)).contains(peer) { return extendedRegion(own, lookup) }
-        if lookup.inside(children(own)).contains(peer) { return insideRegion(own, anchor: anchor, lookup) }
+        let own = scope(of: anchor, lookup)
+        if lookup.inside(children(own)).contains(peer) {
+            let near = extendedRegion(own, lookup)
+            let nearSet = Set(near)
+            return near + insideRegion(own, anchor: anchor, lookup).filter { !nearSet.contains($0) }
+        }
         var level = own
         while let at = level {
             level = spans[at].parent
@@ -78,23 +94,34 @@ struct GroupSpanIndex: Sendable {
     }
 
     /// The `head`-headed group of the segment at `anchor`, for the group-scope
-    /// cardinality rules counting `counted` (`.obrObxGroup`: head OBR): starting
-    /// from the anchor's innermost group, groups transparent for (`counted`,
-    /// `head`) are dissolved into their parent; the first group from there
-    /// outward whose extended own level holds `head` is the group, and its
-    /// occurrence without nested pairing boundaries is returned. Nil when no
-    /// enclosing group holds `head`.
+    /// cardinality rules counting `counted` (`.obrObxGroup`: head OBR): from the
+    /// anchor's scope (the same lifting as a peer lookup, for (`counted`,
+    /// `head`)), the first group outward whose extended own level holds `head`
+    /// is the group, and its occurrence without nested pairing boundaries is
+    /// returned. Nil when no enclosing group holds `head`.
     func group(around anchor: Int, holding head: String, counting counted: String) -> [Int]? {
         let lookup = ScopeLookup(anchor: counted, peer: head)
-        var level = spans.lastIndex { $0.indices.contains(anchor) }
-        while let at = level, lookup.transparent(element(at: spans[at].position)) {
-            level = spans[at].parent
-        }
+        var level = scope(of: anchor, lookup)
         while true {
             if lookup.extended(children(level)).contains(head) { return insideRegion(level, anchor: anchor, lookup) }
             guard let at = level else { return nil }
             level = spans[at].parent
         }
+    }
+
+    /// The anchor's scope: the group occurrence an anchor is treated as sitting
+    /// at. Its innermost group occurrence, lifted through transparent
+    /// (non-repeating) groups to the nearest repeating enclosing occurrence.
+    /// Never the message: when every enclosing group is transparent up to the
+    /// root, the innermost group occurrence itself (no lifting).
+    private func scope(of anchor: Int, _ lookup: ScopeLookup) -> Int? {
+        let innermost = spans.lastIndex { $0.indices.contains(anchor) }
+        var level = innermost
+        while let at = level, lookup.transparent(element(at: spans[at].position)) {
+            guard let parent = spans[at].parent else { return innermost }
+            level = parent
+        }
+        return level
     }
 
     /// The occurrence of `level` (nil: the message) without its descendants
@@ -176,16 +203,21 @@ struct ScopeLookup {
         group.max != 1 && claims(group)
     }
 
-    /// Whether `group`'s own level holds the peer and an anchor inside it first
-    /// finds the peer there, whatever its cardinality.
+    /// Whether `group`'s extended own level holds the peer and an anchor inside it
+    /// first finds the peer there, whatever its cardinality.
     func claims(_ group: StructureElement) -> Bool {
-        guard Self.ownLevel(group.children).contains(peer) else { return false }
+        guard extended(group.children).contains(peer) else { return false }
+        // An anchor inside `group` finds the peer at `group`'s extended own level
+        // unless a repeating group between them holds the peer at its own
+        // extended level first; a non-repeating group in between is transparent.
         func unclaimed(_ children: [StructureElement]) -> Bool {
             children.contains { child in
                 switch child {
                 case .segment(let id, _, _): return id == anchor
                 case .choice(.none, _, _, let alternatives): return unclaimed(alternatives)
-                default: return !Self.ownLevel(child.children).contains(peer) && unclaimed(child.children)
+                default:
+                    if transparent(child) { return unclaimed(child.children) }
+                    return !extended(child.children).contains(peer) && unclaimed(child.children)
                 }
             }
         }

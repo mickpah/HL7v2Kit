@@ -1382,41 +1382,49 @@ and fixtures, only the quoted condition text where a gate leg was removed.
   sibling group (v2.8.2 CSU_C09, CH07 pp 103 to 104: the pharmacy ORC in STUDY_PHARM
   `{ [COMMON_ORDER { ORC }] ... }` took the OBR of a STUDY_OBSERVATION, a false
   `pairedFieldMismatch`), and did not cut ORDER_PRIOR for an OBX anchor. The rule as implemented
-  (`GroupSpanIndex`, `ScopeLookup`), for a lookup of peer ID P from an anchor of ID A:
+  (`GroupSpanIndex`, `ScopeLookup`, fix rounds 2 to 4) is one principle: **a group or named
+  choice that occurs at most once per occurrence of its parent is transparent, for the anchor,
+  the peer and the group scope alike; only a repeating nested group that pairs is a boundary; a
+  peer never comes from a repeating sibling.** For a lookup of peer ID P from an anchor of ID A:
   - *Own level* of a group: its segments and those of the unnamed choices in it, not those of
     nested groups or named choices.
-  - *Transparency* (fix round 3 as ruled): a child group or named choice that occurs at most
-    once per occurrence of its parent (maximum 1) is transparent: its own-level segments count as
-    part of the parent's own level, recursively through transparent children. A bracket that
-    cannot repeat makes segments optional together; it is not a scope, and it is never a pairing
-    boundary. DFT_P03 and DFT_P11
-    `COMMON_ORDER { ... [ORDER { OBR [{NTE}] }] [{OBSERVATION { OBX ... }}] }` (v2.5.1 CH06 6.4.3)
-    and the v2.8.2 CC* `CLINICAL_*_DETAIL { CLINICAL_*_OBJECT <OBR | ...> [{CLINICAL_*_OBSERVATION
-    { OBX ... }}] }` need it, and so does the v2.8.2 COMMON_ORDER `{ ORC ... [ORDER_DOCUMENT
-    { OBX ... TXA }] }` of ORU_R01 and OUL_R22 to R24, whose ORC belongs to the whole order (fix
-    round 2 had cut it for OBX anchors, so an order's OBX lost its ORC).
-  - *Pairing boundary*: only a *repeating* nested group or named choice can be one. It is one for
-    a lookup (anchor ID A, peer ID P) when its own level holds P and some A inside it (at its own
-    level, or in a nested group whose own level does not hold P) first finds P at its own level:
-    it claims its own segments. ORDER_PRIOR `{ ORC OBR ... {OBSERVATION_PRIOR { OBX }} }` repeats
-    on every version and is one for ORC, OBR and OBX anchors. A test fails if any printed
-    structure has a non-repeating group that would claim an ORC/OBR pair (none does), because
-    such a group would now leak its ORC or OBR into the enclosing order.
+  - *Transparency*: a child group or named choice with maximum 1 is transparent: its own-level
+    segments count as part of its parent's own level, recursively. A bracket that cannot repeat
+    makes segments optional together; it is not a scope and never a pairing boundary. DFT_P03
+    and DFT_P11 `COMMON_ORDER { ... [ORDER { OBR [{NTE}] }] [{OBSERVATION { OBX ... }}] }`
+    (v2.5.1 CH06 6.4.3), the v2.8.2 CC* `CLINICAL_*_DETAIL { CLINICAL_*_OBJECT <OBR | ...>
+    [{CLINICAL_*_OBSERVATION { OBX ... }}] }` and the v2.8.2 COMMON_ORDER `{ ORC ...
+    [ORDER_DOCUMENT { OBX ... TXA }] }` of ORU_R01, OUL_R22 to R24 and OPU_R25 rely on it.
   - *Extended own level*: a group's own level plus the own levels of its transparent
     descendants reached through transparent groups only.
-  - The peer is taken from the first of: the extended own level of the anchor's innermost group;
-    anywhere inside that group except nested pairing boundaries; the extended own level of each
-    enclosing group outward to the message. The first whose definition holds P decides; if its
-    occurrence has none, the peer is absent. A peer is therefore never taken from a repeating
-    sibling group or from a nested pairing boundary. Used for every cross-segment lookup
-    (`associatedSegment`, `segmentExists`, the field refs and position atom) and the ORC/OBR pair
-    check.
-  - `.orcObxGroup` / `.obrObxGroup` (head ORC / OBR, counting the rule's segment, OBX): the
-    groups around the anchor that are transparent for (counted, head) are dissolved into their
-    parent; the first group from there outward whose extended own level holds the head is the
-    group, taken as its occurrence without nested pairing boundaries for (counted, head). An OBR
-    anchor in DFT ORDER takes its COMMON_ORDER occurrence (with the sibling OBSERVATION OBX); the
-    order's OBR in OML_O21 takes OBSERVATION_REQUEST without ORDER_PRIOR.
+  - *Pairing boundary*: only a *repeating* nested group or named choice can be one. It is one for
+    (A, P) when it claims its own segments: its extended own level holds P and some A inside it
+    first finds P there (A at its extended own level, or in a nested repeating group whose
+    extended own level does not hold P). ORDER_PRIOR `{ ORC OBR ... {OBSERVATION_PRIOR { OBX }} }`
+    repeats on every version and is one for ORC, OBR and OBX anchors; the repeating ORDER of
+    v2.4 OML_O21 and v2.5.1 OML_O33 claims the OBR of its transparent OBSERVATION_REQUEST for OBX
+    anchors, so a container or specimen OBX does not take it. A test fails if any printed
+    structure has a non-repeating group that would claim an ORC/OBR pair (none does).
+  - *The anchor's scope* (fix round 4): the anchor's innermost group occurrence, lifted through
+    transparent groups to the nearest repeating enclosing occurrence. An OBR in DFT `[ORDER]` is
+    scoped at its COMMON_ORDER occurrence, a CC* OBR in `CLINICAL_*_OBJECT` at its detail, an
+    OPU_R25 v2.8.2 ORC in `[COMMON_ORDER]` at its ORDER. It is never lifted to the message: when
+    every enclosing group is transparent up to the root, the scope is the innermost group
+    occurrence itself (the behaviour before fix round 4).
+  - The peer is taken from the anchor's scope when its definition holds P outside nested pairing
+    boundaries: first from its extended own level, then from the rest of the occurrence except
+    nested pairing boundaries. Otherwise from the extended own level of each enclosing group,
+    outward to the message. The first whose definition holds P decides; if its occurrence has
+    none, the peer is absent. A peer therefore comes from the anchor's scope or the extended own
+    level of a group enclosing it, never from a repeating sibling of the scope or a nested
+    pairing boundary. A peer in a repeating group nested in the scope is its first occurrence (as
+    for TXA and its document OBX). Used for every cross-segment lookup (`associatedSegment`,
+    `segmentExists`, the field refs and position atom) and the ORC/OBR pair check.
+  - `.orcObxGroup` / `.obrObxGroup` (head ORC / OBR, counting the rule's segment, OBX): from the
+    anchor's scope (the same lifting), the first group outward whose extended own level holds
+    the head is the group, taken as its occurrence without nested pairing boundaries for
+    (counted, head). An OBR anchor in DFT ORDER takes its COMMON_ORDER occurrence (with the
+    sibling OBSERVATION OBX); the order's OBR in OML_O21 takes its ORDER without ORDER_PRIOR.
   - Each span keeps its structure position; the index reads the definition there.
   - Through the Validator, a DFT message whose COMMON_ORDER carries an ORC and an OBR (or an OBX
     after the OBR) gets no spans: every COMMON_ORDER element is optional, so the OBR (or OBX) may
@@ -1429,8 +1437,8 @@ and fixtures, only the quoted condition text where a gate leg was removed.
   example the order status response with OBX, ADRM-2021 p 281) has no spans, whatever P8b-4a
   drops from the report. `Validator+ProfileStructure.swift` is unchanged.
 - **Group identity is by position.** Each span carries the group's position in the structure
-  (element indices from the top level, an alternative counting as a child) and the segment IDs of
-  its own definition. v2.4 and v2.3.1 REF_I12 print two sibling PATIENT_VISIT groups; a name
+  (element indices from the top level, an alternative counting as a child); the index reads the
+  group's definition at that position. v2.4 and v2.3.1 REF_I12 print two sibling PATIENT_VISIT groups; a name
   never stands for a group.
 - **R1: spans from the exact matcher (amends ceiling 1 and the P8b-12 amendment).** An accepted
   exact match yields spans when every accepting parse assigns every segment to the same group
