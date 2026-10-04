@@ -177,3 +177,32 @@ counted over all seven versions, not corpus findings; v2.3.1's two, ORU_R01 and 
 exact-matched (P8b-12) and committed as printed. No v2.3.1 spec example carries ORU^R01 or
 ORF^R04 with MSH-12 read as 2.3.1 (the CH07 examples elide MSH-12), so the probes exercise them:
 14 probes and 9 resolution cases in `StructureV231ProbeTests`.
+
+## v2.3 message structures (P8b-15)
+
+The extractor reads 252 v2.3 captions in the CH1 to CH12 PDFs: 4 excluded (the CH2 2.11.1
+WRQ/WRP notation example), 248 resolved to 163 structure IDs, 147 read and 16 unreadable (the
+general order's `Order Detail Segment` placeholder in ORM_O01, ORR_O02 and OSR_Q06, eight CH12
+`[OBR, etc.` structures, the CH8 `[Z..]` and `[other segments(s)]` placeholders in MFN_M01,
+MFR_M01 and MFN_M03, ERP's ellipsis rows and SUR_P09's ED row). v2.3 prints the code alone, the
+events in the section title, no structure ID and no Table 0354: IDs are synthesised `CODE_EVT`
+from the code and the first title event (or the code alone for the ACK, MCF, EDR, TBR and ERP
+folds), 201 captions take their events from the title and 39 from cited `eventsFromTitle`
+entries (section text, Table 0003). 147 are committed under `Resources/structures/v2.3/` and v2.3
+is `complete: true`; the 16 are registered in `completeness.json` (register §E v2.3 addendum).
+Group names: 235 through the HL7 v2.xml 2.3.1 bundle, 7 through the v2.4 bundle, 3 synthesised.
+
+Lookup rule 3 (ADR-019): v2.3 MSH-9 has two components (CM, CH2 2.24.1.9), so once MSH-12 reads
+as 2.3 a v2.3 message resolves from MSH-9.1^9.2 only and a populated MSH-9.3 is ignored. The CH2
+deferred query pair (2.18.1, p 2-74) prints `QRY (A to B)` and `QCK (B to A)` with no caret; both
+are read now (QRY_Q02: MSH, QRD, [QRF], [DSC]; QCK_Q02: MSH, MSA, [ERR], [QAK]), with DSR_Q03
+and the 2.18.2 ACK.
+
+Requirement 4 evidence: with the structure check off the validation digest is byte-identical;
+with it on, 82 messages change: 48 now match cleanly (v2.3 spec examples, the
+`adt_a01_v23.hl7` fixture, which gains the EVN the print requires), 11 are example defects cited
+to the print (five CH10 10.6 examples print AIP before AIL; three CH03 3.4.2 ADT examples order
+OBX against the print; CH04 4.14.5 sends ACK with QAK; two CH06 6.5 BAR^P05 examples omit EVN),
+23 stay info with a new name or reason (QRY^Q01 examples that are fragments; CH05 examples in the
+v2.4 to v2.6 chapters whose MSH-12 reads 2.3, whose info now names MSH-9.1^9.2 under rule 3). No
+misfire. 17 structure probes and the V23-A03 cases are in `StructureV23ProbeTests`.

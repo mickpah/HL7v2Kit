@@ -617,8 +617,9 @@ caption; notation in the description column inside an open group (`[Order Detail
 etc.`, CH04 OSR^Q06) is a G6 placeholder, where it had been dropped and OSR_Q06 written without
 its order detail; on a version that prints its own Table 0354, a caption the table cannot
 resolve fails a full read unless a cited erratum, declared shared triggers, a `captionStructures`
-or an `unresolvedCaptions` entry settles it. The Table 0354 errata also give v2.3 (which reads
-v2.3.1's table) the corrected IDs; v2.3 is not complete and commits nothing.
+or an `unresolvedCaptions` entry settles it. The Table 0354 errata also gave v2.3 (which then read
+v2.3.1's table) the corrected IDs; since P8b-15 v2.3 reads no Table 0354 (its IDs are synthesised,
+v2.3 addendum below).
 
 Known cost of exact matching: 10 v2.3.1 structures fail the determinism lint (CSU_C09, OMD_O01,
 ORD_O02, ORF_R02, ORU_R01, RCI_I05, REF_I12, RPA_I08, RQA_I08 and RRI_I12) and are matched by the
@@ -626,6 +627,76 @@ exact matcher, with at most one finding and no group spans (among them ORU_R01 a
 OBSERVATION group is the pre-v2.5 `{ [OBX] [{NTE}] }`). Corpus run (P8b-14): no misfire; six v2.3.1 spec examples
 draw findings that are example defects (CH04 4.14.5 sends ACK with QAK; five CH10 10.6 examples
 print AIP before AIL).
+
+### Addendum to §E — v2.3 complete (P8b-15, 2026-10-04)
+
+v2.3 is `complete: true` in `Resources/structures/completeness.json`, the last version: 147
+structures modelled (each cited to chapter, section and pages of the CH1 to CH12 PDFs) and 16
+registered as not modelled in that file's `notModelled`. v2.3 prints the message code alone over
+each table, the events in the section title, no structure ID and no Table 0354, and its MSH-9 has
+no third component. Lookup rule 3: a v2.3 message resolves from MSH-9.1^9.2 only; a populated
+MSH-9.3 is ignored, so rule 1's mismatch for an unknown ID never applies on v2.3. Structure IDs
+are synthesised `CODE_EVT` (the code and the first event of the section title) and flagged so in
+each citation; they are internal keys no v2.3 message carries. 252 captions read: 4 excluded (the
+CH02 2.11.1 WRQ/WRP notation example, ruling G7), 248 resolved to 163 structure IDs (every ACK
+caption folds onto ACK).
+
+| Not modelled (v2.3) | Why | Status |
+|---|---|---|
+| ORM_O01 (CH04 4.2.1, p 4-4), ORR_O02 (4.2.2, p 4-5), OSR_Q06 (4.2.3, p 4-6) | The order detail is printed `Order Detail Segment OBR, etc.`; use note b (p 4-4) reads it as "whichever of these order detail segment(s) is appropriate ..., currently OBR, RQD, RQ1, RXO, ODS, ODT", 4.1.2.4 (p 4-3) names examples only and 4.7 (p 4-54) has RQD followed by RQ1 replace it, so one-of versus combination is not fixed (ruling G6). Sections 4.6, 4.7 (twice) and 4.8.1 print specialised ORM and ORR tables (diet, stock, nonstock, pharmacy) under the same O01 and O02 (Table 0003; cited `eventsFromTitle`), which MSH-9.1^9.2 cannot tell apart on v2.3: they are recorded as further prints of ORM_O01 and ORR_O02, not modelled. | **Permanent** for v2.3 (an ORM^O01 or ORR^O02 message is info). |
+| PGL_PC6, PPR_PC1, PPP_PCB, PPG_PCG, PRR_PC5, PPV_PCA, PTR_PCF, PPT_PCL (CH12 12.2.1 to 12.2.12, pp 12-8 to 12-16) | `[OBR, etc.`; the CH12 note before 12.2.1 (p 12-7) reads it as every combination of order detail segments per CH04 4.1.2.4 (ruling G6). PTR_PCF also prints `{NTE}]` with no opening bracket. | **Permanent** for v2.3. |
+| ERP (CH02 2.20.3, p 2-77), MFN_M01 and MFR_M01 (CH08 8.3.1, p 8-4; 8.3.3, p 8-5), MFN_M03 (8.7.2, p 8-21; events M03, M08 to M11) | Ellipsis rows after ERQ; `[Z..]` for the segments of each master file; `[other segments(s)]`, whose M08 to M11 combinations the section prints as uncaptioned fragments keyed by MSH-9 event in prose, which the extractor does not read as structures (ruling G6). | **Permanent** for v2.3 (MFN^M08 to M11 and MFR are info). |
+| SUR_P09 (CH07 7.10.2, p 7-80) | A row `ED Encapsulated Data`: v2.3 defines no ED segment. | **Permanent** for v2.3. |
+
+Events. 201 captions take their events from the section title (`(event A01)`, `(events C01-C08)`,
+first event for the ID). 39 captions whose title names none, or names them as `O01/O02`, take them
+from a cited `eventsFromTitle` entry: CH04 4.6, 4.7 and 4.8.1 ORM O01 and ORR O02 (Table 0003);
+RDE, RDS, RGV O01 and RRE, RRD, RRG, RRA O02 (the title pairs them; Table 0003 "O01 ... also RDE,
+RDS, RGV, RAS", "O02 ... also RRE, RRD, RRG, RRA"); RAS O02 as its title prints it and O01 added
+(Table 0003 and the three sibling sections; a corrected event list is added to, never reduced);
+CH08 MFN and MFK per master file section (M01 for the 8.3.1 template; M02 8.6.1; M03 and M08 to M11
+8.7.2, whose text names those MSH-9 events; M05 8.8.1; M04 8.9.1; M06 and M07 the two cases of
+8.10.1), the general MFK of 8.3.1 also for the events whose sections print no MFK (M03, M08 to M11),
+MFD MFA (8.2 names it), MFQ and MFR M01 to M11 (Table 0003 "varies ... use event same as asking
+for"); CH10 SRM and SRR S01 to S11 and SIU S12 to S24 and S26 (the sections that "use this message
+definition"); CH11 RQA and RPA I08 to I11, REF and RRI I12 to I15 (the sections the message
+definition names). Four codes print no event anywhere and Table 0003 lists none for them: MCF
+(2.13.2), EDR, TBR, ERP (2.20; the Chapter 2 examples send MSH-9 `TBR` and `ERP` alone): each is
+folded onto `CODE^*` with the code as its ID, as ACK is.
+
+Errata (each cited in `overrides.json`, defensible from the v2.3 print alone). Caption: CH04 4.8.17
+prints `R0R` with a digit zero for the code and the event; Table 0076 (p 2-89) defines ROR, and the
+sibling responses RAR, RDR, RER, RGR carry their code as their event: read as ROR^ROR with the
+printed R0R kept, so `ROR^ROR` and `ROR^R0R` both resolve to ROR_ROR. Syntax cells: ADT^A07's
+`[{ROL]}` (3.2.7, p 3-8), ADT^A31's `{[ROL}]` (3.2.31, p 3-25) and CSU's `{[[ORC] ... }]` (7.6.2,
+p 7-65) cross their brackets, which CH02 notation cannot nest; both nested readings mean an
+optional repeating element, so the reading chooses no meaning.
+
+Group names (ADR-019 decision 3; controller carry-in). v2.3 prints no group names: 235 are derived
+through the HL7 v2.xml 2.3.1 bundle (`v2xml-v2.3.1`, cited `HL7-xml 2.3.1/<file>.xsd` with its
+generator; a synthesised ID such as ADT_A04 matches a same-code 2.3.1 file on first segment and
+member set, citing both IDs), 7 through the v2.4 bundle and 3 are synthesised (ORU_R01's patient
+groups, whose v2.3 member set lacks the NK1 of v2.3.1 and later; SIU_S12's patient group).
+
+Reader fixes (extractor, each with a self-check; no v2.3.1 to v2.8.2 report row or structure
+changes): v2.3 captions `QRY (A to B)` and its three siblings (CH02 2.18, which had been missed), a
+code one space from its title or with no Chapter column when the next row is MSH (RRE, RRA, MDM^T10
+and the five CH04 4.8.17 to 4.8.21 query responses), the rows' description column from the MSH row
+(RRD and RRG had been cut short after ERR); a closing bracket or syntax cell one space from its
+description (UDM's `{   DSP   } Display Data`, ADR's `[{ROL}] Role`, CSU's `{RXA Pharmacy
+Administration`) and a page set right of the caption (RDR) are rows. A scan of every v2.3 table for
+syntax rows left after the read table ends found none outside the registered MFN_M03.
+
+Known cost of exact matching: 10 v2.3 structures fail the determinism lint (ADT_A06 and ADT_A07,
+which print DRG twice; CSU_C09; ORF_R02 and ORU_R01, the pre-v2.5 OBSERVATION group; RCI_I05,
+REF_I12, RPA_I08, RQA_I08, RRI_I12) and are matched by the exact matcher, with at most one finding
+and no group spans. RQA_I08 is modelled as printed, `[ [{GT1}] {IN1 [IN2] [IN3]} ]` (11.3.1,
+p 11-12): an insurance group follows GT1 within one optional group, where RPA, REF and RRI print
+`[{GT1}] [{IN1 ...}]`; the print is followed, not the siblings. Triggers the print covers only in
+prose (QRY^P04 in CH06 6.3.4, ORU^W01 and the R03, R05, R06 display queries in CH07) name no syntax
+table and are info. Corpus run (P8b-15): no misfire; 11 spec-example messages draw findings that are
+example defects (five CH10 10.6 examples print AIP before AIL; three CH03 3.4.2 ADT examples order
+OBX against the print; CH04 4.14.5 sends ACK with QAK; two CH06 6.5 BAR^P05 examples omit EVN).
 
 ### Addendum to §E — HL7au:00060.1 through the ADRM-2021 structures (P8b-4, 2026-10-04)
 

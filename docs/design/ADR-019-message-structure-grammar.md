@@ -1223,6 +1223,47 @@ compiling a structure per message.
   branch now applies to v2.3.1: an MSH-9.3 naming no v2.3.1 structure (including the misprinted
   table ID `PIN_107`) is a mismatch.
 
+## Amendment 2026-10-04 — v2.3 complete; lookup rule 3 (P8b-15)
+
+- **v2.3 complete, and with it every supported version.** 147 structures modelled (10
+  exact-matched) and 16 registered (register section E v2.3 addendum: the general order's
+  `Order Detail Segment` placeholder in ORM_O01, ORR_O02 and OSR_Q06, eight CH12 `[OBR, etc.`
+  structures, the master file `[Z..]` and `[other segments(s)]` placeholders in MFN_M01, MFN_M03
+  and MFR_M01, ERP's ellipsis rows, SUR_P09's ED row).
+- **Lookup rule 3 implemented** (pilot addendum: "not implemented"; carry-in P8-6(b)). v2.3 MSH-9
+  is CM <message type>^<trigger event> (CH2 2.24.1.9) with no third component. Once MSH-12 reads
+  as v2.3 (after the version rule, so a message whose MSH-12 does not resolve still names its
+  MSH-9.3 in the not-modelled info), a populated MSH-9.3 is ignored and the message resolves
+  from MSH-9.1^9.2 through the `triggers` index alone; rule 1's unknown-ID branch therefore never
+  fires on v2.3. A trigger printed under one structure resolves to it; a trigger the print does
+  not cover, or one under a registered structure, is `messageStructureNotModelled` (info).
+- **Synthesised structure IDs (rollout order item 6, its v2.3 half, realised).** v2.3 prints the message code
+  alone over each table, the events in the section title, no structure ID and no Table 0354.
+  The ID is `CODE_EVT` from the code and the first event of the title (multi-event titles:
+  `CRM_C01` for C01 to C08), or the code alone where a `triggerFolds` entry folds every caption
+  of a code onto `CODE^*` (ACK, and MCF, EDR, TBR and ERP, which v2.3 prints with no event and
+  Table 0003 lists with none). The IDs are internal keys: no v2.3 message carries them. Each
+  citation says the ID was synthesised and where each print's events came from: the section
+  title, or a cited `overrides.json` `eventsFromTitle` entry (new kind, 39 v2.3 entries, keyed by
+  section, caption and an optional occurrence) where the title names none or names them in a form
+  the title reader does not read (`(event O01/O02)`), citing the section text or Table 0003.
+  v2.3 no longer reads v2.3.1's Table 0354: the borrowed table, and with it v2.3.1's errata, gave
+  v2.3 structure IDs and merged prints (ADT^A04 into ADT_A01) that the v2.3 print does not give;
+  each v2.3 event now has the table its own section prints.
+- **Decision 3 for v2.3 through the v2.3.1 bundle (controller carry-in).** v2.3 group names are
+  derived through the HL7-xml 2.3.1 bundle first (new `nameSource` `v2xml-v2.3.1`, cited
+  `HL7-xml 2.3.1/` with the file's generator), then the v2.4 bundle (`v2xml-v2.4`), matching on
+  (structure ID or message code, first segment, member set), never by position; else synthesised.
+  The 2.3.1 bundle's CHOICE stays refused. Result: 235 / 7 / 3. The codegen, the test decoder and
+  the extractor accept `v2xml-v2.3.1` on v2.3 only.
+- **Extractor (v2.3 caption era only, except two row rules).** Captions with a direction tag and
+  no caret (`QRY (A to B)`, CH2 2.18), a code one space from its title, or no Chapter column
+  (read only when the next row is the MSH row; CH04 4.8.6, 4.8.13, 4.8.17 to 4.8.21, CH09 9.4.10);
+  the rows' description column taken from the MSH row (CH04 4.8.9 and 4.8.11 set the title nearer
+  the code). Rows: a closing bracket or a whole syntax cell one space from its description, and a
+  syntax cell ending at the description column on a page set right of the caption, are rows, not
+  prose. No v2.3.1 to v2.8.2 report row or dumped structure changes.
+
 ## Amendment 2026-10-04 — HL7au:00060.1 through the ADRM-2021 structures (P8b-4)
 
 - **Path (ruling G9).** The AU structures live in `Resources/structures/profiles/au-adrm-2021/`

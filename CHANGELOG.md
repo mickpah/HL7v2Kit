@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-15: HL7 v2.3 message structures complete; lookup rule 3
+
+- With `messageStructureSeverity` set, every v2.3 message structure is now checked: 147
+  structures extracted from the v2.3 chapter prints (10 matched exactly), and v2.3 is marked
+  complete, so every supported version is. `ADT^A01` on v2.3 with no EVN or PV1 now draws two
+  missing-segment findings where it drew one info issue.
+- ADR-019 lookup rule 3: v2.3 defines no MSH-9.3, so a message whose MSH-12 reads as 2.3 is
+  resolved from MSH-9.1^9.2 only and a populated third component is ignored (never a mismatch).
+  A trigger the v2.3 print covers resolves to its own print; one it does not (an event printed
+  under no syntax table, a Z event) is info, never an error.
+- v2.3 prints the message code alone over each table, the events in the section title, no
+  structure ID and no Table 0354. Structure IDs are synthesised `CODE_EVT` from the code and the
+  first event of the title (`ADT_A04`, `SRM_S01`), or the code alone for the general
+  acknowledgment and the four messages printed with no event (MCF, EDR, TBR, ERP); every v2.3
+  citation says so and names where each event came from. v2.3 no longer reads v2.3.1's Table
+  0354 or its errata. 39 captions whose section title names no event take their events from a
+  cited `overrides.json` `eventsFromTitle` entry (section text or Table 0003).
+- Group names, which v2.3 never prints: 235 derived through the HL7 v2.xml 2.3.1 bundle (new
+  `nameSource` `v2xml-v2.3.1`), 7 through the v2.4 bundle, 3 synthesised.
+- 16 v2.3 structures are registered as not modelled, each with its reason (register section E):
+  the general order's `Order Detail Segment` placeholder (ORM_O01, ORR_O02, OSR_Q06; the four
+  specialised ORM and ORR prints of CH04 share the trigger and cannot be told apart from
+  MSH-9.1^9.2), eight CH12 `[OBR, etc.` structures, the master file `[Z..]` and
+  `[other segments(s)]` placeholders (MFN_M01, MFN_M03, MFR_M01), ERP's ellipsis rows and
+  SUR_P09's ED row.
+- Errata, each cited to the v2.3 print: CH04 4.8.17's `R0R` read as `ROR` (Table 0076), the
+  printed event R0R kept; crossed brackets in ADT^A07 (`[{ROL]}`), ADT^A31 (`{[ROL}]`) and CSU
+  (`{[ ... }]`), whose two nested readings mean the same; CH02 2.11.1's WRQ/WRP notation example
+  excluded.
+- The extractor reads v2.3's other caption forms (`QRY (A to B)`, a code one space from its
+  title or with no Chapter column) and rows whose syntax cell sits one space from its
+  description or on a page set right of the caption. No v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1 or
+  v2.8.2 structure or report row changes.
+- The `adt_a01_v23.hl7` fixture gains the EVN segment the v2.3 print requires.
+
 ### Added — P8b-14: HL7 v2.3.1 message structures complete
 
 - With `messageStructureSeverity` set, every v2.3.1 message structure is now checked: 99
