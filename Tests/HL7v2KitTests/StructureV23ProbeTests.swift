@@ -74,4 +74,18 @@ struct StructureV23ProbeTests {
         #expect(issues.count == 1 && issues.first?.severity == .info, "\(msh9): \(issues.map(\.message))")
         #expect(issues.first.map { if case .messageStructureNotModelled = $0.code { true } else { false } } == true)
     }
+
+    // P8b-15: v2.3 complete. Rule 1's unknown-MSH-9.3 branch cannot fire (rule 3 ignores MSH-9.3);
+    // a trigger printed under a registered structure is info with the register reason, never an error.
+    @Test("v2.3 complete: registered triggers are info with their reason; a declared ID changes nothing",
+          arguments: [("ORM^O01", "Order Detail Segment"), ("PPR^PC2", "OBR, etc"), ("SUR^P09", "ED"),
+                      ("ERP", "ellipsis"), ("MFN^M08", "other segments"), ("MFR^M05", "[Z..]")])
+    func registered(_ c: (String, String)) throws {
+        #expect(MessageStructureTable.isComplete(.v2_3))
+        for msh9 in [c.0, c.0 + (c.0.contains("^") ? "^ZZZ_Z99" : "^^ZZZ_Z99")] {
+            let issues = try structureIssues(msh9, ["PID|1"])
+            #expect(issues.count == 1 && issues.first?.severity == .info, "\(msh9): \(issues.map(\.message))")
+            #expect(issues.first?.message.contains(c.1) == true, "\(msh9): \(issues.map(\.message))")
+        }
+    }
 }
