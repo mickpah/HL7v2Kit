@@ -206,6 +206,30 @@ struct MessageStructureValidationTests {
         #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", [Self.pid, "OBR|1", "OBX|1"])).isEmpty)
     }
 
+    // ADR-019 lookup rule 1 on v2.6 (P8b-10): complete, so an unknown MSH-9.3 ID is a
+    // mismatch with no body match; a registered one is info with its reason; ADT^A01 and
+    // ORU^R01 resolve and match as on v2.5.1.
+    @Test("v2.6 complete (P8b-10): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A01 and ORU^R01 unchanged")
+    func v26RuleOne() throws {
+        let unknown = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: "2.6", [Self.pid]))
+        #expect(unknown.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
+        #expect(unknown.first?.severity == .error)
+        #expect(unknown.first?.message.contains("whose structures are all modelled") == true, "\(unknown.map(\.message))")
+        let registered = try structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", ["MSA|AA|1", "QAK|1", "QPD|1"]))
+        #expect(registered.map(\.code) == [.messageStructureNotModelled(structure: "RSP_K21")])
+        #expect(registered.first?.severity == .info)
+        #expect(registered.first?.message.contains("neither accepts every message the other accepts") == true,
+                "\(registered.map(\.message))")
+        let placeholder = try structureIssues(Self.wire("PGL^PC6", version: "2.6", []))
+        #expect(placeholder.map(\.code) == [.messageStructureNotModelled(structure: "PGL^PC6")])
+        #expect(MessageStructureTable.isComplete(.v2_6))
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.6", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A04", version: "2.6", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", version: "2.6", [Self.pid, "OBR|1", "OBX|1"])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.6", [Self.pid, Self.pv1])).map(\.code)
+                == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
+    }
+
     // P8b-9: v2.5.1 is complete, so the near miss is a mismatch that names the loaded ID.
     @Test("An MSH-9.3 differing from a modelled ID only by case or whitespace: a mismatch on the complete v2.5.1, named as such",
           arguments: ["ADT_A01 ", "adt_a01"])

@@ -173,10 +173,10 @@ struct MessageStructureTableTests {
 
     // P8b-1: the version switch and the completeness set are generated from
     // Resources/structures/completeness.json.
-    @Test("Only v2.5.1 is complete (P8b-9), substituted versions included", arguments: Version.allCases)
+    @Test("v2.5.1 (P8b-9) and v2.6 (P8b-10) are complete, substituted versions included", arguments: Version.allCases)
     func noVersionComplete(version: Version) {
-        #expect(MessageStructureTable.isComplete(version) == (version == .v2_5_1))
-        #expect(MessageStructureTable.completeVersions == [.v2_5_1])
+        #expect(MessageStructureTable.isComplete(version) == [Version.v2_5_1, .v2_6].contains(version.grammarVersion))
+        #expect(MessageStructureTable.completeVersions == [.v2_5_1, .v2_6])
     }
 
     @Test("The generated switch: 172 structures on v2.5.1 (P8b-9), 187 on v2.6 (P8b-10), none on any other version",
