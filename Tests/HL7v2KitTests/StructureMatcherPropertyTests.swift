@@ -106,7 +106,7 @@ struct StructureMatcherPropertyTests {
     }
 
     /// The length of the shortest derivation: every required element once.
-    private static func shortest(_ elements: [StructureElement]) -> Int {
+    static func shortest(_ elements: [StructureElement]) -> Int {
         elements.reduce(0) { total, element in
             guard element.min > 0 else { return total }
             switch element {
