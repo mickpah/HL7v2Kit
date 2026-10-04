@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — P8b-13: HL7 v2.4 message structures complete
 
-- With `messageStructureSeverity` set, every v2.4 message structure is now checked: 146
+- With `messageStructureSeverity` set, every v2.4 message structure is now checked: 148
   structures extracted from the chapter prints (18 matched exactly), and v2.4 is marked
   complete. An MSH-9.3 that names no v2.4 structure (`ADT^A04^ADT_A04`) is now
   `messageStructureMismatch` on v2.4 instead of info; `ADT^A01^ADT_A01` without PV1 is a
@@ -35,11 +35,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - v2.4 prints no group names: 298 are named from the HL7 v2.xml v2.4 bundle, 35 by cited
   overrides (the v2.5.1 bundle's names for the seven structures the v2.4 bundle lacks, ORL_O22,
   RAS_O17, DFT_P03 and RCI_I05, whose bundle group is named `c`), and one is synthesised.
-- 26 v2.4 structures are registered as not modelled, each with its reason (register section
+- 24 v2.4 structures are registered as not modelled, each with its reason (register section
   E): eight CH12 `[OBR, etc.` structures, five CH05 query templates, three CH08 master file
-  templates, ERP_R09, SUR_P09, QRY_P04 and DSR_P04 ('see Chapter 5') and six Table 0354 rows
-  with no print. Every Table 0354 v2.4 row is modelled or registered.
+  templates, ERP_R09, SUR_P09, QRY_P04 and DSR_P04 ('see Chapter 5') and four Table 0354 rows
+  with no print (ORU_W01, QRF_W02, RRA_O02, RRE_O02). Every Table 0354 v2.4 row is modelled or registered.
 - Shared triggers MFN^M02 to M06, RPI^I04 and RSP^K24 are ambiguous without MSH-9.3.
+
+### Fixed — P8b-13: QRY_Q02 and QCK_Q02 on v2.4, v2.5.1 and v2.6
+
+- QRY_Q02 and QCK_Q02 were registered as not modelled ("no chapter prints its syntax") on
+  v2.4, v2.5.1 and v2.6, but CH05 5.10.3.1 prints both (v2.4 p 5-112, v2.5.1 p 5-116, v2.6
+  p 96) as "QRY^Q02 (A to B)" and "QCK^Q02 (B to A)". The structure extractor now reads a
+  `CODE^EVT` caption followed by a one-space direction tag. Both structures are modelled on the
+  three versions: a QRY^Q02 without QRD is now a missing segment, and a QCK^Q02 without MSA
+  likewise. Counts: v2.4 148 modelled, 24 registered; v2.5.1 173 and 30; v2.6 190 and 20.
 
 ### Fixed — P8b-13: ERP_R09 on v2.5.1
 

@@ -1,0 +1,13 @@
+{
+  "structure": "QRY_Q02",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-116.",
+  "triggers": ["QRY^Q02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

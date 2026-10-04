@@ -93,10 +93,12 @@ extension MessageStructureTable {
         "PMU_B03": v2_4_PMU_B03,
         "PMU_B04": v2_4_PMU_B04,
         "QBP_Q21": v2_4_QBP_Q21,
+        "QCK_Q02": v2_4_QCK_Q02,
         "QCN_J01": v2_4_QCN_J01,
         "QRY_A19": v2_4_QRY_A19,
         "QRY_PC4": v2_4_QRY_PC4,
         "QRY_Q01": v2_4_QRY_Q01,
+        "QRY_Q02": v2_4_QRY_Q02,
         "QRY_R02": v2_4_QRY_R02,
         "QRY_T12": v2_4_QRY_T12,
         "QSB_Q16": v2_4_QSB_Q16,
@@ -2349,6 +2351,20 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_4_QCK_Q02: MessageStructure = MessageStructure(
+        id: "QCK_Q02",
+        version: "2.4",
+        triggers: ["QCK^Q02"],
+        citation: "HL7 v2.4 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-112.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+        ]
+    )
+
     private static let v2_4_QCN_J01: MessageStructure = MessageStructure(
         id: "QCN_J01",
         version: "2.4",
@@ -2392,6 +2408,20 @@ extension MessageStructureTable {
         version: "2.4",
         triggers: ["QRY^Q01", "QRY^Q26", "QRY^Q27", "QRY^Q28", "QRY^Q29", "QRY^Q30"],
         citation: "HL7 v2.4 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-111; the same structure is printed for QRY^Q26 (4.13.13), QRY^Q27 (4.13.14), QRY^Q28 (4.13.15), QRY^Q29 (4.13.16) and QRY^Q30 (4.13.17).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_4_QRY_Q02: MessageStructure = MessageStructure(
+        id: "QRY_Q02",
+        version: "2.4",
+        triggers: ["QRY^Q02"],
+        citation: "HL7 v2.4 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-112.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),

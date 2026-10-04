@@ -156,6 +156,32 @@ struct StructureV24ProbeTests {
         #expect(issues.first?.severity == .info && issues.first?.message.contains("ellipsis") == true, "\(issues.map(\.message))")
     }
 
+    // CH05 5.10.3.1 (v2.4 p 5-112; v2.5.1 p 5-115; v2.6 CH05 5.10.3.1) prints the deferred
+    // query pair with a one-space direction tag: "QRY^Q02 (A to B)  Query Message" (MSH, QRD,
+    // [QRF], [DSC]) and "QCK^Q02 (B to A)  Query General Acknowledgment" (MSH, MSA, [ERR],
+    // [QAK]). Table 0354 maps Q02 to both; MSH-9.1 tells them apart, so each resolves with or
+    // without MSH-9.3. P8b-13 fix round 1: the reader had registered both as unprinted.
+    @Test("QRY^Q02 and QCK^Q02 resolve and are checked (CH05 5.10.3.1)", arguments: ["2.4", "2.5.1", "2.6"])
+    func deferredQuery(_ version: String) throws {
+        let v = try #require(Version(rawValue: version))
+        #expect(MessageStructureTable.structure("QRY_Q02", version: v) != nil)
+        #expect(MessageStructureTable.structure("QCK_Q02", version: v) != nil)
+        for msh9 in ["QRY^Q02^QRY_Q02", "QRY^Q02"] {
+            // DSC-1 empty: a populated continuation pointer marks a fragment, which is not checked.
+            let ok = try structureIssues(msh9, ["QRD|1", "QRF|1", "DSC|"], version: version)
+            #expect(ok.isEmpty, "\(version) \(msh9): \(ok.map(\.message))")
+            let bad = try structureIssues(msh9, ["QRF|1"], version: version)
+            #expect(bad.map { Self.describe($0.code) } == ["missing QRD"], "\(version) \(msh9): \(bad.map(\.message))")
+            #expect(bad.first?.code == .messageStructureSegmentMissing(structure: "QRY_Q02", segmentID: "QRD", group: nil))
+        }
+        for msh9 in ["QCK^Q02^QCK_Q02", "QCK^Q02"] {
+            let ok = try structureIssues(msh9, ["MSA|AA|1", "QAK|1|OK"], version: version)
+            #expect(ok.isEmpty, "\(version) \(msh9): \(ok.map(\.message))")
+            let bad = try structureIssues(msh9, ["QAK|1|OK"], version: version)
+            #expect(bad.map { Self.describe($0.code) } == ["missing MSA"], "\(version) \(msh9): \(bad.map(\.message))")
+        }
+    }
+
     @Test("At least twelve probes on v2.4 structures")
     func coverage() {
         #expect(Self.probes.count >= 12)

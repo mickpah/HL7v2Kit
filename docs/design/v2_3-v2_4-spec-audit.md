@@ -125,12 +125,19 @@ This S2 commit ships the structural-delta findings + the deferred-items framing.
 
 ## v2.4 message structures (P8b-13)
 
-The extractor reads 386 v2.4 captions: 36 excluded as examples, query profiles or conformance
-statements (ruling G7), 166 structure IDs, 146 read and 20 unreadable (G6 placeholders and
+The extractor reads 389 v2.4 captions: 36 excluded as examples, query profiles or conformance
+statements (ruling G7), 168 structure IDs, 148 read and 20 unreadable (G6 placeholders and
 templates, ERP_R09's ellipsis rows, SUR_P09's ED row, and the 'see Chapter 5' captions QRY_P04
-and DSR_P04). 146 are committed under `Resources/structures/v2.4/` and v2.4 is
-`complete: true`; with the 26 registered in `completeness.json` they account for all 171 Table
-0354 v2.4 rows. v2.4 prints no group names: 298 are named from the HL7 v2.xml v2.4 bundle, 35
+and DSR_P04). 148 are committed under `Resources/structures/v2.4/` and v2.4 is
+`complete: true`; with the 24 registered in `completeness.json` they account for all 171 Table
+0354 v2.4 rows and the ACK caption, which has no row. As first committed the counts were 386,
+166, 146 and 26: QRY_Q02 and QCK_Q02 were registered as unprinted, but CH05 5.10.3.1 (p 5-112)
+prints both, as "QRY^Q02 (A to B)" and "QCK^Q02 (B to A)", a one-space caption form the reader
+missed (P8b-13 fix round; "ACK^Q03 (A to B)" is the third such caption and changes nothing).
+The P8b-3a/3b report counts (130 parsed, 10 lint-failing, 162 groups named, 6 synthesised)
+predate P8b-13's reader fixes, errata and group-name overrides; the committed result is 148
+parsed, 18 lint-failing (exact-matched), 298 named from the bundle, 35 by override and 1
+synthesised. v2.4 prints no group names: 298 are named from the HL7 v2.xml v2.4 bundle, 35
 by cited overrides and 1 is synthesised (register §E v2.4 addendum).
 
 Requirement 4 evidence: with the structure check off the validation digest is byte-identical;

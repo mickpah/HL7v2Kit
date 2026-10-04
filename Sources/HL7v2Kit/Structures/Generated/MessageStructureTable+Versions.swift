@@ -6,9 +6,9 @@ extension MessageStructureTable {
     // Completeness per grammar version (ADR-019 lookup rule 1):
     //   2.3 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-15)
     //   2.3.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-14)
-    //   2.4 (complete): P8b-13: 146 structures extracted from the v2.4 chapter prints (v2.4 prints no group names: 298 named from HL7-xml v2.4, 35 by cited overrides.json groupNames, 1 synthesised), every Table 0354 v2.4 row modelled or registered; the 20 unreadable prints (G6 placeholders ERP_R09, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, MFN_M03 and templates MFN_M01, MFR_M01, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row; DSR_P04 and QRY_P04, printed as 'see Chapter 5' with no syntax) and the 6 Table 0354 rows with no printed syntax (ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RRA_O02, RRE_O02) are registered as not modelled below (register section E, v2.4 not-modelled table)
-    //   2.5.1 (complete): P8b-9: 171 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints); the 18 unreadable prints (G6 placeholders ERP_R09 (P8b-13), MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
-    //   2.6 (complete): P8b-10: 188 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints; RSP_K21 as the union of its two incomparable prints, overrides.json unionPrints, P8b-11); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 5 Table 0354 rows with no printed syntax (ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11) are registered as not modelled below (register section E, v2.6 not-modelled table)
+    //   2.4 (complete): P8b-13: 148 structures extracted from the v2.4 chapter prints (QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 5-112, P8b-13 fix round 1) (v2.4 prints no group names: 298 named from HL7-xml v2.4, 35 by cited overrides.json groupNames, 1 synthesised), every Table 0354 v2.4 row modelled or registered; the 20 unreadable prints (G6 placeholders ERP_R09, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, MFN_M03 and templates MFN_M01, MFR_M01, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row; DSR_P04 and QRY_P04, printed as 'see Chapter 5' with no syntax) and the 4 Table 0354 rows with no printed syntax (ORU_W01, QRF_W02, RRA_O02, RRE_O02) are registered as not modelled below (register section E, v2.4 not-modelled table)
+    //   2.5.1 (complete): P8b-9: 173 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints; QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 5-116, P8b-13 fix round 1); the 18 unreadable prints (G6 placeholders ERP_R09 (P8b-13), MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 12 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
+    //   2.6 (complete): P8b-10: 190 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints; RSP_K21 as the union of its two incomparable prints, overrides.json unionPrints, P8b-11; QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 96, P8b-13 fix round 1); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 3 Table 0354 rows with no printed syntax (ORU_W01, QRF_W02, RSP_Q11) are registered as not modelled below (register section E, v2.6 not-modelled table)
     //   2.7.1 (complete): P8b-16: 164 structures extracted from the v2.7.1 chapter prints (ACK from its looser print, overrides.json primaryPrints), every Table 0354 v2.7.1 row modelled or registered; the 13 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF and templates QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS) and QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and QRF, withdrawn as of v2.7), segments v2.7.1 does not define, RDR_RDR (no normative print) and the 39 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.7.1 not-modelled table)
     //   2.8.2 (complete): P8b-11: 185 structures extracted from the v2.8.2 chapter prints (ACK from its looser print, overrides.json primaryPrints), every Table 0354 v2.8.2 row modelled or registered; the 8 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1 and templates QBP_Q11, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS, which v2.8.2 does not define), QBP_Q13 and RDR_RDR (no normative print) and the 47 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.8.2 not-modelled table)
 
@@ -91,18 +91,12 @@ extension MessageStructureTable {
                 "QBP_Q15": NotModelledStructure(
                     triggers: ["QBP^Q15"],
                     reason: "CH05 section 5.4.3 (p 5-42) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.4 not-modelled table)"),
-                "QCK_Q02": NotModelledStructure(
-                    triggers: [],
-                    reason: "Table 0354 v2.4 (Appendix A; CH02 section 2.17.3, pp 2-136 to 2-141) lists QCK_Q02 (event Q02), and no v2.4 chapter prints its syntax (Table 0354 only; register section E, v2.4 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.4 (Appendix A; CH02 section 2.17.3, pp 2-136 to 2-141) lists QRF_W02 (event W02), and no v2.4 chapter prints its syntax (Table 0354 only; register section E, v2.4 not-modelled table)"),
                 "QRY_P04": NotModelledStructure(
                     triggers: ["QRY^P04"],
                     reason: "CH06 section 6.4.4 (p 6-13) prints the caption QRY^P04^QRY_P04 with no syntax rows, only 'see Chapter 5' (the original-mode display query of CH05), so no v2.4 chapter prints its syntax (no print; register section E, v2.4 not-modelled table)"),
-                "QRY_Q02": NotModelledStructure(
-                    triggers: [],
-                    reason: "Table 0354 v2.4 (Appendix A; CH02 section 2.17.3, pp 2-136 to 2-141) lists QRY_Q02 (event Q02), and no v2.4 chapter prints its syntax (Table 0354 only; register section E, v2.4 not-modelled table)"),
                 "QVR_Q17": NotModelledStructure(
                     triggers: ["QVR^Q17"],
                     reason: "CH05 section 5.4.5 (p 5-44) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.4 not-modelled table)"),
@@ -181,18 +175,12 @@ extension MessageStructureTable {
                 "QBP_Q15": NotModelledStructure(
                     triggers: ["QBP^Q15"],
                     reason: "CH05 section 5.4.3 (p 5-39) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
-                "QCK_Q02": NotModelledStructure(
-                    triggers: [],
-                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QCK_Q02 (event Q02); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QRF_W02 (event W02); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
                 "QRY_P04": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QRY_P04 (event P04); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
-                "QRY_Q02": NotModelledStructure(
-                    triggers: [],
-                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QRY_Q02 (event Q02); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
                 "QRY_T12": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QRY_T12 (event T12); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
@@ -265,15 +253,9 @@ extension MessageStructureTable {
                 "QBP_Q15": NotModelledStructure(
                     triggers: ["QBP^Q15"],
                     reason: "CH05 section 5.4.3 (p 32) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.6 not-modelled table)"),
-                "QCK_Q02": NotModelledStructure(
-                    triggers: [],
-                    reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 86) lists QCK_Q02 (event Q02); no v2.6 chapter prints its syntax (register section E, v2.6 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 87) lists QRF_W02 (event W02); no v2.6 chapter prints its syntax (register section E, v2.6 not-modelled table)"),
-                "QRY_Q02": NotModelledStructure(
-                    triggers: [],
-                    reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 86) lists QRY_Q02 (event Q02); no v2.6 chapter prints its syntax (register section E, v2.6 not-modelled table)"),
                 "QVR_Q17": NotModelledStructure(
                     triggers: ["QVR^Q17"],
                     reason: "CH05 section 5.4.5 (p 34) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.6 not-modelled table)"),

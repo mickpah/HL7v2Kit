@@ -783,6 +783,31 @@ def check_two_part_caption_through_0354():
         assert miss[0] == "XYZ^X09" and "has no row for it" in miss[2], miss
 
 
+def check_two_part_caption_with_direction():
+    # v2.3.1, v2.4, v2.5.1 and v2.6 CH05 5.10.3.1 print "QRY^Q02 (A to B)  Query Message" and
+    # "QCK^Q02 (B to A)  Query General Acknowledgment": one space, then the direction, then the
+    # title. The direction is not the title; both structures share the event, told apart by MSH-9.1.
+    table = TABLE + [("ABC_X02", ["X02"], "X02")]
+    for version in ("2.3.1", "2.4", "2.5.1", "2.6"):
+        line = "    XYZ^X02 (A to B)          Synthetic Message                     Chapter"
+        m = ext.match_caption(line, ext.ERAS[f"v{version}"][1])
+        assert m and m[1:4] == ("XYZ", "X02", "") and m[5].startswith("Synthetic Message"), (version, m)
+        text = _page(1, [line] + _table("XYZ^X02", [("MSH", "Header"), ("PID", "Patient")])[1:] + [""]
+                     + ["    ABC^X02 (B to A)          Synthetic Acknowledgment              Chapter"]
+                     + _table("ABC^X02", [("MSH", "Header"), ("MSA", "Ack")])[1:] + [""]
+                     + ["    ACK^X02 (A to B)          General Acknowledgment                Chapter"]
+                     + _table("ACK^X02", [("MSH", "Header"), ("MSA", "Ack")])[1:],
+                     heading="9.1.3           XYZ/ABC - synthetic (Event X02)")
+        structures, report, count = _run(version, [("syn", text)], tables=table)
+        assert count == 3, (version, count, report)
+        assert structures["XYZ_X01"]["triggers"] == ["XYZ^X02", "XYZ^X01"], structures
+        assert structures["ABC_X02"]["triggers"] == ["ABC^X02"], structures
+        assert [e["segment"] for e in structures["ABC_X02"]["elements"]] == ["MSH", "MSA"], structures
+        assert structures["ACK"]["triggers"] == ["ACK^X02"], structures
+        # XYZ_X03 is the shared TABLE's row with no caption here; the two read rows are not "missing".
+        assert [r[0] for r in report if r[1] in ("needs-structure-id", "0354-missing-caption")] == ["XYZ_X03"], report
+
+
 def check_section_title_caption():
     # v2.3: the message code alone; the events from the section title, wrapped over two lines.
     text = _page(1, ["    XYZ                       Synthetic Message                     Chapter"]
@@ -1316,7 +1341,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_bundle_mismatch_not_resolved_by_position, check_derivation_through_v24, check_synthesised_fallback,
           check_bundle_differs_report_only, check_override_shadowed_by_bundle, check_name_source_validation,
           check_bundle_maps, check_caret_colon_caption, check_event_ranges,
-          check_two_part_caption_through_0354, check_section_title_caption, check_primary_print_and_duplicates,
+          check_two_part_caption_through_0354, check_two_part_caption_with_direction, check_section_title_caption, check_primary_print_and_duplicates,
           check_excluded_print_never_primary, check_footnotes_inside_table, check_group_mark_errata,
           check_bracket_split_and_group_of_a_group, check_shared_triggers, check_0354_reconciliation,
           check_caption_errata, check_reader_layouts,

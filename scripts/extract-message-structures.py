@@ -78,7 +78,10 @@ CAPTION = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")\^(" + _SID + r"
                      r"\s+(\S.*)$")   # a caption carries a title; a bare CODE^EVT^STRUCT is a table cell
 # CODE^EVT with a title two or more spaces away (v2.3.1; v2.4's two-part captions): the structure
 # ID comes from Table 0354. A line holding "|" or "<cr>" is an example message, never a caption.
-TWO_PART = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")(\s{2,})(\S.*)$")
+# CH05 5.10.3.1 (v2.3.1, v2.4, v2.5.1, v2.6) puts a direction one space after CODE^EVT, then the
+# title: "QRY^Q02 (A to B)  Query Message", "QCK^Q02 (B to A)  Query General Acknowledgment".
+# The direction is read past, never into the title (P8b-13 fix round 1).
+TWO_PART = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")(?: \([A-Z] to [A-Z]\))?(\s{2,})(\S.*)$")
 # v2.7.1 and v2.8.2: "CODE^EVT^STRUCT: title" on its own line, then a "Segments Description" row;
 # v2.8.2 CH07 prints "ACK^R01^ACK : title" with a space before the colon (P8b-11: read as a caption,
 # so the ORU_R01 and ORU_R30 rows end there instead of running on into the acknowledgment).

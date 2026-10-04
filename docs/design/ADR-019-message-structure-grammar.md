@@ -1148,10 +1148,12 @@ compiling a structure per message.
 
 ## Amendment 2026-10-04 — v2.4 complete (P8b-13)
 
-- **v2.4 complete.** 146 structures modelled (18 exact-matched), 26 registered (register
+- **v2.4 complete.** 148 structures modelled (18 exact-matched), 24 registered (register
   section E v2.4 addendum: CH12 placeholders, CH05 query templates, CH08 master file
-  templates, ERP_R09, SUR_P09, the 'see Chapter 5' captions QRY_P04 and DSR_P04, and six
-  Table 0354 rows with no print); every Table 0354 v2.4 row is one or the other.
+  templates, ERP_R09, SUR_P09, the 'see Chapter 5' captions QRY_P04 and DSR_P04, and four
+  Table 0354 rows with no print); every Table 0354 v2.4 row is one or the other. (As first
+  committed: 146 and 26, with QRY_Q02 and QCK_Q02 wrongly registered as unprinted; see the fix
+  round below.)
 - **Decision 3 realised for v2.4 through the bundle.** v2.4 prints no group names. Of 334
   unprinted names, 298 come from the HL7 v2.xml v2.4 bundle (nameSource `v2xml`), 35 from cited
   `overrides.json` `groupNames` entries (nameSource `override`) and 1 is synthesised. Override
@@ -1167,6 +1169,15 @@ compiling a structure per message.
   is a G6 placeholder (this registered ERP_R09 on v2.5.1 as well, 171 modelled there); a
   syntax-cell erratum may carry an `occurrence`. Apart from ERP_R09 on v2.5.1, none changes
   another version's report.
+- **Fix round: the one-space direction caption.** CH05 5.10.3.1 prints "QRY^Q02 (A to B)  Query
+  Message" and "QCK^Q02 (B to A)  Query General Acknowledgment" (v2.4 p 5-112, v2.5.1 p 5-116,
+  v2.6 p 96; v2.3.1 the same). The two-part caption form now reads past an optional one-space
+  `(X to Y)` direction tag. QRY_Q02 (MSH, QRD, [QRF], [DSC]) and QCK_Q02 (MSH, MSA, [ERR],
+  [QAK]) are modelled on v2.4 (148), v2.5.1 (173) and v2.6 (190) and leave `notModelled` there;
+  Table 0354 maps Q02 to both and MSH-9.1 tells them apart. "ACK^Q03 (A to B)" (v2.4 p 5-113)
+  is now read as an ACK caption; its print equals the primary ACK print, so no structure
+  changes. No other generated structure or report row changes on any version; v2.7.1 and
+  v2.8.2 do not print either structure.
 
 ## Amendment 2026-10-04 — HL7au:00060.1 through the ADRM-2021 structures (P8b-4)
 

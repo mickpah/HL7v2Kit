@@ -271,7 +271,8 @@ not define is passed over (it already raises `segmentNotInVersionGrammar`).
 v2.5.1 is `complete: true` in `Resources/structures/completeness.json`: every structure the
 chapters print is either modelled (172, extracted by `scripts/extract-message-structures.py`,
 each cited to chapter, section and pages; 171 since P8b-13 registered ERP_R09, see the v2.4
-addendum) or registered here as not modelled (31, 32 since P8b-13, listed in
+addendum; 173 since the P8b-13 fix round read QRY_Q02 and QCK_Q02 from CH05 5.10.3.1, p 5-116)
+or registered here as not modelled (31, 32 since P8b-13, 30 since its fix round, listed in
 that file's `notModelled` with the triggers its captions print). A registered structure is
 reported as `messageStructureNotModelled` (info) with its reason, never as a mismatch, unless
 MSH-9.3 names it for a trigger its captions do not print; its triggers count towards an
@@ -282,7 +283,7 @@ ambiguous trigger (ADR-019 lookup rule 2).
 | PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF | CH12 prints the order detail as `< OBR \| etc. >`; the CH12 12.3 note reads it as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples ("Examples are OBR and RXO"), so the alternatives cannot be enumerated (ruling G6). | **Blocking** for v2.5.1 unless a ruling fixes the set (later versions are read by their own tasks). |
 | QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11 (CH05 5.4.1 to 5.4.5); MFN_M01, MFR_M01, MFN_M03 (CH08 8.4.1, 8.4.4, 8.8.2) | Templates: a `[...]` or `...` row stands for query-specific segments a conformance statement defines, or master-file-specific segments; no fixed syntax exists (ruling G6). | **Permanent** for the template IDs (a conformance statement or the specific master file message defines the content). |
 | SUR_P09 (CH07 7.11.2) | The print has a row `ED Encapsulated Data`; v2.5.1 defines no ED segment (ED is a data type), so the row names nothing a message can carry. | **Blocking**; a print defect. |
-| DSR_P04, MFD_MFA, ORU_R31, ORU_R32, ORU_W01, QCK_Q02, QRF_W02, QRY_P04, QRY_Q02, QRY_T12, RDE_O01, RRA_O02, RSP_K22, TBR_R09 | Table 0354 v2.5.1 lists them; no v2.5.1 chapter prints their syntax. | **Permanent** for v2.5.1. |
+| DSR_P04, MFD_MFA, ORU_R31, ORU_R32, ORU_W01, QRF_W02, QRY_P04, QRY_T12, RDE_O01, RRA_O02, RSP_K22, TBR_R09 | Table 0354 v2.5.1 lists them; no v2.5.1 chapter prints their syntax. (QRY_Q02 and QCK_Q02 were listed here until the P8b-13 fix round: CH05 5.10.3.1, p 5-116, prints both, as "QRY^Q02 (A to B)" and "QCK^Q02 (B to A)", a caption form the reader had missed; both are now modelled.) | **Permanent** for v2.5.1. |
 
 Two normative prints of one structure ID that disagree (P8b-9 ruling): the committed structure
 is the LOOSER print, the one that accepts every message the other accepts, cited to both
@@ -310,8 +311,9 @@ reached, and no group spans, so span-derived group predicates (P8b-17) cannot us
 
 ### Addendum to §E — v2.6 complete (P8b-10, 2026-10-04)
 
-v2.6 is `complete: true` in `Resources/structures/completeness.json`: 188 structures modelled
-(each cited to chapter, section and pages; RSP_K21 since P8b-11) and 22 registered as not modelled in that file's
+v2.6 is `complete: true` in `Resources/structures/completeness.json`: 190 structures modelled
+(each cited to chapter, section and pages; RSP_K21 since P8b-11; QRY_Q02 and QCK_Q02 since the
+P8b-13 fix round, CH05 5.10.3.1, p 96) and 20 registered as not modelled in that file's
 `notModelled`, with the same lookup behaviour as v2.5.1 above.
 
 | Not modelled (v2.6) | Why | Status |
@@ -319,7 +321,7 @@ v2.6 is `complete: true` in `Resources/structures/completeness.json`: 188 struct
 | PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF (CH12 12.2.1 to 12.2.12) | The order detail is printed `< OBR \| etc. >`; the CH12 12.2 note (p 12-6) reads it as every combination of order detail segments per CH04 4.2.2.4, which names only examples (ruling G6). | **Blocking** for v2.6 unless a ruling fixes the set. |
 | QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11 (CH05 5.4.1 to 5.4.5); MFN_M01, MFR_M01, MFN_M03 (CH08 8.4.1, 8.4.4, 8.8.2) | Templates: a `[...]` or `...` row stands for query-specific or master-file-specific segments (ruling G6). | **Permanent** for the template IDs. |
 | SUR_P09 (CH07 7.11.2) | A row `ED Encapsulated Data`; v2.6 defines no ED segment. | **Blocking**; a print defect. |
-| ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11 | Table 0354 v2.6 (CH02 2.16.3, pp 86 to 87) lists them; no v2.6 chapter prints their syntax normatively (RSP_Q11's only print is the site-specific CH08 8.4.5.1 example `RSP^Znn^RSP_Q11`, excluded under G7). | **Permanent** for v2.6. |
+| ORU_W01, QRF_W02, RSP_Q11 | Table 0354 v2.6 (CH02 2.16.3, pp 86 to 87) lists them; no v2.6 chapter prints their syntax normatively (RSP_Q11's only print is the site-specific CH08 8.4.5.1 example `RSP^Znn^RSP_Q11`, excluded under G7). QRY_Q02 and QCK_Q02 were listed here until the P8b-13 fix round: CH05 5.10.3.1 (p 96) prints both; they are now modelled. | **Permanent** for v2.6. |
 
 Two normative prints of one structure ID that disagree (P8b-9 ruling): the looser print is
 committed, cited to both (overrides.json `primaryPrints`).
@@ -466,8 +468,9 @@ matcher, with at most one finding and no group spans.
 
 ### Addendum to §E — v2.4 complete (P8b-13, 2026-10-04)
 
-v2.4 is `complete: true` in `Resources/structures/completeness.json`: 146 structures modelled
-(each cited to chapter, section and pages) and 26 registered as not modelled in that file's
+v2.4 is `complete: true` in `Resources/structures/completeness.json`: 148 structures modelled
+(each cited to chapter, section and pages; QRY_Q02 and QCK_Q02 since the P8b-13 fix round,
+below) and 24 registered as not modelled in that file's
 `notModelled`; every Table 0354 v2.4 row is one or the other. v2.4 is the first version whose
 print names no group: 298 group names come from the HL7 v2.xml v2.4 bundle, 35 from cited
 `overrides.json` `groupNames` entries and 1 is synthesised (below).
@@ -480,7 +483,23 @@ print names no group: 298 group names come from the HL7 v2.xml v2.4 bundle, 35 f
 | ERP_R09 (CH05 5.10.4.2, p 5-116; also v2.5.1 p 5-120) | Ellipsis rows after ERQ stand for "the segments indicated by the ellipsis", the remainder of another message (ruling G6). A corpus misfire in P8b-13: the extractor had dropped the rows and committed `MSH MSA [ERR] QAK ERQ [DSC]` on v2.4 and v2.5.1; an ellipsis row is now a placeholder and ERP_R09 is registered on both versions. | **Permanent** for v2.4 and v2.5.1. |
 | SUR_P09 (CH07 7.11.2) | A row `ED Encapsulated Data`: v2.4 defines no ED segment (ED is a data type). | **Permanent** for v2.4. |
 | QRY_P04, DSR_P04 (CH06 6.4.4, p 6-13) | The captions print no syntax, only "see Chapter 5" (the original-mode display query). | **Permanent** for v2.4. |
-| ORU_W01, QRF_W02, QCK_Q02, QRY_Q02, RRA_O02, RRE_O02 | Table 0354 v2.4 rows (Appendix A; CH02 2.17.3) with no printed syntax. | **Permanent** for v2.4. |
+| ORU_W01, QRF_W02, RRA_O02, RRE_O02 | Table 0354 v2.4 rows (Appendix A; CH02 2.17.3) with no printed syntax. | **Permanent** for v2.4. |
+
+P8b-13 fix round (2026-10-04). The addendum first registered QRY_Q02 and QCK_Q02 here as
+"no v2.4 chapter prints its syntax". That was false: CH05 5.10.3.1 (p 5-112) prints
+"QRY^Q02 (A to B)  Query Message" (MSH, QRD, [QRF], [DSC]) and "QCK^Q02 (B to A)  Query
+General Acknowledgment" (MSH, MSA, [ERR], [QAK]). The reader required two spaces after
+`CODE^EVT` and so never read a caption with a one-space direction tag. Both are now modelled
+(Table 0354 maps Q02 to both IDs; MSH-9.1 tells them apart; v2.4 defines QRD and QRF). The
+same captions print in v2.5.1 (p 5-116) and v2.6 (p 96), which had registered both for the
+same reason; both are modelled there too. The third such caption, "ACK^Q03 (A to B)" (p 5-113),
+prints MSH, MSA, [ERR], identical to the primary ACK print (CH02 2.14.1), and ACK already
+carries `ACK^*`, so reading it changes no structure. The P8b-3a/3b report counts (162 groups
+named, 6 synthesised, 130 parsed, 10 lint-failing) predate P8b-13's reader fixes and errata:
+those raised the parsed prints from 130 to 146 (148 with this round), more parsed prints
+brought more groups to name (298 from the v2.4 bundle), the 6 synthesised groups of ORL_O22
+and RAS_O17 took cited `groupNames` overrides (35 in all), leaving DFT_P03's one synthesised
+group, and 18 committed structures fail the lint and are exact-matched (ADR-019, P8b-12).
 
 Looser prints. Every duplicate print of a v2.4 structure (ACK, ADT_A09, MFK_M01, RQC_I05) is
 stricter than its primary print, so no `primaryPrints` or `unionPrints` entry was needed. One
