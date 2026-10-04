@@ -174,14 +174,7 @@ extension Validator {
         if let why = fragmentReason(message, structure: structure) {
             return [notModelled(structure.id, message: message, reason: "the message is a fragment (\(why))")]
         }
-
-        // Segments the version grammar lacks already raise
-        // segmentNotInVersionGrammar; Z and ADD are skipped by the matcher.
-        let grammar = Self.grammarTable(for: message.version)
-        // A skipped segment is matched as "", which no grammar defines.
-        let matched = ids.indices.map { skipping.contains($0) ? "" : ids[$0] }
-        let outside = Set(matched.filter { grammar[$0] == nil })
-        let match = StructureMatcherCache.shared.matcher(for: structure).match(matched, transparent: outside)
+        let match = structureMatch(structure, message: message, skipping: skipping)
         guard !match.findings.isEmpty, !ids.isEmpty else { return [] }
         let location = Self.segmentLocations(ids)
 
@@ -208,6 +201,20 @@ extension Validator {
                 )
             }
         }
+    }
+
+    /// The matcher's result for the message body, the segments at the indices
+    /// in `skipping` passed over. Segments the version grammar lacks already
+    /// raise segmentNotInVersionGrammar and are transparent; Z and ADD are
+    /// skipped by the matcher. Shared with the group spans (P8b-17).
+    func structureMatch(_ structure: MessageStructure, message: Message,
+                        skipping: Set<Int> = []) -> StructureMatch {
+        let ids = message.segments.map(\.segmentID)
+        let grammar = Self.grammarTable(for: message.version)
+        // A skipped segment is matched as "", which no grammar defines.
+        let matched = ids.indices.map { skipping.contains($0) ? "" : ids[$0] }
+        let outside = Set(matched.filter { grammar[$0] == nil })
+        return StructureMatcherCache.shared.matcher(for: structure).match(matched, transparent: outside)
     }
 
     /// Why the message is a fragment of a logical message, or nil (ADR-019

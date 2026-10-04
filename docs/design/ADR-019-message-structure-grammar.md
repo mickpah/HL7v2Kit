@@ -569,7 +569,8 @@ in `Resources/schemas/<ver>/ORC.json` and `OBR.json`. It is spec-defensible for 
 head, so the leg is vacuous) but under-fires on OUL_R21, which prints `[ORC] OBR`. **The
 P4-7 gates are removed only by the rollout task that supplies the spans** for the version
 in question (R9), never earlier and never as part of the pilot, so the misfire stays fixed
-at every step.
+at every step. Done in P8b-17 (amendment below), with a fallback for messages that get no
+spans.
 
 **Default-output change.** Switching a version to span-derived groups changes predicate
 outcomes with `messageStructureSeverity` off. This is accepted under G2 but is a change of
@@ -990,7 +991,8 @@ accepts or rejects the wrong messages. Known ceiling 1 is replaced.
 - **New known cost (ceiling 1 as amended).** No group spans are reported for an exact-matched
   structure: an accepted sequence can have several parses with different group boundaries.
   Span-derived group predicates (P8b-17) skip these structures and keep the back-walk
-  heuristics on them.
+  heuristics on them. (Superseded by the P8b-17 amendment: an exact match whose accepting
+  parses agree on the groups has spans.)
 - **Proof.** The reference recogniser of the property test is the oracle: every synthetic
   shape exhaustively (every MSH + w up to length 12 over two letters, 9 over three, 8 over
   four), the pilots, and, env-gated (`ExactStructureMatcherCorpusTests`, extractor `--dump`
@@ -1348,3 +1350,60 @@ compiling a structure per message.
   RQD, RQ1, RXO, ODS, ODT) is kept because the print does not settle whether the p 280 narrowing
   applies to the response, so RQD or RQ1 there is not flagged. Groups RESPONSE and ORDER take the
   base names.
+
+---
+
+## Amendment 2026-10-04 — group spans scope the group-dependent predicates (P8b-17)
+
+R9 is switched on for every complete version (all seven). It changes default output on
+purpose (decision 5); the digest probe shows no predicate outcome change on the spec examples
+and fixtures, only the quoted condition text where a gate leg was removed.
+
+- **The seam.** `Message` carries an internal `groupScoping` (not part of equality), which
+  `Validator.validate(_:)` sets on its own copy before any check, whatever
+  `messageStructureSeverity` is: `.spans` (a `GroupSpanIndex`), `.walk`, or `.gated`.
+  `associatedSegment(_:fromIndex:)` (and so `segmentExists`, every cross-segment field ref and
+  the position atom), `resolveGroup(scope:)` and `checkOrcObrPairEquality` ask it first. The peer
+  rule is the one above: the innermost matched group instance around the anchor whose definition
+  contains the peer's segment ID at any depth, else the whole message. `.orcObxGroup` and
+  `.obrObxGroup` use it with ORC and OBR. No public API changes.
+- **When spans are used.** The version is complete, the structure resolves (lookup rules 1 to
+  4), the message is not a fragment, the base match has no finding, and the match does not
+  withhold its spans (below). "No finding" is the base match before any profile structure
+  governs it: an ADRM-conformant AU message that deviates from the base v2.4 structure (for
+  example the order status response with OBX, ADRM-2021 p 281) has no spans, whatever P8b-4a
+  drops from the report. `Validator+ProfileStructure.swift` is unchanged.
+- **Group identity is by position.** Each span carries the group's position in the structure
+  (element indices from the top level, an alternative counting as a child) and the segment IDs of
+  its own definition. v2.4 and v2.3.1 REF_I12 print two sibling PATIENT_VISIT groups; a name
+  never stands for a group.
+- **R1: spans from the exact matcher (amends ceiling 1 and the P8b-12 amendment).** An accepted
+  exact match yields spans when every accepting parse assigns every segment to the same group
+  occurrences; when accepting parses disagree it yields none (`spansWithheld`). Method: each
+  group (and named choice) occurrence gets an unlabelled entry state in the automaton. A parse
+  places a consumed segment in the groups enclosing its state and begins a new occurrence of each
+  of those whose entry lies on the path from the previous consumed segment. Counting only states
+  on some accepting parse (forward-reachable, and able to consume the rest and complete), the
+  parses agree exactly when each step admits one placement; the spans are then built as the
+  one-pass matcher builds them. The verdict and the single finding are computed as before (entry
+  states are unlabelled and keep the labelled states' order, so the shortest-completion tie-break
+  is unchanged): the matcher tests, the exact-matcher corpus test and the warn digest are
+  unchanged. Example: OUL_R24 `ORDER { OBR [ORC] ... }` (v2.5.1 CH07 7.3.9) is lint-failing and
+  now has an ORDER span over each OBR and its ORC. OML_O33 with prior results (v2.5.1 to v2.8.2,
+  `PRIOR_RESULT { ORDER_PRIOR { [ORC] OBR ... } }` with nothing required before it) is genuinely
+  ambiguous: an ORC and OBR after an order's OBR can be a prior result or the next order, so the
+  spans are withheld.
+- **R4: the fallback when there are no spans.** For a message code the P4-7 or P10-5a gates
+  covered on that version (one internal table, `Validator.formerlyGated`, with the print
+  citations), the conditions of the formerly gated fields are not evaluated, exactly as under the
+  gate: v2.5.1 OUL; v2.6, v2.7.1 and v2.8.2 OUL, OPU and OPL; fields ORC-2, ORC-3, OBR-2, OBR-3,
+  plus ORC-8 and OBR-29 on v2.5.1 and v2.6. An empty MSH-9.1 counts as gated, as the gate leg
+  `messageCode not in (...)` was never true for it. The walk is unsound there because those
+  structures print OBR before ORC in one group. Every other message uses the ORC walk unchanged.
+  The register states the fallback as a limitation.
+- **Schemas.** The `messageCode not in (...)` legs are removed from ORC and OBR on v2.5.1 (6 ORC,
+  3 OBR legs), v2.6 (6, 3), v2.7.1 (4, 2) and v2.8.2 (4, 2). v2.3, v2.3.1 and v2.4 never carried
+  that gate: their OBR `messageCode in (ORU, ORF)` legs (the ORC-absent rule, P1-3) and
+  `messageCode in (ORU, ORF, OUL)` conditions (OBR-7, OBR-25) are print conditions, not gates,
+  and stay.
+

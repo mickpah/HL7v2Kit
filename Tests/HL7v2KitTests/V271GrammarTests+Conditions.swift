@@ -40,7 +40,8 @@ extension V271GrammarTests {
     /// and 4.5.3.3 print the v2.6 sentences ("If the placer order number is not present in
     /// the ORC, it must be present in the associated OBR and vice versa"), not v2.8.2's
     /// "either a placer or a filler id with an exception for ... 'Send Number'". The
-    /// `messageCode not in (OUL, OPU, OPL)` gates are kept (P10 ruling C5).
+    /// `messageCode not in (OUL, OPU, OPL)` gates kept by P10 ruling C5 are removed with
+    /// v2.6's (P8b-17): structure group spans scope the ORC/OBR peer.
     static let p105aFromV26 = ["OBR-2", "OBR-3", "ORC-2", "ORC-3"]
 
     /// v2.7.1's own readings. PRT: CH07 sections 7.3.4.5 and 7.3.4.8 to 7.3.4.10 name four

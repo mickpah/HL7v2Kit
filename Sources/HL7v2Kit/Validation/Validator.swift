@@ -44,7 +44,10 @@ public struct Validator: Sendable {
         // version-keyed lookup below (segment grammar, tables, datatype
         // grammar, version-gated ORC/OBR pairs) uses the same release.
         appendVersionIssues(for: message, issues: &issues)
-        let message = message.declaring(message.version.grammarVersion)
+        let declared = message.declaring(message.version.grammarVersion)
+        // P8b-17 (ADR-019): group spans, or the fallback, for the
+        // group-dependent predicates, whatever messageStructureSeverity is.
+        let message = declared.scoped(groupScoping(for: declared))
         var segmentOccurrence: [String: Int] = [:]
         // v0.11-S3 (ADR-010 Extension 2): dedupe fired cardinality
         // violations by (scope, groupHeadIndex, rule identity) so a
@@ -368,13 +371,17 @@ public struct Validator: Sendable {
         case .messageWide:
             return ResolvedGroup(startIndex: 0, headIndex: 0, segments: segs)
         case .orcObxGroup:
-            let range = message.orcGroupRange(around: anchorIndex)
+            let range = spanRange(message, around: anchorIndex, containing: "ORC")
+                ?? message.orcGroupRange(around: anchorIndex)
             return ResolvedGroup(
                 startIndex: range.lowerBound,
                 headIndex: range.lowerBound,
                 segments: Array(segs[range])
             )
         case .obrObxGroup:
+            if let range = spanRange(message, around: anchorIndex, containing: "OBR") {
+                return ResolvedGroup(startIndex: range.lowerBound, headIndex: range.lowerBound, segments: Array(segs[range]))
+            }
             var head = anchorIndex
             while head > 0 && segs[head].segmentID != "OBR" {
                 head -= 1
@@ -389,6 +396,14 @@ public struct Validator: Sendable {
             }
             return ResolvedGroup(startIndex: head, headIndex: head, segments: Array(segs[head..<end]))
         }
+    }
+
+    /// With group spans (P8b-17), the innermost group instance around
+    /// `index` whose definition contains `id` (the whole message at the top
+    /// level); nil when the message has no spans.
+    private func spanRange(_ message: Message, around index: Int, containing id: String) -> Range<Int>? {
+        guard case .spans(let spans) = message.groupScoping else { return nil }
+        return spans.range(around: index, containing: id)
     }
 
     /// The segment grammar table for `version` (ADR-018 substitution for
@@ -1122,7 +1137,9 @@ public struct Validator: Sendable {
     /// must be present in the associated OBR") is
     /// message-shape-dependent (ORU needs no ORC at all) and is not
     /// asserted here. Version-gated pairs (parent) apply only where
-    /// their version set says.
+    /// their version set says. Each ORC's OBR is its associated segment
+    /// (`Message.associatedIndex`): its own group with spans (P8b-17), else
+    /// the first OBR in the ORC walk.
     private func checkOrcObrPairEquality(
         message: Message,
         issues: inout [ValidationIssue]
@@ -1134,11 +1151,7 @@ public struct Validator: Sendable {
             obrOccurrenceByIndex[index] = obrOccurrence
         }
         for (index, segment) in message.segments.enumerated() where segment.segmentID == "ORC" {
-            guard let obrIndex = message.segments.indices.first(where: { i in
-                i != index
-                    && message.segments[i].segmentID == "OBR"
-                    && message.orcGroupRange(around: index).contains(i)
-            }) else { continue }
+            guard let obrIndex = message.associatedIndex("OBR", fromIndex: index) else { continue }
             let obr = message.segments[obrIndex]
             for pair in Self.orcObrEqualityPairs {
                 if let versions = pair.versions, !versions.contains(message.version.grammarVersion) { continue }
@@ -2085,6 +2098,9 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
+        // P8b-17: a formerly gated field on a message with no group spans.
+        if case .gated(let fields) = message.groupScoping,
+           fields.contains("\(location.segmentID)-\(grammar.index)") { return }
         guard grammar.optionality == .conditional,
               !isPopulated,
               let condition = grammar.condition,

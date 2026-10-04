@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P8b-17: structure group spans scope the group-dependent predicates
+
+- Default output changes on purpose (ADR-019 decision 5): on every complete version a message
+  whose structure matches cleanly has its ORC/OBR peers, segment-presence atoms, ORC/OBR pair
+  equality and group-scope cardinality rules scoped by the matched group instances, whatever
+  `messageStructureSeverity` is. Otherwise the ORC walk is used as before.
+- The P4-7 and P10-5a `messageCode not in (...)` gates are removed from ORC-2, ORC-3, ORC-8,
+  OBR-2, OBR-3 and OBR-29 on v2.5.1, v2.6, v2.7.1 and v2.8.2: OUL^R21 to R24, OPU^R25 and
+  OPL^O37 messages are now checked inside their own groups. An OUL, OPU or OPL message with no
+  spans (a structure deviation, disagreeing parses) keeps the gate's outcome on those fields
+  (register, Addendum to §D).
+- The exact matcher reports group spans when every accepting parse puts every segment in the
+  same group occurrences, and withholds them when parses disagree. Its verdict and finding are
+  unchanged.
+- The spec-example and fixture digest is unchanged in outcome: 152 issue lines per digest
+  (default, structure check at warning, `.strict`) change only in the quoted condition text.
+  `ValidationDigestTests` gains `VALIDATION_DIGEST_PRESET=strict`.
+
 ### Added — P8b-15: HL7 v2.3 message structures complete; lookup rule 3
 
 - With `messageStructureSeverity` set, every v2.3 message structure is now checked: 147

@@ -39,7 +39,8 @@ struct ValidationDigestTests {
         case "error": .error
         default: nil
         }
-        var base = ValidationOptions.default
+        // P8b-17: VALIDATION_DIGEST_PRESET=strict starts from the `.strict` preset.
+        var base = env["VALIDATION_DIGEST_PRESET"] == "strict" ? ValidationOptions.strict : .default
         base.messageStructureSeverity = structureSeverity
         var asserted = base
         asserted.auPathologySender = true

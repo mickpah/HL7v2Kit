@@ -39,17 +39,20 @@
 /// enclosing group or named choice. `.exceededMaximum` is never reported,
 /// and there is no recovery after the first divergence.
 ///
-/// No group spans: an exact match can be ambiguous (several parses accept
-/// the same sequence with different group boundaries), so `spans` is always
-/// empty (ADR-019 ceiling 1, P8b-12 amendment). Predicates derived from spans skip
-/// structures matched this way.
+/// Group spans (P8b-17, amending P8b-12): an exact match can be ambiguous,
+/// several parses accepting the same sequence. An accepted sequence has spans
+/// only when every accepting parse assigns every segment to the same group
+/// occurrences; then `spans` is that one assignment, in the form
+/// ``StructureMatcher`` gives. When accepting parses disagree, `spans` is empty
+/// and `spansWithheld` is true. A rejected sequence has no spans. The verdict
+/// and the finding do not depend on this.
 struct ExactStructureMatcher: Sendable {
     let structure: MessageStructure
-    private let automaton: Automaton
+    private let automaton: ExactAutomaton
 
     init(structure: MessageStructure) {
         self.structure = structure
-        self.automaton = Automaton(structure.elements)
+        self.automaton = ExactAutomaton(structure.elements)
     }
 
     /// The number of automaton states: the bound on the memo held per position.
@@ -61,7 +64,8 @@ struct ExactStructureMatcher: Sendable {
         let a = automaton
         var mark = [Int](repeating: -1, count: a.labels.count)
         var live = a.closure([a.start], stamp: 0, &mark)
-        var step = 0
+        var lives = [live]
+        var steps: [(index: Int, id: String)] = []
         for (index, id) in ids.enumerated() where !StructureMatcher.isTransparent(id) && !transparent.contains(id) {
             var next: [Int] = []
             for state in live where a.labels[state] == id {
@@ -70,10 +74,16 @@ struct ExactStructureMatcher: Sendable {
             guard !next.isEmpty else {
                 return StructureMatch(findings: [StructureFinding(kind: .unexpected, segmentID: id, group: nil, index: index)], spans: [])
             }
-            step += 1
-            live = a.closure(next, stamp: step, &mark)
+            steps.append((index, id))
+            live = a.closure(next, stamp: steps.count, &mark)
+            lives.append(live)
         }
-        if live.contains(a.accept) { return StructureMatch(findings: [], spans: []) }
+        if live.contains(a.accept) {
+            guard let spans = a.spans(lives: lives, steps: steps) else {
+                return StructureMatch(findings: [], spans: [], spansWithheld: true)
+            }
+            return StructureMatch(findings: [], spans: spans)
+        }
         let expected = live.filter { a.labels[$0] != nil }
             .min { (a.distance[$0], $0) < (a.distance[$1], $1) }
         let finding = expected.map {
@@ -86,10 +96,16 @@ struct ExactStructureMatcher: Sendable {
 /// The compiled structure. A state with a label consumes that segment and
 /// moves to its `edges`; a state without one moves along its edges freely.
 /// States are numbered in structure order.
-private struct Automaton: Sendable {
+struct ExactAutomaton: Sendable {
     private(set) var labels: [String?] = []
     /// For a segment state, the innermost enclosing group or named choice.
     private(set) var groups: [String?] = []
+    /// For the entry state of a group (or named choice) occurrence, the group.
+    private(set) var entries: [Int?] = []
+    /// For a segment state, the groups enclosing it, outermost first.
+    private(set) var ancestry: [[Int]] = []
+    /// The groups and named choices, by structure position.
+    private(set) var groupTable: [(name: String, position: [Int], members: Set<String>)] = []
     private(set) var edges: [[Int]] = []
     private(set) var start = 0
     private(set) var accept = 0
@@ -98,13 +114,15 @@ private struct Automaton: Sendable {
 
     init(_ elements: [StructureElement]) {
         start = add(nil, group: nil)
-        accept = elements.reduce(start) { element($1, from: $0, group: nil) }
+        accept = elements.indices.reduce(start) { element(elements[$1], from: $0, group: nil, position: [$1], ancestry: []) }
         distance = distancesToAccept()
     }
 
     private mutating func add(_ label: String?, group: String?) -> Int {
         labels.append(label)
         groups.append(group)
+        entries.append(nil)
+        ancestry.append([])
         edges.append([])
         return labels.count - 1
     }
@@ -113,43 +131,72 @@ private struct Automaton: Sendable {
 
     /// The fragment for `element` with all its occurrences, entered at
     /// `from`; returns its exit state (always a new state).
-    private mutating func element(_ element: StructureElement, from: Int, group: String?) -> Int {
+    private mutating func element(_ element: StructureElement, from: Int, group: String?,
+                                  position: [Int], ancestry: [Int]) -> Int {
         var current = from
         for _ in 0..<element.min {
-            current = occurrence(element, from: current, group: group)
+            current = occurrence(element, from: current, group: group, position: position, ancestry: ancestry)
         }
         guard let max = element.max else {
             let hub = add(nil, group: nil)
             link(current, hub)
-            link(occurrence(element, from: hub, group: group), hub)
+            link(occurrence(element, from: hub, group: group, position: position, ancestry: ancestry), hub)
             return hub
         }
         let exit = add(nil, group: nil)
         link(current, exit)
         for _ in element.min..<Swift.max(element.min, max) {
-            current = occurrence(element, from: current, group: group)
+            current = occurrence(element, from: current, group: group, position: position, ancestry: ancestry)
             link(current, exit)
         }
         return exit
     }
 
+    /// The table index of the group or named choice at `position`.
+    private mutating func groupID(_ name: String, _ position: [Int], _ members: Set<String>) -> Int {
+        if let id = groupTable.firstIndex(where: { $0.position == position }) { return id }
+        groupTable.append((name, position, members))
+        return groupTable.count - 1
+    }
+
+    /// An unlabelled state that marks entering an occurrence of group `id`.
+    private mutating func entry(_ id: Int, from: Int) -> Int {
+        let state = add(nil, group: nil)
+        entries[state] = id
+        link(from, state)
+        return state
+    }
+
     /// One occurrence of `element` entered at `from`; returns a new exit state.
-    private mutating func occurrence(_ element: StructureElement, from: Int, group: String?) -> Int {
+    private mutating func occurrence(_ element: StructureElement, from: Int, group: String?,
+                                     position: [Int], ancestry: [Int]) -> Int {
         switch element {
         case .segment(let id, _, _):
             let consume = add(id, group: group)
+            self.ancestry[consume] = ancestry
             link(from, consume)
             let exit = add(nil, group: nil)
             link(consume, exit)
             return exit
         case .group(let name, _, _, let children):
             let exit = add(nil, group: nil)
-            link(children.reduce(from) { self.element($1, from: $0, group: name) }, exit)
+            let id = groupID(name, position, element.segmentIDs)
+            let start = entry(id, from: from)
+            link(children.indices.reduce(start) {
+                self.element(children[$1], from: $0, group: name, position: position + [$1], ancestry: ancestry + [id])
+            }, exit)
             return exit
         case .choice(let name, _, _, let alternatives):
             let exit = add(nil, group: nil)
-            for alternative in alternatives {
-                link(self.element(alternative, from: from, group: name ?? group), exit)
+            var start = from, inner = ancestry
+            if let name {
+                let id = groupID(name, position, element.segmentIDs)
+                start = entry(id, from: from)
+                inner.append(id)
+            }
+            for a in alternatives.indices {
+                link(self.element(alternatives[a], from: start, group: name ?? group,
+                                  position: position + [a], ancestry: inner), exit)
             }
             return exit
         }

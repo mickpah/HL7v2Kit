@@ -189,12 +189,19 @@ struct ExpressibleConditionTests {
 
     // MARK: - ORC-8 child-order gate (owner decision G2-6, 2026-09-30)
 
-    @Test("ORC-8: the OBR-absent leg is gated off OUL and OPU", arguments: ["2.5.1", "2.6"])
+    @Test("ORC-8: the OBR-absent leg does not misfire on OUL R22, whose OBR precedes the ORC",
+          arguments: ["2.5.1", "2.6"])
     func orc8Gate(version: String) throws {
-        // OUL R22: the OBR precedes the ORC, outside its group.
+        // OUL R22 prints ORDER { OBR [ORC] ... }: the OBR is in the ORC's group
+        // (P8b-17 group spans; the P4-7 gate is gone). A child order whose
+        // parent is in OBR-29 needs no ORC-8.
         let oul = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
-                                 obr([2: "PON1", 3: "FON1"]), "ORC|CH|PON1|FON1")
+                                 obr([2: "PON1", 3: "FON1", 29: "PAR1&PL"]), "ORC|CH|PON1|FON1")
         #expect(try missing(oul, "ORC", 8).isEmpty, "v\(version) OUL R22")
+        // With no parent in either segment, ORC-8 is required (CH04 4.5.1.8).
+        let orphan = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
+                                    obr([2: "PON1", 3: "FON1"]), "ORC|CH|PON1|FON1")
+        #expect(try missing(orphan, "ORC", 8).count == 1, "v\(version) OUL R22 CH without parent")
         // ORM child order with no OBR keeps the leg.
         let child = TestWires.wire("ORM^O01", version, "ORC|CH|PON2|FON2")
         #expect(try missing(child, "ORC", 8).count == 1, "v\(version) ORM CH")

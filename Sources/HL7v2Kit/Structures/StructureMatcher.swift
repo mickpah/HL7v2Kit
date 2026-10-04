@@ -45,6 +45,13 @@ struct GroupSpan: Sendable, Equatable, CustomStringConvertible {
     let indices: ClosedRange<Int>
     /// Index into `StructureMatch.spans` of the enclosing group instance.
     let parent: Int?
+    /// The group's (or named choice's) position in the structure: element
+    /// indices from the top level, an alternative counting as a child. It,
+    /// not the name, identifies the group: v2.4 REF_I12 prints two sibling
+    /// PATIENT_VISIT groups (P8b-17).
+    var position: [Int] = []
+    /// Every segment ID the group's definition contains, at any depth.
+    var members: Set<String> = []
 
     var name: String { path.last ?? "" }
     var description: String { "\(path.joined(separator: "/")) \(indices)" }
@@ -55,6 +62,10 @@ struct GroupSpan: Sendable, Equatable, CustomStringConvertible {
 struct StructureMatch: Sendable, Equatable {
     let findings: [StructureFinding]
     let spans: [GroupSpan]
+    /// True when the message is accepted but its accepting parses place some
+    /// segment in different group occurrences, so `spans` is empty and no
+    /// group is known (``ExactStructureMatcher``, P8b-17).
+    var spansWithheld = false
 }
 
 /// Matches segment IDs against an HL7 abstract message syntax in one pass.
@@ -84,7 +95,7 @@ struct StructureMatcher: Sendable {
 
     init(structure: MessageStructure) {
         self.structure = structure
-        self.root = CompiledSequence(structure.elements)
+        self.root = CompiledSequence(structure.elements, positions: structure.elements.indices.map { [$0] })
     }
 
     /// Z-segments and ADD continuations are never matched (ADR-019): they
@@ -102,7 +113,8 @@ struct StructureMatcher: Sendable {
         var state = State(ids: ids, positions: positions)
         matchSequence(root, path: [], parent: nil, follow: [], &state)
         return StructureMatch(findings: state.findings, spans: state.spans.map {
-            GroupSpan(path: $0.path, indices: $0.start...$0.end, parent: $0.parent)
+            GroupSpan(path: $0.path, indices: $0.start...$0.end, parent: $0.parent,
+                      position: $0.item.position, members: $0.item.element.segmentIDs)
         })
     }
 
@@ -111,6 +123,7 @@ struct StructureMatcher: Sendable {
         let start: Int
         var end: Int
         let parent: Int?
+        let item: CompiledElement
     }
 
     private struct State {
@@ -166,7 +179,7 @@ struct StructureMatcher: Sendable {
                     state.consume()
                 case .group(let name, _, let max, _):
                     let span = state.spans.count
-                    state.spans.append(OpenSpan(path: path + [name], start: state.index, end: state.index, parent: parent))
+                    state.spans.append(OpenSpan(path: path + [name], start: state.index, end: state.index, parent: parent, item: item))
                     let inner = max == 1 ? later : later.union(own)
                     matchSequence(item.bodies[0], path: path + [name], parent: span, follow: inner, &state)
                     if state.cursor == before {
@@ -183,7 +196,7 @@ struct StructureMatcher: Sendable {
                     let inner = later.union(own)
                     if let name {
                         let span = state.spans.count
-                        state.spans.append(OpenSpan(path: path + [name], start: state.index, end: state.index, parent: parent))
+                        state.spans.append(OpenSpan(path: path + [name], start: state.index, end: state.index, parent: parent, item: item))
                         matchSequence(alternative, path: path + [name], parent: span, follow: inner, &state)
                         if state.cursor == before {
                             state.spans.removeLast()
@@ -222,20 +235,24 @@ struct StructureMatcher: Sendable {
 /// One element with the sets matching it needs, computed once.
 private struct CompiledElement: Sendable {
     let element: StructureElement
+    let position: [Int]
     let first: Set<String>
     let nullable: Bool
     /// A group's elements as one sequence; a choice's alternatives, each as
     /// a one-element sequence; none for a segment.
     let bodies: [CompiledSequence]
 
-    init(_ element: StructureElement) {
+    init(_ element: StructureElement, position: [Int]) {
         self.element = element
+        self.position = position
         first = element.firstSet
         nullable = element.isNullable
         switch element {
         case .segment: bodies = []
-        case .group(_, _, _, let children): bodies = [CompiledSequence(children)]
-        case .choice(_, _, _, let choices): bodies = choices.map { CompiledSequence([$0]) }
+        case .group(_, _, _, let children):
+            bodies = [CompiledSequence(children, positions: children.indices.map { position + [$0] })]
+        case .choice(_, _, _, let choices):
+            bodies = choices.indices.map { CompiledSequence([choices[$0]], positions: [position + [$0]]) }
         }
     }
 }
@@ -246,8 +263,8 @@ private struct CompiledSequence: Sendable {
     let items: [CompiledElement]
     let later: [Set<String>]
 
-    init(_ elements: [StructureElement]) {
-        items = elements.map(CompiledElement.init)
+    init(_ elements: [StructureElement], positions: [[Int]]) {
+        items = elements.indices.map { CompiledElement(elements[$0], position: positions[$0]) }
         var suffix: Set<String> = []
         var later = [Set<String>](repeating: [], count: items.count)
         for i in items.indices.reversed() {
