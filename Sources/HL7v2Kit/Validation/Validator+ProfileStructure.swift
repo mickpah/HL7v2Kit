@@ -26,6 +26,8 @@ extension Validator {
     /// structure places there, or the base reports `missing` a segment the profile
     /// structure does not report missing anywhere (it makes it optional, or removes
     /// it). Every other base finding is kept; where no profile applies, all of them.
+    /// An exact-matched base, which reports its first divergence only, is matched
+    /// again past each dropped `unexpected` until a finding is kept or none is left.
     /// `profiles` replaces the generated table; tests pass synthetic ones.
     func matchProfileStructure(over base: MessageStructure, baseFindings: [ValidationIssue], message: Message,
                                severity: IssueSeverity,
@@ -50,7 +52,7 @@ extension Validator {
         let unsettled = Set(match.findings.map { at($0.index) } + expectedAt.map(at))
         let profileMissing = Set(match.findings.filter { $0.kind == .missing }.map(\.segmentID))
         let placed = Set(ids.indices.filter { !StructureMatcher.isTransparent(ids[$0]) && !passedOver.contains(ids[$0]) }.map(at))
-        let kept = baseFindings.filter { issue in
+        func keeps(_ issue: ValidationIssue) -> Bool {
             let here = issue.location.pathDescription
             guard !unsettled.contains(here) else { return true }
             switch issue.code {
@@ -58,6 +60,22 @@ extension Validator {
             case .messageStructureSegmentMissing(_, let segmentID, _): return profileMissing.contains(segmentID)
             default: return true
             }
+        }
+        var kept = baseFindings.filter(keeps)
+        // An exact-matched base reports its first divergence only. When that is a
+        // dropped `unexpected`, the base is matched again with the dropped occurrence
+        // passed over, so a later divergence is found. Each round passes over one more
+        // message index, so the loop ends within the message's length; a dropped
+        // `missing` is located at the end, after every segment was consumed, so
+        // nothing follows it.
+        var skipped: Set<Int> = []
+        var findings = baseFindings
+        while base.requiresExactMatch, kept.isEmpty, let dropped = findings.first,
+              case .messageStructureSegmentUnexpected = dropped.code,
+              let index = ids.indices.first(where: { at($0) == dropped.location.pathDescription }),
+              skipped.insert(index).inserted {
+            findings = matchStructure(base, message: message, severity: severity, skipping: skipped)
+            kept = findings.filter(keeps)
         }
 
         let reported = Set(kept.compactMap { issue -> String? in

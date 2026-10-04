@@ -6,6 +6,7 @@ extension MessageStructureTable {
     static let auADRM2021: [String: MessageStructure] = [
         "ORM_O01": auADRM2021_ORM_O01,
         "ORU_R01": auADRM2021_ORU_R01,
+        "OSR_Q06": auADRM2021_OSR_Q06,
         "REF_I12": auADRM2021_REF_I12,
         "RRI_I12": auADRM2021_RRI_I12,
     ]
@@ -78,6 +79,41 @@ extension MessageStructureTable {
                     .segment("OBR", min: 1, max: 1),
                     .segment("CTD", min: 0, max: 1),
                     .segment("OBX", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let auADRM2021_OSR_Q06: MessageStructure = MessageStructure(
+        id: "OSR_Q06",
+        version: "2.4",
+        triggers: ["OSR^Q06"],
+        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.3 OSQ/OSR- query response for order status (event Q06), Query Response, p 281: MSH, MSA, [ERR], QRD, [QRF], [ [PID] { ORC OBR [{OBX}] [{CTI}] } ], [DSC]. Caption erratum: the response's caption prints 'OSQ^Q06^OSQ_Q06 Order Status Response', the same as the query's; the section title ('OSQ/OSR- query response') and base v2.4 section 4.4.3 give the response as OSR^Q06^OSR_Q06. Constrains HL7 v2.4 Chapter 4, section 4.4.3, p 4-21: OBX, which the base order does not have, is matched here only; NTE segments are omitted, which is not a finding (ADR-019 decision 7). Order detail: the p 281 print says only 'OBR Order Detail', with no prose on this message; the base v2.4 choice (OBR, RQD, RQ1, RXO, ODS or ODT) is kept because the print does not settle whether the p 280 narrowing for ORM^O01 (OBR replaced only for medication and diet orders) applies to the response, so a status response carrying RQD or RQ1 is not flagged. Unprinted group names (ADR-019 decision 3), the base v2.4 OSR_Q06 groups with the same head segment, whose names the base takes through overrides.json from HL7-xml v2.5.1/OSR_Q06.xsd (P8b-13 ruling 1): RESPONSE (overrides.json, the base OSR_Q06 RESPONSE) and ORDER (overrides.json, the base OSR_Q06 ORDER). PID is printed as a bare optional segment, not the base PATIENT group.",
+        profile: "au-adrm-2021",
+        baseVersion: "2.4",
+        rule: "HL7au:00060.1",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .segment("PID", min: 0, max: 1),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .choice(nil, min: 1, max: 1, alternatives: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("RQD", min: 1, max: 1),
+                        .segment("RQ1", min: 1, max: 1),
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("ODS", min: 1, max: 1),
+                        .segment("ODT", min: 1, max: 1),
+                    ]),
+                    .segment("OBX", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
                 ]),
             ]),
             .segment("DSC", min: 0, max: 1),

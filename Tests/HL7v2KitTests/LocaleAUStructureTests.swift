@@ -272,6 +272,92 @@ struct LocaleAUStructureTests {
         #expect(found[0].message.contains("requires PRD in group RF1_GROUP before PID[1]"), "\(found[0].message)")
     }
 
+    // MARK: - Re-matching an exact-matched base after a governed finding (P8b-4a fix round 1)
+
+    // Base v2.4 REF_I12, RRI_I12 and ORU_R01 fail the determinism lint and are matched
+    // exactly, with one finding and no recovery. When that finding is dropped, the base is
+    // matched again with the dropped occurrence passed over, so a later divergence is found.
+
+    @Test("AU REF^I12 with PD1 then EVN: PD1 is dropped and the base still reports EVN, which neither structure places")
+    func refDroppedThenNeitherPlaces() throws {
+        let found = base(try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "PD1|", "EVN|", "PV1|1"]))
+        #expect(found.map(\.code) == [.messageStructureSegmentUnexpected(structure: "REF_I12", segmentID: "EVN")],
+                "\(found.map(\.message))")
+    }
+
+    @Test("AU REF^I12 with PD1 then a second PV1 is clean: a narrowed maximum, registered and not enforced")
+    func refDroppedThenSecondPV1() throws {
+        // Base v2.4 REF_I12 (CH11 pp 11-16 to 11-17) prints [ PV1 [PV2] ] twice, so the base
+        // accepts PV1 PV1 once PD1 is passed over; only the ADRM (p 324, PV1 once) rejects the
+        // second, as a beyond-maximum finding, which decision 7 does not report (narrowed
+        // maxima, permanent-limitations register section E, P8b-4a addendum).
+        let all = try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "PD1|", "PV1|1", "PV1|2"])
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+    }
+
+    // MARK: - OSR^Q06 order status response (ADRM-2021 section 5.3, p 281)
+
+    static let osrHead = ["MSA|AA|1", "QRD|20240101|R|I|Q1|||1^RD|ALL|OS|"]
+
+    @Test("A conformant AU order status response with OBX (p 281) is clean under AU; the international locale reports OBX")
+    func osrWithOBX() throws {
+        let body = Self.osrHead + ["PID|1", "ORC|SC", "OBR|1", "OBX|1", "CTI|1"]
+        let all = try issues("OSR^Q06^OSR_Q06", body)
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        let intl = base(try issues("OSR^Q06^OSR_Q06", body, locale: .international))
+        #expect(intl.map(\.code) == [.messageStructureSegmentUnexpected(structure: "OSR_Q06", segmentID: "OBX")],
+                "\(intl.map(\.message))")
+    }
+
+    @Test("An AU order status response with RXO in place of OBR raises no 00060.1 (the base choice is kept)")
+    func osrWithRXO() throws {
+        let all = try issues("OSR^Q06^OSR_Q06", Self.osrHead + ["ORC|SC", "RXO|1"])
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+    }
+
+    @Test("An AU order status response without MSA: MSA is required in both structures, reported once by the base")
+    func osrWithoutMSA() throws {
+        let all = try issues("OSR^Q06^OSR_Q06", ["QRD|20240101|R|I|Q1|||1^RD|ALL|OS|", "ORC|SC", "OBR|1"])
+        #expect(base(all).contains { $0.code == .messageStructureSegmentMissing(structure: "OSR_Q06", segmentID: "MSA", group: nil) },
+                "\(base(all).map(\.message))")
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+    }
+
+    @Test("AU RRI^I12 with ERR then a second PID: ERR is dropped and the base reports the second PID")
+    func rriDroppedThenSecondPID() throws {
+        let found = base(try issues("RRI^I12^RRI_I12", ["MSA|AA|1", "ERR|", "RF1|A", "PRD|RP", "PID|1", "PID|2"]))
+        #expect(found.map(\.code) == [.messageStructureSegmentUnexpected(structure: "RRI_I12", segmentID: "PID")],
+                "\(found.map(\.message))")
+        #expect(found.first?.location.pathDescription == "PID[2]")
+    }
+
+    @Test("AU ORU^R01 with NK1 after a removed NTE, then EVN: NK1 is dropped and the base reports EVN")
+    func oruDroppedThenNeitherPlaces() throws {
+        // Base v2.4 PATIENT prints NK1 before NTE; the ADRM removed NTE (decision 7) and places
+        // NK1 after PD1 (p 205), so the base NK1 finding is dropped.
+        let body = ["PID|1", "PD1|", "NTE|1", "NK1|1", "PV1|1", "OBR|1", "OBX|1"]
+        #expect(base(try issues("ORU^R01^ORU_R01", body)).isEmpty)
+        let intl = base(try issues("ORU^R01^ORU_R01", body, locale: .international))
+        #expect(intl.map(\.code) == [.messageStructureSegmentUnexpected(structure: "ORU_R01", segmentID: "NK1")],
+                "\(intl.map(\.message))")
+        let found = base(try issues("ORU^R01^ORU_R01", body + ["EVN|"]))
+        #expect(found.map(\.code) == [.messageStructureSegmentUnexpected(structure: "ORU_R01", segmentID: "EVN")],
+                "\(found.map(\.message))")
+    }
+
+    @Test("A conformant AU REF^I12 with several base findings to drop stays clean (the re-match terminates)")
+    func refManyDropsStayClean() throws {
+        let all = try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "PD1|", "IAM|1", "OBR|1", "OBX|1", "PV1|1",
+                                                 "ORC|NW", "RXO|1", "RXR|1", "PRB|AD", "GOL|AD", "PTH|AD", "ROL|1"])
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        let intl = base(try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "PD1|", "IAM|1", "PV1|1"], locale: .international))
+        #expect(!intl.isEmpty)
+    }
+
     @Test("REF^I13 shares the base REF_I12 structure but the ADRM prints only I12: no 00060.1")
     func refOtherTriggerIsNotMatched() throws {
         let all = try issues("REF^I13^REF_I12", ["RF1|A", "PRD|RP", "PID|1"])
@@ -280,10 +366,10 @@ struct LocaleAUStructureTests {
 
     // MARK: - Data
 
-    @Test("The ADRM-2021 structures are ORM_O01, ORU_R01, REF_I12 and RRI_I12, each tagged with the profile, base version and rule")
+    @Test("The ADRM-2021 structures are ORM_O01, ORU_R01, OSR_Q06, REF_I12 and RRI_I12, each tagged with the profile, base version and rule")
     func dataTags() throws {
         let table = MessageStructureTable.auADRM2021
-        #expect(Set(table.keys) == ["ORM_O01", "ORU_R01", "REF_I12", "RRI_I12"])
+        #expect(Set(table.keys) == ["ORM_O01", "ORU_R01", "OSR_Q06", "REF_I12", "RRI_I12"])
         for (id, structure) in table {
             #expect(structure.id == id)
             #expect(structure.profile == "au-adrm-2021", "\(id)")
@@ -300,7 +386,7 @@ struct LocaleAUStructureTests {
         #expect(MessageStructureTable.structure("ORU_R01", version: .v2_4)?.profile == nil)
     }
 
-    @Test("Each profile file decodes to exactly the generated structure", arguments: ["ORM_O01", "ORU_R01", "REF_I12", "RRI_I12"])
+    @Test("Each profile file decodes to exactly the generated structure", arguments: ["ORM_O01", "ORU_R01", "OSR_Q06", "REF_I12", "RRI_I12"])
     func fileParity(_ id: String) throws {
         var object = try #require(try JSONSerialization.jsonObject(
             with: Data(contentsOf: Self.root.appendingPathComponent("\(id).json"))) as? [String: Any])

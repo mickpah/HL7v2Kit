@@ -39,8 +39,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ADRM-2021 print no longer draws base v2.4 structure findings the ADRM structure contradicts:
   a base finding is dropped where the ADRM structure accepts the message at that point (a segment
   it places there, such as PD1 in REF^I12, p 324, or ERR in RRI^I12, p 325; a segment it makes
-  optional, such as PRD and PID in RRI^I12). Every other base finding is kept. The international
-  locale and triggers with no ADRM structure are unchanged (ADR-019 decision 7, amended).
+  optional, such as PRD and PID in RRI^I12). Every other base finding is kept. Where the base is
+  matched exactly (v2.4 REF_I12, RRI_I12 and ORU_R01, which report their first divergence only)
+  and that finding is a dropped `unexpected`, the base is matched again with that segment passed
+  over, until a finding is kept or none is left, so a later divergence is still reported. Narrowed
+  maxima (REF^I12 `[IN1]`, PV1 and PV2) stay unreported: the base allows the repetition and the
+  ADRM's beyond-maximum finding is not reported (decision 7). The international locale and
+  triggers with no ADRM structure are unchanged (ADR-019 decision 7, amended).
+- The order status response (OSR^Q06, p 281, caption erratum `OSQ^Q06^OSQ_Q06`) is the fifth ADRM
+  structure: its `[{OBX}]` is accepted under the AU locale. Its order detail keeps the base v2.4
+  choice, as the print says only "OBR Order Detail" and does not settle whether the p 280
+  narrowing applies, so RQD or RQ1 there is not flagged.
 - RRI^I12 is the fourth ADRM structure (p 325, `MSH MSA [ERR] [ RF1 {PRD} PID ]`): a missing MSA
   is reported as `profileConstraintViolation(localeRule: "HL7au:00060.1")`.
 - The ORM^O01 order detail is narrowed to OBR, RXO, ODS and ODT (p 280: OBR is replaced only for

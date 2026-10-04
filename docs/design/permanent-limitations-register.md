@@ -628,13 +628,14 @@ blocking spec-completeness of the segment half of 00060.1:
 | RRI^I12 | p 325: `MSH MSA [ERR] [ RF1 {PRD} PID ]`, MSA unbracketed (base v2.4 `[MSA]`); the prose says the RF1, PRD and PID group "has been made optional for backward compatibility" | Closed by P8b-4a: `RRI_I12.json` requires MSA, and the base findings its optional group and `[ERR]` accept are dropped (addendum below) |
 | Appendix 8 simplified REF structure | pp 484 to 485 ("Constrained REF_I12 message structure", normative; the OBR group and OBX required) | It applies only to messages declaring the simplified REF profile in MSH-12 (pp 483 to 484); the overlay has no MSH-12-gated structure variant |
 | ORR^O02 | pp 280 to 281: `[ [PID ... {ORC OBR} ]`, one `[` unclosed | The bracket erratum leaves PID's optionality undecidable, so no structure is modelled; read as for ORM^O01 (p 280: OBR, or RXO, ODS or ODT for medication and diet orders), the order detail would also exclude the base RQD and RQ1, which is not enforced either |
-| Narrowed maxima | REF^I12 p 324 prints `[IN1]` where the base repeats the insurance group | 00060.1 is about required elements; an ADRM maximum below the base is not enforced (the overlay drops `unexpected` and beyond-maximum findings) |
-| Segments the ADRM adds where it prints no modelled structure | the order status response p 281 (`[{OBX}]` inside the order; base v2.4 OSR_Q06 has no OBX; its PID is optional in the base as well) | The response's caption prints `OSQ^Q06^OSQ_Q06` for an OSR^Q06 message and no profile structure is modelled for it, so the base v2.4 match reports OBX unexpected under either locale. Since P8b-4a the base findings on REF^I12 (IAM; the pharmacy, problem, goal and pathway groups; PD1) and RRI^I12 that the profile structure accepts are dropped |
+| Narrowed maxima | REF^I12 p 324 prints `[IN1]` where the base repeats the insurance group `[{ IN1 [IN2] [IN3] }]`, and PV1 and `[PV2]` once where the base (v2.4 CH11 pp 11-16 to 11-17) prints `[ PV1 [PV2] ]` twice. These are every narrowed maximum in the five modelled ADRM structures (ORU_R01, ORM_O01, REF_I12, RRI_I12, OSR_Q06, each segment's maximum compared with the base's, P8b-4a) | 00060.1 is about required elements; an ADRM maximum below the base is not enforced (the overlay drops `unexpected` and beyond-maximum findings, ADR-019 decision 7). A second IN1, PV1 or PV2 on REF^I12 therefore draws no finding under AU |
+| Order status response | p 281 (`[{OBX}]` inside the order; base v2.4 OSR_Q06 has no OBX; its PID is optional in the base as well) | Closed by P8b-4a fix round 1: `OSR_Q06.json` models it, citing the caption erratum `OSQ^Q06^OSQ_Q06` for OSR^Q06, so the base OBX finding is dropped under AU. Order detail: the p 281 print says only "OBR Order Detail", with no prose on this message; the base v2.4 choice (OBR, RQD, RQ1, RXO, ODS, ODT) is kept because the print does not settle whether the p 280 narrowing for ORM^O01 applies to the response, so a status response carrying RQD or RQ1 is not flagged |
 
 The other ADRM prints add nothing over the base for a missing segment: ACK^R01 (p 206) and
 ACK^O01 (p 280) print MSH MSA [ERR], the base ACK; OSQ^Q06 (p 281) is the base; the order status
 response (p 281, captioned "OSQ^Q06^OSQ_Q06 Order Status Response", for OSR^Q06) requires, with
-the order detail read as the base choice, nothing the base does not.
+the order detail read as the base choice, nothing the base does not (modelled since P8b-4a fix
+round 1 for the OBX it adds).
 
 ### Addendum to §E — AU profile structures govern base structure findings (P8b-4a, 2026-10-04)
 
@@ -645,11 +646,18 @@ point: no profile finding is located there, and the base reports `unexpected` a 
 profile structure places there, or `missing` a segment the profile structure reports missing
 nowhere (ADR-019 decision 7 as amended). Every other base finding is kept: a segment neither
 structure places, one the profile names but not at that point, and a base finding at a place
-where the profile reports a finding of its own. The ORM^O01 order detail is narrowed to OBR, RXO,
+where the profile reports a finding of its own. A base that fails the determinism lint (v2.4
+REF_I12, RRI_I12 and ORU_R01) is matched exactly and reports its first divergence only; when that
+finding is a dropped `unexpected`, the base is matched again with the dropped occurrence passed
+over, repeated until a finding is kept or none is left, so a later divergence is still reported
+(fix round 1). What stays unreported is what neither structure reports: the narrowed maxima,
+which the base accepts and the profile reports only as beyond-maximum findings, which decision 7
+drops. A fifth ADRM structure, OSR_Q06 (p 281, the order status response), is modelled in fix
+round 1 (row above). The ORM^O01 order detail is narrowed to OBR, RXO,
 ODS and ODT (p 280 replaces OBR only "for medication and diet orders"), so an RQD or RQ1 in its
 place is a 00060.1 finding. Still not enforced, as the table above records: Appendix 8, the
 ORR^O02 bracket erratum, the PV1 prose mandate, the narrowed maxima (the base allows the
-repetition and the profile drops beyond-maximum findings) and the order status response.
+repetition and the profile drops beyond-maximum findings).
 Approximation, kept on the side of reporting: a base `missing` finding is compared with the
 profile's by segment ID, not by place, so a segment the profile reports missing elsewhere keeps
 every base `missing` finding for it.

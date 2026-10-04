@@ -158,8 +158,11 @@ extension Validator {
     /// `requiresExactMatch` flag, set at codegen time) is matched by
     /// `ExactStructureMatcher`: at most one finding and no group spans
     /// (ADR-019 ceiling 1, P8b-12); every other structure by the one-pass
-    /// `StructureMatcher`. No message is linted here.
-    func matchStructure(_ structure: MessageStructure, message: Message, severity: IssueSeverity) -> [ValidationIssue] {
+    /// `StructureMatcher`. No message is linted here. The segments at the
+    /// message indices in `skipping` are passed over without a finding (the
+    /// AU profile's re-match of an exact-matched base, P8b-4a).
+    func matchStructure(_ structure: MessageStructure, message: Message, severity: IssueSeverity,
+                        skipping: Set<Int> = []) -> [ValidationIssue] {
         let ids = message.segments.map(\.segmentID)
         if let why = fragmentReason(message, structure: structure) {
             return [notModelled(structure.id, message: message, reason: "the message is a fragment (\(why))")]
@@ -168,8 +171,10 @@ extension Validator {
         // Segments the version grammar lacks already raise
         // segmentNotInVersionGrammar; Z and ADD are skipped by the matcher.
         let grammar = Self.grammarTable(for: message.version)
-        let outside = Set(ids.filter { grammar[$0] == nil })
-        let match = StructureMatcherCache.shared.matcher(for: structure).match(ids, transparent: outside)
+        // A skipped segment is matched as "", which no grammar defines.
+        let matched = ids.indices.map { skipping.contains($0) ? "" : ids[$0] }
+        let outside = Set(matched.filter { grammar[$0] == nil })
+        let match = StructureMatcherCache.shared.matcher(for: structure).match(matched, transparent: outside)
         guard !match.findings.isEmpty, !ids.isEmpty else { return [] }
         let location = Self.segmentLocations(ids)
 

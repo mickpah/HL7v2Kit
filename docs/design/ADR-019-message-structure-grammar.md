@@ -682,7 +682,7 @@ Owner gate G2, answered 2026-09-30 (all recommended defaults).
 | 4 | Unrecognised or empty MSH-12 | Skip, `messageStructureNotModelled` (info); no fallback grammar |
 | 5 | Group spans gating | On for complete versions with a clean match, independent of severity; behind the `isComplete` probe |
 | 6 | ORC-8 OUL misfire | Interim gate `messageCode not in (...)` shipped in P4-7; removed per version by the rollout task that supplies spans |
-| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point |
+| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point; an exact-matched base is matched again past a dropped `unexpected` until a finding is kept; narrowed maxima stay unreported |
 | 8 | AU overlay timing | Immediately after the extractor (R1) |
 | 9 | Acknowledgments | Build and validate the general ACK; no protocol logic |
 | 10 | Severity | `messageStructureSeverity = nil` default now; presets `.warning` and `.error` confirmed at close-out |
@@ -1266,7 +1266,8 @@ compiling a structure per message.
   `unexpected` a segment the profile structure places there, or `missing` a segment the profile
   structure reports missing nowhere in the message (it makes it optional, or removes it). Every
   other base finding is kept, including one for a segment neither structure places and one for a
-  segment the profile names but not at that point. Messages whose trigger has no profile
+  segment the profile names but not at that point (for an exact-matched base, among the findings
+  of the re-match described under fix round 1 below). Messages whose trigger has no profile
   structure, and every message under the international locale, are untouched; 00060.1 findings
   keep their P8b-4 behaviour. The comparison of `missing` findings by segment ID rather than by
   place errs on keeping a base finding. Implemented in `matchProfileStructure`
@@ -1281,4 +1282,24 @@ compiling a structure per message.
   5.1.2.4 is cited on p 279.
 - Still registered (permanent-limitations register section E, P8b-4 and P8b-4a addenda): Appendix
   8 (p 484, selected by MSH-12), ORR^O02 (p 280 bracket erratum), the ORU^R01 PV1 prose mandate
-  (pp 17, 205), the narrowed maxima and the order status response OBX (p 281).
+  (pp 17, 205) and the narrowed maxima.
+
+### Fix round 1 (P8b-4a)
+
+- **Re-match of an exact-matched base.** "Every other base finding is kept" held only for the
+  one-pass matcher. A base that fails the determinism lint (v2.4 REF_I12, RRI_I12, ORU_R01) is
+  matched exactly and reports its first divergence only, with no recovery, so dropping that finding
+  hid every later one. Now, when the base `requiresExactMatch`, every base finding was dropped,
+  and the dropped one is `unexpected`, the base is matched again with that occurrence passed over
+  (`matchStructure(_:message:severity:skipping:)`), repeated until a finding is kept or none is
+  left; each round passes over one more message index, so it ends within the message length. A
+  dropped exact `missing` is at the end, every segment consumed, so nothing follows it. What stays
+  unreported is what neither structure reports: the narrowed maxima (REF^I12 `[IN1]`, PV1 and
+  `[PV2]`, which the base prints twice, CH11 pp 11-16 to 11-17), where the base accepts the
+  repetition and the profile's beyond-maximum finding is dropped by decision 7, unchanged.
+- **OSR_Q06, the fifth profile structure** (p 281, caption erratum `OSQ^Q06^OSQ_Q06` for the
+  response): `MSH MSA [ERR] QRD [QRF] [ [PID] { ORC <order detail> [{OBX}] [{CTI}] } ] [DSC]`. The
+  print says only "OBR Order Detail", with no prose on this message; the base v2.4 choice (OBR,
+  RQD, RQ1, RXO, ODS, ODT) is kept because the print does not settle whether the p 280 narrowing
+  applies to the response, so RQD or RQ1 there is not flagged. Groups RESPONSE and ORDER take the
+  base names.
