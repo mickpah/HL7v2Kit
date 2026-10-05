@@ -108,8 +108,17 @@ group, cardinality or choice of a modelled structure changes.
   7.17, not 7.16. 20 registered, unchanged.
 - v2.7.1 and v2.8.2: every registration read and unchanged (Table 0354 rows marked Deprecated,
   templates, CH12 placeholders, prints of segments the version does not define).
-- Register statuses agree for equivalent prints: the CH12 `< OBR | etc. >` placeholders and
-  SUR_P09's `ED` row are permanent on every version (they were blocking on v2.5.1 onwards).
+- Register statuses agree for equivalent prints. SUR_P09's `ED` row is permanent on every version
+  (it was blocking on v2.5.1 and v2.6; v2.5.1 CH07 7.11.2, p 7-101, itself calls ED "an invalid
+  ED segment"). A structure registered only for an open slot, whose other segments are printed,
+  is blocking on every version (fix round 1 reversed the first pass, which had made them
+  permanent): the CH12 `OBR, etc.` order detail on v2.3 to v2.8.2 (52 registrations), the
+  general order detail of ORM_O01, ORR_O02 and OSR_Q06 on v2.3 and v2.3.1, and the ERP ellipsis
+  on v2.3 to v2.5.1. CH04 4.2.2.4 (v2.5.1 p 4-5; 4.1.2.4 on v2.3 and v2.3.1) says "Examples are
+  OBR and RXO. Future ancillary-specific segments may be defined": the slot is open, and an
+  open-slot structure element would let the validator check everything printed around it but not
+  what fills it. The 62 reasons say so; the register, NEXT_STEPS and STATUS list the element as
+  a follow-up for the owner.
 - Counts, modelled and registered: v2.3 147 and 22, v2.3.1 100 and 28, v2.4 148 and 24, v2.5.1
   173 and 30, v2.6 190 and 20, v2.7.1 164 and 58, v2.8.2 185 and 58; the P8b-9 and P8b-10
   entries below note their later counts.
