@@ -1624,3 +1624,25 @@ UDM_Q05) is Blocking (model limit), closed by segment grammars for the withdrawn
 URS or a rule that passes over them and checks the rest. v2.8.2 QBP_Q13 stays Permanent as a
 template ID: CH05 5.4.2 refers to 5.3.1.2, an example query profile whose grammar disagrees with
 5.4.2's own segment list.
+
+## Amendment 2026-10-06 — which Table 0354 listing governs; F-I1 and R1 confirmed (owner ruling)
+
+Owner ruling of 2026-10-06 on the question left open at the P8b-18 close-out (decision 6 of the
+owner's list in `STATUS.md`, not decision 6 of this ADR's table): **Appendix A governs the code
+table** `Resources/tables/<v>/0354.json`. Where a chapter listing prints IDs that Appendix A lacks,
+or Appendix A prints IDs a chapter listing omits, the difference is handled on the structure side,
+not in the table:
+
+- **CH02-only IDs** (v2.4 CH02 Table 0354: QRY_P04 and QRY_Q26 to QRY_Q30, none in
+  `Resources/tables/v2.4/0354.json`) stay registered in `Resources/structures/completeness.json`,
+  where a message that declares one gets information under ruling F-I1, never a mismatch.
+- **Appendix-A-only IDs** (the v2.5.1 CH02 omissions ORU_R31, ORU_R32, RDE_O01 and RRA_O02, all in
+  `Resources/tables/v2.5.1/0354.json`) keep the treatment they have: in the code table and
+  registered, since no print gives them a syntax of their own.
+
+The table stays open as before, so the ruling changes no output. The owner also confirmed on
+2026-10-06 **ruling F-I1** (P8b-final: a structure ID the version's print gives for the trigger
+is never a mismatch) and **the P8b-17 ruling R1** (the exact matcher yields group spans when
+every accepting parse agrees); both stand as built. Decision 7 (AU removed segments) is to be
+revisited in epic P11 sprint 6, where segments beyond the ADRM's narrowed maxima are to be reported
+at information; scheduled, not built.
