@@ -27,6 +27,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The validation digest keeps a preset's own severity unless `VALIDATION_DIGEST_STRUCTURE_SEVERITY`
   is set (`off` forces it off) and accepts `VALIDATION_DIGEST_PRESET=lenient`.
 
+### Fixed — P8b-18: Table 0354 provenance on every version; citation and guard minors
+
+- **Provenance (citations only):** every structure whose ID the extractor reads from Table 0354
+  now says so with the table's page, on every version that prints the table, as v2.3.1 has since
+  P8b-14: 24 on v2.4 (the two-part captions), 12 on v2.5.1 and 6 on v2.6 (QRY_Q02, QCK_Q02 and
+  the other captions that print no ID). v2.7.1 and v2.8.2 print every structure's own ID, so none
+  is added there. No segment, group, cardinality, choice or trigger changes.
+- **Page citations:** v2.3 2.18.1 and 2.18.2 are on p 2-75 (not 2-74), Table 0076 on pp 2-89 to
+  2-90 (not 2-88 to 2-89); the v2.3 ORU^W01 reference also cites 7.14 (p 7-104); the spec audit
+  counts ten printed v2.3.1 IDs with no Table 0354 row (with MCF); a test comment gives v2.5.1
+  QRY^Q02 its page, 5-116.
+- **Extractor guards:** a `referencedTriggers` trigger must carry the structure's message code
+  and enters the shared-trigger check; a `captionStructures` entry is looked up as a Table 0354
+  row before its row's message code is compared; a direction caption (`CODE^EVT (A to B)`) must be
+  a column header ending in "Chapter", so running prose of that form is no caption.
+- **Codegen guard:** a profile group named through nameSource `override` must be a name an
+  overrides.json `groupNames` entry gives the base structure, not merely cite "overrides.json".
+
 ### Changed — P8b-17: structure group spans scope the group-dependent predicates
 
 - Default output changes on purpose (ADR-019 decision 5): on every complete version a message
@@ -78,7 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   MSH-9.1^9.2), eight CH12 `[OBR, etc.` structures, MFN_M01's `[Z..]`, ERP's ellipsis rows,
   SUR_P09's ED row, MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated), and 4 triggers v2.3 defines only in Table 0003 or prose
   with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05), whose info now gives
-  the reason. the four prose cross-references to printed structures added to them through overrides.json `referencedTriggers` (ORU^W01 to ORU_R01, CH07 7.19.1; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1) are matched. The v2.3.1 MFN_M03 reason, and the status of v2.3.1's
+  the reason. The four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` and matched (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1). The v2.3.1 MFN_M03 reason, and the status of v2.3.1's
   MFN_M03, MFN_M08 to M11 and MFR rows, are corrected the same way (blocking, not permanent).
 - v2.3.1 MCF (CH02 2.13.2) is now modelled through a `triggerFolds` entry onto `MCF^*`, as on v2.3:
   v2.3.1 has 100 structures.

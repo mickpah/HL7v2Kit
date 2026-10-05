@@ -1,7 +1,7 @@
 {
   "structure": "ORU_R01",
   "version": "2.4",
-  "citation": "HL7 v2.4 Chapter 7, section 7.3.1 ORU - unsolicited observation message (event R01), p 7-19. Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT), PATIENT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT), VISIT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT) and OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT).",
+  "citation": "HL7 v2.4 Chapter 7, section 7.3.1 ORU - unsolicited observation message (event R01), p 7-19. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-138). Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT), PATIENT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT), VISIT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT) and OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT).",
   "triggers": ["ORU^R01"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

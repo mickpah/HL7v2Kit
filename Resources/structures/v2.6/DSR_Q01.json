@@ -1,7 +1,7 @@
 {
   "structure": "DSR_Q01",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 95.",
+  "citation": "HL7 v2.6 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 95. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 84).",
   "triggers": ["DSR^Q01"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

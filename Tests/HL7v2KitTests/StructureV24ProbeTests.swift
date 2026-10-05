@@ -156,7 +156,7 @@ struct StructureV24ProbeTests {
         #expect(issues.first?.severity == .info && issues.first?.message.contains("ellipsis") == true, "\(issues.map(\.message))")
     }
 
-    // CH05 5.10.3.1 (v2.4 p 5-112; v2.5.1 p 5-115; v2.6 CH05 5.10.3.1) prints the deferred
+    // CH05 5.10.3.1 (v2.4 p 5-112; v2.5.1 p 5-116; v2.6 CH05 5.10.3.1) prints the deferred
     // query pair with a one-space direction tag: "QRY^Q02 (A to B)  Query Message" (MSH, QRD,
     // [QRF], [DSC]) and "QCK^Q02 (B to A)  Query General Acknowledgment" (MSH, MSA, [ERR],
     // [QAK]). Table 0354 maps Q02 to both; MSH-9.1 tells them apart, so each resolves with or

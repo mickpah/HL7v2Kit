@@ -1,7 +1,7 @@
 {
   "structure": "UDM_Q05",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 94.",
+  "citation": "HL7 v2.6 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 94. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 87).",
   "triggers": ["UDM^Q05"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

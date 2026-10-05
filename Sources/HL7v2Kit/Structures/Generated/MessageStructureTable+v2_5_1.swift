@@ -1338,7 +1338,7 @@ extension MessageStructureTable {
         id: "DSR_Q01",
         version: "2.5.1",
         triggers: ["DSR^Q01"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-115.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-115. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-102).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1357,7 +1357,7 @@ extension MessageStructureTable {
         id: "DSR_Q03",
         version: "2.5.1",
         triggers: ["DSR^Q03"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.3.2 DSR/ACK - deferred response to a query (event Q03), p 5-116.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.3.2 DSR/ACK - deferred response to a query (event Q03), p 5-116. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-102).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1439,7 +1439,7 @@ extension MessageStructureTable {
         id: "EDR_R07",
         version: "2.5.1",
         triggers: ["EDR^R07"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-102).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1456,7 +1456,7 @@ extension MessageStructureTable {
         id: "EQQ_Q04",
         version: "2.5.1",
         triggers: ["EQQ^Q04"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-102).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3589,7 +3589,7 @@ extension MessageStructureTable {
         id: "QCK_Q02",
         version: "2.5.1",
         triggers: ["QCK^Q02"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-116.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-116. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3658,7 +3658,7 @@ extension MessageStructureTable {
         id: "QRY_Q01",
         version: "2.5.1",
         triggers: ["QRY^Q01", "QRY^Q26", "QRY^Q27", "QRY^Q28", "QRY^Q29", "QRY^Q30"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-115; the same structure is printed for QRY^Q26 (4.13.15), QRY^Q27 (4.13.16), QRY^Q28 (4.13.17), QRY^Q29 (4.13.18) and QRY^Q30 (4.13.19).",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-115; the same structure is printed for QRY^Q26 (4.13.15), QRY^Q27 (4.13.16), QRY^Q28 (4.13.17), QRY^Q29 (4.13.18) and QRY^Q30 (4.13.19). Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3673,7 +3673,7 @@ extension MessageStructureTable {
         id: "QRY_Q02",
         version: "2.5.1",
         triggers: ["QRY^Q02"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-116.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-116. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4521,7 +4521,7 @@ extension MessageStructureTable {
         id: "RQQ_Q09",
         version: "2.5.1",
         triggers: ["RQQ^Q09"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), pp 5-119 to 5-120.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), pp 5-119 to 5-120. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4917,7 +4917,7 @@ extension MessageStructureTable {
         id: "SPQ_Q08",
         version: "2.5.1",
         triggers: ["SPQ^Q08"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.3 SPQ - stored procedure request (event Q08), p 5-120.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.3 SPQ - stored procedure request (event Q08), p 5-120. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5142,7 +5142,7 @@ extension MessageStructureTable {
         id: "TBR_R08",
         version: "2.5.1",
         triggers: ["TBR^R08"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5178,7 +5178,7 @@ extension MessageStructureTable {
         id: "UDM_Q05",
         version: "2.5.1",
         triggers: ["UDM^Q05"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 5-113.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 5-113. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5194,7 +5194,7 @@ extension MessageStructureTable {
         id: "VQQ_Q07",
         version: "2.5.1",
         triggers: ["VQQ^Q07"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.4 VQQ - Virtual Table query (event Q07), p 5-122.",
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.4 VQQ - Virtual Table query (event Q07), p 5-122. Structure ID from Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),

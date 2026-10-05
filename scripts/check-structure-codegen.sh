@@ -215,9 +215,10 @@ reject "structure directory for an unlisted version" 'unlisted versions ["2.9"]'
 os.mkdir(os.path.join(S, 'v2.9'))"
 
 # P8b-2a: the extractor's overrides.json and the G9 profiles directory are allowed, and only
-# in that form.
+# in that form. The codegen reads its sharedTriggers and (P8b-18, for profile names) groupNames.
 accept "overrides.json under Resources/structures (P8b-2a)" "$PRE
-save('overrides.json', {'groupNames': [], 'sharedTriggers': load('overrides.json')['sharedTriggers']})"
+o = load('overrides.json')
+save('overrides.json', {'groupNames': o['groupNames'], 'sharedTriggers': o['sharedTriggers']})"
 
 accept "an empty profile directory under Resources/structures/profiles (G9)" "$PRE
 os.makedirs(os.path.join(S, 'profiles', 'au-test'))"
@@ -265,6 +266,24 @@ au(lambda d: d.update(triggers=['ORU^R01', 'ORU^R30']))"
 
 reject "profile structure breaking a structure-file rule" 'is not cited' "$PRE$AU
 au(lambda d: d.update(citation=d['citation'].replace('PD1_GROUP (synthesised', 'PD1_GROUP (made up')))"
+
+# P8b-18: a profile group named through nameSource override must be a name the base structure
+# takes from an overrides.json groupNames entry (same version and structure); citing
+# "overrides.json" in the text is not enough.
+OSR='
+def rename(d):
+    response = next(e for e in d["elements"] if e.get("group") == "RESPONSE")
+    response["elements"][-1]["group"] = "ORDERS"
+    d["citation"] = d["citation"].replace("ORDER (overrides.json", "ORDERS (overrides.json")
+d = load("profiles/au-adrm-2021/OSR_Q06.json")
+'
+reject "profile override name with no base groupNames entry" 'group ORDERS (nameSource override) names no overrides.json groupNames entry of the base v2.4 OSR_Q06' "$PRE$OSR
+rename(d); save('profiles/au-adrm-2021/OSR_Q06.json', d)"
+
+reject "profile override name whose base groupNames entry is gone" 'group ORDER (nameSource override) names no overrides.json groupNames entry of the base v2.4 OSR_Q06' "$PRE
+o = load('overrides.json')
+o['groupNames'] = [g for g in o['groupNames'] if not (g['structure'] == 'OSR_Q06' and g['name'] == 'ORDER')]
+save('overrides.json', o)"
 
 reject "stray file in profiles" 'holds only profile directories' "$PRE
 save('profiles/notes.json', {})"

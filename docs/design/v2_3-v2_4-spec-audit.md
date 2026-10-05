@@ -159,7 +159,7 @@ Table 0354 v2.3.1 (CH2 2.24.1.9, pp 2-103 to 2-106), read through ten cited erra
 misprinted rows, two declared shared triggers (ADT^A28, ADT^A31) and four `captionStructures`
 entries (MFK, PPP). 99 are committed under `Resources/structures/v2.3.1/` (100 with MCF, folded in P8b-15 fix round 2) and v2.3.1 is
 `complete: true`; with the 27 registered in `completeness.json` they account for all 117 Table
-0354 v2.3.1 rows (nine printed IDs, ACK and the shared ORM^O01 and ORR^O02 structures, have no
+0354 v2.3.1 rows (ten printed IDs, ACK, MCF and the shared ORM^O01 and ORR^O02 structures, have no
 row). Group names: 247 from the HL7 v2.xml 2.3.1 bundle, 6 through the v2.4 bundle, none
 synthesised (register §E v2.3.1 addendum).
 
@@ -192,12 +192,12 @@ folds), 201 captions take their events from the title and 39 from cited `eventsF
 entries (section text, Table 0003). 147 are committed under `Resources/structures/v2.3/` and v2.3
 is `complete: true`; the 16 are registered in `completeness.json` with 4 triggers v2.3 defines
 only in Table 0003 or prose with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03,
-DSR^R05), 20 entries in all (register §E v2.3 addendum); the four prose cross-references to printed structures added to them through overrides.json `referencedTriggers` (ORU^W01 to ORU_R01, CH07 7.19.1; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1) are matched (fix round 2).
+DSR^R05), 20 entries in all (register §E v2.3 addendum); the four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` and matched (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1) (fix round 2).
 Group names: 235 through the HL7 v2.xml 2.3.1 bundle, 7 through the v2.4 bundle, 3 synthesised.
 
 Lookup rule 3 (ADR-019): v2.3 MSH-9 has two components (CM, CH2 2.24.1.9), so once MSH-12 reads
 as 2.3 a v2.3 message resolves from MSH-9.1^9.2 only and a populated MSH-9.3 is ignored. The CH2
-deferred query pair (2.18.1, p 2-74) prints `QRY (A to B)` and `QCK (B to A)` with no caret; both
+deferred query pair (2.18.1, p 2-75) prints `QRY (A to B)` and `QCK (B to A)` with no caret; both
 are read now (QRY_Q02: MSH, QRD, [QRF], [DSC]; QCK_Q02: MSH, MSA, [ERR], [QAK]), with DSR_Q03
 and the 2.18.2 ACK.
 

@@ -1,7 +1,7 @@
 {
   "structure": "EQQ_Q04",
   "version": "2.4",
-  "citation": "HL7 v2.4 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-115.",
+  "citation": "HL7 v2.4 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-115. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-137).",
   "triggers": ["EQQ^Q04"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

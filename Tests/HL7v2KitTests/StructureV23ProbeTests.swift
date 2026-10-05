@@ -71,7 +71,7 @@ struct StructureV23ProbeTests {
         // CH02 2.20.2 (p 2-77; folded onto TBR^*, no event printed): RDF is required.
         Probe(msh9: "TBR", structure: "TBR", compliant: ["MSA|AA|1", "QAK|1|OK", "RDF|1", "RDT|1"],
               variant: ["MSA|AA|1", "QAK|1|OK", "RDT|1"], finding: "missing RDF"),
-        // CH02 2.18.1 (p 2-74; 'QCK (B to A)', the direction tag with no caret): MSA is required.
+        // CH02 2.18.1 (p 2-75; 'QCK (B to A)', the direction tag with no caret): MSA is required.
         Probe(msh9: "QCK^Q02", structure: "QCK_Q02", compliant: ["MSA|AA|1", "QAK|1|OK"],
               variant: ["QAK|1|OK"], finding: "missing MSA"),
         // CH09 9.4.10 (p 9-8; '... & Content Chapter', one space before the column): OBX is required.

@@ -985,7 +985,7 @@ extension MessageStructureTable {
         id: "DOC_T12",
         version: "2.4",
         triggers: ["DOC^T12"],
-        citation: "HL7 v2.4 Chapter 9, section 9.8.1 QRY/DOC - document query (event T12), pp 9-20 to 9-21. Unprinted group names (ADR-019 decision 3): RESULT (overrides.json: HL7 v2.4 Chapter 9, section 9.8.1 QRY/DOC - document query (event T12), pp 9-20 to 9-21: the unnamed group with first segment EVN at the root (v2.4 prints no group names); HL7-xml v2.4 has no DOC_T12.xsd, so named RESULT from HL7-xml v2.5.1/DOC_T12.xsd, DOC_T12.RESULT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
+        citation: "HL7 v2.4 Chapter 9, section 9.8.1 QRY/DOC - document query (event T12), pp 9-20 to 9-21. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-137). Unprinted group names (ADR-019 decision 3): RESULT (overrides.json: HL7 v2.4 Chapter 9, section 9.8.1 QRY/DOC - document query (event T12), pp 9-20 to 9-21: the unnamed group with first segment EVN at the root (v2.4 prints no group names); HL7-xml v2.4 has no DOC_T12.xsd, so named RESULT from HL7-xml v2.5.1/DOC_T12.xsd, DOC_T12.RESULT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1008,7 +1008,7 @@ extension MessageStructureTable {
         id: "DSR_Q01",
         version: "2.4",
         triggers: ["DSR^Q01"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), pp 5-111 to 5-112.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), pp 5-111 to 5-112. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-137).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1026,7 +1026,7 @@ extension MessageStructureTable {
         id: "DSR_Q03",
         version: "2.4",
         triggers: ["DSR^Q03"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.3.2 DSR/ACK - deferred response to a query (event Q03), pp 5-112 to 5-113.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.3.2 DSR/ACK - deferred response to a query (event Q03), pp 5-112 to 5-113. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-137).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1095,7 +1095,7 @@ extension MessageStructureTable {
         id: "EDR_R07",
         version: "2.4",
         triggers: ["EDR^R07"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-115.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-115. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-137).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1111,7 +1111,7 @@ extension MessageStructureTable {
         id: "EQQ_Q04",
         version: "2.4",
         triggers: ["EQQ^Q04"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-115.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-115. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-137).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2114,7 +2114,7 @@ extension MessageStructureTable {
         id: "ORU_R01",
         version: "2.4",
         triggers: ["ORU^R01"],
-        citation: "HL7 v2.4 Chapter 7, section 7.3.1 ORU - unsolicited observation message (event R01), p 7-19. Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT), PATIENT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT), VISIT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT) and OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT).",
+        citation: "HL7 v2.4 Chapter 7, section 7.3.1 ORU - unsolicited observation message (event R01), p 7-19. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-138). Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT), PATIENT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT), VISIT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT) and OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2150,7 +2150,7 @@ extension MessageStructureTable {
         id: "OSQ_Q06",
         version: "2.4",
         triggers: ["OSQ^Q06"],
-        citation: "HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-20.",
+        citation: "HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-20. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-138).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2164,7 +2164,7 @@ extension MessageStructureTable {
         id: "OSR_Q06",
         version: "2.4",
         triggers: ["OSR^Q06"],
-        citation: "HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21. Unprinted group names (ADR-019 decision 3): RESPONSE (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment PID at the root (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named RESPONSE from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.RESPONSE.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).), PATIENT (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment PID at [RESPONSE] (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named PATIENT from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).) and ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment ORC at [RESPONSE] (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named ORDER from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.ORDER.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).).",
+        citation: "HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-139). Unprinted group names (ADR-019 decision 3): RESPONSE (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment PID at the root (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named RESPONSE from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.RESPONSE.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).), PATIENT (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment PID at [RESPONSE] (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named PATIENT from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).) and ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment ORC at [RESPONSE] (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named ORDER from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.ORDER.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2355,7 +2355,7 @@ extension MessageStructureTable {
         id: "QCK_Q02",
         version: "2.4",
         triggers: ["QCK^Q02"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-112.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-112. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-139).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2407,7 +2407,7 @@ extension MessageStructureTable {
         id: "QRY_Q01",
         version: "2.4",
         triggers: ["QRY^Q01", "QRY^Q26", "QRY^Q27", "QRY^Q28", "QRY^Q29", "QRY^Q30"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-111; the same structure is printed for QRY^Q26 (4.13.13), QRY^Q27 (4.13.14), QRY^Q28 (4.13.15), QRY^Q29 (4.13.16) and QRY^Q30 (4.13.17).",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-111; the same structure is printed for QRY^Q26 (4.13.13), QRY^Q27 (4.13.14), QRY^Q28 (4.13.15), QRY^Q29 (4.13.16) and QRY^Q30 (4.13.17). Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-139).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2421,7 +2421,7 @@ extension MessageStructureTable {
         id: "QRY_Q02",
         version: "2.4",
         triggers: ["QRY^Q02"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-112.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-112. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-139).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2448,7 +2448,7 @@ extension MessageStructureTable {
         id: "QRY_T12",
         version: "2.4",
         triggers: ["QRY^T12"],
-        citation: "HL7 v2.4 Chapter 9, section 9.8.1 QRY/DOC - document query (event T12), p 9-20.",
+        citation: "HL7 v2.4 Chapter 9, section 9.8.1 QRY/DOC - document query (event T12), p 9-20. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-139).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2661,7 +2661,7 @@ extension MessageStructureTable {
         id: "RDR_RDR",
         version: "2.4",
         triggers: ["RDR^RDR"],
-        citation: "HL7 v2.4 Chapter 4, section 4.13.15 RDR - pharmacy/treatment dispense information (event Q28), p 4-87. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.DEFINITION.CONTENT), PATIENT (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.PATIENT.CONTENT), ORDER (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.ORDER.CONTENT), ENCODING (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.ENCODING.CONTENT) and DISPENSE (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.DISPENSE.CONTENT).",
+        citation: "HL7 v2.4 Chapter 4, section 4.13.15 RDR - pharmacy/treatment dispense information (event Q28), p 4-87. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-140). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.DEFINITION.CONTENT), PATIENT (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.PATIENT.CONTENT), ORDER (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.ORDER.CONTENT), ENCODING (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.ENCODING.CONTENT) and DISPENSE (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.DISPENSE.CONTENT).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3220,7 +3220,7 @@ extension MessageStructureTable {
         id: "RQQ_Q09",
         version: "2.4",
         triggers: ["RQQ^Q09"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), p 5-116.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), p 5-116. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-140).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3550,7 +3550,7 @@ extension MessageStructureTable {
         id: "SPQ_Q08",
         version: "2.4",
         triggers: ["SPQ^Q08"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.4.3 SPQ - stored procedure request (event Q08), p 5-116.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.4.3 SPQ - stored procedure request (event Q08), p 5-116. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-140).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3564,7 +3564,7 @@ extension MessageStructureTable {
         id: "SQM_S25",
         version: "2.4",
         triggers: ["SQM^S25"],
-        citation: "HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25. Unprinted group names (ADR-019 decision 3): REQUEST (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment ARQ at the root (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named REQUEST from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.REQUEST.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), RESOURCES (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment RGS at [REQUEST] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named RESOURCES from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.RESOURCES.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), SERVICE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIS at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named SERVICE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.SERVICE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), GENERAL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIG at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named GENERAL_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.GENERAL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), PERSONNEL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIP at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named PERSONNEL_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.PERSONNEL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).) and LOCATION_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIL at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named LOCATION_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.LOCATION_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
+        citation: "HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-140). Unprinted group names (ADR-019 decision 3): REQUEST (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment ARQ at the root (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named REQUEST from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.REQUEST.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), RESOURCES (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment RGS at [REQUEST] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named RESOURCES from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.RESOURCES.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), SERVICE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIS at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named SERVICE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.SERVICE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), GENERAL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIG at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named GENERAL_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.GENERAL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), PERSONNEL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIP at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named PERSONNEL_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.PERSONNEL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).) and LOCATION_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIL at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named LOCATION_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.LOCATION_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3602,7 +3602,7 @@ extension MessageStructureTable {
         id: "SQR_S25",
         version: "2.4",
         triggers: ["SQR^S25"],
-        citation: "HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26. Unprinted group names (ADR-019 decision 3): SCHEDULE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment SCH at the root (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named SCHEDULE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.SCHEDULE.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1, which v2.4 does not define (P8b-13 ruling 1).), PATIENT (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment PID at [SCHEDULE] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named PATIENT from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), RESOURCES (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment RGS at [SCHEDULE] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named RESOURCES from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.RESOURCES.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), SERVICE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment AIS at [SCHEDULE, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named SERVICE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.SERVICE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), GENERAL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment AIG at [SCHEDULE, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named GENERAL_RESOURCE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.GENERAL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), PERSONNEL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment AIP at [SCHEDULE, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named PERSONNEL_RESOURCE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.PERSONNEL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).) and LOCATION_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment AIL at [SCHEDULE, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named LOCATION_RESOURCE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.LOCATION_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
+        citation: "HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-140). Unprinted group names (ADR-019 decision 3): SCHEDULE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment SCH at the root (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named SCHEDULE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.SCHEDULE.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1, which v2.4 does not define (P8b-13 ruling 1).), PATIENT (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment PID at [SCHEDULE] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named PATIENT from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), RESOURCES (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment RGS at [SCHEDULE] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named RESOURCES from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.RESOURCES.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), SERVICE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment AIS at [SCHEDULE, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named SERVICE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.SERVICE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), GENERAL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment AIG at [SCHEDULE, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named GENERAL_RESOURCE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.GENERAL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), PERSONNEL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment AIP at [SCHEDULE, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named PERSONNEL_RESOURCE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.PERSONNEL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).) and LOCATION_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), pp 10-25 to 10-26: the unnamed group with first segment AIL at [SCHEDULE, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQR_S25.xsd, so named LOCATION_RESOURCE from HL7-xml v2.5.1/SQR_S25.xsd, SQR_S25.LOCATION_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3763,7 +3763,7 @@ extension MessageStructureTable {
         id: "TBR_R08",
         version: "2.4",
         triggers: ["TBR^R08"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-115.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-115. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-141).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3794,7 +3794,7 @@ extension MessageStructureTable {
         id: "UDM_Q05",
         version: "2.4",
         triggers: ["UDM^Q05"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 5-110.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 5-110. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-141).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3809,7 +3809,7 @@ extension MessageStructureTable {
         id: "VQQ_Q07",
         version: "2.4",
         triggers: ["VQQ^Q07"],
-        citation: "HL7 v2.4 Chapter 5, section 5.10.4.4 VQQ - Virtual Table query (event Q07), p 5-117.",
+        citation: "HL7 v2.4 Chapter 5, section 5.10.4.4 VQQ - Virtual Table query (event Q07), p 5-117. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-141).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3823,7 +3823,7 @@ extension MessageStructureTable {
         id: "VXQ_V01",
         version: "2.4",
         triggers: ["VXQ^V01"],
-        citation: "HL7 v2.4 Chapter 4, section 4.17.3 VXQ -query for vaccination record (event V01), p 4-132.",
+        citation: "HL7 v2.4 Chapter 4, section 4.17.3 VXQ -query for vaccination record (event V01), p 4-132. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-141).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3836,7 +3836,7 @@ extension MessageStructureTable {
         id: "VXR_V03",
         version: "2.4",
         triggers: ["VXR^V03"],
-        citation: "HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133. Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (overrides.json: HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133: the unnamed group with first segment PV at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXR_V03.xsd, so named PATIENT_VISIT from HL7-xml v2.5.1/VXR_V03.xsd, VXR_V03.PATIENT_VISIT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), INSURANCE (overrides.json: HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133: the unnamed group with first segment IN at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXR_V03.xsd, so named INSURANCE from HL7-xml v2.5.1/VXR_V03.xsd, VXR_V03.INSURANCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133: the unnamed group with first segment ORC at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXR_V03.xsd, so named ORDER from HL7-xml v2.5.1/VXR_V03.xsd, VXR_V03.ORDER.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).) and OBSERVATION (overrides.json: HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133: the unnamed group with first segment OBX at [ORDER] (v2.4 prints no group names); HL7-xml v2.4 has no VXR_V03.xsd, so named OBSERVATION from HL7-xml v2.5.1/VXR_V03.xsd, VXR_V03.OBSERVATION.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
+        citation: "HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-141). Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (overrides.json: HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133: the unnamed group with first segment PV at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXR_V03.xsd, so named PATIENT_VISIT from HL7-xml v2.5.1/VXR_V03.xsd, VXR_V03.PATIENT_VISIT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), INSURANCE (overrides.json: HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133: the unnamed group with first segment IN at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXR_V03.xsd, so named INSURANCE from HL7-xml v2.5.1/VXR_V03.xsd, VXR_V03.INSURANCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133: the unnamed group with first segment ORC at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXR_V03.xsd, so named ORDER from HL7-xml v2.5.1/VXR_V03.xsd, VXR_V03.ORDER.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).) and OBSERVATION (overrides.json: HL7 v2.4 Chapter 4, section 4.17.5 VXR - vaccination record response (event V03), pp 4-132 to 4-133: the unnamed group with first segment OBX at [ORDER] (v2.4 prints no group names); HL7-xml v2.4 has no VXR_V03.xsd, so named OBSERVATION from HL7-xml v2.5.1/VXR_V03.xsd, VXR_V03.OBSERVATION.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3872,7 +3872,7 @@ extension MessageStructureTable {
         id: "VXU_V04",
         version: "2.4",
         triggers: ["VXU^V04"],
-        citation: "HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133. Unprinted group names (ADR-019 decision 3): PATIENT (overrides.json: HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133: the unnamed group with first segment PV at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXU_V04.xsd, so named PATIENT from HL7-xml v2.5.1/VXU_V04.xsd, VXU_V04.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), INSURANCE (overrides.json: HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133: the unnamed group with first segment IN at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXU_V04.xsd, so named INSURANCE from HL7-xml v2.5.1/VXU_V04.xsd, VXU_V04.INSURANCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133: the unnamed group with first segment ORC at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXU_V04.xsd, so named ORDER from HL7-xml v2.5.1/VXU_V04.xsd, VXU_V04.ORDER.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).) and OBSERVATION (overrides.json: HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133: the unnamed group with first segment OBX at [ORDER] (v2.4 prints no group names); HL7-xml v2.4 has no VXU_V04.xsd, so named OBSERVATION from HL7-xml v2.5.1/VXU_V04.xsd, VXU_V04.OBSERVATION.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
+        citation: "HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-141). Unprinted group names (ADR-019 decision 3): PATIENT (overrides.json: HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133: the unnamed group with first segment PV at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXU_V04.xsd, so named PATIENT from HL7-xml v2.5.1/VXU_V04.xsd, VXU_V04.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), INSURANCE (overrides.json: HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133: the unnamed group with first segment IN at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXU_V04.xsd, so named INSURANCE from HL7-xml v2.5.1/VXU_V04.xsd, VXU_V04.INSURANCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133: the unnamed group with first segment ORC at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXU_V04.xsd, so named ORDER from HL7-xml v2.5.1/VXU_V04.xsd, VXU_V04.ORDER.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).) and OBSERVATION (overrides.json: HL7 v2.4 Chapter 4, section 4.17.6 VXU - unsolicited vaccination record update (event V04), p 4-133: the unnamed group with first segment OBX at [ORDER] (v2.4 prints no group names); HL7-xml v2.4 has no VXU_V04.xsd, so named OBSERVATION from HL7-xml v2.5.1/VXU_V04.xsd, VXU_V04.OBSERVATION.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3905,7 +3905,7 @@ extension MessageStructureTable {
         id: "VXX_V02",
         version: "2.4",
         triggers: ["VXX^V02"],
-        citation: "HL7 v2.4 Chapter 4, section 4.17.4 VXX - response to vaccination query returning multiple PID matches, p 4-132. Unprinted group names (ADR-019 decision 3): PATIENT (overrides.json: HL7 v2.4 Chapter 4, section 4.17.4 VXX - response to vaccination query returning multiple PID matches, p 4-132: the unnamed group with first segment PID at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXX_V02.xsd, so named PATIENT from HL7-xml v2.5.1/VXX_V02.xsd, VXX_V02.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
+        citation: "HL7 v2.4 Chapter 4, section 4.17.4 VXX - response to vaccination query returning multiple PID matches, p 4-132. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-141). Unprinted group names (ADR-019 decision 3): PATIENT (overrides.json: HL7 v2.4 Chapter 4, section 4.17.4 VXX - response to vaccination query returning multiple PID matches, p 4-132: the unnamed group with first segment PID at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXX_V02.xsd, so named PATIENT from HL7-xml v2.5.1/VXX_V02.xsd, VXX_V02.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),

@@ -1417,7 +1417,7 @@ extension MessageStructureTable {
         id: "DSR_Q01",
         version: "2.6",
         triggers: ["DSR^Q01"],
-        citation: "HL7 v2.6 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 95.",
+        citation: "HL7 v2.6 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 95. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 84).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1437,7 +1437,7 @@ extension MessageStructureTable {
         id: "DSR_Q03",
         version: "2.6",
         triggers: ["DSR^Q03"],
-        citation: "HL7 v2.6 Chapter 5, section 5.10.3.2 DSR/ACK - deferred response to a query (event Q03), p 96.",
+        citation: "HL7 v2.6 Chapter 5, section 5.10.3.2 DSR/ACK - deferred response to a query (event Q03), p 96. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 84).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4306,7 +4306,7 @@ extension MessageStructureTable {
         id: "QCK_Q02",
         version: "2.6",
         triggers: ["QCK^Q02"],
-        citation: "HL7 v2.6 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 96.",
+        citation: "HL7 v2.6 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 96. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 86).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4366,7 +4366,7 @@ extension MessageStructureTable {
         id: "QRY_Q01",
         version: "2.6",
         triggers: ["QRY^Q01", "QRY^Q26", "QRY^Q27", "QRY^Q28", "QRY^Q29", "QRY^Q30"],
-        citation: "HL7 v2.6 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 95; the same structure is printed for QRY^Q26 (4.13.15), QRY^Q27 (4.13.16), QRY^Q28 (4.13.17), QRY^Q29 (4.13.18) and QRY^Q30 (4.13.19).",
+        citation: "HL7 v2.6 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 95; the same structure is printed for QRY^Q26 (4.13.15), QRY^Q27 (4.13.16), QRY^Q28 (4.13.17), QRY^Q29 (4.13.18) and QRY^Q30 (4.13.19). Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 86).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4382,7 +4382,7 @@ extension MessageStructureTable {
         id: "QRY_Q02",
         version: "2.6",
         triggers: ["QRY^Q02"],
-        citation: "HL7 v2.6 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 96.",
+        citation: "HL7 v2.6 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 96. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 86).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6002,7 +6002,7 @@ extension MessageStructureTable {
         id: "UDM_Q05",
         version: "2.6",
         triggers: ["UDM^Q05"],
-        citation: "HL7 v2.6 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 94.",
+        citation: "HL7 v2.6 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 94. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 87).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),

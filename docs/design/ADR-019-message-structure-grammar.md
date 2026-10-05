@@ -1197,7 +1197,9 @@ compiling a structure per message.
   whose intended text is a list keeping the printed event and adding one). Each v2.3.1
   structure whose ID came from the table carries "Structure ID from Table 0354 v2.3.1" in its
   citation, with the table's page, any erratum (printed and corrected) and any declaration (90
-  of 99; the other nine print their ID). Three new rules settle the rest, each
+  of 99; the other nine print their ID). Since P8b-18 every version that prints the table does
+  the same (v2.4: 24 of 148, v2.5.1: 12 of 173, v2.6: 6 of 190; every v2.7.1 and v2.8.2 caption
+  prints its ID). Three new rules settle the rest, each
   cited in `overrides.json`: a caption whose events two rows list (ADT^A28, ADT^A31 under ADT_A01
   and ADT_A28) is resolved only when every event is a declared shared trigger of exactly those
   structures, and the print is then each structure's; `captionStructures` names the row (of the caption's own message code) for a
@@ -1237,7 +1239,7 @@ compiling a structure per message.
   with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05), registered under
   synthesised IDs with their reason. Fix round 2 adds the override kind `referencedTriggers`
   (a trigger whose prose names an already printed structure without ambiguity is added to that
-  structure's triggers, cited): the four prose cross-references to printed structures added to them through overrides.json `referencedTriggers` (ORU^W01 to ORU_R01, CH07 7.19.1; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1). v2.3.1 MCF is folded onto `MCF^*` (v2.3.1: 100
+  structure's triggers, cited): the four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1). v2.3.1 MCF is folded onto `MCF^*` (v2.3.1: 100
   structures).
 - **Lookup rule 3 implemented** (pilot addendum: "not implemented"; carry-in P8-6(b)). v2.3 MSH-9
   is CM <message type>^<trigger event> (CH2 2.24.1.9) with no third component. Once MSH-12 reads

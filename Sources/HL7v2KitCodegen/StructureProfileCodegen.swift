@@ -20,8 +20,11 @@ func profileSwiftNames(_ name: String) -> (constant: String, file: String) {
 }
 
 /// Check a decoded profile file against its directory and the base it constrains.
+/// `overrideNames` holds the overrides.json `groupNames` entries as "version|structure|name": a
+/// group or choice named through nameSource `override` must be one of the base structure's (P8b-18).
 func validateProfileStructure(_ s: MessageStructureSchema, file: URL, profile: String,
-                              base: [String: [String: MessageStructureSchema]]) throws {
+                              base: [String: [String: MessageStructureSchema]],
+                              overrideNames: Set<String>) throws {
     guard let tag = s.profile, let baseVersion = s.baseVersion, let rule = s.rule else {
         throw StructureSchemaError(description: "a profile structure needs \"profile\", \"baseVersion\" and \"rule\"")
     }
@@ -42,6 +45,42 @@ func validateProfileStructure(_ s: MessageStructureSchema, file: URL, profile: S
     guard extra.isEmpty else {
         throw StructureSchemaError(description: "triggers \(extra) are not printed for the base v\(baseVersion) \(s.structure)")
     }
+    try validateProfileOverrideNames(s.elements, version: baseVersion, structure: s.structure, overrideNames: overrideNames)
+}
+
+/// A name taken through nameSource `override` in a profile file is the base structure's: an
+/// overrides.json groupNames entry of the same version and structure ID names it. A citation
+/// that merely mentions "overrides.json" is not enough (P8b-18).
+private func validateProfileOverrideNames(_ elements: [StructureElementSchema], version: String, structure: String,
+                                          overrideNames: Set<String>) throws {
+    for element in elements {
+        if element.nameSource == "override", let name = element.group ?? element.choice,
+           !overrideNames.contains("\(version)|\(structure)|\(name)") {
+            let kind = element.group != nil ? "group" : "choice"
+            throw StructureSchemaError(description: "\(kind) \(name) (nameSource override) names no overrides.json "
+                + "groupNames entry of the base v\(version) \(structure)")
+        }
+        try validateProfileOverrideNames((element.elements ?? []) + (element.alternatives ?? []), version: version,
+                                         structure: structure, overrideNames: overrideNames)
+    }
+}
+
+/// The overrides.json `groupNames` entries as "version|structure|name"; an absent file or key
+/// gives none.
+func overrideGroupNames(in root: URL) throws -> Set<String> {
+    let url = root.appendingPathComponent(structureOverridesFileName)
+    guard FileManager.default.fileExists(atPath: url.path) else { return [] }
+    let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
+    guard let entries = (object as? [String: Any])?["groupNames"] as? [[String: Any]] else { return [] }
+    var out: Set<String> = []
+    for entry in entries {
+        guard let version = entry["version"] as? String, let structure = entry["structure"] as? String,
+              let name = entry["name"] as? String else {
+            throw StructureSchemaError(description: "\(url.path): a groupNames entry needs version, structure and name")
+        }
+        out.insert("\(version)|\(structure)|\(name)")
+    }
+    return out
 }
 
 /// Render one table per directory under `<root>/profiles` (absent: none). The directory
@@ -52,6 +91,13 @@ func renderProfileStructureTables(from root: URL, to outputRoot: URL,
     let profilesRoot = root.appendingPathComponent(structureProfilesDirectoryName)
     guard fm.fileExists(atPath: profilesRoot.path) else { return [] }
     var rendered: [(file: URL, source: String)] = []
+    let overrideNames: Set<String>
+    do {
+        overrideNames = try overrideGroupNames(in: root)
+    } catch {
+        FileHandle.standardError.write(Data("HL7v2KitCodegen: \(error)\n".utf8))
+        throw ExitCode.failure
+    }
     let entries = try fm.contentsOfDirectory(at: profilesRoot, includingPropertiesForKeys: [.isDirectoryKey])
         .filter { !$0.lastPathComponent.hasPrefix(".") }
         .sorted { $0.lastPathComponent < $1.lastPathComponent }
@@ -71,7 +117,7 @@ func renderProfileStructureTables(from root: URL, to outputRoot: URL,
         for fileURL in files {
             do {
                 let s = try decoder.decode(MessageStructureSchema.self, from: Data(contentsOf: fileURL))
-                try validateProfileStructure(s, file: fileURL, profile: profile, base: base)
+                try validateProfileStructure(s, file: fileURL, profile: profile, base: base, overrideNames: overrideNames)
                 structures.append(s)
             } catch {
                 FileHandle.standardError.write(Data("HL7v2KitCodegen: \(fileURL.path): \(error)\n".utf8))

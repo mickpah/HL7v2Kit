@@ -855,8 +855,8 @@ def check_caption_erratum_occurrence():
 def check_table_0354_provenance():
     # P8b-14 fix round 1: on v2.3.1 (the table-0354 caption era) every structure whose ID was read
     # from Table 0354 says so in its citation, naming any erratum (printed and corrected row) and
-    # any declaration that resolved it; a caption printing its ID adds nothing; the caret era
-    # (v2.4's two-part captions) is unchanged.
+    # any declaration that resolved it; a caption printing its ID adds nothing. Since P8b-18 the
+    # caret era (v2.4's two-part captions) says so too.
     rows = [("MSH", "Header"), ("PID", "Patient")]
     text = _page(1, ["    XYZ^X02                   Synthetic Message                     Chapter"]
                  + _table("XYZ^X02", rows)[1:] + [""]
@@ -875,7 +875,8 @@ def check_table_0354_provenance():
     assert not [r for r in report if r[1] == "error"], report
     structures, _, _ = _run("2.4", [("syn", text)], fix | {"errata": [{**e, "version": "2.4"} for e in fix["errata"]]},
                             tables=table)
-    assert "Structure ID from Table 0354" not in structures["XYZ_X01"]["citation"], structures["XYZ_X01"]["citation"]
+    assert " Structure ID from Table 0354 v2.4" in structures["XYZ_X01"]["citation"], structures["XYZ_X01"]["citation"]
+    assert "Structure ID from Table 0354" not in structures["ABC_X05"]["citation"], structures["ABC_X05"]["citation"]
     # A declared shared trigger names the rows that list it.
     two = [("XYZ_X01", ["X01", "X28"], "X01, X28"), ("XYZ_X28", ["X28"], "X28")]
     text = _page(1, ["    XYZ^X28                   Synthetic Message                     Chapter"] + _table("XYZ^X28", rows)[1:],
@@ -925,6 +926,13 @@ def check_caption_structure_declared():
     _, report, _ = _run("2.3.1", [("syn", text)], {**EMPTY, "captionStructures": [{**entry, "structure": "ABC_X01"}]},
                         tables=other, full=True)
     assert any(r[1] == "error" and "another message code" in r[2] for r in report), report
+    # P8b-18: the message code compared is the Table 0354 row's own, so the entry is first looked
+    # up as a row: a structure that is no row is reported as no row, never as "a row of another
+    # message code" because of its ID prefix.
+    _, report, _ = _run("2.3.1", [("syn", text)], {**EMPTY, "captionStructures": [{**entry, "structure": "ABC_X09"}]},
+                        tables=table, full=True)
+    errors = [r[2] for r in report if r[1] == "error" and "captionStructures" in r[2]]
+    assert errors and all("is not a Table 0354 v2.3.1 row" in e for e in errors), report
     for bad, why in (({**entry, "structure": "XYZ_X09"}, "not a Table 0354 row"), ({**entry, "section": "9.1.8"}, "stale")):
         _, report, _ = _run("2.3.1", [("syn", text)], {**EMPTY, "captionStructures": [bad]}, tables=table, full=True)
         assert any(r[1] == "error" and "captionStructures" in r[2] for r in report), (why, report)
@@ -1124,6 +1132,15 @@ def check_two_part_caption_with_direction():
         assert structures["ACK"]["triggers"] == ["ACK^X02"], structures
         # XYZ_X03 is the shared TABLE's row with no caption here; the two read rows are not "missing".
         assert [r[0] for r in report if r[1] in ("needs-structure-id", "0354-missing-caption")] == ["XYZ_X03"], report
+        # P8b-18 (negative case): every printed direction caption is a column header ending in
+        # "Chapter" (all twelve in the v2.3.1 to v2.6 prints); a line of running prose that starts
+        # "CODE^EVT (A to B)" and goes on two spaces later is not a caption, and reads nothing.
+        prose = "    XYZ^X02 (A to B)  is sent first, and the response follows later in the session."
+        assert ext.match_caption(prose, ext.ERAS[f"v{version}"][1]) is None, (version, prose)
+        text = _page(1, ["The deferred query is sent by the initiating system:", prose, "and then acknowledged."],
+                     heading="9.1.3           XYZ/ABC - synthetic (Event X02)")
+        structures, report, count = _run(version, [("syn", text)], tables=table)
+        assert count == 0 and not [r for r in report if r[1] == "skipped"], (version, count, report)
 
 
 def check_section_title_caption():
@@ -1455,6 +1472,19 @@ def check_referenced_triggers():
         {"version": "2.3", "structure": "XYZ_X07", "triggers": ["XYZ^X09"], "citation": "x"}]}
     _, report, _ = _run("2.3", [("syn", text)], stale, full=True)
     assert ("XYZ_X07", "error", "referencedTriggers entry names no structure read from the print") in report, report
+    # P8b-18: a referenced trigger of another message code is an error; a referenced trigger enters
+    # the shared-trigger check (here XYZ^X09 is also printed as XYZ_X09, undeclared).
+    other = {**EMPTY, "referencedTriggers": [
+        {"version": "2.3", "structure": "XYZ_X01", "triggers": ["ABC^X09"], "citation": "x"}]}
+    _, report, _ = _run("2.3", [("syn", text)], other, full=True)
+    assert ("XYZ_X01", "error", "referencedTriggers entry adds ABC^X09, whose message code is not XYZ") in report, report
+    two = _page(1, ["    XYZ                       Synthetic Message                     Chapter"]
+                + _table("XYZ", [("MSH", "Header"), ("PID", "Patient")])[1:], heading="9.2.1 XYZ - synthetic (event X01)") \
+        + _page(2, ["    XYZ                       Synthetic Message                     Chapter"]
+                + _table("XYZ", [("MSH", "Header"), ("PV1", "Visit")])[1:], heading="9.2.2 XYZ - synthetic (event X09)")
+    _, report, _ = _run("2.3", [("syn", two)], entries, full=True)
+    assert any(r[0] == "XYZ^X09" and r[1] == "shared-trigger" and "XYZ_X01" in r[2] and "XYZ_X09" in r[2]
+               for r in report), report
     for bad in ({"version": "2.3", "structure": "XYZ_X01", "triggers": [], "citation": "x"},
                 {"version": "2.3", "structure": "XYZ_X01", "triggers": ["XYZ-X09"], "citation": "x"}):
         try:

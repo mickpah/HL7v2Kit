@@ -87,6 +87,7 @@ CAPTION = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")\^(" + _SID + r"
 # The direction is read past, never into the title (P8b-13 fix round 1).
 # One space before the caret is a typesetting slip read as the caption (v2.3.1 CH08 8.8.1 "MFN ^M05").
 TWO_PART = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2}) ?\^(" + _EVT + r")(?: \([A-Z] to [A-Z]\))?(\s{2,})(\S.*)$")
+DIRECTION = re.compile(r"^\s*[A-Z][A-Z0-9]{2} ?\^" + _EVT + r" \([A-Z] to [A-Z]\)\s")
 # v2.7.1 and v2.8.2: "CODE^EVT^STRUCT: title" on its own line, then a "Segments Description" row;
 # v2.8.2 CH07 prints "ACK^R01^ACK : title" with a space before the colon (P8b-11: read as a caption,
 # so the ORU_R01 and ORU_R30 rows end there instead of running on into the acknowledgment).
@@ -100,7 +101,7 @@ COLUMNS_CAPTION = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2}\^\S+)\s{2,}(\S.*?)\s{2,}S
 # v2.3: the message code alone, a title and "Chapter"; the event is in the section title.
 CODE_ONLY = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})(\s{3,})(\S.*?)\s{2,}Chapter\s*$")
 # v2.3 (section-title era) also prints, P8b-15: a direction tag after the code, no caret ("QRY (A to
-# B)", CH02 2.18.1 and 2.18.2, p 2-74); and, read only when the next row is the MSH row, a code one
+# B)", CH02 2.18.1 and 2.18.2, p 2-75); and, read only when the next row is the MSH row, a code one
 # space from a long title ("RRE Pharmacy/Treatment Encoded Order Acknowledgment Message  Chapter",
 # CH04 4.8.6, p 4-73; RRA, 4.8.13) or a code with no Chapter column ("R0R  Pharmacy /Treatment Order
 # Response", CH04 4.8.17 to 4.8.21, pp 4-105 to 4-107).
@@ -316,6 +317,10 @@ def match_caption(line, era):
     m = TWO_PART.match(line)
     # A "title" that is itself CODE^EVT is a grid row (v2.5.1 CH05 5.10.3's query/response
     # pairs, "EQQ^Q04   TBR^R08   Tabular"), not a caption.
+    # A direction caption is a column header: all twelve printed (v2.3.1 to v2.6) end in "Chapter";
+    # "CODE^EVT (A to B)  text" in running prose does not, and is no caption (P8b-18).
+    if m and DIRECTION.search(line) and not re.search(r"\s{2,}Chapter\s*$", line):
+        return None
     if m and "|" not in line and "<cr>" not in line.lower() and not re.match(r"[A-Z][A-Z0-9]{2}\^", m.group(5)):
         return (len(m.group(1)), m.group(2), m.group(3), "", m.start(5), m.group(5))
     return None
@@ -764,11 +769,12 @@ def table_citation(ver, sid, triggers, where, withdrawn):
 
 
 def table_provenance(ver, table_ver, era, sid, how, errata, where):
-    """The sentence a v2.3.1 structure citation carries when its ID was read from Table 0354
-    (P8b-14 fix round 1): the table's place, any erratum the row was read through (printed and
-    corrected), and any declaration that resolved a caption. Only the table-0354 caption era
-    (v2.3.1) carries it; other eras keep their committed citations."""
-    if era != "table-0354" or not how:
+    """The sentence a structure citation carries when its ID was read from Table 0354 (P8b-14
+    fix round 1, v2.3.1; every version since P8b-18: the v2.4 two-part captions, QRY_Q02 and
+    QCK_Q02 on v2.4 to v2.6): the table's place, any erratum the row was read through (printed
+    and corrected), and any declaration that resolved a caption. v2.3 has no table and
+    synthesises its IDs; v2.7.1 and v2.8.2 captions print every ID."""
+    if not how:
         return ""
     printed = next((e["printed"] for e in errata or [] if "_" in e["printed"]), sid)
     loc = where.get(printed) or where.get(sid)
@@ -1199,7 +1205,8 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     shared = {e["trigger"]: sorted(e["structures"]) for e in overrides["sharedTriggers"] if e["version"] == ver}
     unresolved = {(u["section"], u["caption"]): u for u in overrides["unresolvedCaptions"] if u["version"] == ver}
     assigned = {(u["section"], u["caption"]): u for u in overrides["captionStructures"] if u["version"] == ver}
-    rows_of_table = {row for row, _, _ in table}
+    # Table 0354 row: its message code, the code the row prints before "_" (the ACK row: ACK itself).
+    rows_of_table = {row: row.split("_")[0] for row, _, _ in table}
     used_unresolved, used_assigned, assigned_cites = set(), set(), {}
     provenance = {}     # structure ID: how its Table 0354 resolutions went (P8b-14 fix round 1)
     # v2.3 (P8b-15): events for a code-alone caption whose title names none; an entry with an
@@ -1261,21 +1268,22 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 declared_id = assigned.get((cap.section, cap.printed)) if len(hits) != 1 else None
                 if len(hits) > 1 and all(shared.get(f"{cap.code}^{v}") == hits for v in cap.events):
                     owners = hits
-                elif declared_id and declared_id["structure"].split("_")[0] != cap.code:
-                    used_assigned.add((cap.section, cap.printed))
-                    report.append((cap.printed, "error", f"captionStructures entry for section {cap.section} names "
-                                   f"{declared_id['structure']}, a row of another message code"))
-                    continue
-                elif declared_id and declared_id["structure"] in rows_of_table:
-                    # A cited captionStructures entry: the row the print belongs to (P8b-14).
-                    used_assigned.add((cap.section, cap.printed))
-                    owners = [declared_id["structure"]]
-                    assigned_cites.setdefault(owners[0], []).append(declared_id["citation"])
-                elif declared_id:
+                elif declared_id and declared_id["structure"] not in rows_of_table:
                     used_assigned.add((cap.section, cap.printed))
                     report.append((cap.printed, "error", f"captionStructures entry for section {cap.section} names "
                                    f"{declared_id['structure']}, which is not a Table 0354 v{table_ver} row"))
                     continue
+                elif declared_id and rows_of_table[declared_id["structure"]] != cap.code:
+                    # P8b-18: the row's own message code, looked up in the table, not the entry's ID prefix.
+                    used_assigned.add((cap.section, cap.printed))
+                    report.append((cap.printed, "error", f"captionStructures entry for section {cap.section} names "
+                                   f"{declared_id['structure']}, a row of another message code"))
+                    continue
+                elif declared_id:
+                    # A cited captionStructures entry: the row the print belongs to (P8b-14).
+                    used_assigned.add((cap.section, cap.printed))
+                    owners = [declared_id["structure"]]
+                    assigned_cites.setdefault(owners[0], []).append(declared_id["citation"])
                 elif len(hits) != 1:
                     why = (f"Table 0354 (v{table_ver}) has no row for it" if not hits else
                            f"Table 0354 (v{table_ver}) maps it to {', '.join(hits)}" if table else
@@ -1456,10 +1464,21 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         if (ver, sid) in bundles.defects:
             report.append((sid, "bundle-differs", f"{_v2xml.folder(ver)}/{sid}.xsd is unreadable: {bundles.defects[(ver, sid)]}"))
         report.append((sid, "parsed", f"{len(entries)} caption(s)"))
+    referenced_by = {}
+    for e in overrides.get("referencedTriggers", []):
+        if e["version"] == ver:
+            referenced_by.setdefault(e["structure"], []).extend(e["triggers"])
+            # P8b-18: a referenced trigger carries the structure's own message code (the prose names
+            # that message for the event); another code is a different message, never a reference.
+            report += [(e["structure"], "error", f"referencedTriggers entry adds {t}, whose message code is not "
+                        f"{e['structure'].split('_')[0]}") for t in e["triggers"]
+                       if t.split("^")[0] != e["structure"].split("_")[0]]
     for sid in sorted(prints):     # every printed structure, parsed or not, claims its triggers
         fold = folds.get(sid)
-        for trig in [fold["trigger"]] if fold else dict.fromkeys(
-                [f"{c.code}^{v}" for c, _, _ in prints[sid] for v in c.events] + added.get(sid, [])):
+        # P8b-18: referenced triggers enter the shared-trigger check like printed ones.
+        for trig in [fold["trigger"]] + referenced_by.get(sid, []) if fold else dict.fromkeys(
+                [f"{c.code}^{v}" for c, _, _ in prints[sid] for v in c.events] + added.get(sid, [])
+                + referenced_by.get(sid, [])):
             owner.setdefault(trig, []).append(sid)
     report += shared_triggers(ver, owner, overrides, full)
     report += reconcile_0354(ver, table_ver, table, prints)

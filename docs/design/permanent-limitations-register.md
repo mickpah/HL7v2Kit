@@ -699,7 +699,7 @@ and no group spans. RQA_I08 is modelled as printed, `[ [{GT1}] {IN1 [IN2] [IN3]}
 p 11-12): an insurance group follows GT1 within one optional group, where RPA, REF and RRI print
 `[{GT1}] [{IN1 ...}]`; the print is followed, not the siblings. Triggers the print defines only in
 prose or Table 0003 are classed by what the print gives (P8b-15 fix round 2): ORU^W01 (7.19.1, "ORU
-messages"; v2.3 prints one ORU definition, 7.2.1), QRY^P04 (CH06 6.3.4, "the QRY/DSP transaction, as defined in Chapter 2"), QRY^R05 and UDM^R06 (CH07 7.2.2.1; both Chapter 2 QRY prints are MSH QRD [QRF] [DSC], and Chapter 2 prints one UDM) name a printed structure without ambiguity and are added to it through `overrides.json` `referencedTriggers`; QRF^W02, QRY^R03, DSR^R03 and DSR^R05 do not and are registered (table above) as info. Corpus run (P8b-15): no misfire; 11 spec-example messages draw findings that are
+messages", and 7.14, p 7-104, waveform results sent "like other results"; v2.3 prints one ORU definition, 7.2.1), QRY^P04 (CH06 6.3.4, "the QRY/DSP transaction, as defined in Chapter 2"), QRY^R05 and UDM^R06 (CH07 7.2.2.1; both Chapter 2 QRY prints are MSH QRD [QRF] [DSC], and Chapter 2 prints one UDM) name a printed structure without ambiguity and are added to it through `overrides.json` `referencedTriggers`; QRF^W02, QRY^R03, DSR^R03 and DSR^R05 do not and are registered (table above) as info. Corpus run (P8b-15): no misfire; 11 spec-example messages draw findings that are
 example defects (five CH10 10.6 examples print AIP before AIL; three CH03 3.4.2 ADT examples order
 OBX against the print; CH04 4.14.5 sends ACK with QAK; two CH06 6.5 BAR^P05 examples omit EVN).
 
