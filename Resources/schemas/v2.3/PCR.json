@@ -24,7 +24,7 @@
     { "index": 19, "swiftName": "deviceOperatorQualifications", "name": "Device Operator Qualifications", "dataType": "ID", "length": "1", "table": "0242", "optionality": "O", "repeatability": "1", "tables": ["0242"] },
     { "index": 20, "swiftName": "relatednessAssessment", "name": "Relatedness Assessment", "dataType": "ID", "length": "1", "table": "0250", "optionality": "O", "repeatability": "1", "tables": ["0250"] },
     { "index": 21, "swiftName": "actionTakenInResponseToTheEvent", "name": "Action Taken In Response To The Event", "dataType": "ID", "length": "2", "table": "0251", "optionality": "O", "repeatability": "6", "tables": ["0251"] },
-    { "index": 22, "swiftName": "eventCausalityObservations", "name": "Event Causality Observations", "dataType": "ID", "length": "2", "table": "0232", "optionality": "O", "repeatability": "6", "tables": ["0232"] },
+    { "index": 22, "swiftName": "eventCausalityObservations", "name": "Event Causality Observations", "dataType": "ID", "length": "2", "table": "0252", "optionality": "O", "repeatability": "6", "tables": ["0252"] },
     { "index": 23, "swiftName": "indirectExposureMechanism", "name": "Indirect Exposure Mechanism", "dataType": "ID", "length": "1", "table": "0253", "optionality": "O", "repeatability": "3", "tables": ["0253"] }
   ]
 }

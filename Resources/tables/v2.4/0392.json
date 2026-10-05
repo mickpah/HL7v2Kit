@@ -2,9 +2,9 @@
   "table": "0392",
   "version": "2.4",
   "name": "Match reason",
-  "kind": "HL7",
+  "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.4 Appendix A, HL7 Table 0392 - Match reason",
+  "citation": "HL7 v2.4 Chapter 5 sec 5.5.4.2 QRI-2 Match reason code (IS): 'Refer to User-defined Table 0392 - Match reason for suggested values'; User-defined Table 0392 - Match reason (p. 5-50)",
   "entries": [
     {
       "code": "DB",

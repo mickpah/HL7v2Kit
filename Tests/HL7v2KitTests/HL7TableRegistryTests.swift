@@ -213,6 +213,24 @@ struct HL7TableRegistryTests {
         #expect(t0290.entries.first { $0.code == "63" }?.description == "/")
     }
 
+    @Test("A table kind follows the defining chapter where Appendix A indexes it otherwise (P7-8)")
+    func chapterKindOverAppendixIndex() throws {
+        for number in ["0174", "0315", "0316"] {
+            #expect(HL7TableRegistry.table(number, version: .v2_3)?.kind == .userDefined, "v2.3 \(number)")
+        }
+        #expect(HL7TableRegistry.table("0392", version: .v2_4)?.kind == .userDefined, "v2.4 0392")
+        // v2.3 CH2 sec 2.24.22.2: "HL7 table 0208", printed with OK, NF, AE and AR.
+        let t0208 = try #require(HL7TableRegistry.table("0208", version: .v2_3))
+        #expect(t0208.kind == .hl7 && t0208.isClosed)
+        #expect(Set(t0208.codes) == ["OK", "NF", "AE", "AR"])
+    }
+
+    @Test("v2.3 PD1-12 and PCR-22 bind the table their definitions name, not the misprinted TBL# (P7-8)")
+    func v23MisprintedBindings() {
+        #expect(SegmentGrammarTable.v2_3["PD1"]?.field(12)?.table == "0136")
+        #expect(SegmentGrammarTable.v2_3["PCR"]?.field(22)?.table == "0252")
+    }
+
     @Test("v2.4 Table 0290 rows 51 to 63 carry the base64 character, not the value reprinted before it")
     func table0290V24Descriptions() throws {
         let v24 = try #require(HL7TableRegistry.table("0290", version: .v2_4))

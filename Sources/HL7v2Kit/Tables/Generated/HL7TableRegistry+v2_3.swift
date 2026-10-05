@@ -2456,7 +2456,7 @@ extension HL7TableRegistry {
     static let t0174_v2_3 = HL7Table(
         number: "0174",
         name: "Nature of Test/Observation",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "P", description: "Profile or battery consisting of many independent atomic observations (e.g., SMA12, electrolytes), usually done at one instrument on one specimen"),
@@ -2841,12 +2841,13 @@ extension HL7TableRegistry {
     static let t0208_v2_3 = HL7Table(
         number: "0208",
         name: "Query Response Status",
-        kind: .userDefined,
+        kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "OK", description: "Data found, no errors (this is the default)"),
             HL7Table.Entry(code: "NF", description: "No data found, no errors"),
             HL7Table.Entry(code: "AR", description: "Application reject"),
+            HL7Table.Entry(code: "AE", description: "Application error"),
         ] as [HL7Table.Entry]
     )
 
@@ -4453,7 +4454,7 @@ extension HL7TableRegistry {
     static let t0315_v2_3 = HL7Table(
         number: "0315",
         name: "Living Will",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "Y", description: "Yes, patient has a living will"),
@@ -4467,7 +4468,7 @@ extension HL7TableRegistry {
     static let t0316_v2_3 = HL7Table(
         number: "0316",
         name: "Organ Donor",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "Y", description: "Yes, patient is a donor and card is on file"),

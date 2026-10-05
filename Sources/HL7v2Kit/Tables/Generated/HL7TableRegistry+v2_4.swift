@@ -6499,7 +6499,7 @@ extension HL7TableRegistry {
     static let t0392_v2_4 = HL7Table(
         number: "0392",
         name: "Match reason",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "DB", description: "Match on Date of Birth"),

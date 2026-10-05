@@ -103,10 +103,10 @@
       "index": 12,
       "swiftName": "protectionIndicator",
       "name": "Protection Indicator",
-      "dataType": "ID", "length": "1", "table": "0129",
+      "dataType": "ID", "length": "1", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
-      "tables": ["0129"]
+      "tables": ["0136"]
     }
   ]
 }

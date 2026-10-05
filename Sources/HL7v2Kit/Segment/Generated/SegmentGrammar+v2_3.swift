@@ -1397,7 +1397,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 19, name: "Device Operator Qualifications", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0242", length: "1"),
             FieldGrammar(index: 20, name: "Relatedness Assessment", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0250", length: "1"),
             FieldGrammar(index: 21, name: "Action Taken In Response To The Event", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0251", length: "2", maxRepetitions: 6),
-            FieldGrammar(index: 22, name: "Event Causality Observations", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0232", length: "2", maxRepetitions: 6),
+            FieldGrammar(index: 22, name: "Event Causality Observations", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0252", length: "2", maxRepetitions: 6),
             FieldGrammar(index: 23, name: "Indirect Exposure Mechanism", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0253", length: "1", maxRepetitions: 3),
         ]
     )
@@ -1417,7 +1417,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Separate Bill", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "2"),
             FieldGrammar(index: 10, name: "Duplicate Patient", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "2"),
             FieldGrammar(index: 11, name: "Publicity Indicator", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "1"),
-            FieldGrammar(index: 12, name: "Protection Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0129", length: "1"),
+            FieldGrammar(index: 12, name: "Protection Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "1"),
         ]
     )
 

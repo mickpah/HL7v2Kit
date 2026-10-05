@@ -154,6 +154,18 @@
     ],
     "cite": "v2.3 CH3 sec 3.3.10 DB1 attribute table prints TBL# 0033 for Disabled person code: a digit transposition. The field definition (3.3.10.2) says 'Refer to user-defined table 0334 - Disabled person' and prints that table beneath it; Appendix A lists 0334 Disabled Person with the same four values and has no 0033; v2.3.1, v2.4 and v2.5.1 all print 0334. Registered spec typo, normalised (precedent: v2.4 AL1-1)."
   },
+  "v2.3/PD1-12": {
+    "tables": [
+      "0136"
+    ],
+    "cite": "v2.3 CH3 sec 3.3.9 PD1 attribute table (Figure 3-9, p. 3-74) prints TBL# 0129 (Accommodation code, PV2-2) for Protection indicator. The field definition (3.3.9.12, p. 3-76) says 'Refer to HL7 table 0136 - Yes/no indicator for valid values'; v2.3.1 onwards print 0136. Registered spec misprint, normalised (precedent: v2.3 DB1-2; P7-8, audit-schemas KINDMISMATCH)."
+  },
+  "v2.3/PCR-22": {
+    "tables": [
+      "0252"
+    ],
+    "cite": "v2.3 CH7 sec 7.11.3 PCR attribute table (p. 7-91) prints TBL# 0232 (Insurance company contact reason, IN2-57) for Event causality observations. The field definition (7.11.3.22, p. 7-94) says 'Refer to HL7 table 0252 - Causality observations for valid values' and prints that table; v2.3.1 onwards print 0252. Registered spec misprint, normalised (precedent: v2.3 DB1-2; P7-8, audit-schemas KINDMISMATCH)."
+  },
   "v2.5.1/TQ1-12": {
     "tables": [
       "0472"

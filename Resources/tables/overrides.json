@@ -1,5 +1,31 @@
 {
   "2.3": {
+    "0174": {
+      "kind": "User",
+      "citation": "HL7 v2.3 Chapter 8 sec 8.7.3.18 OM1-18 Nature of test/observation (IS), User-defined Table 0174 - Nature of test/observation (p. 8-27)",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as HL7; the chapter that defines the field prints the table as User-defined Table 0174 and the field as IS, and v2.3.1 onwards index it as User. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255. No validation effect: an IS field is never checked against its table."
+    },
+    "0208": {
+      "kind": "HL7",
+      "citation": "HL7 v2.3 Chapter 2 sec 2.24.22.2 QAK-2 Query response status (ID): 'It is defined with HL7 table 0208 - Query response status'; Table 0208 - Query response status (p. 2-120) prints OK, NF, AE and AR",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as User and its numeric sort omits AE; Chapter 2 defines QAK-2 as ID with HL7 table 0208 and prints four rows, and v2.3.1 onwards index it as HL7 with all four. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255: kind HL7 and the AE row transcribed from the chapter (appended after the Appendix A rows). QAK-2 is now checked against the table, as on v2.3.1 onwards.",
+      "addEntries": [
+        [
+          "AE",
+          "Application error"
+        ]
+      ]
+    },
+    "0315": {
+      "kind": "User",
+      "citation": "HL7 v2.3 Chapter 3 sec 3.3.9.7 PD1-7 Living will (IS): 'Refer to user-defined table 0315 - Living will for suggested values'; User-defined Table 0315 - Living will (p. 3-75)",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as HL7; the chapter that defines the field prints the table as User-defined Table 0315 and the field as IS, and v2.3.1 onwards index it as User. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255. No validation effect: an IS field is never checked against its table."
+    },
+    "0316": {
+      "kind": "User",
+      "citation": "HL7 v2.3 Chapter 3 sec 3.3.9.8 PD1-8 Organ donor (IS): 'Refer to user-defined table 0316 - Organ donor for suggested values'; User-defined Table 0316 - Organ donor (p. 3-75)",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as HL7; the chapter that defines the field prints the table as User-defined Table 0316 and the field as IS, and v2.3.1 onwards index it as User. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255. No validation effect: an IS field is never checked against its table."
+    },
     "0003": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
@@ -1680,6 +1706,11 @@
     }
   },
   "2.4": {
+    "0392": {
+      "kind": "User",
+      "citation": "HL7 v2.4 Chapter 5 sec 5.5.4.2 QRI-2 Match reason code (IS): 'Refer to User-defined Table 0392 - Match reason for suggested values'; User-defined Table 0392 - Match reason (p. 5-50)",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as HL7; the chapter that defines the field prints the table as User-defined Table 0392 and the field as IS, and v2.5.1 onwards index it as User. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255. No validation effect: an IS field is never checked against its table."
+    },
     "0131": {
       "createName": "Contact role",
       "kind": "User",
