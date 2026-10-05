@@ -11,6 +11,18 @@ see exactly which versions are complete, which are partial, and by how much.
 > re-prioritisation recorded in `ROADMAP.md` → M5. Read that first for the decision and its
 > rationale; read this for the enumerated scope.
 
+> **Closed (M5, v3.1.0, 2026-09-16; closure header added 2026-10-05, remediation P7-4).** Exit
+> criterion 3 is met: v2.6 and v2.8.2 were swept chapter by chapter. Today v2.6 has 170
+> segment schemas and v2.8.2 has 180, each every segment with an attribute table in that
+> version's chapters except the CH08 example Z-segment ZL7 ("proposed example only"); v2.7.1,
+> added later (P10), has 170 on the same basis. `python3 scripts/audit-schemas.py --depth`
+> now carries the presence check this register asked for (no absent segment on any version)
+> and reports every schema exact against its own version's attribute table (0 gaps; ADD and
+> RDT, whose `1-n` rows the extractor cannot parse, are hand-authored and whitelisted). The
+> audit's `DEFERRED_VERSIONS` is empty. The `.v2_8` and message-structure sections below are
+> also superseded (see the notes under them). The rest is the historical record of the
+> deferral.
+
 ## Why this register exists (the requirement it sits against)
 
 `the working notes` project requirement **#1** states: *feature-complete over AU-specific — "AU
@@ -81,6 +93,10 @@ picked up.
 documented decision (ADR-013). It is unaffected by this re-prioritisation and stays deferred
 on its own rationale: the `2.8` MSH-12 raw value is rare in the field.
 
+> **Superseded (ADR-018, gate G1; noted 2026-10-05, P7-4).** `Version.v2_8.grammarVersion` is
+> `.v2_8_2`: a `2.8` message is validated against the v2.8.2 grammar and the substitution is
+> reported as `versionGrammarSubstituted(declared:validatedAs:)` (`2.7` likewise against v2.7.1).
+
 ## Also deferred: abstract message syntax (all versions)
 
 Message structures (segment order, segment groups, required segments per trigger event,
@@ -94,6 +110,13 @@ spec-completeness in `permanent-limitations-register.md` section E, designed in 
 and rolled out per version by `planning/remediation/P8b-message-structure-rollout.md` (to be
 scoped by P8-9).
 
+> **Superseded (P8b rollout, 2026-10-03 to 2026-10-05; noted 2026-10-05, P7-4).** Every
+> structure the seven versions print is now either modelled or registered as not modelled with
+> a cited reason (`Resources/structures/`, `completeness.json`), and the check is on in the
+> presets (`.warning` in `.default`, `.error` in `.strict`, off in `.lenient`). Section E of
+> `permanent-limitations-register.md` carries the per-version counts and the rows still
+> blocking. The `planning/` paths above are in the local planning folder, not in the repository.
+
 ## Exit criteria — when this register closes
 
 1. The AU-priority tier reaches full per-version depth (v2.3 / v2.3.1 / v2.4 / v2.5.1).
@@ -102,9 +125,10 @@ scoped by P8-9).
    seed, per-version verification against that version's **own** attribute table, golden
    `--verify`, cross-check pin, `scripts/audit-schemas.py --depth`.
 
-Until (3) completes, **v2.6 and v2.8.2 must be described as partial** wherever coverage is
+~~Until (3) completes, **v2.6 and v2.8.2 must be described as partial** wherever coverage is
 stated: `README.md`, `STATUS.md`, DocC, and any public-facing claim. Requirement #2 makes
-that non-negotiable — an integrator must not be able to mistake partial for complete.
+that non-negotiable — an integrator must not be able to mistake partial for complete.~~
+(criterion 3 met; see the closure header)
 
 ## Re-measuring this register
 
@@ -113,7 +137,8 @@ xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin   # /tmp
 python3 scripts/audit-schemas.py --depth                                   # depth of what exists
 ```
 
-The depth audit only checks schemas that **exist**, so it cannot see an absent segment. The
+~~The depth audit only checks schemas that **exist**, so it cannot see an absent segment. The
 presence gap this register enumerates needs the extract-and-diff described under *Measured
 scope* — see the v1.10 runway item for folding a presence predicate into
-`scripts/audit-schemas.py` so this becomes a one-command check.
+`scripts/audit-schemas.py` so this becomes a one-command check.~~ The presence predicate is
+now part of `--depth` (its `== presence:` line), so the command above is the one-command check.

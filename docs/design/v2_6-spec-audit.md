@@ -1,7 +1,7 @@
 # HL7 v2.6 schema audit — v0.14 (ADR-012)
 
 **Audit date:** 2026-07-09 (v0.14 cycle, substages S1–S5).
-**Audited:** `Resources/schemas/v2.6/*.json` (15 segments: MSH, MSA, ERR, EVN, NTE, PID, PD1, NK1, PV1, AL1, ORC, OBR, OBX, DG1, IN1).
+**Audited:** `Resources/schemas/v2.6/*.json` (15 segments at the v0.14 audit: MSH, MSA, ERR, EVN, NTE, PID, PD1, NK1, PV1, AL1, ORC, OBR, OBX, DG1, IN1; superseded: 170 segment schemas today, every segment with an attribute table in the v2.6 chapters except the CH08 example Z-segment ZL7).
 **Reference:** HL7 v2.6, ANSI/HL7 Final Standard, October 2007. PDFs referenced locally in `docs/standards/HL7_v26_PDF/` (not committed to-tree pending IP review). Attribute tables and field-definition prose were extracted via PDFKit and verified field-by-field against the v2.5.1 baseline schemas.
 **Lens:** the working notes project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. v2.6 is a mainstream version; ADR-012 accepted first-class grammar (Option A) rather than leave it recognised-but-unvalidated (Option B, rejected as a shipped end-state).
 
@@ -23,6 +23,13 @@ v2.6 migrated most `CE` coded fields to `CWE`, but the migration is **field-by-f
 
 ### 3. Field-count growth (new fields appended)
 
+> **Superseded (2026-10-05, remediation P7-4).** NK1, PV1 and IN1 are no longer held at a
+> curated depth. On v2.6 the schemas carry PID 39, NK1 39, PV1 52, ORC 31 and IN1 53 fields,
+> the full printed depth, and `python3 scripts/audit-schemas.py --depth` reports every schema
+> exact against its version's attribute table (0 gaps; ADD and RDT, whose `1-n` rows the
+> extractor cannot parse, are hand-authored and whitelisted). The OBR and OBX rows below are
+> corrected in place: neither grew from v2.5.1 to v2.6. The rest records the v0.14 state.
+
 Segment field counts grew where v2.6 appended fields; the new fields were authored from their v2.6 field-definition prose:
 
 | Segment | v2.5.1 | v2.6 | New fields |
@@ -31,8 +38,8 @@ Segment field counts grew where v2.6 appended fields; the new fields were author
 | MSA | 6 | 8 | MSA-7/8 |
 | NTE | 4 | 8 | NTE-5..8 |
 | PD1 | 21 | 22 | PD1-22 (Advance Directive Last Verified Date) |
-| OBR | 47 | 50 | OBR-48 (Medically Necessary Duplicate Procedure Reason), 49 (Result Handling), 50 (Parent Universal Service Identifier) |
-| OBX | 17 | 25 | OBX-18..25 (Equipment Instance Identifier … Performing Organization Medical Director) |
+| OBR | ~~47~~ 50 | 50 | None. _Corrected (P7-4): v2.5.1 already prints OBR-48 (Medically Necessary Duplicate Procedure Reason), 49 (Result Handling) and 50 (Parent Universal Service Identifier) in its CH07 OBR attribute table (pp. 7-27 to 7-28); `Resources/schemas/v2.5.1/OBR.json` has 50 fields._ |
+| OBX | ~~17~~ 25 | 25 | No new positions. _Corrected (P7-4): v2.5.1 CH07 OBX attribute table (p. 7-42) already prints OBX-1..25, with OBX-20..22 "Reserved for harmonization with V2.6"; v2.6 fills those three slots (Observation Site, Observation Instance Identifier, Mood Code)._ |
 | DG1 | 21 | 26 | DG1-22 (Parent Diagnosis), 23 (DRG CCL Value Code), 24 (DRG Grouping Usage), 25 (DRG Diagnosis Determination Status), 26 (POA Indicator) |
 
 Segments held at the v2.5.1 curation depth where v2.6 added no fields in the modelled range: PID (39), NK1 (13), PV1 (20 — curated), AL1 (6), ORC (31).
@@ -46,6 +53,10 @@ v2.6 is the **first modelled version to use the `W` (withdrawn) optionality code
 Withdrawn fields keep their historical (v2.5.1) `dataType` string in the schema for positional/type continuity, with optionality `W`.
 
 ### 5. IN1 25-field scope (carried limitation, not a regression)
+
+> **Superseded (2026-10-05, remediation P7-4).** IN1 is modelled at its full 53-field v2.6
+> depth, as it is on every other version (v2.3 to v2.4: 49; v2.5.1: 53; v2.7.1: 54;
+> v2.8.2: 55). The 25-field scope below no longer holds.
 
 The v2.6 IN1 schema mirrors the **25-field curation** established for the v2.5.1 / v2.4 / v2.3 IN1 schemas (the shared typed-segment surface), not the full ~53-field v2.6 IN1. This is a **carried scope limitation** consistent across every version, not a v2.6-specific gap. Extending IN1 to its full field set across all versions is a separate feature-completeness backlog item (req #1), out of scope for the v2.6 grammar-parity cycle.
 

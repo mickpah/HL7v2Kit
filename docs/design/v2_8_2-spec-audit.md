@@ -1,9 +1,26 @@
 # HL7 v2.8.2 schema audit — v0.15 (ADR-013)
 
 **Audit date:** 2026-07-09 (v0.15 cycle, substages S1–S5).
-**Audited:** `Resources/schemas/v2.8.2/*.json` (15 segments: MSH, MSA, ERR, EVN, NTE, PID, PD1, NK1, PV1, AL1, ORC, OBR, OBX, DG1, IN1).
+**Audited:** `Resources/schemas/v2.8.2/*.json` (15 segments at the v0.15 audit: MSH, MSA, ERR, EVN, NTE, PID, PD1, NK1, PV1, AL1, ORC, OBR, OBX, DG1, IN1; superseded: 180 segment schemas today, see the addendum).
 **Reference:** HL7 v2.8.2, ANSI/HL7 Final Standard, September 2015 — the latest published HL7 v2.x release. PDFs referenced locally in `docs/standards/HL7_V2.8.2_PDF/PDF/` (not committed to-tree pending IP review). Attribute tables and field-definition prose extracted via PDFKit and verified field-by-field against the v2.6 baseline schemas.
 **Lens:** the working notes project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. v2.8.2 is a deliberate req-#1 reach to the latest standard; ADR-013 accepted first-class grammar (Option A). Sequel to ADR-012 (v2.6).
+
+## Superseded in part (2026-10-05, remediation P7-4)
+
+This audit describes the v0.15 state. Since then:
+
+- 180 segment schemas exist for v2.8.2: every segment with an attribute table in the v2.8.2
+  chapters except the CH08 example Z-segment ZL7 ("proposed example only").
+  `python3 scripts/audit-schemas.py --depth` finds no absent segment and reports every schema
+  exact against its version's attribute table (0 gaps; ADD and RDT, whose `1-n` rows the
+  extractor cannot parse, are hand-authored and whitelisted). The audit's `DEFERRED_VERSIONS`
+  is empty.
+- NK1, PV1 and IN1 carry their full printed depth (41, 54 and 55 fields); PID has 40, OBX 30,
+  OBR 54 and ORC 34.
+- PD1-15 and ORC-26 carry conditions (`PD1-22 populated`, `ORC-20 in (3, 4)`); only OBR-48,
+  DG1-22 and OBX-22 remain conditional without a predicate.
+- The "Known limitations" entries below are corrected in place and the closed ones struck
+  through.
 
 ## Method note — the OBX "Example" trap (req #2)
 
@@ -47,7 +64,7 @@ Fields still present but demoted to backward-compat: PID-13/14; PD1-12/13; PV1-9
 | OBR | 50 | 54 | 51 Observation Group ID (EI), 52 Parent Observation Group ID (EI), 53 Alternate Placer Order Number (CX), 54 Parent Order (EIP) |
 | OBX | 25 | 30 | 26 Patient Results Release Category (ID), 27 Root Cause (CWE), 28 Local Process Control (CWE), 29 Observation Type (ID), 30 Observation Sub-Type (ID) |
 
-Segments held at v2.6 counts (no new fields in the modelled range): MSH (25, byte-identical to v2.6), MSA (8), ERR (12), EVN (7), NTE (8, identical), PD1 (22), AL1 (6), DG1 (26). NK1 (13) and PV1 (20) mirror the v2.6 **curated** depth (full v2.8.2 NK1/PV1 are 41/54); IN1 (25) mirrors the shared curated depth (full v2.8.2 IN1 is 53). These curations are consistent across all versions — a documented req-#1 feature-completeness backlog item, not a v2.8.2 regression.
+Segments held at v2.6 counts (no new fields in the modelled range): MSH (25, byte-identical to v2.6), MSA (8), ERR (12), EVN (7), NTE (8, identical), PD1 (22), AL1 (6), DG1 (26). ~~NK1 (13) and PV1 (20) mirror the v2.6 **curated** depth (full v2.8.2 NK1/PV1 are 41/54); IN1 (25) mirrors the shared curated depth (full v2.8.2 IN1 is 53). These curations are consistent across all versions — a documented req-#1 feature-completeness backlog item, not a v2.8.2 regression.~~ **Superseded (P7-4):** NK1, PV1 and IN1 are modelled at full depth; from v2.6 they grow NK1 39 to 41, PV1 52 to 54 and IN1 53 to 55.
 
 ## Conditional-rule pass (S5)
 
@@ -61,8 +78,8 @@ Conditions carried verbatim where the v2.8.2 OPT column still shows `C` and the 
 
 ### Known limitations (documented, not shipped — req #3/#4)
 
-- **PD1-15, ORC-26, OBR-48, DG1-22, OBX-22** — `C` in the v2.8.2 tables with no extractable predicate; recorded conditional-without-condition (never fire).
-- **NK1 / PV1 / IN1** — curated to the shared typed-segment depth (13 / 20 / 25); the full v2.8.2 field sets (41 / 54 / 53) are unmodelled — a cross-version req-#1 backlog item.
+- **OBR-48, DG1-22, OBX-22** — `C` in the v2.8.2 tables with no extractable predicate; recorded conditional-without-condition (never fire). ~~PD1-15, ORC-26~~ **Shipped (v0.16 S2):** PD1-15 `PD1-22 populated` and ORC-26 `ORC-20 in (3, 4)` (see `conditional-completeness-audit.md`).
+- ~~**NK1 / PV1 / IN1** — curated to the shared typed-segment depth (13 / 20 / 25); the full v2.8.2 field sets (41 / 54 / 53) are unmodelled — a cross-version req-#1 backlog item.~~ **Closed (M5):** NK1 41, PV1 54, IN1 55 fields, the full printed v2.8.2 depth (the v2.8.2 IN1 table prints 55, not 53).
 
 ## Public-API / model impact
 

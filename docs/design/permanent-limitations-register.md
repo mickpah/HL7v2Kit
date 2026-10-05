@@ -927,7 +927,7 @@ Wire data is never lost: `field(_:)` and `CompositeView.field` reach every posit
 
 - **NUL / BOM handling** — embedded NUL is *rejected* at parse (v0.2-P2); BOM is stripped. These are design decisions with no carve-out, not limitations.
 - **`.v2_8` substitution** — a deliberate, announced decision (ADR-018): a `2.8` message is validated against the v2.8.2 grammar, and every report carries `versionGrammarSubstituted` (info) at MSH-12. The v2.8 text is not on disk, so the v2.8 to v2.8.2 differences are unverified; the info issue says so.
-- **Curated NK1 / PV1 / IN1 depth** — a req-#1 feature-completeness *backlog* item (extend the field sets), not a conformance limitation of the modelled fields.
+- ~~**Curated NK1 / PV1 / IN1 depth** — a req-#1 feature-completeness *backlog* item (extend the field sets), not a conformance limitation of the modelled fields.~~ **Closed (M5, v3.1.0, 2026-09-16; struck 2026-10-05, P7-4):** NK1, PV1 and IN1 are modelled at full printed depth on every version (NK1 37 / 37 / 37 / 39 / 39 / 41 / 41, PV1 52 on v2.3 to v2.6 and 54 on v2.7.1 and v2.8.2, IN1 49 / 49 / 49 / 53 / 53 / 54 / 55, in the order v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2).
 - **Blank printed OPT** (v2.4 / v2.5.1 RCP-7) is kept verbatim as `""` in the schema and generated as `.optional` (`optionalityCase` default branch): the spec prints no optionality, and the permissive reading can never raise a false error.
 
 ## Outcome — M2 closed

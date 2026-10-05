@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P7-4: v2.6 / v2.8.2 coverage documents
+
+- `v2_6-spec-audit.md`, `v2_8_2-spec-audit.md`, `deferred-coverage-backlog.md` and
+  `permanent-limitations-register.md` now agree with the shipped full-depth surface: 170
+  segment schemas on v2.6, 180 on v2.8.2 (170 on v2.7.1), every segment with an attribute
+  table except the CH08 example ZL7, all exact under the depth audit. Dated superseded notes,
+  a closure header on the backlog (M5, v3.1.0), and the curated NK1 / PV1 / IN1 lines struck.
+- The v2.6 field-growth table said v2.5.1 OBR had 47 fields and OBX 17, with OBR-48..50 and
+  OBX-18..25 new in v2.6. The v2.5.1 CH07 tables print OBR-1..50 (pp. 7-27 to 7-28) and
+  OBX-1..25 (p. 7-42, OBX-20..22 reserved for v2.6); both rows are corrected.
+- The v2.8.2 audit no longer lists PD1-15 and ORC-26 as conditions without a predicate (both
+  shipped in v0.16), and gives the v2.8.2 IN1 depth as 55, not 53. The backlog's `.v2_8` and
+  message-structure sections note that ADR-018 and the P8b rollout superseded them.
+
 ### Fixed — P7-3: v2.3 / v2.3.1 / v2.4 audit document
 
 - `docs/design/v2_3-v2_4-spec-audit.md` no longer says the v2.3, v2.3.1 and v2.4 PDFs are
