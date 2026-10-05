@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — support and contribution policy (2026-10-06)
+
+- `SUPPORT.md` added: rigidly defined areas of certainty and uncertainty for a one-person project. `CONTRIBUTING.md`, `README.md` and `ROADMAP.md` follow it: contributions are not accepted at this stage; issues, spec-reading disagreements and fork announcements are welcome; the licence applies to every release; the roadmap is the maintainer's working arc, not a commitment.
+
 ### Summary — workstream P7 (audit, documents and coverage), complete 2026-10-05
 
 - **Audit (P7-1, P7-8):** `audit-schemas.py` compares `C` and the defining attribute table;

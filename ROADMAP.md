@@ -1,5 +1,7 @@
 # HL7v2Kit — Roadmap
 
+**This file is not a commitment.** `SUPPORT.md` is explicit that there is no promised roadmap and no promise of future releases; what follows is the maintainer's own working arc, kept for the maintainer's benefit, and may be reordered, paused or dropped at any time. Nothing here is owed to anyone. Contributions towards it are not accepted at this stage (see `CONTRIBUTING.md`).
+
 Longer-horizon version arc toward **v1.0**. Companion to the two live planning docs:
 
 - **`STATUS.md`** — where the project is *right now* (read first).

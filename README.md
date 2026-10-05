@@ -2,7 +2,7 @@
 
 A native Swift package for **parsing, building, and validating** HL7 v2.x healthcare messages.
 
-**Status:** `v1.0.0` — first stable release. The public API is frozen under SemVer (additive-only in `1.x`); see [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md), and the versioning contract in [`Migration.md`](Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md).
+**Status:** Active, maintained by one person; current release `v3.13.0`. What you can and cannot rely on is set out in [SUPPORT.md](SUPPORT.md). Versioning follows SemVer; breaking changes are listed in [CHANGELOG.md](CHANGELOG.md) and the versioning contract is in [`Migration.md`](Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md).
 
 ## Why use this
 
@@ -98,8 +98,8 @@ The codegen-drift CI job fails any commit that edits a schema without committing
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). **No PHI ever enters the repository** — all fixtures must be PHI-free synthetic data. (Real-world-derived fixtures must go through `scripts/anonymise-fixture.sh` and still pass the CI PHI scan.)
+**Contributions are not accepted at this stage of the project**; pull requests will be closed unread. Bug reports, spec-reading disagreements (with chapter and page cited) and fork announcements are welcome as issues. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SUPPORT.md](SUPPORT.md). **No PHI ever enters the repository**: every fixture is synthetic, and `scripts/scan-fixtures-for-phi.sh` is a hard gate in CI.
 
 ## Licence
 
-Apache 2.0 — see [LICENSE](LICENSE).
+Apache 2.0, see [LICENSE](LICENSE). The licence applies to every release, forever: you can fork, vendor or build on any version regardless of what happens to this repository.

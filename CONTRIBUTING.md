@@ -1,56 +1,51 @@
 # Contributing to HL7v2Kit
 
-Thanks for considering a contribution. This file covers what you need to know.
+**Contributions are not accepted at this stage of the project.**
 
-## Ground rules
+Pull requests will be closed unread. This is a statement about the project's stage, not
+about your work: HL7v2Kit is maintained by one person, its design is still moving, and
+reviewing outside changes costs more than it returns right now. `SUPPORT.md` sets out
+exactly what the project does and does not promise; this file follows it.
 
-1. **No PHI in fixtures.** Ever. Every fixture is synthetic. The PHI scan job in CI (`scripts/scan-fixtures-for-phi.sh`) is a hard gate. Real-world-derived fixtures must go through `scripts/anonymise-fixture.sh` (the `HL7v2KitAnonymise` target) — the only approved path — and the output must still pass the PHI scan before commit.
-2. **Round-trip safety is sacred.** If a change breaks parse → serialise byte equality on any accepted fixture, the change is wrong, not the test.
-3. **Public API additions need a CHANGELOG entry.** Public API changes need a major-version bump (pre-1.0: a minor-version bump, with a clear note).
-4. **No runtime dependencies.** Swift Testing is bundled with the Swift 6 toolchain and is the only test dependency. The package's `Package.swift` `dependencies` array must remain empty.
-5. **Don't hand-edit `Sources/HL7v2Kit/Segment/Generated/`.** Those files are emitted by `HL7v2KitCodegen`. Edit the schema JSON under `Resources/schemas/` and regenerate.
+If that changes, this file and `SUPPORT.md` will say so first.
 
-## Development setup
+## What is welcome
 
-```bash
-git clone https://github.com/<your-org>/HL7v2Kit.git
-cd HL7v2Kit
-swift build
-swift test
-```
+- **Bug reports**, as issues. Include the version, platform, a minimal reproduction, and
+  expected versus actual behaviour. Reports without a reproduction may be closed without
+  investigation.
+- **Spec-reading disagreements.** The package aims to be a faithful rendering of the
+  HL7 v2 standard. If a schema, table, rule or message structure disagrees with the print,
+  open an issue citing the version, chapter, section and page. These are the most useful
+  reports the project can receive.
+- **Fork announcements.** The licence lets you fork without asking. If your fork is
+  clearly active, open an issue titled "Fork: <url>" and it will be linked from
+  `README.md` when the maintainer next looks.
+- **Security reports.** Open an issue titled "Security: <summary>"; there is no private
+  reporting channel yet. A report will be acknowledged within 14 days.
 
-Required: Swift 6.0+, macOS 12+ (or Linux with a recent Swift toolchain). Running tests via `swift test` from the CLI needs a Swift Testing-aware toolchain — that ships with full Xcode 16+ but not with Command Line Tools 6.3.x. If `swift test` reports `no such module 'Testing'`, run from Xcode instead.
+## Working on a fork
 
-## Adding a typed segment
+The repository's own working rules, for anyone building on it:
 
-Typed segment structs are code-generated. To add a v2 segment:
+1. **No PHI in fixtures.** Ever. Every fixture is synthetic. `scripts/scan-fixtures-for-phi.sh`
+   is a hard gate in CI, and every fixture has a row in `Tests/Fixtures/README.md`.
+2. **Round-trip safety.** Parse then serialise is byte-identical on every accepted fixture.
+   A change that breaks that is wrong, not the test.
+3. **No runtime dependencies.** Foundation only; `Package.swift` `dependencies` stays empty.
+   Swift Testing is bundled with the Swift 6 toolchain.
+4. **Generated code is never hand-edited.** Everything under a `Generated/` directory and
+   the extractor output under `Resources/` is produced by `HL7v2KitCodegen` and the scripts
+   under `scripts/`. Edit the schema JSON or an override, cited to the print, and run
+   `bash scripts/regenerate-typed-segments.sh`. CI fails on drift.
+5. **Defensible against the print.** Every schema field, table, condition and structure
+   carries a citation to the standard. Nothing ships if it is known to misfire on a
+   spec-compliant message; a gap the model cannot express is registered in
+   `docs/design/permanent-limitations-register.md` rather than papered over.
 
-1. Hand-curate `Resources/schemas/<version>/<SegmentID>.json` (use the existing `PID.json` as a template — each field needs `index`, `swiftName`, `name`, `dataType`, `optionality`, `repeatability`).
-2. Run `bash scripts/regenerate-typed-segments.sh`. Commit both the schema JSON and the regenerated `Sources/HL7v2Kit/Segment/Generated/<version>/<SegmentID>.swift`.
-3. Add a `case <X>.segmentID: return .typed(AnyTypedSegment(<X>(fields: unknown.fields)))` line to `Sources/HL7v2Kit/Segment/SegmentRegistry.swift`.
-4. Add a cross-check test in `Tests/HL7v2KitTests/TypedSegmentTests.swift`: every field exposed via the typed accessor must agree with the matching path string for at least one synthetic fixture.
-
-The codegen-drift CI job fails any PR that edits a schema without committing the regenerated output.
-
-## Code style
-
-- Public API has DocC comments.
-- All public types are `Sendable`.
-- Errors are enums with associated values, conforming to `Equatable` and `Sendable`.
-- No runtime dependencies (Foundation only).
-- The portable-kernel files under `Sources/HL7v2Kit/` carry a `// PORTABLE KERNEL` header (copy it from any existing kernel file when creating a new one). Those files must stay Foundation-free and byte/character-level — `Data` only at the edges. See `docs/design/ADR-006-portable-core-boundary.md`.
-
-## Pull request checklist
-
-- [ ] Tests added or updated.
-- [ ] `swift build` and `swift test` pass locally.
-- [ ] CHANGELOG.md updated under `[Unreleased]`.
-- [ ] Any new fixture has an entry in `Tests/Fixtures/README.md` with provenance + anonymisation log.
-
-## Reporting security issues
-
-Email `security@<your-domain>` rather than filing a public issue. Triage within 14 days, patch within 30 days.
+`the working notes` holds the fuller working notes and the reading order for the design documents.
 
 ## Licence
 
-By contributing, you agree your contribution is licensed under Apache 2.0.
+Apache 2.0, see `LICENSE`. It applies to every release and lets you fork, vendor or build
+on any version without asking.
