@@ -74,8 +74,8 @@ def check_elision_field_drops_rest_of_segment():
 
 def check_elided_msh12_keeps_message_but_drops_version():
     # P4-22 rule 3: rule 2 applied to MSH is what keeps a message whose MSH-12 is elided —
-    # the field is absent afterwards (not the literal "..."), so the Validator falls back to
-    # the default grammar rather than a version implied by garbage text.
+    # the field is absent afterwards (not the literal "..."), so no version is implied by
+    # garbage text (the harness then uses the source document's version, P7-8).
     msh = "MSH|^~\\&|APP|FAC|APP2|FAC2|20200101||ADT^A01|MSG1|P|...|"
     out, from_field = extract._drop_elision(msh)
     fields = out.split("|")

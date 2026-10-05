@@ -204,8 +204,8 @@ def _drop_elision(seg):
     field and every later field (including a trailing "..." after the last delimiter) are
     treated as not present. Applied uniformly to every segment, this is also what keeps a
     message whose MSH-12 sits past an elided field — MSH-12 comes out absent rather than
-    the literal "...", so the Validator falls back to the default grammar instead of a
-    version implied by garbage text.
+    the literal "...", so no version is implied by garbage text (SpecExampleMessageTests
+    then parses an elided-version message under its source document's version, P7-8).
 
     Returns (possibly-truncated segment, the 1-based HL7 field number the elision started
     at, or None if nothing was elided) — fix round 1 (brief Part 1 rule 3, "mark it") needs
@@ -390,7 +390,7 @@ def messages_from_lines(text):
                 # P4-28: the fabricated default encoding characters leave no "..." for
                 # _drop_elision to see, so _elision_metadata never sets this on its own —
                 # but the whole header beyond those four characters is unknown, same as the
-                # elided-MSH-12 case P4-22 already falls back to the default grammar for.
+                # elided-MSH-12 case (P7-8: validated under the source document's version).
                 # Likewise record it as a truncated segment from field 3 on (field 1 is the
                 # separator, field 2 the fabricated encoding characters — both "present"),
                 # the same convention _elision_metadata uses, so the report's existing ELIDED
@@ -409,7 +409,8 @@ def _elision_metadata(cleaned_segs, dropped):
     elision actually truncated (repetition is the 1-based count of that segment ID seen so
     far, matching how the Validator numbers repeated segments), and whether the truncation
     reached MSH-12 (repetition 1's own "fromField" <= 12), the signal that this message is
-    evaluated under the default grammar rather than a version the example printed."""
+    declares no version of its own: SpecExampleMessageTests parses it under the version of
+    the document that prints it (P7-8; before P7-8 it fell back to the default v2.5.1)."""
     truncated, msh_version_elided = [], False
     counts = {}
     for i, (seg, (_, split_index)) in enumerate(zip(cleaned_segs, dropped)):
@@ -505,8 +506,9 @@ _RXA_FOR_RXG_REASON = (
     "The fourth line of the same RGR give series is printed as an RXA, not an RXG "
     "(\"RXA|4||199208131912||250\" in v2.3/v2.3.1; \"RXA|4||^^^199208131912|10986^AMPICILLIN|"
     "250\" in v2.4-v2.6), so RXG-shaped content sits in RXA positions: RXA-2 blank and RXA-6 "
-    "blank (v2.3/v2.3.1); RXA-2 blank, the TQ-shaped give time in RXA-3 (RXA-3.1 empty) and "
-    "the give code in RXA-4 (RXA-4.2 \"AMPICILLIN\" against Table 0529) in v2.4-v2.6.")
+    "blank (v2.3/v2.3.1); RXA-2 blank in v2.4-v2.6, and under the v2.5.1 TS the TQ-shaped give "
+    "time in RXA-3 (RXA-3.1 empty) and the give code in RXA-4 (RXA-4.2 \"AMPICILLIN\" against "
+    "Table 0529).")
 _RXA_CH12_SHIFT_REASON = (
     "CH12 PPP^PCB pathway example prints \"RXA|1|199505011200|||0047-0402-30^Ampicillin...\": "
     "RXA-2 (Administration Sub-ID Counter) is omitted, so the start time lands in RXA-2 and "
@@ -574,10 +576,13 @@ _P4_29_ENTRIES = [
     *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
        "location_pattern": r"^RXA\[\d+\]-[26]$", "count": 2, "reason": _RXA_FOR_RXG_REASON}
       for src, idx in {"v2.3/CH4.pdf": 31, "v2.3.1/Hl7V231.pdf": 78}.items()],
+    # P7-8: the v2.4 and v2.6 copies elide MSH-12 and now validate under their own version,
+    # where only RXA-2 fires: v2.4 TS prints no component optionality and no Table 0529
+    # binding, and v2.6 prints RXA-3 and RXA-4 as DTM. The v2.5.1 copy keeps all three.
     *[{"source_glob": src, "index": idx, "code": "*",
-       "location_pattern": r"^RXA\[\d+\]-(2|3\.1|4\.2)$", "count": 3, "reason": _RXA_FOR_RXG_REASON}
-      for src, idx in {"v2.4/CH04.PDF": 37, "v2.5.1/V251_CH04.pdf": 40,
-                        "v2.6/V26_CH04_Orders.pdf": 39}.items()],
+       "location_pattern": r"^RXA\[\d+\]-(2|3\.1|4\.2)$", "count": n, "reason": _RXA_FOR_RXG_REASON}
+      for src, idx, n in [("v2.4/CH04.PDF", 37, 1), ("v2.5.1/V251_CH04.pdf", 40, 3),
+                          ("v2.6/V26_CH04_Orders.pdf", 39, 1)]],
     *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
        "location_pattern": r"^RXA\[\d+\]-3$", "count": 1, "reason": _RXA_CH12_SHIFT_REASON}
       for src, idx in {"v2.3.1/Hl7V231.pdf": 146, "v2.4/CH12.PDF": 2, "v2.5.1/V251_CH12.pdf": 2,
@@ -749,8 +754,9 @@ _P10_6_ENTRIES = [
 ]
 # P10-7: the v2.7.1 sweep. Every non-elided error line on an example printed in a v2.7.1
 # chapter, and on any example declaring MSH-12 "2.7" (substituted by v2.7.1, G11), is claimed
-# here or by a per-source row added to an earlier block. Examples whose MSH-12 is elided or
-# misplaced validate under the v2.5.1 fallback (the P4-22 rule); their lines are claimed too,
+# here or by a per-source row added to an earlier block. Examples whose MSH-12 is misplaced
+# validate under the v2.5.1 fallback (the P4-22 rule; an elided MSH-12 validates under v2.7.1
+# since P7-8, block at the end of this list); their lines are claimed too,
 # cited against the v2.7.1 print that carries them. Every line is the example's own defect
 # except _P10_7_GOL19_REASON (a fallback-grammar effect). Per-source totals ("all") unless an
 # index is needed to keep a v2.8.2 or same-source line of another class out.
@@ -812,6 +818,11 @@ _P10_7_GOL19_REASON = (
 _P10_7_ORC_OBR_REASON = (
     "v2.7.1 CH04 (p90) prints the second child ORC as \"89-522^EKG\" and its OBR as \"89-552^EKG\"; "
     "the prose names the children 89-551 and 89-552. ORC-3 and OBR-3 are the same element (00217).")
+
+
+_P7_8_OBX2_CE_REASON = (
+    "v2.7.1 CH02C HL7 Table 0125 Value Type (p39) has no CE row (CE is withdrawn; CNE and CWE "
+    "remain). The examples print OBX-2 \"CE\".")
 
 
 def _p10_7(chapter):
@@ -898,6 +909,20 @@ _P10_7_ENTRIES = [
       for pat, n, reason in [(r"^STF\[\d+\]-2\.5$", 1, _P10_6_CX5_REASON),
                              (r"^STF\[\d+\]-10\.3$", 2, _P10_6_XTN3_REASON),
                              (r"^STF\[\d+\]-11\.7$", 2, _P10_6_XAD7_REASON)]],
+    # P7-8 (P6-14 review): the v2.7.1 examples that elide MSH-12 now validate under v2.7.1, the
+    # version of the document that prints them, instead of the v2.5.1 fallback. That surfaces the
+    # same CX.5 and XTN.3 omissions P10-6 registered on the declared copies, and OBX-2 "CE".
+    {"source_glob": _p10_7("CH04A_Orders"), "index": "all", "code": "requiredComponentMissing",
+     "location_pattern": r"^(PID\[\d+\]-13|ORC\[\d+\]-14)\.3$", "count": 2, "reason": _P10_6_XTN3_REASON},
+    {"source_glob": _p10_7("CH04_Orders"), "index": "all", "code": "requiredComponentMissing",
+     "location_pattern": r"^ORC\[\d+\]-14\.3$", "count": 7, "reason": _P10_6_XTN3_REASON},
+    {"source_glob": _p10_7("CH04_Orders"), "index": "all", "code": "requiredComponentMissing",
+     "location_pattern": r"^RQD\[\d+\]-7\.5$", "count": 7, "reason": _P10_6_CX5_REASON},
+    {"source_glob": _p10_7("CH07_Observations"), "index": "all", "code": "requiredComponentMissing",
+     "location_pattern": r"^(PID\[\d+\]-3|CSR\[\d+\]-4)\.5$", "count": 9, "reason": _P10_6_CX5_REASON},
+    *[{"source_glob": _p10_7(ch), "index": "all", "code": 'valueNotInTable(table: "0125")',
+       "location_pattern": r"^OBX\[\d+\]-2$", "count": n, "reason": _P7_8_OBX2_CE_REASON}
+      for ch, n in [("CH02C_CodeTables", 2), ("CH09_MedRecords", 1)]],
 ]
 KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": "all", "code": "conditionalFieldMissing",
@@ -924,9 +949,12 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
      "location_pattern": r"^RXO\[\d+\]-4$", "count": 1, "reason": _RXO_FREE_TEXT_REASON},
     # Same defect, same bare-"MSH|..." fix, in the standalone v2.3 CH4 PDF (index 16 is "500
     # mg Polycillin...", RXO-1/2/4 blank; index 24 is the "D5W..." custom IV, RXO-1/2 only).
-    {"source_glob": "v2.3/CH4.pdf", "index": "all", "code": "conditionalFieldMissing",
+    # P7-8: both headers elide MSH-12, so they now validate under v2.3, whose RXO attribute
+    # table (CH4 4.8.2, Figure 4-13, p 4-62) prints RXO-1, RXO-2 and RXO-4 R, not C: the same
+    # blank fields are requiredFieldMissing here (v2.3.1 onwards prints them C).
+    {"source_glob": "v2.3/CH4.pdf", "index": "all", "code": "requiredFieldMissing",
      "location_pattern": r"^RXO\[\d+\]-[12]$", "count": 4, "reason": _RXO_FREE_TEXT_REASON},
-    {"source_glob": "v2.3/CH4.pdf", "index": "all", "code": "conditionalFieldMissing",
+    {"source_glob": "v2.3/CH4.pdf", "index": "all", "code": "requiredFieldMissing",
      "location_pattern": r"^RXO\[\d+\]-4$", "count": 1, "reason": _RXO_FREE_TEXT_REASON},
     *[{"source_glob": src, "index": 2, "code": "conditionalFieldMissing",
        "location_pattern": r"^RXO\[\d+\]-[12]$", "count": 2, "reason": _RXO_FREE_TEXT_REASON}

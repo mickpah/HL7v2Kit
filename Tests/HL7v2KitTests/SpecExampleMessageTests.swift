@@ -44,6 +44,21 @@ struct SpecExampleMessageTests {
         }
     }
 
+    /// The version of the document that prints the example: `source` is
+    /// `"<version>/<file>"`, for example `"v2.3/CH04.pdf"`.
+    static func sourceVersion(_ source: String) -> Version? {
+        guard let prefix = source.split(separator: "/").first, prefix.hasPrefix("v") else { return nil }
+        return Version(rawValue: String(prefix.dropFirst()))
+    }
+
+    /// P7-8 (P6-14 review): an example whose MSH-12 the print elided declares no
+    /// version, so the parser would fall back to v2.5.1 (ADR-018) and a v2.3 example
+    /// would draw v2.5.1 findings. Parse it under the version of its source document.
+    static func parserOptions(for example: Example) -> ParserOptions {
+        guard example.mshVersionElided, let version = sourceVersion(example.source) else { return .default }
+        return ParserOptions(versionOverride: version)
+    }
+
     @Test("Report: what the Validator says about every example message")
     func report() throws {
         let path = try #require(ProcessInfo.processInfo.environment["SPEC_EXAMPLE_MESSAGES"])
@@ -51,7 +66,7 @@ struct SpecExampleMessageTests {
         var lines: [String] = []
         for example in examples {
             let wire = example.segments.joined(separator: "\r") + "\r"
-            guard let message = try? Parser().parse(wire) else {
+            guard let message = try? Parser(options: Self.parserOptions(for: example)).parse(wire) else {
                 lines.append("SPECEX\t\(example.source)\t\(example.index)\tPARSE\t-\t-")
                 continue
             }
@@ -65,5 +80,21 @@ struct SpecExampleMessageTests {
         }
         let out = ProcessInfo.processInfo.environment["SPEC_EXAMPLE_REPORT"] ?? "/tmp/spec-example-report.tsv"
         try lines.joined(separator: "\n").write(toFile: out, atomically: true, encoding: .utf8)
+    }
+}
+
+/// The harness logic that runs without the extracted examples (always enabled).
+@Suite("Spec example harness")
+struct SpecExampleHarnessTests {
+    @Test("An elided-version example is parsed under its source document's version")
+    func elidedVersionUsesSourceVersion() throws {
+        let elided = SpecExampleMessageTests.Example(source: "v2.3/CH04.pdf", index: 1, segments: [],
+                                                     truncatedSegments: [], mshVersionElided: true)
+        let declared = SpecExampleMessageTests.Example(source: "v2.3/CH04.pdf", index: 2, segments: [],
+                                                       truncatedSegments: [], mshVersionElided: false)
+        #expect(SpecExampleMessageTests.parserOptions(for: elided).versionOverride == .v2_3)
+        #expect(SpecExampleMessageTests.parserOptions(for: declared).versionOverride == nil)
+        #expect(SpecExampleMessageTests.sourceVersion("v2.3.1/Hl7V231.pdf") == .v2_3_1)
+        #expect(SpecExampleMessageTests.sourceVersion("v2.8.2/V282_CH02.pdf") == .v2_8_2)
     }
 }
