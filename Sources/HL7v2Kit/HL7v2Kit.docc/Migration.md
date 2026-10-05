@@ -273,9 +273,14 @@ The early minors (0.2–0.5) included source-breaking refactors while the surfac
 3. **M3 API stabilisation** — done: v0.18 (ADR-014 + the public-API-surface inventory + this contract).
 4. **M4 IP review** — done: cleared (2026-07-09); public push unblocked.
 
-## See Also
+## Related documents
 
 - `docs/design/ADR-014-api-evolution-policy.md` — the evolution policy this contract implements
 - `docs/design/public-api-surface.md` — the full v1.0 public-symbol inventory
 - `CHANGELOG.md` (repository root) — per-release detail
-- ``Version`` · ``IssueCode`` · ``HL7Locale``
+
+## See Also
+
+- ``Version``
+- ``IssueCode``
+- ``HL7Locale``

@@ -15,7 +15,7 @@ against its version's own attribute table by `scripts/audit-schemas.py` (depth *
 presence). On v2.3 / v2.3.1 / v2.4 **no segment the spec defines is missing**; v2.6 / v2.8.2
 grammar coverage is deliberately partial (see `docs/design/deferred-coverage-backlog.md`).
 
-Segments outside this list parse as ``UnknownSegment`` and remain accessible via path strings — see <doc:#Unknown-Segments> below.
+Segments outside this list parse as ``UnknownSegment`` and remain accessible via path strings — see <doc:#Unknown-segments> below.
 
 ## Reading a typed segment
 

@@ -95,8 +95,9 @@ Adding a segment's grammar means the ``Validator`` now has rules to check agains
 - A condition that the message cannot decide (a referenced segment or field that does not resolve, or a predicate that does not parse) does not trigger; cross-segment references are supported (ADR-008, ADR-010). See <doc:Validation>.
 - Primitive value format is checked (a TS field containing `"hello"` raises ``IssueCode/valueFormatInvalid(dataType:)``); see <doc:Validation> for this and for what the validator does not check.
 
+The contribution workflow is in `CONTRIBUTING.md` at the repository root.
+
 ## See Also
 
 - <doc:TypedSegments>
 - <doc:Validation>
-- `CONTRIBUTING.md` (repository root)

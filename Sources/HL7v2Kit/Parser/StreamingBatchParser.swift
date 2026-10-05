@@ -23,7 +23,7 @@ import Foundation
 /// **Charset note**. Streaming mode assumes UTF-8 input. MSH-18
 /// charset detection requires the whole first message to be buffered,
 /// which defeats the streaming property; callers parsing non-UTF-8
-/// batches should pre-decode and use ``BatchParser/parse(_:)-string``,
+/// batches should pre-decode and use ``BatchParser/parse(_:)-(String)``,
 /// or use the non-streaming ``BatchParser`` directly.
 public struct StreamingBatchParser: Sendable {
     public let options: ParserOptions
