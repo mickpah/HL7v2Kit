@@ -1155,7 +1155,10 @@ compiling a structure per message.
 - **v2.4 complete.** 148 structures modelled (18 exact-matched), 24 registered (register
   section E v2.4 addendum: CH12 placeholders, CH05 query templates, CH08 master file
   templates, ERP_R09, SUR_P09, the 'see Chapter 5' captions QRY_P04 and DSR_P04, and four
-  Table 0354 rows with no print); every Table 0354 v2.4 row is one or the other. (As first
+  Table 0354 rows with no print); every Table 0354 v2.4 row is one or the other. P8b-18: MFR_M01
+  and MFN_M03 are blocking (per-file prose fragments the extractor does not read), and so is
+  QRY_P04 (its reference names one printed QRY, but its caption prints an ID of its own and the
+  model has no structure alias); DSR_P04 is permanent (two DSR prints differ on MSA). (As first
   committed: 146 and 26, with QRY_Q02 and QCK_Q02 wrongly registered as unprinted; see the fix
   round below.)
 - **Decision 3 realised for v2.4 through the bundle.** v2.4 prints no group names. Of 334

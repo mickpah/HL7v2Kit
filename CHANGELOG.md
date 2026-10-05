@@ -42,6 +42,13 @@ group, cardinality or choice of a modelled structure changes.
   defined in Chapter 2"; both Chapter 2 QRY prints are MSH QRD [QRF] [DSC]), as on v2.3, with
   MSH-9.3 empty or QRY_Q01; DSR^P04 is registered (the two DSR prints differ on MSA): 28
   registered. MCF, folded in P8b-15, is named among the printed IDs Table 0354 lacks.
+- v2.4: MFR_M01 and MFN_M03 are blocking, not templates: CH08 gives the MFR body per master file
+  in prose ("the part ... {MFE [Z..]} is replaced by", 8.7.1 p 8-19, 8.8.2 p 8-21, 8.9.1 p 8-58,
+  8.10.1 p 8-72, 8.11.1 p 8-81) and keys MFN^M03's other segments by MFI-1 (8.8.2), which the
+  extractor does not read. QRY_P04 is blocking: CH06 6.4.4 refers P04 to the Chapter 5 QRY, whose
+  two prints agree, but the caption QRY^P04^QRY_P04 gives it an ID of its own and the model has no
+  structure alias. DSR_P04 stays permanent (the two Chapter 5 DSR prints differ on MSA). 24
+  registered, unchanged.
 
 ### Fixed — P8b-18: Table 0354 provenance on every version; citation and guard minors
 
@@ -215,6 +222,7 @@ group, cardinality or choice of a modelled structure changes.
   E): eight CH12 `[OBR, etc.` structures, five CH05 query templates, three CH08 master file
   templates, ERP_R09, SUR_P09, QRY_P04 and DSR_P04 ('see Chapter 5') and four Table 0354 rows
   with no print (ORU_W01, QRF_W02, RRA_O02, RRE_O02). Every Table 0354 v2.4 row is modelled or registered.
+  (P8b-18 classes MFR_M01, MFN_M03 and QRY_P04 as blocking, not templates or permanent.)
 - Shared triggers MFN^M02 to M06, RPI^I04 and RSP^K24 are ambiguous without MSH-9.3.
 
 ### Fixed — P8b-13: QRY_Q02 and QCK_Q02 on v2.4, v2.5.1 and v2.6

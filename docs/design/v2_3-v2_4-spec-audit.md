@@ -130,7 +130,12 @@ statements (ruling G7), 168 structure IDs, 148 read and 20 unreadable (G6 placeh
 templates, ERP_R09's ellipsis rows, SUR_P09's ED row, and the 'see Chapter 5' captions QRY_P04
 and DSR_P04). 148 are committed under `Resources/structures/v2.4/` and v2.4 is
 `complete: true`; with the 24 registered in `completeness.json` they account for all 171 Table
-0354 v2.4 rows and the ACK caption, which has no row. As first committed the counts were 386,
+0354 v2.4 rows and the ACK caption, which has no row. P8b-18 classed them by the print: MFR_M01
+and MFN_M03 are blocking (CH08 gives their segments per file in prose fragments, 8.7.1 p 8-19 to
+8.11.1 p 8-81, and keys MFN^M03's other segments by MFI-1, 8.8.2 p 8-21, as v2.3 and v2.3.1 do);
+QRY_P04 is blocking (6.4.4's reference names one printed QRY, but the caption gives P04 an ID of
+its own, which the model cannot alias); DSR_P04 stays permanent (the two CH05 DSR prints differ
+on MSA). As first committed the counts were 386,
 166, 146 and 26: QRY_Q02 and QCK_Q02 were registered as unprinted, but CH05 5.10.3.1 (p 5-112)
 prints both, as "QRY^Q02 (A to B)" and "QCK^Q02 (B to A)", a one-space caption form the reader
 missed (P8b-13 fix round; "ACK^Q03 (A to B)" is the third such caption and changes nothing).

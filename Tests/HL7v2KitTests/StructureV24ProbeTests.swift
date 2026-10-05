@@ -182,6 +182,22 @@ struct StructureV24ProbeTests {
         }
     }
 
+    // P8b-18: registrations classed by the print. v2.4 CH08 gives the MFR body per master file
+    // in prose ("is replaced by", 8.7.1 p 8-19 and on) and keys MFN^M03's other segments by MFI-1
+    // (8.8.2, p 8-21): blocking, the extractor does not read prose fragments. CH06 6.4.4 (p 6-13)
+    // refers P04 to the Chapter 5 QRY/DSR: the QRY prints agree, but the caption gives P04 its own
+    // ID, QRY_P04 (blocking: no structure alias); the two DSR prints differ on MSA (permanent).
+    @Test("Registered v2.4 structures are info with the reason the print supports",
+          arguments: [("MFR^M02^MFR_M01", "prose-printed replacement fragments"),
+                      ("MFN^M03^MFN_M03", "any of the following combinations"),
+                      ("QRY^P04^QRY_P04", "no structure alias"),
+                      ("DSR^P04^DSR_P04", "which mode P04 uses")])
+    func registeredByThePrint(_ c: (String, String)) throws {
+        let issues = try structureIssues(c.0, ["MSA|AA|1", "QRD|1"])
+        #expect(issues.count == 1 && issues.first?.severity == .info, "\(c.0): \(issues.map(\.message))")
+        #expect(issues.first?.message.contains(c.1) == true, "\(c.0): \(issues.map(\.message))")
+    }
+
     @Test("At least twelve probes on v2.4 structures")
     func coverage() {
         #expect(Self.probes.count >= 12)
