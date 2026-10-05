@@ -1099,7 +1099,9 @@ compiling a structure per message.
 ## Amendment 2026-10-04 — v2.6 complete (P8b-10)
 
 - **v2.6 complete.** 187 structures modelled (23 exact-matched), 23 registered (register
-  section E v2.6 addendum); ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their
+  section E v2.6 addendum; now 190 and 20, and since P8b-18 MFR_M01 and MFN_M03 are blocking, not
+  templates: CH08 gives the staff MFR body in prose and MFN^M03's segments by an MFI-1-keyed
+  reference to MFN^M08 to M12); ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their
   looser prints. Where two prints are incomparable (v2.6 RSP_K21) the structure is registered,
   not guessed.
 - **Union of incomparable prints (P8b-11).** A cited `unionPrints` entry names two

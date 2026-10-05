@@ -57,6 +57,11 @@ group, cardinality or choice of a modelled structure changes.
   the chapter prints ORU^R31^ORU_R30 and ORU^R32^ORU_R30), QRY_T12 (CH09 prints QRY^T12^QRY),
   RSP_K22 (CH03 prints RSP^K22^RSP_K21), RDE_O01 and RRA_O02 (Appendix A only), MFD_MFA (named in
   CH08 8.4, no syntax). 30 registered, unchanged.
+- v2.6: MFR_M01 and MFN_M03 are blocking, not templates, as on v2.5.1 (the staff MFR body in
+  prose, 8.7.1, pp 8-18 to 8-19; MFN^M03's other segments as the MFI-1-keyed MFN^M08 to M12
+  groups). ORU_W01's reason now says the CH07 7.17 examples send ORU^W01^ORU_R01 against Table
+  0354's ORU_W01; QRF_W02's cites CH07 7.15.2. On v2.5.1 the waveform examples are cited as
+  7.17, not 7.16. 20 registered, unchanged.
 
 ### Fixed — P8b-18: Table 0354 provenance on every version; citation and guard minors
 
