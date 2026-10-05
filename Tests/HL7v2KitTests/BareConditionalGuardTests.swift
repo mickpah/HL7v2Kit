@@ -56,7 +56,7 @@ struct BareConditionalGuardTests {
         let expected: Set<String> = [
             "AIG-2", "AIL-2", "AIP-2", "AIS-2", "AIS-5",
             "ARQ-2", "ARQ-3", "ARQ-24", "AUT-6", "CSP-4",
-            "OBR-14", "OBR-22", "OBX-4", "PTH-6", "QAK-1", "QPD-2", "RGS-2", "ROL-1",
+            "OBR-14", "OBR-22", "OBX-4", "PTH-6", "QAK-1", "QPD-2", "RGS-2",
             "RXA-7", "RXA-11", "RXA-12", "RXD-5", "RXD-8", "RXD-13",
             "RXE-8", "RXE-10", "RXE-11", "RXE-13", "RXE-15", "RXE-16", "RXE-17", "RXE-18", "RXE-19", "RXE-22",
             "RXG-14", "RXO-5", "RXO-14", "RXO-15", "RXO-17",

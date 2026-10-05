@@ -247,14 +247,16 @@ extension V271GrammarTests {
         // (p. 31) print v2.7.1's "required when used in Patient Care and Personnel Management
         // messages". v2.8.2 CH12 12.3.6 to 12.3.12 (p. 16) removes PRR, PPV, PTR and PPT "as
         // of v2.8", so its set drops them. v2.4 CH12 12.4.3.1 (p. 24) names Patient Care
-        // messages only, a different sentence, and stays bare; v2.3 and v2.3.1 print R.
+        // messages only, a different sentence: P7-2 gives v2.4 the eight CH12 message codes
+        // (12.3.1 to 12.3.12) without PMU or RSP^K25. v2.3 and v2.3.1 print R.
         let rolCare = "messageCode in (PGL, PPG, PPP, PPR, PPT, PPV, PRR, PTR, PMU) OR messageCode = RSP AND triggerEvent = K25"
         for table in [v251, v26, v271] {
             #expect(try Self.grammarField(table, "ROL-1").condition == rolCare)
         }
         #expect(try Self.grammarField(v282, "ROL-1").condition
                 == "messageCode in (PGL, PPG, PPP, PPR, PMU) OR messageCode = RSP AND triggerEvent = K25")
-        #expect(try Self.grammarField(v24, "ROL-1").condition == nil)
+        #expect(try Self.grammarField(v24, "ROL-1").condition
+                == "messageCode in (PGL, PPG, PPP, PPR, PPT, PPV, PRR, PTR)")
         #expect(try Self.grammarField(SegmentGrammarTable.v2_3_1, "ROL-1").optionality == .required)
         // TXA-11 and TXA-22: v2.8.2's "Condition" paragraphs on OBR-35 and OBR-32 are not in
         // the v2.7.1 print (CH09 sections 9.7.3.11 and 9.7.3.22); both stay bare here.

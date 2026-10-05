@@ -2370,7 +2370,7 @@ extension SegmentGrammarTable {
         segmentID: "ROL",
         version: "2.4",
         fields: [
-            FieldGrammar(index: 1, name: "Role Instance ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
+            FieldGrammar(index: 1, name: "Role Instance ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "messageCode in (PGL, PPG, PPP, PPR, PPT, PPV, PRR, PTR)", prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
             FieldGrammar(index: 2, name: "Action Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0287", length: "2"),
             FieldGrammar(index: 3, name: "Role-ROL", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 4, name: "Role Person", dataType: "XCN", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),

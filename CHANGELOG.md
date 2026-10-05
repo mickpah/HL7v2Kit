@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   of the seven versions is not named there. The two slots V251-C12 found unregistered,
   TXA-21 (v2.3 to v2.6, registered in P4-15) and OBR-48 on v2.5.1 (scope added in the P1
   fix round), are named today.
+- **v2.4 ROL-1 is required in the Patient Care messages (P10-7 intake).** v2.4 CH12
+  section 12.4.3.1 (p. 24): "This field is required when used in Patient Care messages. The
+  field is optional when used in ADT and Finance messages." ROL-1 was bare on v2.4 because
+  the sentence differs from v2.5.1's; it now carries `messageCode in (PGL, PPG, PPP, PPR,
+  PPT, PPV, PRR, PTR)`, the eight CH12 messages, each of which carries ROL. ADT, Finance,
+  CH13 and PMU messages are unaffected on v2.4. `RoleConditionTests` covers both sides.
 
 ### Fixed — P8b-final: findings of the whole-branch review of the message-structure rollout
 
