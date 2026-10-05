@@ -54,6 +54,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fold now also takes `MCF^*` from that caption (extractor `fold_triggers`, cited in the
   structure). The six rows left are Table 0354 event misprints that are not trigger events
   (v2.3.1 `136`, `1II`; v2.4 and v2.5.1 `007`, `022`), whose corrected events match.
+- **The Permanent / Blocking line drawn by its definition (F-I2).** v2.7.1 QRY_PC4, RCI_I05,
+  RQC_I05, RCL_I06 and UDM_Q05 and v2.8.2 UDM_Q05 print their full syntax and are registered only
+  because it names QRD, QRF, URD or URS, which the version's grammar does not define: a model
+  limit, now **Blocking**, each reason naming what would close it (segment grammars for the
+  withdrawn segments, or a rule that passes over them and checks the rest). v2.8.2 QBP_Q13's
+  reason no longer says "no normative print": CH05 5.4.2 refers to 5.3.1.2, an example query
+  profile whose grammar (query Z99) has a query-specific PID and disagrees with 5.4.2's own
+  segment list, so it stays Permanent as a template ID. Outcomes unchanged (information).
 
 ### Fixed — P8b-18: message-structure rollout close-out
 
@@ -401,7 +409,8 @@ group, cardinality or choice of a modelled structure changes.
   `messageStructureMismatch` on v2.8.2 and 2.8 instead of info.
 - 58 v2.8.2 structures are registered as not modelled, each with its reason (register section
   E): four CH12 `< OBR | Hxx etc. >` structures, four CH05 query templates, UDM_Q05 (its URD
-  and URS are not defined in v2.8.2), QBP_Q13 and RDR_RDR (no normative print) and the 47
+  and URS are not defined in v2.8.2), QBP_Q13 (its CH05 5.4.2 reference gives only a query
+  profile's grammar, P8b-final), RDR_RDR (no normative print) and the 47
   Table 0354 rows marked Deprecated. Every Table 0354 v2.8.2 row is modelled or registered.
 - ACK takes its looser print (CH10's `[{UAC}]`); ORL^O22, O34, O36 and O40 are declared
   shared triggers (each printed for a patient-required and a patient-optional structure);
