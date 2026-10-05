@@ -89,7 +89,10 @@ Not modelled, with reasons in `completeness.json`: PGL_PC6, PPR_PC1, PPP_PCB, PP
 PPV_PCA, PTR_PCF and PPT_PCL (CH12 `< OBR | Hxx etc. >`, G6); QBP_Q11, RSP_K11, QBP_Q13, QBP_Q15
 and QVR_Q17 (CH05 query templates, G6); RDR_RDR (no normative print); UDM_Q05 (URD and URS) and
 QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and QRF, withdrawn as of v2.7), segments v2.7.1 does
-not define; and 39 Table 0354 rows marked Deprecated with no printed syntax.
+not define (Blocking, a model limit, since P8b-final F-I2); and 39 Table 0354 rows marked
+Deprecated with no printed syntax. P8b-final (ruling F-I1) folds ORU^W01 onto ORU_R01 (CH07
+7.14.1) and records the CH03 3.3.63 query profile's `RSP^K32^RSP_K25` as a printed pair, so
+neither is a mismatch.
 
 Requirement 4 evidence: with the structure check off the validation digest is byte-identical;
 with it on, 146 example messages change: 68 now match cleanly, 32 stay info with a new reason,

@@ -466,6 +466,28 @@ if ! grep -qF '"ZZZ_Z01": NotModelledStructure(' "$SCRATCH/case$((cases - 1))/ou
   failures=$((failures + 1))
 fi
 
+PAIR='
+def pair(**fields):
+    c = load("completeness.json")
+    e = {"trigger": "ACK^Z01", "structure": "ADT_A01", "reason": "synthetic"}
+    e.update(fields)
+    c["versions"]["2.5.1"].setdefault("printedPairs", []).append(e)
+    save("completeness.json", c)
+'
+
+reject "a printedPairs entry naming a structure that is not loaded (P8b-final)" 'printedPairs ACK^Z01 ZZZ_Z01: the structure must be a loaded one' "$PRE$SHARED$PAIR
+pair(structure='ZZZ_Z01')"
+
+reject "a printedPairs entry whose structure prints the trigger (P8b-final)" 'printedPairs ADT^A04 ADT_A01: the structure prints that trigger' "$PRE$SHARED$PAIR
+pair(trigger='ADT^A04')"
+
+accept "a printedPairs entry renders in the versions switch (P8b-final)" "$PRE$SHARED$PAIR
+pair()"
+if ! grep -qF '"ACK^Z01 ADT_A01": "synthetic",' "$SCRATCH/case$((cases - 1))/out/Structures/Generated/MessageStructureTable+Versions.swift"; then
+  echo "FAIL a printedPairs entry renders: the generated versions file lacks it"
+  failures=$((failures + 1))
+fi
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

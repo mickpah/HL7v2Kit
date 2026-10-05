@@ -192,8 +192,16 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
 }
 
 /// The message structures each HL7 version defines, generated from
-/// `Resources/structures/` (ADR-019). Only the versions and structures
-/// modelled so far are present; a lookup miss means "not modelled".
+/// `Resources/structures/` (ADR-019). Every supported version is complete:
+/// each structure its print gives is either modelled here or registered as
+/// not modelled with a reason (an unexpandable placeholder or template, a
+/// print naming segments the version does not define, a Table 0354 row with
+/// no printed syntax). A lookup miss therefore means the ID is not a modelled
+/// structure of that version: it may be a registered one, or one the version
+/// does not print at all, and this API does not tell the two apart (the
+/// ``Validator`` does, reporting a registered structure as
+/// ``IssueCode/messageStructureNotModelled(structure:)`` with its reason and
+/// an unprinted ID as ``IssueCode/messageStructureMismatch(declared:trigger:)``).
 ///
 /// Lookups resolve ``Version/grammarVersion`` first, so ``Version/v2_8``
 /// reads the v2.8.2 structures, as the ``Validator`` does for its grammar.
@@ -231,6 +239,13 @@ public enum MessageStructureTable {
     /// lists, that are registered as not modelled, keyed by ID (P8b-9).
     static func notModelled(for version: Version) -> [String: NotModelledStructure] {
         generatedNotModelled(for: version)
+    }
+
+    /// The reason a (trigger, structure ID) pair that `version`'s grammar
+    /// version prints is not modelled although the structure is modelled for
+    /// other triggers (a query profile's response row, P8b-final), or nil.
+    static func printedPairReason(trigger: String, structure: String, version: Version) -> String? {
+        generatedPrintedPairs(for: version.grammarVersion)["\(trigger) \(structure)"]
     }
 
     /// The modelled and the registered structure IDs whose triggers accept

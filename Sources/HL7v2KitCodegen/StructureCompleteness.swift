@@ -20,14 +20,15 @@ let structureOverridesFileName = "overrides.json"
 let structureProfilesDirectoryName = "profiles"
 
 /// One version's entry: whether every structure the version prints is
-/// modelled, the citation for that claim, and the structures registered as
-/// not modelled (P8b-9).
+/// modelled, the citation for that claim, the structures registered as not
+/// modelled (P8b-9), and the printed pairs (P8b-final).
 struct StructureCompletenessEntry: Decodable {
     let complete: Bool
     let citation: String
     let notModelled: [NotModelledEntry]
+    let printedPairs: [PrintedPairEntry]
 
-    private enum CodingKeys: String, CodingKey, CaseIterable { case complete, citation, notModelled }
+    private enum CodingKeys: String, CodingKey, CaseIterable { case complete, citation, notModelled, printedPairs }
 
     init(from decoder: any Decoder) throws {
         try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "completeness entry")
@@ -35,6 +36,27 @@ struct StructureCompletenessEntry: Decodable {
         complete = try c.decode(Bool.self, forKey: .complete)
         citation = try c.decode(String.self, forKey: .citation)
         notModelled = try c.decodeIfPresent([NotModelledEntry].self, forKey: .notModelled) ?? []
+        printedPairs = try c.decodeIfPresent([PrintedPairEntry].self, forKey: .printedPairs) ?? []
+    }
+}
+
+/// A (trigger, structure ID) pair the version prints although the ID is a
+/// modelled structure printed for other triggers (a query profile's response
+/// row, P8b-final F-I1): a message declaring the pair is reported as not
+/// modelled with the reason, never as a mismatch, and its body is not checked.
+struct PrintedPairEntry: Decodable {
+    let trigger: String
+    let structure: String
+    let reason: String
+
+    private enum CodingKeys: String, CodingKey, CaseIterable { case trigger, structure, reason }
+
+    init(from decoder: any Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "printedPairs entry")
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        trigger = try c.decode(String.self, forKey: .trigger)
+        structure = try c.decode(String.self, forKey: .structure)
+        reason = try c.decode(String.self, forKey: .reason)
     }
 }
 
@@ -126,6 +148,22 @@ func validateCompleteness(_ data: StructureCompleteness, modelledVersions: Set<S
                 throw StructureSchemaError(description: "\(label): it is a loaded structure")
             }
         }
+        var pairs: Set<String> = []
+        for pair in entry.printedPairs {
+            let label = "version \(version) printedPairs \(pair.trigger) \(pair.structure)"
+            guard pair.trigger.range(of: "^[A-Z][A-Z0-9]{2}\\^[A-Z0-9]{3}$", options: .regularExpression) != nil else {
+                throw StructureSchemaError(description: "\(label): the trigger must be CODE^EVT")
+            }
+            guard (structureIDs[version] ?? []).contains(pair.structure) else {
+                throw StructureSchemaError(description: "\(label): the structure must be a loaded one (a registered ID needs no pair)")
+            }
+            guard !pair.reason.trimmingCharacters(in: .whitespaces).isEmpty, !pair.reason.contains(where: \.isNewline) else {
+                throw StructureSchemaError(description: "\(label): the reason must be one non-empty line")
+            }
+            guard pairs.insert("\(pair.trigger) \(pair.structure)").inserted else {
+                throw StructureSchemaError(description: "\(label): listed twice")
+            }
+        }
     }
 }
 
@@ -213,6 +251,13 @@ func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [St
         }.joined(separator: "\n")
         return "        case .\(versionDirName(version)):\n            return [\n\(rows)\n            ]"
     }.joined(separator: "\n")
+    let pairCases = versions.compactMap { version -> String? in
+        guard let pairs = data.versions[version]?.printedPairs, !pairs.isEmpty else { return nil }
+        let rows = pairs.sorted { ($0.trigger, $0.structure) < ($1.trigger, $1.structure) }.map { pair -> String in
+            "                \(escapeStringLiteral("\(pair.trigger) \(pair.structure)")): \(escapeStringLiteral(pair.reason)),"
+        }.joined(separator: "\n")
+        return "        case .\(versionDirName(version)):\n            return [\n\(rows)\n            ]"
+    }.joined(separator: "\n")
     let complete = versions.filter { data.versions[$0]?.complete == true }.map { ".\(versionDirName($0))" }
     let citations = versions.map { version -> String in
         let entry = data.versions[version]
@@ -249,6 +294,15 @@ func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [St
         static func generatedNotModelled(for version: Version) -> [String: NotModelledStructure] {
             switch version.grammarVersion {
     \(gapCases.isEmpty ? "" : gapCases + "\n")        default: return [:]
+            }
+        }
+
+        /// The (trigger, structure ID) pairs `version`'s grammar version prints
+        /// although the structure is modelled for other triggers (P8b-final),
+        /// keyed "CODE^EVT STRUCTURE", with the reason.
+        static func generatedPrintedPairs(for version: Version) -> [String: String] {
+            switch version.grammarVersion {
+    \(pairCases.isEmpty ? "" : pairCases + "\n")        default: return [:]
             }
         }
     }

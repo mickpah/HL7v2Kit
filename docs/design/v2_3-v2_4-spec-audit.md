@@ -130,7 +130,11 @@ statements (ruling G7), 168 structure IDs, 148 read and 20 unreadable (G6 placeh
 templates, ERP_R09's ellipsis rows, SUR_P09's ED row, and the 'see Chapter 5' captions QRY_P04
 and DSR_P04). 148 are committed under `Resources/structures/v2.4/` and v2.4 is
 `complete: true`; with the 24 registered in `completeness.json` they account for all 171 Table
-0354 v2.4 rows and the ACK caption, which has no row. P8b-18 classed them by the print: MFR_M01
+0354 v2.4 rows of the Appendix A listing and the ACK caption, which has no row. P8b-final (ruling
+F-I1) registered the 10 rows the CH02 listing (2.17.3) prints that Appendix A lacks or prints
+differently (QRY_Q26 to QRY_Q30, RPI_I0I, RQI_I0I, ORN_008, TBR_R09, RDE_O01), 34 in all, so a
+message copying either listing is never a mismatch, and folds the v2.4 CH02 2.14.2
+`MCF^varies^ACK` caption onto ACK (`MCF^*`). P8b-18 classed them by the print: MFR_M01
 and MFN_M03 are blocking (CH08 gives their segments per file in prose fragments, 8.7.1 p 8-19 to
 8.11.1 p 8-81, and keys MFN^M03's other segments by MFI-1, 8.8.2 p 8-21, as v2.3 and v2.3.1 do);
 QRY_P04 is blocking (6.4.4's reference names one printed QRY, but the caption gives P04 an ID of
@@ -163,7 +167,7 @@ structure ID (MFN^M01-M06 twice, MFQ^M01-M06, MFR^M01-M06, MFN^M04; declared in
 Table 0354 v2.3.1 (CH2 2.24.1.9, pp 2-103 to 2-106), read through ten cited errata for its
 misprinted rows, two declared shared triggers (ADT^A28, ADT^A31) and four `captionStructures`
 entries (MFK, PPP). 99 are committed under `Resources/structures/v2.3.1/` (100 with MCF, folded in P8b-15 fix round 2) and v2.3.1 is
-`complete: true`; with the 27 Table 0354 rows registered in `completeness.json` (28 registered since P8b-18 added DSR_P04, the P04 response, under a synthesised ID; QRY^P04 is added to QRY_Q01 through `referencedTriggers`) they account for all 117 Table
+`complete: true`; with the 27 Table 0354 rows registered in `completeness.json` (28 registered since P8b-18 added DSR_P04, the P04 response, under a synthesised ID; QRY^P04 is added to QRY_Q01 through `referencedTriggers`; 38 since P8b-final, ruling F-I1, registered the ten IDs the table prints misprinted, so a message copying one is information, not a mismatch) they account for all 117 Table
 0354 v2.3.1 rows (ten printed IDs, ACK, MCF and the shared ORM^O01 and ORR^O02 structures, have no
 row). Group names: 247 from the HL7 v2.xml 2.3.1 bundle, 6 through the v2.4 bundle, none
 synthesised (register §E v2.3.1 addendum).

@@ -349,6 +349,13 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
     } catch {
         throw structureFailure(completenessURL.path, error)
     }
+    // P8b-final (F-I1): a printed pair names a loaded structure that does not print the trigger.
+    for (version, entry) in completeness.versions {
+        for pair in entry.printedPairs where owners[version]?[pair.trigger]?.contains(pair.structure) == true {
+            throw structureFailure(completenessURL.path, StructureSchemaError(
+                description: "version \(version) printedPairs \(pair.trigger) \(pair.structure): the structure prints that trigger"))
+        }
+    }
     // ADR-019 lookup rule 2 (P8b-9): a trigger under two structures, loaded or registered as
     // not modelled, is accepted only as a declared shared trigger.
     for (version, entry) in completeness.versions {

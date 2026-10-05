@@ -240,8 +240,15 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// segment, or the head segment of a required group (`group` names the
     /// group; nil at the top level). Located at the segment it was expected
     /// before, or at the last segment when expected at the end. Severity
-    /// follows ``ValidationOptions/messageStructureSeverity`` (off by
-    /// default). ADR-019; additive case introduced in P8-5 per ADR-014.
+    /// follows ``ValidationOptions/messageStructureSeverity`` (`.warning` in
+    /// ``ValidationOptions/default``, `.error` in ``ValidationOptions/strict``,
+    /// off in ``ValidationOptions/lenient``).
+    ///
+    /// The payload names are not always the print's: v2.3 to v2.4 print no
+    /// group names, so `group` there comes from the HL7 v2.xml schema bundles
+    /// or a cited override, or is synthesised; and v2.3 prints no structure
+    /// IDs, so `structure` there is synthesised as `CODE_EVT` from the section
+    /// title (ADR-019). ADR-019; additive case introduced in P8-5 per ADR-014.
     case messageStructureSegmentMissing(structure: String, segmentID: String, group: String?)
     /// A segment has no place in the message's structure at that point: out
     /// of order, an extra repetition of a non-repeating segment or group, or
@@ -257,8 +264,11 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// not matched against any structure. Located at MSH-9.3. Never raised for
     /// a locally defined trigger (a Z message type or trigger event the version
     /// prints under no structure): it may declare any printed structure, which is
-    /// matched, or registered and reported as not modelled (P8b-10). ADR-019;
-    /// additive case introduced in P8-5.
+    /// matched, or registered and reported as not modelled (P8b-10). Never
+    /// raised for a structure ID the version's print gives for the trigger,
+    /// in a caption, a Table 0354 listing or a query profile row: such an ID
+    /// is matched, or registered and reported as not modelled (P8b-final).
+    /// ADR-019; additive case introduced in P8-5.
     case messageStructureMismatch(declared: String, trigger: String)
     /// No abstract message syntax was applied to this message, so segment
     /// order and groups were not checked: the structure (`structure`, the

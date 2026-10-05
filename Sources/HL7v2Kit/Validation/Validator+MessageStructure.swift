@@ -38,7 +38,12 @@ extension Validator {
     /// structure) is not modelled rather than a mismatch, and on any version a
     /// Z trigger the version prints under no structure may declare a printed
     /// structure without a mismatch (P8b-10).
-    /// Table 0354 is not consulted (it lags the chapters, ADR-019 fact 5).
+    /// Table 0354 is not consulted at runtime: the extractor merges its rows
+    /// into each structure's triggers (and every v2.3.1 structure ID comes
+    /// from it), and its IDs with no printed syntax are registered as not
+    /// modelled, so a structure ID the version's print gives is never a
+    /// mismatch (P8b-final, ruling F-I1); a printed pair whose ID is modelled
+    /// for other triggers (completeness.json `printedPairs`) is not modelled.
     /// Rule 3 (P8b-15): v2.3 defines no MSH-9.3 (MSH-9 is CM <message type>
     /// ^ <trigger event>, v2.3 Chapter 2 section 2.24.1.9) and its structure
     /// IDs are synthesised, so a v2.3 message resolves from MSH-9.1^9.2 only
@@ -154,6 +159,13 @@ extension Validator {
             return (nil, [notModelled(declared, message: message, reason: printed)])
         }
         guard localTrigger || structure.accepts(messageCode: code, triggerEvent: event) else {
+            // A pair the version prints although the structure is modelled for other
+            // triggers (a query profile's response row) is not modelled, never a
+            // mismatch (P8b-final, ruling F-I1).
+            if structures == nil, let why = MessageStructureTable.printedPairReason(trigger: trigger, structure: declared, version: message.version) {
+                return (nil, [notModelled(declared, message: message,
+                    reason: "\(ver) prints \(trigger) with \(declared), which is modelled for other triggers: \(why)")])
+            }
             return (nil, [ValidationIssue(
                 severity: severity,
                 code: .messageStructureMismatch(declared: declared, trigger: trigger),

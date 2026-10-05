@@ -129,6 +129,29 @@ struct PrintedStructureIDTests {
         #expect(try structureIssues(msh9, version: "2.4").isEmpty)
     }
 
+    // F-I1 (d): query profile rows print an ID the captions do not: v2.8.2 CH04 4.16.6 and
+    // 4.16.8 (pp 157 to 158) 'Query Trigger: QBP^Q33^QBP_Q33' (caption QBP^Q33^QBP_O33) and so
+    // on; v2.7.1 CH03 3.3.63 (p 53) and v2.8.2 CH03 3.2.63 (p 55) 'Response Trigger:
+    // RSP^K32^RSP_K25' (the profile's grammar and Table 0354 give RSP_K32; RSP_K25 is modelled
+    // for RSP^K25). Each is information naming the structure the caption gives.
+    @Test("A query profile's printed ID is information naming the caption's structure",
+          arguments: [("QBP^Q33^QBP_Q33", "2.8.2", "QBP_Q33", "QBP_O33"), ("RSP^K33^RSP_K33", "2.8.2", "RSP_K33", "RSP_O33"),
+                      ("QBP^Q34^QBP_Q34", "2.8.2", "QBP_Q34", "QBP_O34"), ("RSP^K34^RSP_K34", "2.8.2", "RSP_K34", "RSP_O34"),
+                      ("RSP^K32^RSP_K25", "2.7.1", "RSP_K25", "RSP_K32"), ("RSP^K32^RSP_K25", "2.8.2", "RSP_K25", "RSP_K32")])
+    func queryProfileID(_ c: (String, String, String, String)) throws {
+        let issues = try structureIssues(c.0, version: c.1)
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: c.2)], "\(c.0) v\(c.1): \(issues.map(\.message))")
+        #expect(issues.first?.severity == .info)
+        #expect(issues.first?.message.contains(c.3) == true, "\(c.0) v\(c.1): \(issues.map(\.message))")
+    }
+
+    @Test("The printed pair is information for that trigger only; the modelled structures still resolve",
+          arguments: [("RSP^K25^RSP_K25", "2.8.2", "RSP_K25"), ("RSP^K32^RSP_K32", "2.8.2", "RSP_K32"),
+                      ("RSP^K32", "2.7.1", "RSP_K32"), ("QBP^Q33^QBP_O33", "2.8.2", "QBP_O33")])
+    func queryProfileOthers(_ c: (String, String, String)) throws {
+        #expect(try resolved(c.0, version: c.1) == c.2, "\(c.0) v\(c.1)")
+    }
+
     // M4: v2.7.1 CH02C 2.C.2.175 (p 104) and v2.8.2 CH02C 2.C.2.279 (p 152) print the row
     // 'ORM_O01  O01  Deprecated'; a bare ORM^O01 resolves to that registration and its reason.
     @Test("A bare trigger of a Deprecated Table 0354 row gets the Deprecated reason (M4)",

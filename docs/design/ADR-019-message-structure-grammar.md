@@ -1263,7 +1263,8 @@ compiling a structure per message.
   ADR^A19 and PPG^PCG, both of whose v2.3 prints are unreadable.
 - **Lookup.** v2.3.1 messages carry MSH-9.3 (CM, three components); lookup rule 1's complete
   branch now applies to v2.3.1: an MSH-9.3 naming no v2.3.1 structure (including the misprinted
-  table ID `PIN_107`) is a mismatch.
+  table ID `PIN_107`) is a mismatch. *Reversed by P8b-final (ruling F-I1, see the 2026-10-05
+  amendment below): the literally printed misprints are registered, so they are information.*
 
 ## Amendment 2026-10-04 — v2.3 complete; lookup rule 3 (P8b-15)
 
@@ -1544,7 +1545,7 @@ these lookups is read by a shipped condition; each is registered in the limitati
 - **All seven versions complete.** Modelled and registered structures per version (from
   `Resources/structures/` and `completeness.json`): v2.3 147 / 22, v2.3.1 100 / 28, v2.4
   148 / 24, v2.5.1 173 / 30, v2.6 190 / 20, v2.7.1 164 / 58, v2.8.2 185 / 58; 1,107 modelled
-  and 240 registered in all. Five ADRM-2021 profile structures (ORM_O01, ORU_R01, OSR_Q06,
+  and 240 registered in all (266 after P8b-final: v2.3.1 38, v2.4 34, v2.5.1 32, v2.8.2 62). Five ADRM-2021 profile structures (ORM_O01, ORU_R01, OSR_Q06,
   REF_I12, RRI_I12) layer on v2.4 under `.auLocalisation`; HL7au:00060.1 stays PARTIAL.
 - **Presets.** The check is on in `.default` (warning) and `.strict` (error) and off in
   `.lenient` since 3ffb31d4 (owner decision G2 b; Migration.md).
@@ -1561,6 +1562,65 @@ these lookups is read by a shipped condition; each is registered in the limitati
   Table 0354 listing governs on v2.5.1 (CH02 omits ORU_R31, ORU_R32, RDE_O01 and RRA_O02,
   Appendix A lists them) and on v2.4 (CH02 lists QRY_Q26 to Q30 and QRY_P04, Appendix A does
   not); the spec examples that contradict Table 0354 (ORU^W01^ORU_R01 on v2.6 to v2.8.2;
-  ADT^A47 and ADT^A49 with ADT_A30 on v2.7.1 and v2.8.2); whether the AU profile reports
+  ADT^A47 and ADT^A49 with ADT_A30 on v2.7.1 and v2.8.2) (P8b-final: both listings' IDs are now
+  registered or matched and `ORU^W01^ORU_R01` is matched; the ADT_A30 pairs draw information,
+  ADT_A30 being registered with no triggers there); whether the AU profile reports
   segments beyond the ADRM's narrowed maxima (decision 7); the 00060.1 PV1 prose mandate; and the
   P8b-17 ruling that extended the exact matcher to produce spans (R1).
+
+## Amendment 2026-10-05 — a printed structure ID is never a mismatch (P8b-final)
+
+The whole-branch review of the rollout (finding F-I1) showed structure IDs that a version's own
+print gives reported as `messageStructureMismatch`. Ruling F-I1 (reverses the P8b-14 ruling that
+the literally printed v2.3.1 IDs are mismatches; the owner is to confirm it): **a structure ID
+that the version's print gives for the trigger, in a caption, a Table 0354 listing or a cited
+reference, is never a mismatch.** Lookup rule 1 is unchanged in code; the data now honours the
+rule. A consumer gets one of three outcomes for MSH-9:
+
+1. **Matched.** The declared ID is a modelled structure printed for the trigger: the body is
+   checked and its findings fire at the configured severity. New pairs: `ORU^W01` on ORU_R01 on
+   v2.3.1 to v2.8.2 through `referencedTriggers` (each CH07 W01 section says W01 "identifies ORU
+   messages"; v2.6 to v2.8.2's examples send `ORU^W01^ORU_R01`), and `MCF^*` on v2.4 ACK (CH02
+   2.14.2, p 2-97, prints `MCF^varies^ACK`; the extractor's general fold now takes the other
+   message codes a caption prints with the fold's structure ID).
+2. **Information.** The declared ID is printed for the trigger but has no modelled syntax: it is
+   registered as not modelled, and one `.info` `messageStructureNotModelled` names the printed
+   row and the structure the chapters give; the body is not structure-checked. Registered under
+   this rule: the ten literally printed v2.3.1 Table 0354 misprints (TBR_R09, RRE_O01, MFD_P09,
+   PIN_107, RPI_I0I, RQI_I0I, ARD_A19, SIIU_S12, RROR_ROR, ORM__O01); the v2.4 CH02 rows
+   Appendix A lacks or prints differently (QRY_Q26 to QRY_Q30, RPI_I0I, RQI_I0I, ORN_008, TBR_R09,
+   RDE_O01); v2.5.1 BRP_030 and RSP_Q11; the IDs the v2.8.2 CH04 4.16 query profiles print
+   where the captions give QBP_O33, RSP_O33, QBP_O34 and RSP_O34 (QBP_Q33, RSP_K33, QBP_Q34,
+   RSP_K34); PPG^PCC on PPG_PCG on every version from v2.3.1. Table 0354's ORU_W01 stays
+   registered beside the fold. Where the printed ID is a structure modelled for other triggers
+   (the v2.7.1 CH03 3.3.63 and v2.8.2 CH03 3.2.63 query profiles' `RSP^K32^RSP_K25`), the pair
+   is listed in completeness.json `printedPairs` (new; the codegen checks the structure is
+   loaded and does not print the trigger) and the Validator reports it the same way, before
+   the mismatch branch.
+3. **Mismatch.** The declared ID is printed for other triggers only, or (on a complete version)
+   printed nowhere: `messageStructureMismatch` at the configured severity; the body is not checked.
+
+A bare trigger resolves to the one structure printed for it, or is information when it is
+ambiguous (`ORU^W01` on v2.7.1 and v2.8.2, where the Deprecated Table 0354 row ORU_W01 carries
+W01, declared in `sharedTriggers`) or registered (M4: a Deprecated row's registration carries the
+events the row prints, so a bare `ORM^O01` on v2.7.1 or v2.8.2 gets the Deprecated reason).
+
+**Sweep.** One MSH-only message per (trigger, ID) pair that any printed Table 0354 listing (CH02 /
+CH02C and Appendix A), caption or query profile trigger row gives, every version, validated at
+`.error` (4,747 messages; a table row's events tried under every code a caption prints for
+them): six rows still draw a
+mismatch, each a Table 0354 event misprint that is not a trigger event (v2.3.1 `136` under
+ADT_A30 and `1II` under RPA_I08; v2.4 and v2.5.1 `007` under OMN_O07 and `022` under ORL_O22),
+whose corrected events match.
+
+**Counts.** Modelled / registered per version: v2.3 147 / 22, v2.3.1 100 / 38, v2.4 148 / 34,
+v2.5.1 173 / 32, v2.6 190 / 20, v2.7.1 164 / 58, v2.8.2 185 / 62; 1,107 modelled and 266
+registered, and two printed pairs (v2.7.1, v2.8.2). No modelled structure's segments, groups, cardinality or choices changed; only
+triggers and citations did (ORU_R01 on six versions, v2.4 ACK).
+
+**Permanent and Blocking (F-I2).** A structure whose syntax is fully printed but names segments
+the version's grammar does not define (v2.7.1 QRY_PC4, RCI_I05, RQC_I05, RCL_I06, UDM_Q05; v2.8.2
+UDM_Q05) is Blocking (model limit), closed by segment grammars for the withdrawn QRD, QRF, URD and
+URS or a rule that passes over them and checks the rest. v2.8.2 QBP_Q13 stays Permanent as a
+template ID: CH05 5.4.2 refers to 5.3.1.2, an example query profile whose grammar disagrees with
+5.4.2's own segment list.

@@ -47,13 +47,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   extractor's shared-trigger check now counts registered structures' triggers, as the codegen
   guard does.
 - **Every printed (trigger, structure ID) pair swept (F-I1 d).** A sweep validated one message
-  per pair that any printed Table 0354 listing (CH02 / CH02C and Appendix A) or caption gives,
-  on every version (4,731 messages; a table row's events tried under every code a caption prints
-  for them). One printed pair was still a mismatch: v2.4 CH02 2.14.2 (p 2-97) prints the
-  delayed acknowledgment as `MCF^varies^ACK`, so `MCF^A01^ACK` was reported. The general ACK
-  fold now also takes `MCF^*` from that caption (extractor `fold_triggers`, cited in the
-  structure). The six rows left are Table 0354 event misprints that are not trigger events
-  (v2.3.1 `136`, `1II`; v2.4 and v2.5.1 `007`, `022`), whose corrected events match.
+  per pair that any printed Table 0354 listing (CH02 / CH02C and Appendix A), caption or query
+  profile trigger row gives, on every version (4,747 messages; a table row's events tried under
+  every code a caption prints for them). Printed pairs still reported as mismatches: v2.4 CH02
+  2.14.2 (p 2-97) prints the delayed acknowledgment as `MCF^varies^ACK`, so `MCF^A01^ACK` was
+  reported; the general ACK fold now also takes `MCF^*` from that caption (extractor
+  `fold_triggers`, cited in the structure). The v2.8.2 CH04 4.16.6 and 4.16.8 query profiles
+  print QBP_Q33, RSP_K33, QBP_Q34 and RSP_K34 where the captions give QBP_O33 and so on: now
+  registered (v2.8.2: 62 registered). The v2.7.1 CH03 3.3.63 and v2.8.2 CH03 3.2.63 profiles
+  print `RSP^K32^RSP_K25`, whose ID is modelled for RSP^K25: a new completeness.json
+  `printedPairs` list (codegen-checked: the structure is loaded and does not print the trigger)
+  makes such a pair information. The six rows left are Table 0354 event misprints that are not
+  trigger events (v2.3.1 `136`, `1II`; v2.4 and v2.5.1 `007`, `022`), whose corrected events
+  match.
 - **The Permanent / Blocking line drawn by its definition (F-I2).** v2.7.1 QRY_PC4, RCI_I05,
   RQC_I05, RCL_I06 and UDM_Q05 and v2.8.2 UDM_Q05 print their full syntax and are registered only
   because it names QRD, QRF, URD or URS, which the version's grammar does not define: a model
@@ -95,7 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Appendix A and `Resources/tables/v2.4/0354.json` do not; registered for P7 (table JSON unchanged).
 - **Tests (1538 to 1541):** v2.8.2 COMMON_ORDER cases in the long-message growth test;
   `customRuleCountsEachAnchor`; the real v2.4 REF_I12 same-name PATIENT_VISIT siblings; the
-  v2.3.1 literal misprints PIN_107, RPI_I0I, RQI_I0I and ARD_A19 as mismatches. Validation digests
+  v2.3.1 literal misprints PIN_107, RPI_I0I, RQI_I0I and ARD_A19 as mismatches (information since
+  P8b-final, ruling F-I1). Validation digests
   (default, strict, structure off) byte-identical to 9c81e6eb.
 
 ### Changed — P8b-18: the message-structure check is on in `.default` and `.strict`
@@ -274,7 +281,8 @@ group, cardinality or choice of a modelled structure changes.
 - With `messageStructureSeverity` set, every v2.3.1 message structure is now checked: 99
   structures extracted from the v2.3.1 print (10 matched exactly), and v2.3.1 is marked
   complete. An MSH-9.3 that names no v2.3.1 structure (`ADT^A04^ADT_A04`, or the misprinted
-  Table 0354 ID `PIN_107`) is now `messageStructureMismatch` on v2.3.1 instead of info.
+  Table 0354 ID `PIN_107`) is now `messageStructureMismatch` on v2.3.1 instead of info (for
+  `PIN_107` and the other literally printed misprints, information again since P8b-final).
 - Most v2.3.1 captions print `CODE^EVT` only; the structure ID comes from Table 0354 v2.3.1,
   read through cited errata for its misprinted rows (ARD_A19, PIN_107, RPI_I0I, RQI_I0I,
   TBR_R09, RRE_O01, MFD_P09 and the events 136 and 1II; PPG_PCG gains PCG and keeps PCC). Each
@@ -297,7 +305,8 @@ group, cardinality or choice of a modelled structure changes.
   unless a cited override settles it. No v2.4, v2.5.1, v2.6, v2.7.1 or v2.8.2 structure changes.
 - The literally printed misprinted Table 0354 IDs (`TBR^R09^TBR_R09`, `RRE^O01^RRE_O01`,
   `MFD^P09^MFD_P09`, `PIN^I07^PIN_107`) are `messageStructureMismatch` on v2.3.1 (P8b-14 fix
-  round 1, controller ruling); register section E gives the evidence.
+  round 1, controller ruling); register section E gives the evidence. Reversed by P8b-final
+  (ruling F-I1): they are registered and report information.
 
 ### Fixed — P8b-4a: AU profile structures govern base structure findings; RRI_I12
 

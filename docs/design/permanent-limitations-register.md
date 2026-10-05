@@ -415,9 +415,10 @@ RRI_I12) and are matched by the exact matcher, with at most one finding and no g
 ### Addendum to §E — v2.8.2 complete (P8b-11, 2026-10-04)
 
 v2.8.2 is `complete: true` in `Resources/structures/completeness.json`: 185 structures modelled
-(each cited to chapter, section and pages) and 58 registered as not modelled in that file's
-`notModelled`; every Table 0354 v2.8.2 row is one or the other. A 2.8 message reads through the
-v2.8.2 grammar (ADR-018) and is checked the same way.
+(each cited to chapter, section and pages) and 62 registered as not modelled in that file's
+`notModelled` (58 until P8b-final added the four CH04 query profile IDs below); every Table 0354
+v2.8.2 row is one or the other. A 2.8 message reads through the v2.8.2 grammar (ADR-018) and is
+checked the same way.
 
 | Not modelled (v2.8.2) | Why | Status |
 |---|---|---|
@@ -425,6 +426,7 @@ v2.8.2 grammar (ADR-018) and is checked the same way.
 | QBP_Q11, RSP_K11, QBP_Q15, QVR_Q17 (CH05 5.4.1 to 5.4.5) | Query templates: a `[...]` or `...` row stands for the segments a query profile defines (ruling G6). QBP_Q11 also carries QBP^Q31, which the CH04A 4A.3.20 query profile declares. | **Permanent** for the template IDs. |
 | QBP_Q13 | CH05 5.4.2 (pp 35 to 36) says the structure "contains the MSH, RDF, RCP, and DSC segments" and "can be found in 5.3.1.2"; 5.3.1.2 (pp 14 to 15) is an example query profile printing the grammar of the site-defined query Z99 (MSH `[{SFT}]` `[UAC]` QPD `[PID]` `[RDF]` RCP `[RDF]` `[DSC]`), whose PID is that query's own parameter segment, and which disagrees with the 5.4.2 list. The explicit reference gives only a query profile's grammar, as the earlier 5.4.2 template (`[...]`) does (G6; the example excluded, G7); a conformant QBP^Q13 for another profile could draw a finding against it (P8b-final F-I2). | **Permanent** for the template ID on v2.8.2. |
 | RDR_RDR | The only print is the CH05 5.9.1.1 restatement of a Chapter 4 query that v2.8.2 Chapter 4A no longer prints (excluded, G7). | **Permanent** for v2.8.2. |
+| QBP_Q33, RSP_K33, QBP_Q34, RSP_K34 (P8b-final) | The CH04 4.16.6 and 4.16.8 query profiles (pp 157 to 158) print "Query Trigger: QBP^Q33^QBP_Q33", "Response Trigger: RSP^K33^RSP_K33" and the Q34 / K34 pair, where the section captions and Table 0354 give QBP_O33, RSP_O33, QBP_O34 and RSP_O34 (modelled). Registered so that a message copying the profile row is information naming the caption's structure, not a mismatch (ruling F-I1); no chapter prints a syntax under these IDs. | **Permanent** for v2.8.2 (no syntax under the printed ID). |
 | UDM_Q05 (CH05 5.10.1.2) | Retained for backward compatibility; prints URD and `[URS]`, which v2.8.2 does not define (Appendix A lists both as deprecated), so it cannot be checked against the v2.8.2 grammar. | **Blocking** (model limit) for v2.8.2 (P8b-final F-I2): the syntax is fully printed. Closed by URD and URS segment grammars on v2.8.2, or a rule that passes over the withdrawn segments and checks the rest. |
 | 47 Table 0354 rows marked Deprecated (CH02C 2.C.2.279, pp 149 to 153): ADR_A19, ADT_A18, ADT_A30, DOC_T12, MFN_M01, MFN_M03, MFQ_M01, MFR_M01, MFR_M04, MFR_M05, MFR_M06, MFR_M07, NMQ_N01, NMR_N01, ORF_R04, ORM_O01, ORR_O02, ORU_W01, OSQ_Q06, OSR_Q06, OUL_R21, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QCK_Q02, QRF_W02, QRY_A19, QRY_PC4, QRY_Q01, QRY_Q02, QRY_R02, QRY_T12, RAR_RAR, RCI_I05, RCL_I06, RER_RER, RGR_RGR, ROR_ROR, RQC_I05, RSP_Q11, SQM_S25, SQR_S25, SUR_P09, VXQ_V01, VXR_V03, VXX_V02 | The Comment column of the printed table marks each Deprecated (five "Deprecated and removed as of V2.7") and no v2.8.2 chapter prints its syntax. Since P8b-final (M4) each registration carries the events its row prints, under the code its ID opens with (`ORM_O01`: ORM^O01; the five removed rows list none), written by the extractor from Table 0354, so a bare trigger gets the Deprecated reason and MSH-9.3 naming the row for another trigger is a mismatch. | **Permanent** for v2.8.2 (by design). |
 
@@ -438,11 +440,15 @@ committed, cited to both (overrides.json `primaryPrints`).
 Other print disagreements recorded, not modelled: RDE_O11's 4A.3.13 (RDE^O25) print names the
 RXC group COMPONENTS where the primary 4A.3.5 print and the bundle say COMPONENT (same syntax;
 its unclosed TIMING_ENCODED is read through a cited syntax-cell erratum); CH15 15.3.7 captions
-QBP^Q25^QBP_Q21 over a query parameter table, not a syntax; the CH03 3.2.63 query profile names
-`RSP^K32^RSP_K25` where its caption and Table 0354 say RSP_K32, and the CH04 4.16 profiles name
-QBP_Q33, RSP_K33, QBP_Q34 and RSP_K34 where the captions and Table 0354 say QBP_O33, RSP_O33,
-QBP_O34 and RSP_O34 (the caption is committed; a message declaring the profile's ID is a
-mismatch). The HL7 v2.xml bundles differ from the print for the no-bar `< ... >` named groups
+QBP^Q25^QBP_Q21 over a query parameter table, not a syntax; the CH03 3.2.63 query profile (p 55)
+names `RSP^K32^RSP_K25` where its own grammar and Table 0354 say RSP_K32, and the CH04 4.16
+profiles name QBP_Q33, RSP_K33, QBP_Q34 and RSP_K34 where the captions and Table 0354 say QBP_O33,
+RSP_O33, QBP_O34 and RSP_O34 (the caption is committed). Since P8b-final (ruling F-I1) a message
+declaring the profile's ID is information, never a mismatch: the four CH04 IDs are registered
+(table above), and `RSP^K32^RSP_K25`, whose ID is modelled for RSP^K25, is a completeness.json
+`printedPairs` entry (a pair the print gives although the structure is modelled for other
+triggers; the body is not checked). The v2.7.1 CH03 3.3.63 profile (p 53) prints the same pair,
+recorded likewise. The HL7 v2.xml bundles differ from the print for the no-bar `< ... >` named groups
 of EHC_E01, E02, E04, E15, E20, E21, E24, QBP_E03, QBP_E22, RSP_E03 and RSP_E22 (the CH16 text
 never says "one of" for them: named required groups, P8b-6 ruling), ADT_A09 and ADT_A12 (the
 bundle adds DG1), ADT_A60, DFT_P03 and DFT_P11 (a VISIT group the print does not have), OSM_R26
@@ -819,7 +825,10 @@ finding is a dropped `unexpected`, the base is matched again with the dropped oc
 over, repeated until a finding is kept or none is left, so a later divergence is still reported
 (fix round 1). What stays unreported is what neither structure reports: the narrowed maxima,
 which the base accepts and the profile reports only as beyond-maximum findings, which decision 7
-drops. A fifth ADRM structure, OSR_Q06 (p 281, the order status response), is modelled in fix
+drops. The code drops every profile `unexpected` finding (`Validator+ProfileStructure.swift`),
+so a segment order the ADRM narrowed would go unreported as well; none is known (the final
+review traced ORU_R01 and REF_I12 and found no ordering that differs from the base), so today
+this is a property of the data, not a gap in the text above (P8b-final M5). A fifth ADRM structure, OSR_Q06 (p 281, the order status response), is modelled in fix
 round 1 (row above). The ORM^O01 order detail is narrowed to OBR, RXO,
 ODS and ODT (p 280 replaces OBR only "for medication and diet orders"), so an RQD or RQ1 in its
 place is a 00060.1 finding. Still not enforced, as the table above records: Appendix 8, the
@@ -843,7 +852,7 @@ that would.
 | OBR to OBX | v2.4 OML_O21 | Takes a CONTAINER_2 OBX that comes before an OBSERVATION OBX | The OBSERVATION OBX of the request | **Blocking** (same rule) |
 | Message-level OBR to OBX | v2.7.1 and v2.8.2 ORU_R30 | Takes the PATIENT_OBSERVATION OBX | The OBSERVATION group's OBX, which follow the OBR | **Blocking** (same rule) |
 | `.obrObxGroup` count | v2.8.2 ORU_R01 | Counts the ORDER_DOCUMENT and SPECIMEN OBX of the order occurrence with its OBSERVATION OBX | The OBSERVATION group's OBX only | **Blocking** (same rule) |
-| Lookup cost | every version | The anchor's innermost group occurrence is read from an index built once per message (P8b-18 fix round 1; it was a linear search per lookup); the rest of one lookup is linear in the spans of the region it returns and in the definition's size times its depth, so a message-level region costs a pass over the message | (performance, not a spec item) | Measured (release build, best of three): a 5,002-segment ORU^R01 of 150,084 bytes validates at `.warning` in 218 ms (v2.5.1) and 256 ms (v2.8.2), 1.48 and 1.75 ms per KB, inside the derived scaling limit of 293 ms (spec 9.5 prints a budget for a 1 KB message only; the limit scales its 2 ms row by size, 2 ms per KB, and is not a spec budget). The index changed no result (digests byte-identical) and no measured time beyond noise |
+| Lookup cost | every version | The anchor's innermost group occurrence is read from an index built once per message (P8b-18 fix round 1; it was a linear search per lookup); the rest of one lookup is linear in the spans of the region it returns and in the definition's size times its depth, so a message-level region costs a pass over the message | (performance, not a spec item) | Measured (release build, best of three): a 5,002-segment ORU^R01 of 150,084 bytes validates at `.warning` in 218 ms (v2.5.1) and 256 ms (v2.8.2), 1.48 and 1.75 ms per KB, inside the derived scaling limit of 293 ms (spec 9.5 prints a budget for a 1 KB message only; the limit scales its 2 ms row by size, 2 ms per KB, and is not a spec budget). The index changed no result (digests byte-identical) and no measured time beyond noise. Each `validate` resolves the structure and runs the base match twice, once for the group spans and once for the check (final review M8, not changed); both runs are inside the measured figures |
 | AU REF^I12 validation time | v2.4 with `.auLocalisation` | A REF^I12 with 200 to 800 ADRM-added segments (3,125 to 12,327 bytes) validates in 7.9 to 40.3 ms, 2.59 to 3.35 ms per KB, over the derived scaling limit (6.1 to 24.1 ms, 2 ms per KB); at 542f5cd, before the rollout, 6.9 to 36.8 ms, also over it | (performance, not a spec item) | **Registered, not met.** A sample of the 805-segment case puts the time in the AU profile's field-level checks (`checkProfileCompositeOverrides`, condition referent resolution and message path reads); the structure match, group spans and scoping take under 1 per cent of the samples. Without the AU locale the same message validates in 11.3 ms (0.94 ms per KB). The rollout added 1.0 to 3.5 ms (542f5cd to HEAD, the figures above). With the severity off the 805-segment case took 40.6 ms against 41.8 ms at `.warning` in one probe run; that difference is the findings' emission only, because the base match and its group spans are computed whatever the severity (`Validator+GroupSpans.swift`). `PerformanceStructureTests` wraps the three cases in `withKnownIssue` citing this row |
 
 **v2.4 Table 0354: CH02 and Appendix A disagree (for P7).** The CH02 print of Table 0354 (section
@@ -853,18 +862,24 @@ QRY_Q01, QRY_Q02, QRY_R02, QRY_T12). The table JSON is extractor output and is n
 P7 decides which listing the code table follows. The message structures are not affected: QRY_P04
 is registered (v2.4 addendum above), and CH04 prints the pharmacy queries as `QRY^Q26^QRY_Q01` to
 `QRY^Q30^QRY_Q01` (4.13.13 to 4.13.17), so QRY^Q26 to Q30 resolve to QRY_Q01, as Appendix A
-has it; a message declaring `QRY_Q26` to `QRY_Q30` names no loaded structure. v2.5.1 has the
-converse case (CH02 omits ORU_R31, ORU_R32, RDE_O01 and RRA_O02, which Appendix A lists; the
-registrations rest on Appendix A, P8b-18d); which listing governs is open for the owner.
+has it. A message declaring `QRY_Q26` to `QRY_Q30` copies the CH02 listing: since P8b-final
+(ruling F-I1) those IDs are registered as not modelled, so it gets information naming the CH04
+caption, never a mismatch. v2.5.1 has the converse case (CH02 omits ORU_R31, ORU_R32, RDE_O01 and
+RRA_O02, which Appendix A lists; the registrations rest on Appendix A, P8b-18d, and each draws
+information); which listing governs the code table is open for the owner.
 
 **Other open items found by the rollout** (listed for the owner in `STATUS.md`): a
 structure-alias model extension (QRY_P04 on v2.4 and v2.5.1 is a cross-reference by the print,
 but folding it onto the printed QRY would make `QRY^P04^QRY_P04` a mismatch); an extractor
 reader for prose-printed replacement fragments (the master-file bodies, v2.3 to v2.6); v2.3.1
 prints the same R03, R05, R06 and W02 prose and Table 0003 rows that v2.3 folds or registers,
-not yet classed on v2.3.1; and the spec's own examples that contradict Table 0354
-(`ORU^W01^ORU_R01` on v2.6 to v2.8.2; `ADT^A47^ADT_A30` and `ADT^A49^ADT_A30` on v2.7.1 and
-v2.8.2), which draw a mismatch.
+not yet classed on v2.3.1; and the spec's own examples that contradict Table 0354. Since
+P8b-final `ORU^W01^ORU_R01` (v2.6 to v2.8.2 examples) is matched against ORU_R01, W01 being folded
+onto it from each version's CH07 W01 section (v2.3.1 to v2.8.2). `ADT^A47^ADT_A30` and
+`ADT^A49^ADT_A30` (v2.7.1 and v2.8.2 examples) draw information, not a mismatch: ADT_A30 is
+registered there with no triggers (its row lists none on v2.7.1, "Deprecated and removed as of
+V2.7"; on v2.8.2 it is marked Deprecated with none), so the body is not checked, although CH03
+prints A47 under ADT_A44.
 
 ## F. Excluded HL7 v2.x versions (ADR-018)
 
