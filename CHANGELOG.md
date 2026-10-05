@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P7-5: validator limits and design index documented accurately
+
+- **The composite extra-component warning cites the version validated.** It cited "section
+  2.8.1, section 2.11.5" with no version, and v2.3 to v2.4 print neither. It now reads, per
+  the print: v2.3 and v2.3.1 section 2.10.2 c, v2.4 section 2.11.2 c ("new components may be
+  added at the end of a field"; no local extension clause), v2.5.1 sections 2.8.1 and
+  2.11.5 c, v2.6 to v2.8.2 sections 2.8.1 h and 2.11.5 c. Message text only; the code,
+  severity and location are unchanged.
+- DocC "What the validator does not check" drops the stale cross-segment bullet (cross-segment
+  conditions ship, ADR-008) and states what is really unchecked: component normative length
+  (v2.7.1, v2.8.2) and populated `B` / `W` components, both registered in the new
+  permanent-limitations register section G. Field length, bounded repeats, primitive format
+  and message structure are checked and are not listed. The conditional DSL section now
+  gives the shipped grammar (AND / OR, cross-segment referents, three-state evaluation) and a
+  true example (PID-36 `PID-37 populated`); the grammar-scope sentence names all seven
+  versions. `AddingASegment.md` no longer calls primitive format and cross-segment
+  conditions future work.
+- `FieldGrammar.length` documentation quotes the pre-v2.7 length paragraph whole: "not of
+  conceptual importance" and, next, "The length of a field is normative" (v2.3 and v2.3.1
+  section 2.6.2, v2.4 section 2.7.2, v2.5.1 and v2.6 section 2.5.3.2).
+- ADR-016: the 1,073 `ID` field count is recounted with its method stated: right at
+  7c6b62ce, 1,222 live today across seven versions (1,248 bound, 26 `tableOpen`).
+- `docs/design/README.md` indexes ADR-019 and ADR-020 and corrects the ADR-012 and ADR-017
+  rows; `planning/` paths are marked as the local planning folder, not in the repository.
+
 ### Fixed — P7-4: v2.6 / v2.8.2 coverage documents
 
 - `v2_6-spec-audit.md`, `v2_8_2-spec-audit.md`, `deferred-coverage-backlog.md` and

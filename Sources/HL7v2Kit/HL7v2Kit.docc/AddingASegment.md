@@ -87,13 +87,13 @@ The `codegen-drift` GitHub Actions job runs `regenerate-typed-segments.sh` and f
 
 ## What gets validated automatically
 
-Adding a segment's grammar means the ``Validator`` now has rules to check against. The required-field, conditional-field, cardinality, and deprecation checks all become live for the new segment with no additional code. If you populate the `condition` field on a `C`-optional entry, the predicate is evaluated automatically — see <doc:Validation> for the DSL.
+Adding a segment's grammar means the ``Validator`` now has rules to check against. The field-level checks (required, conditional, cardinality, deprecation, length, primitive value format, code table and component grammar) all become live for the new segment with no additional code. If you populate the `condition` field on a `C`-optional entry, the predicate is evaluated automatically — see <doc:Validation> for the DSL.
 
 ## Limits
 
-- HL7v2Kit ships typed wrappers for **XPN / CX / XAD** (v0.2-C1) plus component-grammar enforcement on each (v0.2-V2). The other composite data types (CE, CWE, EI, XCN, HD, MSG, PT, VID, XTN, PL, CNE, XON, EIP) still return `Field?` — each can be promoted to a typed struct in a future stage. See <doc:Migration>.
-- The conditional-field DSL is same-segment-only. Cross-segment predicates (e.g. "PV1-2 = I → this PID field is required") evaluate to `false` and don't trigger errors.
-- Field-level type conformance (e.g. a TS field containing `"hello"` not being a well-formed timestamp) is not checked; tracked for a future release.
+- Typed composite views ship for CE, CNE, CWE, CX, EI, EIP, HD, MSG, PL, PT, VID, XAD, XCN, XON, XPN and XTN, generated to full spec depth on every supported version (ADR-020); a typed accessor of any other composite type returns `Field?`. See <doc:TypedSegments>.
+- A condition that the message cannot decide (a referenced segment or field that does not resolve, or a predicate that does not parse) does not trigger; cross-segment references are supported (ADR-008, ADR-010). See <doc:Validation>.
+- Primitive value format is checked (a TS field containing `"hello"` raises ``IssueCode/valueFormatInvalid(dataType:)``); see <doc:Validation> for this and for what the validator does not check.
 
 ## See Also
 

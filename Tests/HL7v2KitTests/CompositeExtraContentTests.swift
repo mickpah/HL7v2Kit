@@ -176,4 +176,35 @@ struct CompositeExtraContentTests {
             #expect(found.isEmpty, "\(version): \(found.map(\.message))")
         }
     }
+
+    // P7-5: the extension rule is cited by version, as the recipient rule is. v2.3 to v2.4
+    // print only the version compatibility rule c ("new components may be added at the end
+    // of a field": v2.3 and v2.3.1 section 2.10.2, p. 2-58 and p. 2-70; v2.4 section 2.11.2,
+    // p. 2-88) and no local extension clause. From v2.5.1, section 2.8.1 ("New components may
+    // be added at the end of a data type", rule h from v2.6) and section 2.11.5 c ("Data types
+    // may be locally extended by adding new components at the end").
+    @Test("The extension rule cited names each version's own sections (P7-5)")
+    func extensionRuleCitedPerVersion() {
+        let expected: [(Version, String)] = [
+            (.v2_3, "a later version may add components at the end of a field (v2.3 section 2.10.2 c)"),
+            (.v2_3_1, "a later version may add components at the end of a field (v2.3.1 section 2.10.2 c)"),
+            (.v2_4, "a later version may add components at the end of a field (v2.4 section 2.11.2 c)"),
+            (.v2_5_1, "a later version or a local extension may add components at the end of a data type (v2.5.1 sections 2.8.1 and 2.11.5 c)"),
+            (.v2_6, "a later version or a local extension may add components at the end of a data type (v2.6 sections 2.8.1 h and 2.11.5 c)"),
+            (.v2_7_1, "a later version or a local extension may add components at the end of a data type (v2.7.1 sections 2.8.1 h and 2.11.5 c)"),
+            (.v2_8_2, "a later version or a local extension may add components at the end of a data type (v2.8.2 sections 2.8.1 h and 2.11.5 c)"),
+        ]
+        for (version, clause) in expected {
+            #expect(Validator.componentExtensionRule(version) == clause, "\(version)")
+        }
+    }
+
+    @Test("The composite warning carries the versioned extension rule (P7-5)")
+    func compositeMessageCitesVersionedRule() throws {
+        let v251 = try extras(adt(pid5: Self.fifteen), at: "PID", 5).first?.message ?? ""
+        #expect(v251.contains("(v2.5.1 sections 2.8.1 and 2.11.5 c)"))
+        let v23 = try extras(adt(pid5: "DOE^JOHN^^^^^L^A^X", version: "2.3"), at: "PID", 5).first?.message ?? ""
+        #expect(v23.contains("(v2.3 section 2.10.2 c)"))
+        #expect(!v23.contains("local extension"))
+    }
 }

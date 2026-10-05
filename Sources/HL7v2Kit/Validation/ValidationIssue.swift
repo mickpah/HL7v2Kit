@@ -211,10 +211,13 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// (v2.5.1 and v2.8.2 section 2.5.4), and a recipient ignores components and
     /// subcomponents "that are present but were not expected" (section 2.6.2 a).
     /// A warning by default, not an error: "New components may be added at the
-    /// end of a data type" (v2.5.1 section 2.8.1, v2.8.2 section 2.8.1 h), and
+    /// end of a data type" (v2.5.1 section 2.8.1; section 2.8.1 h from v2.6), and
     /// "Data types may be locally extended by adding new components at the end"
-    /// (section 2.11.5 c), so a value shaped by a later version or a local Z data
-    /// type may carry them. Trailing empty components and escaped separators are
+    /// (section 2.11.5 c from v2.5.1), so a value shaped by a later version or a
+    /// local Z data type may carry them. v2.3 to v2.4 print only the version
+    /// compatibility rule "new components may be added at the end of a field"
+    /// (v2.3 and v2.3.1 section 2.10.2 c, v2.4 section 2.11.2 c). The message
+    /// cites the rule of the version validated. Trailing empty components and escaped separators are
     /// never reported. Not checked: a datatype the version gives no component
     /// table (CM on v2.3 to v2.4, `varies` with no OBX-2), and the open-ended
     /// arrays NA (its tables end in an ellipsis) and MA (its prose: "channels

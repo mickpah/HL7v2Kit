@@ -88,10 +88,14 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// `IS` fields and open tables are informational (req #4). M6-O6.
     public let table: String?
     /// The LEN cell the version's attribute table prints, verbatim, or `nil`
-    /// when the table prints none. Before v2.7 it is a stated maximum the
-    /// spec itself calls "not of conceptual importance"; from v2.7 it is a
-    /// normative length (`"2..2"`, `"2,4"`) or, where LEN is blank, the printed
-    /// conformance length with its truncation marker (`"32="`, `"250#"`).
+    /// when the table prints none. Before v2.7 it is a maximum length: the
+    /// spec calls the maximum "not of conceptual importance in the abstract
+    /// message or the HL7 coding rules" and, in the next sentence, "The length
+    /// of a field is normative", negotiable by site agreement (v2.3 and v2.3.1
+    /// section 2.6.2, v2.4 section 2.7.2, v2.5.1 and v2.6 section 2.5.3.2).
+    /// From v2.7 it is a normative length (`"2..2"`, `"2,4"`) or, where LEN is
+    /// blank, the printed conformance length with its truncation marker
+    /// (`"32="`, `"250#"`).
     /// Enforced by the Validator per era: see ``ValidationOptions/fieldLengthSeverity``
     /// and ``ValidationOptions/normativeLengthSeverity`` (P6-6).
     public let length: String?

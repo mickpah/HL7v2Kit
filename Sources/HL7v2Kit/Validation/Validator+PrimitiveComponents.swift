@@ -220,6 +220,29 @@ extension Validator {
         }
     }
 
+    /// Where `version` (a grammar version) allows components to be added at the end: v2.3
+    /// to v2.4 print only the version compatibility rule c, "new components may be added
+    /// at the end of a field" (v2.3 and v2.3.1 section 2.10.2, p. 2-58 and p. 2-70; v2.4
+    /// section 2.11.2, p. 2-88), and no local extension clause. From v2.5.1, section 2.8.1
+    /// "New components may be added at the end of a data type" (rule h from v2.6; v2.5.1
+    /// p. 2-21, v2.6 p. 19, v2.7.1 p. 21, v2.8.2 p. 24) and section 2.11.5 c "Data types may
+    /// be locally extended by adding new components at the end" (v2.5.1 p. 2-40, v2.6 p. 39,
+    /// v2.7.1 p. 43, v2.8.2 p. 44).
+    static func componentExtensionRule(_ version: Version) -> String {
+        switch version {
+        case .v2_3, .v2_3_1:
+            return "a later version may add components at the end of a field (v\(version.rawValue) section 2.10.2 c)"
+        case .v2_4:
+            return "a later version may add components at the end of a field (v2.4 section 2.11.2 c)"
+        case .v2_5_1:
+            return "a later version or a local extension may add components at the end of a data type "
+                + "(v2.5.1 sections 2.8.1 and 2.11.5 c)"
+        default:
+            return "a later version or a local extension may add components at the end of a data type "
+                + "(v\(version.rawValue) sections 2.8.1 h and 2.11.5 c)"
+        }
+    }
+
     func checkExtraPrimitiveComponents(
         _ grammar: FieldGrammar,
         field: Field,
@@ -266,7 +289,7 @@ extension Validator {
                     severity: severity,
                     code: .extraComponentsInCompositeField,
                     location: location,
-                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), \(printedBy) \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores components it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and a later version or a local extension may add components at the end of a data type (section 2.8.1, section 2.11.5)"
+                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), \(printedBy) \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores components it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and \(Self.componentExtensionRule(grammarVersion))"
                 ))
             }
             for entry in composite.components where repetition.components.count >= entry.index {
