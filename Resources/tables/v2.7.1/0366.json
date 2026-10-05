@@ -1,0 +1,18 @@
+{
+  "table": "0366",
+  "version": "2.7.1",
+  "name": "Local/Remote Control State",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A (p110), HL7 Table 0366 - Local/Remote Control State; Chapter 13 sec 13.4.1.4 EQU (p21) 'for valid values'",
+  "entries": [
+    {
+      "code": "L",
+      "description": "Local"
+    },
+    {
+      "code": "R",
+      "description": "Remote"
+    }
+  ]
+}

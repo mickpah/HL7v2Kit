@@ -1,0 +1,22 @@
+{
+  "segmentID": "PRT",
+  "version": "2.7.1",
+  "description": "Participation Information",
+  "fields": [
+    { "index": 1, "swiftName": "participationInstanceId", "name": "Participation Instance ID", "dataType": "EI", "length": "1..4", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "length": "2..2", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 3, "swiftName": "actionReason", "name": "Action Reason", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "participation", "name": "Participation", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0912"] },
+    { "index": 5, "swiftName": "participationPerson", "name": "Participation Person", "dataType": "XCN", "optionality": "C", "repeatability": "*", "condition": "PRT-8 empty AND PRT-9 empty AND PRT-10 empty" },
+    { "index": 6, "swiftName": "participationPersonProviderType", "name": "Participation Person Provider Type", "dataType": "CWE", "optionality": "C", "repeatability": "1", "prohibitedWhen": "PRT-5 empty" },
+    { "index": 7, "swiftName": "participantOrganizationUnitType", "name": "Participant Organization Unit Type", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0406"], "prohibitedWhen": "PRT-5 empty" },
+    { "index": 8, "swiftName": "participationOrganization", "name": "Participation Organization", "dataType": "XON", "optionality": "C", "repeatability": "*", "condition": "PRT-5 empty AND PRT-9 empty AND PRT-10 empty" },
+    { "index": 9, "swiftName": "participantLocation", "name": "Participant Location", "dataType": "PL", "optionality": "C", "repeatability": "*", "condition": "PRT-5 empty AND PRT-8 empty AND PRT-10 empty" },
+    { "index": 10, "swiftName": "participationDevice", "name": "Participation Device", "dataType": "EI", "optionality": "C", "repeatability": "*", "condition": "PRT-5 empty AND PRT-8 empty AND PRT-9 empty" },
+    { "index": 11, "swiftName": "participationBeginDateTimeArrivalTime", "name": "Participation Begin Date/Time (arrival time)", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "participationEndDateTimeDepartureTime", "name": "Participation End Date/Time (departure time)", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "participationQualitativeDuration", "name": "Participation Qualitative Duration", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "participationAddress", "name": "Participation Address", "dataType": "XAD", "optionality": "C", "repeatability": "*", "condition": "PRT-4 = POMD" },
+    { "index": 15, "swiftName": "participantTelecommunicationAddress", "name": "Participant Telecommunication Address", "dataType": "XTN", "optionality": "O", "repeatability": "*" }
+  ]
+}

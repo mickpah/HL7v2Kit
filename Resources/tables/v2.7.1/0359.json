@@ -1,0 +1,22 @@
+{
+  "table": "0359",
+  "version": "2.7.1",
+  "name": "Diagnosis Priority",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Appendix A (p108), HL7 Table 0359 - Diagnosis Priority; Chapter 6 sec 6.5.2.15 DG1-15 (p33) 'for suggested values', and 'Values 2-99 convey ranked secondary' diagnoses: the printed 0, 1, 2 and '...' are not a closed set",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Not included in diagnosis ranking"
+    },
+    {
+      "code": "1",
+      "description": "The primary diagnosis"
+    },
+    {
+      "code": "2",
+      "description": "For ranked secondary diagnoses"
+    }
+  ]
+}

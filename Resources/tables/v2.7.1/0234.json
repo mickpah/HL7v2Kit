@@ -1,0 +1,50 @@
+{
+  "table": "0234",
+  "version": "2.7.1",
+  "name": "Report Timing",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0234 - Report Timing",
+  "entries": [
+    {
+      "code": "10D",
+      "description": "10 day report"
+    },
+    {
+      "code": "15D",
+      "description": "15 day report"
+    },
+    {
+      "code": "30D",
+      "description": "30 day report"
+    },
+    {
+      "code": "3D",
+      "description": "3 day report"
+    },
+    {
+      "code": "7D",
+      "description": "7 day report"
+    },
+    {
+      "code": "AD",
+      "description": "Additional information"
+    },
+    {
+      "code": "CO",
+      "description": "Correction"
+    },
+    {
+      "code": "DE",
+      "description": "Device evaluation"
+    },
+    {
+      "code": "PD",
+      "description": "Periodic"
+    },
+    {
+      "code": "RQ",
+      "description": "Requested information"
+    }
+  ]
+}

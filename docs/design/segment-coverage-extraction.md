@@ -127,20 +127,20 @@ misfire validation (an empty/wrong `dataType` yields an untyped `Field?` accesso
 field still parses / round-trips), but they were a req-#2/#4 faithfulness gap. All three
 are now fixed in `scripts/extract-segment-tables.swift`:
 
-1. ✅ **Column assignment mis-binned right/left-leaning values.** `nearestColumnKey`
+1. Done — **Column assignment mis-binned right/left-leaning values.** `nearestColumnKey`
    assigned each run to the nearest header-label **centre**. Where a table's `DT` values sit
    well right of the label (v2.5.1 **CH12 GOL** — GOL-1 `Action Code` extracted empty `DT`
    instead of `ID`; GOL-4/5 dropped `EI`) or a hair left (v2.5.1 **CH04 BPO** — `CWE` just
    left of the `DT` label), the datatype was dropped/mis-assigned. **Fixed:** `columnKey(forStart:)`
    assigns by smallest distance between the run's **start** and each label's **start** —
    resolves GOL *and* BPO, golden NK1/PV1/IN1 still pass.
-2. ✅ **Spurious rows from wrapped `LEN` digits.** Row detection now rejects `seq < 1` and
+2. Done — **Spurious rows from wrapped `LEN` digits.** Row detection now rejects `seq < 1` and
    any row with **both** an empty name and an empty `DT`. Root cause identified: these were
    never "non-field lines" in general — they are the **overflow digits of a wrapped `LEN`
    cell** landing left of the `DT` column (OM6's `10240` wraps, leaving a bare `0`; EQP's
    `65536` leaves a bare `6`; OM4/OM1 likewise). They both inflated field counts and
    collided on derived swiftNames (`field2`, `field3`).
-3. ✅ **`deriveSwiftName`** drops lone `s` fragments left by a possessive apostrophe
+3. Done — **`deriveSwiftName`** drops lone `s` fragments left by a possessive apostrophe
    (`Contact Person's Name` → `contactPersonName`, not `contactPersonSName`).
 
 ### Rule: empty `dataType` is not automatically a defect
@@ -348,6 +348,12 @@ future `1-n` segment needs the same treatment.
 > still bind it, so the RDT whitelist stays. `ADD` is now simply absent from the caption set
 > — hand-authored like RDT on all four AU-priority versions (§3C) and whitelisted alongside it.
 
+**Presence of whitelisted segments (P6-3).** `DEPTH_WHITELIST` keeps these segments out
+of the depth pass, which also kept them out of the presence check: ADD was missing on
+v2.6 and v2.8.2 without any finding (V282-C04). `audit-schemas.py` now checks a
+whitelisted ID's presence from its attribute-table caption ("HL7 Attribute Table - ADD",
+or "Figure n-m. ADD attributes" before v2.4), independent of row parsing.
+
 ### Spec-text defects normalised in authored schemas
 
 The attribute table is authoritative, but a handful of cells are typeset wrong in the PDF
@@ -360,6 +366,7 @@ itself. Each is normalised in the schema and listed here so `--verify` FAILs are
 | v2.3 | EQL-2 / SPR-2 / VTQ-2 name | `Query/ Response Format Code` | `Query/Response Format Code` | Line-wrap artifact after the slash; every other version and the field definitions read `Query/Response`. Names only. |
 | v2.4 | VTQ-2 name | `Query/ Response Format Code` | `Query/Response Format Code` | Same artifact; v2.4 EQL-2 / SPR-2 are spaced correctly. Names only. |
 | v2.3, v2.3.1, v2.4 | CM2-1 name | `Set ID- CM2` | `Set ID - CM2` | Missing space before the hyphen in all three legacy tables; v2.5.1 and the CM2-1 definition headings are spaced. Names only. |
+| v2.8.2 | RF1-18 DT | `M0` | `MO` | CH11 field heading §11.8.1.18 prints `(MO)`; the same element at AUT-22 prints `MO` in its table row and in §11.8.2.22. `DATATYPE_WHITELIST` carries it. |
 
 ### Blank OPT = optional, and the v2.3.1 Appendix C exception (§3F)
 
@@ -390,8 +397,8 @@ schemas stop short of the spec's field count. Confirmed on **OBX**, a core segme
 | v2.3 | 11 | **17** | OBX-12 … OBX-17 (through `Observation Method`) |
 | v2.3.1 | 14 | *unverified* | — |
 | v2.4 | 16 | *unverified* | extraction breaks at field 4 on this layout — needs a manual read |
-| v2.6 | 25 | 25 | ✅ |
-| v2.8.2 | 30 | 30 | ✅ |
+| v2.6 | 25 | 25 | yes |
+| v2.8.2 | 30 | 30 | yes |
 
 The v1.1 audit completed OBX 17 → 24 but stopped one field short of the v2.5.1 table, and
 never covered the legacy versions. **This is a req-#1/#4 completeness gap, not a
@@ -463,17 +470,20 @@ to match a stray table is the residual risk, same as before the predicate existe
 
 Two carve-outs, both enumerated in `audit-schemas.py`:
 
-- **`CM` accepts any named composite.** Pre-v2.5 tables type most composites as the
-  placeholder `CM` ("composite, see the field definition"); the schemas carry the v2.5-era
-  NAME of the identical component structure because grammar-level composite dispatch keys
-  on it (HL7au:00049.1 is BASE only because v2.4 MSH-9 is typed `MSG`). A **scalar** against
-  a spec `CM` still flags.
+- **`CM` accepts an enumerated refinement only.** Pre-v2.5 tables type most composites as the
+  placeholder `CM` ("composite, see the field definition"). A schema may carry the
+  v2.5-era name only where that structure is the field's own (`CM_REFINEMENTS`: MSG, MOC,
+  PRL, EIP). Grammar-level dispatch keys on those names: HL7au:00049.1 is BASE only
+  because v2.4 MSH-9 is typed `MSG`. SPS and NDL differ (v2.4 OBR-15.2 is TX, SPS.2 CWE;
+  OBR-32.1 is CN, NDL.1 CNN), so OBR-15 and OBR-32..35 stay `CM` on v2.3 to v2.4. Every
+  `CM` field's components come from its own definition (ADR-017, P5 addendum). A scalar
+  against a spec `CM` still flags.
 - **`DATATYPE_WHITELIST`** — `v2.4/AL1-1`: the v2.4 table *and* heading print `CE` for
   `Set ID - AL1` (SI in v2.3 and v2.5+), a spec typo; following it verbatim would dispatch
   the AU CE composite rules onto every plain set-ID (req #4 misfire), so the schema
   normalises to `SI`. `v2.5.1/OBX-5`: the variable-type row defeats the extractor
   (candidates include `*`, `NA or`, truncated `varie`); the schema's `varies` is
-  hand-verified (M6-D5).
+  hand-verified (M6-D5). `v2.8.2/RF1-18`: the `M0` misprint, normalised to `MO` (P6-1).
 
 First measurement (2026-09-16): **45 findings** → 30 were the CM-refinement class
 (documented above, not defects), 2 whitelisted, and **13 real verbatim-fidelity defects

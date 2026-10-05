@@ -1,0 +1,33 @@
+{
+  "structure": "ADT_A04",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 3, section 3.2.4 ADT/ACK - register a patient (event A04), p 3-5. Structure ID ADT_A04 synthesised as CODE_EVT from the message code ADT and A04, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events ADT^A04 read from the section title 3.2.4 'ADT/ACK - register a patient (event A04)'. Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 ADT_A04, which differs from ADT_A01 only by trigger) and INSURANCE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 ADT_A04, which differs from ADT_A01 only by trigger).",
+  "triggers": ["ADT^A04"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "OBX", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": 1 },
+    { "group": "PROCEDURE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+      { "segment": "PR1", "min": 1, "max": 1 },
+      { "segment": "ROL", "min": 0, "max": null }
+    ]},
+    { "segment": "GT1", "min": 0, "max": null },
+    { "group": "INSURANCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+      { "segment": "IN1", "min": 1, "max": 1 },
+      { "segment": "IN2", "min": 0, "max": 1 },
+      { "segment": "IN3", "min": 0, "max": 1 }
+    ]},
+    { "segment": "ACC", "min": 0, "max": 1 },
+    { "segment": "UB1", "min": 0, "max": 1 },
+    { "segment": "UB2", "min": 0, "max": 1 }
+  ]
+}

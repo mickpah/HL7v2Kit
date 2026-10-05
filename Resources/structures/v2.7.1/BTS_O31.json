@@ -1,0 +1,35 @@
+{
+  "structure": "BTS_O31",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 4, section 4.13.6 BTS - Blood Product Transfusion/Disposition Message (Event O31), p 119.",
+  "triggers": ["BTS^O31"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "TQ1", "min": 1, "max": 1 },
+        { "segment": "TQ2", "min": 0, "max": null }
+      ]},
+      { "segment": "BPO", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PRODUCT_STATUS", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "BTX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

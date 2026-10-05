@@ -26,6 +26,10 @@ public struct Message: Sendable, Equatable, Hashable {
     /// know which localisation promises the validator made. See ADR-007.
     public let locale: HL7Locale
 
+    /// How group-dependent predicates find a segment's group (P8b-17). The
+    /// Validator sets it on its own copy; it takes no part in equality.
+    var groupScoping: GroupScoping = .walk
+
     public init(
         version: Version,
         encodingCharacters: EncodingCharacters,
@@ -38,6 +42,27 @@ public struct Message: Sendable, Equatable, Hashable {
         self.segments = segments
         self.characterEncoding = characterEncoding
         self.locale = locale
+    }
+
+    public static func == (lhs: Message, rhs: Message) -> Bool {
+        lhs.version == rhs.version && lhs.encodingCharacters == rhs.encodingCharacters
+            && lhs.segments == rhs.segments && lhs.characterEncoding == rhs.characterEncoding
+            && lhs.locale == rhs.locale
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(version)
+        hasher.combine(encodingCharacters)
+        hasher.combine(segments)
+        hasher.combine(characterEncoding)
+        hasher.combine(locale)
+    }
+
+    /// A copy whose group-dependent predicates use `scoping`.
+    func scoped(_ scoping: GroupScoping) -> Message {
+        var copy = self
+        copy.groupScoping = scoping
+        return copy
     }
 
     // MARK: - Path access (ad-hoc)
@@ -137,7 +162,11 @@ public struct Message: Sendable, Equatable, Hashable {
     /// Resolve the segment of `id` "associated" with the segment at
     /// `fromIndex`, per ADR-008's ORC/OBR group semantics.
     ///
-    /// The group is delimited by ORC segments: the group head is the
+    /// With group spans (P8b-17, ADR-019) the group is the anchor's own
+    /// scope (`GroupSpanIndex.context(around:of:for:)`): the extended own
+    /// level of an enclosing group, or inside the anchor's own group, never
+    /// a repeating sibling group or a nested pairing group. Otherwise it is
+    /// delimited by ORC segments: the group head is the
     /// most recent ORC at or before `fromIndex`; the group ends at the
     /// next ORC (or the end of the segment list). The first segment of
     /// `id` within that range, excluding `fromIndex` itself, is the
@@ -148,12 +177,19 @@ public struct Message: Sendable, Equatable, Hashable {
     /// schema must never make a previously-accepted message
     /// non-conformant").
     func associatedSegment(_ id: String, fromIndex: Int) -> Segment? {
+        associatedIndex(id, fromIndex: fromIndex).map { segments[$0] }
+    }
+
+    /// The message index of `associatedSegment(_:fromIndex:)`.
+    func associatedIndex(_ id: String, fromIndex: Int) -> Int? {
         guard fromIndex >= 0, fromIndex < segments.count else { return nil }
-        for i in orcGroupRange(around: fromIndex) {
-            if i == fromIndex { continue }
-            if segments[i].segmentID == id { return segments[i] }
+        let range: [Int]
+        if case .spans(let index) = groupScoping {
+            range = index.context(around: fromIndex, of: segments[fromIndex].segmentID, for: id)
+        } else {
+            range = Array(orcGroupRange(around: fromIndex))
         }
-        return nil
+        return range.first { $0 != fromIndex && segments[$0].segmentID == id }
     }
 
     /// The ORC-delimited group range around `index`: from the most
@@ -177,8 +213,7 @@ public struct Message: Sendable, Equatable, Hashable {
 
     /// True when a segment of `id` exists in the same ORC/OBR group as
     /// the segment at `inGroupOf` (excluding the segment at that index
-    /// itself). Uses the same group-boundary walk as
-    /// `associatedSegment(_:fromIndex:)`.
+    /// itself). Uses the same group as `associatedSegment(_:fromIndex:)`.
     ///
     /// ADR-010 segment-presence atom (`<segmentID> present` /
     /// `<segmentID> absent`). Distinguishes "peer segment does not

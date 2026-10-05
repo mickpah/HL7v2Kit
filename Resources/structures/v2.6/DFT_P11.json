@@ -1,0 +1,75 @@
+{
+  "structure": "DFT_P11",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 6, section 6.4.8 DFT/ACK - Post Detail Financial Transactions - Expanded (Event P11), pp 9 to 10.",
+  "triggers": ["DFT^P11"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "ROL", "min": 0, "max": null },
+    { "segment": "PV1", "min": 0, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "ROL", "min": 0, "max": null },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "group": "COMMON_ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "ORC", "min": 0, "max": 1 },
+      { "group": "TIMING_QUANTITY", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "TQ1", "min": 1, "max": 1 },
+        { "segment": "TQ2", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "OBR", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": 1 },
+    { "segment": "GT1", "min": 0, "max": null },
+    { "group": "INSURANCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "IN1", "min": 1, "max": 1 },
+      { "segment": "IN2", "min": 0, "max": 1 },
+      { "segment": "IN3", "min": 0, "max": null },
+      { "segment": "ROL", "min": 0, "max": null }
+    ]},
+    { "segment": "ACC", "min": 0, "max": 1 },
+    { "group": "FINANCIAL", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "FT1", "min": 1, "max": 1 },
+      { "group": "FINANCIAL_PROCEDURE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "PR1", "min": 1, "max": 1 },
+        { "segment": "ROL", "min": 0, "max": null }
+      ]},
+      { "group": "FINANCIAL_COMMON_ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "ORC", "min": 0, "max": 1 },
+        { "group": "FINANCIAL_TIMING_QUANTITY", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "TQ1", "min": 1, "max": 1 },
+          { "segment": "TQ2", "min": 0, "max": null }
+        ]},
+        { "group": "FINANCIAL_ORDER", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "group": "FINANCIAL_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]},
+      { "segment": "DG1", "min": 0, "max": null },
+      { "segment": "DRG", "min": 0, "max": 1 },
+      { "segment": "GT1", "min": 0, "max": null },
+      { "group": "FINANCIAL_INSURANCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": null },
+        { "segment": "ROL", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

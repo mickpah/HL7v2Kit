@@ -1,0 +1,30 @@
+{
+  "table": "0061",
+  "version": "2.7.1",
+  "name": "Check Digit Scheme",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0061 - Check Digit Scheme",
+  "entries": [
+    {
+      "code": "BCV",
+      "description": "Bank Card Validation Number"
+    },
+    {
+      "code": "ISO",
+      "description": "ISO 7064: 1983"
+    },
+    {
+      "code": "M10",
+      "description": "Mod 10 algorithm"
+    },
+    {
+      "code": "M11",
+      "description": "Mod 11 algorithm"
+    },
+    {
+      "code": "NPI",
+      "description": "Check digit algorithm in the US National Provider Identifier"
+    }
+  ]
+}

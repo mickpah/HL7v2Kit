@@ -1,0 +1,18 @@
+{
+  "structure": "ADT_A61",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 3, section 3.3.61 ADT/ACK - Change Consulting Doctor (Event A61), p 3-56; the same structure is printed for ADT^A62 (3.3.62).",
+  "triggers": ["ADT^A61", "ADT^A62"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "ROL", "min": 0, "max": null },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "ROL", "min": 0, "max": null },
+    { "segment": "PV2", "min": 0, "max": 1 }
+  ]
+}

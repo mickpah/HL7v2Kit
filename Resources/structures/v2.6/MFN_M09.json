@@ -1,0 +1,20 @@
+{
+  "structure": "MFN_M09",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 8, section 8.8.4 MFN/MFK - Master File Notification - Test/Observation (Categorical), pp 8-21 to 8-22.",
+  "triggers": ["MFN^M09"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_TEST_CATEGORICAL", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "group": "MF_TEST_CAT_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "OM3", "min": 1, "max": 1 },
+        { "segment": "OM4", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

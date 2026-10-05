@@ -25,9 +25,8 @@
 ///    (e.g. `"MR"` medical record, `"SSN"` social security).
 /// 6. Assigning Facility (HD) — ``CX/assigningFacilityNamespace`` returns HD.1.
 ///
-/// Components 7–10 (effective/expiration dates, assigning jurisdiction
-/// and agency) are reachable via ``CX/field`` but not exposed as named
-/// accessors in v0.2.
+/// Components 7-12 are generated accessors (``CX/effectiveDate`` through
+/// ``CX/securityCheckScheme``) in `Composite/Generated/CX+Components.swift`; each one's DocC lists the versions that define it.
 public struct CX: CompositeView {
     /// The components HL7 v2.5.1 PRINTS as required (`R`) in the CX component
     /// table (CX.1). Informational, for the canonical
@@ -39,8 +38,8 @@ public struct CX: CompositeView {
     ]
 
     /// The underlying ``Field``. Use this when you need access to
-    /// repetitions beyond the first, or to components not exposed as
-    /// named accessors.
+    /// repetitions beyond the first. Every component has a named accessor;
+    /// use ``component(_:as:)`` for a sub-composite's subcomponents.
     public let field: Field
 
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.

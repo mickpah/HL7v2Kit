@@ -1,0 +1,42 @@
+{
+  "structure": "SRM_S01",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 10-15 to 10-16. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml v2.4/SRM_S01.xsd, SRM_S01.PATIENT.CONTENT), RESOURCES (HL7-xml v2.4/SRM_S01.xsd, SRM_S01.RESOURCES.CONTENT), SERVICE (HL7-xml v2.4/SRM_S01.xsd, SRM_S01.SERVICE.CONTENT), GENERAL_RESOURCE (HL7-xml v2.4/SRM_S01.xsd, SRM_S01.GENERAL_RESOURCE.CONTENT), LOCATION_RESOURCE (HL7-xml v2.4/SRM_S01.xsd, SRM_S01.LOCATION_RESOURCE.CONTENT) and PERSONNEL_RESOURCE (HL7-xml v2.4/SRM_S01.xsd, SRM_S01.PERSONNEL_RESOURCE.CONTENT).",
+  "triggers": ["SRM^S01", "SRM^S02", "SRM^S03", "SRM^S04", "SRM^S05", "SRM^S06", "SRM^S07", "SRM^S08", "SRM^S09", "SRM^S10", "SRM^S11"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARQ", "min": 1, "max": 1 },
+    { "segment": "APR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PV1", "min": 0, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 },
+      { "segment": "OBX", "min": 0, "max": null },
+      { "segment": "DG1", "min": 0, "max": null }
+    ]},
+    { "group": "RESOURCES", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "RGS", "min": 1, "max": 1 },
+      { "group": "SERVICE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "AIS", "min": 1, "max": 1 },
+        { "segment": "APR", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "GENERAL_RESOURCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "AIG", "min": 1, "max": 1 },
+        { "segment": "APR", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "LOCATION_RESOURCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "AIL", "min": 1, "max": 1 },
+        { "segment": "APR", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "PERSONNEL_RESOURCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "AIP", "min": 1, "max": 1 },
+        { "segment": "APR", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

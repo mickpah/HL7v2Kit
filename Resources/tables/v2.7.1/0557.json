@@ -1,0 +1,26 @@
+{
+  "table": "0557",
+  "version": "2.7.1",
+  "name": "Payee Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0557 - Payee Type",
+  "entries": [
+    {
+      "code": "EMPL",
+      "description": "Employer"
+    },
+    {
+      "code": "ORG",
+      "description": "Payee Organization"
+    },
+    {
+      "code": "PERS",
+      "description": "Person"
+    },
+    {
+      "code": "PPER",
+      "description": "Pay Person"
+    }
+  ]
+}

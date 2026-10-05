@@ -1,0 +1,24 @@
+{
+  "field": "UB2-7",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Occurrence code & date (32-35)",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Occurrence code",
+      "dataType": "CE",
+      "optionality": "",
+      "tables": [
+        "0350"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Occurrence date",
+      "dataType": "DT",
+      "optionality": ""
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "structure": "EHC_E02",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 16, section 16.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 7.",
+  "triggers": ["EHC^E02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "group": "INVOICE_INFORMATION", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+      { "segment": "IVC", "min": 1, "max": 1 },
+      { "segment": "PYE", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PRODUCT_SERVICE_SECTION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "PSS", "min": 1, "max": 1 },
+        { "group": "PSG", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "PSG", "min": 1, "max": 1 },
+          { "segment": "PSL", "min": 0, "max": null }
+        ]}
+      ]}
+    ]}
+  ]
+}

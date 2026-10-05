@@ -359,8 +359,9 @@ extension Profile {
             ),
             // HL7au:00049.2 / .3 — MSH-9 trigger event and message
             // structure must both be valued. 00049.1 (message code) is
-            // not restated: MSG-1 is already `MSG.requiredComponents`
-            // in the base model, so the base check fires first.
+            // the `MSG` CompositeOverride below: the base model requires
+            // MSG-1 only from v2.5.1, and v2.4 (the AU version) types
+            // MSH-9 as CM with no component optionality.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 9,
@@ -507,6 +508,76 @@ extension Profile {
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000004.1 (r3) — OBR-3 EI completeness"
             ),
+            // ADRM-prose:P-11 (P4-27, fix round 1) — ADRM-2021 §4.4.1.26,
+            // p. 228: "Not used in Australian messages. Use observation
+            // Sub-ID in OBX-4 to link results." Unconditional, no Appendix
+            // 5 HL7au ID. No modal verb ("must"/"should") — and the
+            // ADRM's own OBR-26 attribute-table entry (p. 226/227, item
+            // 00259) gives usage O (optional), not X (not used). Per the
+            // documented severity convention (SegmentGrammar.swift
+            // `prohibitedSeverity` DocC — `.error` for normative "may
+            // only be"/"not permitted" text, `.warning` for SHOULD-level
+            // or advisory text), this reads as `.warning`, not `.error`.
+            // OBR-26 carries no base condition (v2.4/OBR.json: optionality
+            // O, no `condition`), so unlike OBR-29 there is no conflicting
+            // requirement elsewhere in the spec that forces this field to
+            // be valued — see task-P4-27-report.md for the OBR-29 check.
+            // Scope: OBR appears in the ORM, ORU and REF structures alike
+            // (ADRM ch. 4 "Observation Reporting" is OBR's home chapter;
+            // ch. 5 "Observation Ordering" and ch. 7 "Patient Referral"
+            // both use the same OBR without redefining this field).
+            FieldOverride(
+                segmentID: "OBR",
+                fieldIndex: 26,
+                prohibitions: [
+                    ProfileFieldProhibition(
+                        condition: "messageCode in (ORM, ORU, REF)",
+                        severity: .warning,
+                        specCitation: "ADRM-prose:P-11 — OBR-26 (Parent Result) should not be valued in Australian messages; use the OBX-4 Sub-ID to link results instead; AU ADRM-2021 §4.4.1.26 p. 228"
+                    ),
+                ],
+                specCitation: "ADRM-prose:P-11 — OBR-26 not used in Australia"
+            ),
+            // ADRM-prose:P-13 (P4-32, owner decision G7, 2026-10-01) —
+            // ADRM-2021 §4.4.1.29, p. 229: "Not used in Australian
+            // messages. Use observation Sub-ID in OBX-4 to link results."
+            // — the identical sentence as OBR-26 (item 00261 here,
+            // item 00259 on OBR-26, P-11). P4-27 investigated this
+            // field and withheld the prohibition (NEEDS_CONTEXT): the
+            // base v2.4 condition on OBR-29 (`ORC-1 = CH AND ORC-8
+            // empty`, v2.4/OBR.json) makes
+            // the field conditionally REQUIRED for a child order sent
+            // without ORC-8, mirroring ADRM §5.4.1.8 (ORC-8, unchanged
+            // from base v2.4 §4.5.1.8), p. 295: "ORC-8-parent is the
+            // same as OBR-29-parent. If the parent is not present in the
+            // ORC, it must be present in the associated OBR." Owner
+            // decision G7 resolves the conflict in favour of shipping
+            // the AU "not used" sentence anyway, as a warning, matching
+            // OBR-26's mechanism and scope exactly (unconditional on the
+            // base requiredness — never negating a base "required when"
+            // condition, per this file's general rule — so on a
+            // v2.3-v2.6 child order sent without ORC-8 this AU warning
+            // and the base conditionally-required check now both fire on
+            // the same field at once; that double-bind is accepted, not
+            // re-engineered away, per G7). See task-P4-32-report.md for
+            // the full weighing. Not double-reported against
+            // HL7au:00060.4 (P4-31): `FullPredicateConditions.generated`
+            // marks only `2.4|OBX-2`; OBR-29 carries no full-predicate
+            // marking, so `checkFullPredicateConditional` never visits
+            // it. Scope matches OBR-26: OBR is shared by ORM (ch. 5),
+            // ORU (ch. 4, its home chapter) and REF (ch. 7).
+            FieldOverride(
+                segmentID: "OBR",
+                fieldIndex: 29,
+                prohibitions: [
+                    ProfileFieldProhibition(
+                        condition: "messageCode in (ORM, ORU, REF)",
+                        severity: .warning,
+                        specCitation: "ADRM-prose:P-13 — OBR-29 (Parent) should not be valued in Australian messages; use the OBX-4 Sub-ID to link results instead; AU ADRM-2021 §4.4.1.29 p. 229"
+                    ),
+                ],
+                specCitation: "ADRM-prose:P-13 — OBR-29 not used in Australia (owner decision G7; conflicts with the base child-order requirement, accepted)"
+            ),
             FieldOverride(
                 segmentID: "ORC",
                 fieldIndex: 2,
@@ -527,6 +598,29 @@ extension Profile {
                 profileUsage: nil,
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness"
+            ),
+            // ADRM-prose:P-12 (P4-27) — ADRM-2021 §7.3.11.24, p. 343:
+            // "This field should not be used. Use ORC-22 for the address
+            // of the prescriber's facility." Unconditional, no Appendix 5
+            // HL7au ID. Base v2.4 CH04 §4.5.1.24 has no such note (ADRM
+            // ch. 5 §5.4.1.24, the Observation Ordering/ORM leg, is
+            // likewise plain), so the prohibition is AU-specific and
+            // scoped to Referrals only — ch. 7 "Patient Referral" is
+            // where the sentence appears. No base condition exists on
+            // ORC-24 (v2.4/ORC.json: optionality O, no `condition`), so
+            // there is no conflicting requirement forcing it to be
+            // valued. Modal verb "should" — warning, not error.
+            FieldOverride(
+                segmentID: "ORC",
+                fieldIndex: 24,
+                prohibitions: [
+                    ProfileFieldProhibition(
+                        condition: "messageCode = REF",
+                        severity: .warning,
+                        specCitation: "ADRM-prose:P-12 — ORC-24 (Ordering Provider Address) should not be used in Referrals; use ORC-22 for the prescriber's facility address instead; AU ADRM-2021 §7.3.11.24 p. 343"
+                    ),
+                ],
+                specCitation: "ADRM-prose:P-12 — ORC-24 should not be used in Referrals"
             ),
             // HL7au:000008.1 (r2) — Display Segments (v0.11-S2, ADR-010).
             // OBX-3 display-format identifier value set, gated on
@@ -638,6 +732,10 @@ extension Profile {
                         specCitation: "HL7au:000034.1 — when both public and local terminology are transmitted in a coded Observation Value, the public code must be primary; AU ADRM-2021 Appendix 5 p. 441"
                     ),
                 ],
+                // HL7au:00060.4 route B (P4-24): OBX-5 must not be valued
+                // other than with the HL7 null while OBX-11 = O. The rule is
+                // base text (HL7 v2.4 §7.4.2.11), so since P4-26 the base
+                // OBX-5 grammar enforces it on every locale; no AU duplicate.
                 specCitation: "HL7au:000034.1 — public-before-local coding-system precedence on coded OBX-5 values"
             ),
             // M6-B-1 — HL7au:00104.7.0 (r3): "PRD-7 must have at least
@@ -788,59 +886,62 @@ extension Profile {
                         specCitation: "ADRM-prose:P-6 — the VMR header OBX (OBX-3.1 = 74028-2) must have OBX-2 = RP; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                 ],
+                // HL7au:00060.4 route B (P4-24): OBX-2 must not be valued
+                // other than with the HL7 null while OBX-11 = O. The rule is
+                // base text (HL7 v2.4 §7.4.2.11), so since P4-26 the base
+                // OBX-2 grammar enforces it on every locale; no AU duplicate.
                 specCitation: "HL7au:000008.1.3 — OBX-2 must match the OBX-3.1 display format per the Display Format codes table; AU ADRM-2021 p. 247"
             ),
         ],
-        grammarExtensions: [
-            // AU pre-adopts v2.5+ PID fields 35..38 (Species Code,
-            // Breed Code, Strain, Production Class Code) on v2.4
-            // wires. Grammar definitions mirror the v2.5.1 PID
-            // schema, including the conditional predicates added in
-            // v0.4-S4-C. Under `.auLocalisation` the Validator merges
-            // these into the v2.4 PID grammar so they validate
-            // against the same rules they do on v2.5.1 wires. v0.5-
-            // S5-D.
-            "PID": [
-                FieldGrammar(
-                    index: 35,
-                    name: "Species Code",
-                    dataType: "CE",
-                    optionality: .conditional,
-                    repeatability: .single,
-                    condition: "PID-36 populated OR PID-38 populated"
-                ),
-                FieldGrammar(
-                    index: 36,
-                    name: "Breed Code",
-                    dataType: "CE",
-                    optionality: .conditional,
-                    repeatability: .single,
-                    condition: "PID-37 populated"
-                ),
-                FieldGrammar(
-                    index: 37,
-                    name: "Strain",
-                    dataType: "ST",
-                    optionality: .optional,
-                    repeatability: .single
-                ),
-                FieldGrammar(
-                    index: 38,
-                    name: "Production Class Code",
-                    dataType: "CE",
-                    optionality: .optional,
-                    repeatability: .single
-                ),
-            ],
-        ],
+        // v0.5-S5-D used to pre-adopt v2.5+ PID fields 35..38 (Species Code,
+        // Breed Code, Strain, Production Class Code) on v2.4 wires here,
+        // believing the base v2.4 PID grammar stopped at field 32. It
+        // didn't: base v2.4 PID.json has carried all four fields (bare C
+        // on 35/36, O on 37/38) since v0.3-G2. P4-17 (2026-10-01) added the
+        // two missing Conditionality Rule strings straight to that base
+        // schema (v2.4 CH03 §3.4.2.35/.36, the same sentence v2.5.1/v2.6
+        // print), which made this override fully redundant for 35/36 and
+        // exposed that its field-38 repeatability (`.single`) had silently
+        // diverged from the base/v2.5.1/v2.6 `*` (RP 2) with no AU citation
+        // narrowing it — a cardinality-check defect under `.auLocalisation`
+        // for a spec-compliant two-repetition PID-38, not an intentional AU
+        // narrowing (req #4). P4-16 removed the override entirely so every
+        // locale now reads PID-35..38 from the single base grammar; AU
+        // traffic validates identically to `.international` for these four
+        // fields. See `LocaleAUProfileTests.v24PID38RepeatsUnderAU` and
+        // `v24PIDSpeciesConditionFiresUnderInternational`.
+        grammarExtensions: [:],
         compositeOverrides: [
-            // CX datatype — HL7au:00044.1 series. Skip 44.1.1 (CX-1
-            // must be specified) since the base spec already requires
-            // CX-1 (CX.requiredComponents = [(1, "ID Number")]);
-            // adding it again would be redundant. The genuinely new
-            // AU narrowings are 44.1.2 (CX-4 assigning authority
-            // required when CX is populated) and 44.1.3 (CX-5
-            // identifier type code required when CX is populated).
+            // MSG datatype (MSH-9 only) — HL7au:00049.1: "MSH-9 Message
+            // type <message type (ID)> component must be valued."
+            // Ungated: a `messageStructure`/`triggerEvent` scope (Orders,
+            // Results, Referrals) was expressible but not chosen — ACK
+            // reuses trigger events across message families, so it would
+            // not distinguish an in-scope ACK from an out-of-scope one,
+            // and the rule only ever catches a non-conformant message
+            // (MSH-9.1 empty) regardless, so a narrower gate buys nothing.
+            // `yieldsToBase`: v2.5.1 and later already require MSG.1 in
+            // the base model; this restatement fires only where the
+            // grammar version does not (v2.3, v2.3.1, v2.4). P3-4.
+            CompositeOverride(
+                dataType: "MSG",
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00049.1 — MSH-9 message type (MSG-1) must be valued (ADRM 2021 Appendix 5)",
+                        yieldsToBase: true
+                    )
+                ]
+            ),
+            // CX datatype — HL7au:00044.1 series: 44.1.1 (CX-1 must be
+            // specified), 44.1.2 (CX-4 assigning authority) and 44.1.3
+            // (CX-5 identifier type code), each required when CX is
+            // populated. 44.1.1 is `yieldsToBase`: CX.1 is R in the base
+            // model from v2.5.1, but v2.4 CX (the AU base) carries no
+            // component optionality, so the profile must state it for
+            // v2.3/v2.3.1/v2.4 traffic (P3 fix wave). Its "valid according
+            // to the identifier scheme" half needs identifier-scheme
+            // recognition and is not checked.
             // The "must conform to sub points of HL7au:00044.2"
             // clause on 44.1.2 references NASH/PKI rules that are
             // runtime-dependent and out of scope for parser/validator.
@@ -851,6 +952,11 @@ extension Profile {
                 // "Orders, Results, Referrals".
                 condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00044.1.1 — CX-1 ID number must be specified",
+                        yieldsToBase: true
+                    ),
                     ComponentRequirement(
                         component: 4,
                         specCitation: "HL7au:00044.1.2 (r2) — CX-4 assigning authority must be valued"
@@ -878,8 +984,19 @@ extension Profile {
             // Referrals". Component indices from the v2.4 XCN
             // definition (CH02 §2.9.52).
             //
-            // .7.1 is NOT restated: XCN-1 is already
-            // `XCN.requiredComponents` in the base model.
+            // .7.1 (XCN-1 must be specified): no modelled version requires
+            // XCN.1 (O on v2.5.1/v2.6, C on v2.8.2, no optionality on
+            // v2.3-v2.4), so the profile states it outright. Its "valid
+            // according to the identifier scheme" half needs
+            // identifier-scheme recognition and is not checked. P3 fix
+            // wave (absorbs P4-19). On v2.8.2, with XCN.1 and XCN.2 both
+            // empty, XCN.1's absence is reported twice: here under
+            // HL7au:00044.7.1, and by the base condition for XCN.1
+            // (conditionalComponentMissing; "XCN.1 is required if XCN.2 is
+            // not populated", conditions.json "2 empty"). The empty family
+            // name is reported separately, by XCN.2's own base condition
+            // ("1 empty") and by HL7au:00044.7.5. Every one is violated, so
+            // all are reported by design, as for EI-1 below.
             // .7.6 (<given name> "should" be valued) is advisory, not a
             // "must", so it is not enforced.
             //
@@ -895,6 +1012,10 @@ extension Profile {
                 // "Orders, Results, Referrals".
                 condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00044.7.1 — XCN-1 ID number must be specified"
+                    ),
                     ComponentRequirement(
                         component: 2,
                         subcomponent: 1,
@@ -1036,10 +1157,25 @@ extension Profile {
             // would be reported twice. The value-set track is populated-only
             // already. HL7au:00044.3.2 (the HPOS/HI registered organisation
             // name) still needs the directory and stays out.
+            //
+            //   .3.1 — "the EI Entity identifier component must be valued".
+            //          No modelled version requires EI.1 (O on v2.5.1+, no
+            //          optionality on v2.3-v2.4), so the profile states it
+            //          outright; on the five fields above it coincides with
+            //          the field-level completeness point, and both are
+            //          reported because both are violated. The "unique within
+            //          the sender facility namespace" half is cross-message
+            //          and not checked. P3 fix wave (absorbs P4-19).
             CompositeOverride(
                 dataType: "EI",
                 // The 00044.3 series is scoped "Orders, Results, Referrals".
                 condition: "messageCode in (ORM, ORU, REF)",
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00044.3.1 (r2) — EI-1 entity identifier must be valued"
+                    ),
+                ],
                 componentValueSets: [
                     ComponentValueSet(
                         component: 4,
@@ -1470,7 +1606,22 @@ extension Profile {
                 virtualRowCitation: "ADRM-prose:P-9 — rows marked STRUCTURAL \"must not be written to OBX segments\"; AU ADRM-2021 Appendix 9 A9.2.3.4 p. 515",
                 headerShapeCitation: "ADRM-prose:P-10 — the VMR header must \"specify an OBX-4 sub-ID which must be a dotted decimal value\"; AU ADRM-2021 Appendix 9 A9.2.1 p. 490"
             ),
-        ]
+        ],
+        // HL7au:00060.4 route C (P4-31, ADR-021). ADRM-2021 Appendix 5
+        // (p. 466): "HL7 message elements with a usage of C (conditional)
+        // must not be valued when the associated predicate is not
+        // satisfied" (Senders; Orders, Results, Referrals). ADRM §1 (p. 11):
+        // "If the predicate is NOT satisfied: A conformant sending
+        // application must NOT send the element." Applies only to the C
+        // fields whose schema marks the stored condition as the full
+        // predicate (v2.4 OBX-2 only, owner ruling G9); every other stored
+        // condition is a "required when" trigger whose false branch the
+        // spec leaves open. Must not: error.
+        fullPredicateRule: FullPredicateRule(
+            scope: "messageCode in (ORM, ORU, REF)",
+            severity: .error,
+            specCitation: "HL7au:00060.4 — a C (conditional) element must not be valued when its predicate is not satisfied; AU ADRM-2021 Appendix 5 p. 466, §1 p. 11"
+        )
     )
 
     /// Shared pair-rule set for CE / CNE / CWE. All three composites

@@ -27,6 +27,6 @@
     { "index": 22, "swiftName": "parentPlacerAppointmentId", "name": "Parent Placer Appointment ID", "dataType": "EI", "length": "75", "optionality": "O", "repeatability": "1" },
     { "index": 23, "swiftName": "parentFillerAppointmentId", "name": "Parent Filler Appointment ID", "dataType": "EI", "length": "75", "optionality": "O", "repeatability": "1" },
     { "index": 24, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "length": "22", "optionality": "C", "repeatability": "*" },
-    { "index": 25, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "length": "22", "optionality": "C", "repeatability": "*" }
+    { "index": 25, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "length": "22", "optionality": "C", "repeatability": "*", "condition": "ARQ-24 populated" }
   ]
 }

@@ -1,0 +1,22 @@
+{
+  "table": "0540",
+  "version": "2.7.1",
+  "name": "Inactive Reason Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0540 - Inactive Reason Code",
+  "entries": [
+    {
+      "code": "L",
+      "description": "Leave of Absence"
+    },
+    {
+      "code": "R",
+      "description": "Retired"
+    },
+    {
+      "code": "T",
+      "description": "Termination"
+    }
+  ]
+}

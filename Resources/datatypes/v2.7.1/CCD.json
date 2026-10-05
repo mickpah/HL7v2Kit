@@ -1,0 +1,23 @@
+{
+  "dataType": "CCD",
+  "version": "2.7.1",
+  "name": "Charge Code and Date",
+  "components": [
+    {
+      "index": 1,
+      "name": "Invocation Event",
+      "dataType": "ID",
+      "optionality": "R",
+      "length": "1..1",
+      "tables": [
+        "0100"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Date/time",
+      "dataType": "DTM",
+      "optionality": "O"
+    }
+  ]
+}

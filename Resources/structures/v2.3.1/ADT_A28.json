@@ -1,0 +1,33 @@
+{
+  "structure": "ADT_A28",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.28 ADT/ACK - add person information (event A28), p 3-20; the same structure is printed for ADT^A31 (3.2.31). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103); declared shared triggers: ADT^A28 (listed under ADT_A01, ADT_A28) and ADT^A31 (listed under ADT_A01, ADT_A28). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ADT_A28, which differs from ADT_A01 only by trigger) and INSURANCE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ADT_A28, which differs from ADT_A01 only by trigger).",
+  "triggers": ["ADT^A28", "ADT^A31"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "OBX", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": 1 },
+    { "group": "PROCEDURE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "PR1", "min": 1, "max": 1 },
+      { "segment": "ROL", "min": 0, "max": null }
+    ]},
+    { "segment": "GT1", "min": 0, "max": null },
+    { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "IN1", "min": 1, "max": 1 },
+      { "segment": "IN2", "min": 0, "max": 1 },
+      { "segment": "IN3", "min": 0, "max": null }
+    ]},
+    { "segment": "ACC", "min": 0, "max": 1 },
+    { "segment": "UB1", "min": 0, "max": 1 },
+    { "segment": "UB2", "min": 0, "max": 1 }
+  ]
+}

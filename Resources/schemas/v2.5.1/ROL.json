@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "Role",
   "fields": [
-    { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "length": "60", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "length": "60", "optionality": "C", "repeatability": "1", "condition": "messageCode in (PGL, PPG, PPP, PPR, PPT, PPV, PRR, PTR, PMU) OR messageCode = RSP AND triggerEvent = K25" },
     { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "length": "2", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 3, "swiftName": "roleRol", "name": "Role-ROL", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0443"] },
     { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "length": "250", "optionality": "R", "repeatability": "*" },

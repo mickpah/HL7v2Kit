@@ -33,7 +33,7 @@ Predicates are deliberately *shape*-based (length, character class, emptiness) r
 enumerated content lists: a marker-word list only finds the corruption you already thought
 of. That distinction is what surfaced the v1.7 names.
 """
-import argparse, collections, glob, json, os, re, shutil, subprocess, sys, tempfile
+import argparse, collections, functools, glob, json, os, re, shutil, subprocess, sys, tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCHEMAS = os.path.join(REPO, "Resources/schemas")
@@ -74,35 +74,131 @@ STANDARDS = _standards_dir()
 # exception").
 DEPTH_WHITELIST = {"RDT", "ADD", "v2.3.1/NSC"}
 
-# Owner-deferred versions (2026-08-23 AU-first re-sequencing; docs/design/deferred-coverage-
-# backlog.md). A segment modelled elsewhere but absent here is reported as DEFERRED — visible,
-# counted, not a failure. Everywhere else the same absence is a PRESENCE defect.
-DEFERRED_VERSIONS = {"v2.6", "v2.8.2"}
+
+def whitelisted_ids(version):
+    """The DEPTH_WHITELIST segment IDs that apply to `version` (a bare ID applies everywhere)."""
+    return {w.split("/")[-1] for w in DEPTH_WHITELIST if "/" not in w or w.startswith(version + "/")}
+
+
+@functools.lru_cache(maxsize=None)
+def _pdf_text(path):
+    return subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", path, "-"],
+                          capture_output=True, text=True, timeout=30).stdout
+
+
+def caption_present(version, seg):
+    """True when a chapter of `version` prints `seg`'s attribute-table caption:
+    "HL7 Attribute Table - ADD" (v2.4 on) or "Figure 2-8. ADD attributes" (v2.3, v2.3.1)."""
+    pattern = re.compile(rf"HL7 Attribute Table\s*[-–]\s*{seg}\b|\b{seg} attributes\b")
+    return any(pattern.search(_pdf_text(pdf))
+               for glob_pattern in CHAPTER_GLOBS[version]
+               for pdf in sorted(glob.glob(os.path.join(STANDARDS, glob_pattern))))
+
+
+# Owner-deferred versions. The 2026-08-23 deferral of v2.6 / v2.8.2 closed with M5 on
+# 2026-09-16 (docs/design/deferred-coverage-backlog.md, closure header), so the set is empty:
+# on every version a segment modelled elsewhere but absent here is a PRESENCE defect.
+# Re-adding a version needs an owner decision recorded in that backlog.
+DEFERRED_VERSIONS = set()
 
 # M6-O5 dataType predicate knobs.
 #
 # Pre-v2.5 attribute tables type most composites as the placeholder `CM`
-# ("composite, defined in the field definition"); the schemas carry the
-# v2.5-era NAME of the identical component structure (v2.3 MSH-9's
-# components are MSG's) because grammar-level composite dispatch keys on
-# it — e.g. HL7au:00049.1 is BASE only because v2.4 MSH-9 is typed MSG.
-# A spec `CM` therefore accepts any named COMPOSITE; a scalar against a
-# spec `CM` still flags. Scalar set mirrors `scalarDataTypes` in
-# Codegen.swift.
+# ("composite, defined in the field definition"). A schema may carry the
+# v2.5-era NAME instead only where that name's structure is the field's own,
+# because grammar-level composite dispatch keys on it — e.g. the HL7au:00049.1
+# overlay rule reaches v2.4 MSH-9 only because it is typed MSG. A spec `CM`
+# therefore accepts only a name in the enumerated CM_REFINEMENTS set below;
+# any other name against a spec `CM`, scalar or composite, flags. Scalar set
+# mirrors `scalarDataTypes` in Codegen.swift.
 SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", "DTM"}
 
-# (version, segment, index) triples where the schema deliberately
-# diverges from the extracted attribute-table value:
-#   v2.4/AL1/1  — the v2.4 table AND heading print `CE` for Set ID -
-#                 AL1, a known spec typo (SI in v2.3 and v2.5+).
-#                 Following it verbatim would dispatch the AU CE
-#                 composite rules onto every plain set-ID (req #4
-#                 misfire), so the schema normalises to SI; registered
-#                 in segment-coverage-extraction.md.
-#   v2.5.1/OBX/5 — the variable-type row's prose defeats the extractor
-#                 (candidates include `*`, `NA or`, truncated `varie`);
-#                 the schema's `varies` is hand-verified (M6-D5).
-DATATYPE_WHITELIST = {("v2.4", "AL1", 1), ("v2.5.1", "OBX", 5)}
+# P5 (V24-C08): the exception class is enumerated. A spec `CM` may carry a v2.5-era name
+# only when that name's structure is the field's own: MSG (v2.3 MSH-9 prints the first two
+# of its three components; v2.5 appended message structure), MOC (OBR-23 <dollar amount (MO)>
+# ^ <charge code (CE)>), PRL (OBR-26 <OBX-3 (CE)> ^ <OBX-4 (ST)> ^ <part of OBX-5 (TX)>),
+# EIP (OBR-29 / ORC-8 <placer (EI)> ^ <filler (EI)>). SPS and NDL are not (v2.4 OBR-15.2
+# additives TX vs SPS.2 CWE; OBR-32.1 CN vs NDL.1 CNN): those fields stay CM, and their
+# components come from the field grammar (DataTypeGrammarTable.grammar(segment:field:version:)).
+CM_REFINEMENTS = {"MSG", "MOC", "PRL", "EIP"}
+
+# P10-4c: every field's dataType must exist on its own version (integrity check
+# `datatype_existence_findings`). A field may name a composite with a component table under
+# Resources/datatypes/<version>, a primitive of the version, or a variable-type marker. The
+# primitives mirror Validator.primitiveTypes; v2.7.1 CH02A prints the v2.8.2 set (SNM included).
+PRIMITIVE_TYPES = {
+    "v2.3": {"DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"},
+    "v2.3.1": {"DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"},
+    "v2.4": {"DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"},
+    "v2.5.1": {"DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "ST", "TM", "TX"},
+    "v2.6": {"DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "ST", "TM", "TX"},
+    "v2.7.1": {"DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"},
+    "v2.8.2": {"DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"},
+}
+VARIABLE_TYPES = {"varies", "Varies", "Variable", "*"}
+# Withdrawn datatypes the version's Chapter 2A still prints as a "WITHDRAWN (...)" stub
+# (v2.7.1 2.A.6, 2.A.27, 2.A.50, 2.A.73, 2.A.77, 2.A.78; v2.8.2 adds LA1 and LA2). Such a
+# type is accepted only on a W or B field.
+WITHDRAWN_TYPES = {
+    "v2.7.1": {"CE", "ELD", "OSD", "SPS", "TQ", "TS"},
+    "v2.8.2": {"CE", "ELD", "LA1", "LA2", "OSD", "SPS", "TQ", "TS"},
+}
+# Before v2.5 a field typed CM (or a CM refinement, or v2.3's PTS and SVC) is checked through
+# its own field-local grammar, not a Chapter 2 component table (permanent-limitations
+# register section C, P6-15 bullet; ADR-017 P5 addendum).
+FIELD_LOCAL_TYPES = {
+    "v2.3": {"CM", "PTS", "SVC"} | CM_REFINEMENTS,
+    "v2.3.1": {"CM"} | CM_REFINEMENTS,
+    "v2.4": {"CM"} | CM_REFINEMENTS,
+}
+# (version, dataType) -> why a type with no component table is accepted. Each is an intake row.
+DATATYPE_EXISTENCE_EXEMPT = {}   # P10-4d: v2.4 NA now has its component file
+# P10-4c rule for withdrawn fields: a W field carries exactly the data type its attribute table
+# prints, and nothing is carried from an earlier version. Chapter 2 section 2.8.4 (v2.7.1 p. 24,
+# v2.8.2 p. 26) is cited only for the fact that a withdrawn field stays listed in its segment
+# with its narrative removed: a deprecated field "will be marked as withdrawn and all explanatory
+# narrative will be removed". The tables print the DT cell of almost every W field blank.
+# Versions listed here are held to the rule; the value maps each W field whose table does print
+# a type to its citation. P10-4d added v2.8.2, v2.6 and v2.5.1; v2.3 to v2.4 have no W field.
+WITHDRAWN_TYPED_AS_PRINTED = {
+    "v2.5.1": {},
+    "v2.6": {},
+    "v2.7.1": {
+        ("UB1", 1): "v2.7.1 CH06 section 6.5.10 UB1 attribute table (p. 130) prints `1  SI  W  "
+                    "00530  Set ID - UB1`",
+    },
+    "v2.8.2": {
+        ("UB1", 1): "v2.8.2 CH06 section 6.5.10 UB1 attribute table (p. 124) prints `1  SI  W  "
+                    "00530  Set ID - UB1`",
+    },
+}
+# Registered exceptions to the rule: a W field that keeps a type its table does not print,
+# because a released accessor is typed from it and ADR-014 forbids retyping it.
+WITHDRAWN_TYPE_EXCEPTIONS = {
+    "v2.5.1": {
+        ("MSA", 5): "v2.5.1 CH02 section 2.15.8 MSA attribute table (p. 73) prints `5  W  00022  "
+                    "Delayed Acknowledgment Type` with the DT cell blank; the schema keeps ID because "
+                    "the released accessor MSA.delayedAcknowledgmentType binds it (ADR-014)",
+    },
+}
+
+# (version, segment, index) -> citation: slots where the schema deliberately diverges from
+# the extracted attribute-table value. Every entry names its source (check-audit-schemas.py
+# fails an entry without one).
+#   v2.8.2/RF1/18 — the CH11 attribute table prints `M0` (zero), a misprint:
+#                 the field heading (§11.8.1.18) and the same element at
+#                 AUT-22 (table row and §11.8.2.22) print `MO`. `M0` is no
+#                 datatype, so following it would skip the MO grammar.
+DATATYPE_WHITELIST = {
+    ("v2.4", "AL1", 1): "v2.4 CH3 AL1 attribute table and heading print CE for Set ID - AL1, a "
+                        "spec typo (SI in v2.3 and v2.5+); registered in segment-coverage-extraction.md",
+    ("v2.3", "QRD", 11): "v2.3 CH2 sec 2.24.4.11 heading prints QRD-11 (CM) with Components: "
+                         "<first data code value (ST)> ^ <last data code value (ST)>; the attribute "
+                         "table prints ST. The printed Components line wins (P5 final review), as "
+                         "v2.3.1 and v2.4 type it CM in both places",
+    ("v2.8.2", "RF1", 18): "v2.8.2 CH11 RF1-18 attribute table prints `M0` (zero), a misprint; "
+                           "field heading §11.8.1.18 and AUT-22 (table row and §11.8.2.22) print `MO`",
+}
 # M20 name predicate. A schema name must equal, after normalisation, an element name the
 # version's own attribute table prints for that slot. Extraction can still glue prose onto a
 # name (ORC-31 "...all orders (i.e., requested"), so a printed candidate whose normalised
@@ -133,11 +229,251 @@ def name_agrees(schema_name, printed):
     return False
 
 
-# M19 optionality predicate. v2.3 and v2.3.1 print DG1-2 as "(B) R": both codes in one
-# cell. The schema keeps R; the extractor reads the cell as B.
-OPTIONALITY_WHITELIST = {("v2.3", "DG1", 2), ("v2.3.1", "DG1", 2)}
-REPEATABILITY_WHITELIST = set()
-LENGTH_WHITELIST = set()
+# M19 optionality whitelist: (version, segment, index) -> citation. An entry is a divergence
+# from the printed OPT column that the spec text itself backs. P4-30: a schema field may instead
+# carry the citation itself as "optionalityCitation" (the single source for new divergences, as
+# "tableOpenCitation" is for openness); see optionality_citation_finding. Anything else is a
+# finding.
+OPTIONALITY_WHITELIST = {
+    ("v2.3", "DG1", 2): "v2.3 CH6 DG1 attribute table prints '(B) R' in one OPT cell; the "
+                        "extractor reads B, the schema keeps R",
+    ("v2.3.1", "DG1", 2): "v2.3.1 CH6 DG1 attribute table prints '(B) R' in one OPT cell; the "
+                          "extractor reads B, the schema keeps R",
+    ("v2.6", "ORC", 8): "v2.6 CH04 section 4.5.1.8: 'If the parent is not present in the ORC, it "
+                        "must be present in the associated OBR'; printed O, modelled C (V26-C13)",
+    ("v2.6", "OBR", 29): "v2.6 CH04 section 4.5.3.29: required when the order is a child; printed "
+                         "O, modelled C (V26-C13)",
+    ("v2.3", "ORC", 8): "v2.3 CH04 section 4.3.1.1.1 'i) PA, CH': 'Whenever a child order is "
+                       "transmitted in a message the ORC segment's ORC-8-parent is valued with "
+                       "the parent's filler order number ... and with the parent's placer order "
+                       "number'; printed O, modelled C (P4-18)",
+    ("v2.3", "OBR", 29): "v2.3 CH04 section 4.5.1.29: 'It is required when the order is a child.'; "
+                        "printed O, modelled C (P4-18)",
+    ("v2.3.1", "ORC", 8): "v2.3.1 CH04 section 4.3.1.1.1 'i) PA, CH': 'Whenever a child order is "
+                         "transmitted in a message the ORC segment's ORC-8-parent is valued with "
+                         "the parent's filler order number ... and with the parent's placer order "
+                         "number'; printed O, modelled C (P4-18)",
+    ("v2.3.1", "OBR", 29): "v2.3.1 CH04 section 4.5.1.29: 'It is required when the order is a "
+                          "child.'; printed O, modelled C (P4-18)",
+    ("v2.4", "ORC", 8): "v2.4 CH04 section 4.5.1.8: 'If the parent is not present in the ORC, it "
+                       "must be present in the associated OBR'; printed O, modelled C (P4-18)",
+    ("v2.4", "OBR", 29): "v2.4 CH04 section 4.5.3.29: 'It is required when the order is a child.'; "
+                        "printed O, modelled C (P4-18)",
+    ("v2.5.1", "ORC", 8): "v2.5.1 CH04 section 4.5.1.8: 'If the parent is not present in the ORC, "
+                         "it must be present in the associated OBR'; printed O, modelled C (P4-18)",
+    ("v2.5.1", "OBR", 29): "v2.5.1 CH04 section 4.5.3.29: 'It is required when the order is a "
+                          "child.'; printed O, modelled C (P4-18)",
+}
+# The schema `repeatability` vocabulary: "1", "*", or a decimal RP/# bound of 2 or more (P6-4).
+REPEATABILITY_TOKEN = re.compile(r"1|\*|[2-9]|[1-9]\d{1,2}")
+REPEATABILITY_WHITELIST = {
+    ("v2.6", "OBX", 5): "v2.6 CH07 section 7.4.2 OBX attribute table prints RP/# 'Y' wrapped under a "
+                       "superscript footnote marker '2', which the extractor reads as a bound; the "
+                       "CH09 constrained OBX prints a blank. 7.4.2.5 'may repeat for multipart, single "
+                       "answer results'; schema '*' (P6-4)",
+}
+# v2.3/v2.3.1 OBX-5: the LEN cell prints a numeric cap (v2.3 Figure 7-5 "655362", v2.3.1
+# Figure 7-5 "65536" + footnote marker, both extraction-glued footnote digits onto 65536) but the
+# field's own footnote overrides it: v2.3 CH7 (p. 7-30) footnote 2 and v2.3.1 CH7 (p. 7-35)
+# footnote 3 both read "The length of the observation value field is variable, depending
+# upon value type. See OBX-2-value type." The schema keeps the variable-length placeholder
+# `*`, matching the DT column's own printed `*` (P6-2 / pre-flight ruling d4). v2.4 to v2.6 print
+# the same footnote over 65536 / 99999 (P6-12). v2.3's "655362" fails LENGTH_TOKEN, so its entry
+# lives in UNREADABLE_WHITELIST.
+LENGTH_WHITELIST = {
+    ("v2.3.1", "OBX", 5): "v2.3.1 Figure 7-5 (p. 7-35) footnote 3: 'The length of the "
+                         "observation value field is variable, depending upon value type. "
+                         "See OBX-2-value type.' LEN cell prints 65536 (footnote marker "
+                         "glued on); schema keeps the variable-length `*`",
+    ("v2.4", "OBX", 5): "v2.4 CH07 section 7.4.2 OBX attribute table footnote 1: 'The length of "
+                       "the observation field is variable, depending upon value type. See OBX-2 "
+                       "value type.' LEN cell prints 65536; schema keeps the variable-length `*` "
+                       "(P6-12)",
+    ("v2.5.1", "OBX", 5): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) footnote 1: 'The "
+                         "length of the observation field is variable, depending upon value type. "
+                         "See OBX-2 value type.' LEN cell prints 99999 (wrapped as 9999 / 9), the "
+                         "section 2.5.3.2 symbol for a variable length; schema keeps `*` (P6-12)",
+    ("v2.6", "OBX", 5): "v2.6 CH07 section 7.4.2 OBX attribute table footnote 1: 'The length of the "
+                       "observation field is variable, depending upon value type. See OBX-2 value "
+                       "type.' LEN cell prints 99999, the section 2.5.3.2 c) symbol for a variable "
+                       "length; schema keeps `*` (P6-12; the M25 sweep had written 24)",
+    ("v2.3", "MSH", 18): 'G10 (P6-6 fix 1): LEN cell prints 6, shorter than values the spec defines as valid; '
+                         'section 2.24.1.18 binds the field to HL7 Table 0211 - Alternate character sets, whose '
+                         "longest code is 'JIS X 0202' (10). Schema stores 10, the smallest length that admits "
+                         'them (limitations register, section C)',
+    ("v2.3", "OBX", 2): 'G10 (P6-6 fix 1): LEN cell prints 2 (Figure 7-5), shorter than values the spec defines '
+                        'as valid; section 7.3.2.2 binds the field to HL7 Table 0125 - Value type, whose codes '
+                        'are three letters (XAD, XCN). Schema stores 3, the smallest length that admits them '
+                        '(limitations register, section C)',
+    ("v2.3", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                         'section 7.11.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                         "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                         'register, section C)',
+    ("v2.3.1", "MSH", 9): 'G10 (P6-6 fix 1): LEN cell prints 7, shorter than values the spec defines as valid; '
+                          'section 2.24.1.9 defines three components <message type (ID)> ^ <trigger event (ID)> ^ '
+                          '<message structure (ID)>; Tables 0076 and 0003 codes are 3 characters and Table 0354 '
+                          "codes at most 7 (e.g. ADT_A01); Table 0354 also prints 'SIIU_S12', a misprint of the "
+                          'SIU_S12 structure Chapter 10 defines, not counted, so ADT^A01^ADT_A01 is 15. Schema '
+                          'stores 15, the smallest length that admits them (limitations register, section C)',
+    ("v2.3.1", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                           'section 7.11.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                           "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                           'register, section C)',
+    ("v2.3.1", "TXA", 3): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                          'section 9.5.1.3 binds the field to HL7 Table 0191 - Type of referenced data, whose '
+                          "longest code is 'Application' (section 2.8.36 prints it). Schema stores 11, the smallest"
+                          ' length that admits them (limitations register, section C)',
+    ("v2.4", "MSH", 9): 'G10 (P6-6 fix 1): LEN cell prints 13, shorter than values the spec defines as valid; '
+                        'section 2.16.9.9 defines three components <message type (ID)> ^ <trigger event (ID)> ^ '
+                        '<message structure (ID)>; Tables 0076 and 0003 codes are 3 characters and Table 0354 '
+                        'codes at most 7 (e.g. ADT_A01), so ADT^A01^ADT_A01 is 15; v2.5.1 prints 15. Schema '
+                        'stores 15, the smallest length that admits them (limitations register, section C)',
+    ("v2.4", "OBX", 2): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                        'section 7.4.2.2 binds the field to HL7 Table 0125 - Value type, whose codes are three '
+                        'letters (XAD, CWE). Schema stores 3, the smallest length that admits them (limitations '
+                        'register, section C)',
+    ("v2.4", "OM3", 7): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                        'section 8.8.5.7 binds the field to HL7 Table 0125 - Value type, whose codes are three '
+                        'letters (XAD, CWE). Schema stores 3, the smallest length that admits them (limitations '
+                        'register, section C)',
+    ("v2.4", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                         'section 7.12.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                         "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                         'register, section C)',
+    ("v2.4", "TXA", 3): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                        'section 9.6.1.3 binds the field to HL7 Table 0191 - Type of referenced data, whose '
+                        "longest code is 'multipart'. Schema stores 9, the smallest length that admits them "
+                        '(limitations register, section C)',
+    ("v2.5.1", "OBX", 2): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                          'section 7.4.2.2 binds the field to HL7 Table 0125 - Value type, whose codes are three '
+                          'letters (XAD, CWE); v2.6 prints 3. Schema stores 3, the smallest length that admits them'
+                          ' (limitations register, section C)',
+    ("v2.5.1", "OM3", 7): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                          'section 8.8.10.7 binds the field to HL7 Table 0125 - Value type, whose codes are three '
+                          'letters (XAD, CWE). Schema stores 3, the smallest length that admits them (limitations '
+                          'register, section C)',
+    ("v2.5.1", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                           'section 7.12.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                           "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                           'register, section C)',
+    ("v2.5.1", "TXA", 3): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                          'section 9.6.1.3 binds the field to HL7 Table 0191 - Type of referenced data, whose '
+                          "longest code is 'multipart'. Schema stores 9, the smallest length that admits them "
+                          '(limitations register, section C)',
+    ("v2.6", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                         'section 7.12.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                         "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                         'register, section C)',
+    ("v2.6", "PSL", 21): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                         'section 16.4.6.21 binds the field to HL7 Table 0532 - Expanded yes/no indicator, which '
+                         "includes 'ASKU' and 'NASK'. Schema stores 4, the smallest length that admits them "
+                         '(limitations register, section C)',
+    ("v2.6", "TXA", 3): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                        'section 9.6.1.3 binds the field to HL7 Table 0191 - Type of referenced data, whose '
+                        "longest code is 'multipart'. Schema stores 9, the smallest length that admits them "
+                        '(limitations register, section C)',
+}
+
+# P6-12: slots M19 / M22 / M25 cannot compare (see read_slot) are reported unless listed here,
+# keyed (audit, version, segment, first index, last index, reason) -> the spec citation. The
+# reason is the read_slot reason the region is cited for ("blank cell" or "malformed print"),
+# so a region cited for blanks cannot hide a malformed print or a missing row. A cited blank is
+# a print: the slot is then compared against "" like any other value, so the schema must store
+# the blank verbatim (fix 1 ruling; a blank OPT is treated as optional, see the limitations
+# register, addendum to section A).
+BLANK_OPT = ("the spec defines no blank OPT code (v2.6 section 2.5.3.4); the schema stores the "
+             "blank verbatim")
+UNREADABLE_WHITELIST = {
+    ("M19", "v2.3", "AIG", 2, 2, "blank cell"): "v2.3 CH10 section 10.5.5 Figure 10-7 AIG attributes (p. 10-42) "
+                                 "prints the R/O/C cell of Segment Action Code blank; %s "
+                                 "(settles the P6-10 'no optionality value' intake row)",
+    ("M19", "v2.3.1", "NST", 2, 15, "blank cell"): "v2.3.1 Appendix C section C.2.2 Figure C-2 NST attributes prints "
+                                    "OPT blank for every field after NST-1; %s",
+    ("M19", "v2.4", "EDU", 2, 2, "blank cell"): "v2.4 CH15 section 15.4.2 EDU attribute table (p. 15-10) prints "
+                                 "OPT blank for Academic Degree; %s",
+    ("M19", "v2.4", "NSC", 2, 9, "blank cell"): "v2.4 CH14 section 14.4.2 NSC attribute table (p. 14-5) prints OPT "
+                                 "blank for NSC-2 to NSC-9; %s",
+    ("M19", "v2.4", "NST", 2, 15, "blank cell"): "v2.4 CH14 section 14.4.3 NST attribute table (p. 14-7) prints OPT "
+                                  "blank for NST-2 to NST-15; %s",
+    ("M19", "v2.4", "RCP", 7, 7, "blank cell"): "v2.4 CH05 section 5.5.5 RCP attribute table (p. 5-51) prints OPT "
+                                 "(and TBL#) blank for Segment group inclusion; %s"
+                                 " (see the v2.4/RCP-7 table repair)",
+    ("M19", "v2.5.1", "NSC", 2, 9, "blank cell"): "v2.5.1 CH14 section 14.4.2 NSC attribute table (p. 14-5) prints "
+                                   "OPT blank for NSC-2 to NSC-9; %s",
+    ("M19", "v2.5.1", "NST", 2, 15, "blank cell"): "v2.5.1 CH14 section 14.4.3 NST attribute table (p. 14-7) prints "
+                                    "OPT blank for NST-2 to NST-15; %s",
+    ("M19", "v2.5.1", "OBX", 20, 22, "blank cell"): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) prints "
+                                     "OBX-20 to OBX-22 'Reserved for harmonization with V2.6' with "
+                                     "every column blank, and 7.4.2.20 to 7.4.2.22 print the "
+                                     "heading alone (no X anywhere); %s",
+    ("M25", "v2.5.1", "OBX", 20, 22, "blank cell"): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) prints "
+                                     "OBX-20 to OBX-22 'Reserved for harmonization with V2.6' with "
+                                     "every column blank; schema carries no length",
+    ("M19", "v2.5.1", "RCP", 7, 7, "blank cell"): "v2.5.1 CH05 section 5.5.6 RCP attribute table (p. 5-48) prints "
+                                   "OPT (and TBL#) blank for Segment group inclusion; %s"
+                                   " (see the v2.5.1/RCP-7 table repair)",
+    ("M19", "v2.6", "NSC", 2, 9, "blank cell"): "v2.6 CH14 section 14.4.2 NSC attribute table (p. 14-4) prints OPT "
+                                 "blank for NSC-2 to NSC-9; %s",
+    ("M19", "v2.6", "NST", 2, 15, "blank cell"): "v2.6 CH14 section 14.4.3 NST attribute table (p. 14-6) prints OPT "
+                                  "blank for NST-2 to NST-15; %s",
+    ("M19", "v2.6", "RCP", 7, 7, "blank cell"): "v2.6 CH05 section 5.5.6 RCP attribute table (p. 40) prints OPT "
+                                 "(and TBL#) blank for Segment group inclusion; %s",
+    ("M19", "v2.6", "PKG", 4, 4, "blank cell"): "v2.6 CH17 section 17.4.5 PKG attribute table (p. 17-17) prints OPT "
+                                 "blank for Package Quantity; %s",
+    ("M19", "v2.6", "STZ", 1, 4, "blank cell"): "v2.6 CH17 section 17.4.3 STZ attribute table (p. 17-15) prints OPT "
+                                 "blank for every field; %s",
+    ("M19", "v2.6", "SCP", 1, 8, "blank cell"): "v2.6 CH17 section 17.7.1 SCP attribute table (p. 17-30) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.6", "SLT", 1, 5, "blank cell"): "v2.6 CH17 section 17.7.2 SLT attribute table (p. 17-32) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.6", "SDD", 1, 7, "blank cell"): "v2.6 CH17 section 17.7.3 SDD attribute table (p. 17-33) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.6", "SCD", 1, 37, "blank cell"): "v2.6 CH17 section 17.7.4 SCD attribute table (p. 17-34) prints "
+                                  "R/O/C blank for every field; %s",
+    ("M22", "v2.8.2", "BUI", 12, 12, "malformed print"): "v2.8.2 CH04 section 4.17.2 BUI attribute table prints RP/# 'R' "
+                                     "for Transport Temperature Units (every other row prints N); R "
+                                     "is not an RP/# value (section 2.5.3.5) and 4.17.2.12 says "
+                                     "nothing of repetition; schema '1'",
+    ("M25", "v2.3", "OBX", 5, 5, "malformed print"): "v2.3 CH7 Figure 7-5 (p. 7-30) footnote 2: 'The length of the "
+                                 "observation value field is variable, depending upon value type. "
+                                 "See OBX-2-value type.' LEN cell prints 65536, read as 655362 "
+                                 "with the footnote marker glued on; schema keeps the "
+                                 "variable-length `*`",
+    ("M25", "v2.8.2", "TQ2", 6, 6, "malformed print"): "v2.8.2 CH04 section 4.5.5 TQ2 attribute table prints LEN '2..' "
+                                   "for Sequence Condition Code, a range with no maximum (section "
+                                   "2.5.5 prints min..max); schema keeps '2..' verbatim, and how it "
+                                   "validates is P6-6's to decide",
+    ("M25", "v2.7.1", "TQ2", 6, 6, "malformed print"): "v2.7.1 CH04 section 4.5.5 TQ2 attribute table (p. 80) prints "
+                                   "LEN '2..' for Sequence Condition Code, a range with no maximum, "
+                                   "as v2.8.2 does; schema keeps '2..' verbatim",
+    ("M25", "v2.7.1", "RXG", 13, 13, "malformed print"): "v2.7.1 CH04A section 4A.4.6 RXG attribute table (p. 78) prints "
+                                   "LEN '(1..250)' in parentheses for the CWE RXG-13, a shape section "
+                                   "2.5.5 does not define; schema keeps the range '1..250' that the "
+                                   "v2.8.2 table prints for the same element",
+    ("M19", "v2.7.1", "RCP", 7, 7, "blank cell"): "v2.7.1 CH05 section 5.5.6 RCP attribute table (p. 46) prints "
+                                   "OPT blank for Segment group inclusion (TBL# 0391 is printed); %s",
+    ("M19", "v2.7.1", "ACC", 12, 12, "blank cell"): "v2.7.1 CH06 section 6.5.9 ACC attribute table (p. 126) prints "
+                                    "OPT blank for Degree of patient liability; %s",
+    ("M19", "v2.7.1", "NSC", 2, 9, "blank cell"): "v2.7.1 CH14 section 14.4.2 NSC attribute table (p. 3) prints R/O "
+                                 "blank for NSC-2 to NSC-9; %s",
+    ("M19", "v2.7.1", "NST", 2, 15, "blank cell"): "v2.7.1 CH14 section 14.4.3 NST attribute table (p. 6) prints R/O "
+                                  "blank for NST-2 to NST-15; %s",
+    ("M19", "v2.7.1", "STF", 41, 41, "blank cell"): "v2.7.1 CH15 section 15.4.8 STF attribute table (pp. 41 to 42) "
+                                   "prints OPT blank for Signature; %s",
+    ("M19", "v2.7.1", "STZ", 1, 4, "blank cell"): "v2.7.1 CH17 section 17.4.3 STZ attribute table (p. 19) prints OPT "
+                                 "blank for every field; %s",
+    ("M19", "v2.7.1", "PKG", 4, 4, "blank cell"): "v2.7.1 CH17 section 17.4.5 PKG attribute table (p. 22) prints OPT "
+                                 "blank for Package Quantity; %s",
+    ("M19", "v2.7.1", "SCP", 1, 8, "blank cell"): "v2.7.1 CH17 section 17.7.1 SCP attribute table (p. 40) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.7.1", "SLT", 1, 5, "blank cell"): "v2.7.1 CH17 section 17.7.2 SLT attribute table (p. 42) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.7.1", "SDD", 1, 7, "blank cell"): "v2.7.1 CH17 section 17.7.3 SDD attribute table (p. 43) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.7.1", "SCD", 1, 37, "blank cell"): "v2.7.1 CH17 section 17.7.4 SCD attribute table (p. 44) prints "
+                                  "R/O/C blank for every field; %s",
+}
+UNREADABLE_WHITELIST = {k: (v % BLANK_OPT if "%s" in v else v) for k, v in UNREADABLE_WHITELIST.items()}
 
 # M9-A tables predicate. A TBL# cell is well-formed when it is one or more
 # 4-digit table numbers joined by "/" (a field may bind more than one table:
@@ -145,9 +481,20 @@ LENGTH_WHITELIST = set()
 # line wrap ("0327/") or a neighbouring column bleeding in ("01107") — and the
 # slot must carry a hand-verified entry in scripts/table-repairs.json, keyed
 # "<version>/<SEG>-<index>", with the citation it was verified against.
+#
+# Despite its name, the file carries hand-verified repairs for three columns: TBL# ("tables",
+# required), RP/# ("repeatability", P6-5) and LEN ("length", P6-12). Keys starting "_" (the
+# file's "_comment") are documentation, not slots.
 TABLE_REPAIRS_PATH = os.path.join(REPO, "scripts/table-repairs.json")
-TABLE_REPAIRS = ({k: v["tables"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()}
-                 if os.path.exists(TABLE_REPAIRS_PATH) else {})
+_REPAIR_ENTRIES = ({k: v for k, v in json.load(open(TABLE_REPAIRS_PATH)).items() if not k.startswith("_")}
+                   if os.path.exists(TABLE_REPAIRS_PATH) else {})
+TABLE_REPAIRS = {k: v["tables"] for k, v in _REPAIR_ENTRIES.items()}
+# P6-5: an entry's optional "repeatability" pins the printed RP/# cell where the same column
+# shift defeats the extractor (v2.3.1 PCR, p. 7-96). M22 compares against it instead.
+REPEATABILITY_REPAIRS = {k: v["repeatability"] for k, v in _REPAIR_ENTRIES.items() if "repeatability" in v}
+# P6-12: an entry's optional "length" pins the printed LEN cell where the print itself defeats
+# pdftotext (v2.6 UAC-1 "705" renders as "7 05"). M25 compares against it instead.
+LENGTH_REPAIRS = {k: v["length"] for k, v in _REPAIR_ENTRIES.items() if "length" in v}
 
 
 def expected_tables(version, seg, index, raw_cells):
@@ -186,7 +533,15 @@ CHAPTER_GLOBS = {
     "v2.5.1": ["HL7_v251_PDF/V251_CH*.pdf"],
     "v2.6":   ["HL7_v26_PDF/V26_CH*.pdf"],
     "v2.8.2": ["HL7_V2.8.2_PDF/PDF/V282_CH*.pdf"],
+    "v2.7.1": ["HL7_V271_PDF/PDF/V271_CH*.pdf"],
 }
+
+# P10-4a: a version whose CHAPTER_GLOBS entry covers only some chapters while its segment
+# schemas are authored in stages, with the task that widens it. Not a deferral (that needs an
+# owner decision, see DEFERRED_VERSIONS): every swept chapter gets the full presence check.
+# check-audit-schemas.py fails once Version.swift declares a staged version, so the entry
+# cannot outlive the rollout.
+CHAPTER_GLOBS_STAGED = {}   # P10-4c widened v2.7.1 to every chapter
 
 # M6-O6 code-table registry. The per-version table JSON lives beside the schemas; the
 # hand-kept overlay (permitsLocalExtensions / dropCodes) sits at the root of that tree and
@@ -200,6 +555,7 @@ TABLE_PDFS = {
     "v2.4":   "HL7_v24_PDF/AppendixA.PDF",
     "v2.5.1": "HL7_v251_PDF/V251_Appendix_A.pdf",
     "v2.6":   "HL7_v26_PDF/V26_Appendix_A.pdf",
+    "v2.7.1": "HL7_V271_PDF/PDF/V271_Appendix_A.pdf",
     "v2.8.2": "HL7_V2.8.2_PDF/PDF/V282_CH02C_CodeTables.pdf",
 }
 TABLE_EXTRACTOR = "/tmp/tablesbin"
@@ -221,10 +577,11 @@ TABLE_EXTRACTOR = "/tmp/tablesbin"
 #                    (v2.6 0396 "CE (obsolete)", v2.8.2 0340 "(HCPCS)")
 #   three+ words     a Value wider than its column run into the Description
 #                    (v2.8.2 0396 "CDCEDACUITY CDC Emergency"); "..." ranges are exempt
-#   bare "..."       an ellipsis row: the list continues or the row means null — never a code
+#   bare "..."       an ellipsis row: the list continues or the row means null — never a code;
+#                    also its U+2026 form (v2.7.1 Appendix A, and v2.8.2 Chapter 2C 0359 / 0418)
 #   a comma           several codes printed in one Value cell (0301 "L,M,N"): as one code the
 #                    closed table rejects each of them
-SUSPECT_CODE = re.compile(r"[\[\]|(),]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^\.\.\.$")
+SUSPECT_CODE = re.compile(r"[\[\]|(),]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^(\.\.\.|\u2026)$")
 
 # Printed codes the shape test would wrongly flag. Each was read against the PDF. Keyed
 # (table, code): version-agnostic because the same printed value recurs across versions.
@@ -244,21 +601,287 @@ SUSPECT_ALLOW = {
 MOJIBAKE = re.compile("[\u00c2\u00e2\u00c3]")
 
 
+def table_open_findings(f):
+    """P2-15 per-field openness. `tableOpen` is a boolean, only on a field with a table
+    binding, and always carries the cited prose that opens the table; a
+    `tableOpenCitation` needs `tableOpen: true`. Returns the finding messages for one field."""
+    out = []
+    if "tableOpen" not in f and "tableOpenCitation" not in f:
+        return out
+    flag, cite = f.get("tableOpen"), f.get("tableOpenCitation")
+    if "tableOpen" in f and not isinstance(flag, bool):
+        out.append(f"tableOpen {flag!r} is not a boolean")
+    elif flag and not f.get("tables"):
+        out.append("tableOpen on a field with no table binding")
+    if flag is True and not (isinstance(cite, str) and cite.strip()):
+        out.append("tableOpen without a tableOpenCitation")
+    if cite is not None and flag is not True:
+        out.append("tableOpenCitation without tableOpen: true")
+    return out
+
+
+def condition_predicate_findings(f):
+    """P4-31 (ADR-021). `conditionIsPredicate: true` marks the stored `condition` as the
+    spec's complete C predicate (must not be sent when false). It is a boolean `true`, only
+    on a field printed C with a non-empty `condition`, and always carries a
+    `predicateCitation` of at least 20 characters; a `predicateCitation` needs the marker.
+    Returns the finding messages for one field (the `optionalityCitation` pattern, P4-30)."""
+    out = []
+    if "conditionIsPredicate" not in f and "predicateCitation" not in f:
+        return out
+    flag, cite = f.get("conditionIsPredicate"), f.get("predicateCitation")
+    if "conditionIsPredicate" in f and flag is not True:
+        out.append(f"conditionIsPredicate {flag!r} is not true (omit the key instead)")
+    if flag is True:
+        if not (isinstance(cite, str) and len(cite.strip()) >= 20):
+            out.append("conditionIsPredicate without a predicateCitation")
+        if f.get("optionality") != "C":
+            out.append("conditionIsPredicate on a field not printed C")
+        if not (f.get("condition") or "").strip():
+            out.append("conditionIsPredicate on a field with no condition")
+    if cite is not None and flag is not True:
+        out.append("predicateCitation without conditionIsPredicate: true")
+    return out
+
+
+# P6-9: swiftName shape. The longest legitimate name is 66 characters (v2.8.2 OM1-56,
+# "Observation/Identifier associated with Producer's Service/Test/Observation ID"); every prose
+# bleed the sweep found was 94 or more (v2.8.2 ITM-16), so 70 leaves headroom for a longer
+# printed name without admitting a bleed. Bleeds shorter than the bound are caught by the
+# foreign-word rule instead (QPD-2 "queryTagUserParametersInSuccessiveFields", 40 characters).
+SWIFT_NAME_MAX = 70
+SWIFT_NAME_FOREIGN_MAX = 2
+SWIFT_IDENTIFIER = re.compile(r"[a-z][A-Za-z0-9]*")
+
+
+STRANDED_POSSESSIVE_S = re.compile(r"[a-z]S[A-Z]")
+
+
+def swift_name_findings(f, canonical=None, canonical_name=None, released=frozenset()):
+    """P6-9. `swiftName` is a lowerCamelCase identifier of at most SWIFT_NAME_MAX characters,
+    rendered from the field's printed element name. The naming convention (AddingASegment.md):
+    a non-canonical slot whose element name normalises equal to the canonical v2.5.1 element
+    at the same index (`canonical_name`) must carry the canonical swiftName (`canonical`),
+    possessive "S" included; any other slot takes `deriveSwiftName` of its printed name.
+    A slot whose name IS the canonical one is exempt from the next two rules (non-canonical
+    versions inherit it by index even where the element was later renamed). Otherwise its
+    first four letters must start some run of
+    the element name's words (a truncated head such as "nistrationSubIdCounter" or a
+    placeholder "field4" fails), and at most SWIFT_NAME_FOREIGN_MAX of its camel-case words may
+    be absent from the element name (prose bleed). `deprecatedSwiftNames`, the released names
+    a renamed accessor keeps as deprecated aliases (ADR-014), is a non-empty list of distinct
+    identifiers, none equal to `swiftName`; the old names are exempt from the length bound.
+    A stranded possessive "S" (`[a-z]S[A-Z]`, as in "personSLocation") is allowed only on a
+    name `released` at v3.13.0 or inherited from the canonical slot: `deriveSwiftName` drops
+    the lone "s", and the foreign-word rule cannot see it (an "s" is in every element name).
+    Returns the finding messages for one field."""
+    out = []
+    swift, element = f.get("swiftName") or "", f.get("name") or ""
+    if not SWIFT_IDENTIFIER.fullmatch(swift):
+        out.append(f"swiftName {swift[:60]!r} is not a lowerCamelCase identifier")
+    if len(swift) > SWIFT_NAME_MAX:
+        out.append(f"swiftName {len(swift)} chars (bound {SWIFT_NAME_MAX}) — prose bleed?")
+    if (canonical and canonical_name is not None and swift != canonical
+            and normalised_name(element).replace(" ", "") == normalised_name(canonical_name).replace(" ", "")):
+        out.append(f"swiftName {swift[:60]!r} differs from the canonical {canonical!r} for the same element"
+                   " — dropped words?")
+    if swift != canonical and swift not in released and STRANDED_POSSESSIVE_S.search(swift):
+        out.append(f"swiftName {swift[:60]!r} has a stranded possessive S; not released at v3.13.0"
+                   " nor canonical-inherited, so it takes deriveSwiftName")
+    if swift and swift != canonical:
+        words = [w for w in re.split(r"[^a-z0-9]+", element.lower()) if w]
+        head = swift.lower()
+        if re.match(r"f[0-9]", head):
+            head = head[1:]   # the extractor prefixes "f" to a name that starts with a digit
+        if not any("".join(words[i:]).startswith(head[:4]) for i in range(len(words))):
+            out.append(f"swiftName {swift[:60]!r} does not start a word of {element[:60]!r} — truncated?")
+        joined = "".join(words)
+        foreign = [w for w in re.findall(r"[A-Z]+(?![a-z])|[A-Z]?[a-z]+|[0-9]+", swift)
+                   if w.lower() not in joined]
+        if len(foreign) > SWIFT_NAME_FOREIGN_MAX:
+            out.append(f"swiftName has {len(foreign)} words absent from {element[:60]!r} — prose bleed?")
+    if "deprecatedSwiftNames" in f:
+        old = f["deprecatedSwiftNames"]
+        if not isinstance(old, list) or not old:
+            out.append("deprecatedSwiftNames must be a non-empty list")
+        else:
+            if any(not (isinstance(o, str) and SWIFT_IDENTIFIER.fullmatch(o)) for o in old):
+                out.append("deprecatedSwiftNames holds a non-identifier")
+            if swift in old:
+                out.append("deprecatedSwiftNames repeats the swiftName")
+            if len(set(map(str, old))) != len(old):
+                out.append("deprecatedSwiftNames has a duplicate")
+    return out
+
+
+def released_swift_names():
+    """`SEG` -> the accessor names its typed struct declared at v3.13.0, from the released
+    surface snapshot (`SEG|public var name: Type` lines). Released names never change."""
+    names = collections.defaultdict(set)
+    path = os.path.join(REPO, "Tests/Fixtures/APISurface/segment-structs-v3.13.0.txt")
+    for line in open(path):
+        m = re.match(r"([A-Z0-9]{3})\|public var ([A-Za-z0-9_]+):", line)
+        if m:
+            names[m.group(1)].add(m.group(2))
+    return names
+
+
+def canonical_swift_names():
+    """`SEG-n` -> (swiftName, element name) for every canonical (v2.5.1) schema field."""
+    names = {}
+    for path in glob.glob(f"{SCHEMAS}/v2.5.1/*.json"):
+        doc = json.load(open(path))
+        for f in doc["fields"]:
+            names[f"{doc['segmentID']}-{f['index']}"] = (f.get("swiftName"), f.get("name", ""))
+    return names
+
+
+def duplicate_swift_names(fields):
+    """P6-9. The accessor names (aliases included) used more than once in one segment, as
+    (name, count) pairs. Codegen would emit two properties with the same name."""
+    counts = collections.Counter()
+    for f in fields:
+        counts.update([f.get("swiftName")] + list(f.get("deprecatedSwiftNames") or []))
+    return [(name, n) for name, n in counts.items() if n > 1]
+
+
+# P6-9 fix 1: element-name shape. Over the corrected corpus (11,999 fields) element names run
+# to 10 words at most (OM1-21 "Date/Time Stamp for any change in Definition for the
+# Observation") and the longest run of consecutive lowercase-led words is 4 (OM1-21 "for any
+# change in", v2.3 DB1-7/8 "return to work date", STF-39 "resource type or category"). The
+# prose bleeds found were 12 words with a 10-word lowercase run (v2.8.2 RQ1-7 "Substitute
+# Allowed e requisition unit of measure that is known to the") and 17 words (v2.8.2 ITM-16).
+# The bounds keep one step of headroom over the corpus maximum. Limit: a bleed of at most 11
+# words whose lowercase runs stay at 5 or fewer looks like a long element name and passes;
+# the M20 depth audit (`--depth`) is the check that compares names with the print.
+ELEMENT_NAME_WORDS_MAX = 11
+ELEMENT_NAME_LOWER_RUN_MAX = 5
+
+
+def element_name_findings(name):
+    """P6-9 fix 1. An element name is a title, not prose: at most ELEMENT_NAME_WORDS_MAX
+    words, and no run of more than ELEMENT_NAME_LOWER_RUN_MAX consecutive lowercase-led words.
+    Returns the finding messages for one name."""
+    out = []
+    words = (name or "").split()
+    if len(words) > ELEMENT_NAME_WORDS_MAX:
+        out.append(f"element name has {len(words)} words (bound {ELEMENT_NAME_WORDS_MAX}) — prose bleed?")
+    run = best = 0
+    for w in words:
+        run = run + 1 if re.match(r"[a-z]", w) else 0
+        best = max(best, run)
+    if best > ELEMENT_NAME_LOWER_RUN_MAX:
+        out.append(f"element name has a run of {best} lowercase words — prose bleed?")
+    return out
+
+
+PROHIBITION_KEYS = {"when", "severity", "citation", "permitsNull"}
+
+
+def when_is_well_formed(when):
+    """A prohibition `when` is '<referent> <predicate>': plain spaces only (no tab, newline
+    or other whitespace), none leading or trailing, and at least two space-separated tokens.
+    Same rule as the codegen precondition in `renderAdditionalProhibitions`."""
+    return (isinstance(when, str) and not re.search(r"[^\S ]", when)
+            and when == when.strip(" ") and len([t for t in when.split(" ") if t]) >= 2)
+
+
+def additional_prohibition_findings(f):
+    """P4-21 extra prohibitions. `additionalProhibitions` is a non-empty list of rules,
+    each {when, severity, citation} plus an optional boolean `permitsNull` (P4-26):
+    `when` a '<referent> <predicate>' condition, `severity` error/warning/info,
+    `citation` the quoted spec text. Mirrors the codegen preconditions so the audit
+    reports what codegen would refuse."""
+    if "additionalProhibitions" not in f:
+        return []
+    rules = f["additionalProhibitions"]
+    if not isinstance(rules, list) or not rules:
+        return ["additionalProhibitions must be a non-empty list"]
+    out = []
+    for i, rule in enumerate(rules):
+        if not isinstance(rule, dict):
+            out.append(f"additionalProhibitions[{i}] is not an object")
+            continue
+        extra = set(rule) - PROHIBITION_KEYS
+        if extra:
+            out.append(f"additionalProhibitions[{i}] has unknown keys {sorted(extra)}")
+        when = rule.get("when")
+        if not when_is_well_formed(when):
+            out.append(f"additionalProhibitions[{i}] when {when!r} is not '<referent> <predicate>'")
+        if rule.get("severity") not in ("error", "warning", "info"):
+            out.append(f"additionalProhibitions[{i}] severity {rule.get('severity')!r} is not error/warning/info")
+        cite = rule.get("citation")
+        if not (isinstance(cite, str) and cite.strip()):
+            out.append(f"additionalProhibitions[{i}] has no citation")
+        if "permitsNull" in rule and not isinstance(rule["permitsNull"], bool):
+            out.append(f"additionalProhibitions[{i}] permitsNull {rule['permitsNull']!r} is not a boolean")
+    return out
+
+
+def composite_types():
+    """version -> the composite datatypes with a component table under Resources/datatypes."""
+    out = collections.defaultdict(set)
+    for path in glob.glob(os.path.join(REPO, "Resources/datatypes/v*/*.json")):
+        out[os.path.basename(os.path.dirname(path))].add(os.path.basename(path)[:-5])
+    return out
+
+
+def datatype_existence_findings(version, f, composites):
+    """P10-4c. A field's non-blank dataType exists on its own version: a composite with a
+    component table, a primitive, a variable-type marker, a pre-v2.5 field-local CM type, a
+    cited exemption, or a withdrawn Chapter 2A stub on a W or B field."""
+    dt, opt = f.get("dataType") or "", f.get("optionality") or ""
+    if (not dt or dt in composites or dt in PRIMITIVE_TYPES.get(version, set()) or dt in VARIABLE_TYPES
+            or dt in FIELD_LOCAL_TYPES.get(version, set()) or (version, dt) in DATATYPE_EXISTENCE_EXEMPT):
+        return []
+    if dt in WITHDRAWN_TYPES.get(version, set()):
+        return [] if opt in ("W", "B") else [
+            f"dataType {dt!r} is withdrawn on {version} (Chapter 2A stub); only a W or B field may carry it"]
+    return [f"dataType {dt!r} is not a {version} composite, primitive or variable type"]
+
+
+def withdrawn_datatype_findings(version, seg, f):
+    """P10-4c. On a version held to the withdrawn-field rule (WITHDRAWN_TYPED_AS_PRINTED), a W
+    field carries a dataType only where its attribute table prints one, and then it must. A
+    registered exception (WITHDRAWN_TYPE_EXCEPTIONS) keeps its type and must keep it."""
+    rule = WITHDRAWN_TYPED_AS_PRINTED.get(version)
+    if rule is None or f.get("optionality") != "W":
+        return []
+    printed, dt = (seg, f["index"]) in rule, f.get("dataType") or ""
+    if (seg, f["index"]) in WITHDRAWN_TYPE_EXCEPTIONS.get(version, {}):
+        return [] if dt else ["registered withdrawn-type exception lost its dataType"]
+    if dt and not printed:
+        return [f"withdrawn field carries dataType {dt!r}, which its {version} table does not print"]
+    if printed and not dt:
+        return ["withdrawn field lost the dataType its table prints"]
+    return []
+
+
 def integrity():
     """Shape predicates over every committed schema. Returns a list of findings."""
     findings = []
+    composites = composite_types()
+    canonical = canonical_swift_names()
+    released = released_swift_names()
     for path in sorted(glob.glob(f"{SCHEMAS}/*/*.json")):
         rel = os.path.relpath(path, REPO)
         doc = json.load(open(path))
+        is_canonical = os.path.basename(os.path.dirname(path)) == "v2.5.1"
         seen = collections.Counter()
         for f in doc["fields"]:
             seen[f["index"]] += 1
             name, dt, opt = f.get("name", ""), f.get("dataType", ""), f.get("optionality", "")
             if not name and not dt:
                 findings.append((rel, f["index"], "phantom row (no name, no dataType)"))
-            elif not dt and opt not in ("W", "X"):
-                # empty dataType is spec-CORRECT for withdrawn/reserved fields only
+            elif not dt and opt not in ("W", "X") and not (
+                    opt == "" and unreadable_whitelisted(
+                        "M19", rel.split(os.sep)[-2], os.path.basename(rel)[:-5].upper(), f["index"], "blank cell")):
+                # empty dataType is spec-CORRECT for withdrawn/reserved fields only, and for a
+                # reserved row printed entirely blank (v2.5.1 OBX-20..22, a cited blank region)
                 findings.append((rel, f["index"], f"empty dataType with optionality {opt!r}"))
+            rp = f.get("repeatability", "")
+            if not REPEATABILITY_TOKEN.fullmatch(rp):
+                findings.append((rel, f["index"], f"repeatability {rp!r} is not 1, *, or a bound of 2 or more"))
             if len(name) > 120:
                 findings.append((rel, f["index"], f"element name {len(name)} chars — prose bleed?"))
             if re.search(r"[|^<]", name):
@@ -271,9 +894,24 @@ def integrity():
             if table is not None and table not in f.get("tables", []):
                 findings.append((rel, f["index"],
                                  f"table {table!r} is not among the spec bindings {f.get('tables', [])}"))
+            findings.extend((rel, f["index"], msg) for msg in table_open_findings(f))
+            findings.extend((rel, f["index"], msg) for msg in additional_prohibition_findings(f))
+            findings.extend((rel, f["index"], msg) for msg in condition_predicate_findings(f))
+            version = os.path.basename(os.path.dirname(path))
+            findings.extend((rel, f["index"], msg)
+                            for msg in datatype_existence_findings(version, f, composites[version]))
+            findings.extend((rel, f["index"], msg)
+                            for msg in withdrawn_datatype_findings(version, doc["segmentID"], f))
+            inherited, inherited_name = (None, None) if is_canonical else \
+                canonical.get(f"{doc['segmentID']}-{f['index']}", (None, None))
+            findings.extend((rel, f["index"], msg) for msg in swift_name_findings(
+                f, inherited, inherited_name, released[doc["segmentID"]]))
+            findings.extend((rel, f["index"], msg) for msg in element_name_findings(name))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))
+        for ident, n in duplicate_swift_names(doc["fields"]):
+            findings.append((rel, 0, f"swiftName {str(ident)[:60]!r} used {n}x in the segment"))
         got = sorted(seen)
         if got and got != list(range(1, max(got) + 1)):
             missing = sorted(set(range(1, max(got) + 1)) - set(got))
@@ -287,6 +925,124 @@ def integrity():
     return findings
 
 
+def natural_key(path):
+    """Chapter order for a PDF glob: CH2 before CH10 (a plain sort puts CH10 first)."""
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", os.path.basename(path))]
+
+
+def defining_rows(tables_in_order):
+    """segment -> {index: extracted row} from the segment's DEFINING attribute table.
+
+    V23-C13: a slot's printed value used to be accepted if ANY chapter printed it, so the
+    v2.3 OBX lengths 4 and 80 from the CH7 "Observational Simple" variant and the CH9 table
+    passed against the normative CH7 Figure 7-5 (10 and 590). The defining table is the first
+    table, in chapter order, that reaches the segment's deepest extracted index: a variant
+    print is shallower, or comes after the home chapter's figure."""
+    deepest = {}
+    for seg, fields in tables_in_order:
+        deepest[seg] = max(deepest.get(seg, 0), max(f["index"] for f in fields))
+    out = {}
+    for seg, fields in tables_in_order:
+        if seg not in out and max(f["index"] for f in fields) == deepest[seg]:
+            out[seg] = {f["index"]: f for f in fields}
+    return out
+
+
+def printed_for(defining, union, seg, index, key):
+    """The printed values a schema attribute is compared against: the defining table's cell
+    when it has one, else the union across chapters (a blank defining cell is an extraction
+    gap, not a print)."""
+    # A non-blank defining cell is trusted on its own, with no union fallback: a value printed
+    # only in another chapter's table never excuses a schema that disagrees with the defining
+    # table. A misread defining cell is caught by the AUDIT_TOKENS shape check (UNREADABLE).
+    cell = ((defining.get(seg, {}).get(index) or {}).get(key) or "").strip()
+    return {cell} if cell else union.get((seg, index), set())
+
+
+# P6-12: the printed shapes each audited column may take. A defining-table cell that is not one
+# of these is a misread (a neighbouring column bled in, a footnote marker glued on), and must
+# never count as a match: the slot is reported as UNREADABLE instead. OPT: v2.6 section 2.5.3.4
+# (the extractor reduces "(B) R" and v2.7+ "C(a/b)" to B and C). LEN: a number (v2.6 section
+# 2.5.3.2), the "64K" abbreviation used before v2.4, or the v2.7+ range "m..n" and conformance
+# length "n=" / "n#" (v2.8.2 sections 2.5.5.1 to 2.5.5.3). Section 2.5.5.0 also allows a list of
+# lengths "x,y,z", and "The minimum length is always 1 or more", so a range from 0 is malformed.
+OPTIONALITY_TOKEN = re.compile(r"[ROCXBW]")
+LENGTH_TOKEN = re.compile(r"[1-9]\d{0,4}|[1-9]\d?[kK]|[1-9]\d*\.\.[1-9]\d*|[1-9]\d*[=#]|[1-9]\d*(?:,[1-9]\d*)+")
+AUDIT_TOKENS = {"M19": ("optionality", OPTIONALITY_TOKEN), "M22": ("repeatability", None),
+                "M25": ("len", LENGTH_TOKEN)}
+
+
+def blank_length_is_print(version, row):
+    """M25. True where a blank LEN cell in a parsed row is itself the print. v2.7.1 and v2.8.2:
+    LEN and C.LEN are printed only "If applicable" (sections 2.5.3.2 and 2.5.3.3; v2.7.1 CH02
+    p. 8), and a field without them takes its data type's (2.5.5.4); composite types carry
+    none. Every version: a withdrawn field (OPT W, v2.6 section 2.5.3.4) prints no length and
+    no data type."""
+    return version in ("v2.7.1", "v2.8.2") or (row.get("optionality") or "").strip() == "W"
+
+
+def read_slot(defining, union, seg, index, audit, version):
+    """P6-12. (printed, unreadable): the values a schema attribute is compared against, or the
+    reason the slot cannot be compared. Nothing is skipped silently: a slot with no defining
+    row, a blank defining cell that is not itself a print, or a print outside the column's
+    shape (AUDIT_TOKENS; REPEATABILITY_TOKEN for M22) comes back unreadable."""
+    key, token = AUDIT_TOKENS[audit]
+    token = token or REPEATABILITY_TOKEN
+    printed = printed_for(defining, union, seg, index, key)
+    if printed:
+        bad = sorted(p for p in printed if not token.fullmatch(p))
+        return (set(), f"malformed print {bad}") if bad else (printed, None)
+    row = defining.get(seg, {}).get(index)
+    if row is None:
+        return set(), "no extracted row"
+    if audit == "M25" and blank_length_is_print(version, row):
+        return {""}, None
+    return set(), "blank cell"
+
+
+def length_to_write(printed):
+    """--write-lengths: the value to write for a disagreeing slot, or None to report it. A blank
+    read never removes a length (P6-12 fix 1): the disagreement is reported instead."""
+    values = sorted((p for p in printed if p), key=lambda x: (len(x), x))
+    return values[0] if values else None
+
+
+def unreadable_whitelisted(audit, version, seg, index, why):
+    """True when a cited region covers the slot FOR THIS REASON (see UNREADABLE_WHITELIST)."""
+    return any(a == audit and v == version and s == seg and lo <= index <= hi and why.startswith(r)
+               for (a, v, s, lo, hi, r) in UNREADABLE_WHITELIST)
+
+
+def resolve_unreadable(audit, version, seg, index, why, have, unreadable):
+    """P6-12. The printed set for an unreadable slot, or None to stop comparing it. A cited
+    blank becomes the print {""}; a cited malformed print is exempt; anything else is reported."""
+    if not unreadable_whitelisted(audit, version, seg, index, why):
+        unreadable.append((audit, version, seg, index, have, why))
+        return None
+    return {""} if why == "blank cell" else None
+
+
+def optionality_finding(have, printed):
+    """M19. True when the schema's OPT is none of the printed codes. C is compared like every
+    other code (X-C10 / V26-C07): a printed C modelled O, or a printed O modelled C, is a
+    finding unless OPTIONALITY_WHITELIST names it with a citation."""
+    return bool(printed) and have not in printed
+
+
+def optionality_citation_finding(have, printed, cite, whitelisted):
+    """P4-30. A field's `optionalityCitation` is its whitelist entry. Returns None when the
+    slot is clean: OPT matches the print, or departs from it with a citation (the field's own
+    `optionalityCitation` of at least 20 characters, or an OPTIONALITY_WHITELIST entry).
+    Returns "uncited" when OPT departs with neither, and "stale" when a field carries an
+    `optionalityCitation` although its OPT matches the extracted print."""
+    cited = isinstance(cite, str) and len(cite.strip()) >= 20
+    if optionality_finding(have, printed):
+        return None if (cited or whitelisted) else "uncited"
+    if cite is not None and printed:
+        return "stale"
+    return None
+
+
 def extracted_depths(version):
     """(segment -> deepest max-field-index, (segment, index) -> {dataTypes seen})
     across that version's chapter PDFs.
@@ -297,9 +1053,10 @@ def extracted_depths(version):
     That bias under-reports and never false-positives — M6-O5's first
     measurement must not cry wolf on table-selection noise."""
     best, dts, tbls, opts, names, reps, lens = {}, {}, {}, {}, {}, {}, {}
+    ordered = []                        # (segment, fields) in chapter order, for defining_rows
     pdfs = []
     for pattern in CHAPTER_GLOBS[version]:
-        pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)))
+        pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)), key=natural_key)
     for pdf in pdfs:
         try:
             out = subprocess.run([EXTRACTOR, pdf], capture_output=True, timeout=900).stdout
@@ -311,6 +1068,7 @@ def extracted_depths(version):
             seg = (table.get("segmentHint") or "").strip().upper()
             fields = table.get("fields", [])
             if seg and fields:
+                ordered.append((seg, fields))
                 best[seg] = max(best.get(seg, 0), max(f["index"] for f in fields))
                 for f in fields:
                     dt = (f.get("dataType") or "").strip()
@@ -331,7 +1089,7 @@ def extracted_depths(version):
                     ln = (f.get("len") or "").strip()
                     if ln:
                         lens.setdefault((seg, f["index"]), set()).add(ln)
-    return best, dts, tbls, opts, names, reps, lens
+    return best, dts, tbls, opts, names, reps, lens, defining_rows(ordered)
 
 
 def write_names(path, wanted):
@@ -348,35 +1106,70 @@ def write_names(path, wanted):
 
 
 def write_lengths(path, wanted):
-    """Insert or replace each listed field's `length` right after its `dataType`, textually."""
+    """Set each listed field's `length` right after its `dataType`, textually; an empty wanted
+    value removes it (a blank print, P6-12). Fields not listed keep theirs: the old version
+    stripped every `length` in the file first, so a partial sweep dropped the rest. A field's
+    span runs from its `"index"` key to the next one, so one-line and multi-line schemas both
+    work."""
     text = open(path, encoding="utf-8").read()
-    text = re.sub(r',\s*"length"\s*:\s*"[^"]*"', "", text)
+    starts = [m for m in re.finditer(r'"index"\s*:\s*(\d+)', text)]
+    out, pos = [], 0
+    for n, m in enumerate(starts):
+        if int(m.group(1)) not in wanted:
+            continue
+        end = starts[n + 1].start() if n + 1 < len(starts) else len(text)
+        span = re.sub(r',\s*"length"\s*:\s*"[^"]*"', "", text[m.start():end])
+        value = wanted.pop(int(m.group(1)))
+        if value:
+            span = re.sub(r'("dataType"\s*:\s*"[^"]*")',
+                          lambda d: d.group(1) + f', "length": {json.dumps(value)}', span, count=1)
+        out.append(text[pos:m.start()] + span)
+        pos = end
+    open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
+
+
+def datatype_disagrees(version, seg, index, schema_dt, candidates):
+    """M6-O5: True when the schema's dataType is a finding against the extracted candidates
+    for that slot. A spec `CM` accepts only an enumerated CM_REFINEMENTS name (P5-7)."""
+    if not candidates or not schema_dt or schema_dt in candidates:
+        return False
+    if (version, seg, index) in DATATYPE_WHITELIST:
+        return False
+    if "CM" in candidates and schema_dt in CM_REFINEMENTS:
+        return False  # enumerated refinement of the CM placeholder (identical structure)
+    return True
+
+
+def write_repeatability(path, wanted):
+    """Replace each listed field's `repeatability` value in place, textually (see write_tables)."""
+    text = open(path, encoding="utf-8").read()
     out, pos, index = [], 0, None
-    for m in re.finditer(r'"index"\s*:\s*(\d+)|"dataType"\s*:\s*"[^"]*"', text):
+    for m in re.finditer(r'"index"\s*:\s*(\d+)|"repeatability"\s*:\s*"[^"]*"', text):
         if m.group(1):
             index = int(m.group(1))
         elif index in wanted:
-            out.append(text[pos:m.end()] + f', "length": {json.dumps(wanted.pop(index))}')
+            out.append(text[pos:m.start()] + f'"repeatability": {json.dumps(wanted.pop(index))}')
             pos = m.end()
     open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
 
 
-def depth(write=False, correct_names=False, record_lengths=False):
+def depth(write=False, correct_names=False, record_lengths=False, record_repeatability=False, versions=None):
     if not os.path.exists(EXTRACTOR):
         sys.exit(f"depth pass needs a compiled extractor at {EXTRACTOR}\n"
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}, [], [], [], [], [], [], []
+        return [], [], 0, [], {}, [], [], [], [], [], [], [], []
     gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
+    unreadable = []   # P6-12: (audit, version, seg, index, schema value, why) for M19/M22/M25
     datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings = [], [], [], [], [], []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
-    wanted_names, wanted_lengths = {}, {}
-    for version in CHAPTER_GLOBS:
+    wanted_names, wanted_lengths, wanted_reps = {}, {}, {}
+    for version in (versions or CHAPTER_GLOBS):
         print(f"  extracting {version} ...", file=sys.stderr)
-        found, spec_dts, spec_tbls, spec_opts, spec_names, spec_reps, spec_lens = extracted_depths(version)
+        found, spec_dts, spec_tbls, spec_opts, spec_names, spec_reps, spec_lens, spec_def = extracted_depths(version)
         # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
         # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
         # audits. A segment the spec defines here that we model on another version is a
@@ -390,6 +1183,12 @@ def depth(write=False, correct_names=False, record_lengths=False):
                 presence.append((version, seg, found[seg]))
             else:
                 backlog[version] = backlog.get(version, 0) + 1
+        # V282-C04: a DEPTH_WHITELIST segment's `1-n` row never parses, so it never enters
+        # `found` and the loop above cannot see it missing. Check its caption instead. A miss
+        # is always a PRESENCE defect (never DEFERRED): these schemas are hand-authored.
+        for seg in sorted(whitelisted_ids(version) - authored[version]):
+            if caption_present(version, seg):
+                presence.append((version, seg, "(caption)"))
         for path in sorted(glob.glob(f"{SCHEMAS}/{version}/*.json")):
             seg = os.path.basename(path)[:-5].upper()
             if seg in DEPTH_WHITELIST or f"{version}/{seg}" in DEPTH_WHITELIST or seg not in found:
@@ -422,35 +1221,64 @@ def depth(write=False, correct_names=False, record_lengths=False):
             for f in schema_fields:
                 candidates = spec_dts.get((seg, f["index"]))
                 schema_dt = (f.get("dataType") or "").strip()
-                if not candidates or not schema_dt or schema_dt in candidates:
+                if not datatype_disagrees(version, seg, f["index"], schema_dt, candidates):
                     continue
-                if (version, seg, f["index"]) in DATATYPE_WHITELIST:
-                    continue
-                if "CM" in candidates and schema_dt not in SCALAR_DATATYPES:
-                    continue  # named refinement of the CM placeholder
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
-            # M25: the LEN column, recorded VERBATIM and never enforced. Before v2.7 the spec
-            # calls the maximum length "not of conceptual importance"; from v2.7 it prints a
-            # normative range ("2..2", "32=" truncation-allowed, "250#" truncation-not-allowed)
-            # and a separate conformance length. A schema's `length` must be one its own
-            # version prints for that slot (the chapters can disagree: OBR in 4 and 7).
+            # P10-4c: under the withdrawn-field rule, a W field the defining table types must
+            # be a cited entry of WITHDRAWN_TYPED_AS_PRINTED (the integrity check holds the rest).
+            if version in WITHDRAWN_TYPED_AS_PRINTED:
+                for f in schema_fields:
+                    printed_dt = ((spec_def.get(seg, {}).get(f["index"]) or {}).get("dataType") or "").strip()
+                    if (f.get("optionality") == "W" and printed_dt
+                            and (seg, f["index"]) not in WITHDRAWN_TYPED_AS_PRINTED[version]):
+                        datatype_findings.append((version, seg, f["index"], f.get("dataType") or "",
+                                                  [printed_dt]))
+            # M25: the LEN column, recorded VERBATIM. Up to v2.6 the cell is a maximum length,
+            # and v2.6 section 2.5.3.2 states "The length of a field is normative"; from v2.7
+            # it prints a normative range ("2..2", "32=" truncation-allowed, "250#"
+            # truncation-not-allowed) and a separate conformance length. A schema's `length`
+            # must be what the version's DEFINING attribute table prints (V23-C13), not any
+            # chapter's variant print.
             for f in schema_fields:
-                printed = spec_lens.get((seg, f["index"]))
                 have = (f.get("length") or "").strip()
-                if not printed or have in printed or (version, seg, f["index"]) in LENGTH_WHITELIST:
+                key = f"{version}/{seg}-{f['index']}"
+                if key in LENGTH_REPAIRS:
+                    printed, why = {LENGTH_REPAIRS[key]}, None
+                else:
+                    printed, why = read_slot(spec_def, spec_lens, seg, f["index"], "M25", version)
+                if why:
+                    printed = resolve_unreadable("M25", version, seg, f["index"], why, have, unreadable)
+                    if printed is None:
+                        continue
+                if have in printed or (version, seg, f["index"]) in LENGTH_WHITELIST:
                     continue
-                if record_lengths:
-                    wanted_lengths.setdefault(path, {})[f["index"]] = sorted(printed, key=lambda x: (len(x), x))[0]
+                value = length_to_write(printed) if record_lengths else None
+                if value is not None:
+                    wanted_lengths.setdefault(path, {})[f["index"]] = value
                     continue
                 len_findings.append((version, seg, f["index"], have, sorted(printed)))
             # M22: the RP/# column, which drives cardinalityExceeded. The extractor renders a
-            # printed Y, or a bounded count such as "2" or "Y/3", as "*" and a blank as "1";
-            # the schema model has only those two values, so a bounded repeat is "*".
+            # printed Y as "*", a blank as "1", and a printed bound ("Y/3", "3") as the bound
+            # itself; the schema carries the same token (P6-4). A slot whose printed token is
+            # unambiguous is written by --write-repeatability. Compared against the DEFINING
+            # table's cell (as M19/M21 do), not the union of every chapter's print: a
+            # constrained copy that misreads a cell no longer hides a bound (P6-4 fix 1).
             for f in schema_fields:
-                printed = spec_reps.get((seg, f["index"]))
+                key = f"{version}/{seg}-{f['index']}"
                 have = (f.get("repeatability") or "").strip()
-                if not printed or have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
+                if key in REPEATABILITY_REPAIRS:
+                    printed, why = {REPEATABILITY_REPAIRS[key]}, None
+                else:
+                    printed, why = read_slot(spec_def, spec_reps, seg, f["index"], "M22", version)
+                if why:
+                    printed = resolve_unreadable("M22", version, seg, f["index"], why, have, unreadable)
+                    if printed is None:
+                        continue
+                if have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
+                    continue
+                if record_repeatability and len(printed) == 1:
+                    wanted_reps.setdefault(path, {})[f["index"]] = next(iter(printed))
                     continue
                 rp_findings.append((version, seg, f["index"], have, sorted(printed)))
             # M20: the NAME column. See NAME_WHITELIST for the shape rule.
@@ -470,20 +1298,28 @@ def depth(write=False, correct_names=False, record_lengths=False):
                     wanted_names.setdefault(path, {})[f["index"]] = ranked[0]
                     continue
                 name_findings.append((version, seg, f["index"], have, sorted(printed)[:2]))
-            # M19: the OPT column had no predicate either. A schema's optionality must be one
-            # the version's own attribute table prints for that slot (union across chapters:
-            # OBR is printed in chapters 4 and 7). An R the spec prints as O is a false
-            # "required field missing"; a B it prints as O is a false deprecation warning.
-            # Anything involving C is left to the conditional-completeness register, which
-            # governs when a printed C is modelled as C-with-predicate, bare C, or O.
+            # M19: the OPT column. A schema's optionality must be the code the version's
+            # DEFINING attribute table prints for that slot. An R the spec prints as O is a
+            # false "required field missing"; a B it prints as O is a false deprecation
+            # warning. C is compared like every other code (X-C10 / V26-C07): the
+            # conditional-completeness register decides how a printed C is modelled, but a
+            # C / non-C disagreement with the print stays a finding until the field's own
+            # `optionalityCitation` or an OPTIONALITY_WHITELIST entry cites the spec; a
+            # citation on a slot that matches the print is a finding too (P4-30).
             for f in schema_fields:
-                printed = spec_opts.get((seg, f["index"]))
                 have = (f.get("optionality") or "").strip()
-                if not printed or have in printed or have == "C" or "C" in printed:
+                printed, why = read_slot(spec_def, spec_opts, seg, f["index"], "M19", version)
+                if why:
+                    printed = resolve_unreadable("M19", version, seg, f["index"], why, have, unreadable)
+                    if printed is None:
+                        continue
+                problem = optionality_citation_finding(
+                    have, printed, f.get("optionalityCitation"),
+                    (version, seg, f["index"]) in OPTIONALITY_WHITELIST)
+                if problem is None:
                     continue
-                if (version, seg, f["index"]) in OPTIONALITY_WHITELIST:
-                    continue
-                optionality_findings.append((version, seg, f["index"], have, sorted(printed)))
+                label = have if problem == "uncited" else f"{have} (optionalityCitation on a printed match)"
+                optionality_findings.append((version, seg, f["index"], label, sorted(printed)))
             # M9-A: the schema's `tables` must equal the version's own TBL#
             # column, both directions (a stale binding is as wrong as a
             # missing one).
@@ -509,7 +1345,11 @@ def depth(write=False, correct_names=False, record_lengths=False):
         write_lengths(path, dict(wanted))
     if wanted_lengths:
         print(f"  lengths written in {len(wanted_lengths)} schemas", file=sys.stderr)
-    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings
+    for path, wanted in wanted_reps.items():
+        write_repeatability(path, dict(wanted))
+    if wanted_reps:
+        print(f"  repeatability written in {len(wanted_reps)} schemas", file=sys.stderr)
+    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings, unreadable
 
 
 def extracted_tables(version):
@@ -640,6 +1480,52 @@ NO_TABLE_SENTINEL = "9999"
 COMPONENT_OPT = {"R", "O", "C", "B", "W", "X", "RE"}
 
 
+PAGE_REFERENCE = re.compile(r"\d+-\d+$")
+MULTIPLE_SPACES = re.compile(r"   +")
+
+
+def datatype_name_findings(name):
+    """P5-9: a datatype `name` is the body heading text, never the table-of-contents entry it
+    was extracted alongside (v2.3.1's contents lines carry no dot leaders, so a regression could
+    recapture one). Two tells of contents residue: a trailing page reference ("address  2-12")
+    and the run of padding spaces before it ("timing quantity      2-52")."""
+    out = []
+    if PAGE_REFERENCE.search(name or ""):
+        out.append(f"name {name!r} ends in what looks like a page reference — contents-line residue?")
+    if MULTIPLE_SPACES.search(name or ""):
+        out.append(f"name {name!r} has a run of 3+ spaces — contents-line residue?")
+    return out
+
+
+def field_grammar_findings(stem, version, doc):
+    """P5 — shape of one field-local composite file, `Resources/datatypes/<version>/fields/<stem>.json`:
+    field / version / source match the path, the key is SEG-N, components are contiguous from 1,
+    carry no optionality (prose prints none) and a plausible datatype, and every table resolves
+    under Resources/tables/<version>."""
+    out = []
+    if doc.get("field") != stem or doc.get("version") != version[1:] or doc.get("source") != "prose-field":
+        out.append("field / version / source do not match the path")
+    if not re.fullmatch(r"[A-Z][A-Z0-9]{2}-[1-9]\d*", stem):
+        out.append(f"{stem!r} is not SEG-N")
+    comps = doc.get("components", [])
+    if not comps or [c.get("index") for c in comps] != list(range(1, len(comps) + 1)):
+        out.append(f"component indexes are not 1..n: {[c.get('index') for c in comps]}")
+    for c in comps:
+        where = f"{stem}.{c.get('index')}"
+        if c.get("optionality") != "":
+            out.append(f"{where}: a prose-derived component cannot carry an optionality")
+        if c.get("dataType") and not re.fullmatch(r"[A-Z][A-Z0-9]{1,3}", c["dataType"]):
+            out.append(f"{where}: implausible datatype {c['dataType']!r}")
+        if not c.get("name") or len(c["name"]) > 70:
+            out.append(f"{where}: empty or over-long name — prose bleed?")
+        for number in c.get("tables", []):
+            if not re.fullmatch(r"\d{4}", number):
+                out.append(f"{where}: malformed table number {number!r}")
+            elif not os.path.exists(f"{TABLES}/{version}/{number}.json"):
+                out.append(f"{where}: table {number} has no file under Resources/tables/{version}")
+    return out
+
+
 def datatypes(depth=False):
     """M10-A — audit Resources/datatypes/ (the Chapter 2A component tables).
 
@@ -660,6 +1546,7 @@ def datatypes(depth=False):
         by_version[version][stem] = doc
         if doc.get("dataType") != stem or doc.get("version") != version[1:]:
             findings.append((rel, "dataType / version do not match the path"))
+        findings += [(rel, why) for why in datatype_name_findings(doc.get("name"))]
         comps = doc.get("components", [])
         if [c.get("index") for c in comps] != list(range(1, len(comps) + 1)) or not comps:
             findings.append((rel, f"component indexes are not 1..n: {[c.get('index') for c in comps]}"))
@@ -667,8 +1554,10 @@ def datatypes(depth=False):
         # no optionality, and a heading can print no datatype code (XTN.1), so those two
         # checks apply to the printed component tables only. A trailing component with no
         # datatype would be a note the extractor failed to drop.
-        prose = doc.get("source") == "prose"
-        if prose and comps and not comps[-1].get("dataType"):
+        # P5: "prose-line" files come from a printed Components / Format line; every entry is a
+        # printed component by construction, and TS prints no datatype code at all.
+        prose = doc.get("source") in ("prose", "prose-line")
+        if doc.get("source") == "prose" and comps and not comps[-1].get("dataType"):
             findings.append((rel, f"{stem}: trailing component without a datatype — a note, not a component?"))
         for c in comps:
             where = f"{stem}.{c.get('index')}"
@@ -688,6 +1577,19 @@ def datatypes(depth=False):
                     findings.append((rel, f"{where}: malformed table number {number!r}"))
                 elif number != NO_TABLE_SENTINEL and not os.path.exists(f"{TABLES}/{version}/{number}.json"):
                     findings.append((rel, f"{where}: table {number} has no file under Resources/tables/{version}"))
+    # P5: field-local composites, Resources/datatypes/v<X>/fields/<SEG>-<N>.json.
+    fields_by_version = collections.defaultdict(dict)
+    for path in sorted(glob.glob(f"{DATATYPES}/v*/fields/*.json")):
+        files += 1
+        rel, stem = os.path.relpath(path, REPO), os.path.basename(path)[:-5]
+        version = os.path.basename(os.path.dirname(os.path.dirname(path)))
+        try:
+            doc = json.load(open(path))
+        except ValueError as exc:
+            findings.append((rel, f"malformed JSON: {exc}"))
+            continue
+        fields_by_version[version][stem] = doc
+        findings += [(rel, why) for why in field_grammar_findings(stem, version, doc)]
     if depth:
         import importlib.util
         spec = importlib.util.spec_from_file_location("dtx", os.path.join(REPO, "scripts/extract-datatype-components.py"))
@@ -717,6 +1619,19 @@ def datatypes(depth=False):
                         for c in committed.get(code, {}).get("components", [])]
                 if got != have:
                     findings.append((f"Resources/datatypes/{version}/{code}.json", "DRIFT against a fresh extraction"))
+        # P5: the field-local composites are re-extracted too; the extractor is their only author.
+        spec = importlib.util.spec_from_file_location("dfc", os.path.join(REPO, "scripts/extract-field-components.py"))
+        dfc = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(dfc)
+        for version in sorted(f"v{v}" for v in dtp.SOURCES):
+            if not any(glob.glob(os.path.join(STANDARDS, p)) for p in CHAPTER_GLOBS[version]):
+                findings.append((f"Resources/datatypes/{version}/fields", "cannot re-extract (missing PDF)"))
+                continue
+            fresh = {key: dfc.document(t) for key, t in dfc.extract(version[1:])[0].items()}
+            committed = fields_by_version.get(version, {})
+            for key in sorted(set(fresh) | set(committed)):
+                if fresh.get(key) != committed.get(key):
+                    findings.append((f"Resources/datatypes/{version}/fields/{key}.json", "DRIFT against a fresh field extraction"))
     return files, findings
 
 
@@ -781,6 +1696,7 @@ EXAMPLE_SOURCES = {
     "v2.4":   ("HL7_v24_PDF/CH02.PDF", r"2\.9"),
     "v2.5.1": ("HL7_v251_PDF/V251_CH02A.pdf", r"2\.A"),
     "v2.6":   ("HL7_v26_PDF/V26_CH02A_DataTypes.pdf", r"2\.A"),
+    "v2.7.1": ("HL7_V271_PDF/PDF/V271_CH02A_DataTypes.pdf", r"2\.A"),
     "v2.8.2": ("HL7_V2.8.2_PDF/PDF/V282_CH02A_DataTypes.pdf", r"2\.?A"),
 }
 EXPECTED_EXAMPLE_REJECTIONS = {
@@ -791,6 +1707,10 @@ EXPECTED_EXAMPLE_REJECTIONS = {
     # that one component; they are not complete XTN values. v2.8.2 prints XTN.3 as R.
     ("v2.8.2", "XTN", "^^^^^^^^Do not use after 5PM", "XTN.3"),
     ("v2.8.2", "XTN", "^^^^^^^^^^^1-800-Dentist", "XTN.3"),
+    # v2.7.1 prints the same two fragments (Chapter 2A 2.A.90.9 and 2.A.90.12, p107) and
+    # XTN.3 as R (component table, 2.A.90, p104).
+    ("v2.7.1", "XTN", "^^^^^^^^Do not use after 5PM", "XTN.3"),
+    ("v2.7.1", "XTN", "^^^^^^^^^^^1-800-Dentist", "XTN.3"),
 }
 _EXAMPLE_FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|\.{6,}")
 
@@ -828,13 +1748,23 @@ def _condition_holds(expr, populated, repeated=False):
         return False
 
 
+class _ClosedTable:
+    """Membership in a closed table: a printed code, or a full match of a pattern row."""
+    def __init__(self, doc):
+        self.codes = {e["code"] for e in doc["entries"]}
+        self.patterns = [re.compile(p["regex"]) for p in doc.get("patterns", [])]
+
+    def __contains__(self, value):
+        return value in self.codes or any(p.fullmatch(value) for p in self.patterns)
+
+
 def _closed_codes(version, number):
     path = f"{TABLES}/{version}/{number}.json"
     if not os.path.exists(path):
         return None
     doc = json.load(open(path))
     if doc["kind"] == "HL7" and not doc["permitsLocalExtensions"] and doc["entries"]:
-        return {e["code"] for e in doc["entries"]}
+        return _ClosedTable(doc)
     return None
 
 
@@ -850,7 +1780,7 @@ def spec_examples():
             findings.append((version, f"cannot read {pdf}"))
             continue
         grammar = {os.path.basename(p)[:-5]: json.load(open(p)) for p in glob.glob(f"{DATATYPES}/{version}/*.json")}
-        text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", path, "-"], capture_output=True, text=True).stdout
+        text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", path, "-"], capture_output=True, text=True, timeout=30).stdout
         current, inside, seen = None, False, set()
         for line in text.split("\n"):
             if _EXAMPLE_FURNITURE.search(line):
@@ -916,10 +1846,14 @@ def main():
                     help="also audit the M12 AU VMR implementation table (add --depth to re-extract)")
     ap.add_argument("--write-lengths", action="store_true",
                     help="with --depth: write the printed LEN into the schemas as `length` (M25 sweep)")
+    ap.add_argument("--write-repeatability", action="store_true",
+                    help="with --depth: write the printed RP/# token (1, *, or a bound) into the schemas (P6-4)")
     ap.add_argument("--write-names", action="store_true",
                     help="with --depth: replace names the NAME predicate rejects with the shortest printed one (M20)")
     ap.add_argument("--write-tables", action="store_true",
                     help="with --depth: write the spec TBL# bindings into the schemas (M9-A sweep)")
+    ap.add_argument("--only-version", action="append", choices=sorted(CHAPTER_GLOBS),
+                    help="with --depth: audit only this version (repeatable); OPT and LEN findings print uncapped")
     args = ap.parse_args()
 
     bad = integrity()
@@ -930,8 +1864,10 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings, len_findings = depth(
-            write=args.write_tables, correct_names=args.write_names, record_lengths=args.write_lengths)
+        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings, len_findings, unreadable = depth(
+            write=args.write_tables, correct_names=args.write_names, record_lengths=args.write_lengths,
+            record_repeatability=args.write_repeatability, versions=args.only_version)
+        cap = None if args.only_version else 60
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
         for v, seg, s, e in gaps:
@@ -955,7 +1891,7 @@ def main():
         if len(tbl_findings) > 60:
             print(f"   ... and {len(tbl_findings) - 60} more")
         print(f"\n== optionality (M19): {len(opt_findings)} findings")
-        for v, seg, idx, got, want in opt_findings[:60]:
+        for v, seg, idx, got, want in opt_findings[:cap]:
             print(f"   OPT      {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
         print(f"\n== name (M20): {len(name_findings)} findings")
         for v, seg, idx, got, want in name_findings[:80]:
@@ -963,10 +1899,14 @@ def main():
         print(f"\n== repeatability (M22): {len(rp_findings)} findings")
         for v, seg, idx, got, want in rp_findings[:60]:
             print(f"   RP       {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
+        print(f"\n== unreadable prints (M19/M22/M25): {len(unreadable)} findings "
+              f"({len(UNREADABLE_WHITELIST)} cited regions)")
+        for audit_id, v, seg, idx, got, why in unreadable[:cap]:
+            print(f"   UNREAD   {audit_id} {v} {seg}-{idx}: schema {got!r}, {why}")
         print(f"\n== length (M25): {len(len_findings)} findings")
-        for v, seg, idx, got, want in len_findings[:60]:
+        for v, seg, idx, got, want in len_findings[:cap]:
             print(f"   LEN      {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
-        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings or rp_findings or len_findings:
+        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings or rp_findings or len_findings or unreadable:
             rc = 1
 
     if args.tables:

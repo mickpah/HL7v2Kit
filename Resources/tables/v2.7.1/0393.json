@@ -1,0 +1,18 @@
+{
+  "table": "0393",
+  "version": "2.7.1",
+  "name": "Match Algorithms",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0393 - Match Algorithms",
+  "entries": [
+    {
+      "code": "LINKSOFT_2.01",
+      "description": "Proprietary algorithm for LinkSoft v2.01"
+    },
+    {
+      "code": "MATCHWARE_1.2",
+      "description": "Proprietary algorithm for MatchWare v1.2"
+    }
+  ]
+}

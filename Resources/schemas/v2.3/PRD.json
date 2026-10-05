@@ -8,7 +8,7 @@
     { "index": 3, "swiftName": "providerAddress", "name": "Provider Address", "dataType": "XAD", "length": "60", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "providerLocation", "name": "Provider Location", "dataType": "PL", "length": "60", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "providerCommunicationInformation", "name": "Provider Communication Information", "dataType": "XTN", "length": "100", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "1", "tables": ["0185"] },
+    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "1", "tables": ["0185"], "tableOpen": true, "tableOpenCitation": "v2.3 Chapter 11 section 11.5.3.6 PRD-6: \"Refer to user-defined table 0185 - Preferred method of contact for suggested values.\"" },
     { "index": 7, "swiftName": "providerIdentifiers", "name": "Provider Identifiers", "dataType": "CM", "length": "100", "optionality": "O", "repeatability": "*" },
     { "index": 8, "swiftName": "effectiveStartDateOfRole", "name": "Effective Start Date of Role", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "effectiveEndDateOfRole", "name": "Effective End Date of Role", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" }

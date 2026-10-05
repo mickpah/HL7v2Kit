@@ -1,0 +1,24 @@
+{
+  "field": "IN3-5",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Penalty",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Penalty type",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0148"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Penalty amount",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

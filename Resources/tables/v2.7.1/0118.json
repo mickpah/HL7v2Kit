@@ -1,0 +1,9 @@
+{
+  "table": "0118",
+  "version": "2.7.1",
+  "name": "Major Diagnostic Category",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.25 (p29), External Table 0118 - Major Diagnostic Category; Chapter 8 sec 8.13.2.2 DMI-2 (p97) 'Refer to External Table 0118'",
+  "entries": []
+}

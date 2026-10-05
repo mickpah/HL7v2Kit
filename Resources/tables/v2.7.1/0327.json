@@ -1,0 +1,9 @@
+{
+  "table": "0327",
+  "version": "2.7.1",
+  "name": "Job Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0327 - Job Code",
+  "entries": []
+}

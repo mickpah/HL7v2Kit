@@ -1,0 +1,26 @@
+{
+  "table": "0516",
+  "version": "2.7.1",
+  "name": "Error Severity",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0516 - Error Severity",
+  "entries": [
+    {
+      "code": "E",
+      "description": "Error"
+    },
+    {
+      "code": "F",
+      "description": "Fatal Error"
+    },
+    {
+      "code": "I",
+      "description": "Information"
+    },
+    {
+      "code": "W",
+      "description": "Warning"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "structure": "MFN_M16",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 8, section 8.12.2 MFN/MFK - Inventory Item Master File Message - Enhanced (Event M16), p 95.",
+  "triggers": ["MFN^M16"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MATERIAL_ITEM_RECORD", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "ITM", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "STERILIZATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "STZ", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "PURCHASING_VENDOR", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "VND", "min": 1, "max": 1 },
+        { "group": "PACKAGING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "PKG", "min": 1, "max": 1 },
+          { "segment": "PCE", "min": 0, "max": null }
+        ]}
+      ]},
+      { "group": "MATERIAL_LOCATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "IVT", "min": 1, "max": 1 },
+        { "segment": "ILT", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

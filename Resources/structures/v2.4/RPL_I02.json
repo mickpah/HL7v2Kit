@@ -1,0 +1,17 @@
+{
+  "structure": "RPL_I02",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 11, section 11.3.2 RQI/RPL - request/receipt of patient selection display list (event I02), p 11-10. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RPL_I02.xsd, RPL_I02.PROVIDER.CONTENT).",
+  "triggers": ["RPL^I02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "NTE", "min": 0, "max": null },
+    { "segment": "DSP", "min": 0, "max": null },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

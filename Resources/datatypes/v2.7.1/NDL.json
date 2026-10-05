@@ -1,0 +1,101 @@
+{
+  "dataType": "NDL",
+  "version": "2.7.1",
+  "name": "Name with Date and Location",
+  "components": [
+    {
+      "index": 1,
+      "name": "Name",
+      "dataType": "CNN",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Start Date/time",
+      "dataType": "DTM",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "End Date/time",
+      "dataType": "DTM",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Point of Care",
+      "dataType": "IS",
+      "optionality": "O",
+      "length": "20=",
+      "tables": [
+        "0302"
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Room",
+      "dataType": "IS",
+      "optionality": "O",
+      "length": "20=",
+      "tables": [
+        "0303"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Bed",
+      "dataType": "IS",
+      "optionality": "O",
+      "length": "20=",
+      "tables": [
+        "0304"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 8,
+      "name": "Location Status",
+      "dataType": "IS",
+      "optionality": "O",
+      "length": "20=",
+      "tables": [
+        "0306"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Patient Location Type",
+      "dataType": "IS",
+      "optionality": "O",
+      "length": "20=",
+      "tables": [
+        "0305"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Building",
+      "dataType": "IS",
+      "optionality": "O",
+      "length": "20=",
+      "tables": [
+        "0307"
+      ]
+    },
+    {
+      "index": 11,
+      "name": "Floor",
+      "dataType": "IS",
+      "optionality": "O",
+      "length": "20=",
+      "tables": [
+        "0308"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "field": "APR-2",
+  "dataType": "SVC",
+  "version": "2.3",
+  "name": "Resource selection criteria",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Parameter class",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0294"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Parameter value",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

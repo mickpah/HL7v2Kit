@@ -1,0 +1,22 @@
+{
+  "table": "0494",
+  "version": "2.7.1",
+  "name": "Specimen Child Role",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0494 - Specimen Child Role",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Aliquot"
+    },
+    {
+      "code": "C",
+      "description": "Component"
+    },
+    {
+      "code": "M",
+      "description": "Modified from original specimen"
+    }
+  ]
+}

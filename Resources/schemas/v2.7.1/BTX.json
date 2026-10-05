@@ -1,0 +1,26 @@
+{
+  "segmentID": "BTX",
+  "version": "2.7.1",
+  "description": "BTX",
+  "fields": [
+    { "index": 1, "swiftName": "setIdBtx", "name": "Set ID – BTX", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "bcDonationId", "name": "BC Donation ID", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "BTX-3 populated", "prohibitedWhen": "BTX-5 populated", "prohibitedSeverity": "warning" },
+    { "index": 3, "swiftName": "bcComponent", "name": "BC Component", "dataType": "CNE", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "BTX-2 populated", "prohibitedWhen": "BTX-5 populated", "prohibitedSeverity": "warning" },
+    { "index": 4, "swiftName": "bcBloodGroup", "name": "BC Blood Group", "dataType": "CNE", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "BTX-2 populated OR BTX-3 populated" },
+    { "index": 5, "swiftName": "cpCommercialProduct", "name": "CP Commercial Product", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0512"], "condition": "BTX-6 populated OR BTX-7 populated", "prohibitedWhen": "BTX-2 populated OR BTX-3 populated", "prohibitedSeverity": "warning" },
+    { "index": 6, "swiftName": "cpManufacturer", "name": "CP Manufacturer", "dataType": "XON", "optionality": "C", "repeatability": "1", "condition": "BTX-5 populated OR BTX-7 populated", "prohibitedWhen": "BTX-2 populated OR BTX-3 populated", "prohibitedSeverity": "warning" },
+    { "index": 7, "swiftName": "cpLotNumber", "name": "CP Lot Number", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "BTX-5 populated OR BTX-6 populated", "prohibitedWhen": "BTX-2 populated OR BTX-3 populated", "prohibitedSeverity": "warning" },
+    { "index": 8, "swiftName": "bpQuantity", "name": "BP Quantity", "dataType": "NM", "length": "5=", "optionality": "R", "repeatability": "1" },
+    { "index": 9, "swiftName": "bpAmount", "name": "BP Amount", "dataType": "NM", "length": "5=", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "bpUnits", "name": "BP Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 11, "swiftName": "bpTransfusionDispositionStatus", "name": "BP Transfusion/Disposition Status", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0513"] },
+    { "index": 12, "swiftName": "bpMessageStatus", "name": "BP Message Status", "dataType": "ID", "table": "0511", "length": "1..1", "optionality": "R", "repeatability": "1", "tables": ["0511"] },
+    { "index": 13, "swiftName": "bpDateTimeOfStatus", "name": "BP Date/Time of Status", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 14, "swiftName": "bpTransfusionAdministrator", "name": "BP Transfusion Administrator", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "bpTransfusionVerifier", "name": "BP Transfusion Verifier", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "bpTransfusionStartDateTimeOfStatus", "name": "BP Transfusion Start Date/Time of Status", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "bpTransfusionEndDateTimeOfStatus", "name": "BP Transfusion End Date/Time of Status", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "bpAdverseReactionType", "name": "BP Adverse Reaction Type", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0514"] },
+    { "index": 19, "swiftName": "bpTransfusionInterruptedReason", "name": "BP Transfusion Interrupted Reason", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0515"] }
+  ]
+}

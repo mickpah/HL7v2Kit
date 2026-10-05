@@ -1,0 +1,114 @@
+{
+  "table": "0259",
+  "version": "2.7.1",
+  "name": "Modality",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0259 - Modality",
+  "entries": [
+    {
+      "code": "AS",
+      "description": "Angioscopy"
+    },
+    {
+      "code": "BS",
+      "description": "Biomagnetic imaging"
+    },
+    {
+      "code": "CD",
+      "description": "Color flow Doppler"
+    },
+    {
+      "code": "CP",
+      "description": "Colposcopy"
+    },
+    {
+      "code": "CR",
+      "description": "Computed radiography"
+    },
+    {
+      "code": "CS",
+      "description": "Cystoscopy"
+    },
+    {
+      "code": "CT",
+      "description": "Computed tomography"
+    },
+    {
+      "code": "DD",
+      "description": "Duplex Doppler"
+    },
+    {
+      "code": "DG",
+      "description": "Diapanography"
+    },
+    {
+      "code": "DM",
+      "description": "Digital microscopy"
+    },
+    {
+      "code": "EC",
+      "description": "Echocardiography"
+    },
+    {
+      "code": "ES",
+      "description": "Endoscopy"
+    },
+    {
+      "code": "FA",
+      "description": "Fluorescein angiography"
+    },
+    {
+      "code": "FS",
+      "description": "Fundoscopy"
+    },
+    {
+      "code": "LP",
+      "description": "Laparoscopy"
+    },
+    {
+      "code": "LS",
+      "description": "Laser surface scan"
+    },
+    {
+      "code": "MA",
+      "description": "Magnetic resonance angiography"
+    },
+    {
+      "code": "MS",
+      "description": "Magnetic resonance spectroscopy"
+    },
+    {
+      "code": "NM",
+      "description": "Nuclear Medicine (radioisotope study)"
+    },
+    {
+      "code": "OT",
+      "description": "Other"
+    },
+    {
+      "code": "PT",
+      "description": "Positron emission tomography (PET)"
+    },
+    {
+      "code": "RF",
+      "description": "Radio fluoroscopy"
+    },
+    {
+      "code": "ST",
+      "description": "Single photon emission computed tomography"
+    },
+    {
+      "code": "TG",
+      "description": "Thermography"
+    },
+    {
+      "code": "US",
+      "description": "Ultrasound"
+    },
+    {
+      "code": "XA",
+      "description": "X-ray Angiography"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "table": "0093",
+  "version": "2.7.1",
+  "name": "Release Information",
+  "kind": "User",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Appendix A (p49), User-defined Table 0093 - Release Information: the ellipsis row reads 'user-defined codes'",
+  "entries": [
+    {
+      "code": "N",
+      "description": "No"
+    },
+    {
+      "code": "Y",
+      "description": "Yes"
+    }
+  ]
+}

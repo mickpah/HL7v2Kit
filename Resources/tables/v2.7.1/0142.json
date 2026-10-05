@@ -1,0 +1,22 @@
+{
+  "table": "0142",
+  "version": "2.7.1",
+  "name": "Military Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0142 - Military Status",
+  "entries": [
+    {
+      "code": "ACT",
+      "description": "Active duty"
+    },
+    {
+      "code": "DEC",
+      "description": "Deceased"
+    },
+    {
+      "code": "RET",
+      "description": "Retired"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "structure": "RDR_RDR",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.8.19 RDR - pharmacy/treatment dispense information (event RDR), pp 4-106 to 4-107. Structure ID RDR_RDR synthesised as CODE_EVT from the message code RDR and RDR, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events RDR^RDR read from the section title 4.8.19 'RDR - pharmacy/treatment dispense information (event RDR)'. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDR_RDR), PATIENT (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDR_RDR), ORDER (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDR_RDR), ENCODING (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDR_RDR) and DISPENSE (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.DISPENSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDR_RDR).",
+  "triggers": ["RDR^RDR"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "group": "DEFINITION", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "QRD", "min": 1, "max": 1 },
+      { "segment": "QRF", "min": 0, "max": 1 },
+      { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "ENCODING", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+          { "segment": "RXE", "min": 1, "max": 1 },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "segment": "RXC", "min": 0, "max": null }
+        ]},
+        { "group": "DISPENSE", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+          { "segment": "RXD", "min": 1, "max": 1 },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "segment": "RXC", "min": 0, "max": null }
+        ]}
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

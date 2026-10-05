@@ -1,0 +1,29 @@
+{
+  "segmentID": "GOL",
+  "version": "2.7.1",
+  "description": "GOL",
+  "fields": [
+    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "length": "2..2", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 2, "swiftName": "actionDateTime", "name": "Action Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "goalId", "name": "Goal ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "goalInstanceId", "name": "Goal Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "episodeOfCareId", "name": "Episode of Care ID", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "goalListPriority", "name": "Goal List Priority", "dataType": "NM", "length": "3=", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "goalEstablishedDateTime", "name": "Goal Established Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "expectedGoalAchieveDateTime", "name": "Expected Goal Achieve Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "goalClassification", "name": "Goal Classification", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "goalManagementDiscipline", "name": "Goal Management Discipline", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "currentGoalReviewStatus", "name": "Current Goal Review Status", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "currentGoalReviewDateTime", "name": "Current Goal Review Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "nextGoalReviewDateTime", "name": "Next Goal Review Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "previousGoalReviewDateTime", "name": "Previous Goal Review Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "goalReviewInterval", "name": "Goal Review Interval", "dataType": "", "optionality": "W", "repeatability": "1" },
+    { "index": 16, "swiftName": "goalEvaluation", "name": "Goal Evaluation", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "goalEvaluationComment", "name": "Goal Evaluation Comment", "dataType": "ST", "length": "300=", "optionality": "O", "repeatability": "*" },
+    { "index": 18, "swiftName": "goalLifeCycleStatus", "name": "Goal Life Cycle Status", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 19, "swiftName": "goalLifeCycleStatusDateTime", "name": "Goal Life Cycle Status Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "goalTargetType", "name": "Goal Target Type", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 21, "swiftName": "goalTargetName", "name": "Goal Target Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
+    { "index": 22, "swiftName": "moodCode", "name": "Mood Code", "dataType": "CNE", "optionality": "C", "repeatability": "1", "tables": ["0725"] }
+  ]
+}

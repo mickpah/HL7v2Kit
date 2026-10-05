@@ -1,0 +1,22 @@
+{
+  "structure": "NMR_N01",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 14, section 14.3.1 NMQ - Application Management Query Message (Event N01), p 14-2.",
+  "triggers": ["NMR^N01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "QRD", "min": 0, "max": 1 },
+    { "group": "CLOCK_AND_STATS_WITH_NOTES_ALT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "NCK", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "NST", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "NSC", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]}
+  ]
+}

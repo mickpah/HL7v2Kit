@@ -1,13 +1,10 @@
 // XCN.swift
 // Extended Composite ID Number and Name for Persons (HL7 v2.5.1 §2.A.85).
 //
-// Value-type view over a Field that exposes named accessors for the
-// six commonly-populated XCN components. The full XCN composite has
-// 23 components; per the v0.3-C3 plan only the first six (ID + name
-// parts) are exposed via named accessors. Callers needing any of XCN-7
-// through XCN-23 can drill in via ``XCN/field``. Round-trip byte-identity
-// is preserved because the struct doesn't own the data — the segment
-// still owns the underlying `Field`. v0.3-C3.
+// Value-type view over a Field. XCN-1..6 are hand-written below; XCN-7..25
+// are generated into Composite/Generated/XCN+Components.swift from the
+// datatype component tables (ADR-020). The struct does not own the data,
+// so round-trip byte-identity is preserved.
 
 /// Extended Composite ID Number and Name for Persons (XCN) composite.
 ///
@@ -24,8 +21,7 @@
 /// consulting doctor) use ``XCN/field`` to walk the rest, or wrap an
 /// individual ``Repetition`` via ``XCN/init(repetition:)``.
 ///
-/// XCN component layout (HL7 v2.5.1; first six exposed via named
-/// accessors):
+/// XCN component layout (hand-written accessors; XCN-7..25 are generated):
 /// 1. ID Number (ST) → ``XCN/idNumber``. Provider / staff identifier
 ///    (e.g. `"DR123"`).
 /// 2. Family Name (FN) → ``XCN/familyName``.
@@ -37,12 +33,8 @@
 ///    `prefix` collides with `Sequence.prefix(_:)` on call sites that
 ///    chain off a string view.
 ///
-/// XCN-7 through XCN-23 (degree, source table, assigning authority,
-/// name type code, identifier check digit, check digit scheme, identifier
-/// type code, assigning facility, name representation code, name
-/// context, name validity range, name assembly order, effective date,
-/// expiration date, professional suffix, assigning jurisdiction, assigning
-/// agency or department) remain accessible via ``XCN/field``.
+/// XCN-7 through XCN-25 are generated accessors (``XCN/degree`` through
+/// ``XCN/securityCheckScheme``); see `XCN+Components.swift`.
 public struct XCN: CompositeView {
     /// The components HL7 v2.5.1 PRINTS as required (`R`) in the XCN component
     /// table (none: every XCN component is optional there). Informational, for the canonical
@@ -52,8 +44,8 @@ public struct XCN: CompositeView {
     public static let requiredComponents: [RequiredComponent] = []
 
     /// The underlying ``Field``. Use this when you need access to
-    /// repetitions beyond the first, or to XCN components beyond
-    /// XCN-6 (degree, source table, assigning authority, etc.).
+    /// repetitions beyond the first. Every component has a named accessor;
+    /// use ``component(_:as:)`` for a sub-composite's subcomponents.
     public let field: Field
 
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.

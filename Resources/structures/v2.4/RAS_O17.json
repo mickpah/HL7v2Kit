@@ -1,0 +1,48 @@
+{
+  "structure": "RAS_O17",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.13.11 RAS - pharmacy/treatment administration message (event O17), p 4-85. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml v2.4/RAS_O17.xsd, RAS_O17.PATIENT.CONTENT), PATIENT_VISIT (HL7-xml v2.4/RAS_O17.xsd, RAS_O17.PATIENT_VISIT.CONTENT), ORDER (HL7-xml v2.4/RAS_O17.xsd, RAS_O17.ORDER.CONTENT), ORDER_DETAIL (HL7-xml v2.4/RAS_O17.xsd, RAS_O17.ORDER_DETAIL.CONTENT), ORDER_DETAIL_SUPPLEMENT (HL7-xml v2.4/RAS_O17.xsd, RAS_O17.ORDER_DETAIL_SUPPLEMENT.CONTENT), COMPONENTS (HL7-xml v2.4/RAS_O17.xsd, RAS_O17.COMPONENTS.CONTENT), ENCODING (HL7-xml v2.4/RAS_O17.xsd, RAS_O17.ENCODING.CONTENT), ADMINISTRATION (overrides.json: HL7 v2.4 Chapter 4, section 4.13.11 RAS - pharmacy/treatment administration message (event O17), p 4-85: the unnamed group with first segment RXA at [ORDER] (v2.4 prints no group names); named ADMINISTRATION from HL7-xml v2.5.1/RAS_O17.xsd, RAS_O17.ADMINISTRATION.CONTENT, the group with the same parent path, first segment and member set; HL7-xml v2.4/RAS_O17.xsd lists RXA, RXR and OBSERVATION ungrouped under ORDER (a bundle-differs row) (P8b-13 ruling 3).) and OBSERVATION (overrides.json: HL7 v2.4 Chapter 4, section 4.13.11 RAS - pharmacy/treatment administration message (event O17), p 4-85: the unnamed group with first segment OBX at [ORDER, ADMINISTRATION] (v2.4 prints no group names); named OBSERVATION, as HL7-xml v2.4/RAS_O17.xsd, RAS_O17.OBSERVATION.CONTENT names the group with the same first segment and member set (under ORDER) and HL7-xml v2.5.1/RAS_O17.xsd, RAS_O17.OBSERVATION.CONTENT names it under ORDER/ADMINISTRATION (P8b-13 ruling 3).).",
+  "triggers": ["RAS^O17"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "ORDER_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "group": "ORDER_DETAIL_SUPPLEMENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "NTE", "min": 1, "max": null },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "group": "COMPONENTS", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "RXC", "min": 1, "max": null },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]}
+      ]},
+      { "group": "ENCODING", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "RXE", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]},
+      { "group": "ADMINISTRATION", "nameSource": "override", "min": 1, "max": null, "elements": [
+        { "segment": "RXA", "min": 1, "max": null },
+        { "segment": "RXR", "min": 1, "max": 1 },
+        { "group": "OBSERVATION", "nameSource": "override", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]},
+      { "segment": "CTI", "min": 0, "max": null }
+    ]}
+  ]
+}

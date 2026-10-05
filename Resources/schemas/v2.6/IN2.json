@@ -74,6 +74,6 @@
     { "index": 69, "swiftName": "insuredOrganizationNameAndId", "name": "Insured Organization Name and ID", "dataType": "XON", "length": "250", "optionality": "O", "repeatability": "*" },
     { "index": 70, "swiftName": "insuredEmployerOrganizationNameAndId", "name": "Insured Employer Organization Name and ID", "dataType": "XON", "length": "250", "optionality": "O", "repeatability": "*" },
     { "index": 71, "swiftName": "race", "name": "Race", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "*", "tables": ["0005"] },
-    { "index": 72, "swiftName": "patientSRelationshipToInsured", "name": "Patient's Relationship to Insured", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0344"] }
+    { "index": 72, "swiftName": "patientRelationshipToInsured", "name": "Patient's Relationship to Insured", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0344"] }
   ]
 }

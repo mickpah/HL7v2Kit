@@ -1,0 +1,24 @@
+{
+  "field": "BLG-1",
+  "dataType": "CM",
+  "version": "2.3.1",
+  "name": "When to charge",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "When to charge code",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0100"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Date/time",
+      "dataType": "TS",
+      "optionality": ""
+    }
+  ]
+}

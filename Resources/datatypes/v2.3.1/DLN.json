@@ -1,13 +1,13 @@
 {
   "dataType": "DLN",
   "version": "2.3.1",
-  "name": "driver’s license number                                                                         2-28",
+  "name": "driver’s license number",
   "source": "prose",
   "components": [
     {
       "index": 1,
-      "name": "Driver’s license number (as ST data type)",
-      "dataType": "",
+      "name": "License number",
+      "dataType": "ST",
       "optionality": ""
     },
     {

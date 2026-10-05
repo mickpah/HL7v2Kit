@@ -4,8 +4,11 @@
 
 import Foundation
 
-/// What the validator should do when it encounters a Z-segment (or any
-/// segment outside the loaded grammar).
+/// What the validator should do when it encounters a Z-segment: a segment
+/// whose ID begins with `Z` and has no entry in the loaded grammar. Any
+/// other ID outside the loaded grammar is not a Z-segment (ADR-018) and is
+/// unaffected by this policy — it always produces
+/// ``IssueCode/segmentNotInVersionGrammar``.
 public enum ZSegmentPolicy: Sendable, Equatable, Hashable {
     /// Pass silently. No issue is recorded.
     case ignore
@@ -18,7 +21,10 @@ public enum ZSegmentPolicy: Sendable, Equatable, Hashable {
 
 /// Tunable validator behaviour.
 public struct ValidationOptions: Sendable {
-    /// What to do when a segment isn't in the loaded grammar.
+    /// What to do when a `Z`-prefixed segment isn't in the loaded grammar.
+    /// A non-Z segment ID outside the loaded grammar always produces
+    /// ``IssueCode/segmentNotInVersionGrammar`` instead, whatever this is
+    /// set to (ADR-018).
     public var zSegmentPolicy: ZSegmentPolicy
 
     /// If true (default), check that fields with optionality `R` are populated.
@@ -40,7 +46,10 @@ public struct ValidationOptions: Sendable {
     public var checkComponentGrammar: Bool
 
     /// If true (default), check that single-cardinality fields don't carry
-    /// multiple repetitions.
+    /// multiple repetitions. On v2.3 and v2.3.1 a single-repeat `TQ` field's
+    /// repetitions 2 to n are read as its TQ.6 Priority repeat (section 4.4.6,
+    /// "Priority component"), not reported, and not otherwise checked; v2.4
+    /// (section 4.3.6) separates repeated priorities with a space instead.
     public var checkCardinality: Bool
 
     /// If true (default), emit a `.warning` when a deprecated (`B`) or
@@ -72,6 +81,28 @@ public struct ValidationOptions: Sendable {
     /// Set it to report them as advisories. Not an init parameter. M27.
     public var conformanceConditionSeverity: IssueSeverity? = nil
 
+    /// Severity for the abstract-message-syntax check (ADR-019): segment
+    /// order, required segments and groups, and repetition for the message's
+    /// structure, plus an MSH-9.3 that names a structure its MSH-9.1^9.2 is
+    /// not printed under. `.warning` in ``default`` (and for a memberwise
+    /// `ValidationOptions()`), `.error` in ``strict`` and `nil`, the check
+    /// off, in ``lenient`` (owner decision G2 (b), P8b-18; before P8b-18 it
+    /// was `nil` in every preset). Only the structures generated from `Resources/structures/`
+    /// are modelled; a message with no structure applied (unmodelled
+    /// structure or version, an MSH-12 that does not resolve or differs from
+    /// ``Message/version``, a fragment) gets one
+    /// ``IssueCode/messageStructureNotModelled(structure:)`` info issue
+    /// instead of a silent pass. Receivers ignore unexpected segments
+    /// (v2.5.1 CH02 2.6.2), so `.warning` suits receiver-side use and
+    /// `.error` sender-side use. Under ``HL7Locale/auLocalisation`` a v2.4
+    /// ORU^R01, ORM^O01, REF^I12, RRI^I12 or OSR^Q06 is also matched against the
+    /// ADRM-2021 structure: a segment that structure requires and the message
+    /// lacks is reported as `profileConstraintViolation(localeRule:
+    /// "HL7au:00060.1")` at this severity (P8b-4), and a base structure
+    /// finding the ADRM structure accepts at that point is dropped (P8b-4a).
+    /// Not an init parameter. P8-5.
+    public var messageStructureSeverity: IssueSeverity? = .warning
+
     /// The caller asserts that the message comes from a pathology sender.
     /// ADRM-2021 scopes HL7au:00050.1.5 (OBX-6.3 Units coding system must
     /// be `UCUM` on Results) to "Senders (Pathology only)", a fact the wire
@@ -102,6 +133,82 @@ public struct ValidationOptions: Sendable {
     /// Not an init parameter. M32.
     public var auNASHTransport: Bool = false
 
+    /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
+    /// pre-v2.7 maximum length (v2.3 to v2.6, a plain-integer LEN cell), measured
+    /// per repetition with component and subcomponent separators counted (v2.3.1
+    /// section 2.6.2). `.warning` by default; `nil` leaves it unchecked. The spec
+    /// lets a site agreement change the length, "such as a conformance profile ...
+    /// it shall not render the implementation non-conformant" (v2.5.1 section
+    /// 2.5.3.2; v2.3.1 section 2.6.2 "often negotiated on a site-specific basis"),
+    /// and the agreement is not on the wire. `*`, `64K` and the v2.4 to v2.6 symbols
+    /// 65536 (very large number) and 99999 (variable) are not checked.
+    /// Not an init parameter. P6-6.
+    public var fieldLengthSeverity: IssueSeverity? = .warning
+
+    /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
+    /// v2.7+ normative length (`m..n`, `m..`, `x,y,z`) on a primitive-typed field:
+    /// "conformant messages SHALL have a length that lies within the boundaries
+    /// specified" (v2.8.2 section 2.5.5.0). `.warning` by default; `nil` turns it
+    /// off. Conformance lengths (`40=`, `250#`, a bare integer) bound what a
+    /// receiver stores, not what a message carries (section 2.5.5.3), and are
+    /// never checked. Not an init parameter. P6-6.
+    public var normativeLengthSeverity: IssueSeverity? = .warning
+
+    /// Severity for ``IssueCode/extraComponentsInPrimitiveField``: a primitive
+    /// field repetition with content after its value, or a primitive component
+    /// with a subcomponent after its value (every primitive since P6-14).
+    /// `.warning` by default (owner gate G4): the spec has the recipient ignore
+    /// the unexpected components (v2.5.1 and v2.8.2 section 2.6.2 a), and a field
+    /// whose data type a later version widened (an `IS` to a `CE`, v2.5.1 section
+    /// 2.8.2) may legitimately arrive with them. Whatever the setting, the
+    /// code-table check reads the first component as the primitive value. While
+    /// this is at least as severe as the length severity that applies
+    /// (``normativeLengthSeverity`` for a v2.7+ normative length,
+    /// ``fieldLengthSeverity`` otherwise; error > warning > info), the length
+    /// check measures that first component only, so the extra components are
+    /// reported once, here. Below it, or `nil` (this check off), the length check
+    /// measures the whole occurrence, so a binding length rule is never hidden.
+    /// Also the severity for ``IssueCode/extraComponentsInCompositeField``: a
+    /// composite field or component carrying more components than its
+    /// datatype's table defines (P6-15); the length check is not affected there.
+    /// Not an init parameter. P6-13, widened to every primitive in P6-14.
+    public var extraComponentsSeverity: IssueSeverity? = .warning
+
+    /// Severity for ``IssueCode/valueFormatInvalid(dataType:)``: a populated NM,
+    /// SI, DT, TM, DTM or TS value that does not match the format its datatype
+    /// section prints ("no non-numeric ASCII characters are allowed", v2.5.1
+    /// §2.A.47). `.warning` by default (owner gate G4), as are the length checks;
+    /// set `.error` to make a malformed value fail validation, or `nil` to turn
+    /// the check off. Not an init parameter. P6-7.
+    public var valueFormatSeverity: IssueSeverity? = .warning
+
+    /// Severity for the ``IssueCode/cardinalityExceeded`` bound check: a `.multiple`
+    /// field carrying more `~`-repetitions than its printed RP/# bound
+    /// (``FieldGrammar/maxRepetitions``). `.warning` by default (owner gate G4): the
+    /// bound is a new check, so it does not fail validation by default. Set `.error`
+    /// to make an over-bound field fail validation, or `nil` to turn the bound check
+    /// off. The single-cardinality check (a `.single` field carrying more than one
+    /// repetition) is unaffected — it stays an `.error` gated by `checkCardinality`,
+    /// never by this property. Not an init parameter. P6-4.
+    public var repetitionBoundSeverity: IssueSeverity? = .warning
+
+    /// Codes the caller has added locally to HL7 tables, keyed by four-digit table number.
+    ///
+    /// Every supported version allows an HL7 table to be extended locally: v2.3 and v2.3.1
+    /// CH2 sec 2.6.6 ("Additions may be included on a site-specific basis"), v2.4 CH02
+    /// sec 2.7.6, v2.5.1 and v2.6 CH02 sec 2.5.3.6 ("the table itself may be extended to
+    /// accommodate locally defined values") and v2.8.2 CH02C 2.C.1.2. A value listed here
+    /// for a table is accepted wherever the base-spec code-table check reads that table,
+    /// at field or component level; every other value outside the table is still reported.
+    /// AU profile value-set rules are not affected: a value a profile rule rejects is
+    /// still rejected. Empty by default, so HL7 tables stay closed.
+    ///
+    /// Keys are four-digit table numbers (`"0074"`), matched against the table number the
+    /// field or component is bound to; any other key (`"74"`, `"HL70074"`) is ignored.
+    /// Matching of values is exact and case-sensitive, as ``HL7Table/contains(_:)`` is.
+    /// Not an init parameter. P2-13.
+    public var localTableExtensions: [String: Set<String>] = [:]
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
@@ -120,26 +227,43 @@ public struct ValidationOptions: Sendable {
 
     /// Grammar checks on; Z-segments silently tolerated. Suitable for
     /// general AU clinical traffic where Z-segments are routine.
+    /// Message-structure findings are warnings (receiver-side use, v2.5.1
+    /// CH02 2.6.2; owner decision G2 (b), P8b-18).
     public static let `default` = ValidationOptions()
 
     /// All checks on; Z-segments rejected. Useful for sender-side outgoing
     /// message validation where the senders shouldn't be emitting custom
-    /// Z-segments.
-    public static let strict = ValidationOptions(
-        zSegmentPolicy: .reject,
-        checkRequiredFields: true,
-        checkConditionalFields: true,
-        checkComponentGrammar: true,
-        checkCardinality: true,
-        warnDeprecatedFields: true
-    )
+    /// Z-segments. The length severities (`fieldLengthSeverity`,
+    /// `normativeLengthSeverity`), `valueFormatSeverity` and
+    /// `repetitionBoundSeverity` stay `.warning` here as in `default` (owner gate G4).
+    /// Message-structure findings (`messageStructureSeverity`) are `.error`
+    /// here, sender-side conformance (owner decision G2 (b), P8b-18).
+    public static let strict: ValidationOptions = {
+        var options = ValidationOptions(
+            zSegmentPolicy: .reject,
+            checkRequiredFields: true,
+            checkConditionalFields: true,
+            checkComponentGrammar: true,
+            checkCardinality: true,
+            warnDeprecatedFields: true
+        )
+        options.messageStructureSeverity = .error
+        return options
+    }()
 
     /// Only structural / grammar-required checks. No Z-segment chatter,
     /// no deprecated-field warnings, no conditional-field evaluation, no
     /// component-grammar enforcement. Useful when you just want a yes/no
     /// "would HL7v2Kit be happy parsing this round-trip?" answer. The
     /// code-table membership check (`checkCodeTables`) is a content rule,
-    /// not a structural one, so this preset turns it off too.
+    /// not a structural one, so this preset turns it off too, as it does the
+    /// field length checks (`fieldLengthSeverity`, `normativeLengthSeverity`),
+    /// the extra-component check (`extraComponentsSeverity`), the value-format
+    /// check (`valueFormatSeverity`) and the repetition-bound check
+    /// (`repetitionBoundSeverity`), and it sets `messageStructureSeverity`
+    /// to `nil` explicitly (`.warning` in `default`, `.error` in `strict`). `checkCardinality`
+    /// is already `false` here, which also silences the single-cardinality
+    /// error.
     public static let lenient: ValidationOptions = {
         var options = ValidationOptions(
             zSegmentPolicy: .ignore,
@@ -150,6 +274,12 @@ public struct ValidationOptions: Sendable {
             warnDeprecatedFields: false
         )
         options.checkCodeTables = false
+        options.fieldLengthSeverity = nil
+        options.normativeLengthSeverity = nil
+        options.extraComponentsSeverity = nil
+        options.valueFormatSeverity = nil
+        options.repetitionBoundSeverity = nil
+        options.messageStructureSeverity = nil
         return options
     }()
 }

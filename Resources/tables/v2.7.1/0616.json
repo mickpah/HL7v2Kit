@@ -1,0 +1,26 @@
+{
+  "table": "0616",
+  "version": "2.7.1",
+  "name": "Address Expiration Reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0616 - Address Expiration Reason",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Corrected"
+    },
+    {
+      "code": "E",
+      "description": "Added in error"
+    },
+    {
+      "code": "M",
+      "description": "Moved"
+    },
+    {
+      "code": "R",
+      "description": "On request"
+    }
+  ]
+}

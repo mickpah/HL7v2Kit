@@ -1,0 +1,50 @@
+{
+  "table": "0734",
+  "version": "2.7.1",
+  "name": "Grouper Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0734 - Grouper Status",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Normal grouping"
+    },
+    {
+      "code": "1",
+      "description": "Invalid or missing primary diagnosis"
+    },
+    {
+      "code": "2",
+      "description": "Diagnosis is not allowed to be primary"
+    },
+    {
+      "code": "3",
+      "description": "Data does not fulfill DRG criteria"
+    },
+    {
+      "code": "4",
+      "description": "Invalid age, admission date, date of birth or discharge date"
+    },
+    {
+      "code": "5",
+      "description": "Invalid gender"
+    },
+    {
+      "code": "6",
+      "description": "Invalid discharge status"
+    },
+    {
+      "code": "7",
+      "description": "Invalid weight ad admission"
+    },
+    {
+      "code": "8",
+      "description": "Invalid length of stay"
+    },
+    {
+      "code": "9",
+      "description": "Invalid field \"same day\""
+    }
+  ]
+}

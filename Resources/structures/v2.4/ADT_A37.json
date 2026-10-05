@@ -1,0 +1,18 @@
+{
+  "structure": "ADT_A37",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 3, section 3.3.37 ADT/ACK - unlink patient information (event A37), p 3-36.",
+  "triggers": ["ADT^A37"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null }
+  ]
+}

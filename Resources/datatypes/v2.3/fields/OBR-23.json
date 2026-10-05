@@ -1,0 +1,21 @@
+{
+  "field": "OBR-23",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Charge to practice",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Dollar amount",
+      "dataType": "MO",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Charge code",
+      "dataType": "CE",
+      "optionality": ""
+    }
+  ]
+}

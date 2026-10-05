@@ -1903,7 +1903,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "HPC", description: "CMS (formerly HCFA )Procedure Codes (HCPCS)"),
             HL7Table.Entry(code: "I10P", description: "ICD-10 Procedure Codes"),
             HL7Table.Entry(code: "SCT", description: "SNOMED CT"),
-            HL7Table.Entry(code: "contractors.", description: ""),
         ] as [HL7Table.Entry]
     )
 
@@ -1932,7 +1931,7 @@ extension HL7TableRegistry {
         number: "0093",
         name: "Release Information",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "Y", description: "Yes"),
             HL7Table.Entry(code: "N", description: "No"),
@@ -2014,7 +2013,7 @@ extension HL7TableRegistry {
         number: "0105",
         name: "Source of Comment",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "L", description: "Ancillary (filler) department is source of comment"),
             HL7Table.Entry(code: "P", description: "Orderer (placer) is source of comment"),
@@ -2497,7 +2496,12 @@ extension HL7TableRegistry {
         permitsLocalExtensions: false,
         entries: [
 
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "E1... E9", description: "Enlisted", regex: "^E(1|2|3|4|5|6|7|8|9)$"),
+            HL7Table.CodePattern(code: "O1 ... O9", description: "Officers", regex: "^O(1|2|3|4|5|6|7|8|9)$"),
+            HL7Table.CodePattern(code: "W1 ... W4", description: "Warrant Officers", regex: "^W(1|2|3|4)$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0142_v2_8_2 = HL7Table(
@@ -2978,7 +2982,7 @@ extension HL7TableRegistry {
         number: "0175",
         name: "Master File Identifier Code",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CDM", description: "Charge description master file"),
             HL7Table.Entry(code: "CMA", description: "Clinical study with phases and scheduled master file"),
@@ -3287,7 +3291,7 @@ extension HL7TableRegistry {
         number: "0203",
         name: "Identifier Type",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ACSN", description: "Accession ID"),
             HL7Table.Entry(code: "AM", description: "American Express"),
@@ -3354,7 +3358,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "NI", description: "National unique individual identifier"),
             HL7Table.Entry(code: "NII", description: "National Insurance Organization Identifier"),
             HL7Table.Entry(code: "NIIP", description: "National Insurance Payor Identifier (Payor)"),
-            HL7Table.Entry(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code"),
             HL7Table.Entry(code: "NP", description: "Nurse practitioner number"),
             HL7Table.Entry(code: "NPI", description: "National provider identifier"),
             HL7Table.Entry(code: "OD", description: "Optometrist license number"),
@@ -3397,7 +3400,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "WCN", description: "Workers’ Comp Number"),
             HL7Table.Entry(code: "WP", description: "Work Permit"),
             HL7Table.Entry(code: "XX", description: "Organization identifier"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code", regex: "^NN[A-Z]{3}$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0204_v2_8_2 = HL7Table(
@@ -5524,7 +5530,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "contractors.", description: ""),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5877,7 +5883,7 @@ extension HL7TableRegistry {
         number: "0355",
         name: "Primary Key Value Type",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "PL", description: "Person location"),
             HL7Table.Entry(code: "CE", description: "Coded element"),
@@ -5934,12 +5940,11 @@ extension HL7TableRegistry {
         number: "0359",
         name: "Diagnosis Priority",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "0", description: "Not included in diagnosis ranking"),
             HL7Table.Entry(code: "1", description: "The primary diagnosis"),
             HL7Table.Entry(code: "2", description: "For ranked secondary diagnosis"),
-            HL7Table.Entry(code: "…", description: ""),
         ] as [HL7Table.Entry]
     )
 
@@ -6702,7 +6707,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "CDCREC", description: "Race & Ethnicity - CDC The U.S. Centers for Disease Control and"),
             HL7Table.Entry(code: "CDS", description: "CDC Surveillance"),
             HL7Table.Entry(code: "CE", description: "CEN ECG diagnostic codes – (Obsolete, retained for Specific Non-Drug"),
-            HL7Table.Entry(code: "codes", description: "backwards compatibility only. See the entry for the Code MDC coding system.)"),
             HL7Table.Entry(code: "CLP", description: "CLIP"),
             HL7Table.Entry(code: "CPTM", description: "CPT Modifier Code"),
             HL7Table.Entry(code: "CST", description: "COSTART"),
@@ -7071,12 +7075,11 @@ extension HL7TableRegistry {
         number: "0418",
         name: "Procedure Priority",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "0", description: "the admitting procedure"),
             HL7Table.Entry(code: "1", description: "the primary procedure"),
             HL7Table.Entry(code: "2", description: "for ranked secondary procedures"),
-            HL7Table.Entry(code: "…", description: ""),
         ] as [HL7Table.Entry]
     )
 
@@ -7792,7 +7795,7 @@ extension HL7TableRegistry {
         number: "0466",
         name: "Ambulatory Payment Classification Code",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "031", description: "Dental procedures"),
             HL7Table.Entry(code: "163", description: "Excision/biopsy"),
@@ -9273,16 +9276,15 @@ extension HL7TableRegistry {
         number: "0544",
         name: "Container Condition",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "XC37", description: "Not Body temperature"),
-            HL7Table.Entry(code: "XAMB", description: "Not Ambient temperature Not Critical ambient"),
-            HL7Table.Entry(code: "XCAMB", description: "Failed to keep critical ambient."),
-            HL7Table.Entry(code: "temperature", description: "Not Refrigerated"),
-            HL7Table.Entry(code: "XREF", description: "Failed to keep at refrigerated temperature: 4-8 degrees C."),
-            HL7Table.Entry(code: "XCREF", description: "Failed to keep critical refrigerated."),
-            HL7Table.Entry(code: "XFRZ", description: "Not Frozen temperature Not Critical frozen"),
-            HL7Table.Entry(code: "XCFRZ", description: "Failed to keep critical frozen"),
+            HL7Table.Entry(code: "XAMB", description: "Not Ambient temperature"),
+            HL7Table.Entry(code: "XCAMB", description: "Not Critical ambient temperature"),
+            HL7Table.Entry(code: "XREF", description: "Not Refrigerated temperature"),
+            HL7Table.Entry(code: "XCREF", description: "Not Critical refrigerated temperature"),
+            HL7Table.Entry(code: "XFRZ", description: "Not Frozen temperature"),
+            HL7Table.Entry(code: "XCFRZ", description: "Not Critical frozen temperature"),
             HL7Table.Entry(code: "XDFRZ", description: "Not Deep frozen"),
             HL7Table.Entry(code: "XUFRZ", description: "Not Ultra frozen"),
             HL7Table.Entry(code: "XNTR", description: "Not Liquid nitrogen"),
@@ -10103,7 +10105,7 @@ extension HL7TableRegistry {
     static let t0617_v2_8_2 = HL7Table(
         number: "0617",
         name: "Address Usage",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "M", description: "Mailing"),
@@ -10978,7 +10980,7 @@ extension HL7TableRegistry {
         number: "0920",
         name: "Preferred Specimen/Attribute Status",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "P", description: "Preferred"),
             HL7Table.Entry(code: "A", description: "Alternate"),

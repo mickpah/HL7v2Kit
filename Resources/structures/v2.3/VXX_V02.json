@@ -1,0 +1,16 @@
+{
+  "structure": "VXX_V02",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.12.2 VXX - response to vaccination query returning multiple PID matches (event V02), p 4-113. Structure ID VXX_V02 synthesised as CODE_EVT from the message code VXX and V02, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events VXX^V02 read from the section title 4.12.2 'VXX - response to vaccination query returning multiple PID matches (event V02)'. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/VXX_V02.xsd, VXX_V02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 VXX_V02).",
+  "triggers": ["VXX^V02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "NK1", "min": 0, "max": null }
+    ]}
+  ]
+}

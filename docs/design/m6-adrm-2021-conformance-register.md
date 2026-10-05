@@ -15,9 +15,9 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 72 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 14 | partly enforced — see each row's note for what is not |
-| BASE | 15 | already enforced by the base model; overlay deliberately silent |
+| SHIPPED | 74 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 18 | partly enforced — see each row's note for what is not |
+| BASE | 9 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 8 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
@@ -25,7 +25,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## SHIPPED (72)
+## SHIPPED (74)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -93,16 +93,18 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00047.1` |  | Senders | Orders, Results, Referrals | MSH-15 Accept acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00047.2` |  | Senders | Orders, Results, Referrals | MSH-16 Application acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00048.3.1` | r3 | Senders | Orders, Results, Referrals | MSH-18 must only contain one of the following values "", "ASCII" or by site agreement "UNICODE UTF-8", "8859/1" may be used. |  |
+| `HL7au:00049.1` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message type (ID)> component must be valued. |  |
 | `HL7au:00049.2` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <trigger event (ID)> component must be valued. |  |
 | `HL7au:00049.3` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message structure (ID)> component must be valued. |  |
 | `HL7au:00050.1.5` |  | Senders (Pathology only) | Results | The OBX-6 (Units) <name of coding system (IS)> component must be "UCUM". | shipped caller-asserted (M29): `ValidationOptions.auPathologySender` |
+| `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | explicit prohibitions on C fields (`prohibitedWhen` / `additionalProhibitions`, `.conditionalFieldProhibited`): AIS-10, AIG-14, AIL-12, AIP-12 (all six, P4-23); PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 (v2.8.2); OBX-2 and OBX-5 other than the HL7 null when OBX-11 = O (v2.4 7.4.2.11; P4-24, base since P4-26); and, route C (P4-31, ADR-021), v2.4 OBX-2 valued while OBX-11 = X, the one C field whose stored condition is the full predicate, reported when that condition is definitely false. The other 51 candidate C fields in the v2.4 ORM/ORU/REF segments carry no derivable prohibition (owner ruling G9): 31 trigger-only, 8 with no predicate the text settles as a prohibition (RQ1-2/3/4/5 read inclusively, RXE-10/18/19 bare, PTH-6 undefined event), 12 whose predicate the message does not carry |
 | `HL7au:00104.1.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "AP" (Authoring Provider) in the REF message. |  |
 | `HL7au:00104.1.1` |  | Receivers | Referrals | The receiving system must identify the authoring provider in its display of the message content (indicated by "AP" in the associated PRD-1). |  |
 | `HL7au:00104.2.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "IR" (Intended Recipient) in the REF message. |  |
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (14)
+## PARTIAL (18)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -114,32 +116,30 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000034.1` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment in either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.... | enforced for the public systems the ADRM names (LN, SCT, UCUM): a named public system relegated to the CE/CWE alternate triplet behind a non-public primary fires; systems the ADRM does not name skip fail-safe |
 | `HL7au:000034.2` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, in OBX-3 (Observation Identifier), if the system transmits both a public (e.g. LOINC) and a local terminology, then the local terminology must be transmitted in th... | same machinery on OBX-5 coded values; same named-public-systems scope as 000034.1 |
 | `HL7au:000043.1` |  | Senders | Orders, Results, Referrals | MSH-4 – Sending Facility must be filled in with the sending facility HPI-O when sending a message via Secure Message Delivery (SMD) and secured by NASH Certificates. The format must be "registered organisation name in... | M32: the format's OID and "ISO" halves ship caller-asserted on MSH-4 (`auNASHTransport`); the "registered organisation name in HI service" half needs the HPOS/HI directory and stays out |
+| `HL7au:00044.1.1` |  | Senders | Orders, Results, Referrals | CX <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | the presence half is enforced on Orders/Results/Referrals (CX-1 valued; yields to the base CX.1 check from v2.5.1); "valid according to the identifier scheme" needs identifier-scheme recognition and is not checked |
+| `HL7au:00044.3.1` | r2 | Senders | Orders, Results, Referrals | The EI Entity identifier component must be valued and for each document/report must be unique within the sender facility namespace (HD). | the presence half is enforced on Orders/Results/Referrals (EI-1 valued); the uniqueness half is cross-message and out of scope |
+| `HL7au:00044.7.1` |  | Senders | Orders, Results, Referrals | XCN <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | the presence half is enforced on Orders/Results/Referrals (XCN-1 valued); "valid according to the identifier scheme" needs identifier-scheme recognition and is not checked |
 | `HL7au:00044.8.1` |  | Senders | Orders, Results, Referrals | Correct timezone must be specified | the offset-PRESENCE half is enforced: a TS with hour-or-greater precision and no +/-ZZZZ suffix fires on Orders/Results/Referrals; the "offset is CORRECT for the stated local time" half needs a timezone database and is out of scope |
 | `HL7au:00044.10.1.5` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | ED subtype => type enforced for spec-stated pairs (ADRM §3.20.5 + example annotations); arbitrary IANA subtypes skip, fail-safe |
 | `HL7au:00044.10.1.6` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | ED subtype => type enforced for the 0291 subtypes whose 0191 main type §3.20.5 states; unstated ones skip |
 | `HL7au:00044.11.1.5` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.5 |
 | `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.6 |
+| `HL7au:00060.1` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of R (required) must be valued. | P8b-4, P8b-4a: with the structure check on (`messageStructureSeverity`, on in the default and strict presets since P8b-18), a v2.4 ORU^R01, ORM^O01, REF^I12, RRI^I12 or OSR^Q06 is also matched against the ADRM-2021 structure (pp 205, 279, 324, 325, 281; `Resources/structures/profiles/au-adrm-2021/`) and a segment it requires and the message lacks is reported (RRI^I12: MSA); removed base segments are not findings (decision 7), and a base structure finding is dropped where the ADRM structure accepts the message at that point (a segment it places there, or one it makes optional); an exact-matched base is matched again past a dropped finding, so later base findings are kept. The field and component half is the Validator core. Not enforced: the Appendix 8 simplified REF structure (p 484, selected by MSH-12), the ORR^O02 print (pp 280 to 281, unbalanced bracket), the prose-only PV1 mandate on ORU^R01 (pp 17, 205), the narrowed maxima (REF^I12 `[IN1]`, PV1 and PV2, p 324; the code drops every profile `unexpected` finding, not only beyond-maximum ones, so a segment order the ADRM narrowed would go unreported too; none is known: the final review traced ORU_R01 and REF_I12 and found no ordering that differs from the base) and the order detail of the order status response (p 281 prints only OBR; the base choice is kept, so RQD, RQ1, RXO, ODS or ODT in its place and an OBX after any of them go unflagged); permanent-limitations register section E, close-out summary and the P8b-4 and P8b-4a addenda |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | authority => qualifier pairs enforced for the closed AU authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor authorities are open-ended examples and skip |
 
-## BASE (15)
+## BASE (9)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000008.1.2` |  | Senders and Receivers | Results | An OBX display segment is identified using OBX-3 Identifier (CE-1) and Name of Coding System (CE-3) components. The text component of the CE may be blank and only CE1 and CE-3 components need to match. | definitional — states how a display segment is identified; implemented as the overlay gate |
 | `HL7au:000008.1.4` |  | Senders and Receivers | Results | In an OBX display segment, the OBX-3 <name of coding system (IS)> must be valued "AUSPDI". | OBX-3.3 = AUSPDI is the discriminator the HL7au:000008.1 overlay gates on, not an assertion |
-| `HL7au:00044.1.1` |  | Senders | Orders, Results, Referrals | CX <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | CX-1 is already `CX.requiredComponents` |
-| `HL7au:00044.3.1` | r2 | Senders | Orders, Results, Referrals | The EI Entity identifier component must be valued and for each document/report must be unique within the sender facility namespace (HD). | EI-1 is already `EI.requiredComponents`; the uniqueness half is cross-message and out of scope |
-| `HL7au:00044.7.1` |  | Senders | Orders, Results, Referrals | XCN <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | XCN-1 is already `XCN.requiredComponents` |
 | `HL7au:00046.1.1` |  | Senders | Orders, Results, Referrals | Senders must escape \| characters as '\F\' in all fields, components, subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.2` |  | Senders | Orders, Results, Referrals | Senders must escape '^' characters as '\S\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.3` |  | Senders | Orders, Results, Referrals | Senders must escape '&' characters as '\T\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.4` |  | Senders | Orders, Results, Referrals | Senders must escape '~' characters as '\R\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.5` | r2 | Senders | Orders, Results, Referrals | Senders must escape '\' characters as '\E\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.3` |  | Senders | Orders, Results, Referrals | All fields required by HL7 segments table must be validly valued. | R-optionality enforcement is the Validator core |
-| `HL7au:00049.1` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message type (ID)> component must be valued. | MSG-1 is already `MSG.requiredComponents` |
-| `HL7au:00060.1` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of R (required) must be valued. | R-optionality enforcement is the Validator core |
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
-| `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | conditional predicates are the same-segment DSL |
 
 ## REGISTERED (8)
 

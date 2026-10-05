@@ -31,11 +31,11 @@ SEQ        LEN    DT      OPT    R P/#     TBL#      ITEM#    ELEMENT NAME
 
 | Version | PDF vintage | NK1 table extraction | Notes |
 |---|---|---|---|
-| v2.3 | 1997 (`CH3.pdf`) | ✅ clean | caption "Figure 3-5. NK1 attributes"; `RP/#` present; shorter field list |
-| v2.4 | 2000 (`CH03.PDF`) | ✅ clean | "HL7 Attribute Table"; multi-line TBL# `0327/0328` wraps |
-| v2.5.1 | 2007 (`V251_CH03.pdf`) | ✅ clean | 39 fields — **matches the v0.19 canonical depth** (cross-check) |
-| v2.6 | 2007 (`V26_CH03…pdf`) | ✅ clean | same column set as v2.5.1 |
-| v2.8.2 | 2019 (`V282_CH03…pdf`) | ✅ clean | extra `C.LEN` column; shows `B` on NK1-5/6 — **cross-validates the hand-authored v2.8.2 divergences** |
+| v2.3 | 1997 (`CH3.pdf`) | yes — clean | caption "Figure 3-5. NK1 attributes"; `RP/#` present; shorter field list |
+| v2.4 | 2000 (`CH03.PDF`) | yes — clean | "HL7 Attribute Table"; multi-line TBL# `0327/0328` wraps |
+| v2.5.1 | 2007 (`V251_CH03.pdf`) | yes — clean | 39 fields — **matches the v0.19 canonical depth** (cross-check) |
+| v2.6 | 2007 (`V26_CH03…pdf`) | yes — clean | same column set as v2.5.1 |
+| v2.8.2 | 2019 (`V282_CH03…pdf`) | yes — clean | extra `C.LEN` column; shows `B` on NK1-5/6 — **cross-validates the hand-authored v2.8.2 divergences** |
 
 The v2.8.2 WORD `.doc` sources also extract cleanly via a *second, independent* path — `textutil -convert txt` renders each attribute table row-major with `\x07` (BEL) as the cell delimiter and newline as the row delimiter — usable as a **cross-check** for v2.8.2 (the only version shipping WORD on disk; v2.7.1 ships a WORD zip but is not a supported `Version`). Two independent extractors agreeing on v2.8.2 is a useful correctness signal but not required for the pipeline.
 

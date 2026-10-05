@@ -1,0 +1,22 @@
+{
+  "table": "0559",
+  "version": "2.7.1",
+  "name": "Product/Service Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0559 - Product/Service Status",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Denied"
+    },
+    {
+      "code": "P",
+      "description": "Processed"
+    },
+    {
+      "code": "R",
+      "description": "Rejected"
+    }
+  ]
+}

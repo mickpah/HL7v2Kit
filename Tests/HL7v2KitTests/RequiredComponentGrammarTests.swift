@@ -23,7 +23,7 @@ struct RequiredComponentGrammarTests {
         #expect(try missing(wire(pid11: "^^Sydney^NSW^2000")).isEmpty)
         // v2.5.1 prints XPN.1 Family Name as O: a given name alone is valid.
         #expect(try missing(wire(pid5: "^JOHN")).isEmpty)
-        for version in ["2.5.1", "2.6", "2.8.2"] {
+        for version in ["2.5.1", "2.6", "2.7.1", "2.8.2"] {
             #expect(try missing(wire(version: version, pid5: "^JOHN", pid11: "^^Sydney")).isEmpty, "v\(version)")
         }
     }

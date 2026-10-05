@@ -1,0 +1,38 @@
+{
+  "table": "0205",
+  "version": "2.7.1",
+  "name": "Price Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0205 - Price Type",
+  "entries": [
+    {
+      "code": "AP",
+      "description": "administrative price or handling fee"
+    },
+    {
+      "code": "DC",
+      "description": "direct unit cost"
+    },
+    {
+      "code": "IC",
+      "description": "indirect unit cost"
+    },
+    {
+      "code": "PF",
+      "description": "professional fee for performing provider"
+    },
+    {
+      "code": "TF",
+      "description": "technology fee for use of equipment"
+    },
+    {
+      "code": "TP",
+      "description": "total price"
+    },
+    {
+      "code": "UP",
+      "description": "unit price, may be based on length of procedure or service"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "table": "0388",
+  "version": "2.7.1",
+  "name": "Processing Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0388 - Processing Type",
+  "entries": [
+    {
+      "code": "E",
+      "description": "Evaluation"
+    },
+    {
+      "code": "P",
+      "description": "Regular Production"
+    }
+  ]
+}

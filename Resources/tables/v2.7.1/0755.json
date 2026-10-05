@@ -1,0 +1,22 @@
+{
+  "table": "0755",
+  "version": "2.7.1",
+  "name": "Status Weight At Birth",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0755 - Status Weight At Birth",
+  "entries": [
+    {
+      "code": "0",
+      "description": "No weight reported at admission used for grouping"
+    },
+    {
+      "code": "1",
+      "description": "Weight reported at admission used for grouping"
+    },
+    {
+      "code": "2",
+      "description": "Default weight (>2499g) used for grouping"
+    }
+  ]
+}

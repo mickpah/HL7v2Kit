@@ -1,0 +1,42 @@
+{
+  "dataType": "FN",
+  "version": "2.7.1",
+  "name": "Family Name",
+  "components": [
+    {
+      "index": 1,
+      "name": "Surname",
+      "dataType": "ST",
+      "optionality": "R",
+      "length": "50#"
+    },
+    {
+      "index": 2,
+      "name": "Own Surname Prefix",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20#"
+    },
+    {
+      "index": 3,
+      "name": "Own Surname",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "50#"
+    },
+    {
+      "index": 4,
+      "name": "Surname Prefix from Partner/Spouse",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20#"
+    },
+    {
+      "index": 5,
+      "name": "Surname from Partner/Spouse",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "50#"
+    }
+  ]
+}

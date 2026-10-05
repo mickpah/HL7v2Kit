@@ -1,0 +1,54 @@
+{
+  "structure": "REF_I12",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 11, section 11.4.1 REF/RRI - patient referral message, p 11-16. Structure ID REF_I12 synthesised as CODE_EVT from the message code REF and I12, the first event overrides.json eventsFromTitle gives it (v2.3 prints no structure ID and no Table 0354). Events REF^I12, REF^I13, REF^I14 and REF^I15 from overrides.json eventsFromTitle (section 11.4.1 'REF/RRI - patient referral message' names no event): HL7 v2.3 Chapter 11, section 11.4.1 REF/RRI - patient referral message, p 11-15: 'The trigger events that use this message definition are described in Sections 11.4.2 ... (event I12) through 11.4.5 ... (event I15)' (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-94), p 2-92: I12 to I15 REF/RRI.. Unprinted group names (ADR-019 decision 3): AUTHORIZATION_CONTACT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database, derived for v2.3 REF_I12), PROVIDER (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PROVIDER.CONTENT, generator HL7-Database, derived for v2.3 REF_I12), INSURANCE (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.INSURANCE.CONTENT, generator HL7-Database, derived for v2.3 REF_I12), PROCEDURE (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PROCEDURE.CONTENT, generator HL7-Database, derived for v2.3 REF_I12), AUTHORIZATION_CONTACT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database, derived for v2.3 REF_I12), OBSERVATION (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.OBSERVATION.CONTENT, generator HL7-Database, derived for v2.3 REF_I12), RESULTS_NOTES (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.RESULTS_NOTES.CONTENT, generator HL7-Database, derived for v2.3 REF_I12), PATIENT_VISIT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PATIENT_VISIT.CONTENT, generator HL7-Database, derived for v2.3 REF_I12) and PATIENT_VISIT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PATIENT_VISIT.CONTENT, generator HL7-Database, derived for v2.3 REF_I12).",
+  "triggers": ["REF^I12", "REF^I13", "REF^I14", "REF^I15"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "RF1", "min": 0, "max": 1 },
+    { "group": "AUTHORIZATION_CONTACT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+      { "segment": "AUT", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": 1 }
+    ]},
+    { "group": "PROVIDER", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "segment": "GT1", "min": 0, "max": null },
+    { "group": "INSURANCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+      { "segment": "IN1", "min": 1, "max": 1 },
+      { "segment": "IN2", "min": 0, "max": 1 },
+      { "segment": "IN3", "min": 0, "max": 1 }
+    ]},
+    { "segment": "ACC", "min": 0, "max": 1 },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "group": "PROCEDURE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+      { "segment": "PR1", "min": 1, "max": 1 },
+      { "group": "AUTHORIZATION_CONTACT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "AUT", "min": 1, "max": 1 },
+        { "segment": "CTD", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "RESULTS_NOTES", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]},
+    { "group": "PATIENT_VISIT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "group": "PATIENT_VISIT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}

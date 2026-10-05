@@ -1,0 +1,39 @@
+{
+  "structure": "OMN_O01",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.7 SUPPLY ORDERS, pp 4-53 to 4-54. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/OMN_O01.xsd, OMN_O01.PATIENT.CONTENT, generator HL7-Database), PATIENT_VISIT (HL7-xml 2.3.1/OMN_O01.xsd, OMN_O01.PATIENT_VISIT.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/OMN_O01.xsd, OMN_O01.INSURANCE.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/OMN_O01.xsd, OMN_O01.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/OMN_O01.xsd, OMN_O01.ORDER_DETAIL.CONTENT, generator HL7-Database) and OBSERVATION (HL7-xml 2.3.1/OMN_O01.xsd, OMN_O01.OBSERVATION.CONTENT, generator HL7-Database).",
+  "triggers": ["ORM^O01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "GT1", "min": 0, "max": 1 },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "ORDER_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "RQD", "min": 1, "max": 1 },
+        { "segment": "RQ1", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "group": "OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]},
+      { "segment": "BLG", "min": 0, "max": 1 }
+    ]}
+  ]
+}

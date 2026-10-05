@@ -1,0 +1,15 @@
+{
+  "structure": "MFN_M07",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), pp 8-67 to 8-68. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): MF_CLIN_STUDY_SCHED (HL7-xml v2.4/MFN_M07.xsd, MFN_M07.MF_CLIN_STUDY_SCHED.CONTENT, derived for v2.3.1 MFN_M07).",
+  "triggers": ["MFN^M07"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_CLIN_STUDY_SCHED", "nameSource": "v2xml-v2.4", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "CM0", "min": 1, "max": 1 },
+      { "segment": "CM2", "min": 0, "max": null }
+    ]}
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "field": "OBR-33",
+  "dataType": "CM",
+  "version": "2.3.1",
+  "name": "Assistant result interpreter",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Name",
+      "dataType": "CN",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Start date/time",
+      "dataType": "TS",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "End date/time",
+      "dataType": "TS",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Point of care",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Room",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Bed",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 7,
+      "name": "Facility",
+      "dataType": "HD",
+      "optionality": ""
+    },
+    {
+      "index": 8,
+      "name": "Location status",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 9,
+      "name": "Patient location type",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 10,
+      "name": "Building",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 11,
+      "name": "Floor",
+      "dataType": "IS",
+      "optionality": ""
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0245",
+  "version": "2.7.1",
+  "name": "Product Problem",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0245 - Product Problem",
+  "entries": []
+}

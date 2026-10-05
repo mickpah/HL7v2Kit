@@ -1,0 +1,43 @@
+{
+  "structure": "SQR_S25",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 10, section 10.5.3 SQM/SQR - Schedule Query Message and Response (Event S25), pp 10-25 to 10-26.",
+  "triggers": ["SQR^S25"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "QAK", "min": 1, "max": 1 },
+    { "group": "SCHEDULE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "SCH", "min": 1, "max": 1 },
+      { "segment": "TQ1", "min": 0, "max": null },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "PV1", "min": 0, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 },
+        { "segment": "DG1", "min": 0, "max": 1 }
+      ]},
+      { "group": "RESOURCES", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "RGS", "min": 1, "max": 1 },
+        { "group": "SERVICE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "AIS", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "group": "GENERAL_RESOURCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "AIG", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "group": "PERSONNEL_RESOURCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "AIP", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "group": "LOCATION_RESOURCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "AIL", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

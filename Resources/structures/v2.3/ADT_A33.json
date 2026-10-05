@@ -1,0 +1,16 @@
+{
+  "structure": "ADT_A33",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 3, section 3.2.33 ADT/ACK - cancel patient departing - tracking (event A33), p 3-26. Structure ID ADT_A33 synthesised as CODE_EVT from the message code ADT and A33, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events ADT^A33 read from the section title 3.2.33 'ADT/ACK - cancel patient departing - tracking (event A33)'.",
+  "triggers": ["ADT^A33"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "OBX", "min": 0, "max": null }
+  ]
+}

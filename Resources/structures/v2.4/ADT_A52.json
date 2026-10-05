@@ -1,0 +1,14 @@
+{
+  "structure": "ADT_A52",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 3, section 3.3.52 ADT/ACK- cancel leave of absence for a patient (event A52), p 3-47; the same structure is printed for ADT^A53 (3.3.53) and ADT^A55 (3.3.55).",
+  "triggers": ["ADT^A52", "ADT^A53", "ADT^A55"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 }
+  ]
+}

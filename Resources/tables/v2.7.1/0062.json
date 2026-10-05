@@ -1,0 +1,30 @@
+{
+  "table": "0062",
+  "version": "2.7.1",
+  "name": "Event Reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0062 - Event Reason",
+  "entries": [
+    {
+      "code": "01",
+      "description": "Patient request"
+    },
+    {
+      "code": "02",
+      "description": "Physician/health practitioner order"
+    },
+    {
+      "code": "03",
+      "description": "Census management"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

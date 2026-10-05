@@ -2,11 +2,8 @@
 // Extended Composite Name and Identification Number for Organizations
 // composite (HL7 v2.5.1 §2.A.86).
 //
-// Value-type view over a Field that exposes named accessors for the
-// four most-commonly-populated XON components. XON has 10 spec
-// components; the v0.3-C4 cut promotes XON-1 / 2 / 7 / 10 — name plus
-// type code plus identifier metadata, the realistic AU traffic
-// subset. v0.3-C4.
+// Value-type view over a Field. XON-1, 2, 7 and 10 hand-written; the rest
+// generated (ADR-020). v0.3-C4.
 
 /// Extended Composite Name and Identification Number for Organizations
 /// (XON) composite.
@@ -16,8 +13,7 @@
 /// (organization name — next of kin) and ORC-21 (ordering facility
 /// name).
 ///
-/// XON component layout (HL7 v2.5.1; the commonly-populated subset
-/// is exposed via named accessors):
+/// XON component layout (hand-written accessors; the rest are generated):
 /// 1. Organization Name (ST) → ``XON/organizationName``. The
 ///    organization's display name.
 /// 2. Organization Name Type Code (IS) → ``XON/organizationNameTypeCode``.
@@ -27,10 +23,7 @@
 /// 10. Organization Identifier (ST) → ``XON/organizationIdentifier``.
 ///     The unique identifier value.
 ///
-/// XON-3 (ID Number, deprecated), XON-4 (check digit), XON-5 (check
-/// digit scheme), XON-6 (assigning authority, nested HD), XON-8
-/// (assigning facility, nested HD), and XON-9 (name representation
-/// code) remain accessible via ``XON/field``.
+/// XON-3..6, 8 and 9 are generated accessors; see `XON+Components.swift`.
 public struct XON: CompositeView {
     /// The components HL7 v2.5.1 PRINTS as required (`R`) in the XON component
     /// table (none: every XON component is optional there). Informational, for the canonical

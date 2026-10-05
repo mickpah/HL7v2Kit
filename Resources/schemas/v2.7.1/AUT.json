@@ -1,0 +1,19 @@
+{
+  "segmentID": "AUT",
+  "version": "2.7.1",
+  "description": "AUT",
+  "fields": [
+    { "index": 1, "swiftName": "authorizingPayorPlanId", "name": "Authorizing Payor, Plan ID", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0072"] },
+    { "index": 2, "swiftName": "authorizingPayorCompanyId", "name": "Authorizing Payor, Company ID", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0285"] },
+    { "index": 3, "swiftName": "authorizingPayorCompanyName", "name": "Authorizing Payor, Company Name", "dataType": "ST", "length": "45#", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "authorizationEffectiveDate", "name": "Authorization Effective Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "authorizationExpirationDate", "name": "Authorization Expiration Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "authorizationIdentifier", "name": "Authorization Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1" },
+    { "index": 7, "swiftName": "reimbursementLimit", "name": "Reimbursement Limit", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "requestedNumberOfTreatments", "name": "Requested Number of Treatments", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "authorizedNumberOfTreatments", "name": "Authorized Number of Treatments", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "processDate", "name": "Process Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "requestedDisciplineS", "name": "Requested Discipline(s)", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "authorizedDisciplineS", "name": "Authorized Discipline(s)", "dataType": "CWE", "optionality": "O", "repeatability": "*" }
+  ]
+}

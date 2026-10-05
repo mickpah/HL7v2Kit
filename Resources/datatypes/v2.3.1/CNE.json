@@ -1,7 +1,7 @@
 {
   "dataType": "CNE",
   "version": "2.3.1",
-  "name": "coded with no exceptions                                                                        2-18",
+  "name": "coded with no exceptions",
   "source": "prose",
   "components": [
     {
@@ -49,6 +49,12 @@
     {
       "index": 8,
       "name": "Alternate coding system version ID",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 9,
+      "name": "Original text",
       "dataType": "ST",
       "optionality": ""
     }

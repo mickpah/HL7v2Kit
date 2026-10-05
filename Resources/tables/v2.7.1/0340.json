@@ -1,0 +1,9 @@
+{
+  "table": "0340",
+  "version": "2.7.1",
+  "name": "Procedure Code Modifier",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Appendix A (p100), Table 0340 - Procedure Code Modifier, typed 'undefined' (external) in the Appendix A index (p19)",
+  "entries": []
+}

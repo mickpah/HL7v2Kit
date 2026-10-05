@@ -1,0 +1,64 @@
+{
+  "structure": "PEX_P07",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 7, section 7.11.1 PEX - Product Experience Message (Events P07, P08), pp 7-84 to 7-85.",
+  "triggers": ["PEX^P07", "PEX^P08"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "group": "EXPERIENCE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PES", "min": 1, "max": 1 },
+      { "group": "PEX_OBSERVATION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PEO", "min": 1, "max": 1 },
+        { "group": "PEX_CAUSE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "PCR", "min": 1, "max": 1 },
+          { "group": "RX_ORDER", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+            { "segment": "RXE", "min": 1, "max": 1 },
+            { "group": "TIMING_QTY", "nameSource": "printed", "min": 1, "max": null, "elements": [
+              { "segment": "TQ1", "min": 1, "max": 1 },
+              { "segment": "TQ2", "min": 0, "max": null }
+            ]},
+            { "segment": "RXR", "min": 0, "max": null }
+          ]},
+          { "group": "RX_ADMINISTRATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "RXA", "min": 1, "max": 1 },
+            { "segment": "RXR", "min": 0, "max": 1 }
+          ]},
+          { "segment": "PRB", "min": 0, "max": null },
+          { "segment": "OBX", "min": 0, "max": null },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "group": "ASSOCIATED_PERSON", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+            { "segment": "NK1", "min": 1, "max": 1 },
+            { "group": "ASSOCIATED_RX_ORDER", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+              { "segment": "RXE", "min": 1, "max": 1 },
+              { "group": "NK1_TIMING_QTY", "nameSource": "printed", "min": 1, "max": null, "elements": [
+                { "segment": "TQ1", "min": 1, "max": 1 },
+                { "segment": "TQ2", "min": 0, "max": null }
+              ]},
+              { "segment": "RXR", "min": 0, "max": null }
+            ]},
+            { "group": "ASSOCIATED_RX_ADMIN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "RXA", "min": 1, "max": 1 },
+              { "segment": "RXR", "min": 0, "max": 1 }
+            ]},
+            { "segment": "PRB", "min": 0, "max": null },
+            { "segment": "OBX", "min": 0, "max": null }
+          ]},
+          { "group": "STUDY", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "CSR", "min": 1, "max": 1 },
+            { "segment": "CSP", "min": 0, "max": null }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

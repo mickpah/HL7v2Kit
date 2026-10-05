@@ -1,0 +1,37 @@
+{
+  "dataType": "PLN",
+  "version": "2.7.1",
+  "name": "Practitioner License or Other ID Number",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID Number",
+      "dataType": "ST",
+      "optionality": "R",
+      "length": "20="
+    },
+    {
+      "index": 2,
+      "name": "Type of ID Number",
+      "dataType": "CWE",
+      "optionality": "R",
+      "tables": [
+        "0338"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "State/other Qualifying Information",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "62#"
+    },
+    {
+      "index": 4,
+      "name": "Expiration Date",
+      "dataType": "DT",
+      "optionality": "O",
+      "length": "8="
+    }
+  ]
+}

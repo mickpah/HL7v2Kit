@@ -1,0 +1,29 @@
+{
+  "structure": "RCI_I05",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 11, section 11.3.5 RQC/RCI - request for patient clinical information (event I05), p 11-12. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RCI_I05.xsd, RCI_I05.PROVIDER.CONTENT), OBSERVATION (overrides.json: HL7 v2.4 Chapter 11, section 11.3.5 RQC/RCI - request for patient clinical information (event I05), p 11-12, prints the group OBR [{NTE}] [{OBX [{NTE}]}] unnamed (v2.4 prints no group names); HL7-xml v2.4/RCI_I05.xsd names it 'c', which no group name can hold (a bundle defect); named OBSERVATION, the name HL7-xml v2.5.1/RCI_I05.xsd and v2.6/RCI_I05.xsd give the same group (P8b-13).) and RESULTS (overrides.json: HL7 v2.4 Chapter 11, section 11.3.5, p 11-12: the unnamed [{OBX [{NTE}]}] group inside OBSERVATION; HL7-xml v2.4/RCI_I05.xsd names it RESULTS under its defective 'c' group (RCI_I05.RESULTS), as v2.5.1 and v2.6 do under OBSERVATION; named RESULTS (P8b-13).).",
+  "triggers": ["RCI^I05"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "group": "OBSERVATION", "nameSource": "override", "min": 0, "max": null, "elements": [
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "RESULTS", "nameSource": "override", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}

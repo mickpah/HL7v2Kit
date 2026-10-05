@@ -1,0 +1,58 @@
+{
+  "table": "0104",
+  "version": "2.7.1",
+  "name": "Version ID",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.22 (p28), HL7 Table 0104 - Version ID. MSH-12 (Chapter 2 sec 2.14.9.12, p60) and VID.1 (CH02A sec 2.A.82.1, p87) both refer to the table 'for valid values'; the table is left open on the cross-version reading recorded for 0104 on v2.3 to v2.8.2 in this file ('MSH-12 may carry a locally agreed version identifier')",
+  "entries": [
+    {
+      "code": "2.0",
+      "description": "Release 2.0"
+    },
+    {
+      "code": "2.0D",
+      "description": "Demo 2.0"
+    },
+    {
+      "code": "2.1",
+      "description": "Release 2.1"
+    },
+    {
+      "code": "2.2",
+      "description": "Release 2.2"
+    },
+    {
+      "code": "2.3",
+      "description": "Release 2.3"
+    },
+    {
+      "code": "2.3.1",
+      "description": "Release 2.3.1"
+    },
+    {
+      "code": "2.4",
+      "description": "Release 2.4"
+    },
+    {
+      "code": "2.5",
+      "description": "Release 2.5"
+    },
+    {
+      "code": "2.5.1",
+      "description": "Release 2.5.1"
+    },
+    {
+      "code": "2.6",
+      "description": "Release 2.6"
+    },
+    {
+      "code": "2.7",
+      "description": "Release 2.7"
+    },
+    {
+      "code": "2.7.1",
+      "description": "Release 2.7.1"
+    }
+  ]
+}

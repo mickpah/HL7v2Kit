@@ -1,0 +1,13 @@
+{
+  "structure": "UDM_Q05",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 2, section 2.14.2 UDM/ACK - unsolicited display update message (event Q05), p 2-70. Structure ID UDM_Q05 synthesised as CODE_EVT from the message code UDM and Q05, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events UDM^Q05 read from the section title 2.14.2 'UDM/ACK - unsolicited display update message (event Q05)'. Triggers UDM^R06 added by overrides.json referencedTriggers (the print names this structure for them in prose): HL7 v2.3 Chapter 7, section 7.2.2.1 Query usage notes, p 7-15: display-oriented results reporting 'is described in Chapter 2' and 'event R06 is used in the unsolicited message for reporting display results'; Chapter 2 prints one unsolicited display message, UDM (section 2.14.2, p 2-69); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-94), p 2-93: 'R06 UDM - unsolicited update/display results'.",
+  "triggers": ["UDM^Q05", "UDM^R06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "URD", "min": 1, "max": 1 },
+    { "segment": "URS", "min": 0, "max": 1 },
+    { "segment": "DSP", "min": 1, "max": null },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

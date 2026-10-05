@@ -1,0 +1,16 @@
+{
+  "structure": "BAR_P06",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 6, section 6.4.6 BAR/ACK - End Account (event P06), pp 7 to 8.",
+  "triggers": ["BAR^P06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PV1", "min": 0, "max": 1 }
+    ]}
+  ]
+}

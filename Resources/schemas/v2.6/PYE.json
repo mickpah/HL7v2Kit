@@ -5,10 +5,10 @@
   "fields": [
     { "index": 1, "swiftName": "setIdPye", "name": "Set ID – PYE", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "payeeType", "name": "Payee Type", "dataType": "IS", "length": "6", "table": "0557", "optionality": "R", "repeatability": "1", "tables": ["0557"] },
-    { "index": 3, "swiftName": "payeeRelationshipToInvoicePatient", "name": "Payee Relationship to Invoice (Patient)", "dataType": "IS", "length": "2", "table": "0558", "optionality": "C", "repeatability": "1", "tables": ["0558"], "condition": "PYE-2 in (PERS, PPER)" },
-    { "index": 4, "swiftName": "payeeIdentificationList", "name": "Payee Identification List", "dataType": "XON", "length": "183", "optionality": "C", "repeatability": "*", "condition": "PYE-2 in (PPER, ORG)" },
-    { "index": 5, "swiftName": "payeePersonName", "name": "Payee Person Name", "dataType": "XPN", "length": "466", "optionality": "C", "repeatability": "*", "condition": "PYE-2 in (PERS, PPER)" },
-    { "index": 6, "swiftName": "payeeAddress", "name": "Payee Address", "dataType": "XAD", "length": "235", "optionality": "C", "repeatability": "*", "condition": "PYE-2 in (PERS, PPER)" },
+    { "index": 3, "swiftName": "payeeRelationshipToInvoicePatient", "name": "Payee Relationship to Invoice (Patient)", "dataType": "IS", "length": "2", "table": "0558", "optionality": "C", "repeatability": "1", "tables": ["0558"], "condition": "PYE-2 in (PERS, PPER)", "prohibitedWhen": "PYE-2 not in (PERS, PPER)" },
+    { "index": 4, "swiftName": "payeeIdentificationList", "name": "Payee Identification List", "dataType": "XON", "length": "183", "optionality": "C", "repeatability": "5", "condition": "PYE-2 in (PPER, ORG)", "prohibitedWhen": "PYE-2 not in (PPER, ORG)" },
+    { "index": 5, "swiftName": "payeePersonName", "name": "Payee Person Name", "dataType": "XPN", "length": "466", "optionality": "C", "repeatability": "4", "condition": "PYE-2 in (PERS, PPER)", "prohibitedWhen": "PYE-2 not in (PERS, PPER)" },
+    { "index": 6, "swiftName": "payeeAddress", "name": "Payee Address", "dataType": "XAD", "length": "235", "optionality": "C", "repeatability": "4", "condition": "PYE-2 in (PERS, PPER)", "prohibitedWhen": "PYE-2 not in (PERS, PPER)" },
     { "index": 7, "swiftName": "paymentMethod", "name": "Payment Method", "dataType": "IS", "length": "80", "table": "0570", "optionality": "O", "repeatability": "1", "tables": ["0570"] }
   ]
 }

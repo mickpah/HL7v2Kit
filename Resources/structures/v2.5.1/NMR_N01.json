@@ -1,0 +1,21 @@
+{
+  "structure": "NMR_N01",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 14, section 14.3.1 NMQ - Application Management Query Message (Event N01), pp 14-2 to 14-3. Unprinted group names (ADR-019 decision 3): CLOCK_AND_STATS_WITH_NOTES_ALT (HL7-xml v2.5.1/NMR_N01.xsd, NMR_N01.CLOCK_AND_STATS_WITH_NOTES_ALT.CONTENT).",
+  "triggers": ["NMR^N01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "QRD", "min": 0, "max": 1 },
+    { "group": "CLOCK_AND_STATS_WITH_NOTES_ALT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "NCK", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "NST", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "NSC", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]}
+  ]
+}

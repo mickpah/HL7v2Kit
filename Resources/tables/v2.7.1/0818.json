@@ -1,0 +1,26 @@
+{
+  "table": "0818",
+  "version": "2.7.1",
+  "name": "Package",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0818 - Package",
+  "entries": [
+    {
+      "code": "BX",
+      "description": "Box"
+    },
+    {
+      "code": "CS",
+      "description": "Case"
+    },
+    {
+      "code": "EA",
+      "description": "Each"
+    },
+    {
+      "code": "SET",
+      "description": "Set"
+    }
+  ]
+}

@@ -33,6 +33,18 @@ jobs:
       - uses: actions/checkout@v5
       - name: Scan fixtures for PHI patterns
         run: bash scripts/scan-fixtures-for-phi.sh
+      - name: Audit script self-check
+        run: python3 scripts/check-audit-schemas.py
+      - name: Example-message extractor self-check
+        run: python3 scripts/check-extract-example-messages.py
+      - name: Datatype prose extractor self-check
+        run: python3 scripts/check-extract-datatype-prose.py
+      - name: Message-structure extractor self-check
+        run: python3 scripts/check-extract-message-structures.py
+      - name: No emoji or icons in tracked files
+        run: |
+          python3 scripts/check-no-emoji.py --self-test
+          python3 scripts/check-no-emoji.py
 
   codegen-drift:
     name: Codegen drift
@@ -43,7 +55,19 @@ jobs:
         run: bash scripts/regenerate-typed-segments.sh
       - name: Fail if Generated/ is out of date
         run: |
-          if ! git diff --exit-code Sources/HL7v2Kit/Segment/Generated/ Sources/HL7v2Kit/Tables/Generated/ Sources/HL7v2Kit/DataTypes/Generated/ Sources/HL7v2Kit/Locale/Generated/; then
+          if ! git diff --exit-code Sources/HL7v2Kit/Segment/Generated/ Sources/HL7v2Kit/Tables/Generated/ Sources/HL7v2Kit/DataTypes/Generated/ Sources/HL7v2Kit/Locale/Generated/ Sources/HL7v2Kit/Composite/Generated/ Sources/HL7v2Kit/Structures/Generated/; then
             echo "::error::Generated typed segments or code tables are out of date. Run scripts/regenerate-typed-segments.sh and commit the result."
             exit 1
           fi
+          if [ -n "$(git status --porcelain --untracked-files=all Sources/HL7v2Kit/Composite/Generated/ Sources/HL7v2Kit/Segment/Generated/ Sources/HL7v2Kit/Structures/Generated/)" ]; then
+            echo "::error::Generated files are untracked or out of date. Run scripts/regenerate-typed-segments.sh and commit the result."
+            exit 1
+          fi
+      - name: Pinned struct bases self-check
+        run: python3 scripts/check-struct-base-pin.py
+      - name: Message-structure codegen self-check
+        run: bash scripts/check-structure-codegen.sh
+      - name: Code-table extractor self-check
+        run: |
+          xcrun swiftc -O scripts/extract-code-tables.swift -o "$RUNNER_TEMP/tablesbin"
+          "$RUNNER_TEMP/tablesbin" --self-check

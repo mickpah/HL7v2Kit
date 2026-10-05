@@ -1,0 +1,26 @@
+{
+  "structure": "ROR_ROR",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.17 R0R - pharmacy/treatment order response R0R), p 4-102. Structure ID from Table 0354 v2.3.1, its row read through cited overrides.json errata (RROR_ROR read as ROR_ROR). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["ROR^ROR"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "group": "DEFINITION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "QRD", "min": 1, "max": 1 },
+      { "segment": "QRF", "min": 0, "max": 1 },
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

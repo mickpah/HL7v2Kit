@@ -115,10 +115,6 @@
       "description": "CEN ECG diagnostic codes – (Obsolete, retained for Specific Non-Drug"
     },
     {
-      "code": "codes",
-      "description": "backwards compatibility only. See the entry for the Code MDC coding system.)"
-    },
-    {
       "code": "CLP",
       "description": "CLIP"
     },

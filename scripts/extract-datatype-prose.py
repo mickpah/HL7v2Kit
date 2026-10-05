@@ -20,6 +20,13 @@ That numbering is the evidence, not the free-text "Components:" line:
 The standard of evidence was measured before this was adopted: on v2.4, 67 of 73 ID/IS
 bindings recovered this way equal the v2.5.1 printed component table for the same
 component, and the other six are all none-or-several cases that stay unbound.
+
+The printed "Components:" line is a second, subordinate source (P5). It completes the
+subsections: a heading that prints no datatype gives way to the line's entry when that
+entry prints one (v2.3 CE.4 "Alternate components" covers CE.4-6; v2.3.1 CNE.9), and the
+line supplies components past the last subsection. It never binds a table. A composite
+with no numbered subsections takes its components from the line alone (P5-2: CD, CF, TS;
+`"source": "prose-line"`), with `""` where the line prints no datatype code.
 """
 import json, os, re, subprocess, sys
 
@@ -30,10 +37,187 @@ SOURCES = {   # version -> (pdf, datatype section number)
     "2.3.1": ("HL7_v231_PDF/Hl7V231.pdf", "2.8"),
     "2.4":   ("HL7_v24_PDF/CH02.PDF", "2.9"),
 }
+TQ_SOURCES = {   # version -> (pdf, section) of the TQ definition, which CH2 defers to CH4
+    "2.3":   ("HL7_v23_PDF/CH4.pdf", "4.4"),
+    "2.3.1": ("HL7_v231_PDF/Hl7V231.pdf", "4.4"),
+    "2.4":   ("HL7_v24_PDF/CH04.PDF", "4.3"),
+}
 FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+:|^\f|\.{6,}"
                        r"|^\s*\d{1,2}/\d{4}\s*$|^\s*(January|February|March|April|May|June|July|August|September|October|November|December) \d{4}")
 TABLE = re.compile(r"(?:HL7\s+(?:[Tt]able\s+)?|[Uu]ser-\s*defined\s+[Tt]able\s+)(\d{4})(?:\s*[-–]\s*([A-Za-z][A-Za-z /'’-]*))?")
 STOP = {"for", "valid", "values", "suggested", "is", "used", "as", "the", "of", "a", "an", "and", "or", "to", "in", "code", "codes", "id", "type"}
+
+KEEP_HYPHEN = {"pre", "post", "non", "co", "re", "sub", "multi", "self"}
+PIECE = re.compile(r"^(.*?)\s*\(\s*(\*|[A-Z][A-Z0-9]{1,2})\s*\)[a-z ]*$")
+
+
+def pdf_text(pdf):
+    """pdftotext -layout lines of a PDF (a path under docs/standards, or absolute)."""
+    return subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", os.path.join(STANDARDS, pdf), "-"],
+                          capture_output=True, text=True).stdout.split("\n")
+
+
+def unhyphenate(text):
+    """Join a word the layout broke across lines ("identi-\\nfier"), keeping the hyphen of an
+    enumerated prefix ("pre-\\ncertification", v2.4 IN3-20)."""
+    return re.sub(r"\b(\w+)-[ \t]*\n\s*(?=[a-z])",
+                  lambda m: m.group(1) + ("-" if m.group(1).lower() in KEEP_HYPHEN else ""), text)
+
+
+def printed_line(lines):
+    """The first "Components:" / "Format:" line and its continuation lines, or None. Stops at a
+    blank line or a "Subcomponents" / "Definition" / "Note" / "Example" line (v2.4 OBR-15
+    runs its Subcomponents line straight on); a "Definition:" before any such line means the
+    field prints none (v2.4 OM2-6)."""
+    for k, line in enumerate(lines):
+        if line.strip().startswith("Definition:"):
+            return None
+        m = re.search(r"\b(Components|Format):", line)
+        if m:
+            block = [line[m.end():]]
+            for more in lines[k + 1:]:
+                if not more.strip() or re.match(r"\s*(Subcomponents|Definition|Note|Example)", more):
+                    break
+                block.append(more)
+            return "\n".join(block)
+    return None
+
+
+def parse_components_line(text):
+    """[(name, datatype)] from a printed Components / Format line, or None when it prints no
+    fixed list (an array: "...", "~"; v2.3 MA / NA) or a single piece (a primitive's format).
+    A piece with no "(XX)" code keeps its text as the name and "" as its datatype (TS.1,
+    the format itself). An "&" list after the first piece is the previous component's
+    subcomponents (v2.3.1 CD prints "<channel identifier (*)> ^ <channel number (NM)> &
+    <channel name (ST)> ^ ..."); a first piece with one names the component before its "("."""
+    if text is None:
+        return None
+    text = " ".join(unhyphenate(text).split())
+    if "..." in text or "~" in text:
+        return None
+    pieces = [p.strip() for p in text.split("^")]
+    if len(pieces) < 2 or not all(pieces):
+        return None
+    out = []
+    for k, piece in enumerate(pieces):
+        body = piece.lstrip("<").rstrip(">").strip()
+        if "&" in body:
+            if k:
+                continue
+            name, dt = body.split("(", 1)[0].strip(), ""
+        else:
+            m = PIECE.match(body)
+            name, dt = (m.group(1).strip(), m.group(2)) if m else (body, "")
+            dt = "" if dt == "*" else dt
+        out.append((name[:1].upper() + name[1:], dt))
+    return out
+
+
+def reconcile(code, comps, printed):
+    """Numbered subsections, completed from the Components line (P5). A subsection that prints
+    no datatype gives way to the line when the line prints one (v2.3.1 CNE.9 "Original text";
+    v2.3 CE.4 "Alternate components", one heading over CE.4-6). A component the line names past
+    the last subsection comes from the line (CE.5, CE.6). A line shorter than the typed
+    subsections is not trusted (v2.3 XTN prints its format as one piece)."""
+    typed = [c["index"] for c in comps if c["dataType"]]
+    if typed and len(printed) < max(typed):
+        print(f"   WARN {code}: Components line names {len(printed)}, subsections reach {max(typed)}; line ignored",
+              file=sys.stderr)
+        return comps
+    by = {c["index"]: c for c in comps}
+    out = []
+    for index, (name, dt) in enumerate(printed, 1):
+        c = by.get(index)
+        if c is not None and (c["dataType"] or not dt):
+            out.append(c)
+        else:
+            out.append({"index": index, "name": name, "dataType": dt, "text": c["text"] if c else ""})
+    return out
+
+
+ARRAY_SOURCES = {   # version -> {datatype: (pdf, section)} of an array type CH2 defers to CH7
+    "2.4": {"NA": ("HL7_v24_PDF/CH07.PDF", "7.14.1.1")},
+}
+
+
+def parse_array_line(text):
+    """[(name, "")] from an array type's printed line, "<value1> ^ <value2> ^ ... ^ ...": the
+    named pieces before the ellipsis, which closes the line (the array is open-ended). The
+    line prints no datatype code, so each entry's datatype is ""."""
+    pieces = [p.strip() for p in " ".join((text or "").split()).split("^")]
+    names = []
+    for p in pieces:
+        if p == "...":
+            break
+        m = re.fullmatch(r"<\s*([A-Za-z][A-Za-z0-9 ]*?)\s*>", p)
+        if not m:
+            return None
+        names.append(m.group(1))
+    if len(names) < 2 or len(names) == len(pieces):
+        return None                                   # not an array line
+    return [(n[:1].upper() + n[1:], "") for n in names]
+
+
+def extract_array(version, code):
+    """P10-4d. An array datatype CH2 defers to CH7 (v2.4 sec 2.9.27 NA: "Refer to Chapter 7,
+    Section 7.14.1.1"). The CH7 section prints only the array line under its heading."""
+    pdf, section = ARRAY_SOURCES[version][code]
+    lines = pdf_text(pdf)
+    heads = [i for i, l in enumerate(lines) if re.match(rf"^\s*{re.escape(section)}\s+{code}\b", l)]
+    if not heads:
+        return []
+    for line in lines[heads[-1] + 1:heads[-1] + 8]:
+        if line.strip().startswith("Definition:"):
+            break
+        printed = parse_array_line(line) if line.strip() else None
+        if printed:
+            return [{"index": i, "name": n, "dataType": d, "text": ""} for i, (n, d) in enumerate(printed, 1)]
+    return []
+
+
+def extract_tq(version):
+    """TQ's components. CH2 defers to CH4 (v2.3 / v2.3.1 sec 4.4, v2.4 sec 4.3), which numbers
+    them exactly as CH2 numbers any other composite ("4.4.1 Quantity component (CQ)"). The
+    last heading match is the body; earlier ones are the table of contents."""
+    pdf, section = TQ_SOURCES[version]
+    lines = pdf_text(pdf)
+    sec = re.escape(section)
+    heads = [i for i, l in enumerate(lines) if re.match(rf"^\s*{sec}\s+QUANTITY/TIMING", l)]
+    if not heads:
+        return []
+    # v2.4 prints a stray change-bar parenthesis after two headings ("4.3.11 Occurrence
+    # duration component (CE) )"): a trailing ")" is layout, not text.
+    component = re.compile(rf"^\s*{sec}\.(\d+)\s+(.*?)(?:\s*\(\s*([A-Z][A-Z0-9]{{1,2}})\s*\))?[\s)]*$")
+    deeper = re.compile(rf"^\s*{sec}\.\d+\.\d+")
+    end = re.compile(r"^\s*\d+\.\d+\s+[A-Z]")
+    comps, comp = [], None
+    for line in lines[heads[-1] + 1:]:
+        if FURNITURE.search(line):
+            continue
+        if end.match(line):
+            break
+        if deeper.match(line):
+            continue
+        m = component.match(line)
+        if m:
+            comp = {"index": int(m.group(1)), "name": m.group(2).strip(), "dataType": m.group(3) or "", "text": ""}
+            if not any(c["index"] == comp["index"] for c in comps):
+                comps.append(comp)
+            continue
+        if comp is not None:
+            comp["text"] += " " + line.strip()
+    comps.sort(key=lambda c: c["index"])
+    while comps and not comps[-1]["dataType"]:
+        comps.pop()                                    # "Examples of quantity/timing usage"
+    return comps
+
+
+def dehyphenate(text):
+    """Rejoin 'table' hyphenated across a line break. v2.3.1 sec 2.8.31.2 prints 'Refer to HL7
+    ta-' / 'ble 0207', and sec 2.8.28.6 'User-defined ta-' / 'ble 0305'; the joined component text
+    reads 'ta- ble', which TABLE cannot match. Only this word is rejoined: 'user- defined' is
+    already handled by TABLE's own '-\\s*'."""
+    return re.sub(r"\b([Tt]a)-\s+(ble)\b", r"\1\2", text)
 
 
 def words(text):
@@ -70,8 +254,7 @@ def judge(version, mentions):
 
 def extract(version):
     pdf, section = SOURCES[version]
-    text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", os.path.join(STANDARDS, pdf), "-"],
-                          capture_output=True, text=True).stdout.split("\n")
+    text = pdf_text(pdf)
     sec = re.escape(section)
     datatype = re.compile(rf"^\s*{sec}\.(\d+)\s+([A-Z][A-Z0-9]{{1,2}})\s*[-–]\s*(\S.*)$")
     component = re.compile(rf"^\s*{sec}\.(\d+)\.(\d+)\s+(.*?)(?:\s*\(\s*([A-Z][A-Z0-9]{{1,2}})\s*\))?\s*$")
@@ -84,7 +267,14 @@ def extract(version):
         m = datatype.match(line)
         if m:
             inside = True
-            cur = types.setdefault(m.group(2), {"n": m.group(1), "name": m.group(3).strip(), "components": []})
+            # v2.3.1's chapter 2 contents entries carry no dot leaders ("2.8.1    AD - address
+            # 2-12"), so FURNITURE's dot-leader test (used for v2.3 / v2.4) does not filter
+            # them: this heading pattern matches twice, the contents entry then the body
+            # heading. Unconditionally replacing `cur` on every match discards the contents
+            # entry and keeps the last one, the body heading that is actually followed by the
+            # datatype's definition text (confirmed: each v2.3.1 code matches this pattern
+            # exactly twice; v2.3 / v2.4 match once, so overwriting is a no-op there).
+            cur = types[m.group(2)] = {"n": m.group(1), "name": m.group(3).strip(), "components": [], "head": []}
             comp = None
             continue
         if not inside:
@@ -106,23 +296,38 @@ def extract(version):
             continue
         if comp is not None:
             comp["text"] += " " + line.strip()
+        elif cur is not None:
+            cur["head"].append(line)                   # the datatype's own text, before its first subsection
     out = {}
     for code, t in types.items():
         comps = sorted(t["components"], key=lambda c: c["index"])
+        printed = parse_components_line(printed_line(t["head"]))
+        source = "prose"
+        if comps and printed:
+            comps = reconcile(code, comps, printed)
+        elif printed:
+            # P5-2: no numbered subsections, only the printed Components / Format line (CD,
+            # CF, TS). Every entry is a printed component; TS prints no datatype code.
+            comps = [{"index": i, "name": n, "dataType": d, "text": ""} for i, (n, d) in enumerate(printed, 1)]
+            source = "prose-line"
+        if code == "TQ" and version in TQ_SOURCES:
+            comps, source = extract_tq(version), "prose"
+        if code in ARRAY_SOURCES.get(version, {}):
+            comps, source = extract_array(version, code), "prose-line"
         # A trailing subsection with no datatype code is a note, not a component ("Usage
         # notes:", "References for internationalization", "Type-subtype combinations").
-        while comps and not comps[-1]["dataType"]:
+        while source == "prose" and comps and not comps[-1]["dataType"]:
             comps.pop()
         if not comps:
             continue                                   # a primitive: no component subsections
         for c in comps:
-            c["tables"], c["rejected"] = judge(version, TABLE.findall(c.pop("text")))
-        out[code] = {"dataType": code, "version": version, "name": t["name"], "components": comps}
+            c["tables"], c["rejected"] = judge(version, TABLE.findall(dehyphenate(c.pop("text"))))
+        out[code] = {"dataType": code, "version": version, "name": t["name"], "source": source, "components": comps}
     return out
 
 
 def document(t):
-    return {"dataType": t["dataType"], "version": t["version"], "name": t["name"], "source": "prose",
+    return {"dataType": t["dataType"], "version": t["version"], "name": t["name"], "source": t.get("source", "prose"),
             "components": [{k: v for k, v in (("index", c["index"]), ("name", c["name"]), ("dataType", c["dataType"]),
                                               ("optionality", ""), ("tables", c["tables"]))
                             if not (k == "tables" and not v)} for c in t["components"]]}

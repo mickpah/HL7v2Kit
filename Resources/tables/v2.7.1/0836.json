@@ -1,0 +1,9 @@
+{
+  "table": "0836",
+  "version": "2.7.1",
+  "name": "Problem Severity",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0836 - Problem Severity",
+  "entries": []
+}

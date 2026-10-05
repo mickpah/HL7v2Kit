@@ -1,0 +1,26 @@
+{
+  "structure": "RPI_I01",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 11-9. Triggers Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-104) maps to RPI_I01 that no caption prints, accepted with the printed ones (P8b-11 ruling): RPI^I04.",
+  "triggers": ["RPI^I01", "RPI^I04"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "group": "GUARANTOR_INSURANCE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "GT1", "min": 0, "max": null },
+      { "group": "INSURANCE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}

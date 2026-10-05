@@ -1,0 +1,9 @@
+{
+  "table": "0381",
+  "version": "2.7.1",
+  "name": "Cap Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0381 - Cap Type",
+  "entries": []
+}

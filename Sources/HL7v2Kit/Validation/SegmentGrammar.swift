@@ -21,16 +21,21 @@ public enum FieldOptionality: String, Sendable, Equatable, Hashable {
     case withdrawn = "W"
 }
 
-/// Field repeatability. `single` for `1`, `multiple` for `*`.
+/// Field repeatability. `single` for `1`; `multiple` for `*` (unbounded) or a
+/// printed bound. The bound itself is ``FieldGrammar/maxRepetitions``.
 public enum FieldRepeatability: Sendable, Equatable, Hashable {
     case single
     case multiple
 
-    /// Parse the wire-form repeatability string (`"1"` → `.single`, `"*"` → `.multiple`).
+    /// Parse the schema repeatability token: `"1"` → `.single`; `"*"` or a
+    /// bound of 2 or more (`"3"`, the RP/# column's "(integer)") → `.multiple`.
     public init(wireValue raw: String) {
-        switch raw {
-        case "*": self = .multiple
-        default:  self = .single
+        if raw == "*" {
+            self = .multiple
+        } else if let bound = Int(raw), bound > 1 {
+            self = .multiple
+        } else {
+            self = .single
         }
     }
 }
@@ -83,11 +88,48 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// `IS` fields and open tables are informational (req #4). M6-O6.
     public let table: String?
     /// The LEN cell the version's attribute table prints, verbatim, or `nil`
-    /// when the table prints none. Before v2.7 it is a stated maximum the
-    /// spec itself calls "not of conceptual importance"; from v2.7 it is a
-    /// normative range with truncation semantics (`"2..2"`, `"32="`, `"250#"`).
-    /// Recorded for reference and never enforced (M25).
+    /// when the table prints none. Before v2.7 it is a maximum length: the
+    /// spec calls the maximum "not of conceptual importance in the abstract
+    /// message or the HL7 coding rules" and, in the next sentence, "The length
+    /// of a field is normative", negotiable by site agreement (v2.3 and v2.3.1
+    /// section 2.6.2, v2.4 section 2.7.2, v2.5.1 and v2.6 section 2.5.3.2).
+    /// From v2.7 it is a normative length (`"2..2"`, `"2,4"`) or, where LEN is
+    /// blank, the printed conformance length with its truncation marker
+    /// (`"32="`, `"250#"`).
+    /// Enforced by the Validator per era: see ``ValidationOptions/fieldLengthSeverity``
+    /// and ``ValidationOptions/normativeLengthSeverity`` (P6-6).
     public let length: String?
+    /// `true` when this field's own prose leaves its bound ``table`` open, whatever the
+    /// table's own kind: it cites the table "for suggested values", calls it User-defined,
+    /// or says the value set can be extended. Some HL7 tables are cited that way by one field
+    /// and "for valid values" by another (v2.4 PID-31 against PID-24 for Table 0136), so
+    /// openness is per field as well as per table. The Validator's closed-table check skips
+    /// a field with `tableOpen` set; other fields bound to the same table are unaffected.
+    /// The schema entry carries the citation (`tableOpenCitation`). `false` by default. P2-15.
+    public let tableOpen: Bool
+    /// Severity of the `.conditionalFieldProhibited` issue raised when
+    /// this field is populated while `prohibitedWhen` holds. `.error`
+    /// (the default) for normative text ("may only be", "not
+    /// permitted"); `.warning` for SHOULD-level or "not applicable"
+    /// text, so advisory spec wording never produces an error (req #4).
+    /// Ignored when `prohibitedWhen` is `nil`. P4.
+    public let prohibitedSeverity: IssueSeverity
+    /// Further prohibitions on this field beyond ``prohibitedWhen``, each with its own
+    /// severity. The Validator evaluates every rule exactly as it does `prohibitedWhen` and
+    /// raises one `.conditionalFieldProhibited` per rule that holds, so a field the spec
+    /// restricts twice (v2.5.1 / v2.6 RXR-6: an error when RXR-2 is empty, a warning when
+    /// RXR-2 is coded from Table 0163) reports each rule on its own. Not set by the released
+    /// initialisers; empty by default. P4-21.
+    public let additionalProhibitions: [FieldProhibition]
+    /// The most `~`-repetitions the version's RP/# column allows: `Y/3` before
+    /// v2.5, a bare `3` from v2.5 ("the field may repeat up to the number of
+    /// times specified by the integer", v2.3.1 §2.6.5, v2.5.1 §2.5.3.5).
+    /// `nil` when the column prints `Y` (unbounded) or the field does not
+    /// repeat. Non-nil implies `repeatability == .multiple` and a value of at least 2;
+    /// the initialiser traps (`precondition`) otherwise. An overrun raises
+    /// `.cardinalityExceeded` at `.warning`. Not set by the released
+    /// initialisers; `nil` by default. P6-4.
+    public let maxRepetitions: Int?
 
     public init(
         index: Int,
@@ -101,6 +143,107 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         table: String? = nil,
         length: String? = nil
     ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: false)
+    }
+
+    /// Creates a field grammar that also states whether the field's own prose leaves its
+    /// bound table open (see ``tableOpen``). A separate overload so the released
+    /// initialiser keeps its signature (ADR-014). P2-15.
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool
+    ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: tableOpen,
+                  prohibitedSeverity: .error)
+    }
+
+    /// Creates a field grammar that also states the severity of its prohibition (see
+    /// ``prohibitedSeverity``). A separate overload so the released initialisers keep
+    /// their signatures (ADR-014). P4.
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool = false,
+        prohibitedSeverity: IssueSeverity
+    ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: tableOpen,
+                  prohibitedSeverity: prohibitedSeverity, additionalProhibitions: [])
+    }
+
+    /// Creates a field grammar that carries more than one prohibition (see
+    /// ``additionalProhibitions``). A separate overload so the released initialisers keep
+    /// their signatures (ADR-014). P4-21.
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool = false,
+        prohibitedSeverity: IssueSeverity = .error,
+        additionalProhibitions: [FieldProhibition]
+    ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: tableOpen,
+                  prohibitedSeverity: prohibitedSeverity, additionalProhibitions: additionalProhibitions,
+                  maxRepetitions: nil)
+    }
+
+    /// Creates a field grammar that also carries the RP/# column's printed repetition
+    /// bound (see ``maxRepetitions``). A separate overload so the released initialisers
+    /// keep their signatures (ADR-014). P6-4.
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool = false,
+        prohibitedSeverity: IssueSeverity = .error,
+        additionalProhibitions: [FieldProhibition] = [],
+        maxRepetitions: Int?
+    ) {
+        // P6-4: a bound only means something on a repeating field, and a bound of 1 is
+        // `.single`. Codegen never emits either; a hand-built grammar that does is a
+        // programmer error, trapped here rather than silently ignored by the Validator.
+        if let bound = maxRepetitions {
+            precondition(repeatability == .multiple && bound >= 2,
+                         "FieldGrammar \(index): maxRepetitions \(bound) requires .multiple and a bound of at least 2")
+        }
         self.index = index
         self.name = name
         self.dataType = dataType
@@ -111,6 +254,36 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.variableColumns = variableColumns
         self.table = table
         self.length = length
+        self.tableOpen = tableOpen
+        self.prohibitedSeverity = prohibitedSeverity
+        self.additionalProhibitions = additionalProhibitions
+        self.maxRepetitions = maxRepetitions
+    }
+}
+
+/// One prohibition on a field: when ``condition`` holds and the field is populated, the
+/// Validator raises `.conditionalFieldProhibited` at ``severity``. The condition uses the
+/// same predicate grammar as ``FieldGrammar/prohibitedWhen``, with the same fail-safe
+/// semantics (an unresolvable predicate never fires). See
+/// ``FieldGrammar/additionalProhibitions``. P4-21.
+public struct FieldProhibition: Sendable, Equatable, Hashable {
+    /// The predicate under which the field must not be populated, e.g. `"RXR-2.3 = HL70163"`.
+    public let condition: String
+    /// Severity of the issue raised when the rule fires: `.error` for normative text,
+    /// `.warning` for SHOULD-level text (req #4).
+    public let severity: IssueSeverity
+    /// When `true`, the HL7 null (`""`) does not count as a value for this rule: a field
+    /// whose every non-empty repetition is a lone `""` never fires it. Used where the spec
+    /// asks for the field to be "valued with null" while the condition holds, such as
+    /// OBX-2 and OBX-5 under OBX-11 = O (dynamic specification). `false` by default. P4-26.
+    public let permitsNull: Bool
+
+    /// Creates a prohibition from its predicate, the severity it reports at and whether
+    /// the HL7 null is exempt (see ``permitsNull``; `false` by default).
+    public init(condition: String, severity: IssueSeverity, permitsNull: Bool = false) {
+        self.condition = condition
+        self.severity = severity
+        self.permitsNull = permitsNull
     }
 }
 

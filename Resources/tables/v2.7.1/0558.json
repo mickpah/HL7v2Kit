@@ -1,0 +1,26 @@
+{
+  "table": "0558",
+  "version": "2.7.1",
+  "name": "Payee Relationship to Invoice",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0558 - Payee Relationship to Invoice",
+  "entries": [
+    {
+      "code": "FM",
+      "description": "Family Member"
+    },
+    {
+      "code": "GT",
+      "description": "Guarantor"
+    },
+    {
+      "code": "PT",
+      "description": "Patient"
+    },
+    {
+      "code": "SB",
+      "description": "Subscriber"
+    }
+  ]
+}

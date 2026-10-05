@@ -1,0 +1,16 @@
+{
+  "structure": "ADT_A39",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.39 ADT/ACK - merge person - patient ID (event A39), p 3-25; the same structure is printed for ADT^A40 (3.2.40), ADT^A41 (3.2.41) and ADT^A42 (3.2.42). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ADT_A39.xsd, ADT_A39.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["ADT^A39", "ADT^A40", "ADT^A41", "ADT^A42"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "MRG", "min": 1, "max": 1 },
+      { "segment": "PV1", "min": 0, "max": 1 }
+    ]}
+  ]
+}

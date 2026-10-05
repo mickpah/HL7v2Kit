@@ -1,0 +1,134 @@
+{
+  "table": "0125",
+  "version": "2.7.1",
+  "name": "Value Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A (p53), HL7 Table 0125 - Value Type; Chapter 7 sec 7.3.2.2 OBX-2 (p46) and sec 7.15.4 (p141)",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "Address"
+    },
+    {
+      "code": "CF",
+      "description": "Coded Element With Formatted Values"
+    },
+    {
+      "code": "CK",
+      "description": "Composite ID With Check Digit"
+    },
+    {
+      "code": "CN",
+      "description": "Composite ID And Name"
+    },
+    {
+      "code": "CNE",
+      "description": "Coded with No Exceptions"
+    },
+    {
+      "code": "CP",
+      "description": "Composite Price"
+    },
+    {
+      "code": "CWE",
+      "description": "Coded Entry"
+    },
+    {
+      "code": "CX",
+      "description": "Extended Composite ID With Check Digit"
+    },
+    {
+      "code": "DR",
+      "description": "Date/Time Range"
+    },
+    {
+      "code": "DT",
+      "description": "Date"
+    },
+    {
+      "code": "DTM",
+      "description": "Time Stamp (Date & Time)"
+    },
+    {
+      "code": "ED",
+      "description": "Encapsulated Data"
+    },
+    {
+      "code": "FT",
+      "description": "Formatted Text (Display)"
+    },
+    {
+      "code": "IS",
+      "description": "Coded Value for User-Defined Tables"
+    },
+    {
+      "code": "MA",
+      "description": "Multiplexed Array"
+    },
+    {
+      "code": "MO",
+      "description": "Money"
+    },
+    {
+      "code": "NA",
+      "description": "Numeric Array"
+    },
+    {
+      "code": "NM",
+      "description": "Numeric"
+    },
+    {
+      "code": "PN",
+      "description": "Person Name"
+    },
+    {
+      "code": "RP",
+      "description": "Reference Pointer"
+    },
+    {
+      "code": "SN",
+      "description": "Structured Numeric"
+    },
+    {
+      "code": "ST",
+      "description": "String Data."
+    },
+    {
+      "code": "TM",
+      "description": "Time"
+    },
+    {
+      "code": "TN",
+      "description": "Telephone Number"
+    },
+    {
+      "code": "TX",
+      "description": "Text Data (Display)"
+    },
+    {
+      "code": "XAD",
+      "description": "Extended Address"
+    },
+    {
+      "code": "XCN",
+      "description": "Extended Composite Name And Number For Persons"
+    },
+    {
+      "code": "XON",
+      "description": "Extended Composite Name And Number For Organizations"
+    },
+    {
+      "code": "XPN",
+      "description": "Extended Person Name"
+    },
+    {
+      "code": "XTN",
+      "description": "Extended Telecommunications Number"
+    },
+    {
+      "code": "CD",
+      "description": "Channel definition (Chapter 7 waveform: CHN category)"
+    }
+  ]
+}

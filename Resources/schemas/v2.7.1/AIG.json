@@ -1,0 +1,21 @@
+{
+  "segmentID": "AIG",
+  "version": "2.7.1",
+  "description": "AIG",
+  "fields": [
+    { "index": 1, "swiftName": "setIdAig", "name": "Set ID - AIG", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
+    { "index": 3, "swiftName": "resourceId", "name": "Resource ID", "dataType": "CWE", "optionality": "C", "repeatability": "1", "condition": "messageCode = SIU" },
+    { "index": 4, "swiftName": "resourceType", "name": "Resource Type", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "resourceGroup", "name": "Resource Group", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "resourceQuantity", "name": "Resource Quantity", "dataType": "NM", "length": "5#", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "resourceQuantityUnits", "name": "Resource Quantity Units", "dataType": "CNE", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1", "condition": "AIG-9 empty" },
+    { "index": 9, "swiftName": "startDateTimeOffset", "name": "Start Date/Time Offset", "dataType": "NM", "optionality": "C", "repeatability": "1", "condition": "AIG-8 empty" },
+    { "index": 10, "swiftName": "startDateTimeOffsetUnits", "name": "Start Date/Time Offset Units", "dataType": "CNE", "optionality": "C", "repeatability": "1", "condition": "AIG-9 populated" },
+    { "index": 11, "swiftName": "duration", "name": "Duration", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "durationUnits", "name": "Duration Units", "dataType": "CNE", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0279"], "condition": "messageCode = SRM" },
+    { "index": 14, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0278"], "condition": "messageCode in (SIU, SRR)", "prohibitedWhen": "messageCode = SRM", "prohibitedSeverity": "warning" }
+  ]
+}

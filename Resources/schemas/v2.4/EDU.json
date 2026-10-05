@@ -4,7 +4,7 @@
   "description": "Educational Detail",
   "fields": [
     { "index": 1, "swiftName": "setIdEdu", "name": "Set ID – EDU", "dataType": "SI", "length": "60", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "academicDegree", "name": "Academic Degree", "dataType": "IS", "length": "10", "table": "0360", "optionality": "O", "repeatability": "1", "tables": ["0360"] },
+    { "index": 2, "swiftName": "academicDegree", "name": "Academic Degree", "dataType": "IS", "length": "10", "table": "0360", "optionality": "", "repeatability": "1", "tables": ["0360"] },
     { "index": 3, "swiftName": "academicDegreeProgramDateRange", "name": "Academic Degree Program Date Range", "dataType": "DR", "length": "52", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "academicDegreeProgramParticipationDateRange", "name": "Academic Degree Program Participation Date Range", "dataType": "DR", "length": "52", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "academicDegreeGrantedDate", "name": "Academic Degree Granted Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },

@@ -1,0 +1,9 @@
+{
+  "table": "0543",
+  "version": "2.7.1",
+  "name": "Specimen Collection Site",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0543 - Specimen Collection Site",
+  "entries": []
+}

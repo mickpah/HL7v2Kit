@@ -1,0 +1,26 @@
+{
+  "table": "0283",
+  "version": "2.7.1",
+  "name": "Referral Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0283 - Referral Status",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Accepted"
+    },
+    {
+      "code": "E",
+      "description": "Expired"
+    },
+    {
+      "code": "P",
+      "description": "Pending"
+    },
+    {
+      "code": "R",
+      "description": "Rejected"
+    }
+  ]
+}

@@ -66,4 +66,6 @@ We do not ship a registry of "known" Z-segments. `ZAU` is no different from `ZFR
 
 ## Notes
 
-The Z-segment policy interacts with ADR-005 (dictionaries) and the codegen-emitted `SegmentGrammarTable`. The grammar table only contains entries for typed segments; the validator falls into the Z-segment branch for anything else — including IDs that *look* well-known (e.g. `OBR` would fall into the Z branch on a v0.2.0 release if its schema were removed from `Resources/schemas/`). The fail-mode is safe: the validator emits an info / error per `zSegmentPolicy`; it does not invent grammar.
+The Z-segment policy interacts with ADR-005 (dictionaries) and the codegen-emitted `SegmentGrammarTable`. The grammar table only contains entries for typed segments; the validator falls into the Z-segment branch only for IDs beginning with `Z` (ADR-018 amendment below) — any other ID with no grammar entry (e.g. `OBR` would have no entry on a v0.2.0 release if its schema were removed from `Resources/schemas/`) is reported as `IssueCode.segmentNotInVersionGrammar`, not as a Z-segment. The fail-mode is safe: the validator emits an info / error per `zSegmentPolicy` for true Z-segments, and a warning for a non-Z segment the version does not define; it does not invent grammar.
+
+**ADR-018 amendment:** only IDs beginning with `Z` enter the Z-segment branch. Any other ID with no grammar entry for the applied version is reported as `IssueCode.segmentNotInVersionGrammar` (warning) under every policy, so a standard segment is never labelled a Z-segment.

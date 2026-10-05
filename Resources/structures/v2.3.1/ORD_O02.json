@@ -1,0 +1,28 @@
+{
+  "structure": "ORD_O02",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.6 DIET ORDERS, p 4-47. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/ORD_O02.xsd, ORD_O02.RESPONSE.CONTENT, generator HL7-Database), PATIENT (HL7-xml 2.3.1/ORD_O02.xsd, ORD_O02.PATIENT.CONTENT, generator HL7-Database), ORDER_DIET (HL7-xml 2.3.1/ORD_O02.xsd, ORD_O02.ORDER_DIET.CONTENT, generator HL7-Database) and ORDER_TRAY (HL7-xml 2.3.1/ORD_O02.xsd, ORD_O02.ORDER_TRAY.CONTENT, generator HL7-Database).",
+  "triggers": ["ORR^O02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER_DIET", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "segment": "ODS", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER_TRAY", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "segment": "ODT", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

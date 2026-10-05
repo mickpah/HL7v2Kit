@@ -1,0 +1,18 @@
+{
+  "structure": "MFN_M11",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 8, section 8.8.2 MFN/MFK - service/test/observation master file, p 8-22. Unprinted group names (ADR-019 decision 3): MF_TEST_CALCULATED (HL7-xml v2.4/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT) and MF_TEST_CALC_DETAIL (HL7-xml v2.4/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT).",
+  "triggers": ["MFN^M11"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_TEST_CALCULATED", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "group": "MF_TEST_CALC_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "OM6", "min": 1, "max": 1 },
+        { "segment": "OM2", "min": 1, "max": 1 }
+      ]}
+    ]}
+  ]
+}

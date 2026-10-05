@@ -7,6 +7,2342 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Summary — workstream P7 (audit, documents and coverage), complete 2026-10-05
+
+- **Audit (P7-1, P7-8):** `audit-schemas.py` compares `C` and the defining attribute table;
+  the `--tables` KINDMISMATCH findings fall from 14 to 7, each remaining one the print's own
+  binding (ADR-016).
+- **Documents (P7-2 to P7-5, P7-8):** the conditional-completeness register is pinned to the
+  grammar on all seven versions; the v2.3 to v2.4, v2.6 and v2.8.2 audit and coverage
+  documents, the DocC "does not check" list, ADR-016 and the design index corrected against
+  the prints; register section G added; the DocC catalogue builds with no warnings.
+- **Coverage (P7-6, P7-7):** thirteen synthetic wire fixtures across v2.3, v2.3.1, v2.6,
+  v2.7.1 and v2.8.2 with wire-level fire and silent pairs.
+- **Guards (P7-8):** the printed-ID sweep committed as a local guard; spec examples with an
+  elided MSH-12 validate under their source version.
+- Rulings awaiting the owner: RXE-15 on v2.3, v2.3.1 and v2.4 (ship the rule or keep it
+  registered); register section G (component normative length and `B` / `W` component
+  warnings).
+
+### Added — P7-final: validator-level pins for the v2.3 table checks
+
+- `V23TableCheckValidationTests`: on v2.3, QAK-2 outside Table 0208, PD1-12 outside Table 0136 and PCR-22 outside Table 0252 each draw `valueNotInTable`; a listed code draws none.
+- ADR-016 records the convention that code tables keep Appendix A rows as printed; Table 0354 misprints are corrected only by cited structure-side errata.
+
+### Fixed — P7-8: workstream close-out
+
+- **Spec-example harness:** an example whose MSH-12 the print elided validates under the
+  version of the document that prints it, not the v2.5.1 fallback
+  (`SpecExampleMessageTests`, pinned by the new always-on `SpecExampleHarnessTests`).
+  Registry re-baselined: 250 entries, 0 mismatched.
+- **Table kinds and bindings (against the print):** v2.3 Tables 0174, 0315, 0316 and v2.4
+  Table 0392 are User-defined as their chapters print them; v2.3 Table 0208 is HL7 with the
+  AE row (QAK-2 now checked on v2.3); v2.3 PD1-12 binds 0136 and PCR-22 binds 0252, the
+  tables their definitions name. Table 0354 v2.4 and v2.5.1 hold Appendix A's rows as
+  printed, misprints corrected only by structure-side errata (note in `overrides.json`).
+- **Guard:** `scripts/check-printed-structure-ids.py`, a local guard (it reads the licensed
+  PDFs; not CI): no printed (trigger, structure ID) pair is a mismatch beyond six cited
+  misprint rows.
+- **Tests:** the MSH-12 version matrix moved to `VersionMatrixTests.swift`; the bare-C
+  register check no longer takes `TXA-2.1` for `TXA-2`; a v2.3 direction-tag negative case
+  in the structure extractor self-check.
+- **DocC:** symbol links and anchors fixed; the `CharacterEncoding` article renamed
+  `CharacterEncodingGuide` so it no longer hides the enumeration's page; Migration.md cites
+  the extra-component rule per version.
+
+### Added — P7-7: v2.6, v2.7.1 and v2.8.2 wire fixtures
+
+- Seven synthetic fixtures (v2.6 ORU^R01, ADT^A01; v2.7.1 ORU^R01 with PRT / TQ1 / SPM,
+  ADT^A01; v2.8.2 ADT^A01 with PID-40, ORU^R01 with PRT / TQ1 / SPM / OBX-26..30,
+  OML^O21), each conforming to its version's printed structure and validating with no
+  issues at all under `.strict`.
+- Wire pairs for OBX-2, OBR-7 and OBR-25 on the v2.6, v2.7.1 and v2.8.2 results, DG1-20
+  (silent on A01, fires on P12), the PRT one-of rule and the PRT-7 prohibition ("may
+  only be valued if PRT-5 is valued", v2.8.2 CH07 7.4.4.7), and a read-back of the
+  fields added in v2.7 and later.
+- `VersionPredicateWireTests` gains the v2.7.1 and v2.8.2 runs of the shared pairs.
+- The OML fixture pins the registered OBR-7 request-leg gap
+  (`conditional-completeness-audit.md`): emptying OBR-7 on an order stays silent.
+
+### Added — P7-6: v2.3 and v2.3.1 wire fixtures
+
+- Six synthetic fixtures (v2.3 ORU^R01 without ORC, ORF^R04, ACK^A01; v2.3.1 ORU^R01,
+  ADT^A01, ACK^A01 with ERR), each conforming to its version's printed structure and
+  validating with no issues at all under `.strict` (identifiers kept within the printed
+  LEN: PID-3 20, QRD-4 10, v2.3.1 ORC/OBR-2/3 22).
+- `VersionFixtureTests` and `VersionPredicateWireTests`: wire-level fire and silent pairs
+  for OBX-2, OBR-2/3/25, ORC-2, CSR-9/14, CTI-2, RQ1-2 and RQD-2 on v2.3 (and v2.6, with
+  PYE-3/4 and DG1-20).
+- Two stale fixture README rows corrected (v2.3 MSH has 19 fields; v2.3.1 ORC has 24).
+
+### Fixed — P7-5: validator limits and design index documented accurately
+
+- **The composite extra-component warning cites the version validated.** It cited "section
+  2.8.1, section 2.11.5" with no version, and v2.3 to v2.4 print neither. It now reads, per
+  the print: v2.3 and v2.3.1 section 2.10.2 c, v2.4 section 2.11.2 c ("new components may be
+  added at the end of a field"; no local extension clause), v2.5.1 sections 2.8.1 and
+  2.11.5 c, v2.6 to v2.8.2 sections 2.8.1 h and 2.11.5 c. Message text only; the code,
+  severity and location are unchanged.
+- DocC "What the validator does not check" drops the stale cross-segment bullet (cross-segment
+  conditions ship, ADR-008) and states what is really unchecked: component normative length
+  (v2.7.1, v2.8.2) and populated `B` / `W` components, both registered in the new
+  permanent-limitations register section G. Field length, bounded repeats, primitive format
+  and message structure are checked and are not listed. The conditional DSL section now
+  gives the shipped grammar (AND / OR, cross-segment referents, three-state evaluation) and a
+  true example (PID-36 `PID-37 populated`); the grammar-scope sentence names all seven
+  versions. `AddingASegment.md` no longer calls primitive format and cross-segment
+  conditions future work.
+- `FieldGrammar.length` documentation quotes the pre-v2.7 length paragraph whole: "not of
+  conceptual importance" and, next, "The length of a field is normative" (v2.3 and v2.3.1
+  section 2.6.2, v2.4 section 2.7.2, v2.5.1 and v2.6 section 2.5.3.2).
+- ADR-016: the 1,073 `ID` field count is recounted with its method stated: right at
+  7c6b62ce, 1,222 live today across seven versions (1,248 bound, 26 `tableOpen`).
+- `docs/design/README.md` indexes ADR-019 and ADR-020 and corrects the ADR-012 and ADR-017
+  rows; `planning/` paths are marked as the local planning folder, not in the repository.
+
+### Fixed — P7-4: v2.6 / v2.8.2 coverage documents
+
+- `v2_6-spec-audit.md`, `v2_8_2-spec-audit.md`, `deferred-coverage-backlog.md` and
+  `permanent-limitations-register.md` now agree with the shipped full-depth surface: 170
+  segment schemas on v2.6, 180 on v2.8.2 (170 on v2.7.1), every segment with an attribute
+  table except the CH08 example ZL7, all exact under the depth audit. Dated superseded notes,
+  a closure header on the backlog (M5, v3.1.0), and the curated NK1 / PV1 / IN1 lines struck.
+- The v2.6 field-growth table said v2.5.1 OBR had 47 fields and OBX 17, with OBR-48..50 and
+  OBX-18..25 new in v2.6. The v2.5.1 CH07 tables print OBR-1..50 (pp. 7-27 to 7-28) and
+  OBX-1..25 (p. 7-42, OBX-20..22 reserved for v2.6); both rows are corrected.
+- The v2.8.2 audit no longer lists PD1-15 and ORC-26 as conditions without a predicate (both
+  shipped in v0.16), and gives the v2.8.2 IN1 depth as 55, not 53. The backlog's `.v2_8` and
+  message-structure sections note that ADR-018 and the P8b rollout superseded them.
+
+### Fixed — P7-3: v2.3 / v2.3.1 / v2.4 audit document
+
+- `docs/design/v2_3-v2_4-spec-audit.md` no longer says the v2.3, v2.3.1 and v2.4 PDFs are
+  unavailable. Its field-count table carries the modelled counts, each with the print that
+  grounds it (MSH 19 / 20 / 21, PID 30 / 30 / 38, OBR 43 / 45 / 47, OBX 17 / 17 / 19,
+  ORC 19 / 24 / 25, NTE 3 / 4 / 4, NK1 37, PV1 52, IN1 49), matching the depth audit
+  (1010 exact, 0 gaps). OBX-15 ("Producer's ID"), IN1-14 (`CM` on v2.4) and the IN1 depth
+  are corrected. The conditional table no longer says PID-35 and PID-36 do not exist on
+  v2.4: v2.4 CH03 prints both with the v2.5.1 Conditionality Rules (§3.4.2.35, §3.4.2.36,
+  p. 3-76), and the v2.4 schema carries them. A dated addendum lists every correction
+  (V23-C11, V24-C10, documentation half of V231-C17).
+
+### Added — P7-2: the conditional-completeness register is pinned to the grammar
+
+- **Every bare `C` must be named in the register (V251-C12).** `BareConditionalGuardTests`
+  already pinned each version's set of `C` fields with no predicate (v2.3 to v2.7.1; v2.8.2
+  in `MultiVersionTests`), but a field could join a set with a literal update alone. A new
+  test reads `docs/design/conditional-completeness-audit.md` and fails when a bare `C` on any
+  of the seven versions is not named there. The two slots V251-C12 found unregistered,
+  TXA-21 (v2.3 to v2.6, registered in P4-15) and OBR-48 on v2.5.1 (scope added in the P1
+  fix round), are named today.
+- **v2.4 ROL-1 is required in the Patient Care messages (P10-7 intake).** v2.4 CH12
+  section 12.4.3.1 (p. 24): "This field is required when used in Patient Care messages. The
+  field is optional when used in ADT and Finance messages." ROL-1 was bare on v2.4 because
+  the sentence differs from v2.5.1's; it now carries `messageCode in (PGL, PPG, PPP, PPR,
+  PPT, PPV, PRR, PTR)`, the eight CH12 messages, each of which carries ROL. ADT, Finance,
+  CH13 and PMU messages are unaffected on v2.4. `RoleConditionTests` covers both sides.
+- **RXE-15's bare rationale states the print (P10-5a intake).** The audit now quotes the
+  sentence on all seven versions and gives the reasons no predicate ships: the required set
+  is a description, not message codes; "not PEX" would reach the v2.7.1 and v2.8.2 CH11
+  collaborative-care messages; and the standard's own RSP^K31 example (v2.5.1 onward) sends
+  RXE-15 empty. On v2.3 to v2.4, which print no such example, a rule over the Chapter 4
+  messages is expressible and is registered as open for an owner ruling (register §A).
+
+### Fixed — P8b-final: findings of the whole-branch review of the message-structure rollout
+
+- **An exact-matched structure names what it expected (F-I3).** A structure that fails the
+  determinism lint reports its one finding at the furthest segment any parse reached, so a
+  required segment absent mid-message was reported only as the next segment unexpected
+  ("PID has no place in BAR_P01 at this point", EVN never named). The text now adds the
+  segments the structure accepts there: "; expected here: SFT or EVN" (each ID once, in
+  structure order, at most eight then "and N more", "or the end of the message" when a parse
+  is complete there). Code, severity, location and the number of findings are unchanged. In
+  the three validation digests 4 lines change (default and strict), each this clause only.
+- **A structure ID the version's print gives is never a mismatch (F-I1 a, b; reverses the
+  P8b-14 ruling, owner to confirm).** v2.3.1 prints structure IDs only in Table 0354, and ten of
+  its rows are misprinted: TBR_R09, RRE_O01, MFD_P09, PIN_107, RPI_I0I, RQI_I0I, ARD_A19,
+  SIIU_S12, RROR_ROR and ORM__O01 were mismatches (error under `.strict`) for a message that
+  copied them; they are now registered as not modelled, so `TBR^R08^TBR_R09` or
+  `TBR^R09^TBR_R09` is information naming TBR_R08, not structure-checked. The corrected IDs and
+  the bare triggers keep matching. v2.4's CH02 listing of Table 0354 (2.17.3, pp 2-138 to 2-141)
+  prints ten rows Appendix A lacks or prints differently (QRY_Q26 to QRY_Q30, whose CH04
+  captions read QRY^Q26^QRY_Q01 and so on; RPI_I0I, RQI_I0I, ORN_008, TBR_R09, RDE_O01), and
+  v2.5.1's listings disagree on BRP_030 and RSP_Q11: registered likewise. PPG^PCC is registered
+  with PPG_PCG on v2.5.1, v2.6 and v2.8.2, as on v2.3.1, v2.4 and v2.7.1 (every Table 0354 lists
+  PCC under it). The codegen accepts a registered ID that is not of the CODE_EVT form only as the
+  printed ID of a cited table-0354 erratum. Registered: v2.3.1 38, v2.4 34, v2.5.1 32.
+- **Deprecated Table 0354 rows carry their events (M4).** The v2.7.1 and v2.8.2 registrations of
+  rows the printed table marks Deprecated (39 and 47) had no triggers, so a bare `ORM^O01` got
+  the generic reason; the 76 whose row lists events now carry them (`ORM^O01`), written and
+  checked by `scripts/extract-message-structures.py` (`--write` / `--check`) from Table 0354, so a
+  bare trigger gets the Deprecated reason. No trigger is shared with a modelled structure
+  except `ORU^W01` on v2.7.1 and v2.8.2 (next item).
+- **`ORU^W01` is an ORU_R01 trigger on v2.3.1 to v2.8.2 (F-I1 c).** Each version's CH07 W01
+  section says the waveform trigger "identifies ORU messages" (v2.3.1 7.19.1 p 7-117, v2.4 7.15.1
+  p 7-117, v2.5.1 7.15.1 p 7-130, v2.6 7.15.1 p 7-110, v2.7.1 7.14.1 p 140, v2.8.2 7.15.1 p 153)
+  and v2.6 to v2.8.2's examples send `ORU^W01^ORU_R01`, which was a mismatch. W01 is now folded
+  onto ORU_R01 through `referencedTriggers`, as on v2.3: `ORU^W01^ORU_R01` is matched against
+  ORU_R01; `ORU^W01^ORU_W01` (Table 0354's ID, no printed syntax) stays information; a bare
+  `ORU^W01` resolves to ORU_R01 on v2.3.1 to v2.6 and is ambiguous (information) on v2.7.1 and
+  v2.8.2, where the Deprecated ORU_W01 row carries W01 (declared in `sharedTriggers`). The
+  extractor's shared-trigger check now counts registered structures' triggers, as the codegen
+  guard does.
+- **Every printed (trigger, structure ID) pair swept (F-I1 d).** A sweep validated one message
+  per pair that any printed Table 0354 listing (CH02 / CH02C and Appendix A), caption or query
+  profile trigger row gives, on every version (4,747 messages; a table row's events tried under
+  every code a caption prints for them). Printed pairs still reported as mismatches: v2.4 CH02
+  2.14.2 (p 2-97) prints the delayed acknowledgment as `MCF^varies^ACK`, so `MCF^A01^ACK` was
+  reported; the general ACK fold now also takes `MCF^*` from that caption (extractor
+  `fold_triggers`, cited in the structure). The v2.8.2 CH04 4.16.6 and 4.16.8 query profiles
+  print QBP_Q33, RSP_K33, QBP_Q34 and RSP_K34 where the captions give QBP_O33 and so on: now
+  registered (v2.8.2: 62 registered). The v2.7.1 CH03 3.3.63 and v2.8.2 CH03 3.2.63 profiles
+  print `RSP^K32^RSP_K25`, whose ID is modelled for RSP^K25: a new completeness.json
+  `printedPairs` list (codegen-checked: the structure is loaded and does not print the trigger)
+  makes such a pair information. The six rows left are Table 0354 event misprints that are not
+  trigger events (v2.3.1 `136`, `1II`; v2.4 and v2.5.1 `007`, `022`), whose corrected events
+  match.
+- **The rule stated where a consumer reads it (F-I1 e, M7).** Migration.md ("The
+  message-structure check is on by default") and ADR-019 (amendment 2026-10-05) state that a
+  printed structure ID is never a mismatch and what a consumer gets in each case: matched,
+  information (registered, or a `printedPairs` entry), or a mismatch only for an ID printed for
+  other triggers or nowhere. The register's v2.4 Table 0354 and close-out paragraphs, the spec
+  audits and Validation.md say so too; earlier CHANGELOG entries that call the v2.3.1 misprints
+  mismatches are annotated.
+- **Documents and comments (M1, M2, M3, M5, M6, M8, M9).** `ADT^A47^ADT_A30` and
+  `ADT^A49^ADT_A30` on v2.7.1 and v2.8.2 draw information, not a mismatch (ADT_A30 is registered
+  with no triggers there): the register close-out, STATUS.md and NEXT_STEPS.md say so (M1). The
+  resolver's comment says Table 0354 is not consulted at runtime, its rows being merged by the
+  extractor (M2). The `MessageStructureTable` DocC says what a lookup miss does and does not mean
+  (M3). The 00060.1 text says every profile `unexpected` finding is dropped, not only
+  beyond-maximum ones (M5). The `messageStructureSegmentMissing` DocC says v2.3 to v2.4 group
+  names and v2.3 structure IDs are not the print's, and corrects "off by default" (M6). The
+  register's performance row records the two resolutions and base matches per `validate` (M8).
+  Validation.md and Migration.md state that one unrelated structure finding switches the OUL /
+  OPU / OPL order-number predicates off, with no issue saying so (M9). No API change.
+- **The Permanent / Blocking line drawn by its definition (F-I2).** v2.7.1 QRY_PC4, RCI_I05,
+  RQC_I05, RCL_I06 and UDM_Q05 and v2.8.2 UDM_Q05 print their full syntax and are registered only
+  because it names QRD, QRF, URD or URS, which the version's grammar does not define: a model
+  limit, now **Blocking**, each reason naming what would close it (segment grammars for the
+  withdrawn segments, or a rule that passes over them and checks the rest). v2.8.2 QBP_Q13's
+  reason no longer says "no normative print": CH05 5.4.2 refers to 5.3.1.2, an example query
+  profile whose grammar (query Z99) has a query-specific PID and disagrees with 5.4.2's own
+  segment list, so it stays Permanent as a template ID. Outcomes unchanged (information).
+
+### Fixed — P8b-18: message-structure rollout close-out
+
+- **Rollout complete.** Every structure the seven versions print is modelled or registered with
+  its reason: v2.3 147 / 22, v2.3.1 100 / 28, v2.4 148 / 24, v2.5.1 173 / 30, v2.6 190 / 20,
+  v2.7.1 164 / 58, v2.8.2 185 / 58 (1,107 modelled, 240 registered; 266 after P8b-final), plus five ADRM-2021 profile
+  structures on v2.4. Register section E opens with the state at close-out: what a consumer gets
+  per version, and why every version still has Blocking rows (master-file prose fragments on v2.3
+  to v2.6, a structure alias for QRY_P04 on v2.4 and v2.5.1, per-trigger structures on v2.5.1 to
+  v2.8.2, fragment reassembly and version provenance everywhere). ADR-019 gains the close-out
+  amendment and its status line.
+- **Group scoping (P8b-17) imprecisions registered, not fixed:** a container or specimen OBX
+  beside repeating orders takes the first order's ORC and OBR, and that order's ORC and OBR take
+  it (v2.4 ORL_O22; v2.5.1 and v2.6 ORL_O34, ORL_O36; v2.6 OPR_O38); v2.4 OML_O21 OBR to OBX;
+  v2.7.1 and v2.8.2 ORU_R30 message-level OBR to OBX; v2.8.2 `.obrObxGroup` on ORU_R01; the
+  worst-case lookup cost. No shipped condition reads these lookups. The termination comment in
+  `GroupScoping.swift` states the real call graph.
+- **HL7au:00060.1 wording:** a required segment the profile still expects when segments follow
+  the last one it matched (RQD or RQ1 for an ORM^O01 order detail, or a Z-segment) now reads
+  "requires OBR in group ORDER after ORC[1]", naming the last matched segment, not "at the end of
+  the message": the segments after it are transparent to the profile match, so OBR may stand
+  anywhere after ORC[1]. Code, severity and location (the last segment) are unchanged
+  (Migration.md row). The fix rounds tried "in place of RQD[1]" (the first passed-over segment,
+  not necessarily the one replaced) and "no later than <last segment>" (false: OBR appended
+  after the last segment satisfies the profile). The OSR^Q06 register row names every unflagged case against ADRM p 281
+  (RQD, RQ1, RXO, ODS or ODT in place of OBR, and an OBX after any of them); the conformance
+  register is regenerated. The unused `profiles:` test seam of `matchProfileStructure` is removed.
+- **v2.4 group names:** ADR-019 states why the 35 `groupNames` overrides stand in place of
+  extractor borrowing, and what each cites.
+- **v2.4 Table 0354 listings:** CH02 (p 2-139) lists QRY_P04 and QRY_Q26 to QRY_Q30, which
+  Appendix A and `Resources/tables/v2.4/0354.json` do not; registered for P7 (table JSON unchanged).
+- **Tests (1538 to 1541):** v2.8.2 COMMON_ORDER cases in the long-message growth test;
+  `customRuleCountsEachAnchor`; the real v2.4 REF_I12 same-name PATIENT_VISIT siblings; the
+  v2.3.1 literal misprints PIN_107, RPI_I0I, RQI_I0I and ARD_A19 as mismatches (information since
+  P8b-final, ruling F-I1). Validation digests
+  (default, strict, structure off) byte-identical to 9c81e6eb.
+
+### Changed — P8b-18: the message-structure check is on in `.default` and `.strict`
+
+- **Default output changes (owner decision G2 (b), ADR-019 "Later preset change"):**
+  `ValidationOptions.messageStructureSeverity` is `.warning` in `.default` (and for a memberwise
+  `ValidationOptions()`), `.error` in `.strict`, and `nil` in `.lenient`. On the spec's printed
+  examples and the fixtures the default digest gains 4,284 lines: 3,428 info issues (no structure
+  applied, with the reason) and 856 warnings on 167 messages, each a genuine example or fixture
+  defect (`p8b-18-classes.tsv`); `.strict` gains the same lines at error; `.lenient` is unchanged.
+  Migration.md has the row and a section. The preset pins changed (MessageStructureValidationTests,
+  SignatureCompatibilityTests); five tests whose subject is another rule now set the structure
+  findings aside, and two acknowledgment-builder tests expect the info issue.
+- **Performance:** the AU REF^I12 re-match (P8b-4a) passes over every segment the base
+  structure names nowhere in one pass; structure resolution reads a trigger index built once per
+  version (resolve 106 us to 14 us); group scoping reads each segment's innermost group occurrence
+  from an index built once per message instead of a linear search per lookup, and the exact
+  matcher's span computation computes each state's reach once (both behaviour-preserving: the
+  three validation digests are byte-identical). `PerformanceStructureTests` (gated by
+  `RUN_PERF_TESTS`; release build, best of three, Apple Silicon) measures:
+  - **The spec 9.5 budget** (two rows, both for a 1 KB message, default options): a 1,002-byte
+    v2.5.1 ADT^A01 validates in 0.52 ms with the check at `.warning` (budget 2 ms) and 1,000 of
+    them in 0.54 s (budget 10 s). The 2 ms row is met in a release build only: in a debug build
+    the message takes about 2.5 ms, and took 2.35 ms with the check off at 542f5cd, before the
+    rollout.
+  - **Derived scaling checks, not spec budgets** (9.5 prints no budget for a long message; the
+    limit is the 1 KB row scaled by size, 2 ms per KB): a 5,002-segment ORU^R01 of 150,084 bytes
+    (limit 293 ms) validates in 227 ms on v2.5.1 and 269 ms on v2.8.2 at `.warning` (1.55 and
+    1.83 ms per KB; one release run of `PerformanceStructureTests`, `RUN_PERF_TESTS=1 swift test -c
+    release`, at 1e3d8f26 on 2026-10-05, P8b-final carry-forward). The AU REF^I12 with 200 to 800 ADRM-added segments (3,125 to 12,327 bytes)
+    takes 7.9 to 40.3 ms, 2.59 to 3.35 ms per KB, over its derived limit (6.1 to 24.1 ms); it was
+    over it before the rollout too (6.9 to 36.8 ms at 542f5cd), so the rollout added 1.0 to 3.5 ms;
+    a profile puts the time in the AU profile's field-level checks (register section E, close-out
+    addendum). The three cases are wrapped in `withKnownIssue`, citing that row.
+- The validation digest keeps a preset's own severity unless `VALIDATION_DIGEST_STRUCTURE_SEVERITY`
+  is set (`off` forces it off) and accepts `VALIDATION_DIGEST_PRESET=lenient`.
+
+### Fixed — P8b-18: registered structures and triggers classed by the print on every version
+
+Every structure and trigger registered as not modelled now says one true thing in one of three
+classes: the print names an already printed structure (modelled through `referencedTriggers`),
+the print gives the segments only in prose fragments (blocking: the extractor does not read
+them), or the print gives neither (permanent, the reason quoting what it does give). No segment,
+group, cardinality or choice of a modelled structure changes.
+
+- v2.3: DSR^P04 (the response of CH06 6.3.4's "QRY/DSP transaction"; CH02 prints DSR twice with
+  MSA required and optional, mode not stated) and ORU^R03 (Table 0003 gives R03 to QRY/DSR; one
+  CH07 7.4.5.3 example sends ORU^R03) are registered with their reason: 22 registered.
+- v2.3.1: QRY^P04 is matched against QRY_Q01 (CH06 6.3.4, p 6-4, "the QRY/DSR transaction, as
+  defined in Chapter 2"; both Chapter 2 QRY prints are MSH QRD [QRF] [DSC]), as on v2.3, with
+  MSH-9.3 empty or QRY_Q01; DSR^P04 is registered (the two DSR prints differ on MSA): 28
+  registered. MCF, folded in P8b-15, is named among the printed IDs Table 0354 lacks.
+- v2.4: MFR_M01 and MFN_M03 are blocking, not templates: CH08 gives the MFR body per master file
+  in prose ("the part ... {MFE [Z..]} is replaced by", 8.7.1 p 8-19, 8.8.2 p 8-21, 8.9.1 p 8-58,
+  8.10.1 p 8-72, 8.11.1 p 8-81) and keys MFN^M03's other segments by MFI-1 (8.8.2), which the
+  extractor does not read. QRY_P04 is blocking: CH06 6.4.4 refers P04 to the Chapter 5 QRY, whose
+  two prints agree, but the caption QRY^P04^QRY_P04 gives it an ID of its own and the model has no
+  structure alias. DSR_P04 stays permanent (the two Chapter 5 DSR prints differ on MSA). 24
+  registered, unchanged.
+- v2.5.1: MFR_M01 and MFN_M03 are blocking, not templates: CH08 gives the staff MFR body only in
+  prose (8.7.1, pp 8-20 to 8-21), the M03 and M08 to M12 bodies by reference (8.8.2, p 8-22),
+  and MFN^M03's other segments as the MFN^M08 to M12 groups, each keyed by MFI-1. QRY_P04 is
+  blocking as on v2.4 (Table 0354 gives it an ID of its own). The Table 0354 reasons now cite the
+  right page and say what the print gives instead: ORU_R31 and ORU_R32 (Appendix A listing only;
+  the chapter prints ORU^R31^ORU_R30 and ORU^R32^ORU_R30), QRY_T12 (CH09 prints QRY^T12^QRY),
+  RSP_K22 (CH03 prints RSP^K22^RSP_K21), RDE_O01 and RRA_O02 (Appendix A only), MFD_MFA (named in
+  CH08 8.4, no syntax). 30 registered, unchanged.
+- v2.6: MFR_M01 and MFN_M03 are blocking, not templates, as on v2.5.1 (the staff MFR body in
+  prose, 8.7.1, pp 8-18 to 8-19; MFN^M03's other segments as the MFI-1-keyed MFN^M08 to M12
+  groups). ORU_W01's reason now says the CH07 7.17 examples send ORU^W01^ORU_R01 against Table
+  0354's ORU_W01; QRF_W02's cites CH07 7.15.2. On v2.5.1 the waveform examples are cited as
+  7.17, not 7.16. 20 registered, unchanged.
+- v2.7.1 and v2.8.2: every registration read and unchanged (Table 0354 rows marked Deprecated,
+  templates, CH12 placeholders, prints of segments the version does not define).
+- Register statuses agree for equivalent prints. SUR_P09's `ED` row is permanent on every version
+  (it was blocking on v2.5.1 and v2.6; v2.5.1 CH07 7.11.2 prints the row on p 7-102, and the
+  section's deprecation note on p 7-101 calls it "an invalid ED segment"). A structure registered only for an open slot, whose other segments are printed,
+  is blocking on every version (fix round 1 reversed the first pass, which had made them
+  permanent): the CH12 `OBR, etc.` order detail on v2.3 to v2.8.2 (52 registrations), the
+  general order detail of ORM_O01, ORR_O02 and OSR_Q06 on v2.3 and v2.3.1. CH04 4.2.2.4 (v2.5.1 p 4-5; 4.1.2.4 on v2.3 and v2.3.1) says "Examples are
+  OBR and RXO. Future ancillary-specific segments may be defined": the slot is open, and an
+  open-slot structure element would let the validator check everything printed around it but not
+  what fills it. The 58 reasons say so; the register, NEXT_STEPS and STATUS list the element as
+  a follow-up for the owner. ERP on v2.3 to v2.5.1 is blocking too, but not on an open slot: ERQ-2
+  (Event Identifier) "dictate[s] the format of the response message", and the ERP returns the
+  segments of the message that event defines (v2.5.1 CH05 5.10.5.2.3, p 5-124), so modelling it
+  needs a structure keyed by a field value, as MFN_M03 needs one keyed by MFI-1.
+- Counts, modelled and registered: v2.3 147 and 22, v2.3.1 100 and 28, v2.4 148 and 24, v2.5.1
+  173 and 30, v2.6 190 and 20, v2.7.1 164 and 58, v2.8.2 185 and 58; the P8b-9 and P8b-10
+  entries below note their later counts.
+
+### Fixed — P8b-18: Table 0354 provenance on every version; citation and guard minors
+
+- **Provenance (citations only):** every structure whose ID the extractor reads from Table 0354
+  now says so with the table's page, on every version that prints the table, as v2.3.1 has since
+  P8b-14: 24 on v2.4 (the two-part captions), 12 on v2.5.1 and 6 on v2.6 (QRY_Q02, QCK_Q02 and
+  the other captions that print no ID). v2.7.1 and v2.8.2 print every structure's own ID, so none
+  is added there. No segment, group, cardinality, choice or trigger changes.
+- **Page citations:** v2.3 2.18.1 and 2.18.2 are on p 2-75 (not 2-74), Table 0076 on pp 2-89 to
+  2-90 (not 2-88 to 2-89); the v2.3 ORU^W01 reference also cites 7.14 (p 7-104); the spec audit
+  counts ten printed v2.3.1 IDs with no Table 0354 row (with MCF); a test comment gives v2.5.1
+  QRY^Q02 its page, 5-116.
+- **Extractor guards:** a `referencedTriggers` trigger must carry the structure's message code
+  and enters the shared-trigger check; a `captionStructures` entry is looked up as a Table 0354
+  row before its row's message code is compared; a direction caption (`CODE^EVT (A to B)`) must be
+  a column header ending in "Chapter", so running prose of that form is no caption.
+- **Codegen guard:** a profile group named through nameSource `override` must be a name an
+  overrides.json `groupNames` entry gives the base structure, not merely cite "overrides.json".
+
+### Changed — P8b-17: structure group spans scope the group-dependent predicates
+
+- Default output changes on purpose (ADR-019 decision 5): on every complete version a message
+  whose structure matches cleanly has its ORC/OBR peers, segment-presence atoms, ORC/OBR pair
+  equality and group-scope cardinality rules scoped by the matched group instances, whatever
+  `messageStructureSeverity` is. One principle decides the scope: a group that occurs at most
+  once per occurrence of its parent is transparent for the anchor, the peer and the group scope
+  alike (the v2.8.2 COMMON_ORDER's ORC serves the whole order; an OBR in DFT `[ORDER]` is
+  scoped at its COMMON_ORDER, so it finds that order's OBSERVATION OBX); only a repeating nested
+  group that claims its own segments, such as ORDER_PRIOR, is a boundary; a peer never comes
+  from a repeating sibling group
+  (v2.8.2 CSU_C09: the pharmacy ORC has no OBR) or a nested pairing group (the prior results
+  of OML_O21, OML_O33, OML_O35 and OMQ_O42). Otherwise the ORC walk is used as before.
+- The P4-7 and P10-5a `messageCode not in (...)` gates are removed: from ORC-2, ORC-3, ORC-8,
+  OBR-2, OBR-3 and OBR-29 on v2.5.1 and v2.6, and from ORC-2, ORC-3, OBR-2 and OBR-3 on v2.7.1
+  and v2.8.2 (the only fields gated there): OUL^R21 to R24, OPU^R25 and
+  OPL^O37 messages are now checked inside their own groups. An OUL, OPU or OPL message with no
+  spans (a structure deviation, disagreeing parses) keeps the gate's outcome on those fields
+  (register, Addendum to §D).
+- The exact matcher reports group spans when every accepting parse puts every segment in the
+  same group occurrences, and withholds them when parses disagree. Its verdict and finding are
+  unchanged.
+- The spec-example and fixture digest is unchanged in outcome: 152 issue lines per digest
+  (default, structure check at warning, `.strict`) change only in the quoted condition text.
+  `ValidationDigestTests` gains `VALIDATION_DIGEST_PRESET=strict`.
+
+### Added — P8b-15: HL7 v2.3 message structures complete; lookup rule 3
+
+- With `messageStructureSeverity` set, every v2.3 message structure is now checked: 147
+  structures extracted from the v2.3 chapter prints (10 matched exactly), and v2.3 is marked
+  complete, so every supported version is. `ADT^A01` on v2.3 with no EVN or PV1 now draws two
+  missing-segment findings where it drew one info issue.
+- ADR-019 lookup rule 3: v2.3 defines no MSH-9.3, so a message whose MSH-12 reads as 2.3 is
+  resolved from MSH-9.1^9.2 only and a populated third component is ignored (never a mismatch).
+  A trigger the v2.3 print covers resolves to its own print; one it does not (an event printed
+  under no syntax table, a Z event) is info, never an error.
+- v2.3 prints the message code alone over each table, the events in the section title, no
+  structure ID and no Table 0354. Structure IDs are synthesised `CODE_EVT` from the code and the
+  first event of the title (`ADT_A04`, `SRM_S01`), or the code alone for the general
+  acknowledgment and the four messages printed with no event (MCF, EDR, TBR, ERP); every v2.3
+  citation says so and names where each event came from. v2.3 no longer reads v2.3.1's Table
+  0354 or its errata. 39 captions whose section title names no event take their events from a
+  cited `overrides.json` `eventsFromTitle` entry (section text or Table 0003).
+- Group names, which v2.3 never prints: 235 derived through the HL7 v2.xml 2.3.1 bundle (new
+  `nameSource` `v2xml-v2.3.1`), 7 through the v2.4 bundle, 3 synthesised.
+- 22 v2.3 structures are registered as not modelled, each with its reason (register section E):
+  the general order's `Order Detail Segment` placeholder (ORM_O01, ORR_O02, OSR_Q06; the four
+  specialised ORM and ORR prints of CH04 share the trigger and cannot be told apart from
+  MSH-9.1^9.2), eight CH12 `[OBR, etc.` structures, MFN_M01's `[Z..]`, ERP's ellipsis rows,
+  SUR_P09's ED row, MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated), and 6 triggers v2.3 defines only in Table 0003 or prose
+  with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05; DSR^P04 and ORU^R03
+  since P8b-18), whose info now gives the reason. The four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` and matched (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1). The v2.3.1 MFN_M03 reason, and the status of v2.3.1's
+  MFN_M03, MFN_M08 to M11 and MFR rows, are corrected the same way (blocking, not permanent).
+- v2.3.1 MCF (CH02 2.13.2) is now modelled through a `triggerFolds` entry onto `MCF^*`, as on v2.3:
+  v2.3.1 has 100 structures.
+- Errata, each cited to the v2.3 print: CH04 4.8.17's `R0R` read as `ROR` (Table 0076), the
+  printed event R0R kept; crossed brackets in ADT^A07 (`[{ROL]}`), ADT^A31 (`{[ROL}]`) and CSU
+  (`{[ ... }]`), whose two nested readings mean the same; CH02 2.11.1's WRQ/WRP notation example
+  excluded.
+- The extractor reads v2.3's other caption forms (`QRY (A to B)`, a code one space from its
+  title or with no Chapter column) and rows whose syntax cell sits one space from its
+  description or on a page set right of the caption. No v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1 or
+  v2.8.2 structure or report row changes.
+- The `adt_a01_v23.hl7` fixture gains the EVN segment the v2.3 print requires.
+
+### Added — P8b-14: HL7 v2.3.1 message structures complete
+
+- With `messageStructureSeverity` set, every v2.3.1 message structure is now checked: 99
+  structures extracted from the v2.3.1 print (10 matched exactly), and v2.3.1 is marked
+  complete. An MSH-9.3 that names no v2.3.1 structure (`ADT^A04^ADT_A04`, or the misprinted
+  Table 0354 ID `PIN_107`) is now `messageStructureMismatch` on v2.3.1 instead of info (for
+  `PIN_107` and the other literally printed misprints, information again since P8b-final).
+- Most v2.3.1 captions print `CODE^EVT` only; the structure ID comes from Table 0354 v2.3.1,
+  read through cited errata for its misprinted rows (ARD_A19, PIN_107, RPI_I0I, RQI_I0I,
+  TBR_R09, RRE_O01, MFD_P09 and the events 136 and 1II; PPG_PCG gains PCG and keeps PCC). Each
+  structure whose ID came from the table says so in its citation, naming any erratum. Where the table lists an
+  event under two structures (ADT^A28, ADT^A31) the triggers are declared shared; where its
+  one row of a message code omits the caption's events (MFK, PPP) a cited declaration names
+  the row; captions it places under no structure (MFN^M04, MFQ, MFR and the master file
+  templates) are declared and not modelled. CH08 8.10.1's second clinical-trials print, captioned
+  MFN^M06 and MFK^M06, is read as M07 (Table 0003).
+- Group names: 247 from the HL7 v2.xml 2.3.1 bundle (each citation names the file's generator,
+  since the bundle mixes two), 6 through the v2.4 bundle (the 2.3.1 bundle's CHOICE name is not
+  taken without a cited override), none synthesised.
+- 28 v2.3.1 structures are registered as not modelled (27 until P8b-18 added DSR_P04), each with its reason (register section
+  E): the general order's `Order Detail Segment` placeholder (ORM_O01, ORR_O02, OSR_Q06), eight
+  CH12 `[OBR, etc.` structures, ERP_R09, MFN_M03, SUR_P09 and 13 Table 0354 rows no print
+  carries. Every Table 0354 v2.3.1 row is modelled or registered.
+- The structure extractor reads `CODE ^EVT` (one space before the caret, CH08 8.8.1), treats
+  notation in the description column inside an open group as a placeholder (OSR^Q06), and on a
+  version with its own Table 0354 fails a full read on any caption the table cannot resolve
+  unless a cited override settles it. No v2.4, v2.5.1, v2.6, v2.7.1 or v2.8.2 structure changes.
+- The literally printed misprinted Table 0354 IDs (`TBR^R09^TBR_R09`, `RRE^O01^RRE_O01`,
+  `MFD^P09^MFD_P09`, `PIN^I07^PIN_107`) are `messageStructureMismatch` on v2.3.1 (P8b-14 fix
+  round 1, controller ruling); register section E gives the evidence. Reversed by P8b-final
+  (ruling F-I1): they are registered and report information.
+
+### Fixed — P8b-4a: AU profile structures govern base structure findings; RRI_I12
+
+- Under the AU locale with `messageStructureSeverity` set, a v2.4 message that conforms to the
+  ADRM-2021 print no longer draws base v2.4 structure findings the ADRM structure contradicts:
+  a base finding is dropped where the ADRM structure accepts the message at that point (a segment
+  it places there, such as PD1 in REF^I12, p 324, or ERR in RRI^I12, p 325; a segment it makes
+  optional, such as PRD and PID in RRI^I12). Every other base finding is kept. Where the base is
+  matched exactly (v2.4 REF_I12, RRI_I12 and ORU_R01, which report their first divergence only)
+  and that finding is a dropped `unexpected`, the base is matched again with that segment passed
+  over, until a finding is kept or none is left, so a later divergence is still reported. Narrowed
+  maxima (REF^I12 `[IN1]`, PV1 and PV2) stay unreported: the base allows the repetition and the
+  ADRM's beyond-maximum finding is not reported (decision 7). The international locale and
+  triggers with no ADRM structure are unchanged (ADR-019 decision 7, amended).
+- The order status response (OSR^Q06, p 281, caption erratum `OSQ^Q06^OSQ_Q06`) is the fifth ADRM
+  structure: its `[{OBX}]` is accepted under the AU locale. Its order detail keeps the base v2.4
+  choice, as the print says only "OBR Order Detail" and does not settle whether the p 280
+  narrowing applies, so RQD or RQ1 there is not flagged.
+- RRI^I12 is the fourth ADRM structure (p 325, `MSH MSA [ERR] [ RF1 {PRD} PID ]`): a missing MSA
+  is reported as `profileConstraintViolation(localeRule: "HL7au:00060.1")`.
+- The ORM^O01 order detail is narrowed to OBR, RXO, ODS and ODT (p 280: OBR is replaced only for
+  medication and diet orders), so RQD or RQ1 in its place is an HL7au:00060.1 finding; the
+  glossary citation moves to p 279.
+- Register and self-check corrections: the RRI print is quoted with its brackets, "PID optional"
+  on the order status response is no longer listed as a relaxation (base v2.4 OSR_Q06 has it), the
+  conformance register row names the narrowed maxima and the base-finding rule, and
+  `check-structure-codegen.sh` covers `baseVersion` and `rule` in a version file (71 cases).
+
+### Added — P8b-4: HL7au:00060.1 required segments through the ADRM-2021 structures
+
+- Under the AU locale with `messageStructureSeverity` set, a v2.4 ORU^R01, ORM^O01 or REF^I12
+  is also matched against the structure the ADRM-2021 prints for it (pp 205, 279, 324), and a
+  segment that structure requires and the message lacks is reported as
+  `profileConstraintViolation(localeRule: "HL7au:00060.1")` at that severity: PID in each
+  ORU^R01 result, PV1 beside PD1, NK1 or PV2, an order detail segment in each ORM^O01 order,
+  RF1 and PV1 in REF^I12. A base segment the ADRM removed is not a finding (ADR-019 decision 7),
+  and a segment the base check already reports missing is not reported twice. Default output is
+  unchanged.
+- The structures are hand-authored with page citations in
+  `Resources/structures/profiles/au-adrm-2021/`; the codegen accepts the `profile`,
+  `baseVersion` and `rule` keys only there and checks each structure against the base v2.4
+  structure it constrains.
+- HL7au:00060.1 moves from BASE to PARTIAL in the conformance register: RRI^I12, the Appendix 8
+  simplified REF structure, the ORR^O02 print and the prose-only PV1 mandate are registered
+  (register section E).
+
+### Added — P8b-13: HL7 v2.4 message structures complete
+
+- With `messageStructureSeverity` set, every v2.4 message structure is now checked: 148
+  structures extracted from the chapter prints (18 matched exactly), and v2.4 is marked
+  complete. An MSH-9.3 that names no v2.4 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.4 instead of info; `ADT^A01^ADT_A01` without PV1 is a
+  missing segment.
+- v2.4 prints no group names: 298 are named from the HL7 v2.xml v2.4 bundle, 35 by cited
+  overrides (the v2.5.1 bundle's names for the seven structures the v2.4 bundle lacks, ORL_O22,
+  RAS_O17, DFT_P03 and RCI_I05, whose bundle group is named `c`), and one is synthesised.
+- 24 v2.4 structures are registered as not modelled, each with its reason (register section
+  E): eight CH12 `[OBR, etc.` structures, five CH05 query templates, three CH08 master file
+  templates, ERP_R09, SUR_P09, QRY_P04 and DSR_P04 ('see Chapter 5') and four Table 0354 rows
+  with no print (ORU_W01, QRF_W02, RRA_O02, RRE_O02). Every Table 0354 v2.4 row is modelled or registered.
+  (P8b-18 classes MFR_M01, MFN_M03 and QRY_P04 as blocking, not templates or permanent.)
+- Shared triggers MFN^M02 to M06, RPI^I04 and RSP^K24 are ambiguous without MSH-9.3.
+
+### Fixed — P8b-13: QRY_Q02 and QCK_Q02 on v2.4, v2.5.1 and v2.6
+
+- QRY_Q02 and QCK_Q02 were registered as not modelled ("no chapter prints its syntax") on
+  v2.4, v2.5.1 and v2.6, but CH05 5.10.3.1 prints both (v2.4 p 5-112, v2.5.1 p 5-116, v2.6
+  p 96) as "QRY^Q02 (A to B)" and "QCK^Q02 (B to A)". The structure extractor now reads a
+  `CODE^EVT` caption followed by a one-space direction tag. Both structures are modelled on the
+  three versions: a QRY^Q02 without QRD is now a missing segment, and a QCK^Q02 without MSA
+  likewise. Counts: v2.4 148 modelled, 24 registered; v2.5.1 173 and 30; v2.6 190 and 20.
+
+### Fixed — P8b-13: ERP_R09 on v2.5.1
+
+- v2.5.1 ERP_R09 was extracted as `MSH MSA [ERR] QAK ERQ [DSC]`, dropping the ellipsis rows
+  CH05 5.10.4.2 prints for the replayed message's segments, so a compliant event replay response
+  drew false findings. It is now registered as not modelled (info) on v2.4 and v2.5.1.
+- The structure extractor drops footnote marks fused to brackets, reads a bracket-only cell in
+  the description column as syntax, ends a table at a `CODE^EVT` row, treats an ellipsis row as
+  a placeholder, accepts an `occurrence` on a syntax-cell erratum, and requires a cited override
+  for a bundle group name no group name can hold; four v2.4 print errata are cited.
+
+### Added — P8b-16: HL7 v2.7.1 message structures complete
+
+- With `messageStructureSeverity` set, every v2.7.1 message structure is now checked: 164
+  structures extracted from the chapter prints (20 matched exactly), and v2.7.1 is marked
+  complete; a 2.7 message is checked against them (`Version.v2_7` reads through the v2.7.1
+  grammar). An MSH-9.3 that names no v2.7.1 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.7.1 and 2.7 instead of info.
+- 58 v2.7.1 structures are registered as not modelled, each with its reason (register section
+  E): eight CH12 `< OBR | Hxx etc. >` structures, five CH05 query templates, RDR_RDR (no
+  normative print), UDM_Q05 (URD and URS) and QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and
+  QRF, withdrawn as of v2.7), whose segments v2.7.1 does not define, and the 39 Table 0354 rows
+  marked Deprecated. Every Table 0354 v2.7.1 row is modelled or registered.
+- ACK takes its looser print (CH10's `[{UAC}]`); RPI^I04 is a declared shared trigger (Table
+  0354 maps it to RPI_I01 as well as the printed RPI_I04).
+- The structure extractor reads a header row that repeats the caption in place of "Segments"
+  (v2.7.1 CH07 OSM^R26) and a group mark whose name wraps onto the begin/end line; 13 v2.7.1
+  print errata are cited, and the CH08 8.4.3 exclusion is scoped to its template caption.
+- Tests pin that RPI^I04 (v2.5.1, v2.6, v2.7.1, v2.8.2) and v2.5.1 ADT^A12 are ambiguous
+  without MSH-9.3 and resolve cleanly with it.
+
+### Added — P8b-11: HL7 v2.8.2 message structures complete
+
+- With `messageStructureSeverity` set, every v2.8.2 message structure is now checked: 185
+  structures extracted from the chapter prints (32 matched exactly), and v2.8.2 is marked
+  complete; a 2.8 message is checked against them (`Version.v2_8` reads through the v2.8.2
+  grammar). An MSH-9.3 that names no v2.8.2 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.8.2 and 2.8 instead of info.
+- 58 v2.8.2 structures are registered as not modelled, each with its reason (register section
+  E): four CH12 `< OBR | Hxx etc. >` structures, four CH05 query templates, UDM_Q05 (its URD
+  and URS are not defined in v2.8.2), QBP_Q13 (its CH05 5.4.2 reference gives only a query
+  profile's grammar, P8b-final), RDR_RDR (no normative print) and the 47
+  Table 0354 rows marked Deprecated. Every Table 0354 v2.8.2 row is modelled or registered.
+- ACK takes its looser print (CH10's `[{UAC}]`); ORL^O22, O34, O36 and O40 are declared
+  shared triggers (each printed for a patient-required and a patient-optional structure);
+  QBP^Q31, which the CH04A query profile declares, is a registered QBP_Q11 trigger.
+- A structure now accepts every trigger Table 0354 of its version maps to it, as well as the
+  triggers its captions print: v2.8.2 `MFK^M03^MFK_M01` (M03 withdrawn in CH08 8.8.2, still
+  mapped by the table) is matched instead of a mismatch. RPI^I04 (v2.5.1, v2.6, v2.8.2) and
+  ADT^A12 (v2.5.1) become declared shared triggers, ambiguous without MSH-9.3.
+- v2.6 RSP_K21 is now modelled as the union of its two incomparable prints (a new cited
+  `unionPrints` override: aligned by name, the lesser minimum and greater maximum, an element
+  in one print only optional).
+- The structure extractor reads the v2.7.1 and v2.8.2 layouts more fully: a caption with a
+  space before its colon (`ACK^R01^ACK :`, so ORU_R01 and ORU_R30 no longer run on into the
+  acknowledgment), a caption title wrapped before the Segments row, a `Segments Descriptions`
+  header, prose after a table that opens with a segment ID, and indented section headings
+  (captions now cite their own section).
+
+### Added — P8b-10: HL7 v2.6 message structures complete
+
+- With `messageStructureSeverity` set, every v2.6 message structure is now checked: 187
+  structures extracted from the chapter prints (23 matched exactly), and v2.6 is marked
+  complete. An MSH-9.3 that names no v2.6 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.6 instead of info.
+- 23 v2.6 structures are registered as not modelled (20 since P8b-11 and the P8b-13 fix round; 190 modelled), each with its reason (register section
+  E): eight CH12 `< OBR | etc. >` structures, eight query and master-file templates, SUR_P09,
+  RSP_K21 (its K21 and K22 prints are incomparable) and five Table 0354 rows with no printed
+  syntax.
+- Looser prints committed for ACK (CH10's `[{UAC}]`), ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and
+  RDE_O11; v2.6 MFR^M04 to M07 are declared shared triggers.
+- On a complete version a locally defined message (a Z message type, trigger or structure ID
+  whose trigger the version prints under no structure) is not modelled, never a mismatch.
+- `MFK^M14^MFK_M01` is now read on v2.5.1 and v2.6 (the CH08 8.4.3 exclusion is scoped to the
+  `MFN_Znn` template caption).
+- The structure extractor reads bracketless named groups and no-bar named `< ... >` groups as
+  required groups, supports a cited `syntax-cell` erratum and caption-scoped exclusions, and
+  reads a table whose MSH row sits left of its caption.
+
+### Added — P8b-9: HL7 v2.5.1 message structures complete
+
+- With `messageStructureSeverity` set, every v2.5.1 message structure is now checked: 172
+  structures extracted from the chapter prints (21 matched exactly), and v2.5.1 is marked
+  complete. An MSH-9.3 that names no v2.5.1 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.5.1 instead of info.
+- 31 v2.5.1 structures are registered as not modelled (30 since the P8b-13 fix round; 173 modelled), each with its reason (register section
+  E): eight CH12 structures whose order detail is the unenumerated `< OBR | etc. >`, eight
+  query and master-file templates, SUR_P09 (a non-segment `ED` row) and 14 Table 0354 rows with
+  no printed syntax. A message naming one draws
+  `messageStructureNotModelled` (info) with the reason, never a mismatch.
+- A structure ID printed twice with different syntax takes the looser print, cited to both
+  (`primaryPrints` override): RSP_K21 from its K22 print (repeating QUERY_RESPONSE, QRI optional)
+  and RDE_O11 from its O25 print (OBX optional in OBSERVATION); the stricter prints are not
+  checked (register section E).
+- A trigger printed under two structures (v2.5.1 MFR^M04 to M07) is reported as ambiguous when
+  MSH-9.3 is empty; the codegen accepts such a trigger only when it is declared.
+- The structure extractor reads wrapped captions, comma-and-space event lists and indented
+  page-break repeats, never reads a query/response grid row as a caption, and supports a
+  cited `group-close` erratum (v2.5.1 MDM_T02).
+
+### Added — P8b-7: guards over every committed structure; compiled-matcher cache
+
+- A default-on test checks every committed structure of every version: the generated
+  exact-match flag equals a fresh lint; the matcher the flag selects agrees with the
+  reference recogniser on 200 seeded derived and mutated sequences, with both accepted and
+  rejected ones; MSH is the first, required element; every segment is in the version's
+  segment grammar or is ADD; DSC, if present, is only the last top-level element.
+  `STRUCTURE_PROPERTY_FULL` runs it at 2,000 derivations per structure. A structure added by
+  a version task that breaks any of these fails the suite.
+- The Validator compiles each structure's matcher once and reuses it for every message
+  (internal `StructureMatcherCache`, keyed by version and structure ID); the one-pass matcher
+  now computes its FIRST sets once per structure instead of while matching. 1,000 messages
+  against one lint-failing structure compile one automaton. No public API change; the
+  validation digest is byte-identical with the option off and at `.warning`.
+- The env-gated corpus tests read extractor dumps with the codegen's acceptance rules (a test
+  feeds them every structure-file case of `scripts/check-structure-codegen.sh`), fail on a
+  missing or empty version directory, require a minimum sequence count per structure, and
+  record the default guards' verdict per structure.
+- ADR-019 amendment (P8b-7).
+
+### Changed — P8b-12: exact matching for structures that fail the determinism lint
+
+- With `ValidationOptions.messageStructureSeverity` set, a structure that fails the ADR-019
+  determinism lint is now matched exactly instead of raising `messageStructureNotModelled`
+  (owner decision G15). It reports at most one finding, at the furthest segment any parse
+  reached (`messageStructureSegmentUnexpected` there, or `messageStructureSegmentMissing` at
+  the end of the message naming the first segment of the shortest completion), and no group
+  spans. No committed structure fails the lint today, so output is unchanged (validation
+  digest byte-identical with the option off and at `.warning`).
+- The codegen lints every structure it emits and renders an internal `requiresExactMatch`
+  flag into the generated table; the Validator no longer lints a message. A test re-lints
+  every generated structure against the flag, and `scripts/check-structure-codegen.sh` gains
+  eight flag cases. No public API change.
+- Internal `ExactStructureMatcher`: memoised matching over (element path, position) on an
+  automaton compiled from the structure; memory bounded by the structure's state count,
+  time linear in the message length. Proved against the reference recogniser on every
+  synthetic shape (exhaustive) and, env-gated, on the 44 real structures the P8b-3b run
+  found the one-pass matcher wrong on (0 disagreements over 132,000 sequences).
+- ADR-019 amendment (ceiling 1 replaced), register section E, Validation.md and the
+  `messageStructureNotModelled` DocC updated.
+
+### Added — P8b-6: the choice element in the structure model, matcher and lint
+
+- `StructureElement.choice(_:min:max:alternatives:)`: the print's `< A | B >` (from v2.4),
+  named from v2.7.1 on, unnamed (`nil`) before. Each occurrence takes exactly one
+  alternative. A new case of an open enum (ADR-014): a `switch` outside the package needs
+  `@unknown default`.
+- `StructureElement.children` (a group's elements, a choice's alternatives, none for a
+  segment) and `StructureElement.segmentIDs` (every segment ID at any depth): a walker that
+  recurses through them never skips the segments inside a choice. Pinned in
+  `SignatureCompatibilityTests`.
+- Model: FIRST of a choice is the union of its alternatives' FIRST sets; a choice is
+  nullable when its minimum is 0 or any alternative is nullable; its head segment is the
+  first alternative's.
+- Matcher: a choice occurrence takes the alternative whose FIRST set holds the current
+  segment. A named choice opens a group span per occurrence; an unnamed one opens none. A
+  required choice with no alternative present is missing its first alternative's head; a
+  second alternative past the choice's maximum exceeds it.
+- Lint: two alternatives whose FIRST sets overlap are a conflict, and so is a nullable
+  alternative (the one-pass matcher does not decide how an empty occurrence was taken);
+  otherwise a choice is checked against its FOLLOW like any element, and each alternative
+  against the choice's follow set and, when the choice repeats, its re-entry.
+- Codegen: the JSON keys `choice` (a name, or `null`), `nameSource` (named choices only),
+  `min`, `max` and `alternatives` (at least two); 14 new self-check cases.
+- No committed structure uses a choice, so the generated tables and every default output
+  are unchanged.
+
+### Changed — P8b-6: the extractor reads choices
+
+- `scripts/extract-message-structures.py` reads `< A | B >` inline, one alternative per row,
+  token per row, and named (`--- NAME begin` on the `<` row, v2.7.1 on); `ChoiceNotation` no
+  longer skips a structure. A choice of placeholder alternatives (`< OBR | etc. >`, v2.5.1
+  CH12) and `...` rows are skipped as `placeholder (G6)`; the summary line counts them and the
+  parsed structures that carry a choice.
+- `scripts/read-v2xml-bundles.py`: a printed choice is compared with the bundle's choice group
+  (`CHOICE` when unnamed); a choice against a sequence is a `bundle-differs` row.
+- An alternative of several elements (CH02's "choice of segment groups") is an unnamed group,
+  named by the usual rule; a `< >` with no `|` (v2.8.2 CH16 `< QPD RCP >`) is skipped pending a
+  ruling: the print reads as a sequence, the HL7 v2.xml bundle as a choice of each member.
+- Seven new extractor self-checks (the four layouts, choices of segment groups, malformed
+  choices, the bundle cross-check).
+- v2.5.1: 166 structures parse (163 before); ORM_O01, ORR_O02 and OSR_Q06 carry a choice and
+  pass the lint; the three pilots still reproduce byte for byte. v2.8.2: five structures parse
+  with named choices and pass the lint; eleven print a `< >` with no `|`.
+
+### Changed — P8b-3b: CH02B guard, triggerFolds stale guard, ACK on v2.3 and v2.3.1, v2.7.1 ORU_R01
+
+- A Conformance-chapter (CH02B, sections 2.B.x) print is never a structure's primary print; a
+  structure printed only there is an error (exclude it, ruling G7). The v2.7.1 and v2.8.2 CH02B
+  section 2.B.8 `ADT^A01^ADT_A01` profile examples are printed in the caret form, which those
+  versions' caption reader does not take, so they are not read and need no exclusion (an
+  exclusion would be stale); the guard covers them should the reader widen.
+- A `triggerFolds` entry that matches no caption is an error on a full read, and one whose
+  primary matches no normative print is an error there too.
+- v2.3 and v2.3.1: cited `triggerFolds` entries fold every ACK caption into structure `ACK`
+  (`ACK^*`) through CH02 section 2.13.1, which prints the general acknowledgment under the code
+  alone; Table 0354 has no ACK row. ACK now parses on both (76 and 71 captions).
+- v2.7.1 `ORU_R01`: a cited group-mark erratum reads the printed `SPECIMEN OBSERVATION` marks
+  as `SPECIMEN_OBSERVATION` (the v2.8.2 print's and bundle's name); the structure parses. The
+  v2.7.1 bundle names that group `PATIENT_OBSERVATION` and is reported as `bundle-differs`.
+- Two new extractor self-checks (39 in all). No structure JSON added; the pilots reproduce.
+
+### Added — P8b-3b: per-version lint and recogniser run
+
+- `extract-message-structures.py --dump DIR` writes every parsed structure of every version
+  to `DIR/v<ver>/` (refused under `Resources/`), so the lint can run without committing JSON.
+- `StructureLintCorpusTests` (env-gated by `STRUCTURE_LINT_CORPUS`, like the matcher corpus
+  test) decodes each dumped structure, runs the ADR-019 determinism lint, classes each
+  failure's shape, compares the one-pass matcher with the backtracking reference recogniser on
+  the property test's bounded sequences, and records DSC placement; one TSV per version.
+- The property test's sequence generator bounds a derivation at 16 segments or the shortest
+  derivation plus 8, whichever is longer, and stops after 200,000 attempts, so the largest
+  printed structures finish; neither bound binds on the pilots.
+- The extractor reports an empty print, or rows that run on into the next table (a second
+  top-level MSH), as unreadable instead of a parsed structure (17 such structures across
+  v2.4 to v2.8.2; self-check 40).
+
+### Changed — P8b-3a: the structure extractor reads every version
+
+- `scripts/extract-message-structures.py` reads all seven versions' caption forms (v2.3 code
+  alone with the event in the section title; v2.3.1 `CODE^EVT` through Table 0354; v2.4 to v2.6
+  `CODE^EVT^STRUCT`; v2.7.1 and v2.8.2 `CODE^EVT^STRUCT: title`), event ranges, page-break
+  repeats, and footnote furniture inside syntax tables.
+- Primary-print rule: the defining caption's print is primary; other prints of the structure
+  are compared (`duplicate-differs`). 107 cited exclusions (ruling G7: profile examples, query
+  grammars, Z-events); 93 cited errata (group-mark typos, Table 0354 rows, one caption);
+  `sharedTriggers` declared for v2.3.1 `ORM^O01`, `ORR^O02` and v2.8.2 `ORL^O22/O34/O36/O40`;
+  `triggerFolds` for ACK on v2.4 to v2.8.2. Stale exclusions and errata are errors.
+- `--report` writes per-version rows (parsed, skipped by reason, duplicates, Table 0354
+  reconciliation both ways, shared triggers, bundle-differs). No structure JSON added.
+
+### Added — P8b-2b: v2.xml bundle reader and group-name resolution
+
+- `scripts/read-v2xml-bundles.py` (imported by the structure extractor) reads the HL7 v2.xml
+  schema bundles under the gitignored `docs/XML-schemas` (v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2):
+  per `<STRUCTURE>.xsd`, the sequence and choice content, element refs with
+  minOccurs/maxOccurs, and the `STRUCT.GROUP.CONTENT` group names. No bundle file or text is
+  committed (ruling D4).
+- An unnamed printed group takes the bundle group with the same parent path, first segment and
+  member segment set, never a position (`nameSource: v2xml`). v2.3 and v2.3.1 have no bundle:
+  their names are derived through the v2.4 bundle on first segment and member set within the
+  same structure ID, or across the v2.4 structures of the same message code where the ID
+  differs only by trigger, citing both IDs (`v2xml-v2.4`, ruling D2). Otherwise an
+  `overrides.json` entry (`override`), else `<FIRSTSEG>_GROUP` numbered on a clash
+  (`synthesised`), each a `no-bundle-name` report row. An override that a bundle name shadows is
+  an error.
+- Every non-printed name is cited in the structure citation (`NAME (HL7-xml v2.5.1/ORU_R01.xsd,
+  ORU_R01.VISIT.CONTENT)`); the extractor and `StructureCodegen` accept the five `nameSource`
+  values and reject a non-printed name the citation does not cite, `v2xml-v2.4` outside v2.3 and
+  v2.3.1, and `v2xml` on them (`scripts/check-structure-codegen.sh`, six new cases).
+- Report-only cross-check (ruling D3): `bundle-differs` rows where the bundle's member lists or
+  bounds disagree with the print, and for an unreadable bundle schema (v2.5.1 `ORL_O34.xsd`
+  nests `SPECIMEN` inside itself). Per-version name line: v2.4 162 v2xml, 6 synthesised, 14
+  bundle-differs; v2.5.1 8 v2xml, 3 bundle-differs; v2.6 7 v2xml, 6 bundle-differs.
+- `scripts/check-audit-schemas.py`: the bundle map joins the version-map agreement check, with
+  the explicit derived-through-v2.4 exception for 2.3 and 2.3.1.
+
+### Changed — P8b-2b: the ORU_R01 pilot names come from the v2.5.1 bundle
+
+- The five `overrides.json` groupNames for v2.5.1 ORU_R01 are gone; VISIT, ORDER_OBSERVATION,
+  TIMING_QTY, OBSERVATION and SPECIMEN are `nameSource: v2xml`, cited to
+  `HL7-xml v2.5.1/ORU_R01.xsd`. Only `nameSource` and the citation text changed; the structure
+  data and the generated table (citation only) are otherwise identical. Without a bundle the
+  extractor no longer skips a structure with an unnamed group: it synthesises the name and
+  reports the miss.
+
+### Added — P8b-2a: message-structure extractor core; overrides.json; the pilot golden
+
+- `scripts/extract-message-structures.py` reads the abstract message syntax tables printed
+  under each `CODE^EVENT^STRUCTURE` caption (the v2.4 to v2.6 caption form; the other eras are
+  named in `ERAS_PENDING` for P8b-3) and writes `Resources/structures/v<ver>/*.json` in the
+  pilot's exact layout (ADR-019 Option C step 1). `--check` compares with the committed files,
+  `--write` is idempotent, `--report` writes a per-structure TSV, and every run prints captions
+  found, structures parsed and structures skipped by reason (choice, unnamed group,
+  unreadable). Nesting comes from bracket balance; a structure printing choice notation is
+  reported and skipped until P8b-6. It reproduces the three v2.5.1 pilot files byte for byte
+  (v2.5.1: 401 captions, 2 excluded, 173 structures, 141 parsed, 32 skipped).
+- `Resources/structures/overrides.json`: the five ORU_R01 group names the v2.5.1 print leaves
+  unnamed (VISIT, ORDER_OBSERVATION, TIMING_QTY, OBSERVATION, SPECIMEN), each cited; the
+  pilots' citation notes; the ACK trigger fold (`ACK^*`, CH02 section 2.14.1); and one
+  exclusion (v2.5.1 CH05 section 5.7.3.1, a conformance-statement example that prints
+  ORU^R01, ruling G7).
+- `scripts/check-extract-message-structures.py` (CI, fixture-safety job): golden checks on
+  print excerpts for ACK, ADT_A01 and ORU_R01, plus synthetic cases (nested and
+  optional-repeating groups, `{[X]}`, `[PV2]]`, a page break inside a table, a wrapped
+  caption, nested printed names, an unnamed group, a skipped choice, an excluded section,
+  override validation).
+- The codegen accepts `overrides.json` and a `profiles/` directory under
+  `Resources/structures` (4 new cases in `scripts/check-structure-codegen.sh`, now 22);
+  `check-audit-schemas.py` adds the extractor's version map.
+
+### Fixed — P8b-2a: ORU_R01 pilot citation pages
+
+- The golden found the v2.5.1 ORU_R01 citation gave pp 7-12 to 7-13; the table is printed on
+  pp 7-13 to 7-14 (the section heading is on p 7-12). Corrected to the caption-to-last-row
+  rule the other pilots already follow. Structure data and validation output are unchanged.
+
+### Changed — P8b-1: generated structure version switch, completeness flag and codegen self-check
+
+- The version-to-table switch for message structures is generated from
+  `Resources/structures/completeness.json` into
+  `Sources/HL7v2Kit/Structures/Generated/MessageStructureTable+Versions.swift`, together with
+  the set of complete versions (ADR-019). All seven grammar versions are listed and none is
+  complete; `2.7` and `2.8` read the v2.7.1 and v2.8.2 entries through `grammarVersion`.
+- Lookup rule 1's complete-version branch is implemented: once a version is complete, an
+  MSH-9.3 naming no structure of that version is a `messageStructureMismatch` rather than
+  `messageStructureNotModelled`. No version is complete, so output is unchanged; the
+  validation digest is byte-identical with the structure check off and at `.warning`.
+- `scripts/check-structure-codegen.sh` (CI, codegen-drift job) proves the codegen rejects
+  bad structure and completeness input (17 cases) and that a clean run reproduces the
+  committed generated files; `check-audit-schemas.py` asserts the completeness file names
+  every modelled version.
+- A valid-corpus fixture that fails to parse now fails `FixtureStructureConformanceTests`
+  instead of being skipped. Public API unchanged.
+
+### Fixed — P8b-5: synthetic fixtures conform to their message structures
+
+- Nine v2.5.1 ADT fixtures were not valid against ADT_A01 (v2.5.1 Chapter 3, section 3.3.1),
+  which the message-structure check (ADR-019) reported at `.error` as 12 of 15 corpus findings.
+  All nine gain an `EVN` after MSH (EVN-1, B in v2.5.1, left empty; EVN-2 repeats MSH-7);
+  `edge_empty_fields` and `edge_escape_sequences_in_name` move their top-level NTE narrative,
+  escape sequences unchanged, into an `OBX` (FT), which ADT_A01 defines; and
+  `edge_minimal_pid_phone_only` gains a minimal PV1. `msh_with_z_only` (MSH plus one
+  Z-segment) is structurally non-conformant by design and is marked as such. Every fixture
+  stays synthetic and the PHI scan passes. The default validation digest is byte-identical;
+  with the structure check on, only the 12 corrected findings disappear.
+- New always-on `FixtureStructureConformanceTests`: every parseable valid-corpus fixture is
+  validated with `messageStructureSeverity = .error` and must raise no structure finding
+  (`messageStructureNotModelled` aside), except the fixtures listed in its
+  `deliberatelyNonConformant` set, which must still raise one. The env-gated
+  `StructureMatcherCorpusTests` stays as the measurement tool for the spec examples.
+- `.gitignore` gains `docs/XML-schemas` (no trailing slash, so a worktree symlink is ignored
+  too): the HL7 v2.xml bundles are licensed content and are never committed.
+
+### Changed — P10-8: the recipient-rule citation names the message's own version
+
+- `extraComponentsInPrimitiveField` and `extraComponentsInCompositeField` messages cited
+  "v2.5.1 and v2.8.2 section 2.6.2 a" whatever version validated the message. They now cite
+  the grammar version's own section for the rule "ignore segments, fields, components,
+  subcomponents, and extra repetitions of a field that are present but were not expected":
+  v2.3 and v2.3.1 section 2.10 and v2.4 section 2.11 (receiving rule a), v2.5.1, v2.6, v2.7.1
+  and v2.8.2 section 2.6.2 a (a `2.7` message cites v2.7.1). Only the message text changes:
+  codes, severities and locations are unchanged.
+
+### Documentation — P10-8: v2.7.1 close-out
+
+- `docs/design/v2_7_1-spec-audit.md`: what was extracted, the counts, every ruling and the
+  shipped-data defects fixed along the way. ADR-018: the original lines describing 2.7 and
+  2.7.1 as absent or scheduled are marked superseded, and a current version table follows the
+  amendments. ADR-020: outcome note (no struct base moved). Limitations register sections A,
+  C and E name v2.7.1. Conditional-completeness audit: the v2.7.1 totals are broken down and
+  two stale intake headings reworded. `FieldLengthRule` cites the v2.7.1 truncation marks
+  (CH02 2.5.5.2 p. 11, 2.5.5.3 p. 12). The open-ended NA array (v2.4 and v2.7.1) is pinned by
+  a test.
+
+### Changed — P10-7: RCP-4 and ROL-1 rules on the versions that print v2.7.1's text
+
+- RCP-4 is prohibited (warning) when RCP-1 is not `D` on v2.4, v2.5.1, v2.6 and v2.8.2, as on
+  v2.7.1: each prints "This field is only valued when RCP-1-Query priority contains the value
+  D (Deferred)" (CH05; v2.3 and v2.3.1 define no RCP). Default output gains four warnings on
+  the spec examples: the v2.4 and v2.5.1 CH03 QBP^Q23/Q24 examples print "RCP||I|SEC|0614",
+  one field to the right.
+- ROL-1 is required in the Patient Care and Personnel Management messages on v2.5.1, v2.6 and
+  v2.8.2, as on v2.7.1 (CH15 15.4.7.1); v2.8.2 leaves out PRR, PPV, PTR and PPT, removed as of
+  v2.8. v2.4 prints a different sentence and stays bare; v2.3 and v2.3.1 print ROL-1 `R`. No
+  spec example changes.
+
+### Added — P10-7: v2.7.1 spec examples in the harness
+
+- The 222 v2.7.1 example messages run through the validator; every error line on a v2.7.1
+  example, and on every example declaring MSH-12 `2.7`, is claimed by a registry entry cited
+  to the v2.7.1 print (244 entries, 0 mismatched). Each is an example defect or the declared
+  substitution; none is a misfire.
+- The ORC-8 / OBR-54 pair check is pinned end to end for a literal MSH-12 `2.7` and `2.8`.
+
+### Fixed — P10-7: the v2.7.1 text layer's printed hyphen
+
+- The v2.7.1 PDFs encode a printed hyphen as U+2010, so extracted example values such as
+  time-zone offsets carried a non-ASCII character and raised 94 false format warnings.
+  `extract-example-messages.py` maps U+2010 to "-", with a self-check. Extraction only; the
+  shipped resources are unchanged.
+
+### Changed — P10-6: MSH-12 `2.7` validated against v2.7.1 (owner decision G11)
+
+- `Version.v2_7` (`"2.7"`), additive. A message whose MSH-12 declares `2.7` no longer
+  raises `versionNotRecognised` against the v2.5.1 fallback, and `ParserOptions.strict`
+  accepts it: it is validated against the v2.7.1 grammar, code tables and datatype grammar
+  with one `versionGrammarSubstituted(declared: .v2_7, validatedAs: .v2_7_1)` info issue at
+  MSH-12, exactly as `2.8` is validated against v2.8.2 (ADR-018 amendment). The registries
+  stay version-literal: `.v2_7` owns no tables or grammar.
+- The ORC/OBR paired-field version sets are read through `grammarVersion`. This is a tidy-up
+  with no change in output: `validate(_:)` already re-declares the message under its grammar
+  version before any version-keyed check, so a `2.8` message already got the ORC-8 / OBR-54
+  parent-order check of v2.8.2, and a `2.7` message gets v2.7.1's. (Corrected in P10-8: this
+  entry first said the check had read the declared version and that `2.8` output changed;
+  P10-7 found otherwise and pins the behaviour end to end.)
+
+### Added — P10-6: `Version.v2_7_1`, HL7 v2.7.1 validated against its own grammar
+
+- `Version.v2_7_1` (`"2.7.1"`), additive on the open enum (ADR-014). Every per-version
+  dispatch reaches the v2.7.1 resources: `HL7TableRegistry.tables(for:)`,
+  `DataTypeGrammarTable.grammars(for:)` and `fieldGrammars(for:)` (empty: v2.7.1 prints a
+  component table for every composite), and the Validator's segment grammar table.
+- v2.7.1 sits with v2.8.2 on every era rule, each verified against the v2.7.1 print: LEN is
+  a normative length beside C.LEN (CH02 2.5.3.2, 2.5.3.3, 2.5.5.0, 2.5.5.3); no 65536 or
+  99999 length symbols (CH02 2.5.5); SI bounded to 0 to 9999 (CH02A 2.A.69); SNM a primitive
+  and TS withdrawn (CH02A 2.A.71, 2.A.78).
+- The ORC-8 / OBR-54 parent-order pair applies on v2.7.1 (CH04 4.5.3.54; 4.5.1.8 prints
+  "OBR-??", resolved by 4.5.3.54).
+
+### Changed — P10-6: default output for messages that declare 2.7.1
+
+- A message whose MSH-12 declares `2.7.1` no longer falls back to v2.5.1 with
+  `versionNotRecognised`, and `ParserOptions.strict` no longer throws `unsupportedVersion`
+  for it. It is validated against the v2.7.1 grammar. None of the spec example messages
+  declares `2.7.1`, so the validation digest is unchanged.
+
+### Changed — P10-5b intake: EQU-3 required in the ESU message on v2.4 to v2.8.2
+
+- CH13 13.4.1.3 prints "The Equipment State is required in the ESU message and is optional
+  otherwise" on v2.4, v2.5.1, v2.6 and v2.8.2 as on v2.7.1; all four now carry
+  `messageCode = ESU` (v2.3 and v2.3.1 define no EQU). Every printed ESU example values
+  EQU-3, so no spec example output changes.
+
+### Added — P10-5a, P10-5b: v2.7.1 conditional fields
+
+- Every one of the 177 fields v2.7.1 prints `C` was read against its own v2.7.1 definition:
+  112 carry a rule (107 a `condition`, 5 a prohibition only) and 65 stay bare, each with its
+  quote and reason in `docs/design/conditional-completeness-audit.md`. CSR-8, MFI-6 and
+  ROL-4 are printed `R` and modelled `C` with an optionality citation (P4-30).
+- Readings that differ from v2.8.2, each from the v2.7.1 text: ORC-2/3 and OBR-2/3 take the
+  v2.6 forms (no Send Number exception); PRT-5/8/9/10 have no PRT-22 leg; PID-35 and PID-36
+  take v2.6's "Conditionality Rule" sentences; RCP-4, ROL-1 and EQU-3 get rules v2.6 and
+  v2.8.2 then left bare (applied there in later intakes). The `messageCode not in (OUL ...)`
+  ORC/OBR gates are kept (register section D).
+- No output changed at the time: v2.7.1 was not dispatched until P10-6.
+
+### Fixed — P10-4d: v2.4 NA datatype
+
+- v2.4 types SAC-11 and SAC-14 NA but shipped no NA grammar. CH02 2.9.27 defers to CH07
+  7.14.1.1, which prints "<value1> ^ <value2> ^ <value3> ^ <value4> ^ ...";
+  `Resources/datatypes/v2.4/NA.json` holds the four printed values, untyped as printed. NA is
+  an open-ended array on every version (the print ends in an ellipsis), so the four entries
+  are not a maximum and NA is never width-checked. No output changes.
+
+### Fixed — P10-4d: v2.4 table 0131
+
+- v2.4 binds User-defined Table 0131 (Contact Role) on NK1-7 and CTD-1, and CH03 3.4.5.7
+  prints it with the single row "No suggested values", but Appendix A omits it. It is now
+  created, empty and user-defined (v2.4: 409 tables). No output changes.
+
+### Fixed — P10-4d: v2.5.1 MFA-5, MFE-4 and OBX-5 "Varies"
+
+- The segment-table extractor read a data-type cell that wraps its last letters onto the
+  next line as "Varie" (v2.5.1 CH08 8.5.2 and 8.5.3) and "varie" (OBX-5). It now completes the
+  cell from the wrapped fragment. The schemas already recorded `Varies`, so only the
+  extractor and a now-unneeded audit whitelist entry change.
+
+### Fixed — P10-4d: v2.6 withdrawn fields carry the printed data type; the v2.5.1 MSA-5 exception
+
+- Eleven v2.6 withdrawn (W) fields carried a data type the v2.6 attribute tables leave blank
+  (DG1-2, DG1-4, DG1-7 to DG1-14, MSA-5). They are now untyped, as printed. A populated one
+  raises only the withdrawn-field warning; on the spec examples validated as v2.6, 8
+  `extraComponentsInPrimitiveField` issues on MSA-5 no longer fire. No accessor changes.
+- v2.5.1 MSA-5 keeps its ID type as the one registered exception: the print's DT cell is
+  blank, but the released `MSA.delayedAcknowledgmentType` is typed from it (ADR-014).
+  Every version from v2.5.1 up is now held to the rule by `audit-schemas.py`.
+
+### Fixed — P10-4d: v2.6 ITM fields 7 to 29
+
+- The v2.6 ITM schema stopped at ITM-6: the segment-table extractor ended the table at a
+  page-foot footnote (fixed in P10-4c). ITM-7 to ITM-29 are added from the v2.6 CH17
+  section 17.4.2 attribute table (pp. 9 to 10), so v2.6 validates them.
+- Added `ITM.itemNaturalAccountCodeAsCWE`: v2.6 prints ITM-19 IS, so the unreleased
+  `itemNaturalAccountCode` is now `String?` and the v2.7.1 / v2.8.2 CWE reading has its
+  own accessor. The released v3.13.0 surface is unchanged.
+
+### Fixed — P10-4d: v2.8.2 withdrawn fields carry the printed data type
+
+- 30 v2.8.2 withdrawn (W) fields carried a data type the v2.8.2 attribute tables leave blank
+  (AL1-6, DG1-2/4/7 to 14, ERR-1, EVN-1, MSA-3/5/6, OBR-5/6/14/15/27, ORC-7, PD1-4,
+  PID-2/4/9/12/19/20/28). They are now untyped, as printed; only UB1-1 keeps a type (SI,
+  CH06 section 6.5.10, p. 124). A populated one raises only the withdrawn-field warning;
+  on the v2.8.2 spec examples 64 type-keyed issues on PID-2, PID-4 and MSA-5 no longer fire.
+  `audit-schemas.py` now holds v2.8.2 to the rule as well as v2.7.1.
+
+### Added — P10-4a to P10-4c: v2.7.1 segment schemas
+
+- `Resources/schemas/v2.7.1`: 170 segments and 2,519 fields from Chapters 2 to 17, each
+  segment from its defining attribute table, cross-checked by an independent parse and read
+  on the page wherever it differs from v2.8.2. v2.7.1 adds IAR, PAC, PRT and SHP to v2.6's
+  set and lacks QRD, QRF, URD and URS; it lacks ten v2.8.2 segments and has none v2.8.2
+  lacks.
+- Withdrawn (`W`) fields carry exactly the data type their attribute table prints: of
+  v2.7.1's 77, only UB1-1 is typed (SI). Blank OPT cells (87 fields) and table openness
+  (14 fields) are cited from the v2.7.1 print.
+- Extractor fixes, each with a self-check, that also apply to every version: prose bleeding
+  into the last row's element name, and a page-foot footnote inside a table read as a row
+  (it gave v2.7.1 ITM a phantom field and had cut the v2.6 ITM table short).
+- `audit-schemas.py` checks that every field's data type exists on its version. Generated
+  DocC version lists name v2.7.1; no accessor is added, removed or retyped.
+
+### Added — P10-2: v2.7.1 datatype component grammar
+
+- `Resources/datatypes/v2.7.1`: 72 composites, 469 components, 151 bound to a table, 72
+  printed `C` (23 conditions and 30 conformance conditions re-cited to the identical v2.7.1
+  sentences; 19 bare, registered in section D). Against v2.8.2: LA1 and LA2 added, OG
+  absent, PRL.2 ST, XON.4 and XON.5 printed `O`.
+- The datatype and example extractors treat v2.7.1's second page-footer line as furniture,
+  which had truncated 14 composite tables.
+
+### Fixed — P10-1 fix round: shipped v2.8.2 and v2.6 table data
+
+- v2.8.2 Tables 0359 (Diagnosis Priority) and 0418 (Procedure Priority) stored the printed
+  ellipsis row (U+2026) as a code and were closed. They now hold 0, 1 and 2 and are open:
+  Chapter 6 DG1-15 and PR1-14 say "Values 2-99 convey ranked secondary" diagnoses or
+  procedures. The extractor reads the Unicode ellipsis as the bare "..." row in both layouts.
+- v2.8.2 Table 0544 (Container Condition) is open, as Chapter 7 SPM-28, SHP-9 and PAC-6
+  cite it "for suggested values"; the wrapped fragment `temperature` is no longer a code and
+  six descriptions are restored as printed.
+- v2.8.2 wrapped prose stored as codes is dropped: `contractors.` (Tables 0088, 0343) and
+  `codes` (Table 0396).
+- The Chapter 2C layout skipped every line containing ".." as a table-of-contents line,
+  losing rows that print "..."; only a dotted leader is skipped now. v2.8.2 Tables 0093 and
+  0466 regain their ellipsis row and are open; Table 0141 regains its range rows.
+- Table 0141 (Military Rank/Grade) range rows `E1 ... E9`, `O1 ... O9` (`O1 ... O10` on
+  v2.3.1 and v2.4) and `W1 ... W4` were literal codes on v2.3.1 to v2.6 and missing on v2.8.2.
+  They are now pattern rows matching exactly the codes they name, on every version that prints
+  them.
+- See Migration.md for the visible `HL7TableRegistry` changes; validation output is unchanged.
+
+### Added — P10-1: v2.7.1 code tables
+
+- `Resources/tables/v2.7.1`: 535 tables (174 HL7, 361 user-defined), 5,155 entries and four
+  pattern rows (0141, 0203), 144 tables with no values; Appendix A is the source, plus
+  Chapter 2C's 0916. 54 tables carry a cited override: the Appendix A versus Chapter 2C
+  cross-check (13 code-set and 13 kind differences), the readings every version carries,
+  and the openness of ellipsis and no-value tables; 0070 and 0048 are recorded as absent.
+  Readings of 0492, 0125 and 0104 were settled in the review round.
+- `extract-code-tables.swift` reads Appendix A's Unicode ellipsis row (U+2026) as the bare
+  "..." row, which removed 141 bogus entries, with a self-check; the six existing versions
+  re-extract unchanged. Self-check guards: every per-version source map names every modelled
+  version, and a bare U+2026 code is flagged.
+
+### Changed — P10-3: a released struct's union base never changes (ADR-020 amendment)
+
+- The codegen takes a segment struct's base schema from `Resources/struct-bases.json` where
+  the segment is listed there, and only otherwise from canonical v2.5.1 or the earliest
+  definer (`StructBase.swift`). The list pins the 38 structs released in v3.13.0 on a base
+  other than v2.5.1 (24 on v2.6, 14 on v2.8.2, including IAR, PAC, PRT and SHP), so adding
+  v2.7.1 or any other earlier version cannot rename or retype a released accessor. A pin to
+  a version that does not define the segment fails the run.
+- `StructBasePinTests` (3 tests) fails when a generated struct's base differs from its pin
+  or from v2.5.1, when a pin names no struct, or when a v3.13.0 struct is no longer
+  generated: a new segment's non-v2.5.1 base is added to the list in the commit that
+  introduces it. `scripts/check-struct-base-pin.py` (CI, codegen-drift job) runs the codegen
+  on a scratch schema copy with a synthetic earlier PRT and shows its base and released
+  declarations do not move.
+- Regeneration output is unchanged; `docs/design/public-api-surface.md` states the
+  guarantee.
+
+### Changed — P8 final review: internal structure initialiser; wording and doc corrections
+
+- `MessageStructure.init(id:version:triggers:citation:elements:)` is internal (unreleased
+  API, so no compatibility break): there is no public matcher to hand a consumer-built
+  structure to, and the AU overlay will add fields. The DocC of `triggers` gives the
+  `"CODE^EVENT"` / `"CODE^*"` format, `version` is the printed version string, and
+  `StructureElement` says a later release adds cases.
+- An MSH-9.3 that differs from a modelled structure ID only by case or surrounding
+  whitespace (`ADT_A01 `, `adt_a01`) is still `messageStructureNotModelled` (info, no body
+  match), and its message now says so. Default output unchanged.
+- Docs: README feature line, Migration.md open-enum list (`StructureElement`), ADR-019
+  (internal initialiser; where the pilot differs: no overrides.json or JSON Schema file,
+  lookup rule 3 not implemented, lint run per message uncached), ACK syntax citations per
+  version (UAC from v2.6), the MSH-18 echo in the DocC and register rows, and a
+  `Validation.md` note that batch input goes through `BatchParser` and `BatchValidator`.
+
+### Documentation — P8-8: message-structure pilot close-out
+
+- Permanent-limitations register section E: each row restated for what is true after
+  the pilot (three v2.5.1 structures modelled, every other structure and version not
+  modelled; fragments; version provenance; lint-failing structures reported as not
+  modelled); still blocking, "pilot shipped PARTIAL".
+- ADR-019: "pilot shipped" addendum with measured test counts; decision 9 amended for
+  the MSH-18 echo; rollout step 4 records that `isComplete` switches lookup rule 1's
+  unknown-ID case from not-modelled to mismatch.
+- DocC `Validation.md`: a "Message structures" section; the "does not check" bullet now
+  reads "partial". `Migration.md`: every P8 public member listed.
+- `public-api-surface.md`: a fresh inventory, 263 public types (75 hand-written, 188
+  generated segment structs), every type listed; 11 types the old tally missed and the
+  `ParseError` case count (7, not 8) corrected.
+- `MessageBuilder.acknowledgment` DocC: an empty original MSH-9.2 gives `ACK^^ACK`
+  (pinned by a new test); MSH-18 is a builder rule; on v2.3 and v2.3.1 echoing the
+  event is permitted, not mandated. `MessageStructure.accepts` pinned by function type.
+
+### Added — P8-7: general acknowledgment builder (ADR-019 decision 9)
+
+- `AcknowledgmentCode` (HL7 Table 0008, six cases, open enum),
+  `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` and
+  `BuilderError.acknowledgedMessageControlIDMissing`. Builds MSH and MSA in the
+  original's version: MSA-2 copies the MSH-10 field, MSH-3/4 and MSH-5/6 swap, MSH-9 is
+  `ACK^<event>^ACK` (`ACK^<event>` on v2.3), MSH-11, MSH-12 and a populated MSH-18 are
+  echoed. No protocol logic (MSH-15/16, enhanced mode, sequence numbers): the caller
+  chooses the code and adds SFT, UAC or ERR. Additive; default output unchanged.
+
+### Added — P8-6: MSH-9 resolution cases and event-to-structure consistency
+
+- An MSH-9.3 naming a modelled structure not printed for MSH-9.1^9.2 raises
+  `messageStructureMismatch` alone, with no body match. An MSH-9.3 naming an unmodelled
+  structure (`ADT^A04^ADT_A04` on v2.5.1) is `messageStructureNotModelled` until a
+  version is complete; a trigger printed under two structures is not resolved and the
+  info issue names both.
+
+### Added — P8-5: message-structure validation, opt-in (ADR-019)
+
+- `ValidationOptions.messageStructureSeverity` (`IssueSeverity?`, `nil` in every preset;
+  not an init parameter) and four `IssueCode` cases:
+  `messageStructureSegmentMissing(structure:segmentID:group:)`,
+  `messageStructureSegmentUnexpected(structure:segmentID:)`,
+  `messageStructureMismatch(declared:trigger:)` and
+  `messageStructureNotModelled(structure:)` (always `.info`). The structure comes from
+  MSH-9.3, or MSH-9.1^9.2 through the caption-line triggers; it applies only when MSH-12
+  reads as the version validated. Z-segments, ADD and segments the version's grammar does
+  not define are skipped. A fragment (MSH-14 populated, or a trailing DSC with a
+  continuation pointer or where the structure defines none) is not structure-checked.
+  Default output unchanged.
+
+### Added — P8-4: structure matcher and determinism lint
+
+- Greedy recursive-descent matcher (internal) reporting missing, unexpected and
+  over-maximum segments, and the determinism lint every modelled structure must pass;
+  a structure that fails it is reported as not modelled. A reference recogniser property
+  test checks that the matcher and a full recogniser agree on the pilot structures and on
+  every synthetic shape that passes the lint.
+
+### Added — P8-3: message structure model, codegen and the v2.5.1 pilot
+
+- `MessageStructure`, `StructureElement` (open enum) and `MessageStructureTable`,
+  generated into `Sources/HL7v2Kit/Structures/Generated/` from `Resources/structures/`.
+  Three structures: v2.5.1 `ADT_A01` (A01, A04, A08, A13), `ORU_R01` and `ACK`. The
+  codegen-drift CI job covers the new generated directory.
+
+### Documentation — P8-1 and P8-2: abstract message syntax registered; ADR-019
+
+- P8-1: permanent-limitations register section E registers message structures,
+  event-to-structure consistency and acknowledgment construction as blocking
+  spec-completeness; README and DocC state the gap.
+- P8-2: ADR-019 (message structure grammar) accepted under owner gate G2: hybrid source
+  of truth, greedy matcher with determinism lint, ADD skipped on every version, fragments
+  not structure-checked, the version rule, and a mismatch reported alone.
+
+### Fixed — P5 final review: TQ.6 priority repeat on v2.3/v2.3.1; v2.3 QRD-11
+
+- v2.3 and v2.3.1 section 4.4.6 let TQ.6 Priority repeat with the repeat
+  delimiter (`1^Q6H^^200001011200^^S~A^^^S`), which the parser reads as a
+  field repetition. On those versions a single-repeat `TQ` field (ORC-7,
+  RXE-1, RXG-3, GOL-15, QRF-9, URS-9) no longer raises `cardinalityExceeded`
+  for repetitions 2 to n, and no component, format, length or table check
+  runs on them; repetition 1 is validated as usual. v2.4 (section 4.3.6)
+  uses a space and is unchanged. A genuinely wrong second repetition there
+  now goes unreported: a known limit, recorded in the limitations register.
+- v2.3 QRD-11 is typed `CM`, as its section 2.24.4.11 heading and Components
+  line print (`<first data code value (ST)> ^ <last data code value (ST)>`),
+  not `ST` as its attribute table prints; a cited `DATATYPE_WHITELIST` entry
+  records the disagreement. `A^Z` no longer raises
+  `extraComponentsInPrimitiveField`; a third component raises
+  `extraComponentsInCompositeField`. v2.3 now has 46 field-local grammars.
+
+### Changed — P5-1 to P5-3: more issues may fire by default
+
+- No API change, but default output changes, and more errors may fire:
+  `valueNotInTable(table: "0472")` on v2.4 TQ.9, `valueNotInTable(table:
+  "0191")` on v2.3 ED.2, `CD` and `CF` width-checked, and `TQ` checked
+  against its CH4 component grammar. The width warning on a six-component
+  v2.3/v2.3.1 `CE` is gone. See Migration.md.
+
+### Fixed — P5-9: v2.3.1 datatype names without table-of-contents residue
+
+- `DataTypeGrammar.name` for every v2.3.1 composite datatype carried leftover
+  padding and a page number from `scripts/extract-datatype-prose.py` picking
+  up the table-of-contents entry instead of the body heading (`"address
+  2-12"`, `"timing quantity      2-52"`, 39 names in all). v2.3.1's contents
+  entries print no dot leaders, so the extractor's furniture filter — which
+  drops v2.3 and v2.4's dot-leadered contents lines — missed them, and the
+  extractor kept the first heading match it saw rather than the last.
+- Fixed at the source: the extractor now keeps the LAST match of the datatype
+  heading pattern, the body heading that is actually followed by the
+  datatype's definition text, discarding any earlier contents-line match
+  (the same rule `extract_tq` already applied to Chapter 4's TQ numbering).
+  v2.3 and v2.4 print no such duplicate match, so the fix is a no-op there.
+- `audit-schemas.py --datatypes` now also rejects a datatype `name` ending in
+  what looks like a page reference (`\d+-\d+$`) or containing a run of three
+  or more spaces, on every version.
+- Added `scripts/check-extract-datatype-prose.py` (wired into the CI
+  `fixture-safety` job alongside `check-extract-example-messages.py`),
+  covering the name-capture fix, `parse_components_line`, `reconcile`'s
+  WARN-and-keep path, and `extract-field-components.py`'s
+  `promote_misprinted_ampersands`.
+- No component, datatype or table binding changed; only the 39 `name`
+  strings. Confirmed by diffing every re-extracted v2.3.1 file, by a clean
+  re-extraction of v2.3 and v2.4, and by a before/after diff of
+  `Validator().validate(_:).issues` (all severities) over the 1233 spec
+  example messages and the fixture corpus: identical.
+
+### Fixed — P5-7: OBR-15 and OBR-32 to OBR-35 typed `CM`, not the v2.5-era names
+
+- v2.3, v2.3.1 and v2.4 OBR-15 and OBR-32 to OBR-35 were reported as the
+  v2.5-era `SPS` / `NDL` composites. Those structures differ from what the
+  field actually prints (OBR-15.2 additives `TX` vs `SPS.2` `CWE`; OBR-32.1
+  `CN` vs `NDL.1` `CNN`), so the typed name was misleading even though the
+  field-local grammar (P5-5/P5-6) already supplied the right components. The
+  schemas now print `CM`, as the attribute table does; components come only
+  from the field-local grammar. (V24-C08)
+- `audit-schemas.py`'s `CM` carve-out is now an enumerated set,
+  `CM_REFINEMENTS` (`MSG`, `MOC`, `PRL`, `EIP`): only those four pre-v2.5
+  `CM` fields may be typed with their v2.5-era name, because only their
+  structure is identical to it. Every other `CM` field stays `CM`. Guarded
+  by `check_cm_refinements` in `scripts/check-audit-schemas.py`.
+
+### Fixed — P5-6: CE components checked only under an explicit HL7nnnn coding system; width-check dedupe
+
+- Every composite-aware check (width, primitive-component, component
+  code-table, value-format, conditional and required components) now
+  resolves a field's grammar through one point,
+  `Validator.fieldGrammar(segment:field:dataType:version:)`: a primitive
+  stays primitive, else the field-local grammar (P5-5) where the field
+  prints one, else the datatype-level grammar. This closes the
+  component-table half of V231-C03, V23-C06 and V24-C06: a closed HL7 table
+  bound to a field-local `CE`/`CWE` component (OBR-15.1 0070, OBR-15.4 0163,
+  ERR-1.4 0357, SAC-6, TCC-3, IN3-20.2 0136, BLG-1.1 0100, PRA-5.3 0337) is
+  now enforced, where it was silent.
+- A `CE` component's closed-table check only fires when the component's own
+  coding-system subcomponent (CE.3, or CE.6 for the alternate triplet
+  CE.4-6, "defined analogously") explicitly names the table as `HL7nnnn`
+  (case-insensitive; v2.3/v2.3.1 section 2.8.3.3, v2.4 section 2.9.3.3). An
+  empty CE.3 is silent — the spec's own ERR-1 example sends `X3L` with none
+  and calls it "the locally-established code" — and so is any other coding
+  system, which is how OBR-15's veterinary-table allowance (v2.4 section
+  7.4.1.15) is honoured. The same rule now also reaches the existing
+  v2.5.1 ELD.4 (0357) type-level binding.
+- v2.3.1 and v2.4 PRA-7 now has five components: the extractor reads a
+  misprinted `&` as `^` when every later piece has its own "Subcomponents
+  for <name>:" line.
+- IS bindings and the open MSH-9 tables (0076, 0003, 0354 on v2.3.1/v2.4)
+  stay unenforced.
+
+### Added — P9: complete composite views and later-version typed accessors (ADR-020)
+
+- `CompositeView.component(_:as:)` views a sub-composite (for example CX-4 as `HD`);
+  `CompositeView.viewed(as:)` views the same field as another composite (for example
+  a v2.5.1-typed `CE` as the `CWE` that v2.6+ prints); `TypedSegment.repetitions(_:)`
+  returns each repetition of a field as its own `Field`. Additive (ADR-014).
+- **V251-C11, V282-C10: composite views reach full spec depth.**
+  - Every component that any supported version defines now has a named accessor on CX (12), XPN (15), XAD (23), XCN (25), XTN (18), PL (11), CWE (22), CNE (22) and XON (10). CE, EI, EIP, HD, MSG, PT and VID were already complete.
+  - The new accessors are generated from the datatype component tables and a curated name map (`Resources/composites/composite-views.json`) into `Sources/HL7v2Kit/Composite/Generated/`. Codegen fails if any component is unnamed.
+  - Withdrawn components keep an accessor (earlier versions define them); a component printed without a data type takes the type from the newest version that prints one; open arrays (MA, NA) are not composite views.
+  - Hand-written accessors are unchanged, checked against v3.13.0 by `CompositeReleasedSurfaceTests`. The "commonly-populated" rationale is removed.
+- **V251-C11: repeating fields.** Every repeating field (`*` or a bound, 536 in all) on the
+  generated segment structs gains `<name>All`, which returns every repetition in wire order:
+  - `[<View>]` for composite views;
+  - `[String?]` for scalars;
+  - `[Field]` for other types.
+
+  For example, `PID.patientIdentifierListAll: [CX]`. Each passes `TypedSegment.repetitions(_:)`
+  through unchanged: empty when the field is absent, one entry when it is present but empty,
+  three for `A~~B`, and one entry holding `""` for an HL7 null. The singular accessor's DocC
+  now says the field repeats. Codegen fails on an `…All` name that collides with another
+  accessor. The v3.13.0 segment-struct surface is checked by `SegmentReleasedSurfaceTests`.
+  Additive.
+- **V282-C10: version-union typed accessors.** Generated segment structs keep their
+  v2.5.1 base (or the earliest defining version) and add what the other supported
+  versions define (510 accessors, one per element and Swift type):
+  - fields past the base maximum, and positions the base reserves that a later version
+    defines, with their later name and type (222; for example PID-40, ORC-32..34,
+    OBR-51..54, OBX-26..30, and `OBX.observationSite` where v2.5.1 reserves OBX-20);
+  - a later name for a base position only when its Swift type differs from the base
+    accessor's (9; for example `OBX.interpretationCodes: CWE?` for v2.8.2 OBX-8, renamed
+    from Abnormal Flags). A same-type rename is a DocC note on the base accessor;
+  - `<name>As<T>` where any version prints a scalar or raw field as a composite (186;
+    for example `CON.languageTranslatedToAsCWE`, and `MFA.primaryKeyValueMfaAsCE` for
+    v2.3 to v2.4);
+  - `<name>All` wherever any supported version repeats the element (93 more, 629 in
+    all: 16 base fields that repeat only in another version, 45 later element names, 32
+    `As<T>` views; for example `MRG.priorAlternateVisitIdAll`).
+
+  DocC names the versions each accessor applies to and says that on another version's
+  message it returns whatever the position holds. A kept rename says "Same element as
+  ..., renamed in ..." and the base accessor points back to it; every printed name is
+  listed with the accessor whose type matches that version. Composite-to-composite
+  retypes (CE to CWE) point at `viewed(as:)`; 48 view accessors note the version that
+  prints a scalar there. A reserved position's DocC says "No data type: reserved
+  position in v2.5.1". The v3-C5 fallback pass is folded into the union pass. ADR-020
+  records the rules. No existing accessor changes name or type. Additive.
+- **Schema fix: v2.5.1 MFA-5 and MFE-4 data type `Varies`.** The schemas stored `Varie`,
+  the attribute table's truncated cell; the field headings (CH08 8.5.2.4, 8.5.3.5) print
+  `Varies`, as v2.6 and v2.8.2 store it.
+- **P9 close-out (documentation).** The `TypedSegment` and `CWE` DocC state the version
+  shape; the TypedSegments article gains compiled examples for the new accessors;
+  Migration.md, the public-API inventory and register section H (now closed, with three
+  registered residuals) describe what shipped; ADR-013 carries an addendum. A generated
+  accessor that was renamed no longer states the rename twice in its DocC.
+- **P9 final review: wire behaviour, names and a full surface snapshot.** Accessors are not
+  version-gated: the `TypedSegment` and `CWE` DocC, Migration.md and the TypedSegments
+  article now say an accessor returns `nil` only when its position is absent and otherwise
+  reads what the wire holds, and generated composite DocC says so beside "Defined in". Four
+  unreleased later-version names drop a stranded possessive "S" (`IN2.patientRelationshipToInsured`,
+  `NK1.contactPersonTelecommunicationInformation`, `OM1.replacementProducerServiceTestObservationId`,
+  `ROL.personLocation`), as do nine v2.3 to v2.4 schema rows whose names reach no accessor;
+  `audit-schemas.py` now rejects a stranded "S" on any name neither released at v3.13.0 nor
+  canonical-inherited. `AccessorSurfaceSnapshotTests` pins every segment and composite
+  accessor (name, type, index) for equality against `Tests/Fixtures/APISurface/*-unreleased.txt`.
+- **P9 final review: generator fixes.** Segment and composite codegen render every file
+  before writing any, and delete a file in its output directory that the run did not
+  produce. Rename notes ignore a "(deprecated)" suffix and merge versions that print the
+  same name (OBR-15); a case-only difference is not a rename (IN1-17). A retype note names an existing accessor of that type before
+  `viewed(as:)` (`PID.speciesCode` on v2.6: `taxonomicClassificationCode`). The redundant
+  `checkAllNames` pass is gone; the union pass's name claims cover it.
+
+### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
+
+- `DataTypeGrammarTable.grammar(segment:field:version:)` (additive): the
+  component grammar a pre-v2.5 field defines for itself on its own printed
+  Components line, read by `scripts/extract-field-components.py` into
+  `Resources/datatypes/v<X>/fields/<SEG>-<N>.json`. 45 fields on v2.3, 41 on
+  v2.3.1, 43 on v2.4. A table binds only to a coded component (IS, ID,
+  CE/CNE/CWE), under the existing three-test evidence rule, reaching
+  13/19/26 bound components across the three versions; 15 field mentions
+  (IN2-28, IN2-29, v2.3 MSH-9, v2.3 IN3-11.1) stay unbound because the prose
+  names two tables in one sentence or misprints the table number, and are
+  recorded in the limitations register.
+- The component code-table check now runs on these fields (the width check
+  and the others are wired in by P5-6).
+
+### Added — P5-2/P5-3: CD, CF, TS and TQ component grammar
+
+- v2.3, v2.3.1 and v2.4 `CD` (6 components), `CF` (6) and `TS` (2) now have
+  a component grammar, read from each datatype's printed Components /
+  Format line when it has no numbered prose subsections
+  (`"source": "prose-line"`); `CD` and `CF` are now width-checked and
+  `CF.2`/`CF.5` follow the FT line-marker rule.
+- v2.3, v2.3.1 and v2.4 `TQ` now has a component grammar (10/12/12
+  components), read from the CH4 quantity/timing definition (v2.3/v2.3.1
+  section 4.4, v2.4 section 4.3) rather than CH02; v2.4 TQ.9 is bound to
+  Table 0472.
+- `Validator.componentGrammar(_:version:)`: the single resolution point a
+  composite check calls for a type with no field-local grammar. It keeps
+  `TS` a primitive before consulting the table, so giving `TS` a component
+  grammar does not regress the P6-7 format check, the P6-14
+  primitive-component limit or the P6-15 width check.
+  `checkComponentCodeTables`, `checkConditionalComponents` and
+  `requiredComponents` all route through it.
+
+### Fixed — P5-1: pre-v2.5 composites corrected from the printed Components line
+
+- `extract-datatype-prose.py` now also reads the printed "Components:"
+  line: a numbered subsection that prints no datatype yields to it, and a
+  component the line names past the last numbered subsection comes from it.
+- v2.3 and v2.3.1 `CE` now has six components (was three); v2.3.1 `CNE` now
+  has nine (was eight). (V23-C04, V231-C07)
+- Side effects, each printed by the line: `DLN.1` is `ST` on v2.3 to v2.4
+  (was unset); v2.3 `ED.2` is `ID` bound to Table 0191 (was unset); v2.3
+  `SN.1` is the comparator component.
+
+### Added — P6-15: extra components on composite fields
+
+- New `IssueCode.extraComponentsInCompositeField` (additive; the enum is open
+  per ADR-014). A composite field repetition carrying a populated component
+  beyond its datatype's component table on the message's version (an XPN with
+  a 15th component on v2.5.1) is reported at the field. A composite component
+  carrying a populated subcomponent beyond its own datatype's table (a sixth
+  FN subcomponent in XPN.1, a fourth HD subcomponent in CX.4) is reported at
+  that component. Before, neither was reported anywhere.
+- Severity follows `ValidationOptions.extraComponentsSeverity` (`.warning` by
+  default, off under `.lenient`). A recipient ignores components "present but
+  were not expected" (v2.5.1 and v2.8.2 section 2.6.2 a), and "New components
+  may be added at the end of a data type" (v2.5.1 section 2.8.1, v2.8.2
+  section 2.8.1 h), so a value shaped by a later version may carry them.
+- Silent: trailing empty components and subcomponents, escaped `\S\` / `\T\`,
+  a datatype the version prints no component table for (CM on v2.3 to v2.4,
+  OBX-5 `varies` with no OBX-2), and the open-ended arrays NA (its tables end
+  in an ellipsis; v2.5.1 section 2.A.45 example
+  `125^34^-22^-234^569^442^-212^6`) and MA ("channels within a sample are
+  separated by component delimiters", v2.5.1 section 2.A.40; the v2.6 and
+  v2.8.2 tables end in an ellipsis). OBX-5 takes the datatype OBX-2 names.
+  Primitive fields and components keep `extraComponentsInPrimitiveField`.
+- The length check is unchanged for composites: it still measures the whole
+  occurrence.
+- Fixtures: no new warnings. Spec examples: no change to the error report
+  (149 registry entries, 0 mismatched). 43 new warnings, all print defects
+  (field shifts, a TQ-shaped RXA-3, an XCN in a CE field, a four-component QIP)
+  or print elisions (`...` inside ORC-9); five also depend on version
+  substitution (MSH-12 elided, validated as v2.5.1).
+
+### Changed — P6-11: OR-rule issue messages name the failing sub-rule
+
+- The OR-rule issue message (`RequiredComponentSet`, used today only by `HD`) named every
+  OR alternative even when a grouped pair was the actual failure — misleading when, for
+  example, HD-1 is valued and only one of the HD-2/HD-3 pair is valued: the pair rule fired,
+  not the OR, yet the message read as if HD-1 were missing too. `RequiredComponentSet.violationMessage(populatedIndices:compositeCode:)`
+  now names the partially-populated group's "both or neither" rule directly in that case,
+  and falls back to the OR alternatives (unchanged wording) when nothing in the field
+  satisfies either side. Issue codes, severities and locations are unaffected — message text
+  only, and `ValidationIssue.message` carries no stability guarantee (ADR-014).
+
+### Fixed — P6-14: extra components on every primitive; component-level table check
+
+- `extraComponentsInPrimitiveField` covered `ID` and `IS` fields only. It now
+  covers every primitive field of the message's version, from each version's
+  datatype sections: DT, FT, ID, IS, NM, SI, ST, TM, TN, TS and TX on v2.3 to
+  v2.4 (section 2.8 / 2.9); DT, DTM, FT, GTS, ID, IS, NM, SI, ST, TM and TX on
+  v2.5.1 and v2.6 (section 2.A); the same plus SNM on v2.8.2. Content after
+  the first value of an NM, SI, DT, TM, DTM or TS field (for example `12^abc`)
+  is now reported; the P6-7 limitations-register sentence is removed.
+- A primitive component of a composite carrying a subcomponent after its value
+  (CX.1 `12&3`) is reported with the same code, located at the component.
+- Spec-allowed shapes stay silent: the TS degree-of-precision component on
+  v2.3 to v2.4 ("...[+/-ZZZZ]^<degree of precision>"), FT line markers ("The
+  component separator that marks each line", v2.5.1 section 2.7.6), one
+  observation ID suffix in OBX-3.1, OBX-3.4 and v2.8.2 OBX-3.10 ("71020&IMP",
+  "This same combining rule applies to other coding systems", v2.5.1 section
+  7.2.3), the QIP.2 value list ("<value1 & value2 &...>", v2.5.1 section
+  2.A.59.2), and escaped `\S\` / `\T\`. TX and GTS are checked: TX lines are separated by
+  the repetition separator, and GTS "follows the formatting rules for a ST
+  field" (v2.5.1 section 2.A.32). FT line markers are field-level only: an FT
+  component (CF.2, CF.5; CF.11 on v2.8.2) admits one subcomponent.
+- The component-level table check skipped an `ID` component with
+  subcomponents (`Component.stringValue` is nil there). It now checks the first
+  subcomponent and locates the issue at subcomponent 1 when more follow. It
+  also looks up the grammar by `Version.grammarVersion` directly; a `2.8`
+  message already ran these checks, because `validate(_:)` declares the
+  grammar version first.
+- Spec examples: no change to the error report (149 registry entries, 0
+  mismatched). The new warnings are print defects (field shifts, composite
+  shapes in primitive fields, unescaped delimiters). One class was a misfire
+  and is fixed: 253 OBX-3.1 suffix warnings (`73916&IMP`) are now silent.
+
+### Added — P6-7: primitive lexical rules
+
+- `IssueCode.valueFormatInvalid(dataType:)` (additive; open enum per ADR-014)
+  and `ValidationOptions.valueFormatSeverity: IssueSeverity?` (default
+  `.warning`, owner gate G4; `.warning` in `.strict`; `nil` in `.lenient`).
+  NM, SI, DT, TM, DTM and TS are checked against their printed formats on
+  every version, including composite components one level of subcomponents
+  down and OBX-5 by its OBX-2 type; a primitive field is read as its first
+  value. (V251-C10)
+- Rules (v2.5.1 and v2.8.2 section 2.A; v2.3 to v2.4 section 2.8 / 2.9): NM is
+  an optional sign, digits and an optional decimal point; SI a non-negative
+  integer in NM form, bounded 0 to 9999 from v2.5.1 where the section prints
+  the bound (`Version.boundsSequenceID`); DT `YYYY[MM[DD]]` naming a calendar
+  date; TM `HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]`; DTM and TS
+  `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`. The pre-v2.5 TS format
+  line prints `HHMM`, but the same section's prose has `YYYYMMDDHH` specify a
+  precision of hour, so the hour alone is accepted on every version.
+
+### Changed — P6-7
+
+- Messages carrying a malformed primitive value (for example an NM of `<5`,
+  or a DT of `1980-01-01`) now raise a `valueFormatInvalid` warning. Set
+  `valueFormatSeverity = .error` to fail validation on it, or `nil` for the
+  previous behaviour.
+- Fixture `adt_a04_register_paediatric.hl7`: PD1-3 carried `L` in XON.3 (ID
+  number, NM); corrected to `Family Health^L` (XON.1 name, XON.2 type code).
+
+### Fixed — P6-13: table check covers multi-component values in primitive fields
+
+- The field-level code-table check skipped any `ID` field repetition with more
+  than one component or subcomponent (`Repetition.stringValue` is nil there),
+  so TQ2-10 `RR2^SYS` was never checked against Table 0506. It now reads the
+  first component, the value a recipient reads: a recipient ignores
+  components "present but ... not expected" (v2.5.1 and v2.8.2 section
+  2.6.2 a). A miss on that first component is located at component 1
+  (`TQ2[1]-10.1`). Local table extensions and locale renderings apply as
+  before; `IS` fields and open tables are still never enforced.
+- New `IssueCode.extraComponentsInPrimitiveField` (additive; open enum per
+  ADR-014) reports an `ID` or `IS` field repetition with content after its
+  first value. The component separator separates components "of data fields
+  where allowed" (section 2.5.4) and a sender escapes it in data as `\S\`
+  (§2.7.1); an escaped separator is one value and stays silent.
+  Severity follows the new `ValidationOptions.extraComponentsSeverity:
+  IssueSeverity?` (default `.warning`, owner gate G4; `nil` in `.lenient`).
+- Length: while that check is at least as severe as the length severity that
+  applies (`normativeLengthSeverity` from v2.7, `fieldLengthSeverity` before;
+  error > warning > info), an `ID` / `IS` field's length is the length of its
+  first value, so with the defaults v2.8.2 ECD-3 `Y^YES` raises one
+  extra-component warning instead of a length warning for the same cause.
+  When the length rule is more binding (say `normativeLengthSeverity =
+  .error`), or the check is off, the whole occurrence is measured as before.
+- Under version substitution (an unrecognised MSH-12 such as 2.7, validated
+  against the v2.5.1 grammar, ADR-018) a value a later version allows, such as
+  a CWE in a field that is `IS` in v2.5.1, may raise the extra-component or
+  length warning. This is by design and pinned by a test.
+- Spec examples: 60 new `valueNotInTable` errors, all example defects, now
+  registered (`_P6_13_ENTRIES`, 149 registry entries, 0 mismatched): 51
+  AIL-2 / AIP-2 (the omitted Segment Action Code shift), 6 MSH-16 (a spaced
+  `QPD |` segment ID), 1 MSA-5 (MSA and QAK printed on one line), 1 v2.3.1
+  OBR-30 (field shift) and 1 v2.8.2 TCC-9 (` Y^YES`). 165 new
+  extra-component warnings, all code^text pairs or shifted fields in the
+  prints.
+
+### Fixed — P6-6 fix 1: G10 length corrections, escape measurement, very-large-number symbols
+
+- Owner ruling G10: 18 pre-v2.7 LEN cells shorter than values their own spec
+  defines as valid are corrected in the schema, each with a cited
+  `LENGTH_WHITELIST` entry: v2.3 MSH-18 6 to 10 (Table 0211 `JIS X 0202`);
+  OBX-2 2 to 3 on v2.3, v2.4 and v2.5.1 and OM3-7 2 to 3 on v2.4 and v2.5.1
+  (Table 0125); MSH-9 7 to 15 on v2.3.1 and 13 to 15 on v2.4 (three
+  message-type components, 3 + 3 + 7 plus two separators); PEO-25 1 to 2 on
+  every pre-v2.7 version (Table 0243 `NA`); TXA-3 2 to 11 on v2.3.1 (Table 0191
+  `Application`) and 2 to 9 on v2.4, v2.5.1 and v2.6 (`multipart`); v2.6
+  PSL-21 2 to 4 (Table 0532 `ASKU`). The P6-2 assertion on v2.3 OBX-2 moves
+  from 2 to 3.
+- New guard (`FieldLengthSpecConflictTests`): every pre-v2.7 ID or IS field
+  bound to an HL7 table, and every closed-coded composite field, admits its
+  longest valid value.
+- Escape sequences count the characters between their escape delimiters
+  (`\F\` 1, `\.br\` 3, `\X0D0A\` 5), per v2.8.2 section 2.7; the pre-v2.7
+  texts are silent, so the rule applies to every version. Previously an escape
+  counted as the one character it decodes to.
+- The v2.4 to v2.6 LEN symbols 65536 (very large number) and 99999 (variable)
+  are no longer read as maxima (v2.5.1 section 2.5.3.2 b, c).
+- `ValidationOptions.strict` DocC states the length severities stay `.warning`.
+
+### Added — P6-6: field length validation
+
+- `IssueCode.fieldLengthOutOfRange(length:actual:)` (additive; open enum per
+  ADR-014). `length` is the printed cell; `actual` is the repetition's
+  length with component and subcomponent separators counted.
+- `ValidationOptions.fieldLengthSeverity: IssueSeverity?` (default
+  `.warning`; `nil` in `.lenient`): the pre-v2.7 maximum length (v2.3 to
+  v2.6), which the spec lets a site agreement change (v2.5.1 section
+  2.5.3.2). Not an init parameter.
+- `ValidationOptions.normativeLengthSeverity: IssueSeverity?` (default
+  `.warning`; `nil` in `.lenient`): v2.7+ normative lengths (`m..n`, `m..`,
+  `x,y,z`) on primitive-typed fields, which conformant messages SHALL meet
+  (v2.8.2 section 2.5.5.0). Not an init parameter. (V231-C15)
+- Internal `PrintedLength` reads every stored LEN / C.LEN shape (n, nK, `*`,
+  m..n, m.., x,y,z, n=, n#), mirroring the audit's `LENGTH_TOKEN`; a
+  schema-wide test pins every stored length as well formed for its era.
+  Conformance lengths (`n=`, `n#`, a bare v2.7+ integer) are never enforced
+  (section 2.5.5.3); a range printed on a composite field is not enforced
+  (section 2.5.5.0). Registered in the permanent-limitations register,
+  section C.
+
+### Changed — P6-6
+
+- Validation results change: an over-length field now produces a
+  `fieldLengthOutOfRange` warning on every version. Errors and `isValid` are
+  unchanged by default (owner gate G4, warning first). Set both severities to
+  `nil` for the previous behaviour, or `normativeLengthSeverity = .error` to
+  make v2.7+ normative lengths binding.
+- Test wire corrected: `OrderConditionTests` carried `RR2^SYS` in TQ2-10 (ID,
+  LEN 1; v2.8.2 `1..1`, Table 0506). It now carries `S`.
+- Wording: "OCR-glued" is now "extraction-glued" in `audit-schemas.py` and
+  the P6-2 entry below (the PDFs are vector text, not scanned).
+
+### Changed — P6-12: blank OPT prints stored verbatim
+
+- 146 fields whose attribute table prints OPT blank now store `""`, not
+  `O` (143) or `X` (v2.5.1 OBX-20 to 22, 3). The spec defines no blank
+  code (v2.6 section 2.5.3.4); the validator reads a blank as optional, as
+  it read `O`, so only v2.5.1 OBX-20 to 22 change behaviour: a populated
+  reserved field is no longer flagged as not supported. Recorded as a
+  known limitation (limitations register, addendum to section A).
+- This settles the P6-10 intake row for v2.3 AIG-2 ("no optionality
+  value"): Figure 10-7 prints the cell blank, and the blank is correct.
+- The audit compares each cited blank against the stored value, keys every
+  unreadable-region citation by its reason (a region cited for blanks no
+  longer hides a malformed print or a missing row), and `--write-lengths`
+  never removes a length on a blank read. LENGTH_TOKEN rejects a minimum
+  of 0 and accepts the section 2.5.5.0 list form `x,y,z`.
+
+### Fixed — P6-12: audits report unreadable prints; printed lengths read
+
+- The schema audit's optionality (M19), repeatability (M22) and length (M25)
+  passes no longer skip a slot they cannot read. A slot with no extracted
+  row, a blank cell that is not itself a print, or a cell outside the
+  column's printed shapes is reported as unreadable, unless a cited
+  `UNREADABLE_WHITELIST` entry names it (23 regions: blank OPT cells in
+  NST, NSC, SCD, SCP, SDD, SLT, STZ and others, v2.5.1 OBX-20 to 22, v2.8.2
+  BUI-12 RP 'R', v2.8.2 TQ2-6 LEN '2..'). A TBL# number bled into RP/# is
+  now unreadable instead of `*`.
+- A blank LEN is compared as a print where the spec makes it one: v2.8.2
+  (LEN and C.LEN are printed "if applicable", sections 2.5.3.2 and 2.5.5.4)
+  and withdrawn fields. M25 now compares 2,048 v2.8.2 slots it used to
+  skip.
+- The segment-table extractor reads a right-aligned LEN cell that sat
+  nearer the DT header, the v2.8.2 `C_LEN` header, and a bare OPT code set
+  right of its header (v2.6 BLC). It emits C.LEN separately as `clen`.
+- Lengths corrected from the print: v2.6 STF-4, 5, 7, 21, 23 to 26, 29, 31,
+  32, 35 and GOL-1 (previously absent), v2.6 UAC-1 705 (was `7 05`), v2.6
+  OBX-5 `*` (was 24; footnote 1 makes it variable), v2.5.1 OBX-6 250 (was
+  6), v2.8.2 OBX-2 2..3 (was 2..2), v2.8.2 DG1-15 2= (previously absent).
+- `--write-lengths` now changes only the listed fields; it used to strip
+  every other field's length in the same schema.
+
+### Added — P6-4: bounded repetition counts
+
+- `FieldGrammar.maxRepetitions: Int?` (additive, via a separate `init`
+  overload; the released initialisers are unchanged). It carries the RP/#
+  column's printed bound (`Y/3` before v2.5, `3` from v2.5; v2.3.1 §2.6.5,
+  v2.5.1 §2.5.3.5), and `cardinalityExceeded` now fires, as a warning, when a
+  field carries more repetitions than that bound. The single-cardinality
+  check keeps its error severity and message. (V23-C08, V24-C07)
+- Schema `"repeatability"` accepts a decimal bound (`"3"`) besides `"1"` and
+  `"*"`; `FieldRepeatability(wireValue:)` maps it to `.multiple`. The
+  extractor keeps the printed bound, and `audit-schemas.py --depth
+  --write-repeatability` writes it; M22 compares bounds, and `integrity()`
+  rejects any other token. Codegen emits `maxRepetitions:` only for a bounded
+  field, so every other generated line is unchanged.
+- 221 bounded fields across the six versions (v2.3 35, v2.3.1 31, v2.4 35,
+  v2.5.1 34, v2.6 43, v2.8.2 43), for example v2.3 MSH-18 `Y/3`, v2.4 OBR-17
+  `Y/2`, v2.6 PID-38 `2`, UB2-13 `Y/23`.
+- A printed range keeps its maximum as the bound: v2.6 and v2.8.2 CH16
+  PYE-4 `0-5`, PYE-5/-6 `0-4`, PSL-8/-19 `0-5`, PSL-17/-18/-20 `0-20` and
+  ADJ-5 `0-5`. The minimum is not modelled; every printed minimum is 0, which
+  adds nothing beyond the field's optionality, and the extractor reports any
+  minimum above 0 as a known limitation.
+- The extractor no longer reads a stray cell as a repeat: a LEN bled into the
+  RP/# column (v2.8.2 CH07 OBX-4/-13 `20=`) and an OPT or DT code (`R`, `O`,
+  `CE`) map to `1`; `Y` plus a footnote digit (v2.3 `Y3`, v2.3.1 `Y4`, OBX-5)
+  maps to `*`. `extract-segment-tables.swift --self-check-rp` pins the mapping.
+- M22 compares a slot against the defining table's RP/# cell, as M19 and M21
+  do, not the union of every chapter's print, so a constrained copy can no
+  longer hide a bound.
+- `FieldGrammar`'s initialiser traps on a non-nil `maxRepetitions` with
+  `.single` or a value below 2.
+- OBX-8 on v2.3, v2.3.1 and v2.4 is bounded at 5 by hand: the base OBX table
+  prints `Y/5` (v2.3 CH7, v2.4 CH07), and the constrained OBX copies that
+  print a blank RP/# are message profiles, not the segment definition.
+- ADJ-7 on v2.6 and v2.8.2 prints RP/# `1` and is now single-cardinality
+  (the old extractor read any digit as a repeat).
+- v2.6 OBX-5 stays unbounded: the CH07 table prints `Y` under a superscript
+  footnote marker `2`, which the extractor reads as a bound. Whitelisted in
+  M22 with the citation.
+
+### Fixed — P6-5: PCR repeatability (v2.3.1)
+
+- v2.3.1 PCR-9, 11, 13, 15, 17, 19 and 20 are single-cardinality, as printed
+  (Figure 7-22, p. 7-96). The TBL# numbers that the column shift put in the
+  RP column had been read as repeats. PCR-12/21/22/23 carry their printed
+  bounds (3/6/6/3). `table-repairs.json` entries now take an optional
+  `repeatability`, which M22 compares against. (V231-C05)
+
+### Added — P6-3: ADD on v2.6 and v2.8.2
+
+- The ADD (Addendum) segment is modelled on v2.6 and v2.8.2 (CH02 §2.14.1,
+  SEQ `1-n`), so it now validates instead of taking the Z-segment path.
+  Typed accessors are generated as on the other versions. (V282-C04)
+- `audit-schemas.py --depth` checks a `DEPTH_WHITELIST` segment's presence
+  from its attribute-table caption, so a missing ADD, RDT or NSC is reported.
+
+### Fixed — P6-2: OBX, OBR and NSC lengths (v2.3, v2.3.1)
+
+- v2.3.1 OBX-2 LEN is 3 and OBX-16 is 80, and v2.3 OBX-16 is 80: the values
+  printed in the base Figure 7-5, not the waveform category tables
+  (Figures 7-26/7-27). (V231-C14)
+- v2.3.1 NSC carries the Appendix C Figure C-3 lengths (4, then 30 for
+  NSC-2..9). (V231-C16)
+- Pre-flight ruling d4 (P7-1 length intake, OBR/OBX rows): v2.3.1 OBR-16 is
+  120 and v2.3 OBR-2/OBR-3 are both 75 — the values each segment's defining
+  Chapter 4 (Order Entry) attribute table prints, not Chapter 7's stale
+  reproduction. v2.3 OBX-1 is 10 and OBX-3 is 590, per Figure 7-5.
+- v2.3 and v2.3.1 OBX-5 keeps its variable-length `*`: each version's own
+  footnote on the field ("The length of the observation value field is
+  variable, depending upon value type") overrides the LEN column's printed
+  numeric cap (65536, extraction-glued to its footnote marker). Recorded as a cited
+  `LENGTH_WHITELIST` entry in `scripts/audit-schemas.py`.
+
+### Fixed — P6-9: swiftName prose bleed and truncation
+
+- The schema extractor let definition prose bleed into `swiftName` and cut other
+  names short. A sweep of all 853 schemas corrected 145 slots from the printed
+  element name. Prose bleed: TQ2-10 on v2.5.1 (873 characters), v2.6 (847) and
+  v2.8.2 (806); QPD-2 on v2.4, v2.5.1, v2.6 and v2.8.2, which had absorbed the
+  next row's "User Parameters (in successive fields)"; and v2.8.2 BPX-21 (421),
+  BTX-20 (400) and ITM-16 (94). Truncated heads and `fieldN` placeholders: v2.3
+  QRF (6), v2.3.1 RXE (24), v2.4 LOC (7) and RXE (26), and v2.8.2 RXA (13,
+  including RXA-2 "nistrationSubIdCounter"), RXC (3), RXD (12), RXE (16), RXG
+  (9) and RXO (18). v2.8.2 OM1-56 drops the stray possessive "S", as the
+  extractor's current naming rule does. Non-canonical slots take the canonical
+  v2.5.1 name where the element is unchanged, as the rest of each segment does.
+- Fix round: 31 more slots now carry the canonical name, which brings the sweep to
+  176. Of these, 27 were truncated heads that dropped whole leading words, so they
+  passed the anchor rule ("minimum" for v2.3.1 RXE-3 "Give Amount - Minimum"):
+  v2.3 QRF-1/3/9, v2.3.1 RXE-3/4/6/9/22/26, v2.4 LOC-3/4 and RXE-3/4/22/26/31,
+  and v2.8.2 RXA-3/4, RXD-29, RXE-14/17/18/34, RXG-24 and RXO-6/15/26. The other 4
+  were possessive-S variants of the canonical name: TQ1-14 and TXA-23 on v2.6 and
+  v2.8.2. The convention is now explicit (`AddingASegment.md`). A non-canonical slot
+  whose element name matches the canonical v2.5.1 element takes the canonical
+  swiftName, possessive "S" included. Any other slot takes the extractor's derived
+  name.
+- The typed accessors change on two segments: `TQ2.specialServiceRequestRelationship`
+  and `QPD.queryTag` (see Deprecated). Only the v2.5.1 schemas (and the earliest
+  definer of a segment v2.5.1 lacks) emit typed structs, so no other slot was
+  public.
+- The element names of v2.8.2 ITM-16 and RQ1-7 also carried prose; they are now
+  the printed "Approving Regulatory Agency" and "Substitute Allowed"
+  (`FieldGrammar.name` on the v2.8.2 grammar).
+- v2.8.2 RXA-2's length "4=" was checked against the print and is correct: the
+  attribute table leaves LEN blank and prints C.LEN "4=", which the schema records
+  under the extractor's LEN-else-C.LEN rule (as RXA-1 does). Unchanged.
+- New audit guard: `scripts/audit-schemas.py` now fails any swiftName that is not a
+  lowerCamelCase identifier, is over 70 characters, does not start a word of its
+  element name, carries three or more words absent from it, or repeats within a
+  segment, or that departs from the canonical name for the same element. It also
+  checks element names: at most 11 words, and no run of more than 5 lowercase
+  words (the corpus maximum is 10 and 4). Self-checks `check_swift_name`,
+  `check_swift_name_uniqueness` and `check_element_name` are in
+  `scripts/check-audit-schemas.py`.
+
+### Fixed — P6-1: RF1-18 datatype (v2.8.2)
+
+- v2.8.2 RF1-18 Remaining Benefit Amount is typed `MO`, not the attribute-table
+  misprint `M0`, so the MO component grammar now applies. Registered in
+  `segment-coverage-extraction.md` and `DATATYPE_WHITELIST`. (V282-C11)
+
+### Deprecated — P6-9: two prose-bled accessor names
+
+- `TQ2.specialServiceRequestRelationshipRequestsUsingTheParentChild...` (the
+  873-character v3.13.0 name), renamed `TQ2.specialServiceRequestRelationship`.
+- `QPD.queryTagUserParametersInSuccessiveFields`, renamed `QPD.queryTag`.
+- Both old names stay as `@available(*, deprecated, renamed:)` aliases that
+  forward to the new accessors (ADR-014). Codegen emits them from a new optional
+  schema key, `deprecatedSwiftNames`, which the audit validates.
+
+### Added — P4-32: AU OBR-29 "not used" (owner decision G7)
+
+- Under `.auLocalisation`, OBR-29 (Parent) should not be valued on ORM, ORU
+  and REF. ADRM-2021 §4.4.1.29 (p. 229) reads "Not used in Australian
+  messages. Use observation Sub-ID in OBX-4 to link results" — the
+  identical sentence as OBR-26 (item 00261 here, item 00259 on OBR-26).
+  Reported as a warning
+  `.profileConstraintViolation("ADRM-prose:P-13 ...")`; the HL7 null `""`
+  is exempt. Same mechanism and scope as P-11 (OBR-26, P4-27).
+- P4-27 withheld this rule (NEEDS_CONTEXT) because the base v2.4 condition
+  on OBR-29 (`ORC-1 = CH AND ORC-8 empty`) makes the field conditionally
+  required for a child order sent without ORC-8, mirroring ADRM §5.4.1.8
+  (p. 295, unchanged from base v2.4 §4.5.1.8): "ORC-8-parent is the same
+  as OBR-29-parent. If the parent is not present in the ORC, it must be
+  present in the associated OBR." Owner decision G7 (2026-10-01) resolves
+  the conflict in favour of shipping anyway: on a v2.3–v2.6 child order
+  sent without ORC-8, the AU warning and the base conditionally-required
+  check now both fire on the same field — an accepted double-bind, not a
+  defect in either rule.
+- Not double-reported against HL7au:00060.4 (P4-31): the generated
+  full-predicate set marks only `2.4|OBX-2`, so `checkFullPredicateConditional`
+  never visits OBR-29.
+- No Appendix 5 HL7au conformance-point ID exists for OBR-29 (checked
+  directly against the Appendix 5 text region); `docs/design/
+  m7-adrm-prose-sweep.md` and the permanent-limitations register's
+  HL7au:00060.4 addendum are updated instead, `scripts/
+  extract-adrm-conformance.py` was not re-run because there is nothing
+  for it to pick up.
+
+### Changed — P4-31: three-state condition evaluator (ADR-021)
+
+- The condition evaluator's core now answers true, false or unknown (a peer that does not resolve, an atom that does not parse, a quantifier over an empty domain, a predicate that cannot judge its referent), combining atoms with Kleene AND and OR. Internal; no public API change.
+- No behaviour change: `conditionTriggers` is exactly "the condition is true". The full suite, a digest of every issue on the extracted spec examples and the test fixtures under both locales, and the spec-example registry check (138 entries, 0 mismatched) are unchanged.
+
+### Added — P4-31: HL7au:00060.4 route C, full-predicate enforcement (ADR-021)
+
+- Schema keys `conditionIsPredicate` and `predicateCitation`: a field may mark its stored condition as the spec's complete C predicate (required when true, must not be sent when false). Codegen emits the marked set into an internal lookup; `FieldGrammar` and the public API are unchanged. `scripts/audit-schemas.py` requires the citation, a printed C and a condition, with a self-check case.
+- AU profile: in ORM, ORU and REF, a marked C field valued (other than with the HL7 null) while its condition is definitely false reports `.profileConstraintViolation("HL7au:00060.4 ...")`, error. Unknown never fires; a field a base or AU prohibition already reports is not reported twice. Marked on v2.4: OBX-2 only (valued while OBX-11 = X; ADRM §4.17.2 Scenario 5 confirms). PID-36 and CTI-2 are parents required when their child is valued and stay unmarked (owner ruling G9).
+- Every C field in the v2.4 ORM^O01, ORU^R01 and REF^I12 segments classified with quotes (`docs/design/conditional-completeness-audit.md`): 1 full predicate, 31 trigger-only, 8 with no prohibition derivable from the text, 12 with no prohibition derivable from the message (owner ruling G9). HL7au:00060.4 moves from PARTIAL to SHIPPED with that scope (ADRM conformance register: 74 shipped, 17 partial).
+
+### Added — P4: expressible conditions
+
+- `FieldGrammar.prohibitedSeverity` (default `.error`) and the schema key `prohibitedSeverity`, so SHOULD-level and "not applicable" prohibitions surface as warnings. A separate `init` overload; the released initialisers are unchanged (ADR-014).
+- Condition DSL: `noRepeat(<fieldref>) <op>` (no repetition satisfies the predicate) and `nextSegmentID(<ID>|...)` (next segment ID after skipped IDs). ADR-010 amendment.
+- Predicates moved out of the permanent-limitations register, each with a spec citation in `docs/design/conditional-completeness-audit.md` ("Shipped in P4"): PV2-1, PV2-45, PV2-47; TXA-3, 5, 7, 13, 22; TQ1-12, TQ2-3/4/5/6/10; SCH-1/2/27, ARQ-25; AIS/AIG/AIL/AIP start, offset units, allow substitution and filler status; MFE-2, MFA-2, LRL-5/6, OM7-16/18; BPX-5/6/8/9/10, BTX-2..7; v2.8.2 OBR-22 and PRT-14; v2.6 PD1-15 and ORC-26.
+- Conditional prohibitions: RXR-6, ORC-25, OBX-12, PYE-3..6 (errors); TQ2-7, STF-1, PRA-1, PRA-12, SPM-13, BPX/BTX "not applicable" (warnings).
+
+### Fixed — P4: expressible conditions
+
+- v2.8.2 PRT-7 prohibition keyed to PRT-5 as printed (§7.4.4.7); it fired on person participations without an organisation.
+- OBR-2/3 and ORC-2/3 accept a filler id alone ("either a placer or a filler id"), with the Send Number exception, on all six versions.
+
+### Changed — P4: expressible conditions
+
+- Validation is stricter wherever a predicate above now fires: messages that omit a field the cited sentence requires gain an error or warning. v2.6 PD1-15, DG1-22 and ORC-26, plus v2.5.1 ORC-26 (`ORC-20 in (3, 4)`), move from `O` to the printed `C`; v2.6 OBR-48 was already `C` and is untouched by P4.
+- `docs/design/permanent-limitations-register.md` section A and the conditional-completeness audit are rewritten: the bare-C set is now frozen position by position, with guard tests on all six versions (`BareConditionalGuardTests` for v2.3, v2.3.1, v2.4, v2.5.1, v2.6; `MultiVersionTests.v282M2PermanentLimitationsGuard` for v2.8.2).
+
+### Fixed — P4-16: AU profile PID-35..38 grammar extension removed as redundant
+
+- The S5-D `Profile+au_adrm_2021.swift` `grammarExtensions["PID"]` override (fields 35..38) is gone. P4-17 confirmed base v2.4 `PID.json` has carried all four fields since before P4-17; the override duplicated 35/36/37 exactly, and its field-38 `repeatability: .single` had silently diverged from the base/v2.5.1/v2.6 `*` (RP 2) with no AU citation narrowing it. A two-repetition PID-38 under `.auLocalisation` wrongly raised `cardinalityExceeded`; it no longer does. `Profile.swift`'s `grammarExtensions` doc comment is corrected (the base v2.4 PID grammar never capped at 32).
+
+### Fixed — P4-30: segment-table R against a restricting field definition
+
+Fields whose attribute table prints R while the field definition limits or relaxes them
+(Requirement 4). Each ruling cites the definition; the printed R stays visible in the schema's
+new `optionalityCitation` key, which the schema audit reads as that slot's optionality whitelist
+entry and requires wherever a field's optionality departs from the printed table. The ROL-4
+STF-2/STF-3 value-equality sentence is recorded in the permanent-limitations register.
+
+- **MFI-6 Response Level Code** (all six versions): R to C, `messageCode = MFN`. The
+  definition reads "Required for MFN-Master File Notification message" (v2.3 CH8 sec 8.4.1.6;
+  v2.4 to v2.8.2 CH08 sec 8.5.1.6). An empty MFI-6 on MFK, MFD or another master-file message
+  no longer raises `requiredFieldMissing`; on MFN it raises `conditionalFieldMissing`.
+- **CSR-8 Study Authorizing Provider** (all six): R to C, `triggerEvent = C01`. The
+  definition reads "This field is required for the patient registration trigger event (C01)",
+  the sentence CSR-9 and CSR-10 already carry under a printed C.
+- **ROL-4 Role Person** (v2.6, v2.8.2): R to C, `STF absent`. CH15 sec 15.4.7.4: "If both STF
+  and ROL are present in the same message, populating this field is optional". v2.3 to v2.5.1
+  print no such sentence and keep R.
+- **RXA-4 Date/Time End of Administration** stays R (ruling, no schema change). "If null, the
+  date/time of RXA-3 ... is assumed" names the HL7 null `""`, which Chapter 2 distinguishes
+  from an omitted field; v2.8.2 Chapter 2B: "A required element can have a null value". So
+  `RXA-4 = ""` satisfies R and an empty RXA-4 still fires. The 41 spec-example lines that
+  leave RXA-4 empty are registered as genuine example errors.
+- Spec-example sweep: 4718 to 4688 lines (27 MFK/MFD MFI-6 lines and 3 off-C01 CSR-8 lines
+  gone); registry 126 to 138 entries, 0 mismatched.
+
+### Added — P4-15: bare-C register completion and condition-DSL guards
+
+- Bare-C guard tests (`BareConditionalGuardTests`) pin the remaining v2.3,
+  v2.3.1, v2.4, v2.5.1 and v2.6 sets of `C` fields with no `condition` and no
+  `prohibitedWhen`, sharing one `bareConditionals(_:)` helper with the
+  existing v2.8.2 guard in `MultiVersionTests` (no more per-guard copy).
+  `docs/design/conditional-completeness-audit.md` gained the RXA-11 /
+  RXD-13 / RXE-8 "default, not a trigger" positions, RXO-14 / RXE-13
+  Ordering Provider's DEA Number, TXA-21 and SAC-6 (findings V23-C10,
+  V24-C09).
+- `ConditionLanguage`'s `=` / `!=` / `startsWith` / `not startsWith`
+  predicates now reject a literal containing whitespace. Before this, a
+  misspelt lower-case connector (`PID-3 = A and PID-4 populated`, meant as
+  two `AND`-joined atoms) parsed as one atom whose literal swallowed the
+  rest of the string and silently never matched a real field value. No
+  shipped condition carried a whitespace literal.
+- `ConditionParseValidityTests`'s per-version segment-table list is now
+  derived from `Version.allCases` / `Validator.grammarTable(for:)` instead
+  of hand-listed, so a future version is checked automatically.
+
+### Changed — P4-15: `noRepeat(...)` fails safe on an unreadable predicate
+
+- On malformed input only, a `noRepeat(...)` atom with an unreadable
+  predicate now fails safe (never holds) instead of holding. Moved here from
+  the P4-25 entry below, where a behaviour change had been recorded under
+  "Added".
+
+### Added — P4-26: base OBX-11 = O dynamic-specification null rule
+
+- OBX-2 and OBX-5 must not carry a value other than the HL7 null `""` while
+  OBX-11 = O, on every version that prints the rule: v2.3.1 §7.3.2.11 and
+  §7.4.2.11 in v2.4, v2.5.1, v2.6 and v2.8.2 ("An OBX used for a dynamic
+  specification must contain the detailed examination code, units, etc., with
+  OBX-11 valued with O, and OBX-2 and OBX-5 valued with null"). v2.3 has no O
+  status and no rule. Reported as an error `.conditionalFieldProhibited` on
+  every locale and message type. A value in any OBX-5 repetition fires; a lone
+  `""` does not.
+- The base OBX-2 condition `OBX-11 != X` is unchanged, and OBX-5 gains the
+  condition `OBX-11 = O` on the same five versions. `""` counts as populated
+  for both, so an empty OBX-2 or OBX-5 with OBX-11 = O raises
+  `.conditionalFieldMissing`, and the only conformant wire is `""` in both.
+  Tests pin that.
+- New public `FieldProhibition.permitsNull`. `FieldProhibition` (new in P4-21,
+  not yet released) has a single initialiser,
+  `init(condition:severity:permitsNull:)`, with `permitsNull` defaulting to
+  `false`. The schema key is `permitsNull` on an `additionalProhibitions`
+  entry. Every other shipped prohibition still treats `""` as a value.
+- The AU-profile duplicate from P4-24 is removed, so AU traffic reports the
+  rule once, as the base issue. The P4-24 tests now expect the base issue.
+
+### Added — P4-27: AU "not used" elements
+
+- Under `.auLocalisation`, OBR-26 (Parent Result) should not be valued on
+  ORM, ORU and REF. ADRM-2021 §4.4.1.26 (p. 228) reads "Not used in
+  Australian messages. Use observation Sub-ID in OBX-4 to link results."
+  No modal verb, and the ADRM's own attribute-table entry gives usage O
+  (not X), so per the documented severity convention this is a warning.
+  Reported as `.profileConstraintViolation("ADRM-prose:P-11 ...")`. No base
+  v2.4 condition makes OBR-26 required, so nothing conflicts. (Fix round 1:
+  corrected from error to warning.)
+- Under `.auLocalisation`, ORC-24 (Ordering Provider Address) should not be
+  valued on Referrals. ADRM-2021 §7.3.11.24 (p. 343) reads "This field should
+  not be used. Use ORC-22 for the address of the prescriber's facility."
+  AU-specific (base v2.4 and the ADRM's own Observation Ordering chapter
+  carry no such note) and Referral-only. Reported as a warning
+  `.profileConstraintViolation("ADRM-prose:P-12 ...")`.
+- OBR-29 — the identical "Not used in Australian messages" sentence as
+  OBR-26 (ADRM §4.4.1.29, p. 229) — was deliberately **not** enforced here.
+  It conflicts with ADRM §5.4.1.8's "ORC-8-parent is the same as OBR-29-parent.
+  If the parent is not present in the ORC, it must be present in the
+  associated OBR", which the schema already encodes as a live base condition
+  on both fields and which the already-shipped M8-B2 `pairedFieldMismatch`
+  rule presumes resolvable. Documented as a NEEDS_CONTEXT finding in
+  `docs/design/m7-adrm-prose-sweep.md` and the permanent-limitations
+  register's HL7au:00060.4 addendum. **Superseded by P4-32** (owner decision
+  G7, 2026-10-01, above): OBR-29 ships anyway, as `ADRM-prose:P-13`.
+- A wider sweep for "not used"/"should not be used" AU-specific prose (the
+  M7 sweep's keyword list never matched this phrasing) turned up eight
+  further narrative findings with no conformance-point ID and no safe,
+  wire-decidable enforcement: MSH-20, PID-22, PV1-7, IAM-7, the RP
+  datatype's namespace-ID sub-component, TS's legacy degree-of-precision
+  sub-component and (fix round 1) the section 3 Datatypes overview table, p.128, TM row and the
+  microbiology worked example's OBX-17 note. Each is recorded in
+  `docs/design/m7-adrm-prose-sweep.md` §B with its reason (descriptive
+  rather than prohibitive wording, content-purpose restriction,
+  receiver/system-capability condition, or component-level scope the current
+  `FieldOverride.prohibitions` mechanism cannot express). No Appendix 5
+  conformance point changed, so the M6 register is unchanged.
+
+### Added — P4-25: every condition string is proven to parse
+
+- A test now walks every segment grammar in all six versions, every datatype component condition and every AU-profile condition, and fails on any condition string the evaluator cannot read. Before this, a misspelt condition passed codegen and the audit and then silently never fired. No shipped condition failed; none changed.
+- The condition parse is shared: `ConditionLanguage` classifies clauses, atoms, referents and predicates, and both the evaluator and the internal `Validator.conditionParseErrors(_:)` read conditions through it (ADR-010, P4-25 amendment). Internal only; no public API change. See "Changed — P4-15" above for the resulting `noRepeat(...)` behaviour change.
+
+### Added — P4-24: HL7au:00060.4 route B, explicit AU prohibitions
+
+- Under `.auLocalisation`, OBX-2 and OBX-5 must not be valued when OBX-11 = O
+  on ORM, ORU and REF. HL7 v2.4 §7.4.2.11 reads "An OBX used for a dynamic
+  specification must contain the detailed examination code, units, etc., with
+  OBX-11 valued with O, and OBX-2 and OBX-5 valued with null." Reported as an
+  error `.profileConstraintViolation("HL7au:00060.4 ...")`; the HL7 null `""`
+  is accepted. Silent under `.international` and on other message types.
+- New internal `ProfileFieldProhibition` and `FieldOverride.prohibitions`
+  (additive, defaulted). The rules use the shared condition evaluator, and
+  base validation is unchanged.
+- Every other C field in the v2.4 ORM^O01, ORU^R01 and REF^I12 segments
+  (including the AU REF additions) was read against the base chapter and the
+  ADRM clause. None states a prohibition that route B can model. HL7au:00060.4
+  stays PARTIAL; the limitation addendum and the conformance register name
+  what route B shipped and what route C still has to close.
+
+### Added — P4-23: scheduling filler-status prohibitions in request transactions
+
+- AIS-10, AIG-14, AIL-12 and AIP-12 (Filler Status Code) now carry
+  `prohibitedWhen: messageCode = SRM` at `prohibitedSeverity: warning` in all
+  six versions. The definitions in all four segments read "It is recommended
+  that this field be left unvalued in transactions originating from
+  applications other than the filler application"; AIP-12 additionally reads
+  "It should not be valued in any request transactions from the placer
+  application to the filler application" (identical text in v2.3 through
+  v2.8.2). Fires as a warning on the SRM request; silent on the
+  filler-originated SIU, SRR and SQR wires, and on the SQM query (which the
+  text calls out separately as merely optional).
+- Test coverage: the warning fires on a valued SRM and is silent when the
+  same field is empty, on SIU/SRR, and on the SQM query for both allow
+  substitution and filler status (P4-12 minor 5). Added a silent case for
+  start date/time, offset and units populated together.
+- Register: v2.8.2 Chapter 11 (§11.7.1, §11.7.2) carries AIP in the
+  appointment-history group of CCM, CCR, CCU, CQU and CCI without restating
+  anything about filler status, so both the P4-12 condition and this
+  prohibition correctly stay silent there. v2.6 Chapter 11 carries no
+  scheduling segment at all — Collaborative Care is a v2.8.2 addition.
+
+### Added — P4-21: more than one prohibition per field
+
+- `FieldGrammar.additionalProhibitions: [FieldProhibition]` holds further
+  prohibitions beside `prohibitedWhen`, each with its own severity. Empty by
+  default; set only through a new `FieldGrammar.init` overload ending
+  `additionalProhibitions:`. The released initialisers keep their signatures
+  (ADR-014) and are pinned in `SignatureCompatibilityTests`.
+- `FieldProhibition` (`Sendable`, `Hashable`): a `condition` in the condition
+  grammar and the `severity` it reports at.
+- The Validator raises one `conditionalFieldProhibited` per rule that holds on a
+  populated field, so two triggered rules give two issues.
+- Schema key `additionalProhibitions: [{when, severity, citation}]`. Codegen emits
+  it only where set and fails on a malformed rule or a missing citation;
+  `scripts/audit-schemas.py` checks the same shape.
+- v2.5.1 and v2.6 RXR-6 now warn when RXR-2 is coded from HL7 Table 0163
+  (`RXR-2.3 = HL70163 OR RXR-2.6 = HL70163`, either CWE coding triplet; "If RXR-2 employs HL7 Table 0163 – Body Site, then
+  RXR-6 should not be populated", CH04 §4.14.2.6), beside the existing
+  `RXR-2 empty` error. v2.8.2 CH04A drops the sentence. Closes the
+  "one prohibition per field" limitation (ADR-010 amendment, 2026-10-01).
+
+### Documented — P4-20: HL7au:00060.4 recorded as PARTIAL
+
+- HL7au:00060.4 (C elements must not be valued when the predicate is false) is now PARTIAL in the ADRM register, enforced only through explicit `prohibitedWhen` fields. General enforcement is a BLOCKING limitation (`permanent-limitations-register.md` §D addendum; routes P4-24 and ADR-021 candidate).
+
+### Fixed — P2-15: per-field table openness
+
+- Some HL7 tables are cited "for suggested values" (or "User-defined", or
+  "can be extended") by one field and "for valid values" by another. Openness
+  was set per table, so those fields reported false `valueNotInTable` errors.
+  A schema field entry can now carry `"tableOpen": true` with a quoted
+  `tableOpenCitation`; codegen emits it as the new `FieldGrammar.tableOpen`
+  (default `false`), and the field-level closed-table check skips that field
+  only. The released `FieldGrammar.init` keeps its signature; `tableOpen:` is
+  a separate overload (ADR-014), both pinned in `SignatureCompatibilityTests`.
+- 49 fields are marked, each against its own prose: Table 0136 (v2.4 PID-31;
+  v2.6 and v2.8.2 DG1-24, RFI-3, IVC-13, PSG-4, PSL-47), 0167 (RXD-11, every
+  version), 0185 (PRD-6 and CTD-6 on every version, PRD-14 on v2.6 and
+  v2.8.2), 0206 (v2.6 and v2.8.2 IAM-6, ARV-2), 0239 (v2.3 PCR-2, -9, -11,
+  -13), 0323 (v2.4 and v2.5.1 IAM-6), 0371 (v2.5.1, v2.6, v2.8.2 OM4-7,
+  SAC-27) and 0532 (v2.6 and v2.8.2 PSL-21). v2.6 PSG-4 was missing from the
+  register's list; its prose also says "for suggested values".
+- Validator output changes on the 19 scalar `ID` fields among them (0136,
+  RXD-11, PSL-21): an out-of-table value there is no longer an error. The
+  other 30 are `IS` or composite fields, never enforced, so the mark corrects
+  the metadata only. Fields citing the same tables "for valid values" (PID-24,
+  RXE-9 and the rest) are still checked.
+- `scripts/audit-schemas.py` fails a `tableOpen` that is not a boolean, has no
+  citation, or sits on a field with no table binding, and a citation without
+  `tableOpen`.
+- The permanent-limitations register, section C, now records the mixed
+  tables as modelled rather than as a blocking limitation; ADR-016 gains the
+  per-field decision.
+
+### Fixed — P2-14 fix-wave minors
+
+- `SignatureCompatibilityTests.swift` now uses a plain `import HL7v2Kit`, not
+  `@testable`, so the ADR-014 pinning tests actually exercise public visibility.
+- `scripts/extract-code-tables.swift` records a note when an overrides.json
+  `fixDescriptions` key names a code the PDF does not print, matching the
+  existing `patterns` behaviour.
+- `Resources/tables/overrides.json` gives the v2.3.1 0355 and v2.4 0290
+  entries a `citation` key (the text was already in their `note`).
+- `permanent-limitations-register.md` section C's "Freeze decision (B + C)"
+  paragraph now excludes the mixed-tables row, which blocks spec-completeness
+  (requirement 3) as the row itself already said.
+- STATUS.md's Build row now states the P7-1 audit's real optionality (M19,
+  12 findings) and length (M25, 15 findings) counts, owned by the P4 and P6
+  intake, instead of the stale "0 findings"; test count corrected to 787.
+
+### Fixed — P2-14: remaining locally extensible tables
+
+- Applied the ADR-016 open-table criterion to the four tables the P2 fix wave flagged
+  as an unfinished requirement-4 follow-up:
+  - Table 0105 (Source of comment, NTE-2) opens on every supported version (v2.3 to
+    v2.8.2): NTE-2, its only governing field, reads "This table may be extended
+    locally during implementation" unchanged across all six. An out-of-table NTE-2
+    value no longer raises `valueNotInTable`.
+  - Table 0048 (What subject filter, QRD-9 / URD-4) opens on v2.3 to v2.6 (QRD/URD
+    are dropped from v2.8.2): both governing fields say the table may be extended
+    locally or by local agreement.
+  - Table 0175 (Master file identifier code, MFI-1) opens on every supported
+    version: MFI-1, its only governing field, reads "This table may be extended by
+    local agreement during implementation to cover site-specific master files
+    (z-master files)" unchanged across all six.
+  - Table 0371 (Additive, OM4-7 / SAC-27 / SPM-6) opens on v2.4, the only version
+    where OM4-7 and SAC-27 are the sole citing fields ("The value set can be
+    extended with user specific values"). On v2.5.1, v2.6 and v2.8.2 a third field,
+    SPM-6, also cites the table but only "for valid values" with no extension
+    clause: mixed, stays closed there and is registered in
+    `permanent-limitations-register.md` section C.
+  - 0048, 0175 and 0371's governing fields are all CE/CWE, whose identifier
+    component is `ST`, not `ID` (ADR-016: composite `tables` bindings are recorded
+    but not enforced), so opening them corrects the registry's metadata without a
+    behavioural change in the current validator; only 0105 (a scalar `ID` field)
+    changes what the Validator reports.
+
+### Fixed — P3 fix wave: no silent version fallback
+
+- Four MSH-12 shapes used to fall back to v2.5.1 with no issue in any mode:
+  a whitespace-only MSH-12, an empty VID.1 with VID.2 valued
+  (`^AUS&Australia&ISO3166_1`, legal on v2.5.1, where VID.1 is optional),
+  and a VID.1 with a subcomponent (`2.4&X`, `&2.4`). Each now gets the
+  same treatment as an unmodelled version. The Validator reports
+  `versionNotRecognised(wireValue:)` (warning) naming the v2.5.1 fallback,
+  with VID.1 as rendered (empty when VID.1 is empty).
+  `ParserOptions.rejectUnknownVersion`, which `.strict` sets, throws
+  `ParseError.unsupportedVersion(found:)` with the same value. An empty
+  MSH-12 still falls back without a version issue in every mode, because the
+  required-field check reports it.
+- `VersionHandlingTests.versionMatrix` pins 17 MSH-12 shapes under the
+  default, `.strict` and `rejectUnknownVersion` parser options.
+- The permanent-limitations register, section F, no longer records the
+  subcomponent and empty-VID.1 shapes as a limitation. ADR-018's version
+  table gains rows for them and for a whitespace-only MSH-12.
+- The `versionGrammarSubstituted` message no longer says "MSH-12 declares
+  2.8" when the `.v2_8` version came from `ParserOptions.versionOverride`
+  (or a directly built `Message`) and MSH-12 says otherwise.
+- Findings closed by workstream P3: X-C01 (partial; P10 completes it),
+  X-C02, X-C03, X-C11, V282-C03, V282-C09.
+
+### Fixed — P3-5: unrecognised MSH-12 versions are reported
+
+- A message whose MSH-12 version ID has no `Version` case (2.1, 2.2, 2.5,
+  2.7, 2.7.1, 2.8.1, 2.9, anything else) still parses and falls back to the
+  v2.5.1 grammar, but every report now carries one
+  `IssueCode.versionNotRecognised(wireValue:)` (warning) at MSH-12 naming
+  the grammar applied (V282-C09). The supported set and each exclusion are
+  recorded in ADR-018 and the permanent-limitations register, section F.
+
+### Fixed — P3-4: the version is read from VID.1 of MSH-12
+
+- MSH-12 is a VID composite. The Parser read it as a scalar, so any MSH-12
+  with a second component (the AU form `2.4^AUS&Australia&ISO3166_1`) was
+  treated as absent and validated against v2.5.1 without a word. The
+  version is now taken from VID.1: such messages validate against their
+  declared version, and `ParserOptions.strict` rejects an unknown VID.1
+  (ADR-018).
+- Visible effect on AU v2.4 traffic: the v2.5.1 MSG component checks no
+  longer apply. v2.4 types MSH-9 as CM with no component optionality, and
+  its second component "is not required on response or acknowledgment
+  messages" (HL7 v2.4 Chapter 2, 2.16.9.9), so `requiredComponentMissing`
+  on MSH-9.3 (and on MSH-9.2 for ACK) is no longer reported. The AU
+  profile rule HL7au:00049.2/.3 still requires both on ORM, ORU and REF.
+- HL7au:00049.1 (MSH-9 message type, MSG-1, must be valued) is now enforced
+  by the AU profile itself. It had relied on the base MSG-1 requirement,
+  which exists only from v2.5.1, so it went unenforced once AU traffic
+  resolved to v2.4. The profile rule defers to the base check where the
+  grammar version already requires MSG-1, so v2.5.1 and later report the
+  finding once, not twice. The conformance register moves 00049.1 from
+  BASE to SHIPPED.
+- The same gap applied to three identifier points on Orders, Results and
+  Referrals, which the conformance register had filed as BASE against base
+  requirements the v2.4 grammar does not carry. The AU profile now states
+  each one:
+  - HL7au:00044.1.1 (CX-1 must be specified). CX.1 is required in the base
+    model only from v2.5.1, so this rule defers to the base check there and
+    the finding is still reported once.
+  - HL7au:00044.3.1 (EI-1 must be valued) and HL7au:00044.7.1 (XCN-1 must
+    be specified). No modelled version requires EI.1 or XCN.1, so these were
+    never enforced on any version; they now fire on every version. On ORC-2,
+    ORC-3, ORC-4, OBR-2 and OBR-3 an empty EI-1 is reported under both
+    HL7au:00044.3.1 and the field's own EI-completeness point (HL7au:000003
+    to 000007), since both are violated.
+    Likewise on v2.8.2, when XCN.1 and XCN.2 are both empty, XCN.1's absence
+    is reported twice: under HL7au:00044.7.1 and as the base
+    `conditionalComponentMissing` for XCN.1 (v2.8.2 XCN.1 "is required if
+    XCN.2 is not populated"). The empty family name is reported separately,
+    by XCN.2's own base condition (required if XCN.1 is not populated) and by
+    HL7au:00044.7.5. All are violated, so all are reported by design.
+  The register moves all three from BASE to PARTIAL: the presence half is
+  enforced, while identifier-scheme validity (00044.1.1, 00044.7.1) and
+  cross-message uniqueness (00044.3.1) are not checked. This absorbs P4-19.
+- VID.1 is trimmed, and the `found:` value of
+  `ParseError.unsupportedVersion` carries the trimmed VID.1. (P3-4 briefly
+  let a whitespace-only MSH-12 fall back silently under `.strict`; the P3
+  fix wave above reports it and `.strict` throws for it again.)
+
+### Changed — P3-3: `2.8` messages are validated against the v2.8.2 grammar
+
+- Before, a `2.8` message had no grammar: default validation reported
+  `isValid == true` with nothing checked, and `.strict` rejected every
+  segment as a Z-segment (X-C02, V282-C03).
+- It is now validated against the v2.8.2 segment grammar, code tables and
+  datatype grammar, and every report carries one
+  `IssueCode.versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2)`
+  (info) at MSH-12. `Version.grammarVersion` exposes the mapping. The
+  public registries stay version-literal. Decision: ADR-018.
+
+### Fixed — P3-2: standard segments are no longer reported as Z-segments
+
+- A segment whose ID does not begin with `Z` and that the message's version
+  does not define (for example PRT on a v2.3 message) is now reported as
+  `IssueCode.segmentNotInVersionGrammar` (warning). Before, it went to the
+  Z-segment policy, so `.strict` rejected it as "Z-segment 'PRT' rejected"
+  (V282-C03, ADR-018).
+
+### Fixed — P2 fix wave: whole-workstream review remediation
+
+- Table 0355 (Primary key value type, MFE-5) is opened on v2.4, v2.5.1, v2.6 and
+  v2.8.2: the note under the table reads "For locally defined master files, this table
+  can be locally extended with other HL7 data types". An MFE-5 data type outside the
+  printed rows no longer raises `valueNotInTable` there. v2.3.1 cites the table "for
+  valid values" with no such note, so it stays closed.
+- One criterion for open HL7 tables, recorded in ADR-016: a table is open when its
+  governing field prose cites it "for suggested values" or says it may be extended
+  locally, and closed on "valid values" or silence; field prose that calls an HL7-kind
+  table "User-defined" sets its kind to `User`. Applied where every governing field
+  agrees: v2.8.2 Table 0920 (OM4-16) is opened, and v2.8.2 Table 0617 (XAD.18) becomes
+  `User`, so neither raises `valueNotInTable` any more. Tables whose governing fields
+  disagree (0136, 0167, 0185, 0206, v2.3 0239, 0323, 0532) are unchanged and registered.
+- ADR-014 signature compatibility: `ValidationOptions.init` and `HL7Table.init` keep
+  their released signatures. `localTableExtensions` is no longer an init parameter (set
+  it by mutation), and `patterns:` moves to a separate `HL7Table.init` overload.
+- v2.4 Table 0290 (MIME base64 encoding characters) rows 51 to 63 carried the value
+  reprinted in the description ("51 z"); the descriptions are now the single character
+  CH02 sec 2.9.16.4 means ("z"), matching v2.3.1. Corrected through a new
+  `fixDescriptions` key in `Resources/tables/overrides.json`.
+- ADR-016 no longer lists composite-component table links as deferred (shipped by
+  ADR-017) and records why Table 0391 stays closed on v2.6 and v2.8.2.
+
+### Changed — P7-1: the schema audit compares `C` and the defining attribute table
+
+- `scripts/audit-schemas.py` M19 no longer skips a slot where the schema or the print is
+  `C`; a `C` / non-`C` disagreement is a finding unless the whitelist cites the spec text
+  behind it (v2.6 ORC-8 and OBR-29 are the first such entries).
+- M25 length and M19 optionality compare against each segment's defining attribute table
+  (the first full-depth print in chapter order), not any chapter's variant print.
+- Every audit whitelist entry now carries its citation; `DEFERRED_VERSIONS` is empty
+  since M5 closed.
+- New `--only-version` flag; new `scripts/check-audit-schemas.py` self-check, run in CI.
+
+### Added — P2-13: caller-declared local extensions to HL7 tables
+
+- `ValidationOptions.localTableExtensions` (additive stored property, default
+  `[:]`, set by mutation; not an init parameter, so `ValidationOptions.init` keeps
+  its released signature). Every
+  supported version permits an HL7 table to be extended locally (v2.3 and v2.3.1
+  CH2 sec 2.6.6, "Additions may be included on a site-specific basis"; v2.4 CH02
+  sec 2.7.6; v2.5.1 and v2.6 CH02 sec 2.5.3.6; v2.8.2 CH02C 2.C.1.2); a table
+  still stays closed by default, but a
+  caller can now declare the codes it has locally added to a named table, keyed
+  by four-digit table number. A declared code is accepted wherever that table
+  is checked, at field or component level; every other out-of-table code is
+  still `valueNotInTable` (owner gate G5).
+
+### Added — P2-6: pattern rows in the code-table registry
+
+- `HL7Table.CodePattern` and `HL7Table.patterns` (additive). The released
+  five-parameter `HL7Table.init(number:name:kind:permitsLocalExtensions:entries:)`
+  is unchanged; a separate overload also takes `patterns:`, and codegen emits it
+  only for a table that has pattern rows.
+- `HL7Table.contains(_:)` now accepts a full match against a pattern row,
+  in addition to an exact printed-code match. `CodePattern.matches` enforces
+  the full match itself (wrapping the supplied regex in `\A(?:...)\z`), so
+  a pattern's own regex need not be anchored for matching to be exact.
+- Table 0203 `NNxxx` ("National Person Identifier where the xxx is the ISO
+  table 3166 3-character (alphabetic) country code") is modelled as the
+  pattern `^NN[A-Z]{3}$` on v2.3.1 to v2.8.2 (V282-C01): values such as
+  `NNAUS` or `NNCAN` are now members under `HL7Table.contains(_:)` and in the
+  schema audit's spec-example code check (`scripts/audit-schemas.py
+  --examples`). CX.5 validation outcomes do not change, because Table 0203 is
+  open on v2.4 to v2.8.2 (P2-7) and user-defined on v2.3.1. The pattern
+  checks only the shape — `NN` plus three uppercase letters — not ISO 3166
+  membership of those three letters; see the permanent-limitations register
+  §C.
+
+### Changed — P2-7: Table 0203 is not a closed set
+
+- Table 0203 (Identifier type) is opened on v2.4 to v2.8.2:
+  `permitsLocalExtensions` is set and `HL7Table.isClosed` is now `false` on
+  every version, because every CX.5 / XCN.13 / PPN.13 / XON.7 definition
+  cites the table "for suggested values" rather than as a closed set
+  (V282-C02, owner gate G5). CX.5 values outside the printed rows no
+  longer raise `valueNotInTable` on v2.4 to v2.8.2.
+- v2.4 Table 0203's `kind` is corrected from `User` to `HL7`, matching
+  CH02 sec 2.9.12.5's own heading (Appendix A had indexed it as User).
+
+### Fixed — P2: code-table false errors and bindings
+
+- **P2-1:** v2.5.1 Table 0125 restored to admit every data type CH07 sec
+  7.4.2.2 allows; OBX-2 = `CWE`, `CNE`, `DTM`, `IS`, `DR`, `EI` and the
+  other composites no longer raise `valueNotInTable(0125)` (V251-C01).
+- **P2-2:** Table 0125 widened the same way on v2.3, v2.3.1, v2.4 and v2.6,
+  citing each version's own Chapter 7 OBX-2 prose (V251-C01, cross-version).
+- **P2-3:** v2.3.1 Table 0356 gains the `2.3` row Chapter 2 sec 2.24.1.20
+  prints and Appendix A omits; MSH-20 = `2.3` no longer raises
+  `valueNotInTable(0356)` on v2.3.1 (V231-C01).
+- **P2-4:** v2.4 Table 0119 restored as the HL7 table CH04 sec 4.20.1
+  prints, `kind` corrected from `User` to `HL7`; ORC-1 is checked again on
+  v2.4 (V24-C03).
+- **P2-5:** v2.3 chapter-printed tables 0254, 0255, 0256 and 0290 (and the
+  matching v2.3.1 0290 rows) added from Chapters 8 and 2 (V23-C09).
+- **P2-8:** v2.5.1 print-versus-prose table bindings corrected: TQ1-12
+  binds Table 0472, CON-18 binds 0545, SID-4 keeps 0385; each misprint is
+  recorded in `table-repairs.json` with a citation (V251-C06).
+- **P2-9:** prose-only table bindings added: RCP-7 (v2.4, v2.5.1) binds
+  0391, SAC-28 binds 0372; Table 0391 is opened, citing the printed "no
+  values defined by HL7" note (V251-C07).
+- **P2-10:** the TBL# extractor now joins a four-digit continuation-line
+  number to a closed cell, so v2.3.1 MSH-9 binds both `0003` and `0076` as
+  Figure 2-8 prints (V231-C04).
+- **P2-11:** the datatype-prose extractor rejoins a table reference
+  hyphenated across a line break; v2.3.1 and v2.4 PT.2 now bind 0207 and
+  v2.3.1 PL.6 binds 0305 (V231-C08).
+
+### Fixed — P1 fix wave: whole-workstream review remediation
+
+- v2.6 OBR-48 (Medically Necessary Duplicate Procedure Reason) was `O`; CH04
+  §4.5.3.48 prints `C` (bare, no condition text). It now matches v2.5.1 and
+  v2.8.2, which already printed `C`.
+- Documented the v2.8.2 OBR-2/OBR-3 `ORC-2 empty` / `ORC-3 empty` conditions
+  as a confirmed misfire, not a possible one: §4.5.3.2 needs only a placer
+  *or* a filler id, so a conformant message carrying just a filler id trips
+  OBR-2. Fix tracked as P4-7.
+- Registered a second, wider instance of the same shape on v2.3 to v2.6:
+  a placer NW order legitimately has no filler number yet (the ORC-1 Send
+  Number table notes print a null ORC-3), so OBR-3/ORC-3 misfires there
+  too. Known defect (req #4), blocks spec-completeness; also tracked as
+  P4-7 (`docs/design/permanent-limitations-register.md` §D addendum).
+- Documentation-only: clarified the P1-2 report-message scope excludes
+  CSU^C09-C12 (clinical-trials results, CH07 §7.7.2) for now, which can
+  only under-fire; marked the superseded P1-1 "OBR-7 is now `messageCode
+  = ORU`" notes as widened by P1-2; pinned OBR-2/OBR-3 ORC-absent scope to
+  ORU/ORF with a regression test (v2.4 OUL^R21, no ORC, empty OBR-2/OBR-3
+  raises nothing).
+
+### Fixed — P1-5: OBR optionality follows each version's print
+
+- OBR-1, 8, 9, 10, 11, 20, 21, 26 and 32 were `C` on v2.3 to v2.6, a value
+  carried from an earlier baseline. They are now `O` as printed (v2.3
+  keeps OBR-1 `C`; v2.6 OBR-32 is `B`, so a populated one warns).
+- ORC-8 and OBR-29 stay `C` from the child-order prose; the deviation from
+  the printed `O` is documented.
+
+### Changed — P1-4: OBR-29 child-order predicate simplified
+
+- The OBR-29 condition's first leg (`ORC-1 = CH AND ORC absent`) could
+  never be true and is removed on v2.3 to v2.6. Behaviour is unchanged.
+
+### Fixed — P1-3: OBR-2 / OBR-3 required when an ORU or ORF has no ORC
+
+- With no ORC, `ORC-2 empty` failed safe and never fired, so a result with
+  no order number anywhere passed. OBR-2 and OBR-3 now also fire when the
+  ORC is absent in an ORU or ORF (v2.3 to v2.6).
+
+### Fixed — P1-2: OBR-7 / OBR-25 apply to every report message
+
+- "Required in a report message" was modelled as ORU only. It now covers
+  each version's report structures: ORU and ORF (v2.3, v2.3.1), plus OUL
+  (v2.4, v2.5.1), plus OPU (v2.6); ORU, OUL and OPU on v2.8.2, where ORF
+  is withdrawn.
+
+### Fixed — P1-1: OBR-7 / OBR-14 no longer fire on new orders
+
+- OBR-7 and OBR-14 fired `conditionalFieldMissing` on conformant new orders
+  because OBR-15 (where a specimen *should be* obtained) or an SPM segment
+  was read as "a specimen was sent along". Those legs are removed on every
+  version. OBR-7 keeps its report-message rule. OBR-14 is a bare `C` on
+  v2.3 to v2.4, and `B` on v2.5.1 and v2.6 as printed (SPM-18 favoured).
+
 ### Added — M33: the EI half of the NASH transport assertion
 
 - Under the same `ValidationOptions.auNASHTransport`, **HL7au:00044.3.4**
@@ -1120,7 +3456,7 @@ ADRM-2021 conformance rows accounted for (65 shipped / 12 partial /
 
 ## [3.0.0] — 2026-09-16
 
-**The M6 release — AU localisation completeness (ADRM-2021), closed and measured.** One ⚠️ **breaking** change (the M6-D5 OBX-5 datatype fix, shipped under an owner-directed ADR-014 override — see "Changed — BREAKING" below and `Migration.md` → "The 3.0 boundary"); everything else is additive. The additive-only contract resumes for the 3.x line from this tag.
+**The M6 release — AU localisation completeness (ADRM-2021), closed and measured.** One **BREAKING** change (the M6-D5 OBX-5 datatype fix, shipped under an owner-directed ADR-014 override — see "Changed — BREAKING" below and `Migration.md` → "The 3.0 boundary"); everything else is additive. The additive-only contract resumes for the 3.x line from this tag.
 
 ### Added
 - **M6 — ADRM-2021 AU localisation audit (audit only; no behaviour change).**
@@ -1258,7 +3594,7 @@ ADRM-2021 conformance rows accounted for (65 shipped / 12 partial /
   is a major (`v3.0.0`)**. The additive-only contract is otherwise unchanged.
 
 ### Known limitations found by M6 (registered, not fixed)
-- ~~**M6-O5**~~ ✅ closed above — the dataType predicate now runs each batch.
+- ~~**M6-O5**~~ done — closed above — the dataType predicate now runs each batch.
 - **M6-O6 — HL7 code tables are not modelled.** The schemas drop the spec's
   `TBL#` column and there is no code-table registry, so every "value from HL7
   Table NNNN" point is unshippable: `000032`/`.2` (0074), `00044.7.3` (0200),
@@ -1472,7 +3808,7 @@ v1.10). Additive under ADR-014.
 
 ## [2.0.0] — 2026-08-28
 
-⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10
+**BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10
 removed the dead public surface (the `HL7v2KitDictionaries` product, four never-raised enum
 cases, two no-op `ParserOptions` members, `ValidationReport.empty`,
 `MessageBuilder.append(unknown:)`), made `RequiredComponentSet.init`'s `description` required,
@@ -1691,7 +4027,7 @@ was verified equal to the enumerated fold map exactly.
 - Verification: suite **515 green** in 26 suites; name diff = the fold map exactly;
   warning-free. R10's `unknownSegment` disjunction lines re-located post-fold (:394/:443/:494/:749).
 
-### R10 — ⚠️ BREAKING: the v2.0.0 capstone (remediation stage 10 of 10)
+### R10 — BREAKING: the v2.0.0 capstone (remediation stage 10 of 10)
 
 **The next release cut from this point is `v2.0.0`** (owner-scheduled 2026-08-27; ADR-014's
 "waits for 2.0" lane, exercised for the first time). Every removal shipped dead — zero
@@ -2851,7 +5187,7 @@ v0.3 cycle release. Covers four parallel-track surface expansions and a post-cyc
 - **`Tests/HL7v2KitTests/FuzzTests.swift`** — byte-level fuzz harness covering all four parser surfaces: `Parser.parse(_ data:)`, `BatchParser.parse(_ data:)`, `StreamingBatchParser.feed/finish`, and `MLLPUnframer.feed(_:)` (plus a `MLLPUnframer → Parser` round-trip composition). For each surface, the harness iterates over the cross-product `gold-corpus fixtures × mutators × iterations` and asserts the only acceptable failure mode is a thrown `ParseError`. Any other behaviour (non-`ParseError` throw, force-unwrap trap, slice out-of-bounds, infinite loop) fails the test.
 - **Mutators**: 7 small targeted perturbations — `bitFlip`, `byteReplace`, `byteInsert`, `byteDelete`, `truncate`, `delimiterCorrupt` (corrupts one of `|^~\&\r`), `nulInject`. Designed to surface bounds-checking bugs, not to model real-world corruption.
 - **Seeded PRNG**: small Xorshift64\* generator with a fixed seed (`0xC0FFEE`) drives all mutations, so every fuzz failure is reproducible — the failing test records the (fixture × mutator × iteration) tuple and a replay against the same seed reproduces the case.
-- **Skipped by default** like `PerformanceTests`. Run with `RUN_FUZZ_TESTS=1 xcrun swift test --filter FuzzTests`. Default `swift test` count goes 306 → 311 with the 5 fuzz tests marked `➜ skipped: "Set RUN_FUZZ_TESTS=1 to run the fuzz suite"`.
+- **Skipped by default** like `PerformanceTests`. Run with `RUN_FUZZ_TESTS=1 xcrun swift test --filter FuzzTests`. Default `swift test` count goes 306 → 311 with the 5 fuzz tests marked `skipped: "Set RUN_FUZZ_TESTS=1 to run the fuzz suite"`.
 - **Coverage at landing time**: 47 fixtures × 7 mutators × 100 iterations × 5 surfaces ≈ 165,000 mutated payloads exercised in ~5.4 s on the dev machine. All five tests pass — no crashes, no unexpected error types — across the full grid. Validates the byte-level robustness of every parser-side surface added through v0.3.
 
 ### Added — Streaming batch parser (v0.3-S1)
@@ -3009,7 +5345,7 @@ Tests: 159 (v0.1.0 tag) → 205 (default `swift test`); 210 with `RUN_PERF_TESTS
   - Round-trip 1,000 messages under 10s
   - Validate 1 message (default options) under 2ms warm
   - Validate 1,000 messages under 10s
-- **Skipped by default.** The suite gates on `ProcessInfo.processInfo.environment["RUN_PERF_TESTS"] == nil` via the `@Suite(.disabled(if:))` trait, so the everyday `swift test` run stays fast. To run the perf suite: `RUN_PERF_TESTS=1 xcrun swift test`. Output marks the skipped tests with `➜ ... skipped: "Set RUN_PERF_TESTS=1 to run the perf suite"`.
+- **Skipped by default.** The suite gates on `ProcessInfo.processInfo.environment["RUN_PERF_TESTS"] == nil` via the `@Suite(.disabled(if:))` trait, so the everyday `swift test` run stays fast. To run the perf suite: `RUN_PERF_TESTS=1 xcrun swift test`. Output marks the skipped tests with `... skipped: "Set RUN_PERF_TESTS=1 to run the perf suite"`.
 - **Timing uses `Date()` differences** for portability with macOS 12+ (Foundation's `ContinuousClock` is macOS 13+). Precision is ~µs — plenty for ms/s budgets.
 - Representative ~600-byte ADT^A01 wire (synthesised from the `adt_a01_minimal.hl7` gold-corpus fixture) carries the composite types most AU clinical traffic populates (CX/XPN/CE/XAD/XTN on PID; PL/XCN on PV1) so the budget covers a realistic critical path. Warm-up loops (100 iterations) precede the single-iteration measurements.
 - Measured on the dev machine at landing time: parse-warm ≈ 41ms suite time; 1000-parse 0.176s; 1000-round-trip 0.233s; validate-warm 35ms suite time; 1000-validate 0.056s. All comfortably under budget; spec also reserves a 20% regression threshold above these numbers.

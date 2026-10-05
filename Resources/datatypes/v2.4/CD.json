@@ -1,0 +1,44 @@
+{
+  "dataType": "CD",
+  "version": "2.4",
+  "name": "channel definition",
+  "source": "prose-line",
+  "components": [
+    {
+      "index": 1,
+      "name": "Channel identifier",
+      "dataType": "CM",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Waveform source",
+      "dataType": "CM",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Channel sensitivity/units",
+      "dataType": "CM",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Channel calibration parameters",
+      "dataType": "CM",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Sampling frequency",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Minimum/maximum data values",
+      "dataType": "CM",
+      "optionality": ""
+    }
+  ]
+}

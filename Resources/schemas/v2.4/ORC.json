@@ -19,7 +19,7 @@
       "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "OBR-2 empty"
+      "condition": "ORC-3 empty AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND OBR absent"
     },
     {
       "index": 3,
@@ -28,7 +28,7 @@
       "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "OBR-3 empty"
+      "condition": "ORC-2 empty AND OBR-2 empty AND OBR-3 empty OR ORC-2 empty AND OBR absent"
     },
     {
       "index": 4,
@@ -119,7 +119,7 @@
       "name": "Call Back Phone Number",
       "dataType": "XTN", "length": "250",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "2"
     },
     {
       "index": 15,
@@ -208,7 +208,8 @@
       "name": "Order Status Modifier",
       "dataType": "CWE", "length": "250",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "prohibitedWhen": "ORC-5 empty"
     }
   ]
 }

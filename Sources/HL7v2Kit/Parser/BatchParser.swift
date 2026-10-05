@@ -79,7 +79,7 @@ public struct BatchParser: Sendable {
     }
 
     /// Parse a batch from raw bytes. Encoding handling mirrors
-    /// ``Parser/parse(_:)-data``: BOM stripping, NUL rejection, MSH-18
+    /// ``Parser/parse(_:)-(Data)``: BOM stripping, NUL rejection, MSH-18
     /// detection. The MSH-18 detection probes the *first* message in
     /// the stream (the first MSH after any FHS / BHS) — all messages
     /// in a single batch file are expected to share the same charset.

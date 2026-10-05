@@ -4,7 +4,7 @@
   "description": "OM1",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number – Test/Observation Master File", "dataType": "NM", "length": "4", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "producerSTestObservationId", "name": "Producer's Test/Observation ID", "dataType": "CE", "length": "200", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "producerTestObservationId", "name": "Producer's Test/Observation ID", "dataType": "CE", "length": "200", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "permittedDataTypes", "name": "Permitted Data Types", "dataType": "ID", "length": "12", "table": "0125", "optionality": "O", "repeatability": "*", "tables": ["0125"] },
     { "index": 4, "swiftName": "specimenRequired", "name": "Specimen Required", "dataType": "ID", "length": "1", "table": "0136", "optionality": "R", "repeatability": "1", "tables": ["0136"] },
     { "index": 5, "swiftName": "producerId", "name": "Producer ID", "dataType": "CE", "length": "200", "optionality": "R", "repeatability": "1" },

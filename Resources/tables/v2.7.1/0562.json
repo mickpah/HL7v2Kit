@@ -1,0 +1,34 @@
+{
+  "table": "0562",
+  "version": "2.7.1",
+  "name": "Processing Consideration Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0562 - Processing Consideration Codes",
+  "entries": [
+    {
+      "code": "DFADJ",
+      "description": "Deferred Adjudication Processing"
+    },
+    {
+      "code": "EFORM",
+      "description": "Electronic form to follow"
+    },
+    {
+      "code": "FAX",
+      "description": "Fax to follow"
+    },
+    {
+      "code": "PAPER",
+      "description": "Paper documentation to follow"
+    },
+    {
+      "code": "PYRDELAY",
+      "description": "Delayed by a Previous Payer"
+    },
+    {
+      "code": "RTADJ",
+      "description": "Real Time Adjudication Processing"
+    }
+  ]
+}

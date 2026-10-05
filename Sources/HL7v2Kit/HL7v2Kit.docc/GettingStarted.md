@@ -51,7 +51,7 @@ let rebuilt = message.serialize()
 assert(rebuilt == wire)                                    // byte equal!
 ```
 
-For messages produced by ``Parser``, the output equals the input bytes including escape sequences (``EscapeSequences``) and the originating character set (``CharacterEncoding``). See <doc:RoundTripGuarantee> for what's covered and what isn't.
+For messages produced by ``Parser``, the output equals the input bytes including escape sequences (<doc:EscapeSequences>) and the originating character set (``CharacterEncoding``). See <doc:RoundTripGuarantee> for what's covered and what isn't.
 
 ## Validate
 

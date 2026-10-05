@@ -1,0 +1,21 @@
+{
+  "segmentID": "BPO",
+  "version": "2.7.1",
+  "description": "BPO",
+  "fields": [
+    { "index": 1, "swiftName": "setIdBpo", "name": "Set ID – BPO", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "bpUniversalServiceIdentifier", "name": "BP Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
+    { "index": 3, "swiftName": "bpProcessingRequirements", "name": "BP Processing Requirements", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0508"] },
+    { "index": 4, "swiftName": "bpQuantity", "name": "BP Quantity", "dataType": "NM", "length": "5=", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "bpAmount", "name": "BP Amount", "dataType": "NM", "length": "5=", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "bpUnits", "name": "BP Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 7, "swiftName": "bpIntendedUseDateTime", "name": "BP Intended Use Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "bpIntendedDispenseFromLocation", "name": "BP Intended Dispense From Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "bpIntendedDispenseFromAddress", "name": "BP Intended Dispense From Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "bpRequestedDispenseDateTime", "name": "BP Requested Dispense Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "bpRequestedDispenseToLocation", "name": "BP Requested Dispense To Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "bpRequestedDispenseToAddress", "name": "BP Requested Dispense To Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "bpIndicationForUse", "name": "BP Indication for Use", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0509"] },
+    { "index": 14, "swiftName": "bpInformedConsentIndicator", "name": "BP Informed Consent Indicator", "dataType": "ID", "table": "0136", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
+  ]
+}

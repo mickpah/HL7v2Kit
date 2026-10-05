@@ -1,0 +1,22 @@
+{
+  "table": "0257",
+  "version": "2.7.1",
+  "name": "Nature of Challenge",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0257 - Nature of Challenge",
+  "entries": [
+    {
+      "code": "CFST",
+      "description": "Fasting (no calorie intake) for the period specified in the time component of the term, e.g., 1H POST CFST"
+    },
+    {
+      "code": "EXCZ",
+      "description": "Exercise undertaken as challenge (can be quantified)"
+    },
+    {
+      "code": "FFST",
+      "description": "No fluid intake for the period specified in the time component of the term"
+    }
+  ]
+}

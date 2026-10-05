@@ -3,6 +3,10 @@
 // Regenerate via scripts/regenerate-typed-segments.sh
 
 /// Diagnosis and Procedure Code segment (HL7 v2.8.2).
+///
+/// Defined in HL7 v2.8.2.
+/// Accessors read by field position, so one whose DocC names fewer versions returns
+/// whatever that position holds on another version's wire.
 public struct DPS: TypedSegment {
     public static let segmentID = "DPS"
     public let fields: [Field]
@@ -16,9 +20,18 @@ public struct DPS: TypedSegment {
         field(1).map(CWE.init(field:))
     }
 
-    /// DPS-2: Procedure Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// DPS-2: Procedure Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `procedureCodeAll` returns every repetition.
     public var procedureCode: CWE? {
         field(2).map(CWE.init(field:))
+    }
+
+    /// DPS-2: every repetition of Procedure Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var procedureCodeAll: [CWE] {
+        repetitions(2).map(CWE.init(field:))
     }
 
     /// DPS-3: Effective Date/Time. HL7 data type `DTM`.

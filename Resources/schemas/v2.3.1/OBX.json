@@ -15,11 +15,12 @@
       "index": 2,
       "swiftName": "valueType",
       "name": "Value Type",
-      "dataType": "ID", "length": "2", "table": "0125",
+      "dataType": "ID", "length": "3", "table": "0125",
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0125"],
-      "condition": "OBX-11 != X"
+      "condition": "OBX-11 != X",
+      "additionalProhibitions": [{ "when": "OBX-11 = O", "severity": "error", "permitsNull": true, "citation": "v2.3.1 Chapter 7 section 7.3.2.11 Observ result status: \"The status of O shall be used to indicate that the OBX segment is used for a dynamic specification of the required result. An OBX used for a dynamic specification must contain the detailed examination code, units, etc., with OBX-11 valued with O, and OBX-2 and OBX-5 valued with null.\" HL7 Table 0085 value O is \"Order detail description only (no result)\". The null is the HL7 null \"\" (Chapter 2 section 2.6 Fields), so OBX-2 valued with \"\" is conformant and any other value is not" }]
     },
     {
       "index": 3,
@@ -43,7 +44,9 @@
       "name": "Observation Value",
       "dataType": "*", "length": "*",
       "optionality": "C",
-      "repeatability": "*"
+      "repeatability": "*",
+      "condition": "OBX-11 = O",
+      "additionalProhibitions": [{ "when": "OBX-11 = O", "severity": "error", "permitsNull": true, "citation": "v2.3.1 Chapter 7 section 7.3.2.11 Observ result status: \"The status of O shall be used to indicate that the OBX segment is used for a dynamic specification of the required result. An OBX used for a dynamic specification must contain the detailed examination code, units, etc., with OBX-11 valued with O, and OBX-2 and OBX-5 valued with null.\" HL7 Table 0085 value O is \"Order detail description only (no result)\". The null is the HL7 null \"\" (Chapter 2 section 2.6 Fields), so OBX-5 valued with \"\" is conformant and any other value is not" }]
     },
     {
       "index": 6,
@@ -67,7 +70,7 @@
       "name": "Abnormal Flags",
       "dataType": "ID", "length": "5", "table": "0078",
       "optionality": "O",
-      "repeatability": "*",
+      "repeatability": "5",
       "tables": ["0078"]
     },
     {
@@ -132,7 +135,7 @@
       "index": 16,
       "swiftName": "responsibleObserver",
       "name": "Responsible Observer",
-      "dataType": "XCN", "length": "60",
+      "dataType": "XCN", "length": "80",
       "optionality": "O",
       "repeatability": "*"
     },

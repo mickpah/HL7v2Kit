@@ -3,8 +3,8 @@
   "version": "2.6",
   "name": "What subject filter",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.6 Appendix A, HL7 Table 0048 - What subject filter",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.6 Chapter 5 sec 5.10.4.1.9 QRD-9 What Subject Filter and sec 5.10.4.3.4 URD-4 R/U What Subject Definition, HL7 Table 0048 - What subject filter",
   "entries": [
     {
       "code": "ADV",

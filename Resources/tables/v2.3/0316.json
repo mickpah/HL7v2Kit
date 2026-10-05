@@ -2,9 +2,9 @@
   "table": "0316",
   "version": "2.3",
   "name": "Organ Donor",
-  "kind": "HL7",
+  "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.3 Appendix A, HL7 Table 0316 - Organ Donor",
+  "citation": "HL7 v2.3 Chapter 3 sec 3.3.9.8 PD1-8 Organ donor (IS): 'Refer to user-defined table 0316 - Organ donor for suggested values'; User-defined Table 0316 - Organ donor (p. 3-75)",
   "entries": [
     {
       "code": "Y",

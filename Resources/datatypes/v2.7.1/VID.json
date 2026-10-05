@@ -1,0 +1,32 @@
+{
+  "dataType": "VID",
+  "version": "2.7.1",
+  "name": "Version Identifier",
+  "components": [
+    {
+      "index": 1,
+      "name": "Version ID",
+      "dataType": "ID",
+      "optionality": "R",
+      "length": "3..5",
+      "tables": [
+        "0104"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Internationalization Code",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0399"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "International Version ID",
+      "dataType": "CWE",
+      "optionality": "O"
+    }
+  ]
+}

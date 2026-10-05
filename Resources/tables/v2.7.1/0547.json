@@ -1,0 +1,22 @@
+{
+  "table": "0547",
+  "version": "2.7.1",
+  "name": "Jurisdictional Breadth",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0547 - Jurisdictional Breadth",
+  "entries": [
+    {
+      "code": "C",
+      "description": "County/Parish"
+    },
+    {
+      "code": "N",
+      "description": "Country"
+    },
+    {
+      "code": "S",
+      "description": "State/Province"
+    }
+  ]
+}

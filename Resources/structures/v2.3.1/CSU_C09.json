@@ -1,0 +1,37 @@
+{
+  "structure": "CSU_C09",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 7, section 7.6.2 CSU - unsolicited study data message (events C09-C12), p 7-71. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.PATIENT.CONTENT, generator HL7-Database), VISIT (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.VISIT.CONTENT, generator HL7-Database), STUDY_PHASE (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_PHASE.CONTENT, generator HL7-Database), STUDY_SCHEDULE (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_SCHEDULE.CONTENT, generator HL7-Database), STUDY_OBSERVATION (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_OBSERVATION.CONTENT, generator HL7-Database), STUDY_PHARM (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_PHARM.CONTENT, generator HL7-Database) and RX_ADMIN (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.RX_ADMIN.CONTENT, generator HL7-Database).",
+  "triggers": ["CSU^C09", "CSU^C10", "CSU^C11", "CSU^C12"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "segment": "CSR", "min": 1, "max": 1 },
+      { "group": "STUDY_PHASE", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "CSP", "min": 0, "max": 1 },
+        { "group": "STUDY_SCHEDULE", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+          { "segment": "CSS", "min": 0, "max": 1 },
+          { "group": "STUDY_OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+            { "segment": "ORC", "min": 0, "max": 1 },
+            { "segment": "OBR", "min": 1, "max": 1 },
+            { "segment": "OBX", "min": 1, "max": null }
+          ]},
+          { "group": "STUDY_PHARM", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+            { "segment": "ORC", "min": 0, "max": 1 },
+            { "group": "RX_ADMIN", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+              { "segment": "RXA", "min": 1, "max": 1 },
+              { "segment": "RXR", "min": 1, "max": 1 }
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

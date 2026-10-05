@@ -15,15 +15,39 @@ public struct Validator: Sendable {
     /// `validate(_:)`. See ADR-007.
     public let locale: HL7Locale
 
+    /// Test-only seam (not public API, no `@testable` consumer outside this
+    /// package): when set, `validate(_:)` uses this profile instead of
+    /// resolving one from `locale` via `Profile.load(for:)`. Lets a test
+    /// exercise profile-composite-override edge cases (e.g. `yieldsToBase`
+    /// interacting with `effectiveDataType`) without adding synthetic
+    /// fixtures to the shipped AU profile data. P3-5 fix round 1.
+    let testProfileOverride: Profile?
+
     public init(options: ValidationOptions = .default, locale: HL7Locale = .international) {
         self.options = options
         self.locale = locale
+        self.testProfileOverride = nil
+    }
+
+    init(options: ValidationOptions = .default, locale: HL7Locale = .international, testProfileOverride: Profile) {
+        self.options = options
+        self.locale = locale
+        self.testProfileOverride = testProfileOverride
     }
 
     /// Validate a message. Returns a non-empty report only when at least
     /// one check produced an issue.
     public func validate(_ message: Message) -> ValidationReport {
         var issues: [ValidationIssue] = []
+        // ADR-018: report how MSH-12 relates to the grammar applied, then
+        // validate a copy that declares the grammar version, so every
+        // version-keyed lookup below (segment grammar, tables, datatype
+        // grammar, version-gated ORC/OBR pairs) uses the same release.
+        appendVersionIssues(for: message, issues: &issues)
+        let declared = message.declaring(message.version.grammarVersion)
+        // P8b-17 (ADR-019): group spans, or the fallback, for the
+        // group-dependent predicates, whatever messageStructureSeverity is.
+        let message = declared.scoped(groupScoping(for: declared))
         var segmentOccurrence: [String: Int] = [:]
         // v0.11-S3 (ADR-010 Extension 2): dedupe fired cardinality
         // violations by (scope, groupHeadIndex, rule identity) so a
@@ -32,12 +56,12 @@ public struct Validator: Sendable {
         // group only fires once per distinct group.
         var firedCardinalityKeys: Set<String> = []
 
-        let grammar = grammarTable(for: message.version)
+        let grammar = Self.grammarTable(for: message.version)
         // v0.4-S5-A / v0.5-S5-B: load the profile once per `validate(_:)`
         // call. nil for `.international`; for `.auLocalisation` returns
         // the AU ADRM-2021 profile with field-override narrowings layered
         // on top of base v2.4 / v2.5.1 grammar. See ADR-007.
-        let profile = Profile.load(for: locale)
+        let profile = testProfileOverride ?? Profile.load(for: locale)
 
         // v0.7-S1 (ADR-008): iterate with the 0-based segment index so
         // cross-segment / message-context predicates can resolve peers
@@ -51,12 +75,19 @@ public struct Validator: Sendable {
             segmentOccurrence[id] = occurrence
 
             guard let baseGrammar = grammar[id] else {
-                // No grammar entry — treat as a Z-segment / unknown.
-                appendZSegmentIssue(
-                    id: id,
-                    occurrence: occurrence,
-                    issues: &issues
-                )
+                // No grammar entry. Only a `Z` ID is a Z-segment (ADR-003);
+                // any other ID is a segment this version does not define
+                // (ADR-018), reported whatever the Z-segment policy.
+                if id.hasPrefix("Z") {
+                    appendZSegmentIssue(id: id, occurrence: occurrence, issues: &issues)
+                } else {
+                    issues.append(ValidationIssue(
+                        severity: .warning,
+                        code: .segmentNotInVersionGrammar,
+                        location: IssueLocation(segmentID: id, segmentIndex: occurrence),
+                        message: "Segment '\(id)' is not defined by the HL7 v\(message.version.rawValue) grammar; its fields were not validated"
+                    ))
+                }
                 continue
             }
 
@@ -109,6 +140,12 @@ public struct Validator: Sendable {
         // 00216/00217) — runs for every locale and version; the pairs
         // are the base standard's own identity assertions.
         checkOrcObrPairEquality(message: message, issues: &issues)
+
+        // ADR-019: abstract message syntax (segment order, groups, required
+        // segments per structure). Opt-in.
+        if let severity = options.messageStructureSeverity {
+            checkMessageStructure(message: message, severity: severity, issues: &issues)
+        }
 
         return ValidationReport(issues: issues, locale: locale)
     }
@@ -205,6 +242,7 @@ public struct Validator: Sendable {
             guard let group = resolveGroup(
                 scope: rule.scope,
                 anchorIndex: anchorIndex,
+                counted: rule.countedSegmentID,
                 message: message
             ) else { continue }
 
@@ -223,7 +261,7 @@ public struct Validator: Sendable {
                     return conditionTriggers(
                         activation,
                         in: seg,
-                        segmentIndex: group.startIndex + offset,
+                        segmentIndex: group.indices[offset],
                         message: message,
                         currentSegmentID: seg.segmentID
                     )
@@ -257,7 +295,7 @@ public struct Validator: Sendable {
                     matches += 1
                     continue
                 }
-                let absoluteIndex = group.startIndex + offset
+                let absoluteIndex = group.indices[offset]
                 if conditionTriggers(
                     rule.predicate,
                     in: seg,
@@ -312,35 +350,44 @@ public struct Validator: Sendable {
         }
     }
 
-    /// Resolved group boundaries for a `GroupScope` anchored at
-    /// `anchorIndex`. `startIndex` and `headIndex` are 0-based indices
-    /// into `message.segments`; `segments` is the group's segments in
-    /// document order (inclusive of the head, exclusive of the next
-    /// group's head).
+    /// Resolved group for a `GroupScope` anchored at `anchorIndex`.
+    /// `indices` are the group's 0-based indices into `message.segments`
+    /// in document order (contiguous under the walk; with spans, the
+    /// anchor's own occurrence without nested pairing groups, P8b-17);
+    /// `headIndex` is the first; `segments` are the segments at `indices`.
     private struct ResolvedGroup {
-        let startIndex: Int
-        let headIndex: Int
+        let indices: [Int]
         let segments: [Segment]
+        var headIndex: Int { indices.first ?? 0 }
+
+        init(indices: [Int], in all: [Segment]) {
+            self.indices = indices
+            self.segments = indices.map { all[$0] }
+        }
     }
 
     private func resolveGroup(
         scope: GroupScope,
         anchorIndex: Int,
+        counted: String,
         message: Message
     ) -> ResolvedGroup? {
         let segs = message.segments
         guard anchorIndex >= 0, anchorIndex < segs.count else { return nil }
         switch scope {
         case .messageWide:
-            return ResolvedGroup(startIndex: 0, headIndex: 0, segments: segs)
+            return ResolvedGroup(indices: Array(segs.indices), in: segs)
         case .orcObxGroup:
-            let range = message.orcGroupRange(around: anchorIndex)
-            return ResolvedGroup(
-                startIndex: range.lowerBound,
-                headIndex: range.lowerBound,
-                segments: Array(segs[range])
-            )
+            if case .spans(let spans) = message.groupScoping {
+                return spans.group(around: anchorIndex, holding: "ORC", counting: counted)
+                    .map { ResolvedGroup(indices: $0, in: segs) }
+            }
+            return ResolvedGroup(indices: Array(message.orcGroupRange(around: anchorIndex)), in: segs)
         case .obrObxGroup:
+            if case .spans(let spans) = message.groupScoping {
+                return spans.group(around: anchorIndex, holding: "OBR", counting: counted)
+                    .map { ResolvedGroup(indices: $0, in: segs) }
+            }
             var head = anchorIndex
             while head > 0 && segs[head].segmentID != "OBR" {
                 head -= 1
@@ -353,20 +400,64 @@ public struct Validator: Sendable {
                     && segs[end].segmentID != "ORC" {
                 end += 1
             }
-            return ResolvedGroup(startIndex: head, headIndex: head, segments: Array(segs[head..<end]))
+            return ResolvedGroup(indices: Array(head..<end), in: segs)
         }
     }
 
-    private func grammarTable(for version: Version) -> [String: SegmentGrammar] {
+    /// The segment grammar table for `version` (ADR-018 substitution for
+    /// `v2_8` and `v2_7`). Internal, not private, so tests can derive a per-version
+    /// table list from `Version.allCases` instead of hand-maintaining one
+    /// (P4-15, folded from the P4-25 review).
+    static func grammarTable(for version: Version) -> [String: SegmentGrammar] {
         switch version {
         case .v2_3:   return SegmentGrammarTable.v2_3
         case .v2_3_1: return SegmentGrammarTable.v2_3_1
         case .v2_4:   return SegmentGrammarTable.v2_4
         case .v2_5_1: return SegmentGrammarTable.v2_5_1
         case .v2_6:   return SegmentGrammarTable.v2_6     // v0.14 (ADR-012)
+        case .v2_7_1: return SegmentGrammarTable.v2_7_1   // plan P10 (ADR-018)
+        case .v2_7:   return SegmentGrammarTable.v2_7_1   // ADR-018 substitution (G11)
         case .v2_8_2: return SegmentGrammarTable.v2_8_2   // v0.15 (ADR-013)
-        default:      return [:]   // grammar-less .v2_8 remains out of scope.
+        case .v2_8:   return SegmentGrammarTable.v2_8_2   // ADR-018 substitution
         }
+    }
+
+    /// ADR-018: at most one MSH-12 issue describing how the declared
+    /// version maps to the grammar applied.
+    private func appendVersionIssues(for message: Message, issues: inout [ValidationIssue]) {
+        let location = IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 12)
+        let applied = message.version.grammarVersion
+        // A populated MSH-12 from which no version resolves is reported here
+        // (an empty one is the required-field check's business).
+        let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
+        let reading = Version.reading(
+            msh12: msh12, subcomponentSeparator: message.encodingCharacters.subcomponentSeparator
+        )
+        if case .unresolved(let vid1) = reading {
+            let what = vid1.isEmpty
+                ? "MSH-12 is populated but its version ID (VID.1) is empty"
+                : "MSH-12 version '\(vid1)' is not a version HL7v2Kit models"
+            issues.append(ValidationIssue(
+                severity: .warning,
+                code: .versionNotRecognised(wireValue: vid1),
+                location: location,
+                message: "\(what); validated against the v\(applied.rawValue) grammar instead (ADR-018)"
+            ))
+            return
+        }
+        let declared = message.version
+        guard applied != declared else { return }
+        // Message.version may not come from the wire (ParserOptions.versionOverride,
+        // or a Message built directly); say so, so the note never misquotes MSH-12.
+        let source = reading == .recognised(declared)
+            ? "MSH-12 declares \(declared.rawValue)"
+            : "Message.version is \(declared.rawValue), which MSH-12 does not declare (for example, set by ParserOptions.versionOverride)"
+        issues.append(ValidationIssue(
+            severity: .info,
+            code: .versionGrammarSubstituted(declared: declared, validatedAs: applied),
+            location: location,
+            message: "\(source); HL7v2Kit has no v\(declared.rawValue) grammar and validated this message against v\(applied.rawValue). Differences between the two releases are not verified (ADR-018)"
+        ))
     }
 
     private func appendZSegmentIssue(
@@ -464,8 +555,15 @@ public struct Validator: Sendable {
             fieldIndex: position
         )
 
-        let field = segment.field(position)
-        let isPopulated = field.map { isFieldPopulated($0) } ?? false
+        let parsedField = segment.field(position)
+        let isPopulated = parsedField.map { isFieldPopulated($0) } ?? false
+        // v2.3 / v2.3.1 section 4.4.6: a single-repeat TQ field's repetitions 2..n are its
+        // TQ.6 Priority repeat, not field repetitions (priorityContinuationTrimmed).
+        let field = parsedField.map {
+            Self.priorityContinuationTrimmed($0, grammar: fieldGrammar,
+                                             dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                             version: message.version)
+        }
 
         if options.checkRequiredFields, requiredApplies {
             checkRequired(
@@ -493,6 +591,7 @@ public struct Validator: Sendable {
                 segmentIndex: segmentIndex,
                 message: message,
                 isPopulated: isPopulated,
+                field: field,
                 location: location,
                 issues: &issues
             )
@@ -525,6 +624,23 @@ public struct Validator: Sendable {
                 location: location,
                 issues: &issues
             )
+        }
+
+        // P6-6: LEN, per era (FieldLengthRule).
+        if let field, isPopulated {
+            checkFieldLength(fieldGrammar, field: field, segmentID: grammar.segmentID,
+                             version: message.version,
+                             dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                             encoding: message.encodingCharacters,
+                             location: location, issues: &issues)
+            // P6-13 / P6-14: content after the value of a primitive field or component.
+            checkExtraPrimitiveComponents(fieldGrammar, field: field,
+                                          dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                          version: message.version,
+                                          location: location, issues: &issues)
+            // P6-7: primitive lexical rules (PrimitiveFormat).
+            checkValueFormat(dataType: effectiveDataType(of: fieldGrammar, in: segment), field: field,
+                             version: message.version, location: location, issues: &issues)
         }
 
         if options.checkCodeTables, let field, isPopulated, let tableNumber = fieldGrammar.table {
@@ -565,6 +681,28 @@ public struct Validator: Sendable {
                 message: message,
                 segmentID: grammar.segmentID,
                 segmentIndex: occurrence,
+                issues: &issues
+            )
+            // P4-24: explicit, cited "must not be valued" rules.
+            checkProfileFieldProhibitions(
+                profile: profile,
+                field: field,
+                segment: segment,
+                segmentArrayIndex: segmentIndex,
+                message: message,
+                location: location,
+                issues: &issues
+            )
+            // P4-31: C fields whose condition is the full predicate.
+            checkFullPredicateConditional(
+                profile: profile,
+                fieldGrammar: fieldGrammar,
+                grammarVersion: grammar.version,
+                field: field,
+                segment: segment,
+                segmentArrayIndex: segmentIndex,
+                message: message,
+                location: location,
                 issues: &issues
             )
         }
@@ -659,6 +797,29 @@ public struct Validator: Sendable {
                 if let gate = requirement.condition, !gate.isEmpty,
                    !conditionTriggers(gate, in: segment, segmentIndex: segmentArrayIndex,
                                       message: message, currentSegmentID: segmentID) {
+                    continue
+                }
+                // P3-4: a restated base rule defers to the base check where
+                // the grammar version's composite already requires it.
+                // `message` is the grammar-version copy made in `validate`.
+                // Only defer when that base check actually runs
+                // (`options.checkComponentGrammar`, gating `checkComponents`
+                // above): under `.lenient` it doesn't, so yielding here
+                // would silently drop the finding altogether (P3-5).
+                //
+                // The lookup must key on `fieldGrammar.dataType` — the
+                // field's STATIC declared datatype — not `effectiveDataType`:
+                // `checkComponents` (the base check this defers to) keys on
+                // that same static type. On OBX-5 the static type is always
+                // the "varies" placeholder, which has no component grammar,
+                // so the base check never fires there regardless of the
+                // effective type; deferring on `effectiveDataType` would
+                // silently suppress a future OBX-5-eligible `yieldsToBase`
+                // requirement (P3-5 fix round 1).
+                if options.checkComponentGrammar, requirement.yieldsToBase, requirement.subcomponent == nil,
+                   requiredComponents(forCompositeCode: fieldGrammar.dataType, segmentID: segmentID,
+                                      fieldIndex: fieldIndex, version: message.version)
+                       .contains(where: { $0.index == requirement.component }) {
                     continue
                 }
                 if isComponentPopulated(repetition,
@@ -944,8 +1105,14 @@ public struct Validator: Sendable {
     ///   Result Observation Identifier) and pairs ORC-8 with OBR-54:
     ///   "Condition: Where the message has matching ORC/OBR pairs,
     ///   ORC-8 and OBR-54 Must carry the same value" (§4.5.1.8);
-    ///   "neither one is the same as OBR-29". The grammar-less `.v2_8`
-    ///   gets neither parent leg (ADR-013).
+    ///   "neither one is the same as OBR-29". A `.v2_8` message is
+    ///   validated as v2.8.2 (ADR-018), so it gets the ORC-8/OBR-54 leg.
+    ///   v2.7.1 already repurposes OBR-29 (CH04 §4.5.3.29 p65, Parent
+    ///   Result Observation Identifier) and §4.5.3.54 p74 prints "ORC-8
+    ///   and OBR-54 must carry the same value"; its §4.5.1.8 p37 prints
+    ///   "ORC-8 and OBR-?? Must carry the same value", a text defect
+    ///   resolved by §4.5.3.54 and by the "ORC-8/OBR-54 – parent order"
+    ///   line both sections print.
     /// - ORC-7/OBR-27 (TQ) is deliberately ABSENT: the v2.4 prose says
     ///   the pair "should be valued exactly the same" — advisory, not
     ///   normative — and both fields are withdrawn (`W`) from v2.7.
@@ -958,7 +1125,7 @@ public struct Validator: Sendable {
         OrcObrPair(orcField: 8, obrField: 29, name: "Parent", item: "00222",
                    versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6]),
         OrcObrPair(orcField: 8, obrField: 54, name: "Parent Order", item: "00222",
-                   versions: [.v2_8_2]),
+                   versions: [.v2_7_1, .v2_8_2]),
     ]
 
     /// M8-B1/B2: within each ORC/OBR group, a paired field populated on
@@ -968,7 +1135,9 @@ public struct Validator: Sendable {
     /// must be present in the associated OBR") is
     /// message-shape-dependent (ORU needs no ORC at all) and is not
     /// asserted here. Version-gated pairs (parent) apply only where
-    /// their version set says.
+    /// their version set says. Each ORC's OBR is its associated segment
+    /// (`Message.associatedIndex`): its own group with spans (P8b-17), else
+    /// the first OBR in the ORC walk.
     private func checkOrcObrPairEquality(
         message: Message,
         issues: inout [ValidationIssue]
@@ -980,14 +1149,10 @@ public struct Validator: Sendable {
             obrOccurrenceByIndex[index] = obrOccurrence
         }
         for (index, segment) in message.segments.enumerated() where segment.segmentID == "ORC" {
-            guard let obrIndex = message.segments.indices.first(where: { i in
-                i != index
-                    && message.segments[i].segmentID == "OBR"
-                    && message.orcGroupRange(around: index).contains(i)
-            }) else { continue }
+            guard let obrIndex = message.associatedIndex("OBR", fromIndex: index) else { continue }
             let obr = message.segments[obrIndex]
             for pair in Self.orcObrEqualityPairs {
-                if let versions = pair.versions, !versions.contains(message.version) { continue }
+                if let versions = pair.versions, !versions.contains(message.version.grammarVersion) { continue }
                 guard let orcValue = flattenedField(segment.field(pair.orcField)),
                       let obrValue = flattenedField(obr.field(pair.obrField)),
                       orcValue != obrValue
@@ -1519,13 +1684,27 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard grammar.repeatability == .single else { return }
-        guard field.repetitions.count > 1 else { return }
+        let count = field.repetitions.count
+        guard count > 1 else { return }
+        let severity: IssueSeverity
+        let detail: String
+        switch grammar.repeatability {
+        case .single:
+            severity = .error
+            detail = "is single-cardinality but has \(count) repetitions"
+        case .multiple:
+            // P6-4: a printed RP/# bound, severity set by repetitionBoundSeverity (G4).
+            // Single-cardinality errors above are unaffected by this option.
+            guard let bound = grammar.maxRepetitions, count > bound,
+                  let boundSeverity = options.repetitionBoundSeverity else { return }
+            severity = boundSeverity
+            detail = "allows at most \(bound) repetitions but has \(count)"
+        }
         issues.append(ValidationIssue(
-            severity: .error,
+            severity: severity,
             code: .cardinalityExceeded,
             location: location,
-            message: "Field \(location.pathDescription) ('\(grammar.name)') is single-cardinality but has \(field.repetitions.count) repetitions"
+            message: "Field \(location.pathDescription) ('\(grammar.name)') \(detail)"
         ))
     }
 
@@ -1551,8 +1730,25 @@ public struct Validator: Sendable {
     ///
     /// The same guards as the field-level rule: `IS` and user-defined or open tables are
     /// never enforced; empty and HL7-null values are never checked; a locale's rendering of
-    /// the table widens the check and never narrows it. Versions that print no component
-    /// tables (v2.3 to v2.4) have no grammar, so nothing fires there.
+    /// the table widens the check and never narrows it. A datatype the version gives no
+    /// component grammar (``fieldGrammar(segment:field:dataType:version:)``, which keeps a
+    /// primitive primitive, P5-3, and gives a pre-v2.5 `CM` field the components its own
+    /// definition prints, P5-6) is not checked. The value of an `ID` component is its first
+    /// subcomponent (P6-14; section 2.6.2 a), located at subcomponent 1 when more follow.
+    ///
+    /// A top-level `CE` component bound to one closed HL7 table (P5-6: OBR-15.1 0070,
+    /// OBR-15.4 0163, ERR-1.4 0357, SAC-6 and TCC-3) is checked on its identifier, located at
+    /// subcomponent 1, only when its coding system explicitly names that table, compared
+    /// case-insensitively; its alternate identifier (CE.4, located at subcomponent 4) likewise
+    /// when the alternate coding system CE.6 names it, the alternate components being "defined
+    /// analogously" (v2.4 2.9.3.6): "When an HL7 table is used for a CE data type, the name of coding
+    /// system component is defined as HL7nnnn where nnnn is the HL7 table number" (v2.3 /
+    /// v2.3.1 2.8.3.3, v2.4 2.9.3.3). An empty CE.3 leaves the system unstated and is silent:
+    /// the spec's own ERR-1 example sends `X3L` with none, "the locally-established code"
+    /// (v2.3 / v2.3.1 2.25.2, v2.4 2.18.2). Any other coding system is not that table, so
+    /// OBR-15's "Veterinary medicine may choose the tables supported for the components of
+    /// this field" (v2.4 7.4.1.15) stays silent. The rule applies to any CE component a
+    /// grammar binds to one closed HL7 table, type-level included (v2.5.1 ELD.4 0357).
     private func checkComponentCodeTables(
         dataType: String,
         field: Field,
@@ -1560,7 +1756,11 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard let grammar = DataTypeGrammarTable.grammar(dataType, version: version) else { return }
+        // P6-14: the grammar version, so a 2.8 message reads the v2.8.2 tables directly
+        // (validate(_:) already declares it; this keeps the lookup right on its own).
+        let version = version.grammarVersion
+        guard let grammar = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
+                                              dataType: dataType, version: version) else { return }
 
         /// The closed table an `ID` entry is bound to, or nil when it is not enforceable.
         func closedTable(_ entry: ComponentGrammar) -> HL7Table? {
@@ -1568,9 +1768,16 @@ public struct Validator: Sendable {
                   let table = HL7TableRegistry.table(entry.tables[0], version: version), table.isClosed else { return nil }
             return table
         }
+        /// The closed table a `CE` entry is bound to, or nil (P5-6: OBR-15.1 0070, ERR-1.4 0357).
+        func closedCodedTable(_ entry: ComponentGrammar) -> HL7Table? {
+            guard entry.dataType == "CE", entry.tables.count == 1,
+                  let table = HL7TableRegistry.table(entry.tables[0], version: version), table.isClosed else { return nil }
+            return table
+        }
         func report(_ value: String?, table: HL7Table, name: String, component: Int, subcomponent: Int?, repetition: Int) {
             guard let value, !value.isEmpty, value != "\"\"", !table.contains(value),
-                  HL7TableRegistry.table(table.number, locale: locale)?.contains(value) != true else { return }
+                  HL7TableRegistry.table(table.number, locale: locale)?.contains(value) != true,
+                  options.localTableExtensions[table.number]?.contains(value) != true else { return }
             let where_ = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                        fieldIndex: location.fieldIndex, componentIndex: component,
                                        subcomponentIndex: subcomponent)
@@ -1586,9 +1793,31 @@ public struct Validator: Sendable {
             for entry in grammar.components where repetition.components.count >= entry.index {
                 let component = repetition.components[entry.index - 1]
                 if let table = closedTable(entry) {
-                    report(component.stringValue, table: table, name: entry.name,
-                           component: entry.index, subcomponent: nil, repetition: offset + 1)
-                } else if let nested = DataTypeGrammarTable.grammar(entry.dataType, version: version) {
+                    // P6-14: the value is the first subcomponent (section 2.6.2 a); with
+                    // subcomponents after it, the issue is located at that subcomponent and
+                    // the rest is reported as extraComponentsInPrimitiveField.
+                    let partial = component.subcomponents.dropFirst().contains { !$0.value.isEmpty }
+                    report(component.subcomponents.first?.value, table: table, name: entry.name,
+                           component: entry.index, subcomponent: partial ? 1 : nil, repetition: offset + 1)
+                    continue
+                }
+                if let table = closedCodedTable(entry) {
+                    // A CE names its coding system in CE.3, "HL7nnnn" for an HL7 table. Only
+                    // that explicit claim is checked: an unstated system may carry a local code
+                    // (the spec's own ERR-1 "X3L"), and another system (OBR-15: "Veterinary
+                    // medicine may choose the tables supported for the components of this
+                    // field") is not the HL7 table.
+                    // The alternate triplet CE.4-6 is "defined analogously" (v2.4 2.9.3.6), so
+                    // CE.4 is checked when CE.6 names the table, reported at subcomponent 4.
+                    let parts = component.subcomponents.map(\.value)
+                    func part(_ i: Int) -> String { parts.count >= i ? parts[i - 1] : "" }
+                    for (identifier, system) in [(1, 3), (4, 6)]
+                    where part(system).caseInsensitiveCompare("HL7\(table.number)") == .orderedSame {
+                        report(part(identifier), table: table, name: entry.name,
+                               component: entry.index, subcomponent: identifier, repetition: offset + 1)
+                    }
+                }
+                if let nested = Self.componentGrammar(entry.dataType, version: version) {
                     for inner in nested.components where component.subcomponents.count >= inner.index {
                         guard let table = closedTable(inner) else { continue }
                         report(component.subcomponents[inner.index - 1].value, table: table, name: inner.name,
@@ -1607,21 +1836,33 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard grammar.dataType == "ID",
+        // A field whose own prose leaves the table open (P2-15) is never checked, even
+        // when other fields cite the same table "for valid values".
+        guard grammar.dataType == "ID", !grammar.tableOpen,
               let table = HL7TableRegistry.table(tableNumber, version: version),
               table.isClosed else { return }
         for (offset, repetition) in field.repetitions.enumerated() where isRepetitionPopulated(repetition) {
-            guard let value = repetition.stringValue, value != "\"\"", !table.contains(value) else { continue }
+            // P6-13: a primitive field's value is its first component (a recipient ignores
+            // the rest, v2.5.1 / v2.8.2 section 2.6.2 a); the extras are reported apart.
+            guard let value = Self.primitiveValue(repetition), !value.isEmpty, value != "\"\"",
+                  !table.contains(value) else { continue }
+            let partial = Self.hasExtraPrimitiveContent(repetition)
             // A localisation may print its own rendering of the table (AU ADRM-2021 back-ports
             // UNICODE UTF-8 into v2.4 Table 0211). It WIDENS the check as a union with the base
             // version's rows, so it can never reject what the message's own version prints;
             // narrowing is the profile's job, not this rule's.
             if HL7TableRegistry.table(tableNumber, locale: locale)?.contains(value) == true { continue }
+            // A caller-declared local extension (ValidationOptions.localTableExtensions) also
+            // widens the check, same as a locale rendering: every supported version allows an
+            // HL7 table to be extended locally (v2.3 / v2.3.1 CH2 sec 2.6.6, v2.4 CH02 sec 2.7.6,
+            // v2.5.1 / v2.6 CH02 sec 2.5.3.6, v2.8.2 CH02C 2.C.1.2).
+            if options.localTableExtensions[tableNumber]?.contains(value) == true { continue }
             issues.append(ValidationIssue(
                 severity: .error,
                 code: .valueNotInTable(table: table.number),
-                location: location,
-                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
+                location: partial ? IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
+                                                  fieldIndex: location.fieldIndex, componentIndex: 1) : location,
+                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) \(partial ? "first component " : "")value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
             ))
         }
     }
@@ -1646,7 +1887,7 @@ public struct Validator: Sendable {
     /// Composite types HL7v2Kit doesn't have typed metadata for skip
     /// silently in both dispatches.
     /// Conditional components (M26, ADR-017): for every populated repetition of a field
-    /// whose datatype has a component grammar, a component carrying a `condition` must be
+    /// whose datatype has a component grammar (``componentGrammar(_:version:)``), a component carrying a `condition` must be
     /// populated when that predicate holds over its sibling components. One level of
     /// nesting is descended, as for the code-table check (the CNN inside NDL). Reported at
     /// the component with ``IssueCode/conditionalComponentMissing`` at
@@ -1660,7 +1901,8 @@ public struct Validator: Sendable {
         version: Version,
         issues: inout [ValidationIssue]
     ) {
-        guard let dataType = DataTypeGrammarTable.grammar(grammar.dataType, version: version) else { return }
+        guard let dataType = Self.fieldGrammar(segment: segmentID, field: fieldIndex, dataType: grammar.dataType,
+                                               version: version) else { return }
         let repeated = field.repetitions.filter(isRepetitionPopulated).count > 1
         func check(_ entries: [ComponentGrammar], values: [String?], typeName: String,
                    component: Int?, subcomponent: (Int) -> Int?) {
@@ -1691,7 +1933,7 @@ public struct Validator: Sendable {
             let values = repetition.components.map(\.stringValue)
             check(dataType.components, values: values, typeName: grammar.dataType, component: nil, subcomponent: { _ in nil })
             for entry in dataType.components where repetition.components.count >= entry.index {
-                guard let nested = DataTypeGrammarTable.grammar(entry.dataType, version: version),
+                guard let nested = Self.componentGrammar(entry.dataType, version: version),
                       nested.components.contains(where: { $0.condition != nil || $0.conformanceCondition != nil }) else { continue }
                 let subs = repetition.components[entry.index - 1].subcomponents.map { Optional($0.value) }
                 check(nested.components, values: subs, typeName: "\(grammar.dataType).\(entry.index) (\(entry.dataType))",
@@ -1711,7 +1953,8 @@ public struct Validator: Sendable {
     ) {
         checkConditionalComponents(grammar, field: field, fieldIndex: fieldIndex, segmentID: segmentID,
                                    segmentIndex: segmentIndex, version: version, issues: &issues)
-        let required = requiredComponents(forCompositeCode: grammar.dataType, version: version)
+        let required = requiredComponents(forCompositeCode: grammar.dataType, segmentID: segmentID,
+                                          fieldIndex: fieldIndex, version: version)
         let requiredSet = requiredComponentSet(forCompositeCode: grammar.dataType)
         guard !required.isEmpty || requiredSet != nil else { return }
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
@@ -1745,7 +1988,8 @@ public struct Validator: Sendable {
                         severity: options.requiredComponentSeverity,
                         code: .requiredComponentMissing,
                         location: location,
-                        message: "OR-rule violated in \(grammar.dataType) field \(location.pathDescription) ('\(grammar.name)'): expected \(set.description) populated"
+                        message: "OR-rule violated in \(grammar.dataType) field \(location.pathDescription) ('\(grammar.name)'): "
+                            + set.violationMessage(populatedIndices: populatedIndices, compositeCode: grammar.dataType)
                     ))
                 }
             }
@@ -1765,11 +2009,16 @@ public struct Validator: Sendable {
     /// error against the spec (req #4). The grammar also carries what a fixed list could
     /// not: CX.5, PT.1, VID.1 and XTN.3 become `R` in v2.8.2.
     ///
-    /// v2.3 to v2.4 define components in prose and print no optionality, and the
-    /// grammar-less v2.8 has no tables at all, so nothing is required of them here.
-    /// `RE` (required but may be empty) is, by its own definition, never a missing value.
-    private func requiredComponents(forCompositeCode code: String, version: Version) -> [RequiredComponent] {
-        guard let grammar = DataTypeGrammarTable.grammar(code, version: version) else { return [] }
+    /// v2.3 to v2.4 define components in prose and print no optionality, so nothing is
+    /// required of them here; nor of a field-local `CM` grammar (P5-6), whose Components
+    /// line prints none either, though it resolves through the same
+    /// ``fieldGrammar(segment:field:dataType:version:)`` as every other composite check. `.v2_8` is validated as v2.8.2 (ADR-018), so it is checked
+    /// against that table like any other version. `RE` (required but may be empty) is,
+    /// by its own definition, never a missing value.
+    func requiredComponents(forCompositeCode code: String, segmentID: String, fieldIndex: Int,
+                                    version: Version) -> [RequiredComponent] {
+        guard let grammar = Self.fieldGrammar(segment: segmentID, field: fieldIndex, dataType: code,
+                                              version: version) else { return [] }
         return grammar.components
             .filter { $0.optionalityCode == "R" }
             .map { RequiredComponent(index: $0.index, name: $0.name) }
@@ -1847,6 +2096,9 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
+        // P8b-17: a formerly gated field on a message with no group spans.
+        if case .gated(let fields) = message.groupScoping,
+           fields.contains("\(location.segmentID)-\(grammar.index)") { return }
         guard grammar.optionality == .conditional,
               !isPopulated,
               let condition = grammar.condition,
@@ -1873,32 +2125,48 @@ public struct Validator: Sendable {
     /// `checkConditional`. "PRT-6 may only be valued if PRT-5 is
     /// valued" encodes as `prohibitedWhen: "PRT-5 empty"`. Same
     /// fail-safe semantics: an unresolvable predicate never fires.
-    private func checkProhibition(
+    /// Each of `grammar.additionalProhibitions` is evaluated the same
+    /// way at its own severity, and each rule that holds reports its
+    /// own issue (P4-21). A rule with `permitsNull` skips a field that
+    /// holds only the HL7 null; every other rule treats `""` as a
+    /// value (P4-26). `field` is required (not defaulted) so a caller
+    /// cannot drop the exemption by omission; the null walk over it
+    /// runs only when some rule has `permitsNull`, and a `nil` field
+    /// carries no non-null value. Internal so tests can drive it with
+    /// a hand-built grammar.
+    func checkProhibition(
         _ grammar: FieldGrammar,
         segment: Segment,
         segmentIndex: Int,
         message: Message,
         isPopulated: Bool,
+        field: Field?,
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard isPopulated,
-              let prohibition = grammar.prohibitedWhen,
-              !prohibition.isEmpty,
-              conditionTriggers(
-                prohibition,
+        guard isPopulated else { return }
+        var rules = grammar.additionalProhibitions
+        if let prohibition = grammar.prohibitedWhen {
+            rules.insert(FieldProhibition(condition: prohibition, severity: grammar.prohibitedSeverity), at: 0)
+        }
+        let hasNonNullValue = !rules.contains(where: \.permitsNull)
+            || field.map { carriesNonNullValue($0) } ?? false
+        for rule in rules where !rule.condition.isEmpty
+            && (hasNonNullValue || !rule.permitsNull)
+            && conditionTriggers(
+                rule.condition,
                 in: segment,
                 segmentIndex: segmentIndex,
                 message: message,
                 currentSegmentID: location.segmentID
-              )
-        else { return }
-        issues.append(ValidationIssue(
-            severity: .error,
-            code: .conditionalFieldProhibited,
-            location: location,
-            message: "Field \(location.pathDescription) ('\(grammar.name)') is populated but prohibited while '\(prohibition)' holds"
-        ))
+            ) {
+            issues.append(ValidationIssue(
+                severity: rule.severity,
+                code: .conditionalFieldProhibited,
+                location: location,
+                message: "Field \(location.pathDescription) ('\(grammar.name)') is populated but prohibited while '\(rule.condition)' holds"
+            ))
+        }
     }
 
     /// Evaluate a condition predicate against a single segment.
@@ -1914,12 +2182,13 @@ public struct Validator: Sendable {
     /// <predicate>    := <or-expr>
     /// <or-expr>      := <and-expr> (" OR " <and-expr>)*
     /// <and-expr>     := <atom> (" AND " <atom>)*
-    /// <atom>         := <field-atom> | <segment-atom>
+    /// <atom>         := <field-atom> | <segment-atom> | <repeat-atom>
     /// <field-atom>   := <fieldref> " " <op>
     /// <fieldref>     := <segmentID> "-" <int> <subcomp-tail>?   // ADR-010
     /// <subcomp-tail> := "." <int> | "." <int> "." <int>
     /// <segment-atom> := <segmentID> " " <segment-op>            // ADR-010
     /// <segment-op>   := "present" | "absent"
+    /// <repeat-atom>  := ("anyRepeat(" | "noRepeat(") <fieldref> ") " <op>   // M6-B-1, P4
     /// <op>           := "populated"
     ///                 | "empty"
     ///                 | "= <value>"
@@ -1953,10 +2222,17 @@ public struct Validator: Sendable {
     /// HL7au:000008.1). `populated` / `empty` still evaluate the
     /// whole field; slot-specific presence checks should use `= v` /
     /// `!= v` against the expected scalar.
+    /// P4 adds the lookahead referent `nextSegmentID(<ID>|...)` (next segment ID after skipping the listed IDs; "" at the end of the message).
+    /// It always skips Z-segments as well, because they are site extensions
+    /// outside the standard structure (ADR-003) and may appear anywhere.
     ///
     /// Internal (not private) access so the v0.7 production unit tests
     /// can call the evaluator directly via `@testable import`. Not
     /// part of the public API.
+    ///
+    /// P4-31 (ADR-021): this is exactly `conditionTruth(...) == .true`.
+    /// An unknown condition does not trigger, which is the v0.2-V1
+    /// fail-safe every "required when" caller relies on.
     func conditionTriggers(
         _ condition: String,
         in segment: Segment,
@@ -1964,6 +2240,27 @@ public struct Validator: Sendable {
         message: Message,
         currentSegmentID: String
     ) -> Bool {
+        conditionTruth(
+            condition,
+            in: segment,
+            segmentIndex: segmentIndex,
+            message: message,
+            currentSegmentID: currentSegmentID
+        ) == .true
+    }
+
+    /// The three-state core (P4-31, ADR-021): `.true`, `.false`, or
+    /// `.unknown` when the message cannot decide the condition. Only a
+    /// caller that acts on a definitely false condition (the AU
+    /// HL7au:00060.4 full-predicate check) needs more than
+    /// ``conditionTriggers(_:in:segmentIndex:message:currentSegmentID:)``.
+    func conditionTruth(
+        _ condition: String,
+        in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
+        currentSegmentID: String
+    ) -> ConditionTruth {
         evaluateOrExpression(
             condition,
             in: segment,
@@ -1973,49 +2270,33 @@ public struct Validator: Sendable {
         )
     }
 
-    /// Top-level OR: split on `" OR "` at the topmost level. Any clause
-    /// evaluating true short-circuits to true.
+    /// OR of AND clauses (``ConditionLanguage/clauses(_:)``), combined by
+    /// Kleene's connectives. Short-circuits like the DNF it is: a clause
+    /// stops at its first false atom, the whole at its first true clause.
     private func evaluateOrExpression(
         _ expression: String,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
-    ) -> Bool {
-        for clause in expression.components(separatedBy: " OR ") {
-            if evaluateAndExpression(
-                clause,
-                in: segment,
-                segmentIndex: segmentIndex,
-                message: message,
-                currentSegmentID: currentSegmentID
-            ) {
-                return true
+    ) -> ConditionTruth {
+        var result = ConditionTruth.false
+        for atoms in ConditionLanguage.clauses(expression) {
+            var clause = ConditionTruth.true
+            for atom in atoms {
+                clause = .and(clause, evaluateAtom(
+                    atom,
+                    in: segment,
+                    segmentIndex: segmentIndex,
+                    message: message,
+                    currentSegmentID: currentSegmentID
+                ))
+                if clause == .false { break }
             }
+            result = .or(result, clause)
+            if result == .true { break }
         }
-        return false
-    }
-
-    /// AND: every conjunct must evaluate true.
-    private func evaluateAndExpression(
-        _ expression: String,
-        in segment: Segment,
-        segmentIndex: Int,
-        message: Message,
-        currentSegmentID: String
-    ) -> Bool {
-        for atom in expression.components(separatedBy: " AND ") {
-            if !evaluateAtom(
-                atom,
-                in: segment,
-                segmentIndex: segmentIndex,
-                message: message,
-                currentSegmentID: currentSegmentID
-            ) {
-                return false
-            }
-        }
-        return true
+        return result
     }
 
     /// A referent resolved to a scalar string value plus a "is this
@@ -2028,7 +2309,9 @@ public struct Validator: Sendable {
         let isPopulated: Bool
     }
 
-    /// Single atomic predicate. Today (v0.7-S2) the referent forms are:
+    /// Single atomic predicate, classified by
+    /// ``ConditionLanguage/parseAtom(_:)`` (the same parse
+    /// `Validator.conditionParseErrors(_:)` checks, P4-25). The forms:
     ///
     /// 1. **Same-segment field ref** — `<currentSegmentID>-<index>`.
     /// 2. **Cross-segment field ref** — `<otherSegmentID>-<index>`,
@@ -2042,225 +2325,187 @@ public struct Validator: Sendable {
     ///    predicate to every repetition of the field with ∃-semantics
     ///    (M6-B-1; repeating fields like PRD-1 need more than the
     ///    first-repetition scalar convention).
+    /// 6. **No-repetition atom** — `noRepeat(<fieldref>)` is the
+    ///    universal negation of `anyRepeat`: true iff the field has a
+    ///    populated repetition and no repetition satisfies the
+    ///    predicate (P4; SPM-13's "SPM-11 has no G repetition").
+    /// 7. **Segment-presence atom** — `<segmentID> present` / `absent`
+    ///    (ADR-010).
     ///
-    /// All forms are evaluated against the same predicate set
-    /// (`populated` / `empty` / `= v` / `!= v` / `in (...)` /
-    /// `not in (...)`). Any unresolvable referent fails safe — the
-    /// atom returns `false` without firing the conditional.
+    /// An atom that does not parse, or whose referent cannot be
+    /// resolved, is `.unknown` (P4-31, ADR-021). The two-state
+    /// `conditionTriggers` reads that as "does not fire", the v0.2-V1
+    /// fail-safe.
     private func evaluateAtom(
         _ atom: String,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
-    ) -> Bool {
-        let trimmed = atom.trimmingCharacters(in: .whitespaces)
+    ) -> ConditionTruth {
+        guard case .success(let parsed) = ConditionLanguage.parseAtom(atom) else { return .unknown }
+        switch parsed {
+        case .segmentPresence(let id, let present):
+            // True iff a segment of that ID exists in the current
+            // segment's ORC/OBR group. Distinct from `<fieldref>
+            // populated` / `empty`, which fail safe when the peer is
+            // missing and so conflate "peer absent" with "peer field empty".
+            return ConditionTruth(message.segmentExists(id, inGroupOf: segmentIndex) == present)
 
-        // ADR-010 segment-presence atom (`<segmentID> present` /
-        // `<segmentID> absent`) — recognised before the general
-        // referent/predicate dispatch. Falls through when the shape
-        // doesn't match, so field refs / position atoms / message-
-        // context nouns continue to parse via `resolveReferent`.
-        if let presence = evaluateSegmentPresenceAtom(
-            trimmed,
-            segmentIndex: segmentIndex,
-            message: message
-        ) {
-            return presence
-        }
-
-        let parts = trimmed.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true)
-                            .map(String.init)
-        guard parts.count == 2 else { return false }
-        let referent = parts[0]
-        let predicate = parts[1]
-
-        // M6-B-1 any-repetition atom: `anyRepeat(<fieldref>) <predicate>`.
-        // The scalar field-ref convention reads the FIRST repetition
-        // only, so `PRD-1 = AP` misses a spec-compliant `RP~AP`.
-        // `anyRepeat` applies the predicate to EVERY repetition's slot
-        // with ∃-semantics: true iff any repetition satisfies it.
-        // Fail-safe: a malformed inner ref or unresolvable peer
-        // evaluates false (v0.2-V1).
-        if referent.hasPrefix("anyRepeat("), referent.hasSuffix(")") {
-            let inner = String(referent.dropFirst("anyRepeat(".count).dropLast())
+        case .anyRepeat(let path, let predicate):
+            // M6-B-1: the scalar field-ref convention reads the FIRST
+            // repetition only, so `PRD-1 = AP` misses a spec-compliant
+            // `RP~AP`. ∃-semantics over every repetition's slot. An
+            // unresolvable peer is unknown, and so is a field with no
+            // populated slot (an empty domain, as for `noRepeat` below)
+            // unless an empty slot itself satisfies the predicate
+            // (`anyRepeat(X) empty`). P4-31.
             guard let slots = resolveRepetitionSlots(
-                inner,
+                path,
                 in: segment,
                 segmentIndex: segmentIndex,
                 message: message,
                 currentSegmentID: currentSegmentID
-            ) else { return false }
-            return slots.contains { applyPredicate(predicate, to: $0) }
-        }
+            ) else { return .unknown }
+            let found = ConditionTruth.any(slots.map { applyPredicate(predicate, to: $0) })
+            guard found == .true || slots.contains(where: { $0.isPopulated }) else { return .unknown }
+            return found
 
-        guard let resolved = resolveReferent(
-            referent,
-            in: segment,
-            segmentIndex: segmentIndex,
-            message: message,
-            currentSegmentID: currentSegmentID
-        ) else { return false }
+        case .noRepeat(let path, let predicate):
+            // P4 universal negation: true iff the field has at least one
+            // populated repetition slot and NO slot satisfies the
+            // predicate. SPM-13 "would only be valued if the specimen
+            // role attribute has the value G" needs "no repetition of
+            // SPM-11 is G", which `anyRepeat(...) != G` cannot state (it
+            // is true for `P~G`). An absent or all-empty field is unknown:
+            // there is no definite value to negate (P4-31; the v0.2-V1
+            // fail-safe). Over a populated domain a slot the predicate
+            // cannot judge counts as not matching, as it always has.
+            guard let slots = resolveRepetitionSlots(
+                path,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: currentSegmentID
+            ), slots.contains(where: { $0.isPopulated }) else { return .unknown }
+            return ConditionTruth(!slots.contains { applyPredicate(predicate, to: $0) == .true })
 
-        return applyPredicate(predicate, to: resolved)
-    }
-
-    /// Recognise the ADR-010 segment-presence atom shape
-    /// `<segmentID> present` / `<segmentID> absent`, where `<segmentID>`
-    /// is a bare 3-letter uppercase HL7 segment ID (no dash, no dot,
-    /// no parenthesis). Returns `nil` for any other shape so the
-    /// dispatcher falls through to the field-ref / position-atom /
-    /// message-context productions.
-    ///
-    /// Semantics: `present` is true iff a segment of that ID exists in
-    /// the current segment's ORC/OBR group (per
-    /// `Message.segmentExists(_:inGroupOf:)`); `absent` is the logical
-    /// NOT. Distinct from `<fieldref> populated` / `empty` — the field
-    /// productions fail safe to `false` when the peer segment is
-    /// missing, conflating "peer absent" with "peer field empty". The
-    /// segment-presence atom disentangles them.
-    private func evaluateSegmentPresenceAtom(
-        _ atom: String,
-        segmentIndex: Int,
-        message: Message
-    ) -> Bool? {
-        let parts = atom.split(separator: " ", omittingEmptySubsequences: true).map(String.init)
-        guard parts.count == 2 else { return nil }
-        let id = parts[0]
-        let op = parts[1]
-        // HL7 segment IDs are 3 characters, ASCII uppercase alphanumeric
-        // (e.g. MSH, ORC, OBR, DG1, IN1, PV1). This filter rejects
-        // field refs (`OBR-29` — contains a dash), position atoms
-        // (`previousSegment(ORC)` — contains parens / digits after
-        // paren), and message-context nouns (`messageCode` — lowercase).
-        guard id.count == 3,
-              id.allSatisfy({ $0.isASCII && ($0.isUppercase || $0.isNumber) })
-        else { return nil }
-        switch op {
-        case "present":
-            return message.segmentExists(id, inGroupOf: segmentIndex)
-        case "absent":
-            return !message.segmentExists(id, inGroupOf: segmentIndex)
-        default:
-            return nil
+        case .value(let referent, let predicate):
+            guard let resolved = resolveReferent(
+                referent,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: currentSegmentID
+            ) else { return .unknown }
+            return applyPredicate(predicate, to: resolved)
         }
     }
 
-    /// Dispatch the referent to the production that recognises it.
-    /// Returns `nil` when no production matches — the atom then fails
-    /// safe per the v0.2-V1 invariant.
+    /// Resolve a classified referent. Returns `nil` when the target
+    /// cannot be located — the atom then fails safe per the v0.2-V1
+    /// invariant.
     private func resolveReferent(
-        _ referent: String,
+        _ referent: ConditionReferent,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
     ) -> ResolvedReferent? {
-        // 1. Message-context atoms (literal nouns, no dash).
+        func scalar(_ v: String?) -> ResolvedReferent {
+            ResolvedReferent(raw: v ?? "", isPopulated: !(v ?? "").isEmpty)
+        }
+        func flag(_ on: Bool) -> ResolvedReferent {
+            ResolvedReferent(raw: on ? "true" : "", isPopulated: on)
+        }
         switch referent {
-        case "messageCode":
-            let v = message.messageCode ?? ""
-            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
-        case "messageStructure":
-            let v = message.messageStructure ?? ""
-            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
-        case "triggerEvent":
-            let v = message.triggerEvent ?? ""
-            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
-        case "auPathologySender":
-            // M29 — a caller assertion, not a wire property (see ValidationOptions).
-            return ResolvedReferent(raw: options.auPathologySender ? "true" : "", isPopulated: options.auPathologySender)
-        case "auDisplayIntended":
-            // M30 — likewise.
-            return ResolvedReferent(raw: options.auDisplayIntended ? "true" : "", isPopulated: options.auDisplayIntended)
-        case "auNASHTransport":
-            // M32 — likewise ("when using SMD with NASH certificates").
-            return ResolvedReferent(raw: options.auNASHTransport ? "true" : "", isPopulated: options.auNASHTransport)
-        default:
-            break
-        }
+        case .messageCode: return scalar(message.messageCode)
+        case .messageStructure: return scalar(message.messageStructure)
+        case .triggerEvent: return scalar(message.triggerEvent)
+        // M29 / M30 / M32 — caller assertions, not wire properties (see
+        // ValidationOptions). M32 is "when using SMD with NASH certificates".
+        case .auPathologySender: return flag(options.auPathologySender)
+        case .auDisplayIntended: return flag(options.auDisplayIntended)
+        case .auNASHTransport: return flag(options.auNASHTransport)
 
-        // 2. Position atoms — `previousSegment(ID).<fieldref>` and
-        //    `associatedSegment(ID).<fieldref>`.
-        if let resolved = resolvePositionReferent(
-            referent,
-            segmentIndex: segmentIndex,
-            message: message
-        ) {
-            return resolved
-        }
+        case .nextSegmentID(let skip):
+            // P4 lookahead: the ID of the first segment after the current
+            // one whose ID is not in the skip list and does not start with
+            // "Z", or "" at the end of the message. Z-segments are always
+            // skipped: they are site extensions outside the standard
+            // structure (ADR-003) and may appear anywhere, so one between
+            // chained TQ1s must not stop the lookahead short. TQ1-12 "If
+            // the TQ1 segment is repeated ... indicating the sequencing of
+            // the following TQ1 segment" encodes as `nextSegmentID(TQ2) =
+            // TQ1`: the timing group is {TQ1 [{TQ2}]}, so only TQ2 may sit
+            // between chained TQ1s.
+            var next = segmentIndex + 1
+            while next < message.segments.count,
+                  skip.contains(message.segments[next].segmentID)
+                    || message.segments[next].segmentID.hasPrefix("Z") {
+                next += 1
+            }
+            let id = next < message.segments.count ? message.segments[next].segmentID : ""
+            return scalar(id)
 
-        // 3. Field ref — `<segmentID>-<int>`. Same-segment uses the
-        //    current segment; cross-segment uses associatedSegment.
-        return resolveFieldRef(
-            referent,
-            in: segment,
-            segmentIndex: segmentIndex,
-            message: message,
-            currentSegmentID: currentSegmentID
-        )
+        // Position atoms (ADR-008): a missing preceding / associated
+        // segment of that ID fails safe. The ref's own segment-ID part is
+        // not re-checked against the target, which was resolved positionally.
+        case .previousSegment(let id, let path):
+            guard let target = message.previousSegment(id, beforeIndex: segmentIndex) else { return nil }
+            return readField(target, fieldIndex: path.field,
+                             componentIndex: path.component, subcomponentIndex: path.subcomponent)
+        case .associatedSegment(let id, let path):
+            guard let target = message.associatedSegment(id, fromIndex: segmentIndex) else { return nil }
+            return readField(target, fieldIndex: path.field,
+                             componentIndex: path.component, subcomponentIndex: path.subcomponent)
+
+        case .field(let path):
+            // Same-segment reads directly; cross-segment resolves the peer
+            // via `Message.associatedSegment`, and an unlocatable peer
+            // fails safe (ADR-008) rather than reading as "empty".
+            guard let target = targetSegment(path, in: segment, segmentIndex: segmentIndex,
+                                             message: message, currentSegmentID: currentSegmentID)
+            else { return nil }
+            return readField(target, fieldIndex: path.field,
+                             componentIndex: path.component, subcomponentIndex: path.subcomponent)
+        }
     }
 
-    /// `<segmentID>-<int>`. When segmentID matches the current
-    /// segment, reads directly; otherwise resolves the peer via
-    /// `Message.associatedSegment`.
-    ///
-    /// Fail-safe semantic per ADR-008: when a cross-segment peer
-    /// cannot be located, the atom returns `nil` so the predicate
-    /// evaluates to `false` instead of treating the absent peer as
-    /// an "empty" value. Same-segment refs always have a segment in
-    /// hand and never trip this branch.
-    private func resolveFieldRef(
-        _ referent: String,
+    /// The segment a field-ref reads: the current segment when the IDs
+    /// match, otherwise the associated peer (`nil` when there is none).
+    private func targetSegment(
+        _ path: Path,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
-    ) -> ResolvedReferent? {
-        guard let path = parseDSLFieldRef(referent) else { return nil }
-        let targetSegment: Segment
-        if path.segmentID == currentSegmentID {
-            targetSegment = segment
-        } else {
-            guard let peer = message.associatedSegment(path.segmentID, fromIndex: segmentIndex)
-            else { return nil }
-            targetSegment = peer
-        }
-        return readField(
-            targetSegment,
-            fieldIndex: path.field,
-            componentIndex: path.component,
-            subcomponentIndex: path.subcomponent
-        )
+    ) -> Segment? {
+        path.segmentID == currentSegmentID
+            ? segment
+            : message.associatedSegment(path.segmentID, fromIndex: segmentIndex)
     }
 
     /// Resolve every repetition of a field-ref to its own
     /// `(raw, isPopulated)` pair at the ref's component/subcomponent
-    /// slot, for the `anyRepeat(...)` atom (M6-B-1). Same
-    /// same-segment / cross-segment resolution as `resolveFieldRef`;
-    /// `isPopulated` here is per-repetition-slot (the slot value is
+    /// slot, for the `anyRepeat(...)` / `noRepeat(...)` atoms (M6-B-1).
+    /// Same same-segment / cross-segment resolution as a plain field
+    /// ref; `isPopulated` here is per-repetition-slot (the slot value is
     /// non-empty), unlike the whole-field convention of `readField` —
     /// under ∃-semantics a field-scope answer would be meaningless.
-    /// Returns `nil` on a malformed ref or unresolvable peer
-    /// (fail-safe); an absent field resolves to `[]`, which no
-    /// predicate matches.
+    /// Returns `nil` on an unresolvable peer; an absent field resolves
+    /// to `[]`. Both make the quantifier `.unknown` (P4-31).
     private func resolveRepetitionSlots(
-        _ fieldRef: String,
+        _ path: Path,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
     ) -> [ResolvedReferent]? {
-        guard let path = parseDSLFieldRef(fieldRef) else { return nil }
-        let targetSegment: Segment
-        if path.segmentID == currentSegmentID {
-            targetSegment = segment
-        } else {
-            guard let peer = message.associatedSegment(path.segmentID, fromIndex: segmentIndex)
-            else { return nil }
-            targetSegment = peer
-        }
-        guard let field = targetSegment.field(path.field) else { return [] }
+        guard let target = targetSegment(path, in: segment, segmentIndex: segmentIndex,
+                                         message: message, currentSegmentID: currentSegmentID)
+        else { return nil }
+        guard let field = target.field(path.field) else { return [] }
         let comp = (path.component ?? 1) - 1
         let sub = (path.subcomponent ?? 1) - 1
         return field.repetitions.map { rep in
@@ -2272,78 +2517,6 @@ public struct Validator: Sendable {
             }()
             return ResolvedReferent(raw: raw, isPopulated: !raw.isEmpty)
         }
-    }
-
-    /// Parse a DSL field-ref (`SEG-f`, `SEG-f.c`, `SEG-f.c.s`) via the
-    /// shared ``Path`` parser, then reject the Path-only axes the
-    /// condition DSL grammar excludes: segment-index (`SEG[N]-f`) and
-    /// repetition (`SEG-f~r`) forms return `nil` so the predicate
-    /// evaluates fail-safe false (v0.2-V1 invariant; pinned by the
-    /// CrossSegmentDSLTests R4-C1 rows). ADR-010 Extension 3.
-    private func parseDSLFieldRef(_ referent: String) -> Path? {
-        guard let path = try? Path(referent),
-              path.segmentIndex == nil,
-              path.repetition == nil
-        else { return nil }
-        return path
-    }
-
-    /// Recognise `previousSegment(<ID>).<fieldref>` and
-    /// `associatedSegment(<ID>).<fieldref>`. Returns `nil` for any
-    /// other shape so the dispatcher falls through to the next
-    /// production.
-    ///
-    /// Fail-safe semantic per ADR-008: a position lookup returning
-    /// `nil` (no preceding / associated segment of that ID) makes the
-    /// atom return `nil` so the predicate evaluates to `false`.
-    private func resolvePositionReferent(
-        _ referent: String,
-        segmentIndex: Int,
-        message: Message
-    ) -> ResolvedReferent? {
-        if let (id, fieldRef) = parsePositionForm(referent, function: "previousSegment") {
-            guard let target = message.previousSegment(id, beforeIndex: segmentIndex)
-            else { return nil }
-            return readFieldRef(fieldRef, in: target)
-        }
-        if let (id, fieldRef) = parsePositionForm(referent, function: "associatedSegment") {
-            guard let target = message.associatedSegment(id, fromIndex: segmentIndex)
-            else { return nil }
-            return readFieldRef(fieldRef, in: target)
-        }
-        return nil
-    }
-
-    /// Parse `<function>(<ID>).<fieldref>` into `(<ID>, <fieldref>)`.
-    /// Returns `nil` if the shape doesn't match.
-    private func parsePositionForm(
-        _ referent: String,
-        function: String
-    ) -> (id: String, fieldRef: String)? {
-        let prefix = "\(function)("
-        guard referent.hasPrefix(prefix) else { return nil }
-        let afterPrefix = referent.dropFirst(prefix.count)
-        guard let closeIdx = afterPrefix.firstIndex(of: ")") else { return nil }
-        let id = String(afterPrefix[..<closeIdx])
-        let after = afterPrefix[afterPrefix.index(after: closeIdx)...]
-        guard after.hasPrefix(".") else { return nil }
-        let fieldRef = String(after.dropFirst())
-        return (id, fieldRef)
-    }
-
-    /// Parse `<segmentID>-<int>[.<int>[.<int>]]` and read the named
-    /// field / component / subcomponent from `segment`. The ref's own
-    /// segment-ID part is not re-checked against `segment` — the caller
-    /// already resolved the target positionally. Returns `nil` if the
-    /// field-ref shape is malformed. Callers guarantee a non-nil segment.
-    private func readFieldRef(_ fieldRef: String, in segment: Segment) -> ResolvedReferent? {
-        guard let path = parseDSLFieldRef(fieldRef) else { return nil }
-        return readField(
-            segment,
-            fieldIndex: path.field,
-            componentIndex: path.component,
-            subcomponentIndex: path.subcomponent
-        )
     }
 
     /// Project a `Segment` + 1-based field index (and optional
@@ -2383,68 +2556,37 @@ public struct Validator: Sendable {
         return ResolvedReferent(raw: raw, isPopulated: isPopulated)
     }
 
-    /// Apply the predicate clause (`populated` / `empty` / `= v` /
-    /// `!= v` / `in (…)` / `not in (…)` / `startsWith v` /
-    /// `not startsWith v`) to a resolved referent.
-    private func applyPredicate(_ predicate: String, to resolved: ResolvedReferent) -> Bool {
-        if predicate == "populated" { return resolved.isPopulated }
-        if predicate == "empty"     { return !resolved.isPopulated }
-        if predicate.hasPrefix("= ") {
-            return resolved.raw == String(predicate.dropFirst(2))
-        }
-        if predicate.hasPrefix("!= ") {
-            return resolved.raw != String(predicate.dropFirst(3))
-        }
-        // M6-B-2 prefix ops: ADRM-2021 reserves everything beginning
-        // `Z` (HL7au:000020 message/trigger codes, 000023.1 segments),
-        // which no equality or value-set clause can state. `startsWith`
-        // on an empty referent is false (an absent value begins with
-        // nothing); `not startsWith` mirrors `not in` — it asserts only
-        // on populated referents, per the fail-safe rule.
-        // M8-D: numeric ordering comparison — `> <number>`. Needed for
-        // conditions like PAC-2's "If SHP-8 Number of Packages in
-        // Shipment is greater than 1", which no equality or value-set
-        // clause can state. Both sides must parse as numbers; a
-        // non-numeric or empty referent fails safe to false (v0.2-V1).
-        if predicate.hasPrefix("> ") {
-            guard let threshold = Double(predicate.dropFirst(2)),
-                  let value = Double(resolved.raw)
-            else { return false }
-            return value > threshold
-        }
-        if predicate.hasPrefix("startsWith ") {
-            let prefix = String(predicate.dropFirst("startsWith ".count))
-            return !prefix.isEmpty && resolved.raw.hasPrefix(prefix)
-        }
-        if predicate.hasPrefix("not startsWith ") {
-            let prefix = String(predicate.dropFirst("not startsWith ".count))
-            guard resolved.isPopulated, !prefix.isEmpty else { return false }
-            return !resolved.raw.hasPrefix(prefix)
-        }
-        if predicate.hasPrefix("in (") && predicate.hasSuffix(")") {
-            let values = Self.parseValueList(predicate.dropFirst(4).dropLast())
-            return values.contains(resolved.raw)
-        }
-        if predicate.hasPrefix("not in (") && predicate.hasSuffix(")") {
-            let values = Self.parseValueList(predicate.dropFirst(8).dropLast())
+    /// Apply a classified predicate to a resolved referent. A predicate
+    /// that cannot judge the referent (the fail-safe cases below) is
+    /// `.unknown` (P4-31, ADR-021).
+    private func applyPredicate(_ predicate: ConditionPredicate, to resolved: ResolvedReferent) -> ConditionTruth {
+        switch predicate {
+        case .populated: return ConditionTruth(resolved.isPopulated)
+        case .empty: return ConditionTruth(!resolved.isPopulated)
+        case .equals(let v): return ConditionTruth(resolved.raw == v)
+        case .notEquals(let v): return ConditionTruth(resolved.raw != v)
+        case .greaterThan(let threshold):
+            // M8-D: PAC-2's "If SHP-8 Number of Packages in Shipment is
+            // greater than 1". A non-numeric or empty referent fails safe.
+            guard let value = Double(resolved.raw) else { return .unknown }
+            return ConditionTruth(value > threshold)
+        // M6-B-2 prefix ops: ADRM-2021 reserves everything beginning `Z`
+        // (HL7au:000020 message/trigger codes, 000023.1 segments).
+        // `startsWith` on an empty referent is false (an absent value
+        // begins with nothing); `not startsWith` mirrors `not in` — it
+        // asserts only on populated referents, per the fail-safe rule.
+        case .startsWith(let prefix): return ConditionTruth(resolved.raw.hasPrefix(prefix))
+        case .notStartsWith(let prefix):
+            guard resolved.isPopulated else { return .unknown }
+            return ConditionTruth(!resolved.raw.hasPrefix(prefix))
+        case .isIn(let values): return ConditionTruth(values.contains(resolved.raw))
+        case .notIn(let values):
             // not-in fires only if the referent is actually populated —
-            // an empty referent isn't a member of any set but it's also
-            // not a meaningful "non-member" assertion. Treat empty as
-            // "not in" being false (no trigger) per the fail-safe rule:
-            // the conditional check should only require the dependent
-            // field when the referent carries a definite value the
-            // predicate excludes.
-            guard resolved.isPopulated else { return false }
-            return !values.contains(resolved.raw)
-        }
-        return false
-    }
-
-    /// Parse `"NW, CA, CR, DC"` (or `"NW,CA,CR"`) into the value list
-    /// `["NW", "CA", "CR", "DC"]`. Whitespace around commas is trimmed.
-    private static func parseValueList<S: StringProtocol>(_ raw: S) -> [String] {
-        raw.split(separator: ",").map {
-            $0.trimmingCharacters(in: .whitespaces)
+            // an empty referent is not a meaningful "non-member"
+            // assertion, so the conditional only requires the dependent
+            // field when the referent carries a definite excluded value.
+            guard resolved.isPopulated else { return .unknown }
+            return ConditionTruth(!values.contains(resolved.raw))
         }
     }
 
@@ -2453,5 +2595,20 @@ public struct Validator: Sendable {
     /// "present but empty" wire shape from genuinely absent fields.
     private func isFieldPopulated(_ field: Field) -> Bool {
         field.repetitions.contains(where: isRepetitionPopulated)
+    }
+}
+
+private extension Message {
+    /// A copy of this message declaring `version`. Used to validate under
+    /// ``Version/grammarVersion`` (ADR-018); segments are shared, not copied.
+    func declaring(_ version: Version) -> Message {
+        guard version != self.version else { return self }
+        return Message(
+            version: version,
+            encodingCharacters: encodingCharacters,
+            segments: segments,
+            characterEncoding: characterEncoding,
+            locale: locale
+        )
     }
 }

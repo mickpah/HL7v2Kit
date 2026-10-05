@@ -1,0 +1,46 @@
+{
+  "table": "0365",
+  "version": "2.7.1",
+  "name": "Equipment State",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A (p110), HL7 Table 0365 - Equipment State; Chapter 13 sec 13.4.1.3 EQU (p20) 'for valid values'",
+  "entries": [
+    {
+      "code": "CL",
+      "description": "Clearing"
+    },
+    {
+      "code": "CO",
+      "description": "Configuring"
+    },
+    {
+      "code": "ES",
+      "description": "E-stopped"
+    },
+    {
+      "code": "ID",
+      "description": "Idle"
+    },
+    {
+      "code": "IN",
+      "description": "Initializing"
+    },
+    {
+      "code": "OP",
+      "description": "Normal Operation"
+    },
+    {
+      "code": "PA",
+      "description": "Pausing"
+    },
+    {
+      "code": "PD",
+      "description": "Paused"
+    },
+    {
+      "code": "PU",
+      "description": "Powered Up"
+    }
+  ]
+}

@@ -3,8 +3,8 @@
   "version": "2.6",
   "name": "Primary key value type",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.6 Appendix A, HL7 Table 0355 - Primary key value type",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.6 Chapter 8 sec 8.5.2.5 MFE-5 Primary Key Value Type, HL7 Table 0355 - Primary Key Value Type",
   "entries": [
     {
       "code": "CE",

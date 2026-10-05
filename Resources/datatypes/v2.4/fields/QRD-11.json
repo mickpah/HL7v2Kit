@@ -1,0 +1,21 @@
+{
+  "field": "QRD-11",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "What data code value qual",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "First data code value",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Last data code value",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

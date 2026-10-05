@@ -1,0 +1,28 @@
+{
+  "structure": "BRP_O30",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 4, section 4.13.5 BRP - Blood Product Dispense Status Acknowledgment (Event O30), pp 118 to 119.",
+  "triggers": ["BRP^O30"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "group": "ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "ORC", "min": 1, "max": 1 },
+          { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "TQ1", "min": 1, "max": 1 },
+            { "segment": "TQ2", "min": 0, "max": null }
+          ]},
+          { "segment": "BPO", "min": 0, "max": 1 },
+          { "segment": "BPX", "min": 0, "max": null }
+        ]}
+      ]}
+    ]}
+  ]
+}

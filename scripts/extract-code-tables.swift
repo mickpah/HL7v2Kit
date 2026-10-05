@@ -17,10 +17,12 @@
 //   --report   print every row the parser could not classify as a clean
 //              two-column value row, with the decision it took. Use this when
 //              re-extracting a new source: it is the eyeball list.
+//   --self-check   run the synthetic row-rule cases (no PDF needed) and exit:
+//              /tmp/tablesbin --self-check
 //
 // Two source layouts are supported.
 //
-// A. Appendix A (v2.3, v2.3.1, v2.4, v2.5.1, v2.6)
+// A. Appendix A (v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1)
 //    Section "HL7 AND USER-DEFINED TABLES - ALPHABETIC SORT" is the index: one
 //    line per table, `<kind> <number> <name> <chapter/field refs>`. Section
 //    "... - NUMERIC SORT" prints the values: a caption line `<kind> [number]
@@ -43,8 +45,9 @@
 // rather than silently omitting the table.
 //
 // Resources/tables/overrides.json is a hand-kept overlay, keyed by version and
-// then by table number (kind / permitsLocalExtensions / citation / dropCodes,
-// plus a `note` documenting what was verified). Every entry is version-scoped:
+// then by table number (kind / permitsLocalExtensions / citation / dropCodes /
+// renameCodes / fixDescriptions / addEntries / createName / patterns, plus a note documenting
+// what was verified). Every entry is version-scoped:
 // an artifact of one version's printing must never be able to silently alter
 // another version's table. The file lives at the root of Resources/tables,
 // which the codegen's tables pass ignores because it only enumerates `v*`
@@ -122,6 +125,10 @@ struct Override {
     /// Hand-verified corrections of a value the source PDF misprints exactly
     /// once, so the separator-variant rule below has no sibling to learn from.
     var renameCodes: [String: String] = [:]
+    /// Hand-verified corrections of a printed description, keyed by code, where the
+    /// source misprints the description column (v2.4 Table 0290 prints the value again
+    /// before the character for rows 51 to 63: "51 z"). The row keeps its place.
+    var fixDescriptions: [String: String] = [:]
     /// Rows the source PDF omits but the version's DEFINING chapter prints
     /// (v2.5.1 Appendix A prints 0210 with AND only; Chapter 2A sec 2.A.60.4
     /// prints AND and OR). `[code, description]` pairs, appended in order.
@@ -131,6 +138,11 @@ struct Override {
     /// and not in Appendix A, the only PDF this extractor reads for v2.3. Needs `kind`
     /// and `addEntries` (the transcribed rows) and a `citation` naming the chapter.
     var createName: String?
+    /// Printed rows that name a FAMILY of codes rather than one code (v2.3.1 to v2.8.2
+    /// Table 0203 "NNxxx": "National Person Identifier where the xxx is the ISO table 3166
+    /// 3-character (alphabetic) country code"). `[{"code": <printed value>, "regex":
+    /// <anchored regex>}]`; the matching row moves from `entries` to `patterns`.
+    var patterns: [[String: String]] = []
 }
 
 // MARK: - shared line classification
@@ -176,6 +188,23 @@ func kindOfToken(_ token: String) -> (kind: String, external: Bool) {
 /// in a colon: only a `Note:` leading a paragraph the spec sets under the table
 /// does (v2.8.2 0200 and 0301 both print one directly beneath the last row).
 func isNoteLead(_ cell: String) -> Bool { cell.hasSuffix(":") }
+
+/// A Value cell as the rest of the pipeline reads it. v2.7.1 Appendix A prints the bare
+/// ellipsis row ("no suggested values", 0010 p39; an open list, 0291 p90; a null row,
+/// 0365 p110) with U+2026 where v2.3 to v2.6 print three full stops. Both are one printed
+/// marker, so the Unicode form is read as "..." and dropped by the same rule in render().
+/// Both layouts: v2.8.2 Chapter 2C prints it too (0359, 0418; P10-1 fix round 1).
+func ellipsisValue(_ cell: String) -> String { cell == "\u{2026}" ? "..." : cell }
+
+/// A printed range row: 0141 "E1 ... E9", "E1... E9", "O1 ... O10", "W1 ... W4". It names
+/// every code from the first to the last, so render() emits it as a pattern row matching
+/// exactly those codes (the mechanism 0203 NNxxx uses) instead of one literal code.
+let reRange = RE("^([A-Z]+)([0-9]+)\\s*(?:\\.\\.\\.|\u{2026})\\s*([A-Z]+)([0-9]+)$")
+func rangePattern(_ code: String) -> String? {
+    guard let g = reRange.groups(code), g[1] == g[3], let lo = Int(g[2]), let hi = Int(g[4]),
+          lo < hi, hi - lo < 100 else { return nil }
+    return "^" + g[1] + "(" + (lo...hi).map(String.init).joined(separator: "|") + ")$"
+}
 
 /// Rows the spec prints in place of values when a table has none.
 let noValuesPhrase = RE("^(no suggested values|no values defined|no values are defined|needs values)", [.caseInsensitive])
@@ -245,7 +274,7 @@ func padNumber(_ n: String) -> String {
     n.count >= 4 ? n : String(repeating: "0", count: 4 - n.count) + n
 }
 
-// MARK: - layout A: Appendix A (v2.3 .. v2.6)
+// MARK: - layout A: Appendix A (v2.3 .. v2.7.1)
 
 let reIndexRow = RE("^\\s*(HL7|User|undefined)\\s+([0-9]{1,4})\\s+(\\S.*)$")
 let reCaptionNumbered = RE("^(HL7|User|undefined|undef)\\s+([0-9]{1,4})\\s+(\\S.*)$")
@@ -345,7 +374,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
                 continue
             }
             if cells.count >= 2 {
-                t.codes.append(cells[0].text)
+                t.codes.append(ellipsisValue(cells[0].text))
                 t.descriptions.append(cells[1...].map(\.text).joined(separator: " "))
                 let descCol = restCol + cells[1].offset
                 lastDescCol[number] = descCol
@@ -378,7 +407,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
                 continue
             }
             if !only.contains(" ") {
-                t.codes.append(only)
+                t.codes.append(ellipsisValue(only))
                 t.descriptions.append("")
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: -1)
                 continue
@@ -389,7 +418,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             // PDF bled into the column always carries lower-case words.
             if established < 0 && only.uppercased() == only
                 && !continuesInValueColumn(after: lineNumber, valueColumn: restCol) {
-                t.codes.append(only)
+                t.codes.append(ellipsisValue(only))
                 t.descriptions.append("")
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: -1)
                 if report { notes.append("\(number): description-less table, whole cell taken as the code: \(only)") }
@@ -406,7 +435,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             let aligned = established >= 0 && abs(remCol - established) <= 8
             let complete = established >= 0 && !continuesInValueColumn(after: lineNumber, valueColumn: restCol)
             if aligned || complete {
-                t.codes.append(firstTok)
+                t.codes.append(ellipsisValue(firstTok))
                 t.descriptions.append(remainder)
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: remCol)
                 if report { notes.append("\(number): single-column row accepted as \(firstTok) | \(remainder)") }
@@ -511,7 +540,10 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
     for raw in text.split(separator: "\n", omittingEmptySubsequences: false).map({ clean(String($0)) }) {
         let s = raw.trimmingCharacters(in: .whitespaces)
         if s.isEmpty { continue }
-        if s.contains("..") { continue }        // table of contents
+        // A table-of-contents line carries a dotted leader. Two full stops alone do not
+        // mark one: rows print "..." (v2.7.1 0492 "?? Inappropriate due to ...", 0141
+        // "E1... E9") and the old two-dot test dropped them (P10-1 fix round 1).
+        if s.contains("....") { continue }
 
         if let g = reHeading282.groups(raw) {
             let number = g[1]
@@ -620,7 +652,7 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
                 if report { notes.append("\(t.number): SKIPPED note row: \(first.text) \(cells[1].text)") }
                 continue
             }
-            t.codes.append(first.text)
+            t.codes.append(ellipsisValue(first.text))
             t.descriptions.append(cells[1].text)
             descCol = cells[1].offset
             if cells.count >= 3 { commentCol = cells[2].offset }
@@ -635,7 +667,7 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
             if report { notes.append("\(t.number): SKIPPED note row: \(first.text)") }
             continue
         }
-        t.codes.append(first.text)
+        t.codes.append(ellipsisValue(first.text))
         t.descriptions.append("")
     }
     return (tables, notes)
@@ -724,7 +756,8 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
     let source = appendix ? "Appendix A" : "Chapter 2C"
     let citation = override?.citation
         ?? "HL7 v\(version) \(source), \(kindLabel) \(t.number) - \(t.name)"
-    // A bare "..." row is never a code. The specs print it for "no suggested values" (an
+    // A bare "..." row (v2.7.1 Appendix A: U+2026, read as "..." by ellipsisValue) is never
+    // a code. The specs print it for "no suggested values" (an
     // otherwise empty table), for an external or open-ended list that continues (v2.6 0153
     // "See NUBC codes", 0359 / 0418 ranks), and for a null row (v2.6 0365 "(null) No state
     // change"). It is dropped structurally. Fail-safe (req #4): when other rows remain, the
@@ -734,9 +767,34 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
                                              rename: override?.renameCodes ?? [:])
     var rowPairs = allPairs.filter { $0.0 != "..." }
     var addedNotes: [String] = []
+    let fixDescriptions = override?.fixDescriptions ?? [:]
+    for (i, pair) in rowPairs.enumerated() {
+        if let fixed = fixDescriptions[pair.0] {
+            rowPairs[i].1 = fixed
+            addedNotes.append("\(t.number): description of \(pair.0) corrected by overrides.json")
+        }
+    }
+    for code in fixDescriptions.keys.sorted() where !rowPairs.contains(where: { $0.0 == code }) {
+        addedNotes.append("\(t.number): fixDescriptions \(code) declared in overrides.json but not printed")
+    }
     for pair in override?.addEntries ?? [] where pair.count == 2 && !rowPairs.contains(where: { $0.0 == pair[0] }) {
         rowPairs.append((pair[0], pair[1]))
         addedNotes.append("\(t.number): added by overrides.json: \(pair[0])")
+    }
+    var patternRows: [(code: String, description: String, regex: String)] = []
+    var overridePatterns = override?.patterns ?? []
+    for pair in rowPairs where !overridePatterns.contains(where: { $0["code"] == pair.0 }) {
+        if let regex = rangePattern(pair.0) { overridePatterns.append(["code": pair.0, "regex": regex]) }
+    }
+    for p in overridePatterns {
+        guard let code = p["code"], let regex = p["regex"],
+              let i = rowPairs.firstIndex(where: { $0.0 == code }) else {
+            addedNotes.append("\(t.number): pattern \(p["code"] ?? "?") declared in overrides.json but not printed")
+            continue
+        }
+        patternRows.append((code, rowPairs[i].1, regex))
+        rowPairs.remove(at: i)
+        addedNotes.append("\(t.number): \(code) is a pattern row (\(regex))")
     }
     let notes = allNotes + addedNotes + (hasEllipsis ? ["\(t.number): dropped the bare \"...\" row"
         + (rowPairs.isEmpty ? "" : "; table left open unless overridden")] : [])
@@ -758,6 +816,15 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
     } else {
         lines.append("  \"entries\": [")
         lines.append(rows.joined(separator: ",\n"))
+        lines.append("  ]")
+    }
+    if !patternRows.isEmpty {
+        lines[lines.count - 1] += ","
+        let items = patternRows.map {
+            "    {\n      \"code\": \(jsonString($0.code)),\n      \"description\": \(jsonString($0.description)),\n      \"regex\": \(jsonString($0.regex))\n    }"
+        }
+        lines.append("  \"patterns\": [")
+        lines.append(items.joined(separator: ",\n"))
         lines.append("  ]")
     }
     lines.append("}")
@@ -783,14 +850,80 @@ func loadOverrides(_ path: String, version: String) -> [String: Override] {
             citation: d["citation"] as? String,
             dropCodes: (d["dropCodes"] as? [String]) ?? [],
             renameCodes: (d["renameCodes"] as? [String: String]) ?? [:],
+            fixDescriptions: (d["fixDescriptions"] as? [String: String]) ?? [:],
             addEntries: (d["addEntries"] as? [[String]]) ?? [],
-            createName: d["createName"] as? String
+            createName: d["createName"] as? String,
+            patterns: (d["patterns"] as? [[String: String]]) ?? []
         )
     }
     return out
 }
 
+// MARK: - self-check
+
+/// `--self-check`: synthetic cases for row rules a re-extraction of the committed versions
+/// cannot exercise. Prints one `ok` line per case; exits 1 on the first failure.
+func selfCheck() -> Never {
+    func expect(_ ok: Bool, _ what: String) {
+        guard ok else { print("FAIL \(what)"); exit(1) }
+        print("ok   \(what)")
+    }
+    func rendered(_ codes: [String]) -> String {
+        let t = Table(number: "0010", name: "Physician ID", kind: "User")
+        t.codes = codes.map(ellipsisValue)
+        t.descriptions = codes.map { $0 == "A" ? "Alpha" : "" }
+        return render(t, version: "2.7.1", appendix: true, override: nil).json
+    }
+    // v2.7.1 Appendix A prints the "no suggested values" row with U+2026 (0010, p39).
+    let lone = rendered(["\u{2026}"])
+    expect(!lone.contains("\"code\""), "a lone Unicode-ellipsis row yields no entry")
+    expect(lone == rendered(["..."]), "a lone Unicode-ellipsis row renders as a lone \"...\" row")
+    // ... and beside real rows (0291, 0365 to 0367): dropped, the table left open.
+    let mixed = rendered(["A", "\u{2026}"])
+    expect(mixed.components(separatedBy: "\"code\":").count == 2, "an ellipsis beside a real row is dropped")
+    expect(mixed.contains("\"permitsLocalExtensions\": true"), "an ellipsis beside real rows leaves the table open")
+    expect(mixed == rendered(["A", "..."]), "both ellipsis forms render alike beside real rows")
+    expect(ellipsisValue("2\u{2026}") == "2\u{2026}", "only a bare ellipsis cell is normalised")
+
+    // Chapter 2C layout (v2.8.2 0359 / 0418, v2.7.1 0492 p157, v2.8.2 0141).
+    let chapter2C = [
+        "2.C.2.99 0359 - Diagnosis Priority",
+        "                     User-defined Table 0359 - Diagnosis Priority",
+        "          Value     Description",
+        "            0       Not included in diagnosis ranking",
+        "            1       The primary diagnosis",
+        "            2       For ranked secondary diagnoses",
+        "            \u{2026}",
+        "            ??      Inappropriate due to ...",
+        "          E1... E9  Enlisted",
+        "2.C.2.100 0360 - Degree",
+        "2.C.2.101 0361 - Application ...................................... 12",
+    ].joined(separator: "\n")
+    let b = extract282(chapter2C, report: false).0["0359"]
+    expect(b?.codes.contains("...") == true && b?.codes.contains("\u{2026}") == false,
+           "Chapter 2C: a bare Unicode-ellipsis row reads as \"...\"")
+    expect(b?.codes.contains("??") == true, "Chapter 2C: a row whose description contains \"...\" is kept")
+    expect(b?.codes.contains("E1... E9") == true, "Chapter 2C: a range row is kept")
+    let b2 = render(b!, version: "2.8.2", appendix: false, override: nil).json
+    expect(b2.contains("\"permitsLocalExtensions\": true") && !b2.contains("\u{2026}"),
+           "Chapter 2C: the ellipsis row is dropped and leaves the table open")
+    expect(extract282(chapter2C, report: false).0["0361"] == nil, "a dotted contents line is still skipped")
+
+    // Range rows (0141 'E1 ... E9', 'O1 ... O10'): one pattern row each, not a literal code.
+    let r = Table(number: "0141", name: "Military Rank/Grade", kind: "User")
+    r.codes = ["E1... E9", "O1 ... O10", "W1 ... W4"]
+    r.descriptions = ["Enlisted", "Officers", "Warrant Officers"]
+    let rj = render(r, version: "2.4", appendix: true, override: nil).json
+    expect(!rj.contains("\"entries\": [\n"), "range rows are not literal entries")
+    expect(rj.contains("\"regex\": \"^E(1|2|3|4|5|6|7|8|9)$\"")
+           && rj.contains("\"regex\": \"^O(1|2|3|4|5|6|7|8|9|10)$\"")
+           && rj.contains("\"regex\": \"^W(1|2|3|4)$\""), "each range row becomes the pattern of its codes")
+    exit(0)
+}
+
 // MARK: - main
+
+if CommandLine.arguments.contains("--self-check") { selfCheck() }
 
 var args = Array(CommandLine.arguments.dropFirst())
 let report = args.contains("--report")
@@ -823,7 +956,9 @@ var notes = extractionNotes
 let overridesPath = (outDir as NSString).deletingLastPathComponent + "/overrides.json"
 let overrides = loadOverrides(overridesPath, version: version)
 for (number, o) in overrides where tables[number] == nil {
-    guard let name = o.createName, let kind = o.kind, !o.addEntries.isEmpty else { continue }
+    // A created table needs printed rows, except a user-defined table the chapter prints with
+    // "No suggested values" (P10-4d: v2.4 CH03 section 3.4.5.7 Table 0131, p. 105).
+    guard let name = o.createName, let kind = o.kind, !o.addEntries.isEmpty || kind == "User" else { continue }
     tables[number] = Table(number: number, name: name, kind: kind)   // rows come from addEntries in render()
     notes.append("\(number): created from overrides.json (printed in a chapter, absent from the appendix)")
 }

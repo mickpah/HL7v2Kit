@@ -1,0 +1,1298 @@
+{
+  "table": "0003",
+  "version": "2.7.1",
+  "name": "Event Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.2 (p12), HL7 Table 0003 - Event Type; Chapter 2 sec 2.5.1 (p6): 'All message types and trigger event codes beginning with the letter \"Z\" are reserved for locally defined messages', so the printed rows are not a closed set",
+  "entries": [
+    {
+      "code": "A01",
+      "description": "ADT/ACK - Admit/visit notification"
+    },
+    {
+      "code": "A02",
+      "description": "ADT/ACK - Transfer a patient"
+    },
+    {
+      "code": "A03",
+      "description": "ADT/ACK - Discharge/end visit"
+    },
+    {
+      "code": "A04",
+      "description": "ADT/ACK - Register a patient"
+    },
+    {
+      "code": "A05",
+      "description": "ADT/ACK - Pre-admit a patient"
+    },
+    {
+      "code": "A06",
+      "description": "ADT/ACK - Change an outpatient to an inpatient"
+    },
+    {
+      "code": "A07",
+      "description": "ADT/ACK - Change an inpatient to an outpatient"
+    },
+    {
+      "code": "A08",
+      "description": "ADT/ACK - Update patient information"
+    },
+    {
+      "code": "A09",
+      "description": "ADT/ACK - Patient departing - tracking"
+    },
+    {
+      "code": "A10",
+      "description": "ADT/ACK - Patient arriving - tracking"
+    },
+    {
+      "code": "A11",
+      "description": "ADT/ACK - Cancel admit/visit notification"
+    },
+    {
+      "code": "A12",
+      "description": "ADT/ACK - Cancel transfer"
+    },
+    {
+      "code": "A13",
+      "description": "ADT/ACK - Cancel discharge/end visit"
+    },
+    {
+      "code": "A14",
+      "description": "ADT/ACK - Pending admit"
+    },
+    {
+      "code": "A15",
+      "description": "ADT/ACK - Pending transfer"
+    },
+    {
+      "code": "A16",
+      "description": "ADT/ACK - Pending discharge"
+    },
+    {
+      "code": "A17",
+      "description": "ADT/ACK - Swap patients"
+    },
+    {
+      "code": "A18",
+      "description": "ADT/ACK - Merge patient information"
+    },
+    {
+      "code": "A19",
+      "description": "QRY/ADR - Patient query"
+    },
+    {
+      "code": "A20",
+      "description": "ADT/ACK - Bed status update"
+    },
+    {
+      "code": "A21",
+      "description": "ADT/ACK - Patient goes on a \"leave of absence\""
+    },
+    {
+      "code": "A22",
+      "description": "ADT/ACK - Patient returns from a \"leave of absence\""
+    },
+    {
+      "code": "A23",
+      "description": "ADT/ACK - Delete a patient record"
+    },
+    {
+      "code": "A24",
+      "description": "ADT/ACK - Link patient information"
+    },
+    {
+      "code": "A25",
+      "description": "ADT/ACK - Cancel pending discharge"
+    },
+    {
+      "code": "A26",
+      "description": "ADT/ACK - Cancel pending transfer"
+    },
+    {
+      "code": "A27",
+      "description": "ADT/ACK - Cancel pending admit"
+    },
+    {
+      "code": "A28",
+      "description": "ADT/ACK - Add person information"
+    },
+    {
+      "code": "A29",
+      "description": "ADT/ACK - Delete person information"
+    },
+    {
+      "code": "A30",
+      "description": "ADT/ACK - Merge person information"
+    },
+    {
+      "code": "A31",
+      "description": "ADT/ACK - Update person information"
+    },
+    {
+      "code": "A32",
+      "description": "ADT/ACK - Cancel patient arriving - tracking"
+    },
+    {
+      "code": "A33",
+      "description": "ADT/ACK - Cancel patient departing - tracking"
+    },
+    {
+      "code": "A34",
+      "description": "ADT/ACK - Merge patient information - patient ID only"
+    },
+    {
+      "code": "A35",
+      "description": "ADT/ACK - Merge patient information - account number only"
+    },
+    {
+      "code": "A36",
+      "description": "ADT/ACK - Merge patient information - patient ID and account number"
+    },
+    {
+      "code": "A37",
+      "description": "ADT/ACK - Unlink patient information"
+    },
+    {
+      "code": "A38",
+      "description": "ADT/ACK - Cancel pre-admit"
+    },
+    {
+      "code": "A39",
+      "description": "ADT/ACK - Merge person - patient ID"
+    },
+    {
+      "code": "A40",
+      "description": "ADT/ACK - Merge patient - patient identifier list"
+    },
+    {
+      "code": "A41",
+      "description": "ADT/ACK - Merge account - patient account number"
+    },
+    {
+      "code": "A42",
+      "description": "ADT/ACK - Merge visit - visit number"
+    },
+    {
+      "code": "A43",
+      "description": "ADT/ACK - Move patient information - patient identifier list"
+    },
+    {
+      "code": "A44",
+      "description": "ADT/ACK - Move account information - patient account number"
+    },
+    {
+      "code": "A45",
+      "description": "ADT/ACK - Move visit information - visit number"
+    },
+    {
+      "code": "A46",
+      "description": "ADT/ACK - Change patient ID"
+    },
+    {
+      "code": "A47",
+      "description": "ADT/ACK - Change patient identifier list"
+    },
+    {
+      "code": "A48",
+      "description": "ADT/ACK - Change alternate patient ID"
+    },
+    {
+      "code": "A49",
+      "description": "ADT/ACK - Change patient account number"
+    },
+    {
+      "code": "A50",
+      "description": "ADT/ACK - Change visit number"
+    },
+    {
+      "code": "A51",
+      "description": "ADT/ACK - Change alternate visit ID"
+    },
+    {
+      "code": "A52",
+      "description": "ADT/ACK - Cancel leave of absence for a patient"
+    },
+    {
+      "code": "A53",
+      "description": "ADT/ACK - Cancel patient returns from a leave of absence"
+    },
+    {
+      "code": "A54",
+      "description": "ADT/ACK - Change attending doctor"
+    },
+    {
+      "code": "A55",
+      "description": "ADT/ACK - Cancel change attending doctor"
+    },
+    {
+      "code": "A60",
+      "description": "ADT/ACK - Update allergy information"
+    },
+    {
+      "code": "A61",
+      "description": "ADT/ACK - Change consulting doctor"
+    },
+    {
+      "code": "A62",
+      "description": "ADT/ACK - Cancel change consulting doctor"
+    },
+    {
+      "code": "B01",
+      "description": "PMU/ACK - Add personnel record"
+    },
+    {
+      "code": "B02",
+      "description": "PMU/ACK - Update personnel record"
+    },
+    {
+      "code": "B03",
+      "description": "PMU/ACK - Delete personnel re cord"
+    },
+    {
+      "code": "B04",
+      "description": "PMU/ACK - Active practicing person"
+    },
+    {
+      "code": "B05",
+      "description": "PMU/ACK - Deactivate practicing person"
+    },
+    {
+      "code": "B06",
+      "description": "PMU/ACK - Terminate practicing person"
+    },
+    {
+      "code": "B07",
+      "description": "PMU/ACK - Grant Certificate/Permission"
+    },
+    {
+      "code": "B08",
+      "description": "PMU/ACK - Revoke Certificate/Permission"
+    },
+    {
+      "code": "C01",
+      "description": "CRM - Register a patient on a clinical trial"
+    },
+    {
+      "code": "C02",
+      "description": "CRM - Cancel a patient registration on clinical trial (for clerical mistakes only)"
+    },
+    {
+      "code": "C03",
+      "description": "CRM - Correct/update registration information"
+    },
+    {
+      "code": "C04",
+      "description": "CRM - Patient has gone off a clinical trial"
+    },
+    {
+      "code": "C05",
+      "description": "CRM - Patient enters phase of clinical trial"
+    },
+    {
+      "code": "C06",
+      "description": "CRM - Cancel patient entering a phase (clerical mistake)"
+    },
+    {
+      "code": "C07",
+      "description": "CRM - Correct/update phase information"
+    },
+    {
+      "code": "C08",
+      "description": "CRM - Patient has gone off phase of clinical trial"
+    },
+    {
+      "code": "C09",
+      "description": "CSU - Automated time intervals for reporting, like monthly"
+    },
+    {
+      "code": "C10",
+      "description": "CSU - Patient completes the clinical trial"
+    },
+    {
+      "code": "C11",
+      "description": "CSU - Patient completes a phase of the clinical trial"
+    },
+    {
+      "code": "C12",
+      "description": "CSU - Update/correction of patient order/result information"
+    },
+    {
+      "code": "E01",
+      "description": "Submit HealthCare Services Invoice"
+    },
+    {
+      "code": "E02",
+      "description": "Cancel HealthCare Services Invoice"
+    },
+    {
+      "code": "E03",
+      "description": "HealthCare Services Invoice Status"
+    },
+    {
+      "code": "E04",
+      "description": "Re-Assess HealthCare Services Invoice Request"
+    },
+    {
+      "code": "E10",
+      "description": "Edit/Adjudication Results"
+    },
+    {
+      "code": "E12",
+      "description": "Request Additional Information"
+    },
+    {
+      "code": "E13",
+      "description": "Additional Information Response"
+    },
+    {
+      "code": "E15",
+      "description": "Payment/Remittance Advice"
+    },
+    {
+      "code": "E20",
+      "description": "Submit Authorization Request"
+    },
+    {
+      "code": "E21",
+      "description": "Cancel Authorization Request"
+    },
+    {
+      "code": "E22",
+      "description": "Authorization Request Status"
+    },
+    {
+      "code": "E24",
+      "description": "Authorization Response"
+    },
+    {
+      "code": "E30",
+      "description": "Submit Health Document related to Authorization Request"
+    },
+    {
+      "code": "E31",
+      "description": "Cancel Health Document related to Authorization Request"
+    },
+    {
+      "code": "I01",
+      "description": "RQI/RPI - Request for insurance information"
+    },
+    {
+      "code": "I02",
+      "description": "RQI/RPL - Request/receipt of patient selection display list"
+    },
+    {
+      "code": "I03",
+      "description": "RQI/RPR - Request/receipt of patient selection list"
+    },
+    {
+      "code": "I04",
+      "description": "RQD/RPI - Request for patient demographic data"
+    },
+    {
+      "code": "I05",
+      "description": "RQC/RCI - Request for patient clinical information"
+    },
+    {
+      "code": "I06",
+      "description": "RQC/RCL - Request/receipt of clinical data listing"
+    },
+    {
+      "code": "I07",
+      "description": "PIN/ACK - Unsolicited insurance information"
+    },
+    {
+      "code": "I08",
+      "description": "RQA/RPA - Request for treatment authorization information"
+    },
+    {
+      "code": "I09",
+      "description": "RQA/RPA - Request for modification to an authorization"
+    },
+    {
+      "code": "I10",
+      "description": "RQA/RPA - Request for resubmission of an authorization"
+    },
+    {
+      "code": "I11",
+      "description": "RQA/RPA - Request for cancellation of an authorization"
+    },
+    {
+      "code": "I12",
+      "description": "REF/RRI - Patient referral"
+    },
+    {
+      "code": "I13",
+      "description": "REF/RRI - Modify patient referral"
+    },
+    {
+      "code": "I14",
+      "description": "REF/RRI - Cancel patient referral"
+    },
+    {
+      "code": "I15",
+      "description": "REF/RRI - Request patient referral status"
+    },
+    {
+      "code": "I16",
+      "description": "Collaborative Care Referral"
+    },
+    {
+      "code": "I17",
+      "description": "Modify Collaborative Care Referral"
+    },
+    {
+      "code": "I18",
+      "description": "Cancel Collaborative Care Referral"
+    },
+    {
+      "code": "I19",
+      "description": "Collaborative Care Query/Collaborative Care Query Update"
+    },
+    {
+      "code": "I20",
+      "description": "Asynchronous Collaborative Care Update"
+    },
+    {
+      "code": "I21",
+      "description": "Collaborative Care Message"
+    },
+    {
+      "code": "I22",
+      "description": "Collaborative Care Fetch / Collaborative Care Information"
+    },
+    {
+      "code": "J01",
+      "description": "QCN/ACK - Cancel query/acknowledge message"
+    },
+    {
+      "code": "J02",
+      "description": "QSX/ACK - Cancel subscription/acknowledge message"
+    },
+    {
+      "code": "K11",
+      "description": "RSP - Segment pattern response in response to QBP^Q11"
+    },
+    {
+      "code": "K13",
+      "description": "RTB - Tabular response in response to QBP^Q13"
+    },
+    {
+      "code": "K15",
+      "description": "RDY - Display response in response to QBP^Q15"
+    },
+    {
+      "code": "K21",
+      "description": "RSP - Get person demographics response"
+    },
+    {
+      "code": "K22",
+      "description": "RSP - Find candidates response"
+    },
+    {
+      "code": "K23",
+      "description": "RSP - Get corresponding identifiers response"
+    },
+    {
+      "code": "K24",
+      "description": "RSP - Allocate identifiers response"
+    },
+    {
+      "code": "K25",
+      "description": "RSP - Personnel Information by Segment Response"
+    },
+    {
+      "code": "K31",
+      "description": "RSP -Dispense History Response"
+    },
+    {
+      "code": "K32",
+      "description": "Find Candidates including Visit Information Response"
+    },
+    {
+      "code": "M01",
+      "description": "MFN/MFK - Master file not otherwise specified"
+    },
+    {
+      "code": "M02",
+      "description": "MFN/MFK - Master file - staff practitioner"
+    },
+    {
+      "code": "M03",
+      "description": "MFN/MFK - Master file - test/observation"
+    },
+    {
+      "code": "M04",
+      "description": "MFN/MFK - Master files charge description"
+    },
+    {
+      "code": "M05",
+      "description": "MFN/MFK - Patient location master file"
+    },
+    {
+      "code": "M06",
+      "description": "MFN/MFK - Clinical study with phases and schedules master file"
+    },
+    {
+      "code": "M07",
+      "description": "MFN/MFK - Clinical study without phases but with schedules master file"
+    },
+    {
+      "code": "M08",
+      "description": "MFN/MFK - Test/observation (numeric) master file"
+    },
+    {
+      "code": "M09",
+      "description": "MFN/MFK - Test/observation (categorical) master file"
+    },
+    {
+      "code": "M10",
+      "description": "MFN/MFK - Test /observation batteries master file"
+    },
+    {
+      "code": "M11",
+      "description": "MFN/MFK - Test/calculated observations master file"
+    },
+    {
+      "code": "M12",
+      "description": "MFN/MFK - Master file notification message"
+    },
+    {
+      "code": "M13",
+      "description": "MFN/MFK - Master file notification - general"
+    },
+    {
+      "code": "M14",
+      "description": "MFN/MFK - Master file notification - site defined"
+    },
+    {
+      "code": "M15",
+      "description": "MFN/MFK - Inventory item master file notification"
+    },
+    {
+      "code": "M16",
+      "description": "MFN/MFK - Master File Notification Inventory Item Enhanced"
+    },
+    {
+      "code": "M17",
+      "description": "DRG Master File Message"
+    },
+    {
+      "code": "N01",
+      "description": "NMQ/NMR - Application management query message"
+    },
+    {
+      "code": "N02",
+      "description": "NMD/ACK - Application management data message (unsolicited)"
+    },
+    {
+      "code": "O01",
+      "description": "ORM - Order message (also RDE, RDS, RGV, RAS)"
+    },
+    {
+      "code": "O02",
+      "description": "ORR - Order response (also RRE, RRD, RRG, RRA)"
+    },
+    {
+      "code": "O03",
+      "description": "OMD - Diet order"
+    },
+    {
+      "code": "O04",
+      "description": "ORD - Diet order acknowledgment"
+    },
+    {
+      "code": "O05",
+      "description": "OMS - Stock requisition order"
+    },
+    {
+      "code": "O06",
+      "description": "ORS - Stock requisition acknowledgment"
+    },
+    {
+      "code": "O07",
+      "description": "OMN - Non-stock requisition order"
+    },
+    {
+      "code": "O08",
+      "description": "ORN - Non-stock requisition acknowledgment"
+    },
+    {
+      "code": "O09",
+      "description": "OMP - Pharmacy/treatment order"
+    },
+    {
+      "code": "O10",
+      "description": "ORP - Pharmacy/treatment order acknowledgment"
+    },
+    {
+      "code": "O11",
+      "description": "RDE - Pharmacy/treatment encoded order"
+    },
+    {
+      "code": "O12",
+      "description": "RRE - Pharmacy/treatment encoded order acknowledgment"
+    },
+    {
+      "code": "O13",
+      "description": "RDS - Pharmacy/treatment dispense"
+    },
+    {
+      "code": "O14",
+      "description": "RRD - Pharmacy/treatment dispense acknowledgment"
+    },
+    {
+      "code": "O15",
+      "description": "RGV - Pharmacy/treatment give"
+    },
+    {
+      "code": "O16",
+      "description": "RRG - Pharmacy/treatment give acknowledgment"
+    },
+    {
+      "code": "O17",
+      "description": "RAS - Pharmacy/treatment administration"
+    },
+    {
+      "code": "O18",
+      "description": "RRA - Pharmacy/treatment administration acknowledgment"
+    },
+    {
+      "code": "O19",
+      "description": "OMG - General clinical order"
+    },
+    {
+      "code": "O20",
+      "description": "ORG/ORL - General clinical order response"
+    },
+    {
+      "code": "O21",
+      "description": "OML - Laboratory order"
+    },
+    {
+      "code": "O22",
+      "description": "ORL - General laboratory order response message to any OML"
+    },
+    {
+      "code": "O23",
+      "description": "OMI - Imaging order"
+    },
+    {
+      "code": "O24",
+      "description": "ORI - Imaging order response message to any OMI"
+    },
+    {
+      "code": "O25",
+      "description": "RDE - Pharmacy/treatment refill authorization request"
+    },
+    {
+      "code": "O26",
+      "description": "RRE - Pharmacy/Treatment Refill Authorization Acknowledgement"
+    },
+    {
+      "code": "O27",
+      "description": "OMB - Blood product order"
+    },
+    {
+      "code": "O28",
+      "description": "ORB - Blood product order acknowledgment"
+    },
+    {
+      "code": "O29",
+      "description": "BPS - Blood product dispense status"
+    },
+    {
+      "code": "O30",
+      "description": "BRP - Blood product dispense status acknowledgment"
+    },
+    {
+      "code": "O31",
+      "description": "BTS - Blood product transfusion/disposition"
+    },
+    {
+      "code": "O32",
+      "description": "BRT - Blood product transfusion/disposition"
+    },
+    {
+      "code": "O33",
+      "description": "OML - Laboratory order for multiple orders related to a single specimen"
+    },
+    {
+      "code": "O34",
+      "description": "ORL - Laboratory order response message to a multiple order related to single specimen OML"
+    },
+    {
+      "code": "O35",
+      "description": "OML - Laboratory order for multiple orders related to a single container of a specimen"
+    },
+    {
+      "code": "O36",
+      "description": "ORL - Laboratory order response message to a single container of a specimen OML"
+    },
+    {
+      "code": "O37",
+      "description": "OPL - Population/Location-Based Laboratory Order Message"
+    },
+    {
+      "code": "O38",
+      "description": "OPR - Population/Location-Based Laboratory Order Acknowledgment Message"
+    },
+    {
+      "code": "O39",
+      "description": "Specimen shipment centric laboratory order"
+    },
+    {
+      "code": "O40",
+      "description": "Specimen Shipment Centric Laboratory Order Acknowledgment Message"
+    },
+    {
+      "code": "P01",
+      "description": "BAR/ACK - Add patient accounts"
+    },
+    {
+      "code": "P02",
+      "description": "BAR/ACK - Purge patient accounts"
+    },
+    {
+      "code": "P03",
+      "description": "DFT/ACK - Post detail financial transaction"
+    },
+    {
+      "code": "P04",
+      "description": "QRY/DSP - Generate bill and A/R statements"
+    },
+    {
+      "code": "P05",
+      "description": "BAR/ACK - Update account"
+    },
+    {
+      "code": "P06",
+      "description": "BAR/ACK - End account"
+    },
+    {
+      "code": "P07",
+      "description": "PEX - Unsolicited initial individual product experience report"
+    },
+    {
+      "code": "P08",
+      "description": "PEX - Unsolicited update individual product experience report"
+    },
+    {
+      "code": "P09",
+      "description": "SUR - Summary product experience report"
+    },
+    {
+      "code": "P10",
+      "description": "BAR/ACK -Transmit Ambulatory Payment Classification(APC)"
+    },
+    {
+      "code": "P11",
+      "description": "DFT/ACK - Post Detail Financial Transactions - New"
+    },
+    {
+      "code": "P12",
+      "description": "BAR/ACK - Update Diagnosis/Procedure"
+    },
+    {
+      "code": "PC1",
+      "description": "PPR - PC/ problem add"
+    },
+    {
+      "code": "PC2",
+      "description": "PPR - PC/ problem update"
+    },
+    {
+      "code": "PC3",
+      "description": "PPR - PC/ problem delete"
+    },
+    {
+      "code": "PC4",
+      "description": "QRY - PC/ problem query"
+    },
+    {
+      "code": "PC5",
+      "description": "PRR - PC/ problem response"
+    },
+    {
+      "code": "PC6",
+      "description": "PGL - PC/ goal add"
+    },
+    {
+      "code": "PC7",
+      "description": "PGL - PC/ goal update"
+    },
+    {
+      "code": "PC8",
+      "description": "PGL - PC/ goal delete"
+    },
+    {
+      "code": "PC9",
+      "description": "QRY - PC/ goal query"
+    },
+    {
+      "code": "PCA",
+      "description": "PPV - PC/ goal response"
+    },
+    {
+      "code": "PCB",
+      "description": "PPP - PC/ pathway (problem-oriented) add"
+    },
+    {
+      "code": "PCC",
+      "description": "PPP - PC/ pathway (problem-oriented) update"
+    },
+    {
+      "code": "PCD",
+      "description": "PPP - PC/ pathway (problem-oriented) delete"
+    },
+    {
+      "code": "PCE",
+      "description": "QRY - PC/ pathway (problem-oriented) query"
+    },
+    {
+      "code": "PCF",
+      "description": "PTR - PC/ pathway (problem-oriented) query response"
+    },
+    {
+      "code": "PCG",
+      "description": "PPG - PC/ pathway (goal-oriented) add"
+    },
+    {
+      "code": "PCH",
+      "description": "PPG - PC/ pathway (goal-oriented) update"
+    },
+    {
+      "code": "PCJ",
+      "description": "PPG - PC/ pathway (goal-oriented) delete"
+    },
+    {
+      "code": "PCK",
+      "description": "QRY - PC/ pathway (goal-oriented) query"
+    },
+    {
+      "code": "PCL",
+      "description": "PPT - PC/ pathway (goal-oriented) query response"
+    },
+    {
+      "code": "Q01",
+      "description": "QRY/DSR - Query sent for immediate response"
+    },
+    {
+      "code": "Q02",
+      "description": "QRY/QCK - Query sent for deferred response"
+    },
+    {
+      "code": "Q03",
+      "description": "DSR/ACK - Deferred response to a query"
+    },
+    {
+      "code": "Q05",
+      "description": "UDM/ACK - Unsolicited display update message"
+    },
+    {
+      "code": "Q06",
+      "description": "OSQ/OSR - Query for order status"
+    },
+    {
+      "code": "Q11",
+      "description": "QBP - Query by parameter requesting an RSP segment pattern response"
+    },
+    {
+      "code": "Q13",
+      "description": "QBP - Query by parameter requesting an RTB - tabular response"
+    },
+    {
+      "code": "Q15",
+      "description": "QBP - Query by parameter requesting an RDY display response"
+    },
+    {
+      "code": "Q16",
+      "description": "QSB - Create subscription"
+    },
+    {
+      "code": "Q17",
+      "description": "QVR - Query for previous events"
+    },
+    {
+      "code": "Q21",
+      "description": "QBP - Get person demographics"
+    },
+    {
+      "code": "Q22",
+      "description": "QBP - Find candidates"
+    },
+    {
+      "code": "Q23",
+      "description": "QBP - Get corresponding identifiers"
+    },
+    {
+      "code": "Q24",
+      "description": "QBP - Allocate identifiers"
+    },
+    {
+      "code": "Q25",
+      "description": "QBP - Personnel Information by Segment Query"
+    },
+    {
+      "code": "Q26",
+      "description": "ROR - Pharmacy/treatment order response"
+    },
+    {
+      "code": "Q27",
+      "description": "RAR - Pharmacy/treatment administration information"
+    },
+    {
+      "code": "Q28",
+      "description": "RDR - Pharmacy/treatment dispense information"
+    },
+    {
+      "code": "Q29",
+      "description": "RER - Pharmacy/treatment encoded order information"
+    },
+    {
+      "code": "Q30",
+      "description": "RGR - Pharmacy/treatment dose information"
+    },
+    {
+      "code": "Q31",
+      "description": "QBP Query Dispense history"
+    },
+    {
+      "code": "Q32",
+      "description": "Find Candidates including Visit Information"
+    },
+    {
+      "code": "R01",
+      "description": "ORU/ACK - Unsolicited transmission of an observation message"
+    },
+    {
+      "code": "R02",
+      "description": "QRY - Query for results of observation"
+    },
+    {
+      "code": "R04",
+      "description": "ORF - Response to query; transmission of requested observation"
+    },
+    {
+      "code": "R21",
+      "description": "OUL - Unsolicited laboratory observation"
+    },
+    {
+      "code": "R22",
+      "description": "OUL - Unsolicited Specimen Oriented Observation Message"
+    },
+    {
+      "code": "R23",
+      "description": "OUL - Unsolicited Specimen Container Oriented Observation Message"
+    },
+    {
+      "code": "R24",
+      "description": "OUL - Unsolicited Order Oriented Observation Message"
+    },
+    {
+      "code": "R25",
+      "description": "OPU - Unsolicited Population/Location-Based Laboratory Observation Message"
+    },
+    {
+      "code": "R26",
+      "description": "OSM - Unsolicited Specimen Shipment Manifest Message"
+    },
+    {
+      "code": "R30",
+      "description": "ORU - Unsolicited Point-Of-Care Observation Message Without Existing Order - Place An Order"
+    },
+    {
+      "code": "R31",
+      "description": "ORU - Unsolicited New Point-Of-Care Observation Message - Search For An Order"
+    },
+    {
+      "code": "R32",
+      "description": "ORU - Unsolicited Pre-Ordered Point-Of-Care Observation"
+    },
+    {
+      "code": "R33",
+      "description": "ORA - Observation Report Acknowledgement"
+    },
+    {
+      "code": "ROR",
+      "description": "ROR - Pharmacy prescription order query response"
+    },
+    {
+      "code": "S01",
+      "description": "SRM/SRR - Request new appointment booking"
+    },
+    {
+      "code": "S02",
+      "description": "SRM/SRR - Request appointment rescheduling"
+    },
+    {
+      "code": "S03",
+      "description": "SRM/SRR - Request appointment modification"
+    },
+    {
+      "code": "S04",
+      "description": "SRM/SRR - Request appointment cancellation"
+    },
+    {
+      "code": "S05",
+      "description": "SRM/SRR - Request appointment discontinuation"
+    },
+    {
+      "code": "S06",
+      "description": "SRM/SRR - Request appointment deletion"
+    },
+    {
+      "code": "S07",
+      "description": "SRM/SRR - Request addition of service/resource on appointment"
+    },
+    {
+      "code": "S08",
+      "description": "SRM/SRR - Request modification of service/resource on appointment"
+    },
+    {
+      "code": "S09",
+      "description": "SRM/SRR - Request cancellation of service/resource on appointment"
+    },
+    {
+      "code": "S10",
+      "description": "SRM/SRR - Request discontinuation of service/resource on appointment"
+    },
+    {
+      "code": "S11",
+      "description": "SRM/SRR - Request deletion of service/resource on appointment"
+    },
+    {
+      "code": "S12",
+      "description": "SIU/ACK - Notification of new appointment booking"
+    },
+    {
+      "code": "S13",
+      "description": "SIU/ACK - Notification of appointment rescheduling"
+    },
+    {
+      "code": "S14",
+      "description": "SIU/ACK - Notification of appointment modification"
+    },
+    {
+      "code": "S15",
+      "description": "SIU/ACK - Notification of appointment cancellation"
+    },
+    {
+      "code": "S16",
+      "description": "SIU/ACK - Notification of appointment discontinuation"
+    },
+    {
+      "code": "S17",
+      "description": "SIU/ACK - Notification of appointment deletion"
+    },
+    {
+      "code": "S18",
+      "description": "SIU/ACK - Notification of addition of service/resource on appointment"
+    },
+    {
+      "code": "S19",
+      "description": "SIU/ACK - Notification of modification of service/resource on appointment"
+    },
+    {
+      "code": "S20",
+      "description": "SIU/ACK - Notification of cancellation of service/resource on appointment"
+    },
+    {
+      "code": "S21",
+      "description": "SIU/ACK - Notification of discontinuation of service/resource on appointment"
+    },
+    {
+      "code": "S22",
+      "description": "SIU/ACK - Notification of deletion of service/resource on appointment"
+    },
+    {
+      "code": "S23",
+      "description": "SIU/ACK - Notification of blocked schedule time slot(s)"
+    },
+    {
+      "code": "S24",
+      "description": "SIU/ACK - Notification of opened (\"unblocked\") schedule time slot(s)"
+    },
+    {
+      "code": "S25",
+      "description": "SQM/SQR - Schedule query message and response"
+    },
+    {
+      "code": "S26",
+      "description": "SIU/ACK Notification that patient did not show up for schedule appointment"
+    },
+    {
+      "code": "S27",
+      "description": "SIU/ACK - Broadcast Notification of Scheduled Appointments"
+    },
+    {
+      "code": "S28",
+      "description": "SLR/SLS - Request new sterilization lot"
+    },
+    {
+      "code": "S29",
+      "description": "SLR/SLS - Request Sterilization lot deletion"
+    },
+    {
+      "code": "S30",
+      "description": "STI/STS - Request item"
+    },
+    {
+      "code": "S31",
+      "description": "SDR/SDS - Request anti-microbial device data"
+    },
+    {
+      "code": "S32",
+      "description": "SMD/SMS - Request anti-microbial device cycle data"
+    },
+    {
+      "code": "S33",
+      "description": "STC/ACK - Notification of sterilization configuration"
+    },
+    {
+      "code": "S34",
+      "description": "SLN/ACK - Notification of sterilization lot"
+    },
+    {
+      "code": "S35",
+      "description": "SLN/ACK - Notification of sterilization lot deletion"
+    },
+    {
+      "code": "S36",
+      "description": "SDN/ACK - Notification of anti-microbial device data"
+    },
+    {
+      "code": "S37",
+      "description": "SCN/ACK - Notification of anti-microbial device cycle data"
+    },
+    {
+      "code": "T01",
+      "description": "MDM/ACK - Original document notification"
+    },
+    {
+      "code": "T02",
+      "description": "MDM/ACK - Original document notification and content"
+    },
+    {
+      "code": "T03",
+      "description": "MDM/ACK - Document status change notification"
+    },
+    {
+      "code": "T04",
+      "description": "MDM/ACK - Document status change notification and content"
+    },
+    {
+      "code": "T05",
+      "description": "MDM/ACK - Document addendum notification"
+    },
+    {
+      "code": "T06",
+      "description": "MDM/ACK - Document addendum notification and content"
+    },
+    {
+      "code": "T07",
+      "description": "MDM/ACK - Document edit notification"
+    },
+    {
+      "code": "T08",
+      "description": "MDM/ACK - Document edit notification and content"
+    },
+    {
+      "code": "T09",
+      "description": "MDM/ACK - Document replacement notification"
+    },
+    {
+      "code": "T10",
+      "description": "MDM/ACK - Document replacement notification and content"
+    },
+    {
+      "code": "T11",
+      "description": "MDM/ACK - Document cancel notification"
+    },
+    {
+      "code": "T12",
+      "description": "QRY/DOC - Document query"
+    },
+    {
+      "code": "U01",
+      "description": "ESU/ACK - Automated equipment status update"
+    },
+    {
+      "code": "U02",
+      "description": "ESR/ACK - Automated equipment status request"
+    },
+    {
+      "code": "U03",
+      "description": "SSU/ACK - Specimen status update"
+    },
+    {
+      "code": "U04",
+      "description": "SSR/ACK - specimen status request"
+    },
+    {
+      "code": "U05",
+      "description": "INU/ACK - Automated equipment inventory update"
+    },
+    {
+      "code": "U06",
+      "description": "INR/ACK - Automated equipment inventory request"
+    },
+    {
+      "code": "U07",
+      "description": "EAC/ACK - Automated equipment command"
+    },
+    {
+      "code": "U08",
+      "description": "EAR/ACK - Automated equipment response"
+    },
+    {
+      "code": "U09",
+      "description": "EAN/ACK - Automated equipment notification"
+    },
+    {
+      "code": "U10",
+      "description": "TCU/ACK - Automated equipment test code settings update"
+    },
+    {
+      "code": "U11",
+      "description": "TCR/ACK - Automated equipment test code settings request"
+    },
+    {
+      "code": "U12",
+      "description": "LSU/ACK - Automated equipment log/service update"
+    },
+    {
+      "code": "U13",
+      "description": "LSR/ACK - Automated equipment log/service request"
+    },
+    {
+      "code": "V01",
+      "description": "VXQ - Query for vaccination record"
+    },
+    {
+      "code": "V02",
+      "description": "VXX - Response to vaccination query returning multiple PID matches"
+    },
+    {
+      "code": "V03",
+      "description": "VXR - Vaccination record response"
+    },
+    {
+      "code": "V04",
+      "description": "VXU - Unsolicited vaccination record update"
+    },
+    {
+      "code": "Varies",
+      "description": "MFQ/MFR - Master files query (use event same as asking for e.g., M05 - location)"
+    },
+    {
+      "code": "W01",
+      "description": "ORU - Waveform result, unsolicited transmission of requested information"
+    },
+    {
+      "code": "W02",
+      "description": "QRF - Waveform result, response to query"
+    }
+  ]
+}

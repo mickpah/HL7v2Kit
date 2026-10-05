@@ -3,6 +3,10 @@
 // Regenerate via scripts/regenerate-typed-segments.sh
 
 /// Donation segment (HL7 v2.8.2).
+///
+/// Defined in HL7 v2.8.2.
+/// Accessors read by field position, so one whose DocC names fewer versions returns
+/// whatever that position holds on another version's wire.
 public struct DON: TypedSegment {
     public static let segmentID = "DON"
     public let fields: [Field]
@@ -41,14 +45,32 @@ public struct DON: TypedSegment {
         field(6).map(CNE.init(field:))
     }
 
-    /// DON-7: Intended Procedure Type. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
+    /// DON-7: Intended Procedure Type. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `intendedProcedureTypeAll` returns every repetition.
     public var intendedProcedureType: CNE? {
         field(7).map(CNE.init(field:))
     }
 
-    /// DON-8: Actual Procedure Type. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
+    /// DON-7: every repetition of Intended Procedure Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var intendedProcedureTypeAll: [CNE] {
+        repetitions(7).map(CNE.init(field:))
+    }
+
+    /// DON-8: Actual Procedure Type. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `actualProcedureTypeAll` returns every repetition.
     public var actualProcedureType: CNE? {
         field(8).map(CNE.init(field:))
+    }
+
+    /// DON-8: every repetition of Actual Procedure Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var actualProcedureTypeAll: [CNE] {
+        repetitions(8).map(CNE.init(field:))
     }
 
     /// DON-9: Donor Eligibility Flag. HL7 data type `ID`.
@@ -56,9 +78,18 @@ public struct DON: TypedSegment {
         field(9)?.stringValue
     }
 
-    /// DON-10: Donor Eligibility Procedure Type. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
+    /// DON-10: Donor Eligibility Procedure Type. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `donorEligibilityProcedureTypeAll` returns every repetition.
     public var donorEligibilityProcedureType: CNE? {
         field(10).map(CNE.init(field:))
+    }
+
+    /// DON-10: every repetition of Donor Eligibility Procedure Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var donorEligibilityProcedureTypeAll: [CNE] {
+        repetitions(10).map(CNE.init(field:))
     }
 
     /// DON-11: Donor Eligibility Date. HL7 data type `DTM`.
@@ -76,9 +107,18 @@ public struct DON: TypedSegment {
         field(13).map(CNE.init(field:))
     }
 
-    /// DON-14: Phlebotomy Issue. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
+    /// DON-14: Phlebotomy Issue. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `phlebotomyIssueAll` returns every repetition.
     public var phlebotomyIssue: CNE? {
         field(14).map(CNE.init(field:))
+    }
+
+    /// DON-14: every repetition of Phlebotomy Issue, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var phlebotomyIssueAll: [CNE] {
+        repetitions(14).map(CNE.init(field:))
     }
 
     /// DON-15: Intended Recipient Blood Relative. HL7 data type `ID`.
@@ -161,9 +201,18 @@ public struct DON: TypedSegment {
         field(30)?.stringValue
     }
 
-    /// DON-31: Donation Sample Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// DON-31: Donation Sample Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `donationSampleIdentifierAll` returns every repetition.
     public var donationSampleIdentifier: EI? {
         field(31).map(EI.init(field:))
+    }
+
+    /// DON-31: every repetition of Donation Sample Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var donationSampleIdentifierAll: [EI] {
+        repetitions(31).map(EI.init(field:))
     }
 
     /// DON-32: Donation Accept Staff. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
@@ -171,8 +220,17 @@ public struct DON: TypedSegment {
         field(32).map(XCN.init(field:))
     }
 
-    /// DON-33: Donation Material Review Staff. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// DON-33: Donation Material Review Staff. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `donationMaterialReviewStaffAll` returns every repetition.
     public var donationMaterialReviewStaff: XCN? {
         field(33).map(XCN.init(field:))
+    }
+
+    /// DON-33: every repetition of Donation Material Review Staff, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var donationMaterialReviewStaffAll: [XCN] {
+        repetitions(33).map(XCN.init(field:))
     }
 }

@@ -1,0 +1,9 @@
+{
+  "table": "0385",
+  "version": "2.7.1",
+  "name": "Manufacturer Identifier",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0385 - Manufacturer Identifier",
+  "entries": []
+}

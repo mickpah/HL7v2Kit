@@ -6,7 +6,7 @@
     { "index": 1, "swiftName": "providerProductServiceGroupNumber", "name": "Provider Product/Service Group Number", "dataType": "EI", "length": "73", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "payerProductServiceGroupNumber", "name": "Payer Product/Service Group Number", "dataType": "EI", "length": "73", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "productServiceGroupSequenceNumber", "name": "Product/Service Group Sequence Number", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "adjudicateAsGroup", "name": "Adjudicate as Group", "dataType": "ID", "length": "1", "table": "0136", "optionality": "R", "repeatability": "1", "tables": ["0136"] },
+    { "index": 4, "swiftName": "adjudicateAsGroup", "name": "Adjudicate as Group", "dataType": "ID", "length": "1", "table": "0136", "optionality": "R", "repeatability": "1", "tables": ["0136"], "tableOpen": true, "tableOpenCitation": "v2.6 Chapter 16 section 16.4.5.4 PSG-4: \"Refer to HL7-Table0136 – Yes/No-Indicator for suggested values.\"" },
     { "index": 5, "swiftName": "productServiceGroupBilledAmount", "name": "Product/Service Group Billed Amount", "dataType": "CP", "length": "254", "optionality": "R", "repeatability": "1" },
     { "index": 6, "swiftName": "productServiceGroupDescription", "name": "Product/Service Group Description", "dataType": "ST", "length": "254", "optionality": "R", "repeatability": "1" }
   ]

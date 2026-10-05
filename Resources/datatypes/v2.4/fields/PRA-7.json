@@ -1,0 +1,39 @@
+{
+  "field": "PRA-7",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Privileges",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Privilege",
+      "dataType": "CE",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Privilege class",
+      "dataType": "CE",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Expiration date",
+      "dataType": "DT",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Activation date",
+      "dataType": "DT",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Facility",
+      "dataType": "EI",
+      "optionality": ""
+    }
+  ]
+}

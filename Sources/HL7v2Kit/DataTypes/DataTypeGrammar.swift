@@ -12,7 +12,9 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// The printed component name.
     public let name: String
     /// The component's own datatype code, or `""` for a withdrawn component,
-    /// which the spec prints without one.
+    /// which the spec prints without one, and for a v2.3 to v2.4 component
+    /// whose Components / Format line prints no code (`TS.1`, `TS.2`, and
+    /// `CD.1` on v2.3 and v2.3.1).
     public let dataType: String
     /// The printed optionality code, verbatim: `R`, `O`, `C`, `B`, `W`, or
     /// `RE` (required but may be empty, v2.7+). Kept as printed because `RE`
@@ -89,8 +91,18 @@ public struct DataTypeGrammar: Sendable, Equatable, Hashable {
 /// both match the version's own registry, and `optionalityCode` is `""`
 /// because the prose prints none (ADR-017 addendum, M13).
 public enum DataTypeGrammarTable {
-    /// The component table of `dataType` as printed by `version`, or `nil`
-    /// when that version prints none (or has withdrawn the datatype).
+    /// The component table of `dataType` as printed by `version`, or `nil` when that version
+    /// defines no fixed components for it: a primitive; `CM`, a field-local composite whose
+    /// components each field defines (see ``grammar(segment:field:version:)``); a withdrawn
+    /// datatype; or `MA` / `NA` before v2.5, which print an open list (`<value1> ^ <value2> ^
+    /// ...`) with no fixed component count to state — the same pair `Validator.openComposites`
+    /// names for the width check, the single source for that decision. On v2.3 to v2.4 the
+    /// components come from the numbered prose subsections, completed by the printed
+    /// Components / Format line, and for `TQ` from the CH4 quantity/timing section (ADR-017,
+    /// M13 and P5 addenda). Validator code never calls this directly:
+    /// `Validator.componentGrammar(_:version:)` wraps it, returning `nil` first for any type
+    /// its own `primitiveComponentLimit(_:version:)` bounds instead — TS's two-component count
+    /// on v2.3 to v2.4 is documented there, not restated here.
     public static func grammar(_ dataType: String, version: Version) -> DataTypeGrammar? {
         grammars(for: version)[dataType]
     }
@@ -103,8 +115,44 @@ public enum DataTypeGrammarTable {
         case .v2_4:   return v2_4
         case .v2_5_1: return v2_5_1
         case .v2_6:   return v2_6
+        case .v2_7_1: return v2_7_1
         case .v2_8_2: return v2_8_2
-        default:      return [:]
+        case .v2_7, .v2_8: return [:]
+        }
+    }
+
+    /// The component grammar a field defines for itself, or `nil`. Before v2.5
+    /// most composite fields are typed `CM`: "the specific components of CM
+    /// fields are defined within the field descriptions" (v2.3 sec 2.8.6). Each
+    /// prints them on a "Components:" line under the field heading, and that
+    /// line is extracted here (ADR-017, P5 addendum). v2.3 also prints a few
+    /// field-local names (`TXA-22` PTS, `APR-1` SVC). `dataType` is the code the
+    /// field heading prints and `name` is the field's heading name. Always `nil`
+    /// from v2.5, where every composite has a component table of its own.
+    ///
+    /// `version` resolves through ``Version/grammarVersion``, so `2.8` reads the
+    /// v2.8.2 table. A component is recorded with the datatype its Components
+    /// line prints, `TS` included (`IN3-20.3`); a caller checking values must
+    /// still route each component through `Validator.componentGrammar(_:version:)`
+    /// so a `TS` component stays bounded by the primitive's own component limit
+    /// and format check. The validator reads this table only through
+    /// `Validator.fieldGrammar(segment:field:dataType:version:)` (P5-6), the one
+    /// resolution point its composite-aware checks share.
+    public static func grammar(segment: String, field: Int, version: Version) -> DataTypeGrammar? {
+        fieldGrammars(for: version.grammarVersion)["\(segment)-\(field)"]
+    }
+
+    /// Every field-local composite grammar printed by `version`, keyed `SEG-N`.
+    static func fieldGrammars(for version: Version) -> [String: DataTypeGrammar] {
+        switch version {
+        case .v2_3:   return v2_3_fields
+        case .v2_3_1: return v2_3_1_fields
+        case .v2_4:   return v2_4_fields
+        case .v2_5_1: return v2_5_1_fields
+        case .v2_6:   return v2_6_fields
+        case .v2_7_1: return v2_7_1_fields
+        case .v2_8_2: return v2_8_2_fields
+        case .v2_7, .v2_8: return [:]   // no v2.7 or v2.8 text; grammar(segment:field:version:) resolves grammarVersion
         }
     }
 }
@@ -120,6 +168,13 @@ enum ComponentCondition {
         let p: (Int) -> Bool = { $0 == 0 ? repeated : populated($0) }
         guard let value = parseOr(&tokens, p), tokens.isEmpty else { return false }
         return value
+    }
+
+    /// Whether `expression` parses: the same parse ``holds(_:populated:repeated:)``
+    /// runs, with every atom false. An unparseable condition would never fire (P4-25).
+    static func parses(_ expression: String) -> Bool {
+        var tokens = tokenize(expression)[...]
+        return parseOr(&tokens, { _ in false }) != nil && tokens.isEmpty
     }
 
     private static func tokenize(_ s: String) -> [String] {

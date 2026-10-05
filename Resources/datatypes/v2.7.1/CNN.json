@@ -1,0 +1,99 @@
+{
+  "dataType": "CNN",
+  "version": "2.7.1",
+  "name": "Composite ID Number and Name Simplified",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID Number",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "15="
+    },
+    {
+      "index": 2,
+      "name": "Family Name",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "50#"
+    },
+    {
+      "index": 3,
+      "name": "Given Name",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "30#"
+    },
+    {
+      "index": 4,
+      "name": "Second and Further Given Names or Initials Thereof",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "30#"
+    },
+    {
+      "index": 5,
+      "name": "Suffix (e.g., JR or III)",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20#"
+    },
+    {
+      "index": 6,
+      "name": "Prefix (e.g., DR)",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20#"
+    },
+    {
+      "index": 7,
+      "name": "Degree (e.g., MD)",
+      "dataType": "IS",
+      "optionality": "O",
+      "length": "5=",
+      "tables": [
+        "0360"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Source Table",
+      "dataType": "IS",
+      "optionality": "C",
+      "length": "4=",
+      "condition": "1 populated AND 9 empty AND (10 empty OR 11 empty)",
+      "tables": [
+        "0297"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Assigning Authority - Namespace ID",
+      "dataType": "IS",
+      "optionality": "C",
+      "length": "20=",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Assigning Authority - Universal ID",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "199=",
+      "condition": "11 populated"
+    },
+    {
+      "index": 11,
+      "name": "Assigning Authority - Universal ID Type",
+      "dataType": "ID",
+      "optionality": "C",
+      "length": "1..6",
+      "condition": "10 populated",
+      "tables": [
+        "0301"
+      ]
+    }
+  ]
+}

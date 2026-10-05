@@ -15,7 +15,7 @@ against its version's own attribute table by `scripts/audit-schemas.py` (depth *
 presence). On v2.3 / v2.3.1 / v2.4 **no segment the spec defines is missing**; v2.6 / v2.8.2
 grammar coverage is deliberately partial (see `docs/design/deferred-coverage-backlog.md`).
 
-Segments outside this list parse as ``UnknownSegment`` and remain accessible via path strings — see <doc:#Unknown-Segments> below.
+Segments outside this list parse as ``UnknownSegment`` and remain accessible via path strings — see <doc:#Unknown-segments> below.
 
 ## Reading a typed segment
 
@@ -42,6 +42,34 @@ The accessor's return type encodes the field's HL7 datatype:
 
 - **`String?`** for scalar HL7 datatypes (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `GTS`, `TX`, `DTM`). Returns the rendered first-subcomponent value if the field is single-everything-the-way-down; nil if absent.
 - **A typed composite struct** for every HL7 v2.5.1 composite datatype the typed-segment surface uses: `XPN?` / `CX?` / `XAD?` (shipped v0.2-C1); `CE?` / `CWE?` (shipped v0.3-C2); `EI?` / `XCN?` / `XTN?` (shipped v0.3-C3); `HD?` / `MSG?` / `PT?` / `VID?` / `PL?` / `CNE?` / `XON?` / `EIP?` (shipped v0.3-C4). Each struct exposes named accessors (`familyName`, `id`, `streetAddress`, `identifier`, `text`, `entityIdentifier`, `idNumber`, `telephoneNumber`, `namespaceID`, `messageCode`, `pointOfCare`, `organizationName`, `placerAssignedIdentifier`, …) for the most common components, plus a public `field: Field` for raw access to repetitions and unexposed components. After v0.3-C4 there are no remaining "Field?-typed" structured composites on the 9 spec § 17 segments — every populated typed-segment accessor returns either a `String?` (for scalar HL7 datatypes) or a typed composite struct.
+
+## Composite components and later-version accessors
+
+Every component that any supported version defines has a named accessor on its composite
+view, and each typed segment struct reaches every field, name and repetition through
+v2.8.2 (ADR-020). The examples below are compiled in `TypedSegmentsArticleExamplesTests`.
+
+```swift
+// A named accessor for every component, and a sub-composite view by position.
+let cx = pid.patientIdentifierList                        // CX?
+let effective = cx?.effectiveDate                         // CX-7
+let authority = cx?.component(4, as: HD.self)?.universalID
+
+// Every repetition of a repeating field, in wire order.
+let ids = pid.patientIdentifierListAll                    // [CX]
+
+// A field a later version defines. Not version-gated: nil when OBX-29 is
+// absent, otherwise whatever OBX-29 holds on the wire.
+let kind = obx.observationType                            // OBX-29 (v2.8.2)
+
+// A later version retypes a composite field: re-view it.
+let coded = obx.observationIdentifier?.viewed(as: CWE.self)
+```
+
+`component(_:as:)` returns `nil` only for an absent component; a present but empty
+component gives an empty view. Accessors are not gated by the message's version: each
+accessor's documentation names the versions that define the field, and an accessor for a
+field the declared version lacks still reads that wire position.
 
 ## Iterating multi-occurrence segments
 

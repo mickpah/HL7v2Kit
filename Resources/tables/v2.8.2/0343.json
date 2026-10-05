@@ -4,11 +4,6 @@
   "name": "Military Handicapped Program Code",
   "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0343 - Military Handicapped Program Code",
-  "entries": [
-    {
-      "code": "contractors.",
-      "description": ""
-    }
-  ]
+  "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.271 (p146), Table 0343 - Military Handicapped Program Code",
+  "entries": []
 }

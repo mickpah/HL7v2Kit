@@ -1,0 +1,15 @@
+{
+  "structure": "QBP_E22",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 16, section 16.3.12 QBP^E22 - Query Authorization Request Status (event E22), p 19.",
+  "triggers": ["QBP^E22"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "group": "QUERY", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+      { "segment": "QPD", "min": 1, "max": 1 },
+      { "segment": "RCP", "min": 1, "max": 1 }
+    ]}
+  ]
+}

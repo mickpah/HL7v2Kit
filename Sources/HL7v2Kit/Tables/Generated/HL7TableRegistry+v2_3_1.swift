@@ -863,7 +863,7 @@ extension HL7TableRegistry {
         number: "0048",
         name: "What subject filter",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ADV", description: "Advice/diagnosis"),
             HL7Table.Entry(code: "ANU", description: "Nursing unit lookup (returns patients in beds, excluding empty beds)"),
@@ -1600,7 +1600,7 @@ extension HL7TableRegistry {
         number: "0105",
         name: "Source of comment",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "L", description: "Ancillary (filler) department is source of comment"),
             HL7Table.Entry(code: "P", description: "Orderer (placer) is source of comment"),
@@ -1945,6 +1945,26 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "CD", description: "Channel definition (Chapter 7 waveform: CHN category)"),
             HL7Table.Entry(code: "MA", description: "Multiplexed array (Chapter 7 waveform: WAV category)"),
             HL7Table.Entry(code: "NA", description: "Numeric array (Chapter 7 waveform: WAV category)"),
+            HL7Table.Entry(code: "CNE", description: "Coded with no exceptions"),
+            HL7Table.Entry(code: "CWE", description: "Coded with exceptions"),
+            HL7Table.Entry(code: "DLN", description: "Driver's license number"),
+            HL7Table.Entry(code: "DR", description: "Date/time range"),
+            HL7Table.Entry(code: "EI", description: "Entity identifier"),
+            HL7Table.Entry(code: "FC", description: "Financial class"),
+            HL7Table.Entry(code: "HD", description: "Hierarchic designator"),
+            HL7Table.Entry(code: "IS", description: "Coded value for user-defined tables"),
+            HL7Table.Entry(code: "JCC", description: "Job code/class"),
+            HL7Table.Entry(code: "PL", description: "Person location"),
+            HL7Table.Entry(code: "PPN", description: "Performing person time stamp"),
+            HL7Table.Entry(code: "PT", description: "Processing type"),
+            HL7Table.Entry(code: "QIP", description: "Query input parameter list"),
+            HL7Table.Entry(code: "QSC", description: "Query selection criteria"),
+            HL7Table.Entry(code: "RCD", description: "Row column definition"),
+            HL7Table.Entry(code: "RI", description: "Repeat interval"),
+            HL7Table.Entry(code: "SCV", description: "Scheduling class value pair"),
+            HL7Table.Entry(code: "TQ", description: "Timing/quantity"),
+            HL7Table.Entry(code: "VH", description: "Visiting hours"),
+            HL7Table.Entry(code: "VID", description: "Version identifier"),
         ] as [HL7Table.Entry]
     )
 
@@ -2115,10 +2135,13 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "E1 ... E9", description: "Enlisted"),
-            HL7Table.Entry(code: "O1 ... O10", description: "Officers"),
-            HL7Table.Entry(code: "W1 ... W4", description: "Warrant Officers"),
-        ] as [HL7Table.Entry]
+
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "E1 ... E9", description: "Enlisted", regex: "^E(1|2|3|4|5|6|7|8|9)$"),
+            HL7Table.CodePattern(code: "O1 ... O10", description: "Officers", regex: "^O(1|2|3|4|5|6|7|8|9|10)$"),
+            HL7Table.CodePattern(code: "W1 ... W4", description: "Warrant Officers", regex: "^W(1|2|3|4)$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0142_v2_3_1 = HL7Table(
@@ -2695,7 +2718,7 @@ extension HL7TableRegistry {
         number: "0175",
         name: "Master file identifier code",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CDM", description: "Charge description master file"),
             HL7Table.Entry(code: "CMA", description: "Clinical study with phases and scheduled master file"),
@@ -3000,7 +3023,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "NE", description: "National employer identifier"),
             HL7Table.Entry(code: "NI", description: "National unique individual identifier"),
             HL7Table.Entry(code: "NH", description: "National Health Plan Identifier"),
-            HL7Table.Entry(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code"),
             HL7Table.Entry(code: "NPI", description: "National provider identifier"),
             HL7Table.Entry(code: "PI", description: "Patient internal identifier"),
             HL7Table.Entry(code: "PN", description: "Person number"),
@@ -3017,7 +3039,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "VN", description: "Visit number"),
             HL7Table.Entry(code: "WC", description: "WIC identifier"),
             HL7Table.Entry(code: "XX", description: "Organization identifier"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code", regex: "^NN[A-Z]{3}$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0204_v2_3_1 = HL7Table(
@@ -4375,7 +4400,71 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
-
+            HL7Table.Entry(code: "0", description: "A"),
+            HL7Table.Entry(code: "1", description: "B"),
+            HL7Table.Entry(code: "2", description: "C"),
+            HL7Table.Entry(code: "3", description: "D"),
+            HL7Table.Entry(code: "4", description: "E"),
+            HL7Table.Entry(code: "5", description: "F"),
+            HL7Table.Entry(code: "6", description: "G"),
+            HL7Table.Entry(code: "7", description: "H"),
+            HL7Table.Entry(code: "8", description: "I"),
+            HL7Table.Entry(code: "9", description: "J"),
+            HL7Table.Entry(code: "10", description: "K"),
+            HL7Table.Entry(code: "11", description: "L"),
+            HL7Table.Entry(code: "12", description: "M"),
+            HL7Table.Entry(code: "13", description: "N"),
+            HL7Table.Entry(code: "14", description: "O"),
+            HL7Table.Entry(code: "15", description: "P"),
+            HL7Table.Entry(code: "16", description: "Q"),
+            HL7Table.Entry(code: "17", description: "R"),
+            HL7Table.Entry(code: "18", description: "S"),
+            HL7Table.Entry(code: "19", description: "T"),
+            HL7Table.Entry(code: "20", description: "U"),
+            HL7Table.Entry(code: "21", description: "V"),
+            HL7Table.Entry(code: "22", description: "W"),
+            HL7Table.Entry(code: "23", description: "X"),
+            HL7Table.Entry(code: "24", description: "Y"),
+            HL7Table.Entry(code: "25", description: "Z"),
+            HL7Table.Entry(code: "26", description: "a"),
+            HL7Table.Entry(code: "27", description: "b"),
+            HL7Table.Entry(code: "28", description: "c"),
+            HL7Table.Entry(code: "29", description: "d"),
+            HL7Table.Entry(code: "30", description: "e"),
+            HL7Table.Entry(code: "31", description: "f"),
+            HL7Table.Entry(code: "32", description: "g"),
+            HL7Table.Entry(code: "33", description: "h"),
+            HL7Table.Entry(code: "34", description: "I"),
+            HL7Table.Entry(code: "35", description: "j"),
+            HL7Table.Entry(code: "36", description: "k"),
+            HL7Table.Entry(code: "37", description: "l"),
+            HL7Table.Entry(code: "38", description: "m"),
+            HL7Table.Entry(code: "39", description: "n"),
+            HL7Table.Entry(code: "40", description: "o"),
+            HL7Table.Entry(code: "41", description: "p"),
+            HL7Table.Entry(code: "42", description: "q"),
+            HL7Table.Entry(code: "43", description: "r"),
+            HL7Table.Entry(code: "44", description: "s"),
+            HL7Table.Entry(code: "45", description: "t"),
+            HL7Table.Entry(code: "46", description: "u"),
+            HL7Table.Entry(code: "47", description: "v"),
+            HL7Table.Entry(code: "48", description: "w"),
+            HL7Table.Entry(code: "49", description: "x"),
+            HL7Table.Entry(code: "50", description: "y"),
+            HL7Table.Entry(code: "51", description: "z"),
+            HL7Table.Entry(code: "52", description: "0"),
+            HL7Table.Entry(code: "53", description: "1"),
+            HL7Table.Entry(code: "54", description: "2"),
+            HL7Table.Entry(code: "55", description: "3"),
+            HL7Table.Entry(code: "56", description: "4"),
+            HL7Table.Entry(code: "57", description: "5"),
+            HL7Table.Entry(code: "58", description: "6"),
+            HL7Table.Entry(code: "59", description: "7"),
+            HL7Table.Entry(code: "60", description: "8"),
+            HL7Table.Entry(code: "61", description: "9"),
+            HL7Table.Entry(code: "62", description: "+"),
+            HL7Table.Entry(code: "63", description: "/"),
+            HL7Table.Entry(code: "(pad)", description: "="),
         ] as [HL7Table.Entry]
     )
 
@@ -5407,6 +5496,7 @@ extension HL7TableRegistry {
         entries: [
             HL7Table.Entry(code: "ISO 2022-1994", description: "This standard is titled \"Information Technology - Character Code Structure and Extension Technique\". This standard specifies an escape sequence from basic one byte character set to specified other character set, and vice versa. The escape sequence expl"),
             HL7Table.Entry(code: "<null>", description: "This is the default, indicating that there is no character set switching occurring in this message."),
+            HL7Table.Entry(code: "2.3", description: "The character set switching mode specified in HL7 2.3, sections 2.8.28.6.1, and 2.9.2"),
         ] as [HL7Table.Entry]
     )
 

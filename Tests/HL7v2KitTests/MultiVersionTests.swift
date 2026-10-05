@@ -36,8 +36,11 @@ struct MultiVersionTests {
         (v24Wire, .v2_4),
         (v23Wire, .v2_3),
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.6\r", .v2_6),
+        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.7.1\r", .v2_7_1),
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.8.2\r", .v2_8_2),
-        // The legacy grammar-less case must still resolve for a bare "2.8" wire.
+        // A bare "2.7" wire resolves to .v2_7 (validated as v2.7.1, G11, ADR-018).
+        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.7\r", .v2_7),
+        // A bare "2.8" wire still resolves to .v2_8 (validated as v2.8.2, ADR-018).
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8\r", .v2_8),
     ]
 
@@ -151,8 +154,10 @@ struct MultiVersionTests {
 
     // v0.7-S4: the v2.4 ORC/OBR grammar carries the same four cross-
     // segment / message-context conditions as v2.5.1. Wire shape is a
-    // minimal v2.4 ORU^R01 with both placer orders empty — the XOR
-    // and OBR-25 conditionals should both fire.
+    // minimal v2.4 ORU^R01 with both placer orders empty and a filler id
+    // in OBR-3. Since P4-7 the order-number rule is placer-or-filler, so
+    // the filler id satisfies it (v2.4 CH04 §4.5.1.1 SN table notes print
+    // a null ORC-2 beside a valued filler number); OBR-25 still fires.
     private let v24ORUBothPlacersEmpty = """
     MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01|MSG|P|2.4\r\
     PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
@@ -160,16 +165,15 @@ struct MultiVersionTests {
     OBR|1||FIL|GLUC^Glucose\r
     """
 
-    @Test("v2.4 ORC-2 / OBR-2 XOR + OBR-25 conditionals fire under v2.4 grammar")
-    func v24CrossSegmentConditionalsFire() throws {
+    @Test("v2.4 filler id satisfies ORC-2 / OBR-2; OBR-25 fires under v2.4 grammar")
+    func v24FillerIDSatisfiesPlacerAndOBR25Fires() throws {
         let message = try Parser().parse(v24ORUBothPlacersEmpty)
         let report = Validator().validate(message)
         let codes = report.errors.map { ($0.location.segmentID, $0.location.fieldIndex) }
-        // ORC-2 XOR fires.
-        #expect(codes.contains { $0.0 == "ORC" && $0.1 == 2 })
-        // OBR-2 XOR fires (symmetric).
-        #expect(codes.contains { $0.0 == "OBR" && $0.1 == 2 })
-        // OBR-25 fires (messageCode = ORU).
+        // Placer-or-filler: OBR-3 carries the filler id, so neither placer field fires.
+        #expect(!codes.contains { $0.0 == "ORC" && $0.1 == 2 })
+        #expect(!codes.contains { $0.0 == "OBR" && $0.1 == 2 })
+        // OBR-25 fires (messageCode in (ORU, ORF, OUL)).
         #expect(codes.contains { $0.0 == "OBR" && $0.1 == 25 })
     }
 
@@ -580,8 +584,12 @@ struct MultiVersionTests {
         }
         #expect(orc?.field(30)?.dataType == "CNE")
         // Cross-segment conditions carried over verbatim from v2.5.1.
-        #expect(orc?.field(2)?.condition == "OBR-2 empty")
-        #expect(orc?.field(8)?.condition == "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty")
+        // P4-7: placer-or-filler. P8b-17: the OUL/OPU/OPL gate is gone; structure
+        // group spans scope the ORC/OBR peer.
+        #expect(orc?.field(2)?.condition
+            == "ORC-3 empty AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND OBR absent")
+        #expect(orc?.field(8)?.condition
+            == "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty")
     }
 
     @Test("v2.6 SegmentGrammarTable carries OBR (S3b) — 50 fields, CE→CNE on 44/45, conditions")
@@ -605,9 +613,11 @@ struct MultiVersionTests {
         #expect(obr?.field(49)?.dataType == "IS")   // Result Handling
         #expect(obr?.field(50)?.name == "Parent Universal Service Identifier")
         // Carried conditions (specimen / report-message / XOR).
-        #expect(obr?.field(7)?.condition == "messageCode = ORU OR SPM present OR OBR-15 populated")
-        #expect(obr?.field(25)?.condition == "messageCode = ORU")
-        #expect(obr?.field(29)?.condition == "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty")
+        #expect(obr?.field(7)?.condition == "messageCode in (ORU, ORF, OUL, OPU)")
+        #expect(obr?.field(14)?.optionality == .backwardCompat)
+        #expect(obr?.field(14)?.condition == nil)
+        #expect(obr?.field(25)?.condition == "messageCode in (ORU, ORF, OUL, OPU)")
+        #expect(obr?.field(29)?.condition == "ORC-1 = CH AND ORC-8 empty")
     }
 
     @Test("v2.6 SegmentGrammarTable carries OBX (S3b) — 25 fields, +18..25")
@@ -828,8 +838,16 @@ struct MultiVersionTests {
             #expect(table["ORC"]?.field(i)?.optionality == .backwardCompat, "ORC-\(i) should be B in v2.8.2")
         }
         #expect(table["ORC"]?.field(26)?.optionality == .conditional)
-        #expect(table["ORC"]?.field(2)?.condition == "OBR-2 empty")
-        #expect(table["ORC"]?.field(3)?.condition == "OBR-3 empty")
+        // P4-7 (X-C12): placer-or-filler over both segments, Send Number exempt.
+        // P8b-17: the OUL/OPU/OPL gate is gone; structure group spans scope the peer.
+        #expect(table["ORC"]?.field(2)?.condition
+            == "ORC-3 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND ORC-1 != SN AND OBR absent")
+        #expect(table["ORC"]?.field(3)?.condition
+            == "ORC-2 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty OR ORC-2 empty AND ORC-1 != SN AND OBR absent")
+        #expect(table["OBR"]?.field(2)?.condition
+            == "OBR-3 empty AND ORC-2 empty AND ORC-3 empty AND ORC-1 != SN OR OBR-3 empty AND ORC absent AND messageCode in (ORU, ORF)")
+        #expect(table["OBR"]?.field(3)?.condition
+            == "OBR-2 empty AND ORC-2 empty AND ORC-3 empty AND ORC-1 != SN OR OBR-2 empty AND ORC absent AND messageCode in (ORU, ORF)")
 
         // OBR: 5/6/14/15/27→W; 13 ST→CWE; 49 IS→CWE; 29 C→O (XOR dropped);
         // 10/16/28/32/33/34/35/50→B; 48 O→C; carried 2/3/7/25 conditions.
@@ -844,7 +862,7 @@ struct MultiVersionTests {
         }
         #expect(table["OBR"]?.field(48)?.optionality == .conditional)
         #expect(table["OBR"]?.field(54)?.name == "Parent Order")
-        #expect(table["OBR"]?.field(25)?.condition == "messageCode = ORU")
+        #expect(table["OBR"]?.field(25)?.condition == "messageCode in (ORU, OUL, OPU)")
 
         // OBX: 4 ST→OG; 8 IS→CWE + renamed "Interpretation Codes";
         // 15/16/18/23/24/25→B; +26..30 new; OBX-2 condition carried.
@@ -889,13 +907,14 @@ struct MultiVersionTests {
     }
 
     // S5 conditional pass: a well-formed v2.8.2 ORU^R01. Every ORU-required
-    // conditional (OBR-7, OBR-25, OBX-2) is satisfied; the v2.6 XOR/parent
-    // conditions that v2.8.2 dropped (ORC-8, OBR-29) no longer apply, and no
-    // carried condition (ORC-2/3, OBR-2/3) misfires.
+    // conditional (OBR-7, OBR-22, OBR-25, OBX-2) is satisfied; the v2.6
+    // XOR/parent conditions that v2.8.2 dropped (ORC-8, OBR-29) no longer
+    // apply, and no carried condition (ORC-2/3, OBR-2/3) misfires.
     @Test("v2.8.2 well-formed ORU validates with no spurious errors (S5 conditional pass)")
     func v282CleanORUHasNoErrors() throws {
         let obr = "OBR|1|PON123|FON456|GLU^Glucose^L|||20240301100000"
-            + String(repeating: "|", count: 18) + "F"   // Result Status → OBR-25
+            + String(repeating: "|", count: 15) + "20240301110000"   // OBR-22, required when OBR-25 is valued (§4.5.3.22)
+            + String(repeating: "|", count: 3) + "F"                  // Result Status → OBR-25
         let obx = "OBX|1|NM|GLU^Glucose^L||5.5|mmol/L|||||F"   // OBX-11 (status) → F
         let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01^ORU_R01|MSG1|P|2.8.2\r"
             + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
@@ -973,46 +992,43 @@ struct MultiVersionTests {
         let table = SegmentGrammarTable.v2_8_2
         // Every remaining C-without-condition (seg, index) in v2.8.2.
         let expected: Set<String> = [
-            "OBR-22", "OBR-48", "OBX-4", "OBX-5", "OBX-22", "DG1-22",
-            // v1.2: PV2 added — Prior Pending Location (1), Advance Directive
-            // Code (45), Expected LOA Return Date/Time (47) are conditional in the
-            // spec with no field-machine-expressible trigger (documented limitation).
-            "PV2-1", "PV2-45", "PV2-47",
+            "OBR-48", "OBX-4", "OBX-22", "DG1-22",
+            // OBX-5 left this set in P4-26: it carries `OBX-11 = O` (the
+            // dynamic-specification "valued with null" rule, CH07 §7.4.2.11).
             // v1.2: order/pharmacy family — RXO/RXE/RXD/RXG/RXC give-amount &
-            // dispense fields and TQ1/TQ2 timing fields are conditional on
+            // dispense fields are conditional on
             // data-nature / cross-segment context, not a same-segment predicate
             // (bulk-documented in conditional-completeness-audit.md).
-            "TQ1-12", "TQ2-3", "TQ2-4", "TQ2-5", "TQ2-6", "TQ2-7", "TQ2-10",
-            "RXO-1", "RXO-2", "RXO-4", "RXO-5", "RXO-15", "RXO-17", "RXO-31",
+            "RXO-5", "RXO-15", "RXO-17", "RXO-31",
             "RXE-10", "RXE-11", "RXE-15", "RXE-16", "RXE-17", "RXE-18", "RXE-19", "RXE-22",
             "RXD-5", "RXD-8", "RXG-14", "RXG-32", "RXG-33", "RXC-10", "RXC-11",
             "RXA-7", "RXA-12",
             // v1.3: scheduling family (SCH/RGS/AIS/AIG/AIL/AIP/ARQ) — filler/placer
             // and resource fields conditional on the appointment message intent;
-            // blood-product (BPX/BTX) dispense/transfusion-status conditionals;
-            // SPM-13 specimen-risk and ROL-1 role-instance. All fail-safe, grouped
-            // in conditional-completeness-audit.md.
-            "SCH-1", "SCH-2", "SCH-3", "SCH-24", "SCH-26", "SCH-27",
-            "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24", "ARQ-25",
-            "AIS-2", "AIS-4", "AIS-5", "AIS-6", "AIS-9", "AIS-10",
-            "AIG-2", "AIG-3", "AIG-8", "AIG-9", "AIG-10", "AIG-13", "AIG-14",
-            "AIL-2", "AIL-3", "AIL-4", "AIL-6", "AIL-7", "AIL-8", "AIL-11", "AIL-12",
-            "AIP-2", "AIP-3", "AIP-4", "AIP-6", "AIP-7", "AIP-8", "AIP-11", "AIP-12",
-            "BPX-5", "BPX-6", "BPX-8", "BPX-9", "BPX-10",
-            "BTX-2", "BTX-3", "BTX-4", "BTX-5", "BTX-6", "BTX-7",
-            "SPM-13", "ROL-1",
-            // v1.3 (master-files / referral batch): master-file entry/ack keys and
-            // OM7 / AUT fields conditional on the master-file event or auth context.
-            "MFE-2", "MFA-2", "OM7-16", "OM7-18", "AUT-6",
+            // (SPM-13 carries a prohibition since P4-4). All fail-safe, grouped in
+            // conditional-completeness-audit.md. ROL-1 left this set in P10-7: CH15
+            // 15.4.7.1 reads "required when used in Patient Care and Personnel
+            // Management messages".
+            "SCH-3", "SCH-24", "SCH-26",
+            "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24",
+            "AIS-2", "AIS-5", "AIG-2", "AIL-2", "AIP-2",
+            // v1.3 (master-files / referral batch): AUT-6 Reimbursement Limit is
+            // conditional on the authorization decision context. Its former
+            // batch-mates MFE-2 / MFA-2 (MFI-6 response level) and OM7-16 / OM7-18
+            // (their paired quantity fields) shipped in P4-13 and left this set.
+            "AUT-6",
             // v1.4 (query / lab-automation batch): query-tag/response and specimen-
             // container / equipment fields conditional on the query or lab-automation
-            // event context (fail-safe; documented in the register).
-            "QPD-2", "QAK-1", "RCP-4", "EQU-3", "SAC-3", "SAC-4",
+            // event context (fail-safe; documented in the register). EQU-3 left this
+            // set in P10-5b: CH13 13.4.1.3 reads "required in the ESU message". RCP-4
+            // left it in P10-7: CH05 5.5.6.4 reads "only valued when RCP-1 ... contains
+            // the value D" (a prohibition).
+            "QPD-2", "QAK-1", "SAC-3", "SAC-4",
             // v1.4 (master-file locations / patient-care / med-records batch):
             // location-relationship, pricing, goal/problem/pathway and transcription-
             // document fields conditional on the master-file / care / document event.
-            "LRL-5", "LRL-6", "PRC-5", "GOL-22", "PRB-28", "PTH-6", "PTH-7",
-            "TXA-3", "TXA-5", "TXA-7", "TXA-11", "TXA-13", "TXA-22",
+            "GOL-22", "PRB-28", "PTH-6", "PTH-7",
+            "TXA-11", "TXA-22",
             // v1.7 (CH13 lab-automation completion): the whole SID segment is
             // conditional — §13.4.11 defines all four fields with no condition text at
             // all, so which of them is required depends on what the substance/container
@@ -1052,23 +1068,17 @@ struct MultiVersionTests {
             // this set. The rest have no field-expressible trigger:
             // financial/DRG context (ADJ-7, IVC-23, PSL-10/12..16,
             // DMI-2..5, REL-1), usage-pattern exceptions (DON-1/2),
-            // required-when-known (PRT-1), no stated trigger (PRT-14,
-            // RXV-20/21).
+            // required-when-known (PRT-1), no stated trigger (RXV-20/21).
             "ADJ-7", "IVC-23", "PSL-10", "PSL-12", "PSL-13", "PSL-14",
             "PSL-15", "PSL-16", "DMI-2", "DMI-3", "DMI-4", "DMI-5", "REL-1",
-            "DON-1", "DON-2", "PRT-1", "PRT-14",
+            "DON-1", "DON-2", "PRT-1",
             "RXV-20", "RXV-21",
         ]
-        var actual = Set<String>()
-        for (seg, grammar) in table {
-            // A field whose conditionality is modelled by EITHER axis
-            // (required-when `condition` or the M8-D `prohibitedWhen`
-            // prohibition) is not bare.
-            for f in grammar.fields
-            where f.optionality == .conditional && f.condition == nil && f.prohibitedWhen == nil {
-                actual.insert("\(seg)-\(f.index)")
-            }
-        }
+        // A field whose conditionality is modelled by EITHER axis
+        // (required-when `condition` or the M8-D `prohibitedWhen`
+        // prohibition) is not bare. Shared with BareConditionalGuardTests
+        // (TestSupport.swift bareConditionals) so the two guards cannot drift.
+        let actual = bareConditionals(table)
         #expect(actual == expected,
                 "v2.8.2 C-without-condition set drifted from the audit register; got \(actual.sorted())")
     }
@@ -1080,7 +1090,7 @@ struct MultiVersionTests {
     // ("CTI-2 ... must be valued if CTI-3 ... is valued"). Each was verified against every
     // version's field-definition text by ITEM number, since the heading format differs
     // between the v2.3-era and v2.5+-era chapters.
-    @Test("v1.8: clinical-trial conditional predicates ship on all six versions")
+    @Test("v1.8: clinical-trial conditional predicates ship on every modelled version")
     func v1_8ClinicalTrialConditionsShipped() {
         let tables: [(String, [String: SegmentGrammar])] = [
             ("2.3", SegmentGrammarTable.v2_3),
@@ -1088,6 +1098,7 @@ struct MultiVersionTests {
             ("2.4", SegmentGrammarTable.v2_4),
             ("2.5.1", SegmentGrammarTable.v2_5_1),
             ("2.6", SegmentGrammarTable.v2_6),
+            ("2.7.1", SegmentGrammarTable.v2_7_1),
             ("2.8.2", SegmentGrammarTable.v2_8_2),
         ]
         for (version, table) in tables {

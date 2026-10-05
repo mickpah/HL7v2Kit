@@ -1,0 +1,35 @@
+{
+  "structure": "BAR_P01",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 6, section 6.3.1 BAR/ACK - add patient account (event P01), p 6-2. Structure ID BAR_P01 synthesised as CODE_EVT from the message code BAR and P01, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events BAR^P01 read from the section title 6.3.1 'BAR/ACK - add patient account (event P01)'. Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 BAR_P01), PROCEDURE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 BAR_P01) and INSURANCE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 BAR_P01).",
+  "triggers": ["BAR^P01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "group": "VISIT", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "PV1", "min": 0, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 },
+      { "segment": "DB1", "min": 0, "max": null },
+      { "segment": "OBX", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "segment": "DG1", "min": 0, "max": null },
+      { "segment": "DRG", "min": 0, "max": 1 },
+      { "group": "PROCEDURE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "PR1", "min": 1, "max": 1 },
+        { "segment": "ROL", "min": 0, "max": null }
+      ]},
+      { "segment": "GT1", "min": 0, "max": null },
+      { "segment": "NK1", "min": 0, "max": null },
+      { "group": "INSURANCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "ACC", "min": 0, "max": 1 },
+      { "segment": "UB1", "min": 0, "max": 1 },
+      { "segment": "UB2", "min": 0, "max": 1 }
+    ]}
+  ]
+}

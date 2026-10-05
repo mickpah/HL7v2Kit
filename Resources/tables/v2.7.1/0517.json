@@ -1,0 +1,26 @@
+{
+  "table": "0517",
+  "version": "2.7.1",
+  "name": "Inform Person Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0517 - Inform Person Code",
+  "entries": [
+    {
+      "code": "HD",
+      "description": "Inform help desk"
+    },
+    {
+      "code": "NPAT",
+      "description": "Do NOT inform patient"
+    },
+    {
+      "code": "PAT",
+      "description": "Inform patient"
+    },
+    {
+      "code": "USR",
+      "description": "Inform User"
+    }
+  ]
+}

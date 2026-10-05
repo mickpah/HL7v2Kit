@@ -1,0 +1,9 @@
+{
+  "table": "0143",
+  "version": "2.7.1",
+  "name": "Non-covered Insurance Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0143 - Non-covered Insurance Code",
+  "entries": []
+}

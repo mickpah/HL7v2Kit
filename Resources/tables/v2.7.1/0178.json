@@ -1,0 +1,18 @@
+{
+  "table": "0178",
+  "version": "2.7.1",
+  "name": "File Level Event Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0178 - File Level Event Code",
+  "entries": [
+    {
+      "code": "REP",
+      "description": "Replace current version of this master file with the version contained in this message"
+    },
+    {
+      "code": "UPD",
+      "description": "Change file records as defined in the record-level event codes for each record that follows"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "table": "0421",
+  "version": "2.7.1",
+  "name": "Severity of Illness Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0421 - Severity of Illness Code",
+  "entries": [
+    {
+      "code": "MI",
+      "description": "Mild"
+    },
+    {
+      "code": "MO",
+      "description": "Moderate"
+    },
+    {
+      "code": "SE",
+      "description": "Severe"
+    }
+  ]
+}

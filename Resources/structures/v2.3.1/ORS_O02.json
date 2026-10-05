@@ -1,0 +1,23 @@
+{
+  "structure": "ORS_O02",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.7 SUPPLY ORDERS, p 4-53. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/ORS_O02.xsd, ORS_O02.RESPONSE.CONTENT, generator HL7-Database), PATIENT (HL7-xml 2.3.1/ORS_O02.xsd, ORS_O02.PATIENT.CONTENT, generator HL7-Database) and ORDER (HL7-xml 2.3.1/ORS_O02.xsd, ORS_O02.ORDER.CONTENT, generator HL7-Database).",
+  "triggers": ["ORR^O02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "segment": "RQD", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

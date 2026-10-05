@@ -1,0 +1,9 @@
+{
+  "table": "0088",
+  "version": "2.7.1",
+  "name": "Procedure Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.18 (p27), External Table 0088 - Procedure Code; Chapter 6 sec 6.5.1.25 FT1-25 (p24) 'Refer to Externally-defined Table 0088'",
+  "entries": []
+}

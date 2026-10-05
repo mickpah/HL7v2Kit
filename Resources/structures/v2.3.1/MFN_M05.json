@@ -1,0 +1,21 @@
+{
+  "structure": "MFN_M05",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 8, section 8.8.1 Patient location master file message (MFN/MFK), p 8-48. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): MF_LOCATION (HL7-xml v2.4/MFN_M05.xsd, MFN_M05.MF_LOCATION.CONTENT, derived for v2.3.1 MFN_M05) and MF_LOC_DEPT (HL7-xml v2.4/MFN_M05.xsd, MFN_M05.MF_LOC_DEPT.CONTENT, derived for v2.3.1 MFN_M05).",
+  "triggers": ["MFN^M05"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_LOCATION", "nameSource": "v2xml-v2.4", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "LOC", "min": 1, "max": 1 },
+      { "segment": "LCH", "min": 0, "max": null },
+      { "segment": "LRL", "min": 0, "max": null },
+      { "group": "MF_LOC_DEPT", "nameSource": "v2xml-v2.4", "min": 1, "max": null, "elements": [
+        { "segment": "LDP", "min": 1, "max": 1 },
+        { "segment": "LCH", "min": 0, "max": null },
+        { "segment": "LCC", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "structure": "QRY_A19",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 3, section 3.2.19 QRY/ADR - patient query (event A19), p 3-17. Structure ID QRY_A19 synthesised as CODE_EVT from the message code QRY and A19, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events QRY^A19 read from the section title 3.2.19 'QRY/ADR - patient query (event A19)'.",
+  "triggers": ["QRY^A19"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 }
+  ]
+}

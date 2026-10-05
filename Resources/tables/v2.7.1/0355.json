@@ -1,0 +1,22 @@
+{
+  "table": "0355",
+  "version": "2.7.1",
+  "name": "Primary Key Value Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.176 (p106), HL7 Table 0355 - Primary Key Value Type: 'For locally defined master files, this table can be locally extended with other HL7 data types'",
+  "entries": [
+    {
+      "code": "CE",
+      "description": "Coded element"
+    },
+    {
+      "code": "CWE",
+      "description": "Coded with Exceptions"
+    },
+    {
+      "code": "PL",
+      "description": "Person location"
+    }
+  ]
+}

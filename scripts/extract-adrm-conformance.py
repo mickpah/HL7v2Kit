@@ -98,7 +98,29 @@ CALLER_ASSERTED = {
     'HL7au:00044.3.3': (None, 'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI'),
 }
 
+# Shipped points whose register row needs a scope note.
+SHIPPED_NOTES = {
+    # P4-20 / P4-24 / P4-26 / P4-31 (owner rulings G6, G9): see
+    # permanent-limitations-register (00060.4 row) and ADR-021.
+    'HL7au:00060.4': 'explicit prohibitions on C fields (`prohibitedWhen` / '
+                     '`additionalProhibitions`, `.conditionalFieldProhibited`): '
+                     'AIS-10, AIG-14, AIL-12, AIP-12 (all six, P4-23); '
+                     'PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, '
+                     'SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 '
+                     '(v2.8.2); OBX-2 and OBX-5 other than the HL7 null when '
+                     'OBX-11 = O (v2.4 7.4.2.11; P4-24, base since P4-26); and, '
+                     'route C (P4-31, ADR-021), v2.4 OBX-2 valued while OBX-11 = X, '
+                     'the one C field whose stored condition is the full predicate, '
+                     'reported when that condition is definitely false. The other 51 '
+                     'candidate C fields in the v2.4 ORM/ORU/REF segments carry no '
+                     'derivable prohibition (owner ruling G9): 31 trigger-only, 8 with '
+                     'no predicate the text settles as a prohibition (RQ1-2/3/4/5 read '
+                     'inclusively, RXE-10/18/19 bare, PTH-6 undefined event), 12 whose '
+                     'predicate the message does not carry',
+}
+
 SHIPPED = {
+    'HL7au:00060.4',
     'HL7au:000003', 'HL7au:000004.1', 'HL7au:000005', 'HL7au:000006',
     'HL7au:000007', 'HL7au:000008', 'HL7au:000008.1',
     'HL7au:000040.1', 'HL7au:000040.2', 'HL7au:000040.3', 'HL7au:000040.4',
@@ -118,6 +140,8 @@ SHIPPED = {
     'HL7au:00044.7.2', 'HL7au:00044.7.5',
     # M6-A stage 3 — prohibitions via SegmentCardinalityRule.maxCount.
     'HL7au:000023',
+    # P3-4 — MSG-1 restated: v2.4 has no base MSG grammar (2026-09-30).
+    'HL7au:00049.1',
     # M6-B-1 — exactly-one PRD rules (maxCount + the anyRepeat atom;
     # PRD-1 repeats) and the repaired 00104.7.0 (PRD-7 required on the
     # IR PRD via FieldOverride.condition).
@@ -151,6 +175,27 @@ SHIPPED = {
 # point names, or only one half of a two-part rule (presence but not
 # code-table membership).
 PARTIAL = {
+    # P8b-4 and P8b-4a (ADR-019 decisions 7 and 8): the segment half through the ADRM-2021
+    # structures.
+    'HL7au:00060.1': 'P8b-4, P8b-4a: with the structure check on (`messageStructureSeverity`, '
+                     'on in the default and strict presets since P8b-18), a v2.4 ORU^R01, '
+                     'ORM^O01, REF^I12, RRI^I12 or OSR^Q06 is also matched against the ADRM-2021 '
+                     'structure (pp 205, 279, 324, 325, 281; '
+                     '`Resources/structures/profiles/au-adrm-2021/`) and a segment it requires and '
+                     'the message lacks is reported (RRI^I12: MSA); removed base segments are not '
+                     'findings (decision 7), and a base structure finding is dropped where the ADRM '
+                     'structure accepts the message at that point (a segment it places there, or '
+                     'one it makes optional); an exact-matched base is matched again past a dropped '
+                     'finding, so later base findings are kept. The field and component half is '
+                     'the Validator core. Not enforced: the Appendix 8 simplified REF structure '
+                     '(p 484, selected by MSH-12), the ORR^O02 print (pp 280 to 281, unbalanced '
+                     'bracket), the prose-only PV1 mandate on ORU^R01 (pp 17, 205), the narrowed '
+                     'maxima (REF^I12 `[IN1]`, PV1 and PV2, p 324) and the order detail of the '
+                     'order status response (p 281 prints only OBR; the base choice is kept, so '
+                     'RQD, RQ1, RXO, ODS or ODT in its place and an OBX after any of them go '
+                     'unflagged); '
+                     'permanent-limitations register section E, close-out summary and the P8b-4 '
+                     'and P8b-4a addenda',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
                       '(`auNASHTransport`); the "registered organisation name in HI service" half '
                       'needs the HPOS/HI directory and stays out',
@@ -192,6 +237,20 @@ PARTIAL = {
                       'not name skip fail-safe',
     'HL7au:000034.2': 'same machinery on OBX-5 coded values; same '
                       'named-public-systems scope as 000034.1',
+    # P3 fix wave — the BASE rows these replace cited CX/EI/XCN base
+    # requirements that the v2.4 grammar (the AU base) does not carry.
+    'HL7au:00044.1.1': 'the presence half is enforced on Orders/Results/'
+                       'Referrals (CX-1 valued; yields to the base CX.1 '
+                       'check from v2.5.1); "valid according to the '
+                       'identifier scheme" needs identifier-scheme '
+                       'recognition and is not checked',
+    'HL7au:00044.3.1': 'the presence half is enforced on Orders/Results/'
+                       'Referrals (EI-1 valued); the uniqueness half is '
+                       'cross-message and out of scope',
+    'HL7au:00044.7.1': 'the presence half is enforced on Orders/Results/'
+                       'Referrals (XCN-1 valued); "valid according to the '
+                       'identifier scheme" needs identifier-scheme '
+                       'recognition and is not checked',
     'HL7au:00044.8.1': 'the offset-PRESENCE half is enforced: a TS with '
                        'hour-or-greater precision and no +/-ZZZZ suffix '
                        'fires on Orders/Results/Referrals; the "offset '
@@ -211,24 +270,17 @@ PARTIAL = {
 # Enforced by the base spec model before the overlay runs, so the overlay
 # deliberately does not restate them.
 BASE = {
-    'HL7au:00044.1.1': 'CX-1 is already `CX.requiredComponents`',
     'HL7au:000008.1.4': 'OBX-3.3 = AUSPDI is the discriminator the '
                         'HL7au:000008.1 overlay gates on, not an assertion',
     'HL7au:000008.1.2': 'definitional — states how a display segment is '
                         'identified; implemented as the overlay gate',
     'HL7au:00046.3': 'R-optionality enforcement is the Validator core',
-    'HL7au:00060.1': 'R-optionality enforcement is the Validator core',
     'HL7au:00060.3': 'conditional predicates are the same-segment DSL',
-    'HL7au:00060.4': 'conditional predicates are the same-segment DSL',
     'HL7au:00046.1.1': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.2': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.3': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.4': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.5': 'escaping is `Serializer` behaviour, already correct',
-    'HL7au:00049.1': 'MSG-1 is already `MSG.requiredComponents`',
-    'HL7au:00044.3.1': 'EI-1 is already `EI.requiredComponents`; the '
-                       'uniqueness half is cross-message and out of scope',
-    'HL7au:00044.7.1': 'XCN-1 is already `XCN.requiredComponents`',
 }
 
 # Registered as permanent / documented limitations.
@@ -312,7 +364,6 @@ OUT_OF_SCOPE = [
     ('HL7au:000031',     'display provenance (receiver rendering)'),
     ('HL7au:000033',     'advisory ("should"), terminology content'),
     ('HL7au:00044.0.1',  'user-defined datatypes are not detectable on the wire'),
-    ('HL7au:00044.7.1',  'identifier-scheme validity, not presence'),
     ('HL7au:00044.7.6',  'advisory ("should")'),
     ('HL7au:00048',      'byte-level character-encoding check'),
     ('HL7au:00050',      'APUTS terminology content (external code system)'),
@@ -353,7 +404,7 @@ def classify(row):
         if marker is None or marker in row['text']:
             return ('SHIPPED', note)
     if i in SHIPPED:
-        return ('SHIPPED', '')
+        return ('SHIPPED', SHIPPED_NOTES.get(i, ''))
     if i in BASE:
         return ('BASE', BASE[i])
     if i in REGISTERED:

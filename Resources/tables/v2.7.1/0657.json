@@ -1,0 +1,22 @@
+{
+  "table": "0657",
+  "version": "2.7.1",
+  "name": "Device Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0657 - Device Type",
+  "entries": [
+    {
+      "code": "1",
+      "description": "EO Gas Sterilizer"
+    },
+    {
+      "code": "2",
+      "description": "Steam Sterilizer"
+    },
+    {
+      "code": "3",
+      "description": "Peracetic Acid"
+    }
+  ]
+}

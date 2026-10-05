@@ -3,13 +3,9 @@
   "version": "2.4",
   "name": "Segment group",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.4 Appendix A, HL7 Table 0391 - Segment group",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.4 Table 0391 - Segment group; CH05 sec 5.5.5.7 prints the same 'Etc' row and note ('currently includes no values defined by HL7'), so the printed rows are not a closed set",
   "entries": [
-    {
-      "code": "etc",
-      "description": ""
-    },
     {
       "code": "OBRG",
       "description": "OBR group"

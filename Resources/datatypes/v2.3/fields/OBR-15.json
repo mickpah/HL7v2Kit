@@ -1,0 +1,51 @@
+{
+  "field": "OBR-15",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Specimen source",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Specimen source name or code",
+      "dataType": "CE",
+      "optionality": "",
+      "tables": [
+        "0070"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Additives",
+      "dataType": "TX",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Freetext",
+      "dataType": "TX",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Body site",
+      "dataType": "CE",
+      "optionality": "",
+      "tables": [
+        "0163"
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Site modifier",
+      "dataType": "CE",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Collection method modifier code",
+      "dataType": "CE",
+      "optionality": ""
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "structure": "ORL_O34",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 4, section 4.4.9 ORL - Laboratory order response message to a multiple order related to, pp 4-16 to 4-17.",
+  "triggers": ["ORL^O34"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "SPECIMEN", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "SPM", "min": 1, "max": 1 },
+        { "segment": "OBX", "min": 0, "max": null },
+        { "segment": "SAC", "min": 0, "max": null },
+        { "group": "ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "ORC", "min": 1, "max": 1 },
+          { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "TQ1", "min": 1, "max": 1 },
+            { "segment": "TQ2", "min": 0, "max": null }
+          ]},
+          { "group": "OBSERVATION_REQUEST", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+            { "segment": "OBR", "min": 1, "max": 1 },
+            { "segment": "ROL", "min": 0, "max": null }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

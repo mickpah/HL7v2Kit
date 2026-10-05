@@ -1,0 +1,46 @@
+{
+  "structure": "RDS_O01",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.8.9 RDS/RRD - pharmacy/treatment dispense message (events O01/O02), p 4-80. Structure ID RDS_O01 synthesised as CODE_EVT from the message code RDS and O01, the first event overrides.json eventsFromTitle gives it (v2.3 prints no structure ID and no Table 0354). Events RDS^O01 from overrides.json eventsFromTitle (section 4.8.9 'RDS/RRD - pharmacy/treatment dispense message (events O01/O02)' names no event): HL7 v2.3 Chapter 4, section 4.8.9 RDS/RRD - pharmacy/treatment dispense message (events O01/O02), p 4-80: the title pairs RDS with O01 and RRD with O02; Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-94), p 2-92: 'O01 ORM - Order message (also RDE, RDS, RGV, RAS)'.. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDS_O01), PATIENT_VISIT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDS_O01), ORDER (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDS_O01), ORDER_DETAIL (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDS_O01), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDS_O01), COMPONENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.COMPONENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDS_O01), ENCODING (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDS_O01) and OBSERVATION (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RDS_O01).",
+  "triggers": ["RDS^O01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "ORDER_DETAIL", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "group": "ORDER_DETAIL_SUPPLEMENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+          { "segment": "NTE", "min": 1, "max": null },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "group": "COMPONENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+            { "segment": "RXC", "min": 1, "max": null },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]}
+      ]},
+      { "group": "ENCODING", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "RXE", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]},
+      { "segment": "RXD", "min": 1, "max": 1 },
+      { "segment": "RXR", "min": 1, "max": null },
+      { "segment": "RXC", "min": 0, "max": null },
+      { "group": "OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

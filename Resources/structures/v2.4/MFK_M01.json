@@ -1,0 +1,13 @@
+{
+  "structure": "MFK_M01",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 8, section 8.4.1 MFN/MFK - master files notification, pp 8-9 to 8-10; the same structure is printed for MFK^M07 (8.11.1). Triggers Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-138) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
+  "triggers": ["MFK^M01", "MFK^M02", "MFK^M03", "MFK^M04", "MFK^M05", "MFK^M06", "MFK^M07", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "segment": "MFA", "min": 0, "max": null }
+  ]
+}

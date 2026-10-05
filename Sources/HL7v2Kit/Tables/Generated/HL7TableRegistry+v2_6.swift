@@ -1271,7 +1271,7 @@ extension HL7TableRegistry {
         number: "0048",
         name: "What subject filter",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ADV", description: "Advice/diagnosis"),
             HL7Table.Entry(code: "ANU", description: "Nursing unit lookup (returns patients in beds, excluding empty beds)"),
@@ -2082,7 +2082,7 @@ extension HL7TableRegistry {
         number: "0105",
         name: "Source of comment",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "L", description: "Ancillary (filler) department is source of comment"),
             HL7Table.Entry(code: "O", description: "Other system is source of comment"),
@@ -2406,6 +2406,68 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "CD", description: "Channel definition (Chapter 7 waveform: CHN category)"),
             HL7Table.Entry(code: "MA", description: "Multiplexed array (Chapter 7 waveform: WAV category)"),
             HL7Table.Entry(code: "NA", description: "Numeric array (Chapter 7 waveform: WAV category)"),
+            HL7Table.Entry(code: "AUI", description: "Authorization information"),
+            HL7Table.Entry(code: "CCD", description: "Charge code and date"),
+            HL7Table.Entry(code: "CCP", description: "Channel calibration parameters"),
+            HL7Table.Entry(code: "CE", description: "Coded element"),
+            HL7Table.Entry(code: "CNE", description: "Coded with no exceptions"),
+            HL7Table.Entry(code: "CNS", description: "Composite ID number and name simplified"),
+            HL7Table.Entry(code: "CSU", description: "Channel sensitivity"),
+            HL7Table.Entry(code: "DDI", description: "Daily deductible information"),
+            HL7Table.Entry(code: "DIN", description: "Date and institution name"),
+            HL7Table.Entry(code: "DLD", description: "Discharge to location and date"),
+            HL7Table.Entry(code: "DLN", description: "Driver's license number"),
+            HL7Table.Entry(code: "DLT", description: "Delta"),
+            HL7Table.Entry(code: "DR", description: "Date/time range"),
+            HL7Table.Entry(code: "DTN", description: "Day type and number"),
+            HL7Table.Entry(code: "EI", description: "Entity identifier"),
+            HL7Table.Entry(code: "EIP", description: "Entity identifier pair"),
+            HL7Table.Entry(code: "ERL", description: "Error location"),
+            HL7Table.Entry(code: "FC", description: "Financial class"),
+            HL7Table.Entry(code: "FN", description: "Family name"),
+            HL7Table.Entry(code: "GTS", description: "General timing specification"),
+            HL7Table.Entry(code: "HD", description: "Hierarchic designator"),
+            HL7Table.Entry(code: "ICD", description: "Insurance certification definition"),
+            HL7Table.Entry(code: "IS", description: "Coded value for user-defined tables"),
+            HL7Table.Entry(code: "JCC", description: "Job code/class"),
+            HL7Table.Entry(code: "LA1", description: "Location with address variation 1"),
+            HL7Table.Entry(code: "LA2", description: "Location with address variation 2"),
+            HL7Table.Entry(code: "LD", description: "Error location and description"),
+            HL7Table.Entry(code: "MOC", description: "Money and charge code"),
+            HL7Table.Entry(code: "MOP", description: "Money or percentage"),
+            HL7Table.Entry(code: "MSG", description: "Message type"),
+            HL7Table.Entry(code: "NDL", description: "Name with location and date"),
+            HL7Table.Entry(code: "NR", description: "Numeric range"),
+            HL7Table.Entry(code: "OCD", description: "Occurrence code and date"),
+            HL7Table.Entry(code: "OSD", description: "Order sequence definition"),
+            HL7Table.Entry(code: "OSP", description: "Occurrence span code and date"),
+            HL7Table.Entry(code: "PIP", description: "Practitioner institutional privileges"),
+            HL7Table.Entry(code: "PL", description: "Person location"),
+            HL7Table.Entry(code: "PLN", description: "Practitioner license or other ID number"),
+            HL7Table.Entry(code: "PPN", description: "Performing person time stamp"),
+            HL7Table.Entry(code: "PRL", description: "Parent result link"),
+            HL7Table.Entry(code: "PT", description: "Processing type"),
+            HL7Table.Entry(code: "PTA", description: "Policy type and amount"),
+            HL7Table.Entry(code: "QIP", description: "Query input parameter list"),
+            HL7Table.Entry(code: "QSC", description: "Query selection criteria"),
+            HL7Table.Entry(code: "RCD", description: "Row column definition"),
+            HL7Table.Entry(code: "RFR", description: "Reference range"),
+            HL7Table.Entry(code: "RI", description: "Repeat interval"),
+            HL7Table.Entry(code: "RMC", description: "Room coverage"),
+            HL7Table.Entry(code: "RPT", description: "Repeat pattern"),
+            HL7Table.Entry(code: "SAD", description: "Street Address"),
+            HL7Table.Entry(code: "SCV", description: "Scheduling class value pair"),
+            HL7Table.Entry(code: "SPD", description: "Specialty description"),
+            HL7Table.Entry(code: "SPS", description: "Specimen source"),
+            HL7Table.Entry(code: "SRT", description: "Sort order"),
+            HL7Table.Entry(code: "TQ", description: "Timing/quantity"),
+            HL7Table.Entry(code: "TS", description: "Time stamp"),
+            HL7Table.Entry(code: "UVC", description: "UB value code and amount"),
+            HL7Table.Entry(code: "VH", description: "Visiting hours"),
+            HL7Table.Entry(code: "VID", description: "Version identifier"),
+            HL7Table.Entry(code: "VR", description: "Value range"),
+            HL7Table.Entry(code: "WVI", description: "Channel Identifier"),
+            HL7Table.Entry(code: "WVS", description: "Waveform source"),
         ] as [HL7Table.Entry]
     )
 
@@ -2576,10 +2638,13 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "E1... E9", description: "Enlisted"),
-            HL7Table.Entry(code: "O1 ... O9", description: "Officers"),
-            HL7Table.Entry(code: "W1 ... W4", description: "Warrant Officers"),
-        ] as [HL7Table.Entry]
+
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "E1... E9", description: "Enlisted", regex: "^E(1|2|3|4|5|6|7|8|9)$"),
+            HL7Table.CodePattern(code: "O1 ... O9", description: "Officers", regex: "^O(1|2|3|4|5|6|7|8|9)$"),
+            HL7Table.CodePattern(code: "W1 ... W4", description: "Warrant Officers", regex: "^W(1|2|3|4)$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0142_v2_6 = HL7Table(
@@ -3103,7 +3168,7 @@ extension HL7TableRegistry {
         number: "0175",
         name: "Master file identifier code",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CDM", description: "Charge description master file"),
             HL7Table.Entry(code: "CLN", description: "Clinic master file"),
@@ -3400,7 +3465,7 @@ extension HL7TableRegistry {
         number: "0203",
         name: "Identifier type",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "AM", description: "American Express"),
             HL7Table.Entry(code: "AMA", description: "American Medical Association Number"),
@@ -3461,7 +3526,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "NI", description: "National unique individual identifier"),
             HL7Table.Entry(code: "NII", description: "National Insurance Organization Identifier"),
             HL7Table.Entry(code: "NIIP", description: "National Insurance Payor Identifier (Payor)"),
-            HL7Table.Entry(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code"),
             HL7Table.Entry(code: "NP", description: "Nurse practitioner number"),
             HL7Table.Entry(code: "NPI", description: "National provider identifier"),
             HL7Table.Entry(code: "OD", description: "Optometrist license number"),
@@ -3502,7 +3566,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "WCN", description: "Workers' Comp Number"),
             HL7Table.Entry(code: "WP", description: "Work Permit"),
             HL7Table.Entry(code: "XX", description: "Organization identifier"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code", regex: "^NN[A-Z]{3}$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0204_v2_6 = HL7Table(
@@ -5968,7 +6035,7 @@ extension HL7TableRegistry {
         number: "0355",
         name: "Primary key value type",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CE", description: "Coded element"),
             HL7Table.Entry(code: "CWE", description: "Coded with Exceptions"),

@@ -1,0 +1,78 @@
+{
+  "structure": "OML_O33",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 4, section 4.4.8 OML - Laboratory order for multiple orders related to a single specimen, pp 4-18 to 4-20.",
+  "triggers": ["OML^O33"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "NK1", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "INSURANCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "GT1", "min": 0, "max": 1 },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]},
+    { "group": "SPECIMEN", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "SPM", "min": 1, "max": 1 },
+      { "segment": "OBX", "min": 0, "max": null },
+      { "segment": "SAC", "min": 0, "max": null },
+      { "group": "ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "TQ1", "min": 1, "max": 1 },
+          { "segment": "TQ2", "min": 0, "max": null }
+        ]},
+        { "group": "OBSERVATION_REQUEST", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "segment": "TCD", "min": 0, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "DG1", "min": 0, "max": null },
+          { "group": "OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "TCD", "min": 0, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]},
+          { "group": "PRIOR_RESULT", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "group": "PATIENT_PRIOR", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+              { "segment": "PID", "min": 1, "max": 1 },
+              { "segment": "PD1", "min": 0, "max": 1 }
+            ]},
+            { "group": "PATIENT_VISIT_PRIOR", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+              { "segment": "PV1", "min": 1, "max": 1 },
+              { "segment": "PV2", "min": 0, "max": 1 }
+            ]},
+            { "segment": "AL1", "min": 0, "max": null },
+            { "group": "ORDER_PRIOR", "nameSource": "printed", "min": 1, "max": null, "elements": [
+              { "segment": "ORC", "min": 0, "max": 1 },
+              { "segment": "OBR", "min": 1, "max": 1 },
+              { "segment": "NTE", "min": 0, "max": null },
+              { "group": "TIMING_PRIOR", "nameSource": "printed", "min": 0, "max": null, "elements": [
+                { "segment": "TQ1", "min": 1, "max": 1 },
+                { "segment": "TQ2", "min": 0, "max": null }
+              ]},
+              { "group": "OBSERVATION_PRIOR", "nameSource": "printed", "min": 1, "max": null, "elements": [
+                { "segment": "OBX", "min": 1, "max": 1 },
+                { "segment": "NTE", "min": 0, "max": null }
+              ]}
+            ]}
+          ]}
+        ]},
+        { "segment": "FT1", "min": 0, "max": null },
+        { "segment": "CTI", "min": 0, "max": null },
+        { "segment": "BLG", "min": 0, "max": 1 }
+      ]}
+    ]}
+  ]
+}

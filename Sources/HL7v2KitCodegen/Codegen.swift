@@ -8,10 +8,11 @@
 //   outputRoot:  ./Sources/HL7v2Kit/Segment/Generated
 //
 // The schemas root contains version directories (e.g. v2.5.1/) each with one
-// JSON file per segment (e.g. PID.json). Each file is rendered to
-//   <outputRoot>/<VersionDir>/<SegmentID>.swift
-// Existing files are overwritten — the generated tree is intended to be
-// owned by this tool, not edited by hand.
+// JSON file per segment (e.g. PID.json). Each segment renders once, across
+// versions, to
+//   <outputRoot>/<SegmentID>.swift
+// The output directory is owned by this tool: every file is rendered before any
+// is written, and a file there that the run did not produce is deleted.
 
 import Foundation
 
@@ -21,6 +22,7 @@ struct FieldSchema: Decodable {
     let name: String
     let dataType: String
     let optionality: String
+    /// "1", "*", or a decimal bound >= 2 (P6-4).
     let repeatability: String
     /// Optional predicate string controlling when a `.conditional` field
     /// becomes required. See `FieldGrammar.condition` for the grammar.
@@ -30,6 +32,9 @@ struct FieldSchema: Decodable {
     /// (populated while the predicate is true fires). See
     /// `FieldGrammar.prohibitedWhen`. M8-D.
     let prohibitedWhen: String?
+    /// Severity for the prohibition (`"error"`, `"warning"`, `"info"`);
+    /// absent means error. See `FieldGrammar.prohibitedSeverity`. P4.
+    let prohibitedSeverity: String?
     /// Track B: presence means the spec's SEQ cell is `1-n` (the field
     /// position recurs across every `|`-separated column). The value is
     /// the plural accessor name emitted alongside the primary accessor.
@@ -40,6 +45,114 @@ struct FieldSchema: Decodable {
     let table: String?
     /// The printed LEN cell, verbatim ("250"; v2.7+ "2..2", "32=", "250#"). M25.
     let length: String?
+    /// `true` when the field's own prose leaves its bound table open ("for suggested
+    /// values", User-defined, or extensible). See `FieldGrammar.tableOpen`. P2-15.
+    let tableOpen: Bool?
+    /// The spec citation that justifies `tableOpen`, quoting the field's prose. Read by
+    /// the schema audit, not emitted. P2-15.
+    let tableOpenCitation: String?
+    /// The spec citation for an `optionality` that departs from the printed attribute table,
+    /// naming the printed code and quoting the field definition that overrides it (for
+    /// example a table R whose definition limits the field to MFN messages). Read by the
+    /// schema audit as that slot's optionality whitelist entry (required whenever the
+    /// optionality departs from the print), not emitted. P4-30.
+    let optionalityCitation: String?
+    /// Further prohibitions beyond `prohibitedWhen`, each with its own severity and
+    /// spec citation. See `FieldGrammar.additionalProhibitions`. P4-21.
+    let additionalProhibitions: [ProhibitionSchema]?
+    /// `true` when the stored `condition` is the spec's complete C predicate on this version:
+    /// required when true, must not be sent when false (ADR-021). Emitted into the internal
+    /// `FullPredicateConditions` lookup, not into `FieldGrammar`. P4-31.
+    let conditionIsPredicate: Bool?
+    /// The spec citation for `conditionIsPredicate`, quoting the predicate and showing that
+    /// nothing lets the field be valued while it is false. Required with the marker; read by
+    /// the schema audit, not emitted. P4-31.
+    let predicateCitation: String?
+    /// Accessor names this field shipped under in a released version before `swiftName`
+    /// corrected them. Each is emitted as a deprecated alias that forwards to `swiftName`,
+    /// so released source keeps compiling (ADR-014). P6-9.
+    let deprecatedSwiftNames: [String]?
+}
+
+/// The `version|SEG-n` key of a field marked `conditionIsPredicate`, or `nil` when it is not
+/// marked. Fails codegen on a marker without a citation, on a field that is not printed `C`
+/// or has no `condition`, and on a citation without the marker (ADR-021). P4-31.
+func fullPredicateKey(_ field: FieldSchema, segmentID: String, version: String) -> String? {
+    let context = "\(segmentID)-\(field.index) (v\(version))"
+    guard field.conditionIsPredicate == true else {
+        precondition(field.predicateCitation == nil && field.conditionIsPredicate == nil,
+                     "\(context): predicateCitation or conditionIsPredicate set without conditionIsPredicate: true")
+        return nil
+    }
+    precondition((field.predicateCitation ?? "").trimmingCharacters(in: .whitespaces).count >= 20,
+                 "\(context): conditionIsPredicate needs a predicateCitation of at least 20 characters")
+    precondition(field.optionality == "C", "\(context): conditionIsPredicate on a field not printed C")
+    precondition(!(field.condition ?? "").isEmpty, "\(context): conditionIsPredicate on a field with no condition")
+    return "\(version)|\(segmentID)-\(field.index)"
+}
+
+/// Emit `FullPredicateConditions+Generated.swift`: the set of fields whose stored condition
+/// is the spec's full C predicate (ADR-021). Internal, not public API. P4-31.
+func renderFullPredicateConditions(_ schemasByVersion: [String: [SegmentSchema]]) -> String {
+    let keys = schemasByVersion.flatMap { version, schemas in
+        schemas.flatMap { schema in
+            schema.fields.compactMap { fullPredicateKey($0, segmentID: schema.segmentID, version: version) }
+        }
+    }.sorted()
+    let rows = keys.map { "        \"\($0)\"," }.joined(separator: "\n")
+    return """
+    // Auto-generated by HL7v2KitCodegen. Do not edit by hand.
+    // The fields whose schema marks `conditionIsPredicate: true` (ADR-021): the stored
+    // condition is the spec's complete C predicate on that version. To change the set,
+    // edit Resources/schemas/ and run scripts/regenerate-typed-segments.sh.
+
+    extension FullPredicateConditions {
+        /// `version|SEG-n` keys, sorted.
+        static let generated: Set<String> = [
+    \(rows)
+        ]
+    }
+
+    """
+}
+
+/// One entry of a field's `additionalProhibitions` array. `when` uses the condition
+/// grammar; `severity` is `error`, `warning` or `info`; `citation` quotes the spec text
+/// (read by the schema audit and required here, not emitted). P4-21. `permitsNull: true`
+/// exempts the HL7 null `""` (see `FieldProhibition.permitsNull`). P4-26.
+struct ProhibitionSchema: Decodable {
+    let when: String?
+    let severity: String?
+    let citation: String?
+    let permitsNull: Bool?
+}
+
+/// Render a field's `additionalProhibitions` as the trailing initialiser argument, or `""`
+/// when the key is absent so the field keeps a released initialiser. Fails codegen on a
+/// malformed rule: a blank or one-token `when`, an unknown severity, a missing citation.
+func renderAdditionalProhibitions(_ rules: [ProhibitionSchema]?, context: String) -> String {
+    guard let rules else { return "" }
+    precondition(!rules.isEmpty, "\(context): additionalProhibitions is empty; omit the key instead")
+    let items = rules.enumerated().map { offset, rule -> String in
+        let label = "\(context) additionalProhibitions[\(offset)]"
+        let when = rule.when ?? ""
+        // Plain spaces only, none leading or trailing, at least two tokens. Same rule as
+        // `when_is_well_formed` in scripts/audit-schemas.py.
+        let otherWhitespace = when.unicodeScalars.contains {
+            $0 != " " && CharacterSet.whitespacesAndNewlines.contains($0)
+        }
+        precondition(!otherWhitespace && !when.hasPrefix(" ") && !when.hasSuffix(" ")
+                        && when.split(separator: " ", omittingEmptySubsequences: true).count >= 2,
+                     "\(label): when must be a condition '<referent> <predicate>', got '\(when)'")
+        let severity = rule.severity ?? ""
+        precondition(["error", "warning", "info"].contains(severity),
+                     "\(label): severity must be error, warning or info, got '\(severity)'")
+        precondition(!(rule.citation ?? "").trimmingCharacters(in: .whitespaces).isEmpty,
+                     "\(label): citation is missing")
+        let permitsNull = rule.permitsNull == true ? ", permitsNull: true" : ""
+        return "FieldProhibition(condition: \(escapeStringLiteral(when)), severity: .\(severity)\(permitsNull))"
+    }
+    return ", additionalProhibitions: [\(items.joined(separator: ", "))]"
 }
 
 struct SegmentSchema: Decodable {
@@ -65,6 +178,15 @@ struct TableSchema: Decodable {
     let permitsLocalExtensions: Bool?
     let citation: String?
     let entries: [TableEntrySchema]
+    let patterns: [TablePatternSchema]?
+}
+
+/// One pattern row of a table (`"patterns"` in the table JSON): a printed
+/// row that names a family of codes, e.g. 0203 `NNxxx`.
+struct TablePatternSchema: Decodable {
+    let code: String
+    let description: String
+    let regex: String
 }
 
 /// HL7 data type codes whose values are scalar enough that the typed
@@ -75,8 +197,9 @@ let scalarDataTypes: Set<String> = [
 
 /// HL7 composite data types for which HL7v2Kit ships a Swift struct view.
 /// Accessors return `<Composite>?` instead of `Field?` — callers reach
-/// into the named accessors on the struct, with `.field` available for
-/// unexposed components and additional repetitions.
+/// into the named accessors on the struct (every component is named; P9-3
+/// generates the rest from CompositeViews.swift), with `.field` available
+/// for additional repetitions.
 ///
 /// v0.2-C1 shipped XPN / CX / XAD. v0.3-C2 added CE / CWE. v0.3-C3
 /// added EI / XCN / XTN. v0.3-C4 closes out the v2.5.1 typed-segment
@@ -93,9 +216,9 @@ let compositeDataTypes: Set<String> = [
 /// only to their per-version `SegmentGrammar+vX_Y_Z.swift` tables; the
 /// typed `struct PID` / `struct ORC` / ... shared across all callers
 /// lives at the `Generated/` root (one file per segment, version-agnostic
-/// names) and represents the union surface. Field accessors that don't
-/// exist on an older wire simply return nil — that's the normal Optional
-/// contract for an absent field.
+/// names) and represents the union surface. Later versions add accessors on
+/// top of this base (P9-5, ADR-020: see UnionSurface.swift); an accessor for a
+/// field absent on the message's wire returns nil, the normal Optional contract.
 let canonicalVersion = "2.5.1"
 
 /// Swift keywords that can't be bare identifiers — a schema field whose derived
@@ -113,54 +236,54 @@ func escapedIdentifier(_ s: String) -> String {
     swiftKeywords.contains(s) ? "`\(s)`" : s
 }
 
-func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
-    let returnType: String
-    let body: String
-    let docTail: String
-    if scalarDataTypes.contains(field.dataType) {
-        returnType = "String?"
-        body = "field(\(field.index))?.stringValue"
-        docTail = ""
-    } else if compositeDataTypes.contains(field.dataType) {
-        returnType = "\(field.dataType)?"
-        body = "field(\(field.index)).map(\(field.dataType).init(field:))"
-        docTail = " Returns the typed ``\(field.dataType)`` view; use `.field` for raw access."
-    } else {
-        returnType = "Field?"
-        body = "field(\(field.index))"
-        docTail = ""
-    }
-    let primary = """
-        /// \(segmentID)-\(field.index): \(field.name). HL7 data type `\(field.dataType)`.\(docTail)
-        public var \(escapedIdentifier(field.swiftName)): \(returnType) {
-            \(body)
-        }
-    """
-    guard let plural = field.variableColumns else { return primary }
-    return primary + """
+/// The deprecated aliases for a field's `deprecatedSwiftNames`: each released name forwards to
+/// the corrected `swiftName` (ADR-014: deprecate rather than remove). Fails codegen on an
+/// empty list, a duplicate, or an alias equal to `swiftName`. P6-9.
+func deprecatedAliases(for field: FieldSchema, segmentID: String, returnType: String) -> String {
+    guard let names = field.deprecatedSwiftNames else { return "" }
+    let context = "\(segmentID)-\(field.index)"
+    precondition(!names.isEmpty, "\(context): deprecatedSwiftNames is empty (omit the key instead)")
+    precondition(Set(names).count == names.count, "\(context): deprecatedSwiftNames has a duplicate")
+    precondition(!names.contains(field.swiftName), "\(context): deprecatedSwiftNames repeats the swiftName")
+    let target = escapedIdentifier(field.swiftName)
+    return names.map { old in
+        """
 
 
-        /// \(segmentID)-\(field.index)..n: every `\(field.name)` column. The spec's SEQ is `1-n`:
-        /// the field position recurs, so this returns each `|`-separated column from
-        /// position \(field.index) upward in wire order (empty columns included). Not
-        /// `~`-repetition — each element is one column.
-        public var \(escapedIdentifier(plural)): [Field] {
-            fields.count > \(field.index) ? Array(fields[\(field.index)...]) : []
-        }
-    """
+            /// \(segmentID)-\(field.index): \(field.name). The name this accessor shipped under before
+            /// the schema corrected it; use ``\(field.swiftName)``.
+            @available(*, deprecated, renamed: "\(field.swiftName)")
+            public var \(escapedIdentifier(old)): \(returnType) {
+                \(target)
+            }
+        """
+    }.joined()
 }
 
-func render(_ schema: SegmentSchema) -> String {
-    let accessors = schema.fields
-        .map { swiftAccessor(for: $0, segmentID: schema.segmentID) }
-        .joined(separator: "\n\n")
+func render(_ schema: SegmentSchema, union: UnionSurface = UnionSurface()) -> String {
+    var blocks = schema.fields.map {
+        swiftAccessor(for: $0, segmentID: schema.segmentID, notes: union.notes[$0.index] ?? [],
+                      all: union.repeats[$0.index], version: schema.version)
+    }
+    blocks += union.accessors.map {
+        swiftAccessor(for: $0.field, segmentID: schema.segmentID, name: $0.swiftName,
+                      notes: $0.notes, all: $0.all, plural: false, aliases: false)
+    }
+    let accessors = blocks.joined(separator: "\n\n")
+    let versions = union.segmentVersions.isEmpty ? [schema.version] : union.segmentVersions
+    let others = versions.filter { $0 != schema.version }
+    let unionLine = others.isEmpty ? "" : "\n// Version union (P9-5, ADR-020) with: \(versionList(others))"
 
     return """
     // Auto-generated by HL7v2KitCodegen. Do not edit by hand.
-    // Source schema: Resources/schemas/v\(schema.version)/\(schema.segmentID).json
+    // Source schema: Resources/schemas/v\(schema.version)/\(schema.segmentID).json\(unionLine)
     // Regenerate via scripts/regenerate-typed-segments.sh
 
     /// \(schema.description) segment (HL7 v\(schema.version)).
+    ///
+    /// Defined in HL7 \(versionList(versions)).
+    /// Accessors read by field position, so one whose DocC names fewer versions returns
+    /// whatever that position holds on another version's wire.
     public struct \(schema.segmentID): TypedSegment {
         public static let segmentID = "\(schema.segmentID)"
         public let fields: [Field]
@@ -217,13 +340,31 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
     let versionSwiftName = versionDirName(version)
     let entries = schemas.sorted(by: { $0.segmentID < $1.segmentID }).map { schema in
         let fields = schema.fields.sorted(by: { $0.index < $1.index }).map { field in
-            let repeatability = field.repeatability == "*" ? ".multiple" : ".single"
+            // P6-4: a decimal of 2 or more is a printed RP/# bound ("Y/3", "3").
+            let maxRepetitions = Int(field.repeatability).flatMap { $0 > 1 ? $0 : nil }
+            precondition(["1", "*"].contains(field.repeatability) || maxRepetitions != nil,
+                         "\(schema.segmentID)-\(field.index): repeatability must be 1, * or a bound of 2 or more, got \(field.repeatability)")
+            let repeatability = field.repeatability == "*" || maxRepetitions != nil ? ".multiple" : ".single"
             let condition = field.condition.map { escapeStringLiteral($0) } ?? "nil"
             let prohibitedWhen = field.prohibitedWhen.map { escapeStringLiteral($0) } ?? "nil"
             let variableColumns = field.variableColumns != nil ? "true" : "false"
             let table = field.table.map { escapeStringLiteral($0) } ?? "nil"
             let length = field.length.map { escapeStringLiteral($0) } ?? "nil"
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)),"
+            // Emitted only when set, so unmarked fields keep the released initialiser.
+            let tableOpen = field.tableOpen == true ? ", tableOpen: true" : ""
+            let prohibitedSeverity: String = {
+                guard let raw = field.prohibitedSeverity else { return "" }
+                precondition(field.prohibitedWhen != nil,
+                             "\(schema.segmentID)-\(field.index): prohibitedSeverity is set without prohibitedWhen")
+                precondition(["error", "warning", "info"].contains(raw),
+                             "\(schema.segmentID)-\(field.index): prohibitedSeverity must be error, warning or info, got \(raw)")
+                return ", prohibitedSeverity: .\(raw)"
+            }()
+            let additionalProhibitions = renderAdditionalProhibitions(
+                field.additionalProhibitions, context: "\(schema.segmentID)-\(field.index)")
+            // Last in the shared tail, so it is accepted after any of the arguments above (P6-4).
+            let bound = maxRepetitions.map { ", maxRepetitions: \($0)" } ?? ""
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)\(additionalProhibitions)\(bound)),"
         }.joined(separator: "\n")
         // One typed constant per segment. The whole version used to be a single dictionary
         // literal, which the type checker solves as ONE expression: once fields carried a
@@ -278,42 +419,59 @@ struct DataTypeSchema: Decodable {
     let version: String
     let name: String
     let components: [ComponentSchema]
+    /// P5: the `SEG-N` of a field-local composite (`Resources/datatypes/v<X>/fields/`); nil for a datatype.
+    let field: String?
+}
+
+/// One `DataTypeGrammar` constant (M10-B; P5 reuses it for field-local composites).
+func renderDataTypeConstant(_ constant: String, _ t: DataTypeSchema) -> String {
+    let components = t.components.sorted { $0.index < $1.index }.map { c -> String in
+        let tables = (c.tables ?? []).map { escapeStringLiteral($0) }.joined(separator: ", ")
+        let length = c.length.map { escapeStringLiteral($0) } ?? "nil"
+        let condition = c.condition.map { escapeStringLiteral($0) } ?? "nil"
+        let conformance = c.conformanceCondition.map { escapeStringLiteral($0) } ?? "nil"
+        return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)], length: \(length), condition: \(condition), conformanceCondition: \(conformance)),"
+    }.joined(separator: "\n")
+    return """
+        private static let \(constant): DataTypeGrammar = DataTypeGrammar(
+            dataType: "\(t.dataType)",
+            version: "\(t.version)",
+            name: \(escapeStringLiteral(t.name)),
+            components: [
+    \(components)
+            ]
+        )
+    """
 }
 
 /// Emit `DataTypeGrammarTable+v<X_Y_Z>.swift` (M10-B). One typed constant per
 /// datatype: a single dictionary literal for a whole version is one expression
-/// to the type checker, and the grammar tables showed what that costs.
-func renderDataTypeTable(versionSwiftName: String, sourceDir: String, types: [DataTypeSchema]) -> String {
+/// to the type checker, and the grammar tables showed what that costs. P5 adds
+/// `v<X_Y_Z>_fields`, the field-local composites keyed `SEG-N`.
+func renderDataTypeTable(versionSwiftName: String, sourceDir: String, types: [DataTypeSchema], fields: [DataTypeSchema] = []) -> String {
     let sorted = types.sorted { $0.dataType < $1.dataType }
-    let constants = sorted.map { t -> String in
-        let components = t.components.sorted { $0.index < $1.index }.map { c -> String in
-            let tables = (c.tables ?? []).map { escapeStringLiteral($0) }.joined(separator: ", ")
-            let length = c.length.map { escapeStringLiteral($0) } ?? "nil"
-            let condition = c.condition.map { escapeStringLiteral($0) } ?? "nil"
-            let conformance = c.conformanceCondition.map { escapeStringLiteral($0) } ?? "nil"
-            return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)], length: \(length), condition: \(condition), conformanceCondition: \(conformance)),"
-        }.joined(separator: "\n")
-        return """
-            private static let \(versionSwiftName)_\(t.dataType): DataTypeGrammar = DataTypeGrammar(
-                dataType: "\(t.dataType)",
-                version: "\(t.version)",
-                name: \(escapeStringLiteral(t.name)),
-                components: [
-        \(components)
-                ]
-            )
-        """
-    }.joined(separator: "\n\n")
+    let sortedFields = fields.sorted { ($0.field ?? "") < ($1.field ?? "") }
+    func fieldConstant(_ t: DataTypeSchema) -> String {
+        "\(versionSwiftName)_field_\((t.field ?? "").replacingOccurrences(of: "-", with: "_"))"
+    }
+    let constants = (sorted.map { renderDataTypeConstant("\(versionSwiftName)_\($0.dataType)", $0) }
+        + sortedFields.map { renderDataTypeConstant(fieldConstant($0), $0) }).joined(separator: "\n\n")
     let keys = sorted.map { "        \"\($0.dataType)\": \(versionSwiftName)_\($0.dataType)," }.joined(separator: "\n")
+    let fieldKeys = sortedFields.map { "        \"\($0.field ?? "")\": \(fieldConstant($0))," }.joined(separator: "\n")
+    let fieldDictionary = sortedFields.isEmpty
+        ? "    static let \(versionSwiftName)_fields: [String: DataTypeGrammar] = [:]"
+        : "    static let \(versionSwiftName)_fields: [String: DataTypeGrammar] = [\n\(fieldKeys)\n    ]"
     return """
     // Auto-generated by HL7v2KitCodegen. Do not edit by hand.
-    // Source: Resources/datatypes/\(sourceDir)/*.json
+    // Source: Resources/datatypes/\(sourceDir)/*.json and \(sourceDir)/fields/*.json
     // Regenerate via scripts/regenerate-typed-segments.sh
 
     extension DataTypeGrammarTable {
         static let \(versionSwiftName): [String: DataTypeGrammar] = [
     \(keys)
         ]
+
+    \(fieldDictionary)
 
     \(constants)
     }
@@ -407,6 +565,19 @@ func renderTableRegistry(versionSwiftName: String, sourceDir: String, tables: [T
         let entries = t.entries.map {
             "            HL7Table.Entry(code: \(escapeStringLiteral($0.code)), description: \(escapeStringLiteral($0.description))),"
         }.joined(separator: "\n")
+        for p in t.patterns ?? [] {
+            _ = try NSRegularExpression(pattern: p.regex)   // fail the codegen on a malformed pattern
+            guard p.regex.hasPrefix("^"), p.regex.hasSuffix("$") else {
+                FileHandle.standardError.write(Data(
+                    "HL7v2KitCodegen: table \(t.table) (v\(t.version)): pattern \"\(p.code)\" regex \"\(p.regex)\" is not anchored — expected \"^...$\"\n".utf8))
+                throw ExitCode.failure
+            }
+        }
+        let patternLines = (t.patterns ?? []).map {
+            "            HL7Table.CodePattern(code: \(escapeStringLiteral($0.code)), description: \(escapeStringLiteral($0.description)), regex: \(escapeStringLiteral($0.regex))),"
+        }
+        let patternsArgument = patternLines.isEmpty ? "" :
+            ",\n        patterns: [\n" + patternLines.joined(separator: "\n") + "\n        ] as [HL7Table.CodePattern]"
         return """
             static let t\(t.table)_\(versionSwiftName) = HL7Table(
                 number: "\(t.table)",
@@ -415,7 +586,7 @@ func renderTableRegistry(versionSwiftName: String, sourceDir: String, tables: [T
                 permitsLocalExtensions: \(t.permitsLocalExtensions ?? false),
                 entries: [
         \(entries)
-                ] as [HL7Table.Entry]
+                ] as [HL7Table.Entry]\(patternsArgument)
             )
         """
     }.joined(separator: "\n\n")
@@ -467,6 +638,8 @@ struct Codegen {
         let outputRoot = URL(fileURLWithPath: args.count > 2 ? args[2] : "\(cwd)/Sources/HL7v2Kit/Segment/Generated")
         let tablesRoot = URL(fileURLWithPath: args.count > 3 ? args[3] : "\(cwd)/Resources/tables")
         let tablesOutputRoot = URL(fileURLWithPath: args.count > 4 ? args[4] : "\(cwd)/Sources/HL7v2Kit/Tables/Generated")
+        let structBasePins = try StructBasePins.load(
+            URL(fileURLWithPath: args.count > 13 ? args[13] : "\(cwd)/Resources/struct-bases.json"))
 
         let fm = FileManager.default
 
@@ -487,68 +660,55 @@ struct Codegen {
                 .filter { $0.pathExtension == "json" }
                 .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
 
-            let isCanonical = (version == canonicalVersion)
-            // Canonical-version structs emit at the Generated/ root rather
-            // than under a per-version subdirectory. The struct surface is
-            // shared across every supported HL7 v2 version (typed-segment
-            // accessors return Optional, so fields not present on an older
-            // wire surface as nil) — placing the file under v2_5_1/ would
-            // misleadingly imply sibling v2_3_1/, v2_4/ etc. that never
-            // exist. Per-version SegmentGrammar+vX_Y_Z.swift files DO live
-            // at the Generated/ root and reflect the per-version field
-            // sets. See Codegen.swift `canonicalVersion` documentation.
-            if isCanonical {
-                try fm.createDirectory(at: outputRoot, withIntermediateDirectories: true)
-            }
-
             for schemaURL in segmentFiles {
                 let data = try Data(contentsOf: schemaURL)
                 let schema = try JSONDecoder().decode(SegmentSchema.self, from: data)
                 schemasByVersion[version, default: []].append(schema)
-                guard isCanonical else { continue }
-                let source = render(schema)
-                let outFile = outputRoot.appendingPathComponent("\(schema.segmentID).swift")
-                try Data(source.utf8).write(to: outFile)
-                print("emitted \(outFile.path)")
-                emitted += 1
-                emittedSegmentIDs.insert(schema.segmentID)
             }
         }
 
-        // Fallback pass (v3-C5): a segment with no canonical v2.5.1 schema
-        // — the v2.6/v2.8.2-only surface — emits its shared struct from
-        // the EARLIEST version that defines it. This extends the
-        // union-surface doctrine rather than replacing it: canonical
-        // stays authoritative wherever it defines a segment; where it
-        // never does, the earliest definer is that segment's de-facto
-        // canonical. (Pre-v2.6 versions cannot reach this path — the
-        // presence audit guarantees every pre-v2.6 segment also exists
-        // on canonical.)
-        for (_, schemas) in schemasByVersion.sorted(by: { $0.key < $1.key }) {
-            for schema in schemas where !emittedSegmentIDs.contains(schema.segmentID) {
-                let source = render(schema)
-                let outFile = outputRoot.appendingPathComponent("\(schema.segmentID).swift")
-                try Data(source.utf8).write(to: outFile)
-                print("emitted \(outFile.path)")
-                emitted += 1
-                emittedSegmentIDs.insert(schema.segmentID)
+        // Union surface (P9-5, V282-C10, ADR-020; supersedes the v3-C5 fallback
+        // pass). Each segment struct emits once, at the Generated/ root (the
+        // struct is shared across versions; per-version field sets live in the
+        // SegmentGrammar+vX_Y_Z.swift tables), from its base schema: the version
+        // pinned in Resources/struct-bases.json (P10-3: a released struct's base
+        // never moves), else canonical v2.5.1, else the earliest version that
+        // defines the segment (StructBase.swift). The other
+        // versions add accessors on top (later element names, fields past the
+        // base maximum, `<name>As<T>` where a scalar or raw field is printed as a
+        // composite, `<name>All` where any version repeats the field) and DocC
+        // naming the versions each accessor applies to. See UnionSurface.swift.
+        var schemasBySegment: [String: [SegmentSchema]] = [:]
+        for version in schemasByVersion.keys.sorted(by: versionLess) {
+            for schema in schemasByVersion[version] ?? [] {
+                schemasBySegment[schema.segmentID, default: []].append(schema)
             }
         }
+        // All-or-nothing: render every file for the directory first, then write
+        // them and delete any file the run did not produce (writeGeneratedDirectory).
+        var rendered: [(file: URL, source: String)] = []
+        for (segmentID, schemas) in schemasBySegment.sorted(by: { $0.key < $1.key }) {
+            let base = try structBase(segmentID: segmentID, schemas: schemas, pins: structBasePins)
+            let union = try unionSurface(base: base, others: schemas.filter { $0.version != base.version })
+            rendered.append((outputRoot.appendingPathComponent("\(segmentID).swift"), render(base, union: union)))
+            emitted += 1
+            emittedSegmentIDs.insert(segmentID)
+        }
 
-        // Emit the cross-version SegmentRegistry extension.
-        try fm.createDirectory(at: outputRoot, withIntermediateDirectories: true)
-        let registrySource = renderRegistry(segmentIDs: Array(emittedSegmentIDs))
-        let registryFile = outputRoot.appendingPathComponent("SegmentRegistry+Generated.swift")
-        try Data(registrySource.utf8).write(to: registryFile)
-        print("emitted \(registryFile.path)")
+        // The cross-version SegmentRegistry extension.
+        rendered.append((outputRoot.appendingPathComponent("SegmentRegistry+Generated.swift"),
+                         renderRegistry(segmentIDs: Array(emittedSegmentIDs))))
 
-        // Emit the per-version SegmentGrammar table consumed by Validator.
+        // The per-version SegmentGrammar table consumed by Validator.
         for (version, schemas) in schemasByVersion.sorted(by: { $0.key < $1.key }) {
-            let grammarSource = renderGrammarTable(version: version, schemas: schemas)
-            let grammarFile = outputRoot.appendingPathComponent("SegmentGrammar+\(versionDirName(version)).swift")
-            try Data(grammarSource.utf8).write(to: grammarFile)
-            print("emitted \(grammarFile.path)")
+            rendered.append((outputRoot.appendingPathComponent("SegmentGrammar+\(versionDirName(version)).swift"),
+                             renderGrammarTable(version: version, schemas: schemas)))
         }
+
+        // P4-31: the full-predicate marking (ADR-021).
+        rendered.append((outputRoot.appendingPathComponent("FullPredicateConditions+Generated.swift"),
+                         renderFullPredicateConditions(schemasByVersion)))
+        try writeGeneratedDirectory(rendered, into: outputRoot)
 
         // Emit the per-version HL7 code-table registry (M6-O6). Version
         // directories are the ones whose name starts with "v"; anything
@@ -650,6 +810,7 @@ struct Codegen {
         }
 
         // M10-B: datatype component tables.
+        var dataTypesByVersion: [String: [DataTypeSchema]] = [:]
         let dataTypesRoot = URL(fileURLWithPath: args.count > 5 ? args[5] : "\(cwd)/Resources/datatypes")
         let dataTypesOutputRoot = URL(fileURLWithPath: args.count > 6 ? args[6] : "\(cwd)/Sources/HL7v2Kit/DataTypes/Generated")
         if fm.fileExists(atPath: dataTypesRoot.path) {
@@ -677,13 +838,58 @@ struct Codegen {
                     }
                     types.append(type)
                 }
+                dataTypesByVersion[version] = types
+                // P5: field-local composites, Resources/datatypes/v<X>/fields/<SEG>-<N>.json.
+                var fields: [DataTypeSchema] = []
+                let fieldsURL = dirURL.appendingPathComponent("fields")
+                if fm.fileExists(atPath: fieldsURL.path) {
+                    for fileURL in try fm.contentsOfDirectory(at: fieldsURL, includingPropertiesForKeys: nil)
+                        .filter({ $0.pathExtension == "json" }) {
+                        let type: DataTypeSchema
+                        do {
+                            type = try JSONDecoder().decode(DataTypeSchema.self, from: Data(contentsOf: fileURL))
+                        } catch {
+                            FileHandle.standardError.write(Data(
+                                "HL7v2KitCodegen: \(fileURL.path): malformed field grammar JSON — \(error)\n".utf8))
+                            throw ExitCode.failure
+                        }
+                        guard type.field == fileURL.deletingPathExtension().lastPathComponent, type.version == version else {
+                            FileHandle.standardError.write(Data(
+                                "HL7v2KitCodegen: \(fileURL.path): field / version do not match the path\n".utf8))
+                            throw ExitCode.failure
+                        }
+                        // The key becomes part of a Swift identifier (`v2_4_field_IN3_20`).
+                        guard let key = type.field, key.range(of: "^[A-Z][A-Z0-9]{2}-[1-9][0-9]*$", options: .regularExpression) != nil else {
+                            FileHandle.standardError.write(Data(
+                                "HL7v2KitCodegen: \(fileURL.path): field is not SEG-N\n".utf8))
+                            throw ExitCode.failure
+                        }
+                        fields.append(type)
+                    }
+                }
                 let swiftName = versionDirName(version)
                 let outFile = dataTypesOutputRoot.appendingPathComponent("DataTypeGrammarTable+\(swiftName).swift")
-                try Data(renderDataTypeTable(versionSwiftName: swiftName, sourceDir: dirURL.lastPathComponent, types: types).utf8)
+                try Data(renderDataTypeTable(versionSwiftName: swiftName, sourceDir: dirURL.lastPathComponent, types: types, fields: fields).utf8)
                     .write(to: outFile)
-                print("emitted \(outFile.path) (\(types.count) datatype(s))")
+                print("emitted \(outFile.path) (\(types.count) datatype(s), \(fields.count) field-local)")
             }
         }
+
+        // P9-3 (V251-C11, ADR-020): generated composite-view component accessors.
+        let compositesFile = URL(fileURLWithPath: args.count > 9 ? args[9] : "\(cwd)/Resources/composites/composite-views.json")
+        let compositesOutputRoot = URL(fileURLWithPath: args.count > 10 ? args[10] : "\(cwd)/Sources/HL7v2Kit/Composite/Generated")
+        // Required: without it the generated views would go stale unseen.
+        try emitCompositeViews(specFile: compositesFile, outputRoot: compositesOutputRoot,
+                               dataTypesByVersion: dataTypesByVersion)
+
+        // ADR-019: message structures (positional arguments 11 and 12). Required, like the composites.
+        let structuresRoot = URL(fileURLWithPath: args.count > 11 ? args[11] : "\(cwd)/Resources/structures")
+        let structuresOutputRoot = URL(fileURLWithPath: args.count > 12 ? args[12] : "\(cwd)/Sources/HL7v2Kit/Structures/Generated")
+        // P8b-1: the modelled versions are the schema version directories.
+        let modelledVersions = Set(versionDirs.map {
+            $0.lastPathComponent.replacingOccurrences(of: "v", with: "", options: [.anchored])
+        })
+        try emitStructureTables(from: structuresRoot, to: structuresOutputRoot, modelledVersions: modelledVersions)
 
         print("HL7v2KitCodegen: \(emitted) segment(s) emitted under \(outputRoot.path)")
     }

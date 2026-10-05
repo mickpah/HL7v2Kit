@@ -1,0 +1,22 @@
+{
+  "table": "0500",
+  "version": "2.7.1",
+  "name": "Consent Disclosure Level",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0500 - Consent Disclosure Level",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Full Disclosure"
+    },
+    {
+      "code": "N",
+      "description": "No Disclosure"
+    },
+    {
+      "code": "P",
+      "description": "Partial Disclosure"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "table": "0376",
+  "version": "2.7.1",
+  "name": "Special Handling Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0376 - Special Handling Code",
+  "entries": [
+    {
+      "code": "AMB",
+      "description": "Ambient temperature"
+    },
+    {
+      "code": "C37",
+      "description": "Body temperature"
+    },
+    {
+      "code": "CAMB",
+      "description": "Critical ambient temperature"
+    },
+    {
+      "code": "CATM",
+      "description": "Protect from air"
+    },
+    {
+      "code": "CFRZ",
+      "description": "Critical frozen temperature"
+    },
+    {
+      "code": "CREF",
+      "description": "Critical refrigerated temperature"
+    },
+    {
+      "code": "DFRZ",
+      "description": "Deep frozen"
+    },
+    {
+      "code": "DRY",
+      "description": "Dry"
+    },
+    {
+      "code": "FRZ",
+      "description": "Frozen temperature"
+    },
+    {
+      "code": "MTLF",
+      "description": "Metal Free"
+    },
+    {
+      "code": "NTR",
+      "description": "Liquid nitrogen"
+    },
+    {
+      "code": "PRTL",
+      "description": "Protect from light"
+    },
+    {
+      "code": "PSA",
+      "description": "Do not shake"
+    },
+    {
+      "code": "PSO",
+      "description": "No shock"
+    },
+    {
+      "code": "REF",
+      "description": "Refrigerated temperature"
+    },
+    {
+      "code": "UFRZ",
+      "description": "Ultra frozen"
+    },
+    {
+      "code": "UPR",
+      "description": "Upright"
+    }
+  ]
+}

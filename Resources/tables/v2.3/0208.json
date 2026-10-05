@@ -2,9 +2,9 @@
   "table": "0208",
   "version": "2.3",
   "name": "Query Response Status",
-  "kind": "User",
+  "kind": "HL7",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.3 Appendix A, User-defined Table 0208 - Query Response Status",
+  "citation": "HL7 v2.3 Chapter 2 sec 2.24.22.2 QAK-2 Query response status (ID): 'It is defined with HL7 table 0208 - Query response status'; Table 0208 - Query response status (p. 2-120) prints OK, NF, AE and AR",
   "entries": [
     {
       "code": "OK",
@@ -17,6 +17,10 @@
     {
       "code": "AR",
       "description": "Application reject"
+    },
+    {
+      "code": "AE",
+      "description": "Application error"
     }
   ]
 }

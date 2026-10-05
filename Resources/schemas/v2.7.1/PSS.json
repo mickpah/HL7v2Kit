@@ -1,0 +1,12 @@
+{
+  "segmentID": "PSS",
+  "version": "2.7.1",
+  "description": "Product/Service Section",
+  "fields": [
+    { "index": 1, "swiftName": "providerProductServiceSectionNumber", "name": "Provider Product/Service Section Number", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "payerProductServiceSectionNumber", "name": "Payer Product/Service Section Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "productServiceSectionSequenceNumber", "name": "Product/Service Section Sequence Number", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "billedAmount", "name": "Billed Amount", "dataType": "CP", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "sectionDescriptionOrHeading", "name": "Section Description or Heading", "dataType": "ST", "length": "254#", "optionality": "R", "repeatability": "1" }
+  ]
+}

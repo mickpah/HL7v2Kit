@@ -3,14 +3,14 @@
   "version": "2.3.1",
   "description": "Application Status Change",
   "fields": [
-    { "index": 1, "swiftName": "applicationChangeType", "name": "Network Change Type", "dataType": "IS", "table": "0333", "optionality": "R", "repeatability": "1", "tables": ["0333"] },
-    { "index": 2, "swiftName": "currentCpu", "name": "Current CPU", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "currentFileserver", "name": "Current Fileserver", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "currentApplication", "name": "Current Application", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "currentFacility", "name": "Current Facility", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "newCpu", "name": "New CPU", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "newFileserver", "name": "New Fileserver", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "newApplication", "name": "New Application", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "newFacility", "name": "New Facility", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "applicationChangeType", "name": "Network Change Type", "dataType": "IS", "length": "4", "table": "0333", "optionality": "R", "repeatability": "1", "tables": ["0333"] },
+    { "index": 2, "swiftName": "currentCpu", "name": "Current CPU", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "currentFileserver", "name": "Current Fileserver", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "currentApplication", "name": "Current Application", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "currentFacility", "name": "Current Facility", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "newCpu", "name": "New CPU", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "newFileserver", "name": "New Fileserver", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "newApplication", "name": "New Application", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "newFacility", "name": "New Facility", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" }
   ]
 }

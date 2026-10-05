@@ -4,7 +4,7 @@
   "description": "MFE",
   "fields": [
     { "index": 1, "swiftName": "recordLevelEventCode", "name": "Record-Level Event Code", "dataType": "ID", "length": "3..3", "table": "0180", "optionality": "R", "repeatability": "1", "tables": ["0180"] },
-    { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "length": "20=", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "length": "20=", "optionality": "C", "repeatability": "1", "condition": "MFI-6 not in (NE)" },
     { "index": 3, "swiftName": "effectiveDateTime", "name": "Effective Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "primaryKeyValueMfe", "name": "Primary Key Value - MFE", "dataType": "Varies", "optionality": "R", "repeatability": "*", "tables": ["9999"] },
     { "index": 5, "swiftName": "primaryKeyValueType", "name": "Primary Key Value Type", "dataType": "ID", "length": "2..3", "table": "0355", "optionality": "R", "repeatability": "*", "tables": ["0355"] },

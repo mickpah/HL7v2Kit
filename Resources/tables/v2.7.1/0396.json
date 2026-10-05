@@ -1,0 +1,690 @@
+{
+  "table": "0396",
+  "version": "2.7.1",
+  "name": "Coding System",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.214 (p123), HL7 Table 0396 - Coding System; the table prints the local forms 99zzz and L, and its Note says 'Changes to Table 0396 occur' after publication, so the printed rows are not a closed set",
+  "entries": [
+    {
+      "code": "99zzz",
+      "description": "Local general code where z is an alphanumeric character"
+    },
+    {
+      "code": "ACR",
+      "description": "American College of Radiology finding codes"
+    },
+    {
+      "code": "ALPHAID2006",
+      "description": "German Alpha-ID v2006"
+    },
+    {
+      "code": "ALPHAID2007",
+      "description": "German Alpha-ID v2007"
+    },
+    {
+      "code": "ALPHAID2008",
+      "description": "German Alpha-ID v2008"
+    },
+    {
+      "code": "ALPHAID2009",
+      "description": "German Alpha-ID v2009"
+    },
+    {
+      "code": "ALPHAID2010",
+      "description": "German Alpha-ID v2010"
+    },
+    {
+      "code": "ALPHAID2011",
+      "description": "German Alpha-ID v2011"
+    },
+    {
+      "code": "ANS+",
+      "description": "HL7 set of units of measure"
+    },
+    {
+      "code": "ART",
+      "description": "WHO Adverse Reaction Terms"
+    },
+    {
+      "code": "AS4",
+      "description": "ASTM E1238/ E1467 Universal"
+    },
+    {
+      "code": "AS4E",
+      "description": "AS4 Neurophysiology Codes"
+    },
+    {
+      "code": "ATC",
+      "description": "American Type Culture Collection"
+    },
+    {
+      "code": "C4",
+      "description": "CPT-4"
+    },
+    {
+      "code": "CAPECC",
+      "description": "College of American Pathologists Electronic Cancer Checklist"
+    },
+    {
+      "code": "CAS",
+      "description": "Chemical abstract codes"
+    },
+    {
+      "code": "CCC",
+      "description": "Clinical Care Classification system"
+    },
+    {
+      "code": "CD2",
+      "description": "CDT-2 Codes"
+    },
+    {
+      "code": "CDCA",
+      "description": "CDC Analyte Codes"
+    },
+    {
+      "code": "CDCEDACUITY",
+      "description": "CDC Emergency Department Acuity"
+    },
+    {
+      "code": "CDCM",
+      "description": "CDC Methods/Instruments Codes"
+    },
+    {
+      "code": "CDCOBS",
+      "description": "CDC BioSense RT observations (Census) - CDC"
+    },
+    {
+      "code": "CDCPHINVS",
+      "description": "CDC PHIN Vocabulary Coding System"
+    },
+    {
+      "code": "CDCREC",
+      "description": "Race & Ethnicity - CDC"
+    },
+    {
+      "code": "CDS",
+      "description": "CDC Surveillance"
+    },
+    {
+      "code": "CE",
+      "description": "CEN ECG diagnostic codes"
+    },
+    {
+      "code": "CLP",
+      "description": "CLIP"
+    },
+    {
+      "code": "CPTM",
+      "description": "CPT Modifier Code"
+    },
+    {
+      "code": "CST",
+      "description": "COSTART"
+    },
+    {
+      "code": "CVX",
+      "description": "CDC Vaccine Codes"
+    },
+    {
+      "code": "DCM",
+      "description": "DICOM Controlled Terminology"
+    },
+    {
+      "code": "E",
+      "description": "EUCLIDES"
+    },
+    {
+      "code": "E5",
+      "description": "Euclides quantity codes"
+    },
+    {
+      "code": "E6",
+      "description": "Euclides Lab method codes"
+    },
+    {
+      "code": "E7",
+      "description": "Euclides Lab equipment codes"
+    },
+    {
+      "code": "ENZC",
+      "description": "Enzyme Codes"
+    },
+    {
+      "code": "EPASRS",
+      "description": "EPA SRS"
+    },
+    {
+      "code": "FDAUNII",
+      "description": "Unique Ingredient Identifier (UNII)"
+    },
+    {
+      "code": "FDDC",
+      "description": "First DataBank Drug Codes"
+    },
+    {
+      "code": "FDDX",
+      "description": "First DataBank Diagnostic Codes"
+    },
+    {
+      "code": "FDK",
+      "description": "FDA K10"
+    },
+    {
+      "code": "FIPS5_2",
+      "description": "FIPS 5-2 (State)"
+    },
+    {
+      "code": "FIPS6_4",
+      "description": "FIPS 6-4 (County)"
+    },
+    {
+      "code": "GDRG2004",
+      "description": "G-DRG German DRG Codes v2004"
+    },
+    {
+      "code": "GDRG2005",
+      "description": "G-DRG German DRG Codes v2005"
+    },
+    {
+      "code": "GDRG2006",
+      "description": "G-DRG German DRG Codes v2006"
+    },
+    {
+      "code": "GDRG2007",
+      "description": "G-DRG German DRG Codes v2007"
+    },
+    {
+      "code": "GDRG2008",
+      "description": "G-DRG German DRG Codes v2008"
+    },
+    {
+      "code": "GDRG2009",
+      "description": "G-DRG German DRG Codes v2009"
+    },
+    {
+      "code": "GMDC2004",
+      "description": "German Major Diagnostic Codes v2004"
+    },
+    {
+      "code": "GMDC2005",
+      "description": "German Major Diagnostic Codes v2005"
+    },
+    {
+      "code": "GMDC2006",
+      "description": "German Major Diagnostic Codes v2006"
+    },
+    {
+      "code": "GMDC2007",
+      "description": "German Major Diagnostic Codes v2007"
+    },
+    {
+      "code": "GMDC2008",
+      "description": "German Major Diagnostic Codes v2008"
+    },
+    {
+      "code": "GMDC2009",
+      "description": "German Major Diagnostic Codes v2009"
+    },
+    {
+      "code": "HB",
+      "description": "HIBCC"
+    },
+    {
+      "code": "HCPCS",
+      "description": "CMS (formerly HCFA) Common Procedure Coding System"
+    },
+    {
+      "code": "HCPT",
+      "description": "Health Care Provider Taxonomy"
+    },
+    {
+      "code": "HHC",
+      "description": "Home Health Care"
+    },
+    {
+      "code": "HI",
+      "description": "Health Outcomes"
+    },
+    {
+      "code": "HL7nnnn",
+      "description": "HL7 Defined Codes where nnnn is the HL7 table number"
+    },
+    {
+      "code": "HOT",
+      "description": "Japanese Nationwide Medicine Code"
+    },
+    {
+      "code": "HPC",
+      "description": "CMS (formerly HCFA )Procedure Codes (HCPCS)"
+    },
+    {
+      "code": "I10",
+      "description": "ICD-10"
+    },
+    {
+      "code": "I10G2004",
+      "description": "ICD 10 Germany 2004"
+    },
+    {
+      "code": "I10G2005",
+      "description": "ICD 10 Germany 2005"
+    },
+    {
+      "code": "I10G2006",
+      "description": "ICD 10 Germany 2006"
+    },
+    {
+      "code": "I10P",
+      "description": "ICD-10 Procedure Codes"
+    },
+    {
+      "code": "I9",
+      "description": "ICD9"
+    },
+    {
+      "code": "I9C",
+      "description": "ICD-9CM"
+    },
+    {
+      "code": "I9CDX",
+      "description": "ICD-9CM Diagnosis codes"
+    },
+    {
+      "code": "I9CP",
+      "description": "ICD-9CM Procedure codes"
+    },
+    {
+      "code": "IBT",
+      "description": "ISBT"
+    },
+    {
+      "code": "IBTnnnn",
+      "description": "ISBT 128 codes where nnnn specifies a specific table within ISBT 128."
+    },
+    {
+      "code": "IC2",
+      "description": "ICHPPC-2"
+    },
+    {
+      "code": "ICD10AM",
+      "description": "ICD-10 Australian modification"
+    },
+    {
+      "code": "ICD10CA",
+      "description": "ICD-10 Canada"
+    },
+    {
+      "code": "ICD10GM2007",
+      "description": "ICD 10 Germany v2007"
+    },
+    {
+      "code": "ICD10GM2008",
+      "description": "ICD 10 Germany v2008"
+    },
+    {
+      "code": "ICD10GM2009",
+      "description": "ICD 10 Germany v2009"
+    },
+    {
+      "code": "ICD10GM2010",
+      "description": "ICD 10 Germany v2010"
+    },
+    {
+      "code": "ICD10GM2011",
+      "description": "ICD 10 Germany v2011"
+    },
+    {
+      "code": "ICDO",
+      "description": "International Classification of Diseases for Oncology"
+    },
+    {
+      "code": "ICDO2",
+      "description": "International Classification of Disease for Oncology Second Edition"
+    },
+    {
+      "code": "ICDO3",
+      "description": "International Classification of Disease for Oncology Third Edition"
+    },
+    {
+      "code": "ICS",
+      "description": "ICCS"
+    },
+    {
+      "code": "ICSD",
+      "description": "International Classification of Sleep Disorders"
+    },
+    {
+      "code": "ISO",
+      "description": "ISO 2955.83 (units of measure) with HL7 extensions"
+    },
+    {
+      "code": "ISO3166_1",
+      "description": "ISO 3166-1 Country Codes"
+    },
+    {
+      "code": "ISO3166_2",
+      "description": "ISO 3166-2 Country subdivisions"
+    },
+    {
+      "code": "ISO4217",
+      "description": "ISO4217 Currency Codes"
+    },
+    {
+      "code": "ISO639",
+      "description": "ISO 639 Language"
+    },
+    {
+      "code": "ISOnnnn",
+      "description": "ISO Defined Codes where nnnn is the ISO table number"
+    },
+    {
+      "code": "ITIS",
+      "description": "Integrated Taxonomic Information System"
+    },
+    {
+      "code": "IUPC",
+      "description": "IUPAC/IFCC Component Codes"
+    },
+    {
+      "code": "IUPP",
+      "description": "IUPAC/IFCC Property Codes"
+    },
+    {
+      "code": "JC10",
+      "description": "JLAC/JSLM, nationwide laboratory code"
+    },
+    {
+      "code": "JC8",
+      "description": "Japanese Chemistry"
+    },
+    {
+      "code": "JJ1017",
+      "description": "Japanese Image Examination Cache"
+    },
+    {
+      "code": "L",
+      "description": "Local general code"
+    },
+    {
+      "code": "LB",
+      "description": "Local billing code"
+    },
+    {
+      "code": "LN",
+      "description": "Logical Observation Identifier Names and Codes (LOINC®)"
+    },
+    {
+      "code": "MCD",
+      "description": "Medicaid"
+    },
+    {
+      "code": "MCR",
+      "description": "Medicare"
+    },
+    {
+      "code": "MDC",
+      "description": "Medical Device Communication"
+    },
+    {
+      "code": "MDDX",
+      "description": "Medispan Diagnostic Codes"
+    },
+    {
+      "code": "MEDC",
+      "description": "Medical Economics Drug Codes"
+    },
+    {
+      "code": "MEDR",
+      "description": "Medical Dictionary for Drug Regulatory Affairs (MEDDRA)"
+    },
+    {
+      "code": "MEDX",
+      "description": "Medical Economics Diagnostic Codes"
+    },
+    {
+      "code": "MGPI",
+      "description": "Medispan GPI"
+    },
+    {
+      "code": "MVX",
+      "description": "CDC Vaccine Manufacturer Codes"
+    },
+    {
+      "code": "NAICS",
+      "description": "Industry (NAICS)"
+    },
+    {
+      "code": "NCPDPnnnnsss",
+      "description": "NCPDP code list for data element nnnn [as used in segment sss]"
+    },
+    {
+      "code": "NDA",
+      "description": "NANDA"
+    },
+    {
+      "code": "NDC",
+      "description": "National drug codes"
+    },
+    {
+      "code": "NDFRT",
+      "description": "NDF-RT (Drug Classification)"
+    },
+    {
+      "code": "NIC",
+      "description": "Nursing Interventions Classification"
+    },
+    {
+      "code": "NIP001",
+      "description": "Source of Information (Immunization)"
+    },
+    {
+      "code": "NIP002",
+      "description": "Substance refusal reason"
+    },
+    {
+      "code": "NIP004",
+      "description": "Vaccination - Contraindications, Precautions, and Immunities"
+    },
+    {
+      "code": "NIP007",
+      "description": "Vaccinated at location (facility)"
+    },
+    {
+      "code": "NIP008",
+      "description": "Vaccine purchased with (Type of funding)"
+    },
+    {
+      "code": "NIP009",
+      "description": "Reported adverse event previously"
+    },
+    {
+      "code": "NIP010",
+      "description": "VAERS Report type"
+    },
+    {
+      "code": "NND",
+      "description": "Notifiable Event (Disease/Condition) Code List"
+    },
+    {
+      "code": "NPI",
+      "description": "National Provider Identifier"
+    },
+    {
+      "code": "NUBC",
+      "description": "National Uniform Billing Committee"
+    },
+    {
+      "code": "NULLFL",
+      "description": "Null Flavor"
+    },
+    {
+      "code": "O301",
+      "description": "German Procedure Codes"
+    },
+    {
+      "code": "O3012004",
+      "description": "OPS Germany v2004"
+    },
+    {
+      "code": "O3012005",
+      "description": "OPS Germany v2005"
+    },
+    {
+      "code": "O3012006",
+      "description": "OPS Germany v2006"
+    },
+    {
+      "code": "OHA",
+      "description": "Omaha System"
+    },
+    {
+      "code": "OPS2007",
+      "description": "OPS Germany v2007"
+    },
+    {
+      "code": "OPS2008",
+      "description": "OPS Germany v2008"
+    },
+    {
+      "code": "OPS2009",
+      "description": "OPS Germany v2009"
+    },
+    {
+      "code": "OPS2010",
+      "description": "OPS Germany v2010"
+    },
+    {
+      "code": "OPS2011",
+      "description": "OPS Germany v2011"
+    },
+    {
+      "code": "PHINQUESTION",
+      "description": "CDC Public Health Information Network (PHIN) Question"
+    },
+    {
+      "code": "PLR",
+      "description": "CDC PHLIP Lab result codes that are not covered in SNOMED at the time of this implementation"
+    },
+    {
+      "code": "PLT",
+      "description": "CDC PHLIP Lab test codes, where LOINC concept is too broad or not yet available, especially as needed for ordering and or lab to lab reporting )"
+    },
+    {
+      "code": "POS",
+      "description": "POS Codes"
+    },
+    {
+      "code": "RC",
+      "description": "Read Classification"
+    },
+    {
+      "code": "RXNORM",
+      "description": "RxNorm"
+    },
+    {
+      "code": "SCT",
+      "description": "SNOMED Clinical Terms"
+    },
+    {
+      "code": "SCT2",
+      "description": "SNOMED Clinical Terms alphanumeric codes"
+    },
+    {
+      "code": "SDM",
+      "description": "SNOMED- DICOM Microglossary"
+    },
+    {
+      "code": "SIC",
+      "description": "Industry (SIC)"
+    },
+    {
+      "code": "SNM",
+      "description": "Systemized Nomenclature of Medicine (SNOMED)"
+    },
+    {
+      "code": "SNM3",
+      "description": "SNOMED International"
+    },
+    {
+      "code": "SNT",
+      "description": "SNOMED topology codes (anatomic sites)"
+    },
+    {
+      "code": "SOC",
+      "description": "Occupation (SOC 2000)"
+    },
+    {
+      "code": "UB04FL14",
+      "description": "Priority (Type) of Visit"
+    },
+    {
+      "code": "UB04FL15",
+      "description": "Point of Origin"
+    },
+    {
+      "code": "UB04FL17",
+      "description": "Patient Discharge Status"
+    },
+    {
+      "code": "UB04FL31",
+      "description": "Occurrence Code"
+    },
+    {
+      "code": "UB04FL35",
+      "description": "Occurrence Span"
+    },
+    {
+      "code": "UB04FL39",
+      "description": "Value Code"
+    },
+    {
+      "code": "UC",
+      "description": "UCDS"
+    },
+    {
+      "code": "UCUM",
+      "description": "UCUM code set for units of measure(from Regenstrief)"
+    },
+    {
+      "code": "UMD",
+      "description": "MDNS"
+    },
+    {
+      "code": "UML",
+      "description": "Unified Medical Language"
+    },
+    {
+      "code": "UPC",
+      "description": "Universal Product Code"
+    },
+    {
+      "code": "UPIN",
+      "description": "UPIN"
+    },
+    {
+      "code": "USPS",
+      "description": "United States Postal Service"
+    },
+    {
+      "code": "W1",
+      "description": "WHO record # drug codes (6 digit)"
+    },
+    {
+      "code": "W2",
+      "description": "WHO record # drug codes (8 digit)"
+    },
+    {
+      "code": "W4",
+      "description": "WHO record # code with ASTM extension"
+    },
+    {
+      "code": "WC",
+      "description": "WHO ATC"
+    },
+    {
+      "code": "X12Dennnn",
+      "description": "ASC X12 Code List nnnn"
+    }
+  ]
+}

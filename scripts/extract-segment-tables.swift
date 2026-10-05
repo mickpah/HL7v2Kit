@@ -12,7 +12,8 @@
 //   swift extract-segment-tables.swift <chapter.pdf> [SEGID]
 //     SEGID (optional) filters to one segment's table (e.g. NK1).
 //
-// The RP/# column maps to repeatability: "Y" (or a max-count) -> "*", blank -> "1".
+// The RP/# column maps to repeatability: "Y" -> "*", a printed bound ("Y/3", "3") -> "3", blank -> "1",
+// and a cell it cannot read -> "?" + the cell (P6-12). "len" is LEN, else C.LEN; "clen" is C.LEN.
 
 import Foundation
 
@@ -46,7 +47,7 @@ struct Column { let key: String; let start: Int }
 let headerKeys: [(key: String, patterns: [String])] = [
     ("SEQ",  ["SEQ"]),
     ("LEN",  ["LEN"]),
-    ("CLEN", ["C.LEN", "C.LEN."]),
+    ("CLEN", ["C.LEN", "C_LEN", "C. LEN"]),   // v2.8.2 CH06 DG1 prints "C_LEN" (P6-12)
     ("DT",   ["DT"]),
     ("OPT",  ["OPT", "R/O/C", "R/O"]),   // some legacy chapters (e.g. v2.3 CH10) label it "R/O/C"
     ("RP",   ["RP/#", "R P/#", "RP/ #", "RP/"]),   // v2.3 CH7 wraps the "#": header reads "RP/" — without it the RP column vanishes and its "Y" cells land in OPT (FAC-5..8)
@@ -83,7 +84,8 @@ func detectHeader(_ line: String) -> [Column]? {
 
 struct FieldRow {
     var seq: Int
-    var len: String = ""
+    var len: String = ""      // LEN, else C.LEN when LEN is blank (the schema convention)
+    var clen: String = ""     // C.LEN verbatim (v2.7+), empty before v2.7
     var dt: String = ""
     var opt: String = ""
     var rp: String = ""
@@ -186,7 +188,15 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
         switch columnKey(forStart: r.start, columns: columns) {
         case "SEQ": break
         case "LEN": row.len = r.text
-        case "CLEN": row.len = row.len.isEmpty ? r.text : row.len
+        case "CLEN": row.clen = r.text
+        // P6-12: a right-aligned LEN or C.LEN value can sit nearer the DT (or RP/#) header
+        // than its own (v2.6 STF-4 "2", GOL-1 "2"; v2.8.2 OBX-4 "20="). A data type is never
+        // a number, so a length-shaped run binned under DT is a length; under RP/# only an
+        // unmistakable length shape (a range, "=" or "#") is moved, since a bare number there
+        // is a repetition bound.
+        case "DT" where isLengthShape(r.text, bareNumber: true),
+             "RP" where isLengthShape(r.text, bareNumber: false):
+            assignLength(r.text, to: &row)
         case "DT": row.dt = r.text
         case "OPT": row.opt = r.text
         case "RP": row.rp = r.text
@@ -200,6 +210,13 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
         default: break
         }
     }
+    // P6-12: a bare optionality code under RP/# with the OPT cell empty is the OPT cell set
+    // right of its header (v2.6 CH06 BLC-1/-2 print "O" between OPT and RP/#). RP/# never
+    // holds an optionality code.
+    if row.opt.isEmpty, ["R", "O", "C", "X", "B", "W"].contains(row.rp.uppercased()) {
+        row.opt = row.rp.uppercased(); row.rp = ""
+    }
+    if row.len.isEmpty { row.len = row.clen }
     row.opt = normalizeOptionality(row.opt)
     // No slack when anchoring on a metadata run's end — 2 columns of slack would pull the
     // tail of the item number into the name.
@@ -232,12 +249,34 @@ func normalizeName(_ s: String) -> String {
 // Normalise the OPT cell. HL7 attribute tables sometimes render a backward-compat
 // marker as "(B)" alone or compounded with the historical letter ("(B) R"); the
 // effective single-letter optionality of such a field is B. Otherwise keep the letter.
+// P6-12: only the printed shapes are read; anything else is returned verbatim so the audit's
+// OPTIONALITY_TOKEN check reports it as unreadable instead of it silently becoming a code
+// (the old rule kept the first R/O/C/X/W/B letter of any text, so a DT "CE" read as "C").
+// Printed shapes: a bare code; "(B) R" (v2.3-v2.5.1 DG1-2 / PR1-2, backward compatible);
+// "C(a/b)" (v2.7+ conditional with its true/false optionality, cut at a wrap as "C(R/O").
 func normalizeOptionality(_ raw: String) -> String {
-    let t = raw.trimmingCharacters(in: .whitespaces)
-    if t.contains("(B)") || t.uppercased() == "B" { return "B" }
-    // strip any stray parentheses, keep the first R/O/C/X/W/B token
-    let letters = t.uppercased().filter { "ROCXWB".contains($0) }
-    return letters.isEmpty ? t : String(letters.first!)
+    let t = raw.trimmingCharacters(in: .whitespaces).uppercased()
+    if ["R", "O", "C", "X", "B", "W"].contains(t) { return t }
+    if t.range(of: #"^\(B\)\s*[ROCX]?$"#, options: .regularExpression) != nil { return "B" }
+    if t.range(of: #"^C\([ROCXBW]/[ROCXBW]\)?$"#, options: .regularExpression) != nil { return "C" }
+    return raw.trimmingCharacters(in: .whitespaces)
+}
+
+// A LEN or C.LEN print: a number, a "64K"-style abbreviation (before v2.4), a v2.7+ range
+// ("1..4") or list ("2,4"; v2.8.2 section 2.5.5.0), or a conformance length with its truncation
+// flag ("250#", "20="). A bare number
+// counts only where the column cannot hold one (DT).
+func isLengthShape(_ text: String, bareNumber: Bool) -> Bool {
+    if text.range(of: #"^[0-9]+(\.\.[0-9]*|[=#]|(,[0-9]+)+)$"#, options: .regularExpression) != nil { return true }
+    return bareNumber && text.range(of: #"^[0-9]+[kK]?$"#, options: .regularExpression) != nil
+}
+
+// A displaced length goes to C.LEN when it carries a truncation flag, else to LEN; a slot
+// already read from its own column is never overwritten.
+func assignLength(_ text: String, to row: inout FieldRow) {
+    if text.hasSuffix("=") || text.hasSuffix("#") {
+        if row.clen.isEmpty { row.clen = text } else if row.len.isEmpty { row.len = text }
+    } else if row.len.isEmpty { row.len = text } else if row.clen.isEmpty { row.clen = text }
 }
 
 // Append a no-SEQ continuation line to the last row: numeric fragments left of the
@@ -263,9 +302,30 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
     let preName = String(chars[0..<min(nameStart, chars.count)])
     // Only a cell left open by a trailing "/" continues: an unconditional append also
     // swallowed wrapped LEN digits (v2.5.1 OM1-32 "6553" + "6") into the TBL# cell.
+    let wasOpen = rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces).hasSuffix("/")
     for r in runs(in: preName) where r.text.allSatisfy({ $0.isNumber || $0 == "/" })
         && rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces).hasSuffix("/") {
         rows[rows.count-1].tbl += r.text
+    }
+    // A second table number can also sit under a CLOSED cell: v2.3.1 MSH-9 prints 0076 over
+    // 0003 with no "/" (Figure 2-8, p. 2-93). Accept exactly four digits lying in the TBL#
+    // column itself; a wrapped LEN digit lies under LEN, and an ITEM# has five digits.
+    let cell = rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces)
+    if !wasOpen && !cell.isEmpty {
+        for r in runs(in: preName) where r.text.range(of: #"^[0-9]{4}$"#, options: .regularExpression) != nil
+            && columnKey(forStart: r.start, columns: columns) == "TBL" {
+            rows[rows.count-1].tbl = rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces) + "/" + r.text
+        }
+    }
+    // P10-4d: a data type cell too narrow for its word wraps its last letters onto the next
+    // line, under the DT column (v2.5.1 CH08 sections 8.5.2 and 8.5.3, pp. 14 and 15: MFE-4
+    // and MFA-5 print "Varie" over "s"; CH07 OBX-5 "varie" over "s" the same way). A
+    // lower-case fragment of one or two letters there completes the cell.
+    if let last = rows[rows.count-1].dt.last, last.isLetter {
+        for r in runs(in: preName) where columnKey(forStart: r.start, columns: columns) == "DT"
+            && (1...2).contains(r.text.count) && r.text.allSatisfy({ $0.isLowercase }) {
+            rows[rows.count-1].dt += r.text
+        }
     }
     // A wrapped name starts where the row's own name started, not where the header centred
     // "ELEMENT NAME" (v2.3.1 RXE-21: header at column 93, names at 77 — the continuation
@@ -274,9 +334,25 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
     let itemStart = columns.first { $0.key == "ITEM" }?.start ?? nameStart
     let contStart = runs(in: line).map(\.start).filter { $0 >= itemStart - 2 }.min() ?? nameStart
     let cont = elementName(from: line, nameStart: min(nameStart, contStart))
+    // P10-4a: a body-prose line after the table is one run that starts left of the ITEM#
+    // column and runs on into the name column; only its tail lies in the name column, and
+    // that tail was glued onto the last row's name (v2.7.1 CH04 BPX-21 "BP Dispensing
+    // Individual mercially prepared blood product that is ...", p. 127; the same bleed hit last
+    // rows on every version, among them v2.8.2 RQ1-7 and OBX-25). A wrapped name lies
+    // wholly at or after the ITEM# column, and a wrapped cell to its left (a TBL# or DT
+    // fragment) ends before it.
+    if runs(in: line).contains(where: { $0.start < itemStart - 2 && $0.end > itemStart }) { return }
     if isNameContinuation(cont, currentName: rows[rows.count-1].name) {
         rows[rows.count-1].name += (rows[rows.count-1].name.isEmpty ? "" : " ") + cont
     }
+}
+
+// P10-4c: a page-foot footnote that falls inside a table spanning the page break. Its number
+// sits in the SEQ column and its prose runs across the row (v2.7.1 CH17 ITM, p. 10: footnote 2
+// on the HCPCS levels was read as a second ITM-2). A real row is the next SEQ, or prints a
+// data type, an optionality or an item number; a backward SEQ with none of them is the note.
+func isFootnoteRow(_ row: FieldRow, expected: Int) -> Bool {
+    row.seq < expected && row.dt.isEmpty && row.opt.isEmpty && row.item.isEmpty
 }
 
 // Page furniture between table rows (footers / running heads / form feeds) — skipped,
@@ -324,14 +400,136 @@ func isNameContinuation(_ cont: String, currentName: String) -> Bool {
     return true
 }
 
-// Map RP/# cell to repeatability token.
+// Map RP/# cell to repeatability token: blank or N -> "1", Y -> "*", a printed bound
+// ("Y/3" before v2.5, a bare "3" from v2.5; v2.5.1 §2.5.3.5) -> "3". A printed range
+// ("0-5", v2.6/v2.8.2 CH16 PYE, PSL, ADJ) keeps its maximum as the bound; its minimum is
+// not modelled (a 0 adds nothing beyond OPT, and a minimum above 0 is reported on stderr as
+// a known limitation). Shapes that are not an RP print fall through as follows:
+//   - "Y" + one footnote digit ("Y3" v2.3 CH7, "Y4" v2.3.1, OBX-5) -> "*";
+//   - a LEN cell bled into the column ("20=", "2..2", "250#"; v2.8.2 CH07 OBX-4/-13) -> "1",
+//     since the RP cell itself was blank;
+//   - anything else is UNREADABLE (P6-12): "?" + the cell, which the audit's
+//     REPEATABILITY_TOKEN rejects and reports, so a misread can never silently match. That
+//     covers four or more digits (a TBL# number bled in; the v2.3.1 PCR rows are pinned in
+//     scripts/table-repairs.json), a stray OPT or DT code ("R" in v2.8.2 BUI-12, "CE"), and
+//     any other shape. Before P6-12 these read as "*" or "1".
 func repeatability(_ rp: String) -> String {
     let t = rp.trimmingCharacters(in: .whitespaces).uppercased()
-    if t.isEmpty || t == "N" { return "1" }        // blank or explicit "N" (no) -> single
-    if t == "Y" { return "*" }                      // "Y" (yes) -> repeats
-    if t.contains("Y") { return "*" }               // "Y/2" etc.
-    if t.first(where: { $0.isNumber }) != nil { return "*" } // max-count (e.g. "2", "3") -> repeats
-    return "1"
+    if t.isEmpty || t == "N" { return "1" }
+    if t == "Y" { return "*" }
+    if t.range(of: #"^Y[0-9]$"#, options: .regularExpression) != nil { return "*" }
+    if t.range(of: #"^[0-9]+(\.\.[0-9]+)?[=#]?$"#, options: .regularExpression) != nil,
+       t.contains("=") || t.contains("#") || t.contains("..") { return "1" }
+    if let r = t.range(of: #"^[0-9]{1,3}\s*-\s*[0-9]{1,3}$"#, options: .regularExpression), r == t.startIndex..<t.endIndex {
+        let parts = t.split(separator: "-").map { Int($0.trimmingCharacters(in: .whitespaces)) ?? 0 }
+        if parts[0] > 0 {
+            FileHandle.standardError.write("RP range \(t): minimum above 0 is not modelled (known limitation)\n".data(using: .utf8)!)
+        }
+        return parts[1] > 1 ? String(parts[1]) : "1"
+    }
+    let tail = t.split(separator: "/").last.map { $0.trimmingCharacters(in: .whitespaces) } ?? ""
+    if tail.count <= 3, let n = Int(tail) { return n > 1 ? String(n) : "1" }
+    return "?" + t
+}
+
+// Self-check of the RP/# mapping (P6-4) and, from P6-12, the OPT normaliser and the LEN /
+// C.LEN / OPT column binning: `extract-segment-tables.swift --self-check-rp`.
+func selfCheckRepeatability() -> Never {
+    let cases: [(String, String)] = [
+        ("", "1"), ("N", "1"), ("Y", "*"), ("Y/3", "3"), ("Y/23", "23"), ("2", "2"), ("1", "1"),
+        ("0-5", "5"), ("0-20", "20"), ("0 - 4", "4"), ("Y3", "*"), ("20=", "1"), ("2..2", "1"),
+        ("250#", "1"), ("y", "*"), ("R", "?R"), ("CE", "?CE"), ("0125", "?0125"), ("Y/", "?Y/"),
+    ]
+    var failed = 0
+    for (raw, want) in cases where repeatability(raw) != want {
+        failed += 1
+        print("FAIL rp \(raw.debugDescription): got \(repeatability(raw)), want \(want)")
+    }
+    // P6-12: OPT cells are read only in their printed shapes; anything else stays verbatim.
+    let optCases: [(String, String)] = [
+        ("R", "R"), ("o", "O"), ("W", "W"), ("(B) R", "B"), ("(B)", "B"), ("C(R/O", "C"),
+        ("C(R/O)", "C"), ("", ""), ("60", "60"), ("CE", "CE"), ("RE", "RE"),
+    ]
+    for (raw, want) in optCases where normalizeOptionality(raw) != want {
+        failed += 1
+        print("FAIL opt \(raw.debugDescription): got \(normalizeOptionality(raw)), want \(want)")
+    }
+    // P6-12: rows from the prints, through the column binning (header, row, LEN, C.LEN, DT, OPT, RP).
+    let rowCases: [(String, String, [String])] = [
+        ("   SEQ     LEN      DT     OPT     RP/#     TBL#     ITEM#    ELEMENT NAME",      // v2.6 STF-4
+         "    4           2   IS      O       Y       0182      00674   Staff Type",
+         ["2", "", "IS", "O", "Y"]),
+        ("   SEQ        LEN     DT      OPT      RP/#       TBL#         ITEM#   ELEMENT NAME",  // v2.6 BLC-1
+         "     1        250    CWE           O               0426        01528   Blood Product Code",
+         ["250", "", "CWE", "O", ""]),
+        ("SEQ     LEN        C.LEN    DT      OPT      RP/#      TBL#      ITEM#   ELEMENT NAME",  // v2.8.2 PID
+         "23                 250#     ST        O                          00126   Birth Place",
+         ["250#", "250#", "ST", "O", ""]),
+        ("SEQ     LEN        C.LEN    DT      OPT      RP/#      TBL#      ITEM#   ELEMENT NAME",
+         "24        1..1              ID        O                 0136     00127   Multiple Birth Indicator",
+         ["1..1", "", "ID", "O", ""]),
+        ("SEQ     LEN        C.LEN    DT      OPT      RP/#      TBL#      ITEM#   ELEMENT NAME",
+         " 3                         CX        R        Y                 00106    Patient Identifier List",
+         ["", "", "CX", "R", "Y"]),
+        ("SEQ     LEN     C.LEN   DT      OPT    RP/#     TBL#     ITEM#   ELEMENT NAME",      // a 2.5.5.0 list
+         " 9      2,4              ST      O                       00999   Synthetic List Length",
+         ["2,4", "", "ST", "O", ""]),
+    ]
+    for (header, line, want) in rowCases {
+        guard let cols = detectHeader(header), let r = parseRow(line, columns: cols) else {
+            failed += 1; print("FAIL row \(line.debugDescription): not parsed"); continue
+        }
+        let got = [r.len, r.clen, r.dt, r.opt, r.rp]
+        if got != want { failed += 1; print("FAIL row \(line.debugDescription): got \(got), want \(want)") }
+    }
+    // P10-4a: a wrapped element name continues the last row; a body-prose line that runs from
+    // the left margin into the name column does not (v2.7.1 CH04 BPX-21, p. 127).
+    let contHeader = "SEQ     LEN     C.LEN   DT      OPT    RP/#     TBL#     ITEM#   ELEMENT NAME"
+    let contRow = "21                      XCN     O                         01734   BP Dispensing Individual"
+    let contCases: [(String, String)] = [
+        ("                                                                 and Location", "BP Dispensing Individual and Location"),
+        ("          blood product is defined as any type of blood component or commercially prepared blood product that is",
+         "BP Dispensing Individual"),
+    ]
+    for (line, want) in contCases {
+        guard let cols = detectHeader(contHeader), let r = parseRow(contRow, columns: cols) else {
+            failed += 1; print("FAIL cont: row not parsed"); continue
+        }
+        var rows = [r]
+        appendContinuation(line, to: &rows, columns: cols)
+        if rows[0].name != want { failed += 1; print("FAIL cont \(line.prefix(30).debugDescription): got \(rows[0].name)") }
+    }
+    // P10-4d: a wrapped DT cell is completed by its lower-case tail (v2.5.1 CH08 MFE-4).
+    let dtHeader = "   SEQ        LEN      DT      OPT       RP/#      TBL#       ITEM#     ELEMENT NAME"
+    let dtRow = "     4         200    Varie      R        Y        9999       00667     Primary Key Value - MFE"
+    let dtCases: [(String, String)] = [("                        s", "Varies"), ("", "Varie")]
+    for (line, want) in dtCases {
+        guard let cols = detectHeader(dtHeader), let r = parseRow(dtRow, columns: cols) else {
+            failed += 1; print("FAIL dt: row not parsed"); continue
+        }
+        var rows = [r]
+        appendContinuation(line, to: &rows, columns: cols)
+        if rows[0].dt != want { failed += 1; print("FAIL dt \(line.debugDescription): got \(rows[0].dt)") }
+    }
+    // P10-4c: a page-foot footnote inside a table is not a row (v2.7.1 CH17 ITM, p. 10); the
+    // next SEQ, or a backward SEQ with a data type or item number, still is.
+    let noteHeader = "SEQ       LEN     C.LEN       DT       OPT       RP/#       TBL#        ITEM#     ELEMENT NAME"
+    let noteCases: [(String, Int, Bool)] = [
+        ("2     The HCPCS code is divided into three \"levels.\" Level I includes the entire CPT-4 code by reference. Level II includes the American Dental", 7, true),
+        (" 7                           CWE         O                              02191     Manufacturer Identifier", 7, false),
+        (" 2                 999#       ST         O                              02274     Item Description", 7, false),
+    ]
+    for (line, expected, want) in noteCases {
+        guard let cols = detectHeader(noteHeader), let r = parseRow(line, columns: cols) else {
+            failed += 1; print("FAIL note \(line.prefix(30).debugDescription): not parsed"); continue
+        }
+        if isFootnoteRow(r, expected: expected) != want {
+            failed += 1; print("FAIL note \(line.prefix(30).debugDescription): want footnote \(want)")
+        }
+    }
+    let total = cases.count + optCases.count + rowCases.count + contCases.count + noteCases.count + dtCases.count
+    print("\(total - failed) passed, \(failed) failed")
+    exit(failed == 0 ? 0 : 1)
 }
 
 // MARK: - table extraction from full text
@@ -394,6 +592,7 @@ func extractTables(from text: String) -> [Table] {
             if isPageFurniture(line) { j += 1; continue }
             // A data row, or a continuation of the previous row.
             if let row = parseRow(line, columns: columns) {
+                if isFootnoteRow(row, expected: expected) { j += 1; continue }
                 if row.seq == 1 && expected > 2 { break loop } // a new segment restarted at 1
                 rows.append(row); expected = row.seq + 1
             } else if let seqCol = columns.first(where: { $0.key == "SEQ" })?.start,
@@ -444,7 +643,7 @@ func emit(_ tables: [Table], filter: String?) {
         var fieldLines: [String] = []
         for r in t.rows {
             let rep = repeatability(r.rp)
-            fieldLines.append("    { \"index\": \(r.seq), \"name\": \"\(jsonEscape(r.name))\", \"dataType\": \"\(jsonEscape(r.dt))\", \"optionality\": \"\(jsonEscape(r.opt))\", \"repeatability\": \"\(rep)\", \"len\": \"\(jsonEscape(r.len))\", \"tbl\": \"\(jsonEscape(r.tbl))\", \"item\": \"\(jsonEscape(r.item))\" }")
+            fieldLines.append("    { \"index\": \(r.seq), \"name\": \"\(jsonEscape(r.name))\", \"dataType\": \"\(jsonEscape(r.dt))\", \"optionality\": \"\(jsonEscape(r.opt))\", \"repeatability\": \"\(jsonEscape(rep))\", \"len\": \"\(jsonEscape(r.len))\", \"clen\": \"\(jsonEscape(r.clen))\", \"tbl\": \"\(jsonEscape(r.tbl))\", \"item\": \"\(jsonEscape(r.item))\" }")
         }
         let block = "{\n  \"segmentHint\": \"\(t.segHint)\",\n  \"fieldCount\": \(t.rows.count),\n  \"fields\": [\n\(fieldLines.joined(separator: ",\n"))\n  ]\n}"
         blocks.append(block)
@@ -559,6 +758,7 @@ func emitSchema(pdf: String, seg: String, version: String, refPath: String) -> N
 // MARK: - main
 
 let args = CommandLine.arguments
+if args.count == 2, args[1] == "--self-check-rp" { selfCheckRepeatability() }
 if args.count >= 5, args[1] == "--verify" {
     // --verify <pdf> <SEGID> <schema.json>
     verify(pdf: args[2], seg: args[3], schemaPath: args[4])

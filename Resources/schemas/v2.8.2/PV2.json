@@ -3,7 +3,7 @@
   "version": "2.8.2",
   "description": "PV2",
   "fields": [
-    { "index": 1, "swiftName": "priorPendingLocation", "name": "Prior Pending Location", "dataType": "PL", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "priorPendingLocation", "name": "Prior Pending Location", "dataType": "PL", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = A26" },
     { "index": 2, "swiftName": "accommodationCode", "name": "Accommodation Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0129"] },
     { "index": 3, "swiftName": "admitReason", "name": "Admit Reason", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "transferReason", "name": "Transfer Reason", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
@@ -47,9 +47,9 @@
     { "index": 42, "swiftName": "patientConditionCode", "name": "Patient Condition Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0434"] },
     { "index": 43, "swiftName": "livingWillCode", "name": "Living Will Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0315"] },
     { "index": 44, "swiftName": "organDonorCode", "name": "Organ Donor Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0316"] },
-    { "index": 45, "swiftName": "advanceDirectiveCode", "name": "Advance Directive Code", "dataType": "CWE", "optionality": "C", "repeatability": "*", "tables": ["0435"] },
+    { "index": 45, "swiftName": "advanceDirectiveCode", "name": "Advance Directive Code", "dataType": "CWE", "optionality": "C", "repeatability": "*", "tables": ["0435"], "condition": "PV2-50 populated" },
     { "index": 46, "swiftName": "patientStatusEffectiveDate", "name": "Patient Status Effective Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
-    { "index": 47, "swiftName": "expectedLoaReturnDateTime", "name": "Expected LOA Return Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1" },
+    { "index": 47, "swiftName": "expectedLoaReturnDateTime", "name": "Expected LOA Return Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = A21" },
     { "index": 48, "swiftName": "expectedPreAdmissionTestingDateTime", "name": "Expected Pre-admission Testing Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 49, "swiftName": "notifyClergyCode", "name": "Notify Clergy Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0534"] },
     { "index": 50, "swiftName": "advanceDirectiveLastVerifiedDate", "name": "Advance Directive Last Verified Date", "dataType": "DT", "optionality": "O", "repeatability": "1" }

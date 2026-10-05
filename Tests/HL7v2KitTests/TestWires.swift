@@ -22,4 +22,24 @@ enum TestWires {
     static func oru(_ segments: String...) -> String {
         oruMSH + segments.map { $0 + "\r" }.joined()
     }
+
+    /// MSH header for any message type and version. The P4 condition
+    /// suites vary both, so neither canonical header above fits.
+    static func msh(_ messageType: String, _ version: String) -> String {
+        "MSH|^~\\&|SND|FAC|RCV|FAC|20260930120000||\(messageType)|MSG1|P|\(version)\r"
+    }
+
+    /// One segment line with the given 1-based field values; unlisted
+    /// positions up to the highest listed one are empty. Removes the
+    /// pipe-counting that the long positional wires need.
+    static func segment(_ id: String, _ fields: [Int: String]) -> String {
+        let last = fields.keys.max() ?? 0
+        let values = last == 0 ? [] : (1...last).map { fields[$0] ?? "" }
+        return ([id] + values).joined(separator: "|")
+    }
+
+    /// Header for `messageType` / `version` plus the given segment lines.
+    static func wire(_ messageType: String, _ version: String, _ segments: String...) -> String {
+        msh(messageType, version) + segments.map { $0 + "\r" }.joined()
+    }
 }

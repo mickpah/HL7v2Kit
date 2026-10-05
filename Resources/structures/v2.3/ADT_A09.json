@@ -1,0 +1,17 @@
+{
+  "structure": "ADT_A09",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 3, section 3.2.9 ADT/ACK - patient departing - tracking (event A09), p 3-10. Structure ID ADT_A09 synthesised as CODE_EVT from the message code ADT and A09, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events ADT^A09 read from the section title 3.2.9 'ADT/ACK - patient departing - tracking (event A09)'.",
+  "triggers": ["ADT^A09"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "OBX", "min": 0, "max": null },
+    { "segment": "DG1", "min": 0, "max": null }
+  ]
+}

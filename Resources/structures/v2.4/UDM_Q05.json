@@ -1,0 +1,13 @@
+{
+  "structure": "UDM_Q05",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 5-110. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-141).",
+  "triggers": ["UDM^Q05"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "URD", "min": 1, "max": 1 },
+    { "segment": "URS", "min": 0, "max": 1 },
+    { "segment": "DSP", "min": 1, "max": null },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

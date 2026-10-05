@@ -1,0 +1,36 @@
+{
+  "field": "PRA-5",
+  "dataType": "CM",
+  "version": "2.3.1",
+  "name": "Specialty",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Specialty name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Governing board",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Eligible or certified",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0337"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Date of certification",
+      "dataType": "DT",
+      "optionality": ""
+    }
+  ]
+}

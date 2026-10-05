@@ -1,0 +1,20 @@
+{
+  "structure": "RSP_E03",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 16, section 16.3.4 RSP^E03 - HealthCare Services Invoice Status Query Response, p 10.",
+  "triggers": ["RSP^E03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "group": "QUERY_ACK", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+      { "segment": "QAK", "min": 1, "max": 1 },
+      { "segment": "QPD", "min": 1, "max": 1 },
+      { "group": "INVOICE_PROCESSING_RESULTS_INFO", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "IPR", "min": 1, "max": 1 }
+      ]}
+    ]}
+  ]
+}

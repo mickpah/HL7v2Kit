@@ -1,0 +1,32 @@
+{
+  "structure": "ORU_R01",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 7, section 7.2.1 ORU/ACK - unsolicited transmission of an observation message (event R01), p 7-15. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Triggers ORU^W01 added by overrides.json referencedTriggers (the print names this structure for them in prose): HL7 v2.3.1 Chapter 7, section 7.19.1 W01 - waveform result, unsolicited transmission of requested information, p 7-117: 'The waveform response unsolicited trigger event identifies ORU messages used to transmit waveform data which are results of an ordered test or series of observations'; the section 7.20 examples (pp 7-118 to 7-119) send ORU^W01 as MSH PID OBR OBX, within ORU^R01 (section 7.2.1); waveform observations, 'like other results', are transmitted per section 7.2 (p 7-108). Table 0354 (p 2-104) also lists ORU_W01 (event W01), which no chapter prints; it stays registered as not modelled (P8b-final F-I1 c, as v2.3). Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), VISIT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_OBSERVATION (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["ORU^R01", "ORU^W01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "group": "PATIENT_RESULT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "PD1", "min": 0, "max": 1 },
+        { "segment": "NK1", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "group": "VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "PV1", "min": 1, "max": 1 },
+          { "segment": "PV2", "min": 0, "max": 1 }
+        ]}
+      ]},
+      { "group": "ORDER_OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 0, "max": 1 },
+        { "segment": "OBR", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "group": "OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+          { "segment": "OBX", "min": 0, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "segment": "CTI", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

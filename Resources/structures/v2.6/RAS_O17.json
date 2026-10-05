@@ -1,0 +1,58 @@
+{
+  "structure": "RAS_O17",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 4, section 4.13.11 RAS - Pharmacy/Treatment Administration Message (Event O17), pp 4-95 to 4-96.",
+  "triggers": ["RAS^O17"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "TQ1", "min": 1, "max": 1 },
+        { "segment": "TQ2", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "group": "ORDER_DETAIL_SUPPLEMENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+          { "segment": "NTE", "min": 1, "max": null },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "group": "COMPONENTS", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "RXC", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]}
+      ]},
+      { "group": "ENCODING", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "RXE", "min": 1, "max": 1 },
+        { "group": "TIMING_ENCODED", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "TQ1", "min": 1, "max": 1 },
+          { "segment": "TQ2", "min": 0, "max": null }
+        ]},
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]},
+      { "group": "ADMINISTRATION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "RXA", "min": 1, "max": null },
+        { "segment": "RXR", "min": 1, "max": 1 },
+        { "group": "OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]},
+      { "segment": "CTI", "min": 0, "max": null }
+    ]}
+  ]
+}

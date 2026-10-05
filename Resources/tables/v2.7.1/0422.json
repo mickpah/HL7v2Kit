@@ -1,0 +1,34 @@
+{
+  "table": "0422",
+  "version": "2.7.1",
+  "name": "Triage Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0422 - Triage Code",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Non-acute"
+    },
+    {
+      "code": "2",
+      "description": "Acute"
+    },
+    {
+      "code": "3",
+      "description": "Urgent"
+    },
+    {
+      "code": "4",
+      "description": "Severe"
+    },
+    {
+      "code": "5",
+      "description": "Dead on Arrival (DOA)"
+    },
+    {
+      "code": "99",
+      "description": "Other"
+    }
+  ]
+}

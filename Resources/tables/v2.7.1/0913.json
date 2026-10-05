@@ -1,0 +1,9 @@
+{
+  "table": "0913",
+  "version": "2.7.1",
+  "name": "Monetary Denomination Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0913 - Monetary Denomination Code",
+  "entries": []
+}

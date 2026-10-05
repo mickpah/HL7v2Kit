@@ -75,10 +75,10 @@
       "index": 9,
       "swiftName": "messageType",
       "name": "Message Type",
-      "dataType": "MSG", "length": "7",
+      "dataType": "MSG", "length": "15",
       "optionality": "R",
       "repeatability": "1",
-      "tables": ["0076"]
+      "tables": ["0003", "0076"]
     },
     {
       "index": 10,

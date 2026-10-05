@@ -3,6 +3,8 @@
 // v2.8.2 Chapter 2C). Instances are emitted by HL7v2KitCodegen from
 // Resources/tables/<version>/<NNNN>.json — see HL7TableRegistry.
 
+import Foundation
+
 /// An HL7 code table: its number, printed name, ownership kind and the
 /// value rows the spec prints for one version. M6-O6.
 public struct HL7Table: Sendable, Equatable, Hashable {
@@ -30,6 +32,37 @@ public struct HL7Table: Sendable, Equatable, Hashable {
         }
     }
 
+    /// A printed row that names a family of codes rather than one code:
+    /// Table 0203 `NNxxx`, "National Person Identifier where the xxx is the
+    /// ISO table 3166 3-character (alphabetic) country code" (v2.3.1 to v2.8.2).
+    /// The row is not itself a code; a value is a member when it matches
+    /// ``regex`` in full.
+    public struct CodePattern: Sendable, Equatable, Hashable {
+        /// The row's Value column as printed, e.g. `"NNxxx"`.
+        public let code: String
+        /// The row's printed description.
+        public let description: String
+        /// An anchored regular expression (`^...$`) for the family, e.g. `"^NN[A-Z]{3}$"`.
+        public let regex: String
+
+        /// Create one pattern row.
+        public init(code: String, description: String, regex: String) {
+            self.code = code
+            self.description = description
+            self.regex = regex
+        }
+
+        /// `true` when `value` belongs to the family the row names: the whole
+        /// value matches ``regex``, not merely a substring of it. `regex` is
+        /// wrapped in `\A(?:...)\z` so this holds even when the caller-supplied
+        /// pattern itself omits `^`/`$` anchors.
+        public func matches(_ value: String) -> Bool {
+            guard let full = try? NSRegularExpression(pattern: "\\A(?:\(regex))\\z") else { return false }
+            let range = NSRange(value.startIndex..<value.endIndex, in: value)
+            return full.firstMatch(in: value, range: range) != nil
+        }
+    }
+
     /// Four-digit table number as printed, e.g. `"0074"`.
     public let number: String
     /// Printed table name, e.g. `"Diagnostic Service Section ID"`.
@@ -41,10 +74,12 @@ public struct HL7Table: Sendable, Equatable, Hashable {
     /// systems, 0399 ISO 3166 by reference, 0104 local version IDs).
     /// Such a table is never enforced as a closed set.
     public let permitsLocalExtensions: Bool
-    /// Value rows in printed order.
+    /// Value rows in printed order. Pattern rows are not here; see ``patterns``.
     public let entries: [Entry]
+    /// Printed rows that name a family of codes. Empty for almost every table.
+    public let patterns: [CodePattern]
 
-    /// Create a code table.
+    /// Create a code table with no pattern rows.
     public init(
         number: String,
         name: String,
@@ -52,19 +87,35 @@ public struct HL7Table: Sendable, Equatable, Hashable {
         permitsLocalExtensions: Bool = false,
         entries: [Entry]
     ) {
+        self.init(number: number, name: name, kind: kind,
+                  permitsLocalExtensions: permitsLocalExtensions, entries: entries, patterns: [])
+    }
+
+    /// Create a code table that also has pattern rows (printed rows that name a
+    /// family of codes, such as Table 0203 `NNxxx`).
+    public init(
+        number: String,
+        name: String,
+        kind: Kind,
+        permitsLocalExtensions: Bool = false,
+        entries: [Entry],
+        patterns: [CodePattern]
+    ) {
         self.number = number
         self.name = name
         self.kind = kind
         self.permitsLocalExtensions = permitsLocalExtensions
         self.entries = entries
+        self.patterns = patterns
     }
 
-    /// Exact, case-sensitive membership.
+    /// Exact, case-sensitive membership in the printed rows, or a full match
+    /// of one of the table's pattern rows.
     public func contains(_ code: String) -> Bool {
-        entries.contains { $0.code == code }
+        entries.contains { $0.code == code } || patterns.contains { $0.matches(code) }
     }
 
-    /// The codes in printed order.
+    /// The literal codes in printed order (pattern rows excluded).
     public var codes: [String] { entries.map(\.code) }
 
     /// `true` when the Validator may treat the table as a closed set:

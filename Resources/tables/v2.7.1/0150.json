@@ -1,0 +1,26 @@
+{
+  "table": "0150",
+  "version": "2.7.1",
+  "name": "Certification Patient Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0150 - Certification Patient Type",
+  "entries": [
+    {
+      "code": "ER",
+      "description": "Emergency"
+    },
+    {
+      "code": "IPE",
+      "description": "Inpatient elective"
+    },
+    {
+      "code": "OPE",
+      "description": "Outpatient elective"
+    },
+    {
+      "code": "UR",
+      "description": "Urgent"
+    }
+  ]
+}

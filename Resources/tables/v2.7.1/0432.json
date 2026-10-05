@@ -1,0 +1,34 @@
+{
+  "table": "0432",
+  "version": "2.7.1",
+  "name": "Admission Level of Care Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0432 - Admission Level of Care Code",
+  "entries": [
+    {
+      "code": "AC",
+      "description": "Acute"
+    },
+    {
+      "code": "CH",
+      "description": "Chronic"
+    },
+    {
+      "code": "CO",
+      "description": "Comatose"
+    },
+    {
+      "code": "CR",
+      "description": "Critical"
+    },
+    {
+      "code": "IM",
+      "description": "Improved"
+    },
+    {
+      "code": "MO",
+      "description": "Moribund"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "field": "IN3-20",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Pre-certification req/window",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Pre-certification patient type",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0150"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Pre-certification required",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0136"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Pre-certification window",
+      "dataType": "TS",
+      "optionality": ""
+    }
+  ]
+}

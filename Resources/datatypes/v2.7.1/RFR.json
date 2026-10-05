@@ -1,0 +1,54 @@
+{
+  "dataType": "RFR",
+  "version": "2.7.1",
+  "name": "Reference Range",
+  "components": [
+    {
+      "index": 1,
+      "name": "Numeric Range",
+      "dataType": "NR",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Administrative Sex",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0001"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Age Range",
+      "dataType": "NR",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Gestational Age Range",
+      "dataType": "NR",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Species",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20="
+    },
+    {
+      "index": 6,
+      "name": "Race/subspecies",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20="
+    },
+    {
+      "index": 7,
+      "name": "Conditions",
+      "dataType": "TX",
+      "optionality": "O"
+    }
+  ]
+}

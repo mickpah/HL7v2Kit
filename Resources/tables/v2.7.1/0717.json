@@ -1,0 +1,62 @@
+{
+  "table": "0717",
+  "version": "2.7.1",
+  "name": "Access Restriction Value",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0717 - Access Restriction Value",
+  "entries": [
+    {
+      "code": "ALL",
+      "description": "All"
+    },
+    {
+      "code": "DEM",
+      "description": "All demographic data"
+    },
+    {
+      "code": "DRG",
+      "description": "Drug"
+    },
+    {
+      "code": "HIV",
+      "description": "HIV status and results"
+    },
+    {
+      "code": "LOC",
+      "description": "Patient Location"
+    },
+    {
+      "code": "NO",
+      "description": "None"
+    },
+    {
+      "code": "OI",
+      "description": "Opt in all registries (HIPAA)"
+    },
+    {
+      "code": "OO",
+      "description": "Opt out all registries (HIPAA)"
+    },
+    {
+      "code": "PID-17",
+      "description": "Religion"
+    },
+    {
+      "code": "PID-7",
+      "description": "Date of Birth"
+    },
+    {
+      "code": "PSY",
+      "description": "Psychiatric Mental health"
+    },
+    {
+      "code": "SMD",
+      "description": "Sensitive medical data"
+    },
+    {
+      "code": "STD",
+      "description": "Sexually transmitted diseases"
+    }
+  ]
+}

@@ -67,5 +67,5 @@ The escape character is itself a sender-configured delimiter (the third characte
 ## See Also
 
 - <doc:RoundTripGuarantee>
-- <doc:CharacterEncoding>
+- <doc:CharacterEncodingGuide>
 - ``EncodingCharacters``

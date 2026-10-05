@@ -1,0 +1,22 @@
+{
+  "table": "0518",
+  "version": "2.7.1",
+  "name": "Override Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0518 - Override Type",
+  "entries": [
+    {
+      "code": "EQV",
+      "description": "Equivalence Override"
+    },
+    {
+      "code": "EXTN",
+      "description": "Extension Override"
+    },
+    {
+      "code": "INLV",
+      "description": "Interval Override"
+    }
+  ]
+}

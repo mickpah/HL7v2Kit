@@ -1,0 +1,9 @@
+{
+  "table": "0351",
+  "version": "2.7.1",
+  "name": "Occurrence Span",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Appendix A (p101), HL7 Table 0351 - Occurrence Span: the only printed row is the ellipsis with 'use NUBC codes': the values are an external code set",
+  "entries": []
+}

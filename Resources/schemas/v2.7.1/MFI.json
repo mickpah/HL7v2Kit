@@ -1,0 +1,13 @@
+{
+  "segmentID": "MFI",
+  "version": "2.7.1",
+  "description": "MFI",
+  "fields": [
+    { "index": 1, "swiftName": "masterFileIdentifier", "name": "Master File Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0175"] },
+    { "index": 2, "swiftName": "masterFileApplicationIdentifier", "name": "Master File Application Identifier", "dataType": "HD", "optionality": "O", "repeatability": "*", "tables": ["0361"] },
+    { "index": 3, "swiftName": "fileLevelEventCode", "name": "File-Level Event Code", "dataType": "ID", "table": "0178", "length": "3..3", "optionality": "R", "repeatability": "1", "tables": ["0178"] },
+    { "index": 4, "swiftName": "enteredDateTime", "name": "Entered Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "effectiveDateTime", "name": "Effective Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "responseLevelCode", "name": "Response Level Code", "dataType": "ID", "table": "0179", "length": "2..2", "optionality": "C", "repeatability": "1", "tables": ["0179"], "condition": "messageCode = MFN", "optionalityCitation": "v2.7.1 CH08 section 8.5.1.6 (p. 8): the attribute table (p. 7) prints R, but the definition reads 'Required for MFN-Master File Notification message', so on MFK, MFD and other master-file messages an empty MFI-6 is compliant. Modelled C (P4-30 ruling, applied to v2.7.1 in P10-5b)." }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "segmentID": "IVT",
+  "version": "2.7.1",
+  "description": "Material Location",
+  "fields": [
+    { "index": 1, "swiftName": "setIdIvt", "name": "Set Id – IVT", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "inventoryLocationIdentifier", "name": "Inventory Location Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "inventoryLocationName", "name": "Inventory Location Name", "dataType": "ST", "length": "999=", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "sourceLocationIdentifier", "name": "Source Location Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "sourceLocationName", "name": "Source Location Name", "dataType": "ST", "length": "999=", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "itemStatus", "name": "Item Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0625"] },
+    { "index": 7, "swiftName": "binLocationIdentifier", "name": "Bin Location Identifier", "dataType": "EI", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "orderPackaging", "name": "Order Packaging", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0818"] },
+    { "index": 9, "swiftName": "issuePackaging", "name": "Issue Packaging", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "defaultInventoryAssetAccount", "name": "Default Inventory Asset Account", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "patientChargeableIndicator", "name": "Patient Chargeable Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
+    { "index": 12, "swiftName": "transactionCode", "name": "Transaction Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0132"] },
+    { "index": 13, "swiftName": "transactionAmountUnit", "name": "Transaction amount - unit", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "itemImportanceCode", "name": "Item Importance Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0634"] },
+    { "index": 15, "swiftName": "stockedItemIndicator", "name": "Stocked Item Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
+    { "index": 16, "swiftName": "consignmentItemIndicator", "name": "Consignment Item Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
+    { "index": 17, "swiftName": "reusableItemIndicator", "name": "Reusable Item Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
+    { "index": 18, "swiftName": "reusableCost", "name": "Reusable Cost", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 19, "swiftName": "substituteItemIdentifier", "name": "Substitute Item Identifier", "dataType": "EI", "optionality": "O", "repeatability": "*" },
+    { "index": 20, "swiftName": "latexFreeSubstituteItemIdentifier", "name": "Latex-Free Substitute Item Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 21, "swiftName": "recommendedReorderTheory", "name": "Recommended Reorder Theory", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0642"] },
+    { "index": 22, "swiftName": "recommendedSafetyStockDays", "name": "Recommended Safety Stock Days", "dataType": "NM", "length": "4=", "optionality": "O", "repeatability": "1" },
+    { "index": 23, "swiftName": "recommendedMaximumDaysInventory", "name": "Recommended Maximum Days Inventory", "dataType": "NM", "length": "4=", "optionality": "O", "repeatability": "1" },
+    { "index": 24, "swiftName": "recommendedOrderPoint", "name": "Recommended Order Point", "dataType": "NM", "length": "8#", "optionality": "O", "repeatability": "1" },
+    { "index": 25, "swiftName": "recommendedOrderAmount", "name": "Recommended Order Amount", "dataType": "NM", "length": "8#", "optionality": "O", "repeatability": "1" },
+    { "index": 26, "swiftName": "operatingRoomParLevelIndicator", "name": "Operating Room Par Level Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] }
+  ]
+}

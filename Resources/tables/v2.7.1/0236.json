@@ -1,0 +1,26 @@
+{
+  "table": "0236",
+  "version": "2.7.1",
+  "name": "Event Reported To",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0236 - Event Reported To",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Distributor"
+    },
+    {
+      "code": "L",
+      "description": "Local facility/user facility"
+    },
+    {
+      "code": "M",
+      "description": "Manufacturer"
+    },
+    {
+      "code": "R",
+      "description": "Regulatory agency"
+    }
+  ]
+}

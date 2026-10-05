@@ -1,0 +1,65 @@
+{
+  "structure": "DFT_P03",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 6, section 6.4.3 DFT/ACK - post detail financial transactions (event P03), pp 6-12 to 6-13. Unprinted group names (ADR-019 decision 3): COMMON_ORDER (HL7-xml v2.4/DFT_P03.xsd, DFT_P03.COMMON_ORDER.CONTENT), ORDER (HL7-xml v2.4/DFT_P03.xsd, DFT_P03.ORDER.CONTENT), OBSERVATION (HL7-xml v2.4/DFT_P03.xsd, DFT_P03.OBSERVATION.CONTENT), FINANCIAL (overrides.json: HL7 v2.4 Chapter 6, section 6.4.3 DFT/ACK - post detail financial transactions (event P03), pp 6-12 to 6-13: the unnamed group with first segment FT1 at the root (v2.4 prints no group names); named FINANCIAL from HL7-xml v2.4/DFT_P03.xsd, DFT_P03.FINANCIAL.CONTENT, the one root group of that bundle with first segment FT1, whose nested groups are the print's PR1, ORC, OBR and OBX groups by member set; the print adds DG1, DRG, GT1 and an insurance group per FT1 (its footnotes 3 to 5: 'specific to above FT1'), which the bundle lists only at the root (a bundle-differs row). The nested groups then take their names from the same bundle; the per-FT1 insurance group, which no bundle names, stays synthesised (P8b-13).), FINANCIAL_PROCEDURE (HL7-xml v2.4/DFT_P03.xsd, DFT_P03.FINANCIAL_PROCEDURE.CONTENT), FINANCIAL_COMMON_ORDER (HL7-xml v2.4/DFT_P03.xsd, DFT_P03.FINANCIAL_COMMON_ORDER.CONTENT), FINANCIAL_ORDER (HL7-xml v2.4/DFT_P03.xsd, DFT_P03.FINANCIAL_ORDER.CONTENT), FINANCIAL_OBSERVATION (HL7-xml v2.4/DFT_P03.xsd, DFT_P03.FINANCIAL_OBSERVATION.CONTENT), IN1_GROUP (synthesised: no HL7-xml v2.4/DFT_P03.xsd group under [FINANCIAL] has first segment IN1 and members {IN1, IN2, IN3, ROL}) and INSURANCE (HL7-xml v2.4/DFT_P03.xsd, DFT_P03.INSURANCE.CONTENT).",
+  "triggers": ["DFT^P03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "ROL", "min": 0, "max": null },
+    { "segment": "PV1", "min": 0, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "ROL", "min": 0, "max": null },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "group": "COMMON_ORDER", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "ORC", "min": 0, "max": 1 },
+      { "group": "ORDER", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "OBR", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]},
+    { "group": "FINANCIAL", "nameSource": "override", "min": 1, "max": null, "elements": [
+      { "segment": "FT1", "min": 1, "max": 1 },
+      { "group": "FINANCIAL_PROCEDURE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "PR1", "min": 1, "max": 1 },
+        { "segment": "ROL", "min": 0, "max": null }
+      ]},
+      { "group": "FINANCIAL_COMMON_ORDER", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "ORC", "min": 0, "max": 1 },
+        { "group": "FINANCIAL_ORDER", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "group": "FINANCIAL_OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]},
+      { "segment": "DG1", "min": 0, "max": null },
+      { "segment": "DRG", "min": 0, "max": 1 },
+      { "segment": "GT1", "min": 0, "max": null },
+      { "group": "IN1_GROUP", "nameSource": "synthesised", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": null },
+        { "segment": "ROL", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": 1 },
+    { "segment": "GT1", "min": 0, "max": null },
+    { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "IN1", "min": 1, "max": 1 },
+      { "segment": "IN2", "min": 0, "max": 1 },
+      { "segment": "IN3", "min": 0, "max": null },
+      { "segment": "ROL", "min": 0, "max": null }
+    ]},
+    { "segment": "ACC", "min": 0, "max": 1 }
+  ]
+}

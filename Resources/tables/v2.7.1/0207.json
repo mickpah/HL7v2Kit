@@ -1,0 +1,26 @@
+{
+  "table": "0207",
+  "version": "2.7.1",
+  "name": "Processing Mode",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A (p70), HL7 Table 0207 - Processing Mode; HL7 v2.7.1 Chapter 2C sec 2.C.2.75 (p62)",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Archive"
+    },
+    {
+      "code": "I",
+      "description": "Initial load"
+    },
+    {
+      "code": "R",
+      "description": "Restore from archive"
+    },
+    {
+      "code": "T",
+      "description": "Current processing, transmitted at intervals (scheduled or on demand)"
+    }
+  ]
+}

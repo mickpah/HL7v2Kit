@@ -1,0 +1,44 @@
+{
+  "structure": "ADR_A19",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 3, section 3.3.19 QRY/ADR - patient query (event A19), pp 3-25 to 3-26. Unprinted group names (ADR-019 decision 3): QUERY_RESPONSE (HL7-xml v2.4/ADR_A19.xsd, ADR_A19.QUERY_RESPONSE.CONTENT), PROCEDURE (HL7-xml v2.4/ADR_A19.xsd, ADR_A19.PROCEDURE.CONTENT) and INSURANCE (HL7-xml v2.4/ADR_A19.xsd, ADR_A19.INSURANCE.CONTENT).",
+  "triggers": ["ADR^A19"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QAK", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "QUERY_RESPONSE", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "EVN", "min": 0, "max": 1 },
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "ROL", "min": 0, "max": null },
+      { "segment": "NK1", "min": 0, "max": null },
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 },
+      { "segment": "ROL", "min": 0, "max": null },
+      { "segment": "DB1", "min": 0, "max": null },
+      { "segment": "OBX", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "segment": "DG1", "min": 0, "max": null },
+      { "segment": "DRG", "min": 0, "max": 1 },
+      { "group": "PROCEDURE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "PR1", "min": 1, "max": 1 },
+        { "segment": "ROL", "min": 0, "max": null }
+      ]},
+      { "segment": "GT1", "min": 0, "max": null },
+      { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": null },
+        { "segment": "ROL", "min": 0, "max": null }
+      ]},
+      { "segment": "ACC", "min": 0, "max": 1 },
+      { "segment": "UB1", "min": 0, "max": 1 },
+      { "segment": "UB2", "min": 0, "max": 1 }
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

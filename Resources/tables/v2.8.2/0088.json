@@ -4,7 +4,7 @@
   "name": "Procedure Code",
   "kind": "HL7",
   "permitsLocalExtensions": true,
-  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0088 - Procedure Code",
+  "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.53 (pp48-49), Externally-defined Table 0088 - Procedure Code",
   "entries": [
     {
       "code": "C4",
@@ -29,10 +29,6 @@
     {
       "code": "SCT",
       "description": "SNOMED CT"
-    },
-    {
-      "code": "contractors.",
-      "description": ""
     }
   ]
 }

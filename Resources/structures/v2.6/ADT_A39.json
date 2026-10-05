@@ -1,0 +1,18 @@
+{
+  "structure": "ADT_A39",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 3, section 3.3.39 ADT/ACK - Merge Person - Patient ID (Event A39), p 3-36; the same structure is printed for ADT^A40 (3.3.40), ADT^A41 (3.3.41) and ADT^A42 (3.3.42).",
+  "triggers": ["ADT^A39", "ADT^A40", "ADT^A41", "ADT^A42"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "MRG", "min": 1, "max": 1 },
+      { "segment": "PV1", "min": 0, "max": 1 }
+    ]}
+  ]
+}

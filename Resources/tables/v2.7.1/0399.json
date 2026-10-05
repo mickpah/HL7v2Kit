@@ -1,0 +1,9 @@
+{
+  "table": "0399",
+  "version": "2.7.1",
+  "name": "Country Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.316 (p189), External Table 0399 - Country Code: 'use 3-character (alphabetic) form of ISO 3166'; Chapter 2 sec 2.14.9.17 MSH-17 (p61). The values are ISO 3166 by reference, so the printed rows are not a closed set",
+  "entries": []
+}

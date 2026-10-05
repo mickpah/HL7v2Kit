@@ -1,0 +1,20 @@
+{
+  "segmentID": "PES",
+  "version": "2.7.1",
+  "description": "Product Experience Sender",
+  "fields": [
+    { "index": 1, "swiftName": "senderOrganizationName", "name": "Sender Organization Name", "dataType": "XON", "optionality": "O", "repeatability": "*" },
+    { "index": 2, "swiftName": "senderIndividualName", "name": "Sender Individual Name", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "senderAddress", "name": "Sender Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "senderTelephone", "name": "Sender Telephone", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "senderEventIdentifier", "name": "Sender Event Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "senderSequenceNumber", "name": "Sender Sequence Number", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "senderEventDescription", "name": "Sender Event Description", "dataType": "FT", "length": "600=", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "senderComment", "name": "Sender Comment", "dataType": "FT", "length": "600=", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "senderAwareDateTime", "name": "Sender Aware Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "eventReportDate", "name": "Event Report Date", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 11, "swiftName": "eventReportTimingType", "name": "Event Report Timing/Type", "dataType": "ID", "table": "0234", "length": "2..3", "optionality": "O", "repeatability": "2", "tables": ["0234"] },
+    { "index": 12, "swiftName": "eventReportSource", "name": "Event Report Source", "dataType": "ID", "table": "0235", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0235"] },
+    { "index": 13, "swiftName": "eventReportedTo", "name": "Event Reported To", "dataType": "ID", "table": "0236", "length": "1..1", "optionality": "O", "repeatability": "*", "tables": ["0236"] }
+  ]
+}

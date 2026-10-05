@@ -1,0 +1,30 @@
+{
+  "table": "0507",
+  "version": "2.7.1",
+  "name": "Observation Result Handling",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.268 (p164), User-defined Table 0507 - Observation Result Handling",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Film-with-patient"
+    },
+    {
+      "code": "N",
+      "description": "Notify provider when ready"
+    },
+    {
+      "code": "A",
+      "description": "Alert provider when abnormal"
+    },
+    {
+      "code": "CC",
+      "description": "Copies Requested"
+    },
+    {
+      "code": "BCC",
+      "description": "Blind Copy"
+    }
+  ]
+}

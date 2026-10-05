@@ -1,0 +1,28 @@
+{
+  "dataType": "SAD",
+  "version": "2.7.1",
+  "name": "Street Address",
+  "components": [
+    {
+      "index": 1,
+      "name": "Street or Mailing Address",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "120#"
+    },
+    {
+      "index": 2,
+      "name": "Street Name",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "50#"
+    },
+    {
+      "index": 3,
+      "name": "Dwelling Number",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "12#"
+    }
+  ]
+}

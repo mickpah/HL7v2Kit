@@ -1,0 +1,31 @@
+{
+  "structure": "RGR_RGR",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.21 RGR - pharmacy/treatment dose information (RGR), p 4-103. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["RGR^RGR"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "group": "DEFINITION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "QRD", "min": 1, "max": 1 },
+      { "segment": "QRF", "min": 0, "max": 1 },
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "ENCODING", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "RXE", "min": 1, "max": 1 },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "segment": "RXC", "min": 0, "max": null }
+        ]},
+        { "segment": "RXG", "min": 1, "max": null },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

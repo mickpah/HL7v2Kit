@@ -1,0 +1,21 @@
+{
+  "field": "STF-12",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Activation date",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Date",
+      "dataType": "TS",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Institution name",
+      "dataType": "CE",
+      "optionality": ""
+    }
+  ]
+}

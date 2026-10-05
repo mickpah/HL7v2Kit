@@ -3,6 +3,10 @@
 // Regenerate via scripts/regenerate-typed-segments.sh
 
 /// CDO segment (HL7 v2.8.2).
+///
+/// Defined in HL7 v2.8.2.
+/// Accessors read by field position, so one whose DocC names fewer versions returns
+/// whatever that position holds on another version's wire.
 public struct CDO: TypedSegment {
     public static let segmentID = "CDO"
     public let fields: [Field]

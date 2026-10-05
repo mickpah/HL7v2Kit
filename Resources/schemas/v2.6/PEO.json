@@ -27,6 +27,6 @@
     { "index": 22, "swiftName": "primaryObserverQualification", "name": "Primary Observer's Qualification", "dataType": "ID", "length": "1", "table": "0242", "optionality": "O", "repeatability": "1", "tables": ["0242"] },
     { "index": 23, "swiftName": "confirmationProvidedBy", "name": "Confirmation Provided By", "dataType": "ID", "length": "1", "table": "0242", "optionality": "O", "repeatability": "1", "tables": ["0242"] },
     { "index": 24, "swiftName": "primaryObserverAwareDateTime", "name": "Primary Observer Aware Date/Time", "dataType": "DTM", "length": "24", "optionality": "O", "repeatability": "1" },
-    { "index": 25, "swiftName": "primaryObserverIdentityMayBeDivulged", "name": "Primary Observer's identity May Be Divulged", "dataType": "ID", "length": "1", "table": "0243", "optionality": "O", "repeatability": "1", "tables": ["0243"] }
+    { "index": 25, "swiftName": "primaryObserverIdentityMayBeDivulged", "name": "Primary Observer's identity May Be Divulged", "dataType": "ID", "length": "2", "table": "0243", "optionality": "O", "repeatability": "1", "tables": ["0243"] }
   ]
 }

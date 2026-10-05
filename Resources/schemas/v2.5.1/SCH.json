@@ -3,8 +3,8 @@
   "version": "2.5.1",
   "description": "Schedule Activity Information",
   "fields": [
-    { "index": 1, "swiftName": "placerAppointmentId", "name": "Placer Appointment ID", "dataType": "EI", "length": "75", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "fillerAppointmentId", "name": "Filler Appointment ID", "dataType": "EI", "length": "75", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "placerAppointmentId", "name": "Placer Appointment ID", "dataType": "EI", "length": "75", "optionality": "C", "repeatability": "1", "condition": "SCH-2 empty" },
+    { "index": 2, "swiftName": "fillerAppointmentId", "name": "Filler Appointment ID", "dataType": "EI", "length": "75", "optionality": "C", "repeatability": "1", "condition": "SCH-1 empty" },
     { "index": 3, "swiftName": "occurrenceNumber", "name": "Occurrence Number", "dataType": "NM", "length": "5", "optionality": "C", "repeatability": "1" },
     { "index": 4, "swiftName": "placerGroupNumber", "name": "Placer Group Number", "dataType": "EI", "length": "22", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "scheduleId", "name": "Schedule ID", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" },
@@ -29,6 +29,6 @@
     { "index": 24, "swiftName": "parentFillerAppointmentId", "name": "Parent Filler Appointment ID", "dataType": "EI", "length": "75", "optionality": "C", "repeatability": "1" },
     { "index": 25, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0278"] },
     { "index": 26, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "length": "22", "optionality": "C", "repeatability": "*" },
-    { "index": 27, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "length": "22", "optionality": "C", "repeatability": "*" }
+    { "index": 27, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "length": "22", "optionality": "C", "repeatability": "*", "condition": "SCH-26 populated" }
   ]
 }

@@ -3,12 +3,12 @@
   "version": "2.6",
   "description": "Sterilization Device Data",
   "fields": [
-    { "index": 1, "swiftName": "lotNumber", "name": "Lot Number", "dataType": "EI", "length": "11", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "deviceNumber", "name": "Device Number", "dataType": "EI", "length": "8", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "deviceName", "name": "Device Name", "dataType": "ST", "length": "999", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "deviceDataState", "name": "Device Data State", "dataType": "IS", "length": "1", "table": "0667", "optionality": "O", "repeatability": "1", "tables": ["0667"] },
-    { "index": 5, "swiftName": "loadStatus", "name": "Load Status", "dataType": "IS", "length": "3", "table": "0669", "optionality": "O", "repeatability": "1", "tables": ["0669"] },
-    { "index": 6, "swiftName": "controlCode", "name": "Control Code", "dataType": "NM", "length": "3", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "operatorName", "name": "Operator Name", "dataType": "ST", "length": "15", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "lotNumber", "name": "Lot Number", "dataType": "EI", "length": "11", "optionality": "", "repeatability": "1" },
+    { "index": 2, "swiftName": "deviceNumber", "name": "Device Number", "dataType": "EI", "length": "8", "optionality": "", "repeatability": "1" },
+    { "index": 3, "swiftName": "deviceName", "name": "Device Name", "dataType": "ST", "length": "999", "optionality": "", "repeatability": "1" },
+    { "index": 4, "swiftName": "deviceDataState", "name": "Device Data State", "dataType": "IS", "length": "1", "table": "0667", "optionality": "", "repeatability": "1", "tables": ["0667"] },
+    { "index": 5, "swiftName": "loadStatus", "name": "Load Status", "dataType": "IS", "length": "3", "table": "0669", "optionality": "", "repeatability": "1", "tables": ["0669"] },
+    { "index": 6, "swiftName": "controlCode", "name": "Control Code", "dataType": "NM", "length": "3", "optionality": "", "repeatability": "1" },
+    { "index": 7, "swiftName": "operatorName", "name": "Operator Name", "dataType": "ST", "length": "15", "optionality": "", "repeatability": "1" }
   ]
 }

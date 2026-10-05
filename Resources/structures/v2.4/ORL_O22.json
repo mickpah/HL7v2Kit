@@ -1,0 +1,28 @@
+{
+  "structure": "ORL_O22",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.4.7 ORL - general laboratory order response message to any OML (event O22), p 4-24. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml v2.4/ORL_O22.xsd, ORL_O22.RESPONSE.CONTENT), GENERAL_ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.4.7 ORL - general laboratory order response message to any OML (event O22), p 4-24: the unnamed group with first segment SAC at [RESPONSE] (v2.4 prints no group names); named GENERAL_ORDER from HL7-xml v2.4/ORL_O22.xsd, ORL_O22.GENERAL_ORDER.CONTENT, the one group of that bundle with the same first segment and member set, which the bundle nests under a PATIENT group the print does not have (a bundle-differs row) (P8b-13 ruling 2).), CONTAINER (overrides.json: HL7 v2.4 Chapter 4, section 4.4.7 ORL - general laboratory order response message to any OML (event O22), p 4-24: the unnamed group with first segment SAC at [RESPONSE, GENERAL_ORDER] (v2.4 prints no group names); named CONTAINER from HL7-xml v2.4/ORL_O22.xsd, ORL_O22.CONTAINER.CONTENT, the one group of that bundle with the same first segment and member set, which the bundle nests under a PATIENT group the print does not have (a bundle-differs row) (P8b-13 ruling 2).), ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.4.7 ORL - general laboratory order response message to any OML (event O22), p 4-24: the unnamed group with first segment ORC at [RESPONSE, GENERAL_ORDER] (v2.4 prints no group names); named ORDER from HL7-xml v2.4/ORL_O22.xsd, ORL_O22.ORDER.CONTENT, the one group of that bundle with the same first segment and member set, which the bundle nests under a PATIENT group the print does not have (a bundle-differs row) (P8b-13 ruling 2).) and OBSERVATION_REQUEST (overrides.json: HL7 v2.4 Chapter 4, section 4.4.7 ORL - general laboratory order response message to any OML (event O22), p 4-24: the unnamed group with first segment OBR at [RESPONSE, GENERAL_ORDER, ORDER] (v2.4 prints no group names); named OBSERVATION_REQUEST from HL7-xml v2.4/ORL_O22.xsd, ORL_O22.OBSERVATION_REQUEST.CONTENT, the one group of that bundle with the same first segment and member set, which the bundle nests under a PATIENT group the print does not have (a bundle-differs row) (P8b-13 ruling 2).).",
+  "triggers": ["ORL^O22"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "GENERAL_ORDER", "nameSource": "override", "min": 1, "max": null, "elements": [
+        { "group": "CONTAINER", "nameSource": "override", "min": 0, "max": 1, "elements": [
+          { "segment": "SAC", "min": 1, "max": 1 },
+          { "segment": "OBX", "min": 0, "max": null }
+        ]},
+        { "group": "ORDER", "nameSource": "override", "min": 0, "max": null, "elements": [
+          { "segment": "ORC", "min": 1, "max": 1 },
+          { "group": "OBSERVATION_REQUEST", "nameSource": "override", "min": 0, "max": 1, "elements": [
+            { "segment": "OBR", "min": 1, "max": 1 },
+            { "segment": "SAC", "min": 0, "max": null }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

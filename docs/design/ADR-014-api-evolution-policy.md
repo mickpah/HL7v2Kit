@@ -51,7 +51,7 @@ Apply `@frozen` to the domain-closed enums; leave the open ones un-frozen.
 
 ## M3 substage plan (v0.18 cycle, this branch)
 
-- **S1 — ADR-014** (this doc): decide the policy. ✅
+- **S1 — ADR-014** (this doc): decide the policy. Done.
 - **S2 — Public-surface audit:** enumerate every `public` symbol; confirm each is intended, minimal, DocC-commented; classify each open/stable; produce `docs/design/public-api-surface.md` (the v1.0 inventory). Add the `@unknown default` DocC note to each open enum.
 - **S3 — `Migration.md` finalisation:** rewrite the stale (0.2.0-era) guide into the v1.0 contract — the additive-only rule, the open/stable enum lists, the 0.11→0.17 additive-case history, and what 2.0 would be free to change.
 - **S4 — v1.0-definition ratification + release:** tick the ROADMAP v1.0 definition item 1 (M3); note the only remaining gate is M4 (external IP review); release v0.18.0.

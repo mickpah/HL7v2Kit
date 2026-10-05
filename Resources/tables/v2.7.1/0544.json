@@ -1,0 +1,94 @@
+{
+  "table": "0544",
+  "version": "2.7.1",
+  "name": "Container Condition",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.295 (p172), HL7 Table 0544 - Container Condition; Chapter 7 sec 7.3.3.28 SPM-28 (p67) and sec 7.17.2.9 SHP-9 (p155): 'Refer to HL7 Table 0544 - Container Condition for suggested values'",
+  "entries": [
+    {
+      "code": "CC",
+      "description": "Container Cracked"
+    },
+    {
+      "code": "CL",
+      "description": "Container Leaking"
+    },
+    {
+      "code": "CT",
+      "description": "Container Torn"
+    },
+    {
+      "code": "SB",
+      "description": "Seal Broken"
+    },
+    {
+      "code": "XAMB",
+      "description": "Not Ambient temperature"
+    },
+    {
+      "code": "XC37",
+      "description": "Not Body temperature"
+    },
+    {
+      "code": "XCAMB",
+      "description": "Not Critical ambient temperature"
+    },
+    {
+      "code": "XCATM",
+      "description": "Exposed to Air"
+    },
+    {
+      "code": "XCFRZ",
+      "description": "Not Critical frozen temperature"
+    },
+    {
+      "code": "XCREF",
+      "description": "Not Critical refrigerated temperature"
+    },
+    {
+      "code": "XDFRZ",
+      "description": "Not Deep frozen"
+    },
+    {
+      "code": "XDRY",
+      "description": "Not Dry"
+    },
+    {
+      "code": "XFRZ",
+      "description": "Not Frozen temperature"
+    },
+    {
+      "code": "XMTLF",
+      "description": "Metal Exposed"
+    },
+    {
+      "code": "XNTR",
+      "description": "Not Liquid nitrogen"
+    },
+    {
+      "code": "XPRTL",
+      "description": "Not Protected from light"
+    },
+    {
+      "code": "XPSA",
+      "description": "Shaken"
+    },
+    {
+      "code": "XPSO",
+      "description": "Exposed to shock"
+    },
+    {
+      "code": "XREF",
+      "description": "Not Refrigerated temperature"
+    },
+    {
+      "code": "XUFRZ",
+      "description": "Not Ultra frozen"
+    },
+    {
+      "code": "XUPR",
+      "description": "Not Upright"
+    }
+  ]
+}

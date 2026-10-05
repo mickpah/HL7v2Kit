@@ -1,0 +1,9 @@
+{
+  "segmentID": "OM6",
+  "version": "2.7.1",
+  "description": "OM6",
+  "fields": [
+    { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "length": "4=", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "derivationRule", "name": "Derivation Rule", "dataType": "TX", "optionality": "O", "repeatability": "1" }
+  ]
+}

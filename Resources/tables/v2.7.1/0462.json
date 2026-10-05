@@ -1,0 +1,9 @@
+{
+  "table": "0462",
+  "version": "2.7.1",
+  "name": "Location Cost Center",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0462 - Location Cost Center",
+  "entries": []
+}

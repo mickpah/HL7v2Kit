@@ -3,8 +3,8 @@
   "version": "2.8.2",
   "name": "Container Condition",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0544 - Container Condition",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.454 (pp243-244), HL7 Table 0544 - Container Condition; Chapter 7 sec 7.4.3.28 SPM-28 (p76), sec 7.18.2.9 SHP-9 (p170) and sec 7.18.3.6 PAC-6 (p172): 'Refer to HL7 Table 0544 - Container Condition for suggested values', so the printed rows are not a closed set",
   "entries": [
     {
       "code": "XC37",
@@ -12,31 +12,27 @@
     },
     {
       "code": "XAMB",
-      "description": "Not Ambient temperature Not Critical ambient"
+      "description": "Not Ambient temperature"
     },
     {
       "code": "XCAMB",
-      "description": "Failed to keep critical ambient."
-    },
-    {
-      "code": "temperature",
-      "description": "Not Refrigerated"
+      "description": "Not Critical ambient temperature"
     },
     {
       "code": "XREF",
-      "description": "Failed to keep at refrigerated temperature: 4-8 degrees C."
+      "description": "Not Refrigerated temperature"
     },
     {
       "code": "XCREF",
-      "description": "Failed to keep critical refrigerated."
+      "description": "Not Critical refrigerated temperature"
     },
     {
       "code": "XFRZ",
-      "description": "Not Frozen temperature Not Critical frozen"
+      "description": "Not Frozen temperature"
     },
     {
       "code": "XCFRZ",
-      "description": "Failed to keep critical frozen"
+      "description": "Not Critical frozen temperature"
     },
     {
       "code": "XDFRZ",

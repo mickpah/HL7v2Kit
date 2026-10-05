@@ -1,0 +1,13 @@
+{
+  "segmentID": "PSG",
+  "version": "2.7.1",
+  "description": "Product/Service Group",
+  "fields": [
+    { "index": 1, "swiftName": "providerProductServiceGroupNumber", "name": "Provider Product/Service Group Number", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "payerProductServiceGroupNumber", "name": "Payer Product/Service Group Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "productServiceGroupSequenceNumber", "name": "Product/Service Group Sequence Number", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "adjudicateAsGroup", "name": "Adjudicate as Group", "dataType": "ID", "table": "0136", "length": "1..1", "optionality": "R", "repeatability": "1", "tables": ["0136"], "tableOpen": true, "tableOpenCitation": "v2.7.1 Chapter 16 section 16.4.5.4 PSG-4 (p. 43): \"Refer to HL7 Table 0136 – Yes/No Indicator for suggested values.\"" },
+    { "index": 5, "swiftName": "productServiceGroupBilledAmount", "name": "Product/Service Group Billed Amount", "dataType": "CP", "optionality": "R", "repeatability": "1" },
+    { "index": 6, "swiftName": "productServiceGroupDescription", "name": "Product/Service Group Description", "dataType": "ST", "length": "254#", "optionality": "R", "repeatability": "1" }
+  ]
+}

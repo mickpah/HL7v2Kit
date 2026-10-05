@@ -3,8 +3,8 @@
   "version": "2.5.1",
   "name": "Segment group",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0391 - Segment group",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.5.1 Table 0391 - Segment group; CH05 sec 5.5.6.7 prints it ending 'Etc' with the note 'HL7 Table 0391 - Segment group currently includes no values defined by HL7', and a group's definition is 'given only in the conformance statement of the query', so the printed rows are not a closed set",
   "entries": [
     {
       "code": "OBRG",

@@ -1,0 +1,14 @@
+{
+  "table": "0291",
+  "version": "2.7.1",
+  "name": "Subtype of Referenced Data",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Appendix A (p90), HL7 Table 0291 - Subtype of Referenced Data ('... Source RFC 2046'); CH02A sec 2.A.65.4 RP.4 (p76): the values are the MIME subtypes of RFC 2046, so the printed row is not a closed set",
+  "entries": [
+    {
+      "code": "x-hl7-cda-level-one",
+      "description": "HL7 Clinical Document Architecture Level One document"
+    }
+  ]
+}

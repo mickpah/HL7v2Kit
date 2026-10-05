@@ -1,0 +1,12 @@
+{
+  "structure": "QCK_Q02",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 5-112. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-139).",
+  "triggers": ["QCK^Q02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QAK", "min": 0, "max": 1 }
+  ]
+}

@@ -24,7 +24,7 @@ The library has four pillars:
 ### Validation and conformance
 
 - <doc:Validation>
-- <doc:CharacterEncoding>
+- <doc:CharacterEncodingGuide>
 - <doc:EscapeSequences>
 
 ### Contributing

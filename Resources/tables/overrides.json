@@ -1,5 +1,31 @@
 {
   "2.3": {
+    "0174": {
+      "kind": "User",
+      "citation": "HL7 v2.3 Chapter 8 sec 8.7.3.18 OM1-18 Nature of test/observation (IS), User-defined Table 0174 - Nature of test/observation (p. 8-27)",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as HL7; the chapter that defines the field prints the table as User-defined Table 0174 and the field as IS, and v2.3.1 onwards index it as User. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255. No validation effect: an IS field is never checked against its table."
+    },
+    "0208": {
+      "kind": "HL7",
+      "citation": "HL7 v2.3 Chapter 2 sec 2.24.22.2 QAK-2 Query response status (ID): 'It is defined with HL7 table 0208 - Query response status'; Table 0208 - Query response status (p. 2-120) prints OK, NF, AE and AR",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as User and its numeric sort omits AE; Chapter 2 defines QAK-2 as ID with HL7 table 0208 and prints four rows, and v2.3.1 onwards index it as HL7 with all four. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255: kind HL7 and the AE row transcribed from the chapter (appended after the Appendix A rows). QAK-2 is now checked against the table, as on v2.3.1 onwards.",
+      "addEntries": [
+        [
+          "AE",
+          "Application error"
+        ]
+      ]
+    },
+    "0315": {
+      "kind": "User",
+      "citation": "HL7 v2.3 Chapter 3 sec 3.3.9.7 PD1-7 Living will (IS): 'Refer to user-defined table 0315 - Living will for suggested values'; User-defined Table 0315 - Living will (p. 3-75)",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as HL7; the chapter that defines the field prints the table as User-defined Table 0315 and the field as IS, and v2.3.1 onwards index it as User. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255. No validation effect: an IS field is never checked against its table."
+    },
+    "0316": {
+      "kind": "User",
+      "citation": "HL7 v2.3 Chapter 3 sec 3.3.9.8 PD1-8 Organ donor (IS): 'Refer to user-defined table 0316 - Organ donor for suggested values'; User-defined Table 0316 - Organ donor (p. 3-75)",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as HL7; the chapter that defines the field prints the table as User-defined Table 0316 and the field as IS, and v2.3.1 onwards index it as User. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255. No validation effect: an IS field is never checked against its table."
+    },
     "0003": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
@@ -36,7 +62,7 @@
       "citation": "HL7 v2.3 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes Chapter 7 directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)', and the waveform category table pairs 'Channel Definition / CHN' with data type CD; the chapter's examples use all three. v2.8.2 corrects the table. Restored from the chapter so the closed table does not reject spec-directed waveform messages.",
+      "note": "Value type omits the three waveform datatypes Chapter 7 directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)', and the waveform category table pairs 'Channel Definition / CHN' with data type CD; the chapter's examples use all three. v2.8.2 corrects the table. Restored from the chapter so the closed table does not reject spec-directed waveform messages. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.3 Chapter 7 sec. 7.3.2.2 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.3 CH2 Figure 2-2 'HL7 data types' (v2.3 prints no Table 0440); descriptions as v2.4 Table 0440 prints them.",
       "addEntries": [
         [
           "CD",
@@ -49,6 +75,74 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "VH",
+          "Visiting hours"
         ]
       ]
     },
@@ -167,6 +261,990 @@
           "Work Load"
         ]
       ]
+    },
+    "0254": {
+      "note": "V23-C09: v2.3 Appendix A says 'See Chapter 8' and enumerates nothing; Chapter 8 sec 8.7.3.42 prints Table 0254 - Kind of quantity. Its 102 codes equal those v2.3.1 prints (verified code by code); rows and descriptions are taken from the v2.3.1 printing.",
+      "addEntries": [
+        [
+          "CACT",
+          "*Catalytic Activity"
+        ],
+        [
+          "CNC",
+          "*Catalytic Concentration"
+        ],
+        [
+          "CCRTO",
+          "Catalytic Concentration Ratio"
+        ],
+        [
+          "CCNT",
+          "*Catalytic Content"
+        ],
+        [
+          "CFR",
+          "*Catalytic Fraction"
+        ],
+        [
+          "CRAT",
+          "*Catalytic Rate"
+        ],
+        [
+          "CRTO",
+          "Catalytic Ratio"
+        ],
+        [
+          "ENT",
+          "*Entitic"
+        ],
+        [
+          "ENTSUB",
+          "*Entitic Substance of Amount"
+        ],
+        [
+          "ENTCAT",
+          "*Entitic Catalytic Activity"
+        ],
+        [
+          "ENTNUM",
+          "*Entitic Number"
+        ],
+        [
+          "ENTVOL",
+          "*Entitic Volume"
+        ],
+        [
+          "MASS",
+          "*Mass"
+        ],
+        [
+          "MCNC",
+          "*Mass Concentration"
+        ],
+        [
+          "MCRTO",
+          "*Mass Concentration Ratio"
+        ],
+        [
+          "MCNT",
+          "Mass Content"
+        ],
+        [
+          "MFR",
+          "*Mass Fraction"
+        ],
+        [
+          "MINC",
+          "*Mass Increment"
+        ],
+        [
+          "MRAT",
+          "*Mass Rate"
+        ],
+        [
+          "MRTO",
+          "*Mass Ratio"
+        ],
+        [
+          "NUM",
+          "*Number"
+        ],
+        [
+          "NCNC",
+          "*Number Concentration"
+        ],
+        [
+          "NCNT",
+          "*Number Content"
+        ],
+        [
+          "NFR",
+          "*Number Fraction"
+        ],
+        [
+          "NRTO",
+          "*Number Ratio"
+        ],
+        [
+          "SUB",
+          "*Substance Amount"
+        ],
+        [
+          "SCNC",
+          "*Substance Concentration"
+        ],
+        [
+          "SCRTO",
+          "*Substance Concentration Ratio"
+        ],
+        [
+          "SCNT",
+          "*Substance Content"
+        ],
+        [
+          "SCNTR",
+          "*Substance Content Rate"
+        ],
+        [
+          "SFR",
+          "*Substance Fraction"
+        ],
+        [
+          "SCNCIN",
+          "*Substance Concentration Increment"
+        ],
+        [
+          "SRAT",
+          "*Substance Rate"
+        ],
+        [
+          "SRTO",
+          "*Substance Ratio"
+        ],
+        [
+          "VOL",
+          "*Volume"
+        ],
+        [
+          "VCNT",
+          "*Volume Content"
+        ],
+        [
+          "VFR",
+          "*Volume Fraction"
+        ],
+        [
+          "VRAT",
+          "*Volume Rate"
+        ],
+        [
+          "VRTO",
+          "*Volume Ratio"
+        ],
+        [
+          "ACNC",
+          "Concentration, Arbitrary Substance"
+        ],
+        [
+          "RLMCNC",
+          "*Relative Mass Concentration"
+        ],
+        [
+          "RLSCNC",
+          "*Relative Substance Concentration"
+        ],
+        [
+          "THRMCNC",
+          "*Threshold Mass Concentration"
+        ],
+        [
+          "THRSCNC",
+          "*Threshold Substance Concentration"
+        ],
+        [
+          "TIME",
+          "*Time (e.g. seconds)"
+        ],
+        [
+          "TMDF",
+          "*Time Difference"
+        ],
+        [
+          "TMSTP",
+          "*Time Stamp -- Date and Time"
+        ],
+        [
+          "TRTO",
+          "*Time Ratio"
+        ],
+        [
+          "RCRLTM",
+          "*Reciprocal Relative Time"
+        ],
+        [
+          "RLTM",
+          "*Relative Time"
+        ],
+        [
+          "ABS",
+          "Absorbance"
+        ],
+        [
+          "ACT",
+          "*Activity"
+        ],
+        [
+          "APER",
+          "Appearance"
+        ],
+        [
+          "ARB",
+          "*Arbitrary"
+        ],
+        [
+          "AREA",
+          "Area"
+        ],
+        [
+          "ASPECT",
+          "Aspect"
+        ],
+        [
+          "CLAS",
+          "Class"
+        ],
+        [
+          "CNST",
+          "*Constant"
+        ],
+        [
+          "COEF",
+          "*Coefficient"
+        ],
+        [
+          "COLOR",
+          "Color"
+        ],
+        [
+          "CONS",
+          "Consistency"
+        ],
+        [
+          "DEN",
+          "Density"
+        ],
+        [
+          "DEV",
+          "Device"
+        ],
+        [
+          "DIFF",
+          "*Difference"
+        ],
+        [
+          "ELAS",
+          "Elasticity"
+        ],
+        [
+          "ELPOT",
+          "Electrical Potential (Voltage)"
+        ],
+        [
+          "ELRAT",
+          "Electrical current (amperage)"
+        ],
+        [
+          "ELRES",
+          "Electrical Resistance"
+        ],
+        [
+          "ENGR",
+          "Energy"
+        ],
+        [
+          "EQL",
+          "Equilibrium"
+        ],
+        [
+          "FORCE",
+          "Mechanical force"
+        ],
+        [
+          "FREQ",
+          "Frequency"
+        ],
+        [
+          "IMP",
+          "Impression/ interpretation of study"
+        ],
+        [
+          "KINV",
+          "*Kinematic Viscosity"
+        ],
+        [
+          "LEN",
+          "Length"
+        ],
+        [
+          "LINC",
+          "*Length Increment"
+        ],
+        [
+          "LIQ",
+          "*Liquefaction"
+        ],
+        [
+          "MGFLUX",
+          "Magnetic flux"
+        ],
+        [
+          "MORPH",
+          "Morphology"
+        ],
+        [
+          "MOTIL",
+          "Motility"
+        ],
+        [
+          "OD",
+          "Optical density"
+        ],
+        [
+          "OSMOL",
+          "*Osmolality"
+        ],
+        [
+          "PRID",
+          "Presence/Identity/Existence"
+        ],
+        [
+          "PRES",
+          "*Pressure (Partial)"
+        ],
+        [
+          "PWR",
+          "Power (wattage)"
+        ],
+        [
+          "RANGE",
+          "*Ranges"
+        ],
+        [
+          "RATIO",
+          "*Ratios"
+        ],
+        [
+          "RDEN",
+          "*Relative Density"
+        ],
+        [
+          "REL",
+          "*Relative"
+        ],
+        [
+          "SATFR",
+          "*Saturation Fraction"
+        ],
+        [
+          "SHAPE",
+          "Shape"
+        ],
+        [
+          "SMELL",
+          "Smell"
+        ],
+        [
+          "SUSC",
+          "*Susceptibility"
+        ],
+        [
+          "TASTE",
+          "Taste"
+        ],
+        [
+          "TEMP",
+          "*Temperature"
+        ],
+        [
+          "TEMPDF",
+          "*Temperature Difference"
+        ],
+        [
+          "TEMPIN",
+          "*Temperature Increment"
+        ],
+        [
+          "TITR",
+          "*Dilution Factor (Titer)"
+        ],
+        [
+          "TYPE",
+          "*Type"
+        ],
+        [
+          "VEL",
+          "*Velocity"
+        ],
+        [
+          "VELRT",
+          "*Velocity Ratio"
+        ],
+        [
+          "VISC",
+          "*Viscosity"
+        ]
+      ]
+    },
+    "0255": {
+      "kind": "User",
+      "note": "V23-C09: v2.3 Appendix A enumerates nothing; Chapter 8 sec 8.7.3.43 prints 'User-defined Table 0255 - Duration categories' (hence kind User, as v2.3.1). Its 26 codes equal those v2.3.1 prints; the Value column's '* (star)' is the code '*'.",
+      "addEntries": [
+        [
+          "PT",
+          "To identify measures at a point in time. This is a synonym for \"spot\" or \"random\" as applied to urine measurements."
+        ],
+        [
+          "*",
+          "Life of the \"unit.\" Used for blood products."
+        ],
+        [
+          "30M",
+          "30 minutes"
+        ],
+        [
+          "1H",
+          "1 hour"
+        ],
+        [
+          "2H",
+          "2 hours"
+        ],
+        [
+          "2.5H",
+          "2½ hours"
+        ],
+        [
+          "3H",
+          "3 hours"
+        ],
+        [
+          "4H",
+          "4 hours"
+        ],
+        [
+          "5H",
+          "5 hours"
+        ],
+        [
+          "6H",
+          "6 hours"
+        ],
+        [
+          "7H",
+          "7 hours"
+        ],
+        [
+          "8H",
+          "8 hours"
+        ],
+        [
+          "12H",
+          "12 hours"
+        ],
+        [
+          "24H",
+          "24 hours"
+        ],
+        [
+          "2D",
+          "2 days"
+        ],
+        [
+          "3D",
+          "3 days"
+        ],
+        [
+          "4D",
+          "4 days"
+        ],
+        [
+          "5D",
+          "5 days"
+        ],
+        [
+          "6D",
+          "6 days"
+        ],
+        [
+          "1W",
+          "1 week"
+        ],
+        [
+          "2W",
+          "2 weeks"
+        ],
+        [
+          "3W",
+          "3 weeks"
+        ],
+        [
+          "4W",
+          "4 weeks"
+        ],
+        [
+          "1L",
+          "1 months (30 days)"
+        ],
+        [
+          "2L",
+          "2 months"
+        ],
+        [
+          "3L",
+          "3 months"
+        ]
+      ]
+    },
+    "0256": {
+      "note": "V23-C09: v2.3 Appendix A enumerates nothing; Chapter 8 sec 8.7.3.44 prints Table 0256 - Time delay post challenge. Its 44 codes equal those v2.3.1 prints, except that v2.3 prints '20M' twice, the second against '30 minutes post challenge': a misprint for 30M, corrected as v2.3.1 prints it.",
+      "addEntries": [
+        [
+          "BS",
+          "Baseline (time just before the challenge)"
+        ],
+        [
+          "PEAK",
+          "The time post drug dose at which the highest drug level is reached (differs by drug)"
+        ],
+        [
+          "TROUGH",
+          "The time post drug dose at which the lowest drug level is reached (varies with drug)"
+        ],
+        [
+          "RANDOM",
+          "Time from the challenge, or dose not specified. (random)"
+        ],
+        [
+          "1M",
+          "1 minute post challenge"
+        ],
+        [
+          "2M",
+          "2 minutes post challenge"
+        ],
+        [
+          "3M",
+          "3 minutes post challenge"
+        ],
+        [
+          "4M",
+          "4 minutes post challenge"
+        ],
+        [
+          "5M",
+          "5 minutes post challenge"
+        ],
+        [
+          "6M",
+          "6 minutes post challenge"
+        ],
+        [
+          "7M",
+          "7 minutes post challenge"
+        ],
+        [
+          "8M",
+          "8 minutes post challenge"
+        ],
+        [
+          "9M",
+          "9 minutes post challenge"
+        ],
+        [
+          "10M",
+          "10 minutes post challenge"
+        ],
+        [
+          "15M",
+          "15 minutes post challenge"
+        ],
+        [
+          "20M",
+          "20 minutes post challenge"
+        ],
+        [
+          "25M",
+          "25 minutes post challenge"
+        ],
+        [
+          "30M",
+          "30 minutes post challenge"
+        ],
+        [
+          "1H",
+          "1 hour post challenge"
+        ],
+        [
+          "2H",
+          "2 hours post challenge"
+        ],
+        [
+          "2.5H",
+          "2 1/2 hours post challenge"
+        ],
+        [
+          "3H",
+          "3 hours post challenge"
+        ],
+        [
+          "4H",
+          "4 hours post challenge"
+        ],
+        [
+          "5H",
+          "5 hours post challenge"
+        ],
+        [
+          "6H",
+          "6 hours post challenge"
+        ],
+        [
+          "7H",
+          "7 hours post challenge"
+        ],
+        [
+          "8H",
+          "8 hours post challenge"
+        ],
+        [
+          "8H SHIFT",
+          "8 hours aligned on nursing shifts"
+        ],
+        [
+          "12H",
+          "12 hours post challenge"
+        ],
+        [
+          "24H",
+          "24 hours post challenge"
+        ],
+        [
+          "2D",
+          "2 days"
+        ],
+        [
+          "3D",
+          "3 days"
+        ],
+        [
+          "4D",
+          "4 days"
+        ],
+        [
+          "5D",
+          "5 days"
+        ],
+        [
+          "6D",
+          "6 days"
+        ],
+        [
+          "7D",
+          "7 days"
+        ],
+        [
+          "1W",
+          "1 week"
+        ],
+        [
+          "10D",
+          "10 days"
+        ],
+        [
+          "2W",
+          "2 weeks"
+        ],
+        [
+          "3W",
+          "3 weeks"
+        ],
+        [
+          "4W",
+          "4 weeks"
+        ],
+        [
+          "1L",
+          "1 month (30 days) post challenge"
+        ],
+        [
+          "2L",
+          "2 months (60 days) post challenge"
+        ],
+        [
+          "3L",
+          "3 months (90 days) post challenge"
+        ]
+      ]
+    },
+    "0290": {
+      "note": "V23-C09: v2.3 Appendix A enumerates nothing; Chapter 2 prints Table 0290 - MIME base64 encoding characters (sec 2.8.14 ED, p. 2-25): Value 0 to 63 and (pad), Code the character. Index 34 is printed 'I' (RFC 2045 has 'i'); transcribed as printed. Not bound to any ID field.",
+      "addEntries": [
+        [
+          "0",
+          "A"
+        ],
+        [
+          "1",
+          "B"
+        ],
+        [
+          "2",
+          "C"
+        ],
+        [
+          "3",
+          "D"
+        ],
+        [
+          "4",
+          "E"
+        ],
+        [
+          "5",
+          "F"
+        ],
+        [
+          "6",
+          "G"
+        ],
+        [
+          "7",
+          "H"
+        ],
+        [
+          "8",
+          "I"
+        ],
+        [
+          "9",
+          "J"
+        ],
+        [
+          "10",
+          "K"
+        ],
+        [
+          "11",
+          "L"
+        ],
+        [
+          "12",
+          "M"
+        ],
+        [
+          "13",
+          "N"
+        ],
+        [
+          "14",
+          "O"
+        ],
+        [
+          "15",
+          "P"
+        ],
+        [
+          "16",
+          "Q"
+        ],
+        [
+          "17",
+          "R"
+        ],
+        [
+          "18",
+          "S"
+        ],
+        [
+          "19",
+          "T"
+        ],
+        [
+          "20",
+          "U"
+        ],
+        [
+          "21",
+          "V"
+        ],
+        [
+          "22",
+          "W"
+        ],
+        [
+          "23",
+          "X"
+        ],
+        [
+          "24",
+          "Y"
+        ],
+        [
+          "25",
+          "Z"
+        ],
+        [
+          "26",
+          "a"
+        ],
+        [
+          "27",
+          "b"
+        ],
+        [
+          "28",
+          "c"
+        ],
+        [
+          "29",
+          "d"
+        ],
+        [
+          "30",
+          "e"
+        ],
+        [
+          "31",
+          "f"
+        ],
+        [
+          "32",
+          "g"
+        ],
+        [
+          "33",
+          "h"
+        ],
+        [
+          "34",
+          "I"
+        ],
+        [
+          "35",
+          "j"
+        ],
+        [
+          "36",
+          "k"
+        ],
+        [
+          "37",
+          "l"
+        ],
+        [
+          "38",
+          "m"
+        ],
+        [
+          "39",
+          "n"
+        ],
+        [
+          "40",
+          "o"
+        ],
+        [
+          "41",
+          "p"
+        ],
+        [
+          "42",
+          "q"
+        ],
+        [
+          "43",
+          "r"
+        ],
+        [
+          "44",
+          "s"
+        ],
+        [
+          "45",
+          "t"
+        ],
+        [
+          "46",
+          "u"
+        ],
+        [
+          "47",
+          "v"
+        ],
+        [
+          "48",
+          "w"
+        ],
+        [
+          "49",
+          "x"
+        ],
+        [
+          "50",
+          "y"
+        ],
+        [
+          "51",
+          "z"
+        ],
+        [
+          "52",
+          "0"
+        ],
+        [
+          "53",
+          "1"
+        ],
+        [
+          "54",
+          "2"
+        ],
+        [
+          "55",
+          "3"
+        ],
+        [
+          "56",
+          "4"
+        ],
+        [
+          "57",
+          "5"
+        ],
+        [
+          "58",
+          "6"
+        ],
+        [
+          "59",
+          "7"
+        ],
+        [
+          "60",
+          "8"
+        ],
+        [
+          "61",
+          "9"
+        ],
+        [
+          "62",
+          "+"
+        ],
+        [
+          "63",
+          "/"
+        ],
+        [
+          "(pad)",
+          "="
+        ]
+      ]
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3 Chapter 2 sec 2.24.15.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation.\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3 Chapter 2 sec 2.24.4.9 QRD-9 What subject filter and sec 2.24.6.4 R/U what subject definition (URD-4), HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3 Chapter 8 sec 8.4.1.1 Master file identifier (MFI-1), HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   },
   "2.3.1": {
@@ -227,7 +1305,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.3.1 Chapter 7 sec. 7.3.2.2 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.3.1 CH2 Figure 2-2 'HL7 data types' (v2.3.1 prints no Table 0440); descriptions as v2.4 Table 0440 prints them.",
       "addEntries": [
         [
           "CD",
@@ -240,11 +1318,406 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "CNE",
+          "Coded with no exceptions"
+        ],
+        [
+          "CWE",
+          "Coded with exceptions"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "VH",
+          "Visiting hours"
+        ],
+        [
+          "VID",
+          "Version identifier"
         ]
       ]
+    },
+    "0356": {
+      "note": "V231-C01: v2.3.1 Chapter 2 sec 2.24.1.20 (p. 2-109) prints Table 0356 with three rows, ISO 2022-1994, 2.3 and <null>; Appendix A (the extraction source) omits the 2.3 row. MSH-20 is ID, so without it MSH-20 = 2.3 was a false valueNotInTable error. v2.4 and v2.5.1 print the row.",
+      "addEntries": [
+        [
+          "2.3",
+          "The character set switching mode specified in HL7 2.3, sections 2.8.28.6.1, and 2.9.2"
+        ]
+      ]
+    },
+    "0290": {
+      "note": "V23-C09: v2.3.1 Appendix A enumerates nothing; Chapter 2 prints Table 0290 - MIME base64 encoding characters (sec 2.8.16 ED, p. 2-30): Value 0 to 63 and (pad), Code the character. Index 34 is printed 'I' (RFC 2045 has 'i'); transcribed as printed. Not bound to any ID field.",
+      "addEntries": [
+        [
+          "0",
+          "A"
+        ],
+        [
+          "1",
+          "B"
+        ],
+        [
+          "2",
+          "C"
+        ],
+        [
+          "3",
+          "D"
+        ],
+        [
+          "4",
+          "E"
+        ],
+        [
+          "5",
+          "F"
+        ],
+        [
+          "6",
+          "G"
+        ],
+        [
+          "7",
+          "H"
+        ],
+        [
+          "8",
+          "I"
+        ],
+        [
+          "9",
+          "J"
+        ],
+        [
+          "10",
+          "K"
+        ],
+        [
+          "11",
+          "L"
+        ],
+        [
+          "12",
+          "M"
+        ],
+        [
+          "13",
+          "N"
+        ],
+        [
+          "14",
+          "O"
+        ],
+        [
+          "15",
+          "P"
+        ],
+        [
+          "16",
+          "Q"
+        ],
+        [
+          "17",
+          "R"
+        ],
+        [
+          "18",
+          "S"
+        ],
+        [
+          "19",
+          "T"
+        ],
+        [
+          "20",
+          "U"
+        ],
+        [
+          "21",
+          "V"
+        ],
+        [
+          "22",
+          "W"
+        ],
+        [
+          "23",
+          "X"
+        ],
+        [
+          "24",
+          "Y"
+        ],
+        [
+          "25",
+          "Z"
+        ],
+        [
+          "26",
+          "a"
+        ],
+        [
+          "27",
+          "b"
+        ],
+        [
+          "28",
+          "c"
+        ],
+        [
+          "29",
+          "d"
+        ],
+        [
+          "30",
+          "e"
+        ],
+        [
+          "31",
+          "f"
+        ],
+        [
+          "32",
+          "g"
+        ],
+        [
+          "33",
+          "h"
+        ],
+        [
+          "34",
+          "I"
+        ],
+        [
+          "35",
+          "j"
+        ],
+        [
+          "36",
+          "k"
+        ],
+        [
+          "37",
+          "l"
+        ],
+        [
+          "38",
+          "m"
+        ],
+        [
+          "39",
+          "n"
+        ],
+        [
+          "40",
+          "o"
+        ],
+        [
+          "41",
+          "p"
+        ],
+        [
+          "42",
+          "q"
+        ],
+        [
+          "43",
+          "r"
+        ],
+        [
+          "44",
+          "s"
+        ],
+        [
+          "45",
+          "t"
+        ],
+        [
+          "46",
+          "u"
+        ],
+        [
+          "47",
+          "v"
+        ],
+        [
+          "48",
+          "w"
+        ],
+        [
+          "49",
+          "x"
+        ],
+        [
+          "50",
+          "y"
+        ],
+        [
+          "51",
+          "z"
+        ],
+        [
+          "52",
+          "0"
+        ],
+        [
+          "53",
+          "1"
+        ],
+        [
+          "54",
+          "2"
+        ],
+        [
+          "55",
+          "3"
+        ],
+        [
+          "56",
+          "4"
+        ],
+        [
+          "57",
+          "5"
+        ],
+        [
+          "58",
+          "6"
+        ],
+        [
+          "59",
+          "7"
+        ],
+        [
+          "60",
+          "8"
+        ],
+        [
+          "61",
+          "9"
+        ],
+        [
+          "62",
+          "+"
+        ],
+        [
+          "63",
+          "/"
+        ],
+        [
+          "(pad)",
+          "="
+        ]
+      ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.3.1 Appendix A User-defined Table 0203 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row."
+    },
+    "0355": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.3.1 Chapter 8 sec 8.4.2.5 MFE-5 Primary key value type, HL7 Table 0355 - Primary key value type",
+      "note": "P2-fix 1: stays closed. v2.3.1 Chapter 8 sec 8.4.2.5 (MFE-5) reads 'The valid values for the data type of a primary key are listed in HL7 table 0355' and prints no local-extension note; the note that opens the table first appears in v2.4."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3.1 Chapter 2 sec 2.24.15.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation.\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3.1 Chapter 2 sec 2.24.4.9 QRD-9 What subject filter and sec 2.24.6.4 R/U what subject definition (URD-4), HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3.1 Chapter 8 sec 8.4.1.1 Master file identifier (MFI-1), HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   },
   "2.4": {
+    "0392": {
+      "kind": "User",
+      "citation": "HL7 v2.4 Chapter 5 sec 5.5.4.2 QRI-2 Match reason code (IS): 'Refer to User-defined Table 0392 - Match reason for suggested values'; User-defined Table 0392 - Match reason (p. 5-50)",
+      "note": "P7-8 (audit-schemas KINDMISMATCH): Appendix A section A.4 indexes this table as HL7; the chapter that defines the field prints the table as User-defined Table 0392 and the field as IS, and v2.5.1 onwards index it as User. The chapter wins, as for v2.4 Table 0203 and v2.3 Table 0255. No validation effect: an IS field is never checked against its table."
+    },
+    "0131": {
+      "createName": "Contact role",
+      "kind": "User",
+      "citation": "HL7 v2.4 Chapter 3 sec 3.4.5.7 NK1-7 Contact role, User-defined Table 0131 - Contact role (p. 105)",
+      "note": "v2.4 prints this table in the chapter, with the single row 'No suggested values', and omits it from Appendix A, whose data element index binds 0131 to NK1-7 and CTD-1 (CH11 sec 11.6.4.1). Created with no entries, as the v2.3.1 Appendix A prints it.",
+      "addEntries": []
+    },
     "0003": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
@@ -286,6 +1759,7 @@
       "citation": "HL7 v2.4 Appendix A Table 0418: the row '2 ...' (for ranked secondary procedures) is an open-ended range, 2 and every higher rank, so the printed rows are not a closed set."
     },
     "0354": {
+      "note": "P7-8: rows are Appendix A's as printed; a misprint is not corrected here but by a cited table-0354 erratum in Resources/structures/overrides.json (the convention v2.3.1 ADT_A30 '136' and RPA_I08 '1II' and v2.5.1 '007' / '022' follow). v2.4 Appendix A section A.6 (p. A-103) prints OMN_O07 'O07' and ORL_O22 'O22', so this table holds them as printed; only the CH02 sec 2.17.3 listing (p. 2-138) prints '007' and '022', which the extractor does not read. That CH02 listing also prints rows Appendix A lacks: QRY_Q26 to QRY_Q30 and QRY_P04 (registered on the structure side since P8b-final; recorded in docs/design/v2_3-v2_4-spec-audit.md).",
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.4 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     },
@@ -310,7 +1784,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.4 Chapter 7 sec. 7.4.2.2 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.4 Appendix A HL7 Table 0440 - Data types.",
       "addEntries": [
         [
           "CD",
@@ -323,8 +1797,363 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "CNE",
+          "Coded with no exceptions"
+        ],
+        [
+          "CWE",
+          "Coded with exceptions"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "FN",
+          "Family name"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "SAD",
+          "Street Address"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "SRT",
+          "Sort order"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "VH",
+          "Visiting hours"
+        ],
+        [
+          "VID",
+          "Version identifier"
         ]
       ]
+    },
+    "0119": {
+      "kind": "HL7",
+      "citation": "HL7 v2.4 Chapter 4 sec 4.20.1, HL7 Table 0119 - Order control codes (pp. 4-139 to 4-145); referenced by ORC-1 (sec 4.5.1.1, 'Refer to HL7 Table 0119')",
+      "note": "V24-C03: v2.4 Appendix A indexes 0119 as 'User 119 Order Control codes' and never enumerates it, so the extractor emitted kind User with no rows and ORC-1 (ID) was never checked. Chapter 4 prints it as an HL7 table with 48 distinct codes (Event/Message Type, Originator and Field Note columns omitted; a code printed against several message types is one row). v2.3.1 prints 47 of them (no PR); v2.5.1 adds OP and PY.",
+      "addEntries": [
+        [
+          "NW",
+          "New order/service"
+        ],
+        [
+          "OK",
+          "Order/service accepted & OK"
+        ],
+        [
+          "UA",
+          "Unable to accept order/service"
+        ],
+        [
+          "PR",
+          "Previous Results with new order/service"
+        ],
+        [
+          "CA",
+          "Cancel order/service request"
+        ],
+        [
+          "OC",
+          "Order/service canceled"
+        ],
+        [
+          "CR",
+          "Canceled as requested"
+        ],
+        [
+          "UC",
+          "Unable to cancel"
+        ],
+        [
+          "DC",
+          "Discontinue order/service request"
+        ],
+        [
+          "OD",
+          "Order/service discontinued"
+        ],
+        [
+          "DR",
+          "Discontinued as requested"
+        ],
+        [
+          "UD",
+          "Unable to discontinue"
+        ],
+        [
+          "HD",
+          "Hold order request"
+        ],
+        [
+          "OH",
+          "Order/service held"
+        ],
+        [
+          "UH",
+          "Unable to put on hold"
+        ],
+        [
+          "HR",
+          "On hold as requested"
+        ],
+        [
+          "RL",
+          "Release previous hold"
+        ],
+        [
+          "OE",
+          "Order/service released"
+        ],
+        [
+          "OR",
+          "Released as requested"
+        ],
+        [
+          "UR",
+          "Unable to release"
+        ],
+        [
+          "RP",
+          "Order/service replace request"
+        ],
+        [
+          "RU",
+          "Replaced unsolicited"
+        ],
+        [
+          "RO",
+          "Replacement order"
+        ],
+        [
+          "RQ",
+          "Replaced as requested"
+        ],
+        [
+          "UM",
+          "Unable to replace"
+        ],
+        [
+          "PA",
+          "Parent order/service"
+        ],
+        [
+          "CH",
+          "Child order/service"
+        ],
+        [
+          "XO",
+          "Change order/service request"
+        ],
+        [
+          "XX",
+          "Order/service changed, unsol."
+        ],
+        [
+          "UX",
+          "Unable to change"
+        ],
+        [
+          "XR",
+          "Changed as requested"
+        ],
+        [
+          "DE",
+          "Data errors"
+        ],
+        [
+          "RE",
+          "Observations/Performed Service to follow"
+        ],
+        [
+          "RR",
+          "Request received"
+        ],
+        [
+          "SR",
+          "Response to send order/service status request"
+        ],
+        [
+          "SS",
+          "Send order/service status request"
+        ],
+        [
+          "SC",
+          "Status changed"
+        ],
+        [
+          "SN",
+          "Send order/service number"
+        ],
+        [
+          "NA",
+          "Number assigned"
+        ],
+        [
+          "CN",
+          "Combined result"
+        ],
+        [
+          "RF",
+          "Refill order/service request"
+        ],
+        [
+          "AF",
+          "Order/service refill request approval"
+        ],
+        [
+          "DF",
+          "Order/service refill request denied"
+        ],
+        [
+          "FU",
+          "Order/service refilled, unsolicited"
+        ],
+        [
+          "OF",
+          "Order/service refilled as requested"
+        ],
+        [
+          "UF",
+          "Unable to refill"
+        ],
+        [
+          "LI",
+          "Link order/service to patient care problem or goal"
+        ],
+        [
+          "UN",
+          "Unlink order/service from patient care problem or goal"
+        ]
+      ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.4 Appendix A Table 0203 and CH02 sec 2.9.12.5 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row. V282-C02 (owner gate G5): opened; out-of-table identifier types are spec-compliant under 'suggested values'.",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Table 0203 - Identifier type; CH02 sec 2.9.12.5 prints it as 'HL7 Table 0203' (Appendix A indexes it as User) and says 'Refer to HL7 Table 0203 - Identifier type for suggested values', so the printed rows are not a closed set",
+      "kind": "HL7"
+    },
+    "0391": {
+      "permitsLocalExtensions": true,
+      "dropCodes": [
+        "etc"
+      ],
+      "citation": "HL7 v2.4 Table 0391 - Segment group; CH05 sec 5.5.5.7 prints the same 'Etc' row and note ('currently includes no values defined by HL7'), so the printed rows are not a closed set",
+      "note": "Appendix A carries the printed 'etc' row as a code; it is the continuation marker, not a value."
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 8 sec 8.5.2.5 MFE-5 Primary key value type, HL7 Table 0355 - Primary key value type",
+      "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
+    },
+    "0290": {
+      "fixDescriptions": {
+        "51": "z",
+        "52": "0",
+        "53": "1",
+        "54": "2",
+        "55": "3",
+        "56": "4",
+        "57": "5",
+        "58": "6",
+        "59": "7",
+        "60": "8",
+        "61": "9",
+        "62": "+",
+        "63": "/"
+      },
+      "citation": "HL7 v2.4 Chapter 2 sec 2.9.16.4 ED Encoding, HL7 Table 0290 - MIME base64 encoding characters",
+      "note": "P2-fix 6(d): v2.4 Chapter 2 sec 2.9.16.4 (ED Encoding), HL7 Table 0290 - MIME base64 encoding characters (pp. 2-42 to 2-43), and Appendix A both print the fourth Value/Code column with the value repeated in the Code cell for rows 51 to 63 (\"51 51 z\", \"52 52 0\" ... \"63 63 /\"), so the extractor read the descriptions as \"51 z\" and so on. The Code column of every other row is the single base64 character, as v2.3 and v2.3.1 (transcribed from Chapter 2) have it; the descriptions are corrected to that character."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 2 sec 2.16.10.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation. Refer to HL7 Table 0105 - Source of comment for valid values.\" (unchanged extension wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 5 sec 5.10.5.3.9 QRD-9 What subject filter and sec 5.10.5.6.4 URD-4 R/U what subject definition, HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 Table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 8 sec 8.5.1.1 MFI-1 Master file identifier, HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0371": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 8 sec 8.8.6.7 OM4-7 Additive and Chapter 13 sec 13.4.3.27 SAC-27 Additive, HL7 Table 0371 - Additive",
+      "note": "P2-14: OM4-7 and SAC-27, the only two fields citing the table on v2.4 (SPM does not exist until v2.5.1), both read \"Refer to HL7 table 0371 - Additive for valid values. The table's values are taken from NCCLS AUTO4. The value set can be extended with user specific values.\" so the printed rows are not a closed set. On v2.5.1, v2.6 and v2.8.2 a third field, SPM-6 Specimen Additives, also cites the table but only \"for valid values\" with no extension clause: the table is mixed there and stays closed (permanent-limitations-register.md section C)."
     }
   },
   "2.5.1": {
@@ -384,6 +2213,7 @@
       ]
     },
     "0354": {
+      "note": "P7-8: rows are Appendix A's as printed. Appendix A (p. A-107) and CH02 sec 2.17.3 (p. 2-103) both print OMN_O07 '007' and ORL_O22 '022' (zero for the letter O); kept verbatim, as v2.3.1 keeps ADT_A30 '136' and RPA_I08 '1II'. The correction to O07 and O22 is the cited table-0354 erratum in Resources/structures/overrides.json, which needs the printed text here. v2.4 holds O07 and O22 because its Appendix A prints them so (only its CH02 listing has the misprint).",
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.5.1 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 24 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
     },
@@ -417,7 +2247,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01: v2.5.1 CH07 sec 7.4.2.2 (OBX-2 Value Type) also states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. The printed table stops at the v2.3-era types, so every further data type of v2.5.1 Appendix A HL7 Table 0440 except those four is restored, with the description Table 0440 prints.",
       "addEntries": [
         [
           "CD",
@@ -430,8 +2260,291 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "AUI",
+          "Authorization information"
+        ],
+        [
+          "CCD",
+          "Charge code and date"
+        ],
+        [
+          "CCP",
+          "Channel calibration parameters"
+        ],
+        [
+          "CNE",
+          "Coded with no exceptions"
+        ],
+        [
+          "CNS",
+          "Composite ID number and name simplified"
+        ],
+        [
+          "CSU",
+          "Channel sensitivity"
+        ],
+        [
+          "CWE",
+          "Coded with exceptions"
+        ],
+        [
+          "DDI",
+          "Daily deductible information"
+        ],
+        [
+          "DIN",
+          "Date and institution name"
+        ],
+        [
+          "DLD",
+          "Discharge to location and date"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DLT",
+          "Delta"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "DTM",
+          "Date/time"
+        ],
+        [
+          "DTN",
+          "Day type and number"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "EIP",
+          "Entity identifier pair"
+        ],
+        [
+          "ERL",
+          "Error location"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "FN",
+          "Family name"
+        ],
+        [
+          "GTS",
+          "General timing specification"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "ICD",
+          "Insurance certification definition"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "LA1",
+          "Location with address variation 1"
+        ],
+        [
+          "LA2",
+          "Location with address variation 2"
+        ],
+        [
+          "LD",
+          "Error location and description"
+        ],
+        [
+          "MOC",
+          "Money and charge code"
+        ],
+        [
+          "MOP",
+          "Money or percentage"
+        ],
+        [
+          "MSG",
+          "Message type"
+        ],
+        [
+          "NDL",
+          "Name with location and date"
+        ],
+        [
+          "NR",
+          "Numeric range"
+        ],
+        [
+          "OCD",
+          "Occurrence code and date"
+        ],
+        [
+          "OSD",
+          "Order sequence definition"
+        ],
+        [
+          "OSP",
+          "Occurrence span code and date"
+        ],
+        [
+          "PIP",
+          "Practitioner institutional privileges"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PLN",
+          "Practitioner license or other ID number"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PRL",
+          "Parent result link"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "PTA",
+          "Policy type and amount"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RFR",
+          "Reference range"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "RMC",
+          "Room coverage"
+        ],
+        [
+          "RPT",
+          "Repeat pattern"
+        ],
+        [
+          "SAD",
+          "Street Address"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "SPD",
+          "Specialty description"
+        ],
+        [
+          "SPS",
+          "Specimen source"
+        ],
+        [
+          "SRT",
+          "Sort order"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "UVC",
+          "UB value code and amount"
+        ],
+        [
+          "VH",
+          "Visiting hours"
+        ],
+        [
+          "VID",
+          "Version identifier"
+        ],
+        [
+          "VR",
+          "Value range"
+        ],
+        [
+          "WVI",
+          "Channel Identifier"
+        ],
+        [
+          "WVS",
+          "Waveform source"
         ]
       ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.5.1 Appendix A HL7 Table 0203 and CH02A sec 2.A.14.5 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row. V282-C02 (owner gate G5): opened; out-of-table identifier types are spec-compliant under 'suggested values'.",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Table 0203 - Identifier type; CH02A sec 2.A.14.5 (CX.5) 'Refer to HL7 Table 0203 - Identifier type for suggested values', repeated at XCN.13, PPN.13 and XON.7, so the printed rows are not a closed set"
+    },
+    "0391": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Table 0391 - Segment group; CH05 sec 5.5.6.7 prints it ending 'Etc' with the note 'HL7 Table 0391 - Segment group currently includes no values defined by HL7', and a group's definition is 'given only in the conformance statement of the query', so the printed rows are not a closed set"
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Chapter 8 sec 8.5.2.5 MFE-5 Primary Key Value Type, HL7 Table 0355 - Primary Key Value Type",
+      "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Chapter 2 sec 2.15.10.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation. Refer to HL7 Table 0105 - Source of comment for valid values.\" (unchanged extension wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Chapter 5 sec 5.10.5.3.10 QRD-9 What Subject Filter and sec 5.10.5.6.4 URD-4 R/U What Subject Definition, HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   },
   "2.6": {
@@ -560,7 +2673,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.6 Chapter 7 sec. 7.4.2.2 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.6 Appendix A HL7 Table 0440 - Data types.",
       "addEntries": [
         [
           "CD",
@@ -573,8 +2686,287 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "AUI",
+          "Authorization information"
+        ],
+        [
+          "CCD",
+          "Charge code and date"
+        ],
+        [
+          "CCP",
+          "Channel calibration parameters"
+        ],
+        [
+          "CE",
+          "Coded element"
+        ],
+        [
+          "CNE",
+          "Coded with no exceptions"
+        ],
+        [
+          "CNS",
+          "Composite ID number and name simplified"
+        ],
+        [
+          "CSU",
+          "Channel sensitivity"
+        ],
+        [
+          "DDI",
+          "Daily deductible information"
+        ],
+        [
+          "DIN",
+          "Date and institution name"
+        ],
+        [
+          "DLD",
+          "Discharge to location and date"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DLT",
+          "Delta"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "DTN",
+          "Day type and number"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "EIP",
+          "Entity identifier pair"
+        ],
+        [
+          "ERL",
+          "Error location"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "FN",
+          "Family name"
+        ],
+        [
+          "GTS",
+          "General timing specification"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "ICD",
+          "Insurance certification definition"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "LA1",
+          "Location with address variation 1"
+        ],
+        [
+          "LA2",
+          "Location with address variation 2"
+        ],
+        [
+          "LD",
+          "Error location and description"
+        ],
+        [
+          "MOC",
+          "Money and charge code"
+        ],
+        [
+          "MOP",
+          "Money or percentage"
+        ],
+        [
+          "MSG",
+          "Message type"
+        ],
+        [
+          "NDL",
+          "Name with location and date"
+        ],
+        [
+          "NR",
+          "Numeric range"
+        ],
+        [
+          "OCD",
+          "Occurrence code and date"
+        ],
+        [
+          "OSD",
+          "Order sequence definition"
+        ],
+        [
+          "OSP",
+          "Occurrence span code and date"
+        ],
+        [
+          "PIP",
+          "Practitioner institutional privileges"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PLN",
+          "Practitioner license or other ID number"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PRL",
+          "Parent result link"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "PTA",
+          "Policy type and amount"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RFR",
+          "Reference range"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "RMC",
+          "Room coverage"
+        ],
+        [
+          "RPT",
+          "Repeat pattern"
+        ],
+        [
+          "SAD",
+          "Street Address"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "SPD",
+          "Specialty description"
+        ],
+        [
+          "SPS",
+          "Specimen source"
+        ],
+        [
+          "SRT",
+          "Sort order"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "TS",
+          "Time stamp"
+        ],
+        [
+          "UVC",
+          "UB value code and amount"
+        ],
+        [
+          "VH",
+          "Visiting hours"
+        ],
+        [
+          "VID",
+          "Version identifier"
+        ],
+        [
+          "VR",
+          "Value range"
+        ],
+        [
+          "WVI",
+          "Channel Identifier"
+        ],
+        [
+          "WVS",
+          "Waveform source"
         ]
       ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.6 Appendix A HL7 Table 0203 and CH02A sec 2.A.14.5 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row. V282-C02 (owner gate G5): opened; out-of-table identifier types are spec-compliant under 'suggested values'.",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Table 0203 - Identifier type; CH02A sec 2.A.14.5 (CX.5) 'Refer to HL7 Table 0203 - Identifier type for suggested values', repeated at XCN.13, PPN.13 and XON.7, so the printed rows are not a closed set"
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Chapter 8 sec 8.5.2.5 MFE-5 Primary Key Value Type, HL7 Table 0355 - Primary Key Value Type",
+      "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Chapter 2 sec 2.14.10.2 NTE-2 Source of Comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation. Refer to HL7 Table 0105 - Source of comment for valid values.\" (unchanged extension wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Chapter 5 sec 5.10.4.1.9 QRD-9 What Subject Filter and sec 5.10.4.3.4 URD-4 R/U What Subject Definition, HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 Table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   },
   "2.8.2": {
@@ -605,9 +2997,10 @@
         "Department Acuity",
         "Information Network",
         "data element nnnn [as",
-        "used in segment sss]"
+        "used in segment sss]",
+        "codes"
       ],
-      "note": "Four Values wider than their column ran into the Description (text lines 10652, 10701, 11123, 11254) and their wrapped Description lines parsed as rows. 'CE (obsolete)' and '(deprecated)' under ISOnnnn (line 10978) are status annotations printed in the Value column, not part of the code; v2.4 and v2.5.1 print the same row as plain CE."
+      "note": "Four Values wider than their column ran into the Description (text lines 10652, 10701, 11123, 11254) and their wrapped Description lines parsed as rows. 'CE (obsolete)' and '(deprecated)' under ISOnnnn (line 10978) are status annotations printed in the Value column, not part of the code; v2.4 and v2.5.1 print the same row as plain CE. P10-1 fix round 1: 'codes' (p175) is the wrapped second line of CE's Description 'CEN ECG diagnostic / codes', not a code."
     },
     "0399": {
       "permitsLocalExtensions": true,
@@ -677,6 +3070,480 @@
           "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
         ]
       ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.8.2 CH02C sec 2.C.2.140 HL7 Table 0203 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row. V282-C02 (owner gate G5): opened; out-of-table identifier types are spec-compliant under 'suggested values'.",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 CH02C sec 2.C.2.140 Table 0203 - Identifier Type; CH02A sec 2.A.14.5 (CX.5) 'Refer to HL7 Table 0203 - Identifier Type for suggested values', so the printed rows are not a closed set"
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.280, HL7 Table 0355 - Primary Key Value Type",
+      "note": "P2-fix 1: the Note under the table reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
+    },
+    "0920": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.544, HL7 Table 0920 - Preferred Specimen/Attribute Status; its only governing field, OM4-16 (CH08 sec 8.8.12.16), reads \"Refer to HL7 Table 0920 - Preferred Specimen/Attribute Status in Chapter 2C, Code Tables, for suggested values\", so the printed rows are not a closed set",
+      "note": "P2-fix 2: open under the ADR-016 criterion (governing field prose cites the table for suggested values)."
+    },
+    "0617": {
+      "kind": "User",
+      "citation": "HL7 v2.8.2 Chapter 2A sec 2.A.87.18 XAD.18 Address Usage, User-defined Table 0617 - Address Usage (CH02C 2.C.2.481 prints the caption HL7 Table 0617 and names XAD.18 as its only use)",
+      "note": "P2-fix 2: XAD.18, the only governing field, reads \"Refer to User-defined Table 0617 - Address Usage for valid values\". Under the ADR-016 criterion the chapter prose wins, so the kind is User (P2-4 0119 precedent, in reverse). v2.6 sec 2.A.85.18 prints \"HL7 Table 0617\" inline and stays HL7."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2 sec 2.14.10.2 NTE-2 Source of Comment, HL7 Table 0105 - Source of Comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation. Refer to HL7 Table 0105 - Source of Comment in Chapter 2C, Code Tables, for valid values.\" (unchanged extension wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master File Identifier Code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0359": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.284 (p155), User-defined Table 0359 - Diagnosis Priority; Chapter 6 sec 6.5.2.15 DG1-15 (p34): 'The value 1 means that this is the primary diagnosis. Values 2-99 convey ranked secondary diagnoses', so the printed 0, 1, 2 and ellipsis rows are not a closed set",
+      "note": "P10-1 fix round 1: the lone ellipsis row (U+2026) was stored as a code and the table closed; the extractor now reads it as the bare '...' row and drops it."
+    },
+    "0418": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.337 (p190), HL7 Table 0418 - Procedure Priority; Chapter 6 sec 6.5.4.14 PR1-14 (p47): 'Values 2-99 convey ranked secondary procedures', so the printed 0, 1, 2 and ellipsis rows are not a closed set",
+      "note": "P10-1 fix round 1: the lone ellipsis row (U+2026) was stored as a code and the table closed; the extractor now reads it as the bare '...' row and drops it."
+    },
+    "0544": {
+      "permitsLocalExtensions": true,
+      "dropCodes": [
+        "temperature"
+      ],
+      "fixDescriptions": {
+        "XAMB": "Not Ambient temperature",
+        "XCAMB": "Not Critical ambient temperature",
+        "XREF": "Not Refrigerated temperature",
+        "XCREF": "Not Critical refrigerated temperature",
+        "XFRZ": "Not Frozen temperature",
+        "XCFRZ": "Not Critical frozen temperature"
+      },
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.454 (pp243-244), HL7 Table 0544 - Container Condition; Chapter 7 sec 7.4.3.28 SPM-28 (p76), sec 7.18.2.9 SHP-9 (p170) and sec 7.18.3.6 PAC-6 (p172): 'Refer to HL7 Table 0544 - Container Condition for suggested values', so the printed rows are not a closed set",
+      "note": "P10-1 fix round 1. Chapter 2C prints the Descriptions 'Not Critical ambient / temperature', 'Not Refrigerated / temperature', 'Not Critical refrigerated / temperature' and 'Not Critical frozen / temperature' on two lines centred on the row, so the extractor took the Comment as the Description, glued the first line onto the row above (XAMB, XFRZ) and stored the wrapped 'temperature' as a code. The fragment is dropped and the six Descriptions are restored as printed."
+    },
+    "0088": {
+      "dropCodes": [
+        "contractors."
+      ],
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.53 (pp48-49), Externally-defined Table 0088 - Procedure Code",
+      "note": "P10-1 fix round 1: 'contractors.' is the last line of the HCPCS paragraph under the table ('CMS may distribute the CPT-4 part to its / contractors.', p49), not a code."
+    },
+    "0343": {
+      "dropCodes": [
+        "contractors."
+      ],
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.271 (p146), Table 0343 - Military Handicapped Program Code",
+      "note": "P10-1 fix round 1: 'contractors.' is the last line of the HCPCS paragraph printed under the table (p146), not a code."
+    },
+    "0093": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C (p50), User-defined Table 0093 - Release Information: the row '... user-defined codes' continues the printed values",
+      "note": "P10-1 fix round 1: the Chapter 2C layout used to skip every line containing '..' as a table-of-contents line, so this ellipsis row was lost and the table read as closed."
+    },
+    "0466": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C (p209), User-defined Table 0466 - Ambulatory Payment Classification Code: the row '...' continues the printed values",
+      "note": "P10-1 fix round 1: the Chapter 2C layout used to skip every line containing '..' as a table-of-contents line, so this ellipsis row was lost and the table read as closed."
+    }
+  },
+  "2.7.1": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "dropCodes": [
+        "Z73",
+        "Z74",
+        "Z75",
+        "Z76",
+        "Z77",
+        "Z78",
+        "Z79",
+        "Z80",
+        "Z81",
+        "Z82",
+        "Z83",
+        "Z84",
+        "Z85",
+        "Z86",
+        "Z87"
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.2 (p12), HL7 Table 0003 - Event Type; Chapter 2 sec 2.5.1 (p6): 'All message types and trigger event codes beginning with the letter \"Z\" are reserved for locally defined messages', so the printed rows are not a closed set",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (pp34-35) prints bare rows Z73 to Z99 with no description; Chapter 2C prints none. Chapter 2 sec 2.5.1 (p6) adds 'No such codes will be defined within the HL7 Standard', so Chapter 2C governs: Z73-Z87 are dropped here and the extractor already skips Z88-Z99 as note rows."
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.14 (p22), HL7 Table 0076 - Message Type; Chapter 2 sec 2.5.1 (p6) reserves message types beginning with \"Z\" for locally defined messages, so the printed rows are not a closed set"
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "addEntries": [
+        [
+          "2.7.1",
+          "Release 2.7.1"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.22 (p28), HL7 Table 0104 - Version ID. MSH-12 (Chapter 2 sec 2.14.9.12, p60) and VID.1 (CH02A sec 2.A.82.1, p87) both refer to the table 'for valid values'; the table is left open on the cross-version reading recorded for 0104 on v2.3 to v2.8.2 in this file ('MSH-12 may carry a locally agreed version identifier')",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p50) stops at 2.7; Chapter 2C (p28) also prints '2.7.1 Release 2.7.1 July 2012'. Chapter 2C governs. Openness is not read from the v2.7.1 text, which says 'for valid values': it follows the reading every other version carries, that a receiver matches MSH-12 against its own version (sec 2.14.9.12) and that affiliate versions travel in VID.2 and VID.3 (sec 2.A.82.2, 2.A.82.3)."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2 sec 2.14.10.2 NTE-2 Source of Comment (p65), HL7 Table 0105 - Source of Comment: 'This table may be extended locally during implementation.'"
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier (p7), HL7 Table 0175 - Master File Identifier Code: 'This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).'"
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.176 (p106), HL7 Table 0355 - Primary Key Value Type: 'For locally defined master files, this table can be locally extended with other HL7 data types'"
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.71 (p56), HL7 Table 0203 - Identifier Type; CH02A sec 2.A.14.5 CX.5 (p33) 'Refer to HL7 Table 0203 - Identifier Type for suggested values', so the printed rows are not a closed set",
+      "note": "The row NNxxx (Chapter 2C p59, Appendix A p67) is 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code': a family of codes, modelled as a pattern row as on v2.6 and v2.8.2."
+    },
+    "0396": {
+      "permitsLocalExtensions": true,
+      "renameCodes": {
+        "CE (obsolete)": "CE",
+        "ISOnnnn(deprecated)": "ISOnnnn"
+      },
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.214 (p123), HL7 Table 0396 - Coding System; the table prints the local forms 99zzz and L, and its Note says 'Changes to Table 0396 occur' after publication, so the printed rows are not a closed set",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p121) governs: Chapter 2C runs four wide Values into the Description and wraps others (extraction artefacts). '(obsolete)' and '(deprecated)' are status annotations printed in the Value column, as on v2.6 and v2.8.2."
+    },
+    "0399": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.316 (p189), External Table 0399 - Country Code: 'use 3-character (alphabetic) form of ISO 3166'; Chapter 2 sec 2.14.9.17 MSH-17 (p61). The values are ISO 3166 by reference, so the printed rows are not a closed set"
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "dropCodes": [
+        "MFN_Znn",
+        "QBP_Qnn",
+        "QBP_Z73",
+        "RSP_Z82",
+        "RSP_Z86",
+        "RSP_Z88",
+        "RSP_Z90",
+        "RTB_Knn",
+        "RTB_Z74"
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.175 (p102), HL7 Table 0354 - Message Structure. Chapter 2 sec 2.5.1 (p6) reserves \"Z\" message types and events for locally defined messages, whose structures are local too, so the printed rows are not a closed set",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p101) prints nine rows Chapter 2C omits: the families MFN_Znn, QBP_Qnn, RTB_Knn and the site query structures QBP_Z73, RSP_Z82, RSP_Z86, RSP_Z88, RSP_Z90, RTB_Z74 (\"Z\" events, Chapter 2 sec 2.5.1). None is an HL7-defined structure; Chapter 2C governs. Measured: every structure on a v2.7.1 chapter trigger line is in the table; eight structures appear only in example messages (ADT_A04, ADT_A31, CRM_C05, CRM_C09, MFK_M13, QSX_J01, RSP_K61, RTB_R13)."
+    },
+    "0207": {
+      "dropCodes": [
+        "Not present"
+      ],
+      "citation": "HL7 v2.7.1 Appendix A (p70), HL7 Table 0207 - Processing Mode; HL7 v2.7.1 Chapter 2C sec 2.C.2.75 (p62)",
+      "note": "Processing mode prints 'Not present' = 'the default, meaning current processing'. The row denotes an ABSENT field, not a literal value."
+    },
+    "0211": {
+      "addEntries": [
+        [
+          "UNICODE UTF-16",
+          "UCS Transformation Format, 16-bit form"
+        ],
+        [
+          "UNICODE UTF-32",
+          "UCS Transformation Format, 32-bit form"
+        ],
+        [
+          "UNICODE UTF-8",
+          "UCS Transformation Format, 8-bit form"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.79 (p63), HL7 Table 0211 - Alternate Character Sets",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (pp71-72) wraps the Values 'UNICODE UTF-16', '-32' and '-8' after 'UTF-', so the extractor reads the first as a reprint of UNICODE and skips the others as note rows. Chapter 2C prints all three whole; the prints agree, Chapter 2C's reading governs."
+    },
+    "0301": {
+      "renameCodes": {
+        "L,M,N": "L"
+      },
+      "addEntries": [
+        [
+          "M",
+          "Locally defined coding entity identifier."
+        ],
+        [
+          "N",
+          "Locally defined coding entity identifier."
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Appendix A (p95), HL7 Table 0301 - Universal ID Type; HL7 v2.7.1 Chapter 2C sec 2.C.2.143 (p91)",
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'Locally defined coding entity identifier.', not one. Split into three rows carrying the printed description."
+    },
+    "0335": {
+      "renameCodes": {
+        "Meal RelatedTimings": "Meal Related Timings"
+      },
+      "citation": "HL7 v2.7.1 Appendix A (p99), User-defined Table 0335 - Repeat Pattern; HL7 v2.7.1 Chapter 2C sec 2.C.2.165 (p98)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints wrap the row label 'Meal Related / Timings' over two lines; Appendix A governs once the wrap is rejoined with its space."
+    },
+    "0528": {
+      "addEntries": [
+        [
+          "AHS",
+          "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Appendix A (p160), HL7 Table 0528 - Event Related Period; CH02A sec 2.A.66 RPT (p78)",
+      "note": "The table prints HS ('the hour of sleep'); the RPT section's own example is '|QHS&Every day before the hours of sleep&HL7xxx^^^^1^d^^AHS|', whose RPT.8 'AHS' is in no row. The example's spelling is added so the closed table accepts the specification's own example."
+    },
+    "0125": {
+      "addEntries": [
+        [
+          "CD",
+          "Channel definition (Chapter 7 waveform: CHN category)"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Appendix A (p53), HL7 Table 0125 - Value Type; Chapter 7 sec 7.3.2.2 OBX-2 (p46) and sec 7.15.4 (p141)",
+      "note": "Chapter 7 sec 7.15.4 (p141): 'When using the OBX for the CHN category, OBX-2 Value Type should be valued to CD'. The table prints MA and NA (sec 7.13.1.3, p139) but omits CD, which is added. The defining field governs (as for 0055 and 0391): OBX-2 (sec 7.3.2.2, p46) says 'CQ is invalid ... SI is invalid ... ID is also invalid because it requires a constant field definition'. Appendix A (p53) and Chapter 2C (sec 2.C.2.31, p39) nevertheless print ID, a contradiction in the print; ID is dropped. CQ and SI are not printed. Unlike v2.6, v2.7.1 OBX-2 has no 'All HL7 data types are valid' sentence, so no further datatypes are added.",
+      "dropCodes": [
+        "ID"
+      ]
+    },
+    "0391": {
+      "renameCodes": {
+        "CLOCK_AND_STATS_WITH_NOTE": "CLOCK_AND_STATS_WITH_NOTES"
+      },
+      "addEntries": [
+        [
+          "CLOCK_AND_STATS_WITH_NOTES_ALT",
+          ""
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.209 (pp119-120), HL7 Table 0391 - Segment Group; Chapter 14 sec 14.3.2 NMD^N02^NMD_N02 (p2)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p117) prints CLOCK_AND_STATS_WITH_NOTE; Chapter 2C prints CLOCK_AND_STATS_WITH_NOTES and CLOCK_AND_STATS_WITH_NOTES_ALT, and the defining chapter's NMD_N02 structure names the group CLOCK_AND_STATS_WITH_NOTES. Chapter 2C governs."
+    },
+    "0347": {
+      "addEntries": [
+        [
+          "AB",
+          "Alberta (US and Canada)"
+        ],
+        [
+          "MI",
+          "Michigan (US)"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.171 (p101), User-defined Table 0347 - State/Province",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p101) prints only 'No suggested values defined'; Chapter 2C prints AB and MI ('This table is country specific'). Chapter 2C is the table's defining print (CH02A refers to it 'for suggested values'), so it governs."
+    },
+    "0492": {
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.253 (pp156-157), User-defined Table 0492 - Specimen Appropriateness; Appendix A (p151); Chapter 7 sec 7.3.3.23 SPM-23 (p66)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints carry the row '?? Inappropriate due to ...' (Chapter 2C continues the table over the page break onto p157). Kept as printed, as on v2.6. (The first cross-check missed it: the Chapter 2C layout skipped every line containing '..' as a table-of-contents line.)"
+    },
+    "0507": {
+      "addEntries": [
+        [
+          "A",
+          "Alert provider when abnormal"
+        ],
+        [
+          "CC",
+          "Copies Requested"
+        ],
+        [
+          "BCC",
+          "Blind Copy"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.268 (p164), User-defined Table 0507 - Observation Result Handling",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p157) prints F and N; Chapter 2C prints F, N, A, CC and BCC. Chapter 2C governs."
+    },
+    "0200": {
+      "citation": "HL7 v2.7.1 Appendix A (p65), User-defined Table 0200 - Name Type; HL7 v2.7.1 Chapter 2C sec 2.C.2.68 (p54)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Chapter 2C's extra 'name.' is the tail of the Note under the table (p55); the prints agree, Appendix A governs. No change."
+    },
+    "0440": {
+      "citation": "HL7 v2.7.1 Appendix A (p132), HL7 Table 0440 - Data Types; HL7 v2.7.1 Chapter 2C sec 2.C.2.223 (p138)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Chapter 2C's extra 'type' is the wrapped column header 'Data type' (pp138-139); the prints agree, Appendix A governs. No change."
+    },
+    "0055": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.7 (p20), External Table 0055 - Diagnosis Related Group; Chapter 6 sec 6.5.3.1 DRG-1 (p38) 'Refer to Externally-defined Table 0055'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and the defining chapter call it External. The defining chapter governs: an externally-defined table is HL7-owned with values from an outside body (the extractor's reading of 'External' on every version), so it is never a closed set."
+    },
+    "0088": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.18 (p27), External Table 0088 - Procedure Code; Chapter 6 sec 6.5.1.25 FT1-25 (p24) 'Refer to Externally-defined Table 0088'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and the defining chapter call it External. The defining chapter governs: an externally-defined table is HL7-owned with values from an outside body (the extractor's reading of 'External' on every version), so it is never a closed set."
+    },
+    "0118": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.25 (p29), External Table 0118 - Major Diagnostic Category; Chapter 8 sec 8.13.2.2 DMI-2 (p97) 'Refer to External Table 0118'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and the defining chapter call it External. The defining chapter governs: an externally-defined table is HL7-owned with values from an outside body (the extractor's reading of 'External' on every version), so it is never a closed set."
+    },
+    "0910": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.314 (p188), External Table 0910 - Acquisition Modality; Chapter 4 sec 4.5.6.5 IPC-5 (p87) 'Refer to External Table 0910'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and the defining chapter call it External. The defining chapter governs: an externally-defined table is HL7-owned with values from an outside body (the extractor's reading of 'External' on every version), so it is never a closed set."
+    },
+    "0544": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.295 (p172), HL7 Table 0544 - Container Condition; Chapter 7 sec 7.3.3.28 SPM-28 (p67) and sec 7.17.2.9 SHP-9 (p155): 'Refer to HL7 Table 0544 - Container Condition for suggested values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For suggested values' leaves it open (ADR-016 criterion). Chapter 2C's extra code 'temperature' is a wrapped Description (p173): no code change."
+    },
+    "0905": {
+      "kind": "HL7",
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.309 (p185), HL7 Table 0905 - Shipment Status; Chapter 7 sec 7.17.2.3 SHP-3 (p154) 'Refer to HL7 Table 0905 ... for specific values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For specific values' with no extension clause: closed."
+    },
+    "0906": {
+      "kind": "HL7",
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.310 (p186), HL7 Table 0906 - ActPriority; Chapter 7 sec 7.17.2.6 SHP-6 (p155) 'Refer to HL7 Table 0906 ... for specific values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For specific values' with no extension clause: closed."
+    },
+    "0907": {
+      "kind": "HL7",
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.311 (p186), HL7 Table 0907 - Confidentiality; Chapter 7 sec 7.17.2.7 SHP-7 (p155) 'Refer to HL7 Table 0907 ... for specific values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For specific values' with no extension clause: closed."
+    },
+    "0912": {
+      "kind": "HL7",
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.315 (p188), HL7 Table 0912 - Participation; Chapter 7 sec 7.3.4.4 PRT-4 (p70) 'Refer to HL7 Table 0912 ... for valid values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For valid values' with no extension clause: closed."
+    },
+    "0487": {
+      "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0487 - Specimen Type; HL7 v2.7.1 Chapter 2C sec 2.C.2.248 (p149)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints say HL7 (Chapter 2C captions it 'HL7 table' or 'HL7 Defined Table', which the Chapter 2C layout does not read, so it defaulted to User). Appendix A governs. No change."
+    },
+    "0488": {
+      "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0488 - Specimen Collection Method; HL7 v2.7.1 Chapter 2C sec 2.C.2.249 (p154)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints say HL7 (Chapter 2C captions it 'HL7 table' or 'HL7 Defined Table', which the Chapter 2C layout does not read, so it defaulted to User). Appendix A governs. No change."
+    },
+    "0495": {
+      "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0495 - Body Site Modifier; HL7 v2.7.1 Chapter 2C sec 2.C.2.256 (p157)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints say HL7 (Chapter 2C captions it 'HL7 table' or 'HL7 Defined Table', which the Chapter 2C layout does not read, so it defaulted to User). Appendix A governs. No change."
+    },
+    "0503": {
+      "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0503 - Sequence/Results Flag; HL7 v2.7.1 Chapter 2C sec 2.C.2.264 (p162)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints say HL7 (Chapter 2C captions it 'HL7 table' or 'HL7 Defined Table', which the Chapter 2C layout does not read, so it defaulted to User). Appendix A governs. No change."
+    },
+    "0359": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p108), HL7 Table 0359 - Diagnosis Priority; Chapter 6 sec 6.5.2.15 DG1-15 (p33) 'for suggested values', and 'Values 2-99 convey ranked secondary' diagnoses: the printed 0, 1, 2 and '...' are not a closed set"
+    },
+    "0418": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p128), HL7 Table 0418 - Procedure Priority; Chapter 6 sec 6.5.4.14 PR1-14 (p49): 'Values 2-99 convey ranked secondary procedures', so the printed 0, 1, 2 and '...' are not a closed set"
+    },
+    "0365": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Appendix A (p110), HL7 Table 0365 - Equipment State; Chapter 13 sec 13.4.1.3 EQU (p20) 'for valid values'",
+      "note": "Appendix A prints the ellipsis for the row '(null) No state change': it denotes an ABSENT field, not an open list, so the printed rows stay a closed set."
+    },
+    "0366": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Appendix A (p110), HL7 Table 0366 - Local/Remote Control State; Chapter 13 sec 13.4.1.4 EQU (p21) 'for valid values'",
+      "note": "Appendix A prints the ellipsis for the row '(null) No state change': it denotes an ABSENT field, not an open list, so the printed rows stay a closed set."
+    },
+    "0367": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Appendix A (p111), HL7 Table 0367 - Alert Level; Chapter 13 sec 13.4.1.5 EQU (p21) 'for valid values'",
+      "note": "Appendix A prints the ellipsis for the row '(null) No level change': it denotes an ABSENT field, not an open list, so the printed rows stay a closed set."
+    },
+    "0291": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p90), HL7 Table 0291 - Subtype of Referenced Data ('... Source RFC 2046'); CH02A sec 2.A.65.4 RP.4 (p76): the values are the MIME subtypes of RFC 2046, so the printed row is not a closed set"
+    },
+    "0093": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p49), User-defined Table 0093 - Release Information: the ellipsis row reads 'user-defined codes'"
+    },
+    "0458": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p137), User-defined Table 0458 - OCE Edit Code; Chapter 6 sec 6.5.15.4 GP1-4 and sec 6.5.16.6 GP2-6 refer to it 'for suggested values'"
+    },
+    "0466": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p139), User-defined Table 0466 - Ambulatory Payment Classification Code; the ellipsis row continues the printed sample"
+    },
+    "0153": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p57), HL7 Table 0153 - Value Code: the only printed row is the ellipsis with 'See NUBC codes': the values are an external code set"
+    },
+    "0350": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p101), HL7 Table 0350 - Occurrence Code: the only printed row is the ellipsis with 'Use NUBC codes': the values are an external code set"
+    },
+    "0351": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p101), HL7 Table 0351 - Occurrence Span: the only printed row is the ellipsis with 'use NUBC codes': the values are an external code set"
+    },
+    "0340": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p100), Table 0340 - Procedure Code Modifier, typed 'undefined' (external) in the Appendix A index (p19)"
+    },
+    "0371": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 7 sec 7.3.3.6 SPM-6 (p62), HL7 Table 0371 - Additive/Preservative 'for valid values'",
+      "note": "Mixed: SAC-27 (Chapter 13, p29) and OM4-7 (Chapter 8) add 'The value set can be extended with user specific values'; SPM-6 does not. A mixed table stays closed, as on v2.5.1, v2.6 and v2.8.2 (register row)."
+    },
+    "0617": {
+      "kind": "User",
+      "citation": "HL7 v2.7.1 Chapter 2A sec 2.A.86.18 XAD.18 Address Usage (p92): 'Refer to User-defined Table 0617 - Address Usage' (HL7 v2.7.1 Chapter 2C sec 2.C.2.302, p183, and Appendix A p178 print HL7)"
+    },
+    "0916": {
+      "createName": "Relevant Clinical Information",
+      "kind": "User",
+      "addEntries": [
+        [
+          "F",
+          "Patient was fasting prior to the procedure."
+        ],
+        [
+          "NF",
+          "The patient indicated they did not fast prior to the procedure."
+        ],
+        [
+          "NG",
+          "Not Given – Patient was not asked at the time of the procedure."
+        ],
+        [
+          "FNA",
+          "Fasting not asked of the patient at time of procedure."
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.318 (p190), User-defined Table 0916 - Relevant Clinical Information; Chapter 4 sec 4.5.3.13 OBR-13 (p59)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: printed in Chapter 2C only; Appendix A omits it. Chapter 2C governs, so the table is created here. Chapter 2C notes 'These values are suggestions only'. The caption misspells the name 'Relevant Clincial Information'; the section heading's spelling (2.C.2.318) is used. The NG description keeps the printed en dash, as on v2.8.2."
+    },
+    "0550": {
+      "citation": "HL7 v2.7.1 Appendix A (p163), HL7 Table 0550 - Body Parts; HL7 v2.7.1 Chapter 2C sec 2.C.2.297 (p176)",
+      "note": "Neither print gives the row 'External Jugular' a code: Appendix A prints a mis-decoded no-break space in the Value column, Chapter 2C a blank one. No entry is emitted, as on v2.6."
+    },
+    "0070": {
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: printed in Chapter 2C only (sec 2.C.2.11, p21): 'Table 0070 was retained for backward compatibility as of v2.5 and withdrawn in v2.7.' Chapter 7 (p61) says HL7 Table 0487 replaces it. Not created."
+    },
+    "0048": {
+      "note": "P10-1: Table 0048 - What subject filter is printed nowhere in v2.7.1 (Appendix A, Chapter 2C or any chapter); QRD and URD are not in v2.7.1. No table, so no openness reading."
     }
   }
 }

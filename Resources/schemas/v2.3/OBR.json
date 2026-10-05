@@ -15,19 +15,19 @@
       "index": 2,
       "swiftName": "placerOrderNumber",
       "name": "Placer Order Number",
-      "dataType": "EI", "length": "22",
+      "dataType": "EI", "length": "75",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "ORC-2 empty"
+      "condition": "OBR-3 empty AND ORC-2 empty AND ORC-3 empty OR OBR-3 empty AND ORC absent AND messageCode in (ORU, ORF)"
     },
     {
       "index": 3,
       "swiftName": "fillerOrderNumber",
       "name": "Filler Order Number",
-      "dataType": "EI", "length": "22",
+      "dataType": "EI", "length": "75",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "ORC-3 empty"
+      "condition": "OBR-2 empty AND ORC-2 empty AND ORC-3 empty OR ORC absent AND messageCode in (ORU, ORF)"
     },
     {
       "index": 4,
@@ -60,14 +60,14 @@
       "dataType": "TS", "length": "26",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "messageCode = ORU OR OBR-15 populated"
+      "condition": "messageCode in (ORU, ORF)"
     },
     {
       "index": 8,
       "swiftName": "observationEndDateTime",
       "name": "Observation End Date/Time",
       "dataType": "TS", "length": "26",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -75,7 +75,7 @@
       "swiftName": "collectionVolume",
       "name": "Collection Volume",
       "dataType": "CQ", "length": "20",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -83,7 +83,7 @@
       "swiftName": "collectorIdentifier",
       "name": "Collector Identifier",
       "dataType": "XCN", "length": "60",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "*"
     },
     {
@@ -91,7 +91,7 @@
       "swiftName": "specimenActionCode",
       "name": "Specimen Action Code",
       "dataType": "ID", "length": "1", "table": "0065",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1",
       "tables": ["0065"]
     },
@@ -117,14 +117,13 @@
       "name": "Specimen Received Date/Time",
       "dataType": "TS", "length": "26",
       "optionality": "C",
-      "repeatability": "1",
-      "condition": "OBR-15 populated"
+      "repeatability": "1"
     },
     {
       "index": 15,
       "swiftName": "specimenSource",
       "name": "Specimen Source",
-      "dataType": "SPS", "length": "300",
+      "dataType": "CM", "length": "300",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0070"]
@@ -143,7 +142,7 @@
       "name": "Order Callback Phone Number",
       "dataType": "XTN", "length": "40",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "2"
     },
     {
       "index": 18,
@@ -166,7 +165,7 @@
       "swiftName": "fillerField1",
       "name": "Filler Field 1",
       "dataType": "ST", "length": "60",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -174,7 +173,7 @@
       "swiftName": "fillerField2",
       "name": "Filler Field 2",
       "dataType": "ST", "length": "60",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -210,14 +209,14 @@
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0123"],
-      "condition": "messageCode = ORU"
+      "condition": "messageCode in (ORU, ORF)"
     },
     {
       "index": 26,
       "swiftName": "parentResult",
       "name": "Parent Result",
       "dataType": "PRL", "length": "400",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -234,7 +233,7 @@
       "name": "Result Copies To",
       "dataType": "XCN", "length": "150",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "5"
     },
     {
       "index": 29,
@@ -243,7 +242,7 @@
       "dataType": "EIP", "length": "150",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty"
+      "condition": "ORC-1 = CH AND ORC-8 empty"
     },
     {
       "index": 30,
@@ -266,15 +265,15 @@
       "index": 32,
       "swiftName": "principalResultInterpreter",
       "name": "Principal Result Interpreter",
-      "dataType": "NDL", "length": "200",
-      "optionality": "C",
+      "dataType": "CM", "length": "200",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
       "index": 33,
       "swiftName": "assistantResultInterpreter",
       "name": "Assistant Result Interpreter",
-      "dataType": "NDL", "length": "200",
+      "dataType": "CM", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -282,7 +281,7 @@
       "index": 34,
       "swiftName": "technician",
       "name": "Technician",
-      "dataType": "NDL", "length": "200",
+      "dataType": "CM", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -290,7 +289,7 @@
       "index": 35,
       "swiftName": "transcriptionist",
       "name": "Transcriptionist",
-      "dataType": "NDL", "length": "200",
+      "dataType": "CM", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },

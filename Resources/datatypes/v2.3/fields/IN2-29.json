@@ -1,0 +1,27 @@
+{
+  "field": "IN2-29",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Policy type/amount",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Policy type",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Amount class",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Amount",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

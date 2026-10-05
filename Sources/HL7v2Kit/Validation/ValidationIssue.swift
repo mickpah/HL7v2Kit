@@ -81,8 +81,10 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     case requiredComponentMissing
     /// A deprecated (`B`) or unsupported (`X`) field was populated.
     case fieldNotSupported
-    /// A field exceeded its declared cardinality (`1` but multiple
-    /// repetitions populated).
+    /// A field exceeded its declared cardinality: a `1` field carries more
+    /// than one repetition (`.error`), or a bounded field
+    /// (``FieldGrammar/maxRepetitions``) carries more than its printed bound
+    /// (`.warning`).
     case cardinalityExceeded
     /// A Z-segment (or any segment outside the loaded grammar) is present
     /// and the validator's Z-segment policy is `.warnPresence` or `.reject`.
@@ -144,6 +146,148 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// payload is the four-digit table number. Additive case introduced
     /// in M6-O6; the enum is open per ADR-014, so this is a minor bump.
     case valueNotInTable(table: String)
+
+    /// A segment whose ID does not begin with `Z` has no entry in the
+    /// grammar of the version being applied, so none of its fields was
+    /// validated. Raised as a warning under every `zSegmentPolicy`: the
+    /// Z-segment policy governs site-defined `Z` segments only (ADR-003,
+    /// ADR-018). Additive case; the enum is open per ADR-014.
+    case segmentNotInVersionGrammar
+
+    /// The message declares `declared` in MSH-12, which HL7v2Kit validates
+    /// against the grammar of `validatedAs` (``Version/grammarVersion``).
+    /// Info severity: the differences between the two releases are not
+    /// verified, so a finding may reflect `validatedAs` only (ADR-018).
+    /// Additive case; the enum is open per ADR-014.
+    case versionGrammarSubstituted(declared: Version, validatedAs: Version)
+
+    /// MSH-12 is populated but no ``Version`` case resolves from its version
+    /// ID (VID.1): an unmodelled version, or a VID.1 that is empty,
+    /// whitespace only or subdivided. The message was validated against a
+    /// fallback grammar (v2.5.1, or the caller's
+    /// `ParserOptions.versionOverride`), named in the message. Warning
+    /// severity: the findings may not reflect the declared release. The
+    /// payload is VID.1 as rendered, trimmed, with subcomponents joined by
+    /// the message's subcomponent separator; it is empty when VID.1 is
+    /// empty. An empty MSH-12 is not reported here: MSH-12 is required, so
+    /// the required-field check reports it. Excluded versions are listed in the
+    /// permanent-limitations register, section F (ADR-018). Additive case;
+    /// the enum is open per ADR-014.
+    case versionNotRecognised(wireValue: String)
+
+    /// A populated field repetition's length falls outside the LEN that its
+    /// version's attribute table prints. `length` is the printed cell (`"20"`,
+    /// `"1..4"`); `actual` is the measured length of that repetition, with
+    /// component and subcomponent separators counted and the repetition
+    /// separator not. An escape sequence counts the characters between its
+    /// escape delimiters (`\F\` is 1, `\.br\` is 3; v2.8.2 section 2.7). Pre-v2.7 maximum lengths follow
+    /// ``ValidationOptions/fieldLengthSeverity``; v2.7+ normative lengths on
+    /// primitive fields follow ``ValidationOptions/normativeLengthSeverity``.
+    /// Additive case introduced in P6-6; the enum is open per ADR-014.
+    case fieldLengthOutOfRange(length: String, actual: Int)
+
+    /// A primitive-typed field repetition carries content after its value (any
+    /// primitive since P6-14, ID and IS before), or a primitive component of a
+    /// composite carries a subcomponent after its value: an unescaped component or
+    /// subcomponent separator inside a primitive value. The primitives are each
+    /// version's (see the Validation article); TS on v2.3 to v2.4 admits its
+    /// degree-of-precision component, FT its line-marking component separators,
+    /// and OBX-3.1 an observation ID suffix subcomponent. The component separator "separates
+    /// adjacent components of data fields where allowed" (v2.5.1 and v2.8.2
+    /// section 2.5.4), a sender escapes it in data as `\S\` (section 2.7.1), and
+    /// a recipient ignores components "present but ... not expected" (section
+    /// 2.6.2 a). So the primitive value is the first component, and that is what
+    /// the code-table and length checks read. Located at the field, or at the
+    /// component for a component's subcomponents; severity
+    /// follows ``ValidationOptions/extraComponentsSeverity``. Additive case
+    /// introduced in P6-13; the enum is open per ADR-014.
+    case extraComponentsInPrimitiveField
+
+    /// A composite-typed field repetition carries a populated component beyond
+    /// the components its datatype's component table defines on the message's
+    /// version, or a composite component of a composite carries a populated
+    /// subcomponent beyond the components of its own datatype. The component
+    /// separator "separates adjacent components of data fields where allowed"
+    /// (v2.5.1 and v2.8.2 section 2.5.4), and a recipient ignores components and
+    /// subcomponents "that are present but were not expected" (section 2.6.2 a).
+    /// A warning by default, not an error: "New components may be added at the
+    /// end of a data type" (v2.5.1 section 2.8.1; section 2.8.1 h from v2.6), and
+    /// "Data types may be locally extended by adding new components at the end"
+    /// (section 2.11.5 c from v2.5.1), so a value shaped by a later version or a
+    /// local Z data type may carry them. v2.3 to v2.4 print only the version
+    /// compatibility rule "new components may be added at the end of a field"
+    /// (v2.3 and v2.3.1 section 2.10.2 c, v2.4 section 2.11.2 c). The message
+    /// cites the rule of the version validated. Trailing empty components and escaped separators are
+    /// never reported. Not checked: a datatype the version gives no component
+    /// table (CM on v2.3 to v2.4, `varies` with no OBX-2), and the open-ended
+    /// arrays NA (its tables end in an ellipsis) and MA (its prose: "channels
+    /// within a sample are separated by component delimiters"; the v2.6 and
+    /// v2.8.2 tables end in an ellipsis). Located at
+    /// the field, or at the component for a component's subcomponents; severity
+    /// follows ``ValidationOptions/extraComponentsSeverity``. Additive case
+    /// introduced in P6-15; the enum is open per ADR-014.
+    case extraComponentsInCompositeField
+
+    /// A populated primitive value does not match the format its datatype
+    /// section prints: NM, SI, DT, TM, DTM, and TS (v2.5.1 §2.A.21, 2.A.22,
+    /// 2.A.47, 2.A.69, 2.A.75; v2.8.2 §2A; v2.3 to v2.4 section 2.8 / 2.9). On a
+    /// composite, the components (and one level of subcomponents) whose grammar
+    /// datatype has a rule are checked; a primitive field is read as its first
+    /// value. `dataType` names the rule applied. Located at the field, or at the
+    /// component and subcomponent checked. Severity follows
+    /// ``ValidationOptions/valueFormatSeverity``. Additive case introduced in
+    /// P6-7; the enum is open per ADR-014.
+    case valueFormatInvalid(dataType: String)
+
+    /// A segment the message's structure requires is absent: a required
+    /// segment, or the head segment of a required group (`group` names the
+    /// group; nil at the top level). Located at the segment it was expected
+    /// before, or at the last segment when expected at the end. Severity
+    /// follows ``ValidationOptions/messageStructureSeverity`` (`.warning` in
+    /// ``ValidationOptions/default``, `.error` in ``ValidationOptions/strict``,
+    /// off in ``ValidationOptions/lenient``).
+    ///
+    /// The payload names are not always the print's: v2.3 to v2.4 print no
+    /// group names, so `group` there comes from the HL7 v2.xml schema bundles
+    /// or a cited override, or is synthesised; and v2.3 prints no structure
+    /// IDs, so `structure` there is synthesised as `CODE_EVT` from the section
+    /// title (ADR-019). ADR-019; additive case introduced in P8-5 per ADR-014.
+    case messageStructureSegmentMissing(structure: String, segmentID: String, group: String?)
+    /// A segment has no place in the message's structure at that point: out
+    /// of order, an extra repetition of a non-repeating segment or group, or
+    /// a non-Z segment the structure does not contain. Z-segments, ADD
+    /// continuations and segments the version grammar does not define are
+    /// never reported here. Located at the segment. ADR-019; additive case
+    /// introduced in P8-5.
+    case messageStructureSegmentUnexpected(structure: String, segmentID: String)
+    /// MSH-9.3 names a structure whose caption lines do not print
+    /// MSH-9.1^9.2 (`trigger`, as `CODE^EVENT`), or, on a version whose
+    /// structures are all modelled, names no structure of that version
+    /// (ADR-019 lookup rule 1). The mismatch is reported alone: the body is
+    /// not matched against any structure. Located at MSH-9.3. Never raised for
+    /// a locally defined trigger (a Z message type or trigger event the version
+    /// prints under no structure): it may declare any printed structure, which is
+    /// matched, or registered and reported as not modelled (P8b-10). Never
+    /// raised for a structure ID the version's print gives for the trigger,
+    /// in a caption, a Table 0354 listing or a query profile row: such an ID
+    /// is matched, or registered and reported as not modelled (P8b-final).
+    /// ADR-019; additive case introduced in P8-5.
+    case messageStructureMismatch(declared: String, trigger: String)
+    /// No abstract message syntax was applied to this message, so segment
+    /// order and groups were not checked: the structure (`structure`, the
+    /// MSH-9.3 value or `CODE^EVENT`) is not modelled for the version (an
+    /// MSH-9.3 ID outside the modelled structures included, until the
+    /// version is complete), a `CODE^EVENT` with no MSH-9.3 is printed under
+    /// two modelled structures (ambiguous), the
+    /// version is not resolved from MSH-12, or the message is a fragment
+    /// (MSH-14 populated, a trailing DSC with DSC-1 populated, or a trailing
+    /// DSC the structure does not define); an empty MSH-9 gives an empty
+    /// `structure`. A structure that fails the determinism lint is matched
+    /// exactly and no longer raises this issue (P8b-12). Always
+    /// `.info`; emitted only
+    /// when ``ValidationOptions/messageStructureSeverity`` is set. Located at
+    /// MSH-9. ADR-019; additive case introduced in P8-5.
+    case messageStructureNotModelled(structure: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

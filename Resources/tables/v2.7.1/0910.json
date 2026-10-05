@@ -1,0 +1,9 @@
+{
+  "table": "0910",
+  "version": "2.7.1",
+  "name": "Acquisition Modality",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.314 (p188), External Table 0910 - Acquisition Modality; Chapter 4 sec 4.5.6.5 IPC-5 (p87) 'Refer to External Table 0910'",
+  "entries": []
+}

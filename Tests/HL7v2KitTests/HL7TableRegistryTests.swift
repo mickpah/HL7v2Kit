@@ -22,10 +22,11 @@ struct HL7TableRegistryTests {
         #expect(t.isClosed)
     }
 
-    @Test("Unknown table and the grammar-less v2.8 resolve to nil")
+    @Test("Unknown table, .v2_8 and .v2_7 resolve to nil: the registry stays version-literal (ADR-018)")
     func missingLookups() {
         #expect(HL7TableRegistry.table("9999", version: .v2_5_1) == nil)
         #expect(HL7TableRegistry.table("0074", version: .v2_8) == nil)
+        #expect(HL7TableRegistry.table("0074", version: .v2_7) == nil)
     }
 
     @Test("isClosed is false for user-defined, locally-extensible, or empty tables")
@@ -59,7 +60,7 @@ struct HL7TableRegistryTests {
 
     @Test("0074 and 0155 are closed HL7 tables on every grammar version")
     func closedTablesEverywhere() throws {
-        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             for number in ["0074", "0155"] {
                 let t = try #require(HL7TableRegistry.table(number, version: version), "\(version) \(number)")
                 #expect(t.isClosed, "\(version) \(number)")
@@ -69,10 +70,12 @@ struct HL7TableRegistryTests {
 
     @Test("Tables the spec opens to local codes are HL7-owned but never closed")
     func openHL7Tables() throws {
-        for number in ["0003", "0076", "0396", "0399", "0104"] {
-            let t = try #require(HL7TableRegistry.table(number, version: .v2_5_1), "\(number)")
-            #expect(t.kind == .hl7, "\(number)")
-            #expect(!t.isClosed, "\(number)")
+        for version in [Version.v2_5_1, .v2_7_1] {
+            for number in ["0003", "0076", "0396", "0399", "0104"] {
+                let t = try #require(HL7TableRegistry.table(number, version: version), "\(version) \(number)")
+                #expect(t.kind == .hl7, "\(version) \(number)")
+                #expect(!t.isClosed, "\(version) \(number)")
+            }
         }
     }
 
@@ -88,15 +91,18 @@ struct HL7TableRegistryTests {
         #expect(t.entries.isEmpty)
     }
 
-    @Test("Extraction sanity: v2.5.1 0003 has 286 rows, 0155 has 4, 0125 has no CWE")
+    @Test("Extraction sanity: v2.5.1 0003 has 286 rows, 0155 has 4, 0125 has 90")
     func extractionSanity() throws {
         #expect(HL7TableRegistry.table("0003", version: .v2_5_1)?.entries.count == 286)
         #expect(HL7TableRegistry.table("0155", version: .v2_5_1)?.entries.count == 4)
         let t0125 = try #require(HL7TableRegistry.table("0125", version: .v2_5_1))
-        // 25 printed rows, plus CD / MA / NA restored from Chapter 7's waveform text (M18).
-        #expect(t0125.entries.count == 28)
+        // 25 printed rows, CD / MA / NA restored from Chapter 7's waveform text (M18), and the
+        // 62 further Table 0440 data types sec 7.4.2.2 admits: "All HL7 data types are valid,
+        // and are included in Table 0125 except CM, CQ, SI, and ID" (V251-C01).
+        #expect(t0125.entries.count == 90)
         #expect(t0125.contains("NA") && t0125.contains("MA") && t0125.contains("CD"))
-        #expect(!t0125.contains("CWE"), "CWE is a v2.6 addition")
+        #expect(t0125.contains("CWE") && t0125.contains("DTM"))
+        #expect(!t0125.contains("CM") && !t0125.contains("CQ") && !t0125.contains("SI") && !t0125.contains("ID"))
     }
 
     @Test("A printed \"...\" row is never a code, and leaves an HL7 table open unless the row means null")
@@ -117,7 +123,7 @@ struct HL7TableRegistryTests {
 
     @Test("Rows that denote an absent field, and prose bled into the Value column, are not codes")
     func absenceAndBleedRows() throws {
-        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             let mode = try #require(HL7TableRegistry.table("0207", version: version))
             #expect(mode.codes.allSatisfy { $0.lowercased() != "not present" }, "0207 on \(version)")
             // v2.3 has no T; its Appendix A misprints a / r / i, corrected to Chapter 2's A / R / I.
@@ -160,7 +166,7 @@ struct HL7TableRegistryTests {
 
     @Test("Table 0354 is never closed: every version's chapters use structures it does not print")
     func messageStructureTableIsOpen() throws {
-        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             let t = try #require(HL7TableRegistry.table("0354", version: version), "\(version)")
             #expect(t.contains("ADT_A01"))
             #expect(!t.isClosed, "0354 on \(version): v2.5.1 CH15 defines RSP_K25, which Appendix A omits")
@@ -180,7 +186,7 @@ struct HL7TableRegistryTests {
 
     @Test("A row the appendix drops is restored from the defining chapter: v2.5.1 0210 OR")
     func restoredRow() throws {
-        for version in [Version.v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             let t = try #require(HL7TableRegistry.table("0210", version: version))
             #expect(Set(t.codes) == ["AND", "OR"], "0210 on \(version)")
         }
@@ -191,5 +197,70 @@ struct HL7TableRegistryTests {
         let parts = try #require(HL7TableRegistry.table("0550", version: .v2_6))
         #expect(parts.contains("CHEST") && parts.contains("KIDN"))
         #expect(parts.codes.allSatisfy { !$0.isEmpty && $0.unicodeScalars.allSatisfy { $0.value < 128 } })
+    }
+
+    @Test("v2.3 tables printed only in the chapters carry their rows: 0254, 0255, 0256, 0290")
+    func v23ChapterPrintedRows() throws {
+        for (number, count) in [("0254", 102), ("0255", 26), ("0256", 44), ("0290", 65)] {
+            let t = try #require(HL7TableRegistry.table(number, version: .v2_3))
+            #expect(t.entries.count == count, "v2.3 \(number)")
+        }
+        #expect(HL7TableRegistry.table("0255", version: .v2_3)?.kind == .userDefined, "CH8 prints User-defined Table 0255")
+        let t0256 = try #require(HL7TableRegistry.table("0256", version: .v2_3))
+        #expect(t0256.contains("30M") && t0256.contains("8H SHIFT"))
+        let t0290 = try #require(HL7TableRegistry.table("0290", version: .v2_3_1))
+        #expect(t0290.entries.count == 65)
+        #expect(t0290.entries.first { $0.code == "63" }?.description == "/")
+    }
+
+    @Test("A table kind follows the defining chapter where Appendix A indexes it otherwise (P7-8)")
+    func chapterKindOverAppendixIndex() throws {
+        for number in ["0174", "0315", "0316"] {
+            #expect(HL7TableRegistry.table(number, version: .v2_3)?.kind == .userDefined, "v2.3 \(number)")
+        }
+        #expect(HL7TableRegistry.table("0392", version: .v2_4)?.kind == .userDefined, "v2.4 0392")
+        // v2.3 CH2 sec 2.24.22.2: "HL7 table 0208", printed with OK, NF, AE and AR.
+        let t0208 = try #require(HL7TableRegistry.table("0208", version: .v2_3))
+        #expect(t0208.kind == .hl7 && t0208.isClosed)
+        #expect(Set(t0208.codes) == ["OK", "NF", "AE", "AR"])
+    }
+
+    @Test("v2.3 PD1-12 and PCR-22 bind the table their definitions name, not the misprinted TBL# (P7-8)")
+    func v23MisprintedBindings() {
+        #expect(SegmentGrammarTable.v2_3["PD1"]?.field(12)?.table == "0136")
+        #expect(SegmentGrammarTable.v2_3["PCR"]?.field(22)?.table == "0252")
+    }
+
+    @Test("v2.4 Table 0290 rows 51 to 63 carry the base64 character, not the value reprinted before it")
+    func table0290V24Descriptions() throws {
+        let v24 = try #require(HL7TableRegistry.table("0290", version: .v2_4))
+        #expect(v24.entries.first { $0.code == "51" }?.description == "z")
+        #expect(v24.entries.first { $0.code == "63" }?.description == "/")
+        #expect(v24.entries.allSatisfy { $0.description.count == 1 })
+        let v231 = try #require(HL7TableRegistry.table("0290", version: .v2_3_1))
+        #expect(v24.entries.sorted { $0.code < $1.code } == v231.entries.sorted { $0.code < $1.code })
+    }
+
+    @Test("A pattern row matches the family of codes it names, and is not itself a code")
+    func patternRow() {
+        let t = HL7Table(
+            number: "9999", name: "Test", kind: .hl7,
+            entries: [HL7Table.Entry(code: "MR", description: "Medical record number")],
+            patterns: [HL7Table.CodePattern(code: "NNxxx", description: "National Person Identifier", regex: "^NN[A-Z]{3}$")]
+        )
+        #expect(t.contains("MR") && t.contains("NNAUS") && t.contains("NNCAN"))
+        #expect(!t.contains("NNAU") && !t.contains("NNAUST") && !t.contains("XNNAUS") && !t.contains("NNaus"))
+        #expect(!t.contains("NNxxx"))
+        #expect(t.codes == ["MR"])
+        #expect(t.isClosed)
+    }
+
+    @Test("CodePattern.matches enforces a full match even when the supplied regex is unanchored")
+    func patternMatchIsFullMatch() {
+        let p = HL7Table.CodePattern(code: "x", description: "d", regex: "NN[A-Z]{3}")
+        #expect(p.matches("NNAUS"))
+        #expect(!p.matches("XNNAUSY"))
+        #expect(!p.matches("NNAUSY"))
+        #expect(!p.matches("XNNAUS"))
     }
 }

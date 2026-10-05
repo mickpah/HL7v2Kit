@@ -1,0 +1,38 @@
+{
+  "structure": "ORU_R30",
+  "version": "2.8.2",
+  "citation": "HL7 v2.8.2 Chapter 7, section 7.3.4 ORU - Unsolicited Point-Of-Care Observation Message without Existing, pp 16 to 17; the same structure is printed for ORU^R31 (7.3.5) and ORU^R32 (7.3.6).",
+  "triggers": ["ORU^R30", "ORU^R31", "ORU^R32"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PRT", "min": 0, "max": null },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "group": "PATIENT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "OBX", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null }
+    ]},
+    { "group": "VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null }
+    ]},
+    { "segment": "ORC", "min": 1, "max": 1 },
+    { "segment": "PRT", "min": 0, "max": null },
+    { "segment": "OBR", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "segment": "PRT", "min": 0, "max": null },
+    { "group": "TIMING_QTY", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "TQ1", "min": 1, "max": 1 },
+      { "segment": "TQ2", "min": 0, "max": null }
+    ]},
+    { "group": "OBSERVATION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "OBX", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]}
+  ]
+}

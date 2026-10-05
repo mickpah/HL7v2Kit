@@ -1,0 +1,22 @@
+{
+  "structure": "CRM_C01",
+  "version": "2.8.2",
+  "citation": "HL7 v2.8.2 Chapter 7, section 7.7.1 CRM - Clinical Study Registration Message (Events C01-C08), p 102.",
+  "triggers": ["CRM^C01", "CRM^C02", "CRM^C03", "CRM^C04", "CRM^C05", "CRM^C06", "CRM^C07", "CRM^C08"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "segment": "ARV", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "segment": "CSR", "min": 1, "max": 1 },
+      { "segment": "CSP", "min": 0, "max": null }
+    ]}
+  ]
+}

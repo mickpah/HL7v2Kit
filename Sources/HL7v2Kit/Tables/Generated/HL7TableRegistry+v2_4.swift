@@ -94,6 +94,7 @@ extension HL7TableRegistry {
         "0128": t0128_v2_4,
         "0129": t0129_v2_4,
         "0130": t0130_v2_4,
+        "0131": t0131_v2_4,
         "0132": t0132_v2_4,
         "0133": t0133_v2_4,
         "0135": t0135_v2_4,
@@ -1139,7 +1140,7 @@ extension HL7TableRegistry {
         number: "0048",
         name: "What subject filter",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ADV", description: "Advice/diagnosis"),
             HL7Table.Entry(code: "ANU", description: "Nursing unit lookup (returns patients in beds, excluding empty beds)"),
@@ -1969,7 +1970,7 @@ extension HL7TableRegistry {
         number: "0105",
         name: "Source of comment",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "L", description: "Ancillary (filler) department is source of comment"),
             HL7Table.Entry(code: "O", description: "Other system is source of comment"),
@@ -2138,10 +2139,57 @@ extension HL7TableRegistry {
     static let t0119_v2_4 = HL7Table(
         number: "0119",
         name: "Order Control codes",
-        kind: .userDefined,
+        kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
-
+            HL7Table.Entry(code: "NW", description: "New order/service"),
+            HL7Table.Entry(code: "OK", description: "Order/service accepted & OK"),
+            HL7Table.Entry(code: "UA", description: "Unable to accept order/service"),
+            HL7Table.Entry(code: "PR", description: "Previous Results with new order/service"),
+            HL7Table.Entry(code: "CA", description: "Cancel order/service request"),
+            HL7Table.Entry(code: "OC", description: "Order/service canceled"),
+            HL7Table.Entry(code: "CR", description: "Canceled as requested"),
+            HL7Table.Entry(code: "UC", description: "Unable to cancel"),
+            HL7Table.Entry(code: "DC", description: "Discontinue order/service request"),
+            HL7Table.Entry(code: "OD", description: "Order/service discontinued"),
+            HL7Table.Entry(code: "DR", description: "Discontinued as requested"),
+            HL7Table.Entry(code: "UD", description: "Unable to discontinue"),
+            HL7Table.Entry(code: "HD", description: "Hold order request"),
+            HL7Table.Entry(code: "OH", description: "Order/service held"),
+            HL7Table.Entry(code: "UH", description: "Unable to put on hold"),
+            HL7Table.Entry(code: "HR", description: "On hold as requested"),
+            HL7Table.Entry(code: "RL", description: "Release previous hold"),
+            HL7Table.Entry(code: "OE", description: "Order/service released"),
+            HL7Table.Entry(code: "OR", description: "Released as requested"),
+            HL7Table.Entry(code: "UR", description: "Unable to release"),
+            HL7Table.Entry(code: "RP", description: "Order/service replace request"),
+            HL7Table.Entry(code: "RU", description: "Replaced unsolicited"),
+            HL7Table.Entry(code: "RO", description: "Replacement order"),
+            HL7Table.Entry(code: "RQ", description: "Replaced as requested"),
+            HL7Table.Entry(code: "UM", description: "Unable to replace"),
+            HL7Table.Entry(code: "PA", description: "Parent order/service"),
+            HL7Table.Entry(code: "CH", description: "Child order/service"),
+            HL7Table.Entry(code: "XO", description: "Change order/service request"),
+            HL7Table.Entry(code: "XX", description: "Order/service changed, unsol."),
+            HL7Table.Entry(code: "UX", description: "Unable to change"),
+            HL7Table.Entry(code: "XR", description: "Changed as requested"),
+            HL7Table.Entry(code: "DE", description: "Data errors"),
+            HL7Table.Entry(code: "RE", description: "Observations/Performed Service to follow"),
+            HL7Table.Entry(code: "RR", description: "Request received"),
+            HL7Table.Entry(code: "SR", description: "Response to send order/service status request"),
+            HL7Table.Entry(code: "SS", description: "Send order/service status request"),
+            HL7Table.Entry(code: "SC", description: "Status changed"),
+            HL7Table.Entry(code: "SN", description: "Send order/service number"),
+            HL7Table.Entry(code: "NA", description: "Number assigned"),
+            HL7Table.Entry(code: "CN", description: "Combined result"),
+            HL7Table.Entry(code: "RF", description: "Refill order/service request"),
+            HL7Table.Entry(code: "AF", description: "Order/service refill request approval"),
+            HL7Table.Entry(code: "DF", description: "Order/service refill request denied"),
+            HL7Table.Entry(code: "FU", description: "Order/service refilled, unsolicited"),
+            HL7Table.Entry(code: "OF", description: "Order/service refilled as requested"),
+            HL7Table.Entry(code: "UF", description: "Unable to refill"),
+            HL7Table.Entry(code: "LI", description: "Link order/service to patient care problem or goal"),
+            HL7Table.Entry(code: "UN", description: "Unlink order/service from patient care problem or goal"),
         ] as [HL7Table.Entry]
     )
 
@@ -2243,6 +2291,29 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "CD", description: "Channel definition (Chapter 7 waveform: CHN category)"),
             HL7Table.Entry(code: "MA", description: "Multiplexed array (Chapter 7 waveform: WAV category)"),
             HL7Table.Entry(code: "NA", description: "Numeric array (Chapter 7 waveform: WAV category)"),
+            HL7Table.Entry(code: "CNE", description: "Coded with no exceptions"),
+            HL7Table.Entry(code: "CWE", description: "Coded with exceptions"),
+            HL7Table.Entry(code: "DLN", description: "Driver's license number"),
+            HL7Table.Entry(code: "DR", description: "Date/time range"),
+            HL7Table.Entry(code: "EI", description: "Entity identifier"),
+            HL7Table.Entry(code: "FC", description: "Financial class"),
+            HL7Table.Entry(code: "FN", description: "Family name"),
+            HL7Table.Entry(code: "HD", description: "Hierarchic designator"),
+            HL7Table.Entry(code: "IS", description: "Coded value for user-defined tables"),
+            HL7Table.Entry(code: "JCC", description: "Job code/class"),
+            HL7Table.Entry(code: "PL", description: "Person location"),
+            HL7Table.Entry(code: "PPN", description: "Performing person time stamp"),
+            HL7Table.Entry(code: "PT", description: "Processing type"),
+            HL7Table.Entry(code: "QIP", description: "Query input parameter list"),
+            HL7Table.Entry(code: "QSC", description: "Query selection criteria"),
+            HL7Table.Entry(code: "RCD", description: "Row column definition"),
+            HL7Table.Entry(code: "RI", description: "Repeat interval"),
+            HL7Table.Entry(code: "SAD", description: "Street Address"),
+            HL7Table.Entry(code: "SCV", description: "Scheduling class value pair"),
+            HL7Table.Entry(code: "SRT", description: "Sort order"),
+            HL7Table.Entry(code: "TQ", description: "Timing/quantity"),
+            HL7Table.Entry(code: "VH", description: "Visiting hours"),
+            HL7Table.Entry(code: "VID", description: "Version identifier"),
         ] as [HL7Table.Entry]
     )
 
@@ -2310,6 +2381,16 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "MO", description: "Mobile Unit"),
             HL7Table.Entry(code: "PH", description: "Phone"),
             HL7Table.Entry(code: "TE", description: "Teaching"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0131_v2_4 = HL7Table(
+        number: "0131",
+        name: "Contact role",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
         ] as [HL7Table.Entry]
     )
 
@@ -2414,10 +2495,13 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "E1 ... E9", description: "Enlisted"),
-            HL7Table.Entry(code: "O1 ... O10", description: "Officers"),
-            HL7Table.Entry(code: "W1 ... W4", description: "Warrant Officers"),
-        ] as [HL7Table.Entry]
+
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "E1 ... E9", description: "Enlisted", regex: "^E(1|2|3|4|5|6|7|8|9)$"),
+            HL7Table.CodePattern(code: "O1 ... O10", description: "Officers", regex: "^O(1|2|3|4|5|6|7|8|9|10)$"),
+            HL7Table.CodePattern(code: "W1 ... W4", description: "Warrant Officers", regex: "^W(1|2|3|4)$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0142_v2_4 = HL7Table(
@@ -2994,7 +3078,7 @@ extension HL7TableRegistry {
         number: "0175",
         name: "Master file identifier code",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CDM", description: "Charge description master file"),
             HL7Table.Entry(code: "CLN", description: "Clinic master file"),
@@ -3280,8 +3364,8 @@ extension HL7TableRegistry {
     static let t0203_v2_4 = HL7Table(
         number: "0203",
         name: "Identifier type",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "AM", description: "American Express"),
             HL7Table.Entry(code: "AN", description: "Account number"),
@@ -3310,7 +3394,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "NE", description: "National employer identifier"),
             HL7Table.Entry(code: "NH", description: "National Health Plan Identifier"),
             HL7Table.Entry(code: "NI", description: "National unique individual identifier"),
-            HL7Table.Entry(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code"),
             HL7Table.Entry(code: "NPI", description: "National provider identifier"),
             HL7Table.Entry(code: "PEN", description: "Pension Number"),
             HL7Table.Entry(code: "PI", description: "Patient internal identifier"),
@@ -3329,7 +3412,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "WC", description: "WIC identifier"),
             HL7Table.Entry(code: "WCN", description: "Workers' Comp Number"),
             HL7Table.Entry(code: "XX", description: "Organization identifier"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code", regex: "^NN[A-Z]{3}$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0204_v2_4 = HL7Table(
@@ -4740,20 +4826,20 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "49", description: "x"),
             HL7Table.Entry(code: "5", description: "F"),
             HL7Table.Entry(code: "50", description: "y"),
-            HL7Table.Entry(code: "51", description: "51 z"),
-            HL7Table.Entry(code: "52", description: "52 0"),
-            HL7Table.Entry(code: "53", description: "53 1"),
-            HL7Table.Entry(code: "54", description: "54 2"),
-            HL7Table.Entry(code: "55", description: "55 3"),
-            HL7Table.Entry(code: "56", description: "56 4"),
-            HL7Table.Entry(code: "57", description: "57 5"),
-            HL7Table.Entry(code: "58", description: "58 6"),
-            HL7Table.Entry(code: "59", description: "59 7"),
+            HL7Table.Entry(code: "51", description: "z"),
+            HL7Table.Entry(code: "52", description: "0"),
+            HL7Table.Entry(code: "53", description: "1"),
+            HL7Table.Entry(code: "54", description: "2"),
+            HL7Table.Entry(code: "55", description: "3"),
+            HL7Table.Entry(code: "56", description: "4"),
+            HL7Table.Entry(code: "57", description: "5"),
+            HL7Table.Entry(code: "58", description: "6"),
+            HL7Table.Entry(code: "59", description: "7"),
             HL7Table.Entry(code: "6", description: "G"),
-            HL7Table.Entry(code: "60", description: "60 8"),
-            HL7Table.Entry(code: "61", description: "61 9"),
-            HL7Table.Entry(code: "62", description: "62 +"),
-            HL7Table.Entry(code: "63", description: "63 /"),
+            HL7Table.Entry(code: "60", description: "8"),
+            HL7Table.Entry(code: "61", description: "9"),
+            HL7Table.Entry(code: "62", description: "+"),
+            HL7Table.Entry(code: "63", description: "/"),
             HL7Table.Entry(code: "7", description: "H"),
             HL7Table.Entry(code: "8", description: "I"),
             HL7Table.Entry(code: "9", description: "J"),
@@ -5866,7 +5952,7 @@ extension HL7TableRegistry {
         number: "0355",
         name: "Primary key value type",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CE", description: "Coded element"),
             HL7Table.Entry(code: "PL", description: "Person location"),
@@ -6151,7 +6237,7 @@ extension HL7TableRegistry {
         number: "0371",
         name: "Additive",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "BOR", description: "Borate"),
             HL7Table.Entry(code: "C32", description: "3.2% Citrate"),
@@ -6398,9 +6484,8 @@ extension HL7TableRegistry {
         number: "0391",
         name: "Segment group",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "etc", description: ""),
             HL7Table.Entry(code: "OBRG", description: "OBR group"),
             HL7Table.Entry(code: "ORCG", description: "ORC group"),
             HL7Table.Entry(code: "PIDG", description: "PID group"),
@@ -6414,7 +6499,7 @@ extension HL7TableRegistry {
     static let t0392_v2_4 = HL7Table(
         number: "0392",
         name: "Match reason",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "DB", description: "Match on Date of Birth"),

@@ -1,0 +1,44 @@
+{
+  "dataType": "CD",
+  "version": "2.7.1",
+  "name": "Channel Definition",
+  "components": [
+    {
+      "index": 1,
+      "name": "Channel Identifier",
+      "dataType": "WVI",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Waveform Source",
+      "dataType": "WVS",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Channel Sensitivity and Units",
+      "dataType": "CSU",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Channel Calibration Parameters",
+      "dataType": "CCP",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Channel Sampling Frequency",
+      "dataType": "NM",
+      "optionality": "O",
+      "length": "6#"
+    },
+    {
+      "index": 6,
+      "name": "Minimum and Maximum Data Values",
+      "dataType": "NR",
+      "optionality": "O"
+    }
+  ]
+}

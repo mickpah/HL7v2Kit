@@ -3,7 +3,7 @@
   "version": "2.6",
   "description": "User Authentication Credential",
   "fields": [
-    { "index": 1, "swiftName": "userAuthenticationCredentialTypeCode", "name": "User Authentication Credential Type Code", "dataType": "CWE", "length": "7 05", "optionality": "R", "repeatability": "1", "tables": ["0615"] },
+    { "index": 1, "swiftName": "userAuthenticationCredentialTypeCode", "name": "User Authentication Credential Type Code", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "1", "tables": ["0615"] },
     { "index": 2, "swiftName": "userAuthenticationCredential", "name": "User Authentication Credential", "dataType": "ED", "length": "65536", "optionality": "R", "repeatability": "1" }
   ]
 }

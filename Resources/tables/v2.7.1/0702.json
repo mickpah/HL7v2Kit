@@ -1,0 +1,138 @@
+{
+  "table": "0702",
+  "version": "2.7.1",
+  "name": "Cycle Type-",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0702 - Cycle Type-",
+  "entries": [
+    {
+      "code": "2RS",
+      "description": "Second Rinse"
+    },
+    {
+      "code": "ANR",
+      "description": "Anesthesia/Respiratory"
+    },
+    {
+      "code": "BDP",
+      "description": "Bedpans"
+    },
+    {
+      "code": "BWD",
+      "description": "Bowie-Dick Test"
+    },
+    {
+      "code": "CMW",
+      "description": "Chemical Wash"
+    },
+    {
+      "code": "COD",
+      "description": "Code"
+    },
+    {
+      "code": "CRT",
+      "description": "Cart Wash"
+    },
+    {
+      "code": "DEC",
+      "description": "Decontamination"
+    },
+    {
+      "code": "DRT",
+      "description": "Dart"
+    },
+    {
+      "code": "DRW",
+      "description": "Dart Warm-up Cycle"
+    },
+    {
+      "code": "EOH",
+      "description": "EO High Temperature"
+    },
+    {
+      "code": "EOL",
+      "description": "EO Low Temperature"
+    },
+    {
+      "code": "EXP",
+      "description": "Express"
+    },
+    {
+      "code": "FLS",
+      "description": "Flash"
+    },
+    {
+      "code": "GLS",
+      "description": "Glassware"
+    },
+    {
+      "code": "GNP",
+      "description": "Gen. Purpose"
+    },
+    {
+      "code": "GRV",
+      "description": "Gravity"
+    },
+    {
+      "code": "GTL",
+      "description": "Gentle"
+    },
+    {
+      "code": "ISO",
+      "description": "Isothermal"
+    },
+    {
+      "code": "IST",
+      "description": "Instrument Wash"
+    },
+    {
+      "code": "LKT",
+      "description": "Leak Test"
+    },
+    {
+      "code": "LQD",
+      "description": "Liquid"
+    },
+    {
+      "code": "OPW",
+      "description": "Optional Wash"
+    },
+    {
+      "code": "PEA",
+      "description": "Peracetic Acid"
+    },
+    {
+      "code": "PLA",
+      "description": "Plastic Goods Wash"
+    },
+    {
+      "code": "PRV",
+      "description": "Prevac"
+    },
+    {
+      "code": "RNS",
+      "description": "Rinse"
+    },
+    {
+      "code": "SFP",
+      "description": "Steam Flush Pressure Pulse"
+    },
+    {
+      "code": "THR",
+      "description": "Thermal"
+    },
+    {
+      "code": "TRB",
+      "description": "Tray/Basin"
+    },
+    {
+      "code": "UTL",
+      "description": "Utensil Wash"
+    },
+    {
+      "code": "WFP",
+      "description": "Wrap/Steam Flush Pressure Pulse (Wrap/SFPP)"
+    }
+  ]
+}

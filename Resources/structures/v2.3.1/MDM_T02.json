@@ -1,0 +1,14 @@
+{
+  "structure": "MDM_T02",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 9, section 9.4.2 MDM/ACK - original document notification and content (event T02), p 9-5; the same structure is printed for MDM^T04 (9.4.4), MDM^T06 (9.4.6), MDM^T08 (9.4.8) and MDM^T10 (9.4.10). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104).",
+  "triggers": ["MDM^T02", "MDM^T04", "MDM^T06", "MDM^T08", "MDM^T10"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "TXA", "min": 1, "max": 1 },
+    { "segment": "OBX", "min": 1, "max": null }
+  ]
+}

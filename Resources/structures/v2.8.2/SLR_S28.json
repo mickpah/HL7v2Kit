@@ -1,0 +1,12 @@
+{
+  "structure": "SLR_S28",
+  "version": "2.8.2",
+  "citation": "HL7 v2.8.2 Chapter 17, section 17.5.1 SLR/ACK - Request New Sterilization Lot (Event S28), p 35; the same structure is printed for SLR^S29 (17.5.2), STI^S30 (17.5.3), SLN^S34 (17.6.2) and SLN^S35 (17.6.3).",
+  "triggers": ["SLR^S28", "SLR^S29", "STI^S30", "SLN^S34", "SLN^S35"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "SLT", "min": 1, "max": null }
+  ]
+}

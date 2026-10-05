@@ -1,0 +1,15 @@
+{
+  "structure": "PMU_B04",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 15, section 15.3.4 PMU/ACK - Activate Practicing Person (Event B04), p 15-4; the same structure is printed for PMU^B05 (15.3.5) and PMU^B06 (15.3.6).",
+  "triggers": ["PMU^B04", "PMU^B05", "PMU^B06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "STF", "min": 1, "max": 1 },
+    { "segment": "PRA", "min": 0, "max": null },
+    { "segment": "ORG", "min": 0, "max": null }
+  ]
+}

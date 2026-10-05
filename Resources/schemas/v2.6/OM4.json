@@ -9,7 +9,7 @@
     { "index": 4, "swiftName": "containerVolume", "name": "Container Volume", "dataType": "NM", "length": "20", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "containerUnits", "name": "Container Units", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 6, "swiftName": "specimen", "name": "Specimen", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
-    { "index": 7, "swiftName": "additive", "name": "Additive", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0371"] },
+    { "index": 7, "swiftName": "additive", "name": "Additive", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0371"], "tableOpen": true, "tableOpenCitation": "v2.6 Chapter 8 section 8.8.11.7 OM4-7: \"Refer to HL7 table 0371 - Additive/Preservative for valid values. ... The value set can be extended with user specific values.\"" },
     { "index": 8, "swiftName": "preparation", "name": "Preparation", "dataType": "TX", "length": "10240", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "specialHandlingRequirements", "name": "Special Handling Requirements", "dataType": "TX", "length": "10240", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "normalCollectionVolume", "name": "Normal Collection Volume", "dataType": "CQ", "length": "20", "optionality": "O", "repeatability": "1" },

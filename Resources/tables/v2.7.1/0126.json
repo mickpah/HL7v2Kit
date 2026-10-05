@@ -1,0 +1,30 @@
+{
+  "table": "0126",
+  "version": "2.7.1",
+  "name": "Quantity Limited Request",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0126 - Quantity Limited Request",
+  "entries": [
+    {
+      "code": "CH",
+      "description": "Characters"
+    },
+    {
+      "code": "LI",
+      "description": "Lines"
+    },
+    {
+      "code": "PG",
+      "description": "Pages"
+    },
+    {
+      "code": "RD",
+      "description": "Records"
+    },
+    {
+      "code": "ZO",
+      "description": "Locally defined"
+    }
+  ]
+}

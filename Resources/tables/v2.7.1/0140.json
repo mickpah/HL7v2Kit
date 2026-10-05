@@ -1,0 +1,54 @@
+{
+  "table": "0140",
+  "version": "2.7.1",
+  "name": "Military Service",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0140 - Military Service",
+  "entries": [
+    {
+      "code": "AUSA",
+      "description": "Australian Army"
+    },
+    {
+      "code": "AUSAF",
+      "description": "Australian Air Force"
+    },
+    {
+      "code": "AUSN",
+      "description": "Australian Navy"
+    },
+    {
+      "code": "NATO",
+      "description": "North Atlantic Treaty Organization"
+    },
+    {
+      "code": "NOAA",
+      "description": "National Oceanic and Atmospheric Administration"
+    },
+    {
+      "code": "USA",
+      "description": "US Army"
+    },
+    {
+      "code": "USAF",
+      "description": "US Air Force"
+    },
+    {
+      "code": "USCG",
+      "description": "US Coast Guard"
+    },
+    {
+      "code": "USMC",
+      "description": "US Marine Corps"
+    },
+    {
+      "code": "USN",
+      "description": "US Navy"
+    },
+    {
+      "code": "USPHS",
+      "description": "US Public Health Service"
+    }
+  ]
+}

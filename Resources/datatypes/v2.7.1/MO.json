@@ -1,0 +1,24 @@
+{
+  "dataType": "MO",
+  "version": "2.7.1",
+  "name": "Money",
+  "components": [
+    {
+      "index": 1,
+      "name": "Quantity",
+      "dataType": "NM",
+      "optionality": "O",
+      "length": "="
+    },
+    {
+      "index": 2,
+      "name": "Denomination",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "3..3",
+      "tables": [
+        "0913"
+      ]
+    }
+  ]
+}

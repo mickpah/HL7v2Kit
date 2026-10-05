@@ -1,0 +1,9 @@
+{
+  "table": "0461",
+  "version": "2.7.1",
+  "name": "License Number",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0461 - License Number",
+  "entries": []
+}

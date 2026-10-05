@@ -1,0 +1,11 @@
+{
+  "structure": "QRY_R02",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 7, section 7.2.2 QRY/ORF - query for results of observation (events R02, R04), p 7-15. Structure ID QRY_R02 synthesised as CODE_EVT from the message code QRY and R02, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events QRY^R02 and QRY^R04 read from the section title 7.2.2 'QRY/ORF - query for results of observation (events R02, R04)'.",
+  "triggers": ["QRY^R02", "QRY^R04"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 1, "max": 1 }
+  ]
+}

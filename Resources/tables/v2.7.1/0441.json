@@ -1,0 +1,38 @@
+{
+  "table": "0441",
+  "version": "2.7.1",
+  "name": "Immunization Registry Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0441 - Immunization Registry Status",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Active"
+    },
+    {
+      "code": "I",
+      "description": "Inactive"
+    },
+    {
+      "code": "L",
+      "description": "Inactive - Lost to follow-up (cancel contract)"
+    },
+    {
+      "code": "M",
+      "description": "Inactive - Moved or gone elsewhere (cancel contract)"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "P",
+      "description": "Inactive - Permanently inactive (Do not reactivate or add new entries to the record)"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

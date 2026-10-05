@@ -1,0 +1,42 @@
+{
+  "structure": "OMD_O03",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.7.1 OMD - dietary order (event O03), pp 4-65 to 4-66. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml v2.4/OMD_O03.xsd, OMD_O03.PATIENT.CONTENT), PATIENT_VISIT (HL7-xml v2.4/OMD_O03.xsd, OMD_O03.PATIENT_VISIT.CONTENT), INSURANCE (HL7-xml v2.4/OMD_O03.xsd, OMD_O03.INSURANCE.CONTENT), ORDER_DIET (HL7-xml v2.4/OMD_O03.xsd, OMD_O03.ORDER_DIET.CONTENT), DIET (HL7-xml v2.4/OMD_O03.xsd, OMD_O03.DIET.CONTENT), OBSERVATION (HL7-xml v2.4/OMD_O03.xsd, OMD_O03.OBSERVATION.CONTENT) and ORDER_TRAY (HL7-xml v2.4/OMD_O03.xsd, OMD_O03.ORDER_TRAY.CONTENT).",
+  "triggers": ["OMD^O03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "GT1", "min": 0, "max": 1 },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]},
+    { "group": "ORDER_DIET", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "DIET", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "ODS", "min": 1, "max": null },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "group": "OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]}
+    ]},
+    { "group": "ORDER_TRAY", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "segment": "ODT", "min": 1, "max": null },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]}
+  ]
+}

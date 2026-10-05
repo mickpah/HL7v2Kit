@@ -2,9 +2,9 @@
   "table": "0174",
   "version": "2.3",
   "name": "Nature of Test/Observation",
-  "kind": "HL7",
+  "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.3 Appendix A, HL7 Table 0174 - Nature of Test/Observation",
+  "citation": "HL7 v2.3 Chapter 8 sec 8.7.3.18 OM1-18 Nature of test/observation (IS), User-defined Table 0174 - Nature of test/observation (p. 8-27)",
   "entries": [
     {
       "code": "P",

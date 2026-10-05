@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "Staff Identification",
   "fields": [
-    { "index": 1, "swiftName": "primaryKeyValueStf", "name": "Primary Key Value - STF", "dataType": "CE", "length": "250", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "messageCode = MFN" },
+    { "index": 1, "swiftName": "primaryKeyValueStf", "name": "Primary Key Value - STF", "dataType": "CE", "length": "250", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "messageCode = MFN", "prohibitedWhen": "messageCode != MFN", "prohibitedSeverity": "warning" },
     { "index": 2, "swiftName": "staffIdentifierList", "name": "Staff Identifier List", "dataType": "CX", "length": "250", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "staffName", "name": "Staff Name", "dataType": "XPN", "length": "250", "optionality": "O", "repeatability": "*" },
     { "index": 4, "swiftName": "staffType", "name": "Staff Type", "dataType": "IS", "length": "2", "table": "0182", "optionality": "O", "repeatability": "*", "tables": ["0182"] },

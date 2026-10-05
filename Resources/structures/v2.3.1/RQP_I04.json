@@ -1,0 +1,17 @@
+{
+  "structure": "RQP_I04",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 11, section 11.2.4 RQP/RPI - request for patient demographic data (event I04), p 11-9. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQP_I04.xsd, RQP_I04.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["RQP^I04"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "segment": "GT1", "min": 0, "max": null },
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}

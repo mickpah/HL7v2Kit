@@ -1,0 +1,14 @@
+{
+  "structure": "MDM_T06",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 9, section 9.4.6 MDM/ACK - document addendum notification and content (event T06), p 9-6. Structure ID MDM_T06 synthesised as CODE_EVT from the message code MDM and T06, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events MDM^T06 read from the section title 9.4.6 'MDM/ACK - document addendum notification and content (event T06)'.",
+  "triggers": ["MDM^T06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "TXA", "min": 1, "max": 1 },
+    { "segment": "OBX", "min": 1, "max": null }
+  ]
+}

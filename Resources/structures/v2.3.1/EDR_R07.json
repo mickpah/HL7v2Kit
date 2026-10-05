@@ -1,0 +1,14 @@
+{
+  "structure": "EDR_R07",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 2, section 2.20.1 EDR - enhanced display response (event R07), p 2-86. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
+  "triggers": ["EDR^R07"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QAK", "min": 1, "max": 1 },
+    { "segment": "DSP", "min": 1, "max": null },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

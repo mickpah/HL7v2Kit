@@ -1195,11 +1195,15 @@ struct LocaleAUProfileTests {
                 "Issue message should carry the AU-extended condition string")
     }
 
-    @Test("v2.4 wire + .international locale: PID-35..38 grammar gap means no conditional fires")
-    func v24PIDSpeciesConditionSilentUnderInternational() throws {
-        // Under .international + v2.4, the base grammar has no
-        // PID-35..38 entries; the conditional rule cannot fire. This
-        // pins the v2.4 base-spec behaviour against regression.
+    @Test("v2.4 wire + .international locale: PID-35 fires from the base grammar (P4-17)")
+    func v24PIDSpeciesConditionFiresUnderInternational() throws {
+        // P4-17 added the printed Conditionality Rule (v2.4 CH03
+        // §3.4.2.35: "This field must be valued if PID-36 - Breed
+        // Code or PID-38 - Production Class Code is valued") directly
+        // to the base v2.4 PID.json — the field was already present
+        // there (bare C), the S5-D AU grammar extension above was not
+        // filling a genuine base-spec gap. The predicate now fires
+        // under .international too, without the AU locale layer.
         let message = try Parser(locale: .international).parse(v24PIDBreedWithoutSpecies)
         let report = Validator(locale: .international).validate(message)
         let pid35Issues = report.errors.filter {
@@ -1207,8 +1211,8 @@ struct LocaleAUProfileTests {
             && $0.location.segmentID == "PID"
             && $0.location.fieldIndex == 35
         }
-        #expect(pid35Issues.isEmpty,
-                "Base v2.4 grammar has no PID-35; no conditional should fire under .international")
+        #expect(pid35Issues.count == 1,
+                "Base v2.4 grammar now carries the PID-35 condition; it should fire under .international")
     }
 
     // PID-35 + PID-36 both populated under v2.4 + AU — no conditional
@@ -1255,6 +1259,33 @@ struct LocaleAUProfileTests {
                 "v2.5.1 base grammar fires PID-35 conditional under .international")
         #expect(auPID35.count == 1,
                 "v2.5.1 base grammar fires PID-35 conditional under .auLocalisation")
+    }
+
+    // P4-16: the S5-D grammarExtensions["PID"] override (35..38) is gone —
+    // base v2.4 PID.json has carried all four fields since before P4-17
+    // (which only added the 35/36 condition strings). Its field-38
+    // repeatability was `.single`, diverging from the base schema's `*`
+    // (matches v2.5.1/v2.6, which also print `*`/RP 2) with no AU citation
+    // narrowing it — a latent cardinality-check defect (req #4), not an
+    // intentional AU narrowing. Removing the override lets the correct base
+    // `.multiple` through under AU too. Two PID-38 repetitions, mirrors the
+    // v24PIDBreedWithoutSpecies wire shape (28 pipes after M reach PID-35,
+    // then L2/B7 fill PID-36/37 is skipped — field 38 uses segment(_:_:)).
+    @Test("v2.4 wire + .auLocalisation: PID-38 may repeat (base repeatability, no AU single-cap)")
+    func v24PID38RepeatsUnderAU() throws {
+        let wire = TestWires.wire(
+            "ADT^A01", "2.4",
+            TestWires.segment("PID", [1: "1", 3: "999999^^^HOSP^MR", 38: "A1^^HL70429~A2^^HL70429"])
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let cardinalityHits = report.issues.filter {
+            $0.code == .cardinalityExceeded
+            && $0.location.segmentID == "PID"
+            && $0.location.fieldIndex == 38
+        }
+        #expect(cardinalityHits.isEmpty,
+                "PID-38 is repeatable in the base v2.4/v2.5.1/v2.6 grammar; AU should not cap it at one, got \(cardinalityHits.map(\.message))")
     }
 
     // MARK: - v0.11-S2 (ADR-010): HL7au:000008.1 — OBX-3 AUSPDI value set
@@ -2375,5 +2406,84 @@ struct LocaleAUProfileTests {
         #expect(prohibitionIssues(report, counted: "MSH")
                     .contains { $0.message.contains("Referrals(L2)") },
                 "REF^Z99 under the L2 profile must fire 000020's L2 leg; got \(report.errors.map(\.message))")
+    }
+}
+
+// P4-20 — HL7au:00060.4 ("C elements must not be valued when the
+// associated predicate is not satisfied") is deliberately NOT enforced
+// by negating `FieldGrammar.condition`. This pins that behaviour.
+//
+// DELIBERATE: see docs/design/permanent-limitations-register.md, §D
+// addendum "HL7au:00060.4 ... (P4-20)", BLOCKING spec-completeness.
+// Stored conditions are "required when" triggers, not full predicates,
+// and the evaluator maps "undecidable" to false. Negating them would
+// prohibit OBR-2 here, although ADRM §4.4.1.2 says ORC-2 and OBR-2 may
+// both be valued. Do not make this test fail by adding a naive
+// negation. Route B (P4-24, explicit cited prohibitions) and route C
+// (P4-31, ADR-021: full-predicate marking plus a three-state evaluator)
+// have landed; OBR-2 is classed trigger-only (class b) and stays
+// unmarked, so this pin stays green. See AUFullPredicateTests.
+@Suite("AU HL7au:00060.4 is PARTIAL: no C-false prohibition by negation (P4-20)")
+struct AU00060_4PartialTests {
+
+    private let wire = TestWires.msh("ORU^R01", "2.4")
+        + "PID|1||123^^^HOSP^MR||DOE^JOHN\r"
+        + "ORC|RE|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO\r"
+        + "OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L\r"
+
+    @Test("AU ORU with C field OBR-2 valued while its condition is false raises no HL7au:00060.4")
+    func cFieldValuedWithFalseConditionIsNotReported() throws {
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let obrIndex = try #require(message.segments.firstIndex { $0.segmentID == "OBR" })
+
+        // Precondition: OBR-2 is C with a stored condition, and that
+        // condition is false on this wire (ORC-2 and OBR-3 are valued).
+        let grammar = try #require(SegmentGrammarTable.v2_4["OBR"]?.field(2))
+        #expect(grammar.optionality == .conditional)
+        let condition = try #require(grammar.condition)
+        let validator = Validator(locale: .auLocalisation)
+        #expect(!validator.conditionTriggers(
+            condition, in: message.segments[obrIndex], segmentIndex: obrIndex,
+            message: message, currentSegmentID: "OBR"))
+
+        let report = validator.validate(message)
+        let fired = report.issues.contains { issue in
+            guard case .profileConstraintViolation(let rule) = issue.code else { return false }
+            return rule.contains("00060.4")
+        }
+        #expect(!fired, "HL7au:00060.4 must not fire by negating a required-when condition; got \(report.issues.map(\.message))")
+        #expect(!report.issues.contains { $0.code == .conditionalFieldProhibited && $0.location.segmentID == "OBR" })
+    }
+}
+
+// P8b-4 — HL7au:00060.1 leaves BASE: its segment half is enforced through the ADRM-2021
+// structures (LocaleAUStructureTests). It is PARTIAL, not SHIPPED: RRI^I12, the Appendix 8
+// simplified REF structure, the ORR^O02 print and the prose-only PV1 mandate on ORU^R01 are
+// registered, not enforced (permanent-limitations register section E, P8b-4 addendum).
+@Suite("AU HL7au:00060.1 register row (P8b-4)")
+struct AU00060_1RegisterRowTests {
+
+    @Test("The generated conformance register classes HL7au:00060.1 PARTIAL with the P8b-4 note")
+    func registerRow() throws {
+        let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().appendingPathComponent("docs/design/m6-adrm-2021-conformance-register.md")
+        var section = ""
+        var verdict: String?
+        var note = ""
+        for line in try String(contentsOf: url, encoding: .utf8).split(separator: "\n") {
+            if line.hasPrefix("## ") { section = String(line.dropFirst(3).prefix { $0 != " " }) }
+            if line.hasPrefix("| `HL7au:00060.1` |") {
+                #expect(verdict == nil, "HL7au:00060.1 has one row")
+                verdict = section
+                note = String(line)
+            }
+        }
+        #expect(verdict == "PARTIAL")
+        #expect(note.contains("P8b-4"))
+        #expect(note.contains("RRI^I12"))
+        // P8b-4a: RRI^I12 is enforced, the base findings are governed, the narrowed maxima named.
+        #expect(note.contains("P8b-4a"))
+        #expect(note.contains("a base structure finding is dropped where the ADRM structure accepts"))
+        #expect(note.contains("narrowed maxima"))
     }
 }

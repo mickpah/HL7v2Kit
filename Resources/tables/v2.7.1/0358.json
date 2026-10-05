@@ -1,0 +1,9 @@
+{
+  "table": "0358",
+  "version": "2.7.1",
+  "name": "Practitioner Group",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0358 - Practitioner Group",
+  "entries": []
+}

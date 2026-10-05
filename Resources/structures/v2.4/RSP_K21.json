@@ -1,0 +1,18 @@
+{
+  "structure": "RSP_K21",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 3, section 3.3.56 Get person demographics (QBP) and response (RSP) (events Q21 and K21), p 3-50. Unprinted group names (ADR-019 decision 3): QUERY_RESPONSE (HL7-xml v2.4/RSP_K21.xsd, RSP_K21.QUERY_RESPONSE.CONTENT).",
+  "triggers": ["RSP^K21"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QAK", "min": 1, "max": 1 },
+    { "segment": "QPD", "min": 1, "max": 1 },
+    { "group": "QUERY_RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 }
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

@@ -2,9 +2,9 @@
   "table": "0315",
   "version": "2.3",
   "name": "Living Will",
-  "kind": "HL7",
+  "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.3 Appendix A, HL7 Table 0315 - Living Will",
+  "citation": "HL7 v2.3 Chapter 3 sec 3.3.9.7 PD1-7 Living will (IS): 'Refer to user-defined table 0315 - Living will for suggested values'; User-defined Table 0315 - Living will (p. 3-75)",
   "entries": [
     {
       "code": "Y",

@@ -1,0 +1,28 @@
+{
+  "structure": "ORU_R01",
+  "version": "2.4",
+  "profile": "au-adrm-2021",
+  "baseVersion": "2.4",
+  "rule": "HL7au:00060.1",
+  "citation": "HL7AUSD-STD-OO-ADRM-2021.1, section 4.3 Trigger Events and Message Definitions, ORU^R01^ORU_R01 Message Structure, pp 205 to 206; printed the same as the Australian ORU^R01 Message Structure in section 1 Introduction, pp 17 to 18. Constrains HL7 v2.4 Chapter 7, section 7.3.1, p 7-19: PID is required in each PATIENT_RESULT, and PV1 is required in the optional group that follows PID; NTE, FT1 and CTI are removed (p 205), which is not a finding (ADR-019 decision 7). { [OBX] } is read as min 0, max null. The prose (p 17: 'in Australia PV1 has been made mandatory'; p 205: 'The PV1 segment is also mandatory') goes further than both prints, which place PV1 inside [ ]; the print is enforced and the rest is registered (permanent-limitations register section E, P8b-4 addendum). Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT) and ORDER_OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT), the base groups with the same head segment; PD1_GROUP (synthesised: no base group holds PD1, NK1, PV1 and PV2 without PID).",
+  "triggers": ["ORU^R01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "group": "PATIENT_RESULT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "PD1_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+        { "segment": "PD1", "min": 0, "max": 1 },
+        { "segment": "NK1", "min": 0, "max": null },
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "ORDER_OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 0, "max": 1 },
+        { "segment": "OBR", "min": 1, "max": 1 },
+        { "segment": "CTD", "min": 0, "max": 1 },
+        { "segment": "OBX", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

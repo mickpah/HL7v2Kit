@@ -13,6 +13,10 @@
     {
       "code": "<null>",
       "description": "This is the default, indicating that there is no character set switching occurring in this message."
+    },
+    {
+      "code": "2.3",
+      "description": "The character set switching mode specified in HL7 2.3, sections 2.8.28.6.1, and 2.9.2"
     }
   ]
 }

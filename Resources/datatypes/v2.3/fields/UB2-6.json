@@ -1,0 +1,24 @@
+{
+  "field": "UB2-6",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Value amount and code",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Value code",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0153"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Value amount",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

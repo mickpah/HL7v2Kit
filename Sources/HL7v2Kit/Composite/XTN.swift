@@ -1,8 +1,8 @@
 // XTN.swift
 // Extended Telecommunication Number composite (HL7 v2.5.1 §2.A.84).
 //
-// Value-type view over a Field that exposes named accessors for the
-// most-commonly-populated XTN components. Round-trip byte-identity is
+// Value-type view over a Field. Hand-written XTN components; the rest are
+// generated (ADR-020). Round-trip byte-identity is
 // preserved because the struct doesn't own the data — the segment
 // still owns the underlying `Field`. v0.3-C3.
 
@@ -15,12 +15,11 @@
 /// phone), and OBR-17 (order callback phone).
 ///
 /// Reads from the **first repetition** of the underlying field; XTN
-/// fields are commonly multi-rep (one repetition per phone, email,
+/// fields often repeat (one repetition per phone, email,
 /// fax) — use ``XTN/field`` to walk the rest, or wrap an individual
 /// ``Repetition`` via ``XTN/init(repetition:)``.
 ///
-/// XTN component layout (HL7 v2.5.1; the commonly-populated subset
-/// is exposed via named accessors):
+/// XTN component layout (hand-written accessors; the rest are generated):
 /// 1. Telephone Number (deprecated, ST) → ``XTN/telephoneNumber``. The
 ///    legacy "free-form phone string" slot (e.g. `"(02)555-1234"`).
 ///    Deprecated by HL7 v2.5; modern senders populate XTN-12 instead,
@@ -38,8 +37,7 @@
 ///     The modern primary; carries the full number in
 ///     `+CC-AAA-NNNNNNN` shape.
 ///
-/// XTN-8 through XTN-11 (extension, any text, extension prefix, speed
-/// dial code) and XTN-13 / XTN-14 remain accessible via ``XTN/field``.
+/// XTN-8..11 and XTN-13..18 are generated accessors; see `XTN+Components.swift`.
 public struct XTN: CompositeView {
     /// OR-rule conformance per HL7 v2.5.1 §2.A.84: a populated XTN field
     /// must have at least one of XTN-1 (Telephone Number — deprecated),
@@ -56,8 +54,8 @@ public struct XTN: CompositeView {
     public static let requiredComponentSet: RequiredComponentSet? = nil
 
     /// The underlying ``Field``. Use this when you need access to
-    /// repetitions beyond the first or to XTN components beyond
-    /// the exposed named accessors.
+    /// repetitions beyond the first. Every component has a named accessor;
+    /// use ``component(_:as:)`` for a sub-composite's subcomponents.
     public let field: Field
 
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.

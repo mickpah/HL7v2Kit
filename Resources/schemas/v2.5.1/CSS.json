@@ -5,6 +5,6 @@
   "fields": [
     { "index": 1, "swiftName": "studyScheduledTimePoint", "name": "Study Scheduled Time Point", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "studyScheduledPatientTimePoint", "name": "Study Scheduled Patient Time Point", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "studyQualityControlCodes", "name": "Study Quality Control Codes", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*" }
+    { "index": 3, "swiftName": "studyQualityControlCodes", "name": "Study Quality Control Codes", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "3" }
   ]
 }

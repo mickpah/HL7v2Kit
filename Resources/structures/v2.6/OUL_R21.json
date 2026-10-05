@@ -1,0 +1,41 @@
+{
+  "structure": "OUL_R21",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 7, section 7.3.2 OUL - Unsolicited Laboratory Observation Message (Event R21), pp 7-13 to 7-14.",
+  "triggers": ["OUL^R21"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "NTE", "min": 0, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "ORDER_OBSERVATION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "group": "CONTAINER", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "SAC", "min": 1, "max": 1 },
+        { "segment": "SID", "min": 0, "max": 1 }
+      ]},
+      { "segment": "ORC", "min": 0, "max": 1 },
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "TIMING_QTY", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "TQ1", "min": 1, "max": 1 },
+        { "segment": "TQ2", "min": 0, "max": null }
+      ]},
+      { "group": "OBSERVATION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "OBX", "min": 0, "max": 1 },
+        { "segment": "TCD", "min": 0, "max": 1 },
+        { "segment": "SID", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "segment": "CTI", "min": 0, "max": null }
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

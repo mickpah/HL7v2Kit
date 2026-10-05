@@ -1,0 +1,31 @@
+{
+  "structure": "ORR_O02",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.4.2 ORR - general order response message response to any ORM (event O02), p 4-20. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.RESPONSE.CONTENT), PATIENT (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.PATIENT.CONTENT) and ORDER (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.ORDER.CONTENT).",
+  "triggers": ["ORR^O02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "choice": null, "min": 1, "max": 1, "alternatives": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "segment": "RQD", "min": 1, "max": 1 },
+          { "segment": "RQ1", "min": 1, "max": 1 },
+          { "segment": "RXO", "min": 1, "max": 1 },
+          { "segment": "ODS", "min": 1, "max": 1 },
+          { "segment": "ODT", "min": 1, "max": 1 }
+        ]},
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "CTI", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

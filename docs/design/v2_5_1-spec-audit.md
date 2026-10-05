@@ -52,7 +52,7 @@ In substage S4 the methodology was extended: every conditional rule in the spec 
 | MSH | 21 | 0 | Faithful. |
 | PID | 39 | 0 | Faithful on per-field attributes. PID-35 and PID-36 conditions corrected in S4 (Gap 1). |
 | ORC | 31 | 0 | Faithful on per-field attributes. Conditional rules are cross-segment (ORC↔OBR XOR) — out of scope for same-segment DSL. |
-| OBR | 47 | 0 | Faithful on per-field attributes. OBR-7 / OBR-14 / OBR-25 message-context + specimen-presence rules **RESOLVED in v0.7 / v0.11** (ADR-008 + ADR-010). OBR-22 / OBR-26 / OBR-32 carry discourse-level rules still out of scope for the DSL; OBR-9 / .10 / .11 not shipped per req #4 (no cited MUST). |
+| OBR | 47 | 0 | Faithful on per-field attributes. OBR-7 / OBR-14 / OBR-25 message-context + specimen-presence rules **RESOLVED in v0.7 / v0.11** (ADR-008 + ADR-010) (revised in P1-1/P1-2). OBR-22 / OBR-26 / OBR-32 carry discourse-level rules still out of scope for the DSL; OBR-9 / .10 / .11 not shipped per req #4 (no cited MUST). |
 | OBX | 17 | 0 | Faithful on per-field attributes. OBX-2 condition added in S4 (Gap 2 partial). OBX-4 is grouping-discourse, not same-segment. |
 | NK1 | 13 | 0 | Faithful. |
 | PV1 | 20 | 0 | Faithful. |
@@ -114,6 +114,18 @@ These rules depend on message-type or sibling-segment presence (SPM, OBX). They 
 
 > **v0.11 RESOLVED (ADR-010).** OBR-25 shipped in v0.7-S4 (`messageCode = ORU`). **OBR-7** second trigger and **OBR-14** shipped in v0.11-S4 (commit `cca9aa8`) using the ADR-010 segment-presence atom: OBR-7 = `"messageCode = ORU OR SPM present OR OBR-15 populated"`, OBR-14 = `"SPM present OR OBR-15 populated"`. The "sample sent along" / "accompanied by a specimen" triggers map to SPM-segment presence (v2.5.1) or OBR-15 population. OBR-9 / .10 / .11 remain NOT shipped — descriptive text without a cited MUST trigger (req #4).
 
+**P1-1 correction:** OBR-7 is `messageCode = ORU` (widened in P1-2 below) (the `SPM present OR OBR-15 populated` legs misfired on orders and were removed); OBR-14 is `B` with no condition, as printed in CH04 and CH07 (§4.5.3.14, SPM-18 favoured).
+
+**P1-2:** "report message" is `messageCode in (ORU, ORF, OUL)`: CH07 §7.3.1-§7.3.9 (ORU R01/R30-R32, QRY/ORF, OUL R21-R24). The set is the CH07 results structures (ORU, ORF, OUL, plus OPU from v2.6); CSU^C09-C12 (clinical-trials results, §7.7.2) is out of scope for now, which can only under-fire.
+
+**P1-3:** OBR-2 / OBR-3 add `OR ORC absent AND messageCode in (ORU, ORF)` (§4.3.1.2-3 on v2.3/v2.3.1; §4.5.1.2-3 and §4.5.3.2-3 on v2.4+: "an ORC is not required, and the identifying placer order number must be present in the OBR segments"). The leg is gated to ORU / ORF because OUL R22-R24 and OPU R25 print OBR before [ORC], which the ORC-delimited group model cannot attach. A later OBR group with no ORC of its own still reads the previous group's ORC (under-fire only; closed by message-structure grammar, X-C04 / P8).
+
+**P1-4:** OBR-29 is `ORC-1 = CH AND ORC-8 empty` ("required when the order is a child", §4.5.1.29 on v2.3/v2.3.1, §4.5.3.29 on v2.4+). The removed leg `ORC-1 = CH AND ORC absent` could never be true: ORC-1 resolves through the OBR's own group, which that leg asserts has no ORC (pinned by `obr29FirstLegIsUnsatisfiable`).
+
+**P1-5:** OBR-1/8/9/10/11/20/21/26/32 now carry the printed optionality (O; v2.3 OBR-1 stays C as printed; v2.6 OBR-32 is B). ORC-8 and OBR-29 stay C from the child-order prose (see conditional-completeness-audit.md). V24-C04 said these fields are printed C on v2.5.1; CH04 and CH07 print O, so v2.5.1 was corrected with the others.
+
+V251-C05's "Suspected for OBR-2" is resolved: §4.5.3.2 carries the ORU placer sentence.
+
 ### ORC-8 / OBR-29 parent-child structural rule (Gap 2, out of scope)
 
 From §4.5.3.29 (OBR-29 Parent, identical structurally to ORC-8):
@@ -124,12 +136,25 @@ From §4.5.3.29 (OBR-29 Parent, identical structurally to ORC-8):
 
 > **v0.11 RESOLVED (ADR-010).** ORC-8 / OBR-29 child-order trigger shipped in v0.9 (`"ORC-1 = CH"`); v0.11-S1 (commit `13e616a`) refined both to the §4.5.1.8 DNF XOR softening using the peer-absent atom, so neither field over-fires when its peer carries the parent. Predicates: ORC-8 = `"ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty"`, OBR-29 symmetric. Mirrored to v2.3 / v2.3.1 in v0.11-S4b (commit `2f4796c`).
 
+### DG1-20/21 and PR1-19/20 P12 predicates (partial rendering)
+
+DG1-20 / DG1-21 and PR1-19 / PR1-20 carry `triggerEvent = P12`. The spec scopes DG1-20 (CH06 §6.5.2.20) and PR1-19 (§6.5.4.19) to "all implementations employing Update Diagnosis/Procedures (P12) messages", which is broader than P12 messages: an implementation that uses P12 is expected to carry the identifiers on its other messages too. Whether the sending implementation uses P12 is a deployment property, not a message property, so the predicate fires only on P12 messages themselves. It is fail-safe (it never fires where the spec is satisfied) and is recorded here as a partial rendering, not a defect (req #3).
+
 ## What this audit does NOT validate
 
 - **v2.3 / v2.3.1 / v2.4 schemas** — v0.4-S2's scope. Audited as deltas against this v2.5.1 baseline.
 - **v2.8 schema** — doesn't yet exist; v0.4-S3 adds it.
 - **Spec table errata** — the audit uses the public Final Standard April 2007 PDFs (author's local copy). The official HL7 v2.5.1 ballot's errata sheets (HL7-member access) were not directly consulted. Any errata not reflected in the Final Standard PDFs slip through.
 - **Composite OR-rule literal spec text** — see Gap 3 above; the OR-rules from S4 substage A are interpretive, not directly cited.
+
+## P6 findings closed (2026-10-02)
+
+The 2026-09 review (`planning/reviews/v2.5.1-review.md`) found V251-C10: no primitive-value
+lexical checks existed, and no issue code could report one. Closed by P6-7 (`3890ff0`):
+`IssueCode.valueFormatInvalid(dataType:)`, `ValidationOptions.valueFormatSeverity` and
+`PrimitiveFormat` now check NM, SI, DT, TM, DTM and TS against their printed section 2.A
+formats, including one level of composite/subcomponent nesting and OBX-5 read by its OBX-2
+type.
 
 ## Conclusion
 

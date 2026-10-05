@@ -1,0 +1,13 @@
+{
+  "structure": "QRY_A19",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 3, section 3.3.19 QRY/ADR - Patient Query (Event A19), p 3-22.",
+  "triggers": ["QRY^A19"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "structure": "BAR_P10",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 6, section 6.4.7 BAR/ACK - Transmit Ambulatory Payment Classification (APC) Groups, p 6-10.",
+  "triggers": ["BAR^P10"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "GP1", "min": 1, "max": 1 },
+    { "group": "PROCEDURE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "PR1", "min": 1, "max": 1 },
+      { "segment": "GP2", "min": 0, "max": 1 }
+    ]}
+  ]
+}

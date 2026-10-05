@@ -1,0 +1,17 @@
+{
+  "structure": "ADT_A10",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 3, section 3.2.10 ADT/ACK - patient arriving - tracking (event A10), p 3-11. Structure ID ADT_A10 synthesised as CODE_EVT from the message code ADT and A10, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events ADT^A10 read from the section title 3.2.10 'ADT/ACK - patient arriving - tracking (event A10)'.",
+  "triggers": ["ADT^A10"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "OBX", "min": 0, "max": null },
+    { "segment": "DG1", "min": 0, "max": null }
+  ]
+}

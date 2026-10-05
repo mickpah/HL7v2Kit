@@ -156,7 +156,8 @@ struct ValidationTests {
         let message = try Parser().parse(wire)
         let options = ValidationOptions(warnDeprecatedFields: false)
         let report = Validator(options: options).validate(message)
-        #expect(report.warnings.isEmpty)
+        // P8b-18: the memberwise options report message structure (no EVN, PV1) at .warning.
+        #expect(report.warnings.filter { !$0.code.isMessageStructure }.isEmpty)
     }
 
     // MARK: - Report shape
@@ -325,7 +326,7 @@ struct ValidationTests {
         #expect(ok.isEmpty)
         // PRT-6 empty: nothing to prohibit.
         #expect(try report("PRT|1|AD||AP").isEmpty)
-        // PRT-7 populated with PRT-8 empty: prohibited at PRT-7.
+        // PRT-7 populated with PRT-5 empty: prohibited at PRT-7 (§7.4.4.7).
         let prt7 = try report("PRT|1|AD||AP|||WARD^Ward Unit")
         #expect(prt7.count == 1)
         #expect(prt7.first?.location.pathDescription == "PRT[1]-7")
@@ -393,7 +394,7 @@ struct ValidationTests {
         #expect(!report.isValid)
     }
 
-    @Test("Parent pair — ORC-8/OBR-29 through v2.6; ORC-8/OBR-54 on v2.8.2")
+    @Test("Parent pair — ORC-8/OBR-29 through v2.6; ORC-8/OBR-54 on v2.7.1 and v2.8.2")
     func orcObrParentPairMovesAcrossVersions() throws {
         // v2.5.1: parent lives at OBR-29 (both sides EIP).
         let v251 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
@@ -403,21 +404,27 @@ struct ValidationTests {
         #expect(firedOld.count == 1, "got \(firedOld.map(\.message))")
         #expect(firedOld.first?.code == .pairedFieldMismatch(item: "00222"))
         #expect(firedOld.first?.location.pathDescription == "OBR[1]-29")
-        // v2.8.2: OBR-29 is a DIFFERENT element (00261) — a differing
-        // OBR-29 must NOT fire; the pair reads OBR-54 instead.
-        let v282Obr29 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|2.8.2\r"
-            + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
-            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
-        #expect(try pairMismatches(v282Obr29).isEmpty,
-                "OBR-29 is not the v2.8.2 parent peer")
-        // v2.8.2 with a mismatching OBR-54 fires.
-        let obr54Tail = String(repeating: "|", count: 50)
-        let v282Obr54 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|2.8.2\r"
-            + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
-            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\(obr54Tail)PARENT-B&HOSP^FILP&LAB\r"
-        let fired282 = try pairMismatches(v282Obr54)
-        #expect(fired282.count == 1, "got \(fired282.map(\.message))")
-        #expect(fired282.first?.location.pathDescription == "OBR[1]-54")
+        // v2.7.1 and v2.8.2: OBR-29 is a DIFFERENT element (00261), so a
+        // differing OBR-29 must NOT fire; the pair reads OBR-54 instead
+        // (v2.7.1 CH04 §4.5.3.29 p65 and §4.5.3.54 p74). A literal "2.7" or "2.8" header
+        // validates under v2.7.1 or v2.8.2 (ADR-018) and gets the same ORC-8/OBR-54 check:
+        // validate() re-declares the message under its grammar version before the pair
+        // gate runs, and the gate (P10-6) also keys on grammarVersion.
+        for version in ["2.7.1", "2.8.2", "2.7", "2.8"] {
+            let obr29 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|\(version)\r"
+                + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
+                + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
+            #expect(try pairMismatches(obr29).isEmpty,
+                    "OBR-29 is not the v\(version) parent peer")
+            // A mismatching OBR-54 fires.
+            let obr54Tail = String(repeating: "|", count: 50)
+            let obr54 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|\(version)\r"
+                + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
+                + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\(obr54Tail)PARENT-B&HOSP^FILP&LAB\r"
+            let fired = try pairMismatches(obr54)
+            #expect(fired.count == 1, "v\(version): got \(fired.map(\.message))")
+            #expect(fired.first?.location.pathDescription == "OBR[1]-54")
+        }
     }
 
     // MARK: - 1-n variable columns (Track B)
@@ -435,7 +442,8 @@ struct ValidationTests {
     @Test("RDT: many plain columns are silent; column 1 stays required")
     func rdtColumnsSilentAndColumnOneRequired() throws {
         let clean = Validator().validate(try Parser().parse(TestWires.adt("RDT|a|b|c|d|e|f")))
-        #expect(clean.issues.filter { $0.location.segmentID == "RDT" }.isEmpty)
+        // P8b-18: structure findings (RDT where ADT_A01 has none) are not this test's subject.
+        #expect(clean.issues.filter { $0.location.segmentID == "RDT" && !$0.code.isMessageStructure }.isEmpty)
 
         let missing = Validator().validate(try Parser().parse(TestWires.adt("RDT||b|c")))
         let issue = try #require(missing.issues.first { $0.code == .requiredFieldMissing && $0.location.segmentID == "RDT" })
@@ -447,7 +455,7 @@ struct ValidationTests {
     @Test("RDT: the empty-column-2 case does not fire; ADD columns are optional")
     func rdtEmptyMiddleColumnAndAdd() throws {
         let rdt = Validator().validate(try Parser().parse(TestWires.adt("RDT|a||c")))
-        #expect(rdt.issues.filter { $0.location.segmentID == "RDT" }.isEmpty)
+        #expect(rdt.issues.filter { $0.location.segmentID == "RDT" && !$0.code.isMessageStructure }.isEmpty)
         let add = Validator().validate(try Parser().parse(TestWires.adt("ADD||x~y")))
         #expect(!add.issues.contains { $0.code == .requiredFieldMissing && $0.location.segmentID == "ADD" })
         #expect(add.issues.contains { $0.code == .cardinalityExceeded && $0.location.segmentID == "ADD" && $0.location.fieldIndex == 2 })

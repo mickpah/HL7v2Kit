@@ -1,0 +1,14 @@
+{
+  "structure": "LSU_U12",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 13, section 13.3.12 LSU/ACK - Automated Equipment Log/Service Update (Event U12), p 13-19; the same structure is printed for LSR^U13 (13.3.13).",
+  "triggers": ["LSU^U12", "LSR^U13"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EQU", "min": 1, "max": 1 },
+    { "segment": "EQP", "min": 1, "max": null },
+    { "segment": "ROL", "min": 0, "max": 1 }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0531",
+  "version": "2.7.1",
+  "name": "Institution",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0531 - Institution",
+  "entries": []
+}

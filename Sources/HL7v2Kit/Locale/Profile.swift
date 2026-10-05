@@ -40,10 +40,15 @@ struct Profile: Sendable, Equatable, Hashable {
 
     /// Per-segment grammar extensions. Each entry's `[FieldGrammar]`
     /// is appended to the base-spec grammar for that segment when the
-    /// profile is loaded. Used for AU pre-adoption of v2.5+ fields on
-    /// v2.4 wires (e.g. PID-35..38 species/breed/strain/production-
-    /// class), so the Validator sees them under `.auLocalisation`
-    /// even though the base v2.4 PID grammar caps at 32. v0.5-S5-D.
+    /// profile is loaded (merging over any base field of the same
+    /// index) — the mechanism for a locale to carry fields or
+    /// narrowings the base version grammar does not state. v0.5-S5-D
+    /// introduced it to pre-adopt v2.5+ PID-35..38 on v2.4 wires; P4-16
+    /// (2026-10) removed that use once P4-17 confirmed the base v2.4
+    /// PID grammar already carried those fields (see
+    /// `Profile+au_adrm_2021.swift` for the history). The AU profile's
+    /// own `grammarExtensions` is `[:]` today — currently unused, kept
+    /// for the next locale-specific grammar addition.
     let grammarExtensions: [String: [FieldGrammar]]
 
     /// Per-segment group-scope cardinality rules layered on top of the
@@ -71,6 +76,12 @@ struct Profile: Sendable, Equatable, Hashable {
     /// instantiate a row of the rule's element table.
     let subIDTrees: [SubIDTreeRule]
 
+    /// The "C must not be valued when its predicate is false" rule
+    /// (HL7au:00060.4 route C, ADR-021), or `nil` when the profile has
+    /// none. Applies only to fields whose stored condition is marked as
+    /// a full predicate. P4-31.
+    let fullPredicateRule: FullPredicateRule?
+
     init(
         locale: HL7Locale,
         fieldOverrides: [FieldOverride] = [],
@@ -79,7 +90,8 @@ struct Profile: Sendable, Equatable, Hashable {
         cardinalityExtensions: [String: [SegmentCardinalityRule]] = [:],
         uniquenessRules: [FieldUniquenessRule] = [],
         escapeProhibitions: [EscapeProhibition] = [],
-        subIDTrees: [SubIDTreeRule] = []
+        subIDTrees: [SubIDTreeRule] = [],
+        fullPredicateRule: FullPredicateRule? = nil
     ) {
         self.locale = locale
         self.fieldOverrides = fieldOverrides
@@ -89,6 +101,7 @@ struct Profile: Sendable, Equatable, Hashable {
         self.uniquenessRules = uniquenessRules
         self.escapeProhibitions = escapeProhibitions
         self.subIDTrees = subIDTrees
+        self.fullPredicateRule = fullPredicateRule
     }
 
     /// Look up the profile for a given locale.
@@ -271,11 +284,44 @@ struct ComponentRequirement: Sendable, Equatable, Hashable {
     /// scope the others do not (HL7au:00044.4.3's caller assertion). M30.
     let condition: String?
 
-    init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil, condition: String? = nil) {
+    /// When `true`, the requirement restates a base rule that only some
+    /// versions carry, and is skipped wherever the base composite for the
+    /// message's grammar version already requires this component, so the
+    /// finding is reported once (by the base check). Needed for a conformance
+    /// point like HL7au:00049.1 (MSG-1 must be valued): v2.5.1 and later
+    /// require MSG.1, v2.4 types MSH-9 as CM with no component optionality
+    /// (HL7 v2.4 Chapter 2, 2.16.9.9). P3-4.
+    ///
+    /// On a version where it yields, the finding is the base
+    /// `requiredComponentMissing` (at `ValidationOptions.requiredComponentSeverity`),
+    /// not this rule's `profileConstraintViolation` (always `.error`), so the
+    /// same defect's code and severity can differ between versions.
+    ///
+    /// The deferral check looks up the base composite by the field's
+    /// **statically-declared** datatype (`FieldGrammar.dataType`), the same
+    /// type `Validator.checkComponents` — the base check this defers to —
+    /// keys on, not the field's runtime-resolved `effectiveDataType`
+    /// (e.g. OBX-5's runtime type from OBX-2). This override applies by
+    /// effective datatype (so it reaches OBX-5 at all), but the deferral
+    /// must match what the base check actually looks up, or a composite
+    /// override on a variable-type field could defer to a base check that
+    /// never runs — on OBX-5 the static type is always the "varies"
+    /// placeholder, which has no component grammar, so `checkComponents`
+    /// never fires there regardless of the effective type (P3-5 fix
+    /// round 1). The deferral also only fires when
+    /// `ValidationOptions.checkComponentGrammar` is true, because that flag
+    /// gates whether the base check runs at all — under `.lenient` it
+    /// doesn't, so yielding here would drop the finding rather than move
+    /// it (P3-5).
+    let yieldsToBase: Bool
+
+    init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil, condition: String? = nil,
+         yieldsToBase: Bool = false) {
         self.component = component
         self.subcomponent = subcomponent
         self.specCitation = specCitation
         self.condition = condition
+        self.yieldsToBase = yieldsToBase
     }
 }
 
@@ -383,6 +429,13 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// repeats, so each repetition pairs its own key and value.
     let componentCorrespondences: [ComponentCorrespondence]
 
+    /// Explicit, cited prohibitions on valuing this field (P4-24,
+    /// HL7au:00060.4 route B). Each fires when the field carries a value
+    /// other than the HL7 null (`""`) while its own `condition` holds.
+    /// Not gated by `condition` above; each rule carries its own
+    /// message-type scope.
+    let prohibitions: [ProfileFieldProhibition]
+
     /// Spec citation for this override. Surfaced verbatim in
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`
     /// so consumers can attribute the failure to the specific
@@ -401,6 +454,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         componentValueSets: [ComponentValueSet] = [],
         componentPatterns: [ComponentPattern] = [],
         componentCorrespondences: [ComponentCorrespondence] = [],
+        prohibitions: [ProfileFieldProhibition] = [],
         specCitation: String? = nil
     ) {
         self.segmentID = segmentID
@@ -411,8 +465,71 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         self.componentValueSets = componentValueSets
         self.componentPatterns = componentPatterns
         self.componentCorrespondences = componentCorrespondences
+        self.prohibitions = prohibitions
         self.specCitation = specCitation
     }
+}
+
+/// A profile's "a C element must not be valued when its predicate is not
+/// satisfied" rule (P4-31, ADR-021). It reports a populated field, other
+/// than the HL7 null, whose stored condition is marked as the spec's full
+/// predicate and evaluates definitely false, while `scope` evaluates
+/// true. An unknown condition never fires, and a field that a base or
+/// profile prohibition already reports is not reported again.
+struct FullPredicateRule: Sendable, Equatable, Hashable {
+    /// Message-context predicate the rule applies under, in the shared
+    /// condition grammar, e.g. `"messageCode in (ORM, ORU, REF)"`.
+    let scope: String
+
+    /// `.error` for "must not".
+    let severity: IssueSeverity
+
+    /// Citation surfaced as the `localeRule` of the reported
+    /// `.profileConstraintViolation`.
+    let specCitation: String
+
+    /// The `version|SEG-n` keys of the marked fields. Defaults to the
+    /// schema marking; tests may widen it.
+    let marked: Set<String>
+
+    init(scope: String, severity: IssueSeverity, specCitation: String,
+         marked: Set<String> = FullPredicateConditions.generated) {
+        self.scope = scope
+        self.severity = severity
+        self.specCitation = specCitation
+        self.marked = marked
+    }
+}
+
+/// A profile-authored "must not be valued" rule on one field (P4-24).
+/// Only rules whose spec text states the prohibition in so many words
+/// are modelled; a base "required when" condition is never negated
+/// (see the HL7au:00060.4 limitation row, P4-20).
+///
+/// The HL7 null (`""`) is always exempt from every rule here (P4-26's
+/// `carriesNonNullValue`), unlike the base `FieldProhibition`, which
+/// exempts the null only when its `permitsNull` flag is set. These
+/// profile prohibitions are all "not used" rules: the cited prose asks
+/// that the field carry no real content, and sending the HL7 null is a
+/// delete instruction ("clear any prior value"), not a value in the
+/// sense the prohibition means — so there is no profile rule, unlike
+/// some base rules' mixed phrasing, where the null itself is the thing
+/// the prose forbids.
+struct ProfileFieldProhibition: Sendable, Equatable, Hashable {
+    /// Predicate under which the field must not be valued, in the
+    /// shared condition grammar (ADR-009), including the message-type
+    /// scope, e.g. `"messageCode in (ORM, ORU, REF) AND OBX-11 = O"`.
+    /// Evaluated by `Validator.conditionTriggers`; an unresolvable
+    /// predicate fails safe and never fires.
+    let condition: String
+
+    /// `.error` for must or shall not, `.warning` for should not or not
+    /// applicable.
+    let severity: IssueSeverity
+
+    /// Citation surfaced as the `localeRule` of the reported
+    /// `.profileConstraintViolation`.
+    let specCitation: String
 }
 
 /// A value-set narrowing on a specific component of a populated

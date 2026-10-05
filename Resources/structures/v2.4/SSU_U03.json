@@ -1,0 +1,15 @@
+{
+  "structure": "SSU_U03",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 13, section 13.3.3 SSU/ACK - specimen status update (event U03), p 13-20. Unprinted group names (ADR-019 decision 3): SPECIMEN_CONTAINER (HL7-xml v2.4/SSU_U03.xsd, SSU_U03.SPECIMEN_CONTAINER.CONTENT).",
+  "triggers": ["SSU^U03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EQU", "min": 1, "max": 1 },
+    { "group": "SPECIMEN_CONTAINER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "SAC", "min": 1, "max": 1 },
+      { "segment": "OBX", "min": 0, "max": 1 }
+    ]},
+    { "segment": "ROL", "min": 0, "max": 1 }
+  ]
+}
