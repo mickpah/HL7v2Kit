@@ -24,9 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   worst-case lookup cost. No shipped condition reads these lookups. The termination comment in
   `GroupScoping.swift` states the real call graph.
 - **HL7au:00060.1 wording:** a required segment the profile expects where the message has a
-  segment the profile passes over (RQD or RQ1 for an ORM^O01 order detail) now reads "in place
-  of RQD[1]", not "at the end of the message"; code, severity and location are unchanged
-  (Migration.md row). The OSR^Q06 register row names every unflagged case against ADRM p 281
+  segment the profile passes over (RQD or RQ1 for an ORM^O01 order detail) now reads "no later
+  than RQD[1], the last segment", naming the finding's own location (the last segment, ZXX[1]
+  when a Z-segment follows), not "at the end of the message"; code, severity and location are
+  unchanged (Migration.md row). Fix round 1: the first wording, "in place of RQD[1]", named the
+  first passed-over segment, which could differ from the location and from the segment replaced. The OSR^Q06 register row names every unflagged case against ADRM p 281
   (RQD, RQ1, RXO, ODS or ODT in place of OBR, and an OBX after any of them); the conformance
   register is regenerated. The unused `profiles:` test seam of `matchProfileStructure` is removed.
 - **v2.4 group names:** ADR-019 states why the 35 `groupNames` overrides stand in place of

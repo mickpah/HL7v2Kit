@@ -168,9 +168,13 @@ struct LocaleAUStructureTests {
         try #require(found.count == 1, "\(found.map(\.message))")
         #expect(found[0].message.contains("requires OBR "))
         // P8b-18: the profile passes the requisition detail over, so the matcher
-        // reaches the end; the finding names the segment it stands in place of.
+        // reaches the end with a segment after the last one it matched. The text
+        // names the reported location, the last segment (fix round 1: it named
+        // the passed-over segment, which can differ from the location).
         let id = String(detail.prefix(3))
-        #expect(found[0].message.contains(" in place of \(id)[1] "), "\(found[0].message)")
+        let place = trailingZ ? "ZXX[1]" : "\(id)[1]"
+        #expect(found[0].message.contains(" no later than \(place), the last segment "), "\(found[0].message)")
+        #expect(!found[0].message.contains("in place of"), "\(found[0].message)")
         #expect(!found[0].message.contains("at the end of the message"), "\(found[0].message)")
         #expect(found[0].location.pathDescription == (trailingZ ? "ZXX[1]" : "\(id)[1]"))
     }

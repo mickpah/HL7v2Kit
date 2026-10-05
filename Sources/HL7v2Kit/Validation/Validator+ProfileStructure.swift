@@ -102,10 +102,12 @@ extension Validator {
         })
         // P8b-18: a requirement the matcher reaches the end with, while segments the
         // profile passes over follow the last one it matched (RQD in place of OBR on
-        // ORM^O01), is worded in place of the first of them, not at the end of the
-        // message. The location stays the last segment.
+        // ORM^O01), is not "at the end of the message": the segment was due before
+        // them. The finding is located at the last segment, so the text names that
+        // segment (fix round 1: naming the first passed-over segment named a place
+        // other than the location, and that segment need not be the one replaced).
         let lastMatched = ids.indices.last { !StructureMatcher.isTransparent(ids[$0]) && !passedOver.contains(ids[$0]) }
-        let standIn = ids.indices.first { index in
+        let passedOverAfterLast = ids.indices.contains { index in
             index > (lastMatched ?? -1) && passedOver.contains(ids[index]) && !StructureMatcher.isTransparent(ids[index])
         }
         return (kept, match.findings.indices.compactMap { n in
@@ -116,7 +118,8 @@ extension Validator {
             let anchor = location(min(index, ids.count - 1))
             guard !reported.contains("\(finding.segmentID)@\(anchor.pathDescription)") else { return nil }
             let place = !atEnd ? "before \(anchor.pathDescription)"
-                : standIn.map { "in place of \(location($0).pathDescription)" } ?? "at the end of the message"
+                : passedOverAfterLast ? "no later than \(anchor.pathDescription), the last segment"
+                : "at the end of the message"
             let scope = finding.group.map { " in group \($0)" } ?? ""
             return ValidationIssue(
                 severity: severity,
