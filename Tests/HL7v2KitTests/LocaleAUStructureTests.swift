@@ -167,16 +167,24 @@ struct LocaleAUStructureTests {
         let found = au(all)
         try #require(found.count == 1, "\(found.map(\.message))")
         #expect(found[0].message.contains("requires OBR "))
-        // P8b-18: the profile passes the requisition detail over, so the matcher
-        // reaches the end with a segment after the last one it matched. The text
-        // names the reported location, the last segment (fix round 1: it named
-        // the passed-over segment, which can differ from the location).
+        // P8b-18: the profile passes the requisition detail over (it is transparent
+        // to the profile match), so the matcher reaches the end; OBR belongs after
+        // the last segment the profile matched, ORC[1], wherever the passed-over
+        // segments stand (fix round 2: "no later than the last segment" was false,
+        // as `ormRequisitionDetailOBRAppended` shows). The location is unchanged.
         let id = String(detail.prefix(3))
-        let place = trailingZ ? "ZXX[1]" : "\(id)[1]"
-        #expect(found[0].message.contains(" no later than \(place), the last segment "), "\(found[0].message)")
+        #expect(found[0].message.contains("requires OBR in group ORDER after ORC[1] "), "\(found[0].message)")
+        #expect(!found[0].message.contains("no later than"), "\(found[0].message)")
         #expect(!found[0].message.contains("in place of"), "\(found[0].message)")
         #expect(!found[0].message.contains("at the end of the message"), "\(found[0].message)")
         #expect(found[0].location.pathDescription == (trailingZ ? "ZXX[1]" : "\(id)[1]"))
+    }
+
+    @Test("AU ORM^O01: OBR appended after the passed-over requisition detail and a trailing Z-segment satisfies the profile",
+          arguments: ["RQD|1", "RQ1|1"], [false, true])
+    func ormRequisitionDetailOBRAppended(_ detail: String, _ trailingZ: Bool) throws {
+        let all = try issues("ORM^O01^ORM_O01", ["PID|1", "ORC|NW", detail] + (trailingZ ? ["ZXX|1"] : []) + ["OBR|1"])
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
     }
 
     @Test("A compliant AU ORM^O01, with the removed NTE segments, draws no finding")

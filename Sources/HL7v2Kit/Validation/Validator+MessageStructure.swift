@@ -168,8 +168,9 @@ extension Validator {
     /// not modelled; otherwise every finding is located on a real segment of
     /// the message. A structure that fails the determinism lint (its
     /// `requiresExactMatch` flag, set at codegen time) is matched by
-    /// `ExactStructureMatcher`: at most one finding and no group spans
-    /// (ADR-019 ceiling 1, P8b-12); every other structure by the one-pass
+    /// `ExactStructureMatcher`: at most one finding (ADR-019 ceiling 1, P8b-12),
+    /// and group spans only for an accepted sequence whose accepting parses all
+    /// agree on the groups (P8b-17); every other structure by the one-pass
     /// `StructureMatcher`. No message is linted here. The segments at the
     /// message indices in `skipping` are passed over without a finding (the
     /// AU profile's re-match of an exact-matched base, P8b-4a).

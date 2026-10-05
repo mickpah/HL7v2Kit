@@ -100,16 +100,15 @@ extension Validator {
             guard case .messageStructureSegmentMissing(_, let segmentID, _) = issue.code else { return nil }
             return "\(segmentID)@\(issue.location.pathDescription)"
         })
-        // P8b-18: a requirement the matcher reaches the end with, while segments the
-        // profile passes over follow the last one it matched (RQD in place of OBR on
-        // ORM^O01), is not "at the end of the message": the segment was due before
-        // them. The finding is located at the last segment, so the text names that
-        // segment (fix round 1: naming the first passed-over segment named a place
-        // other than the location, and that segment need not be the one replaced).
+        // P8b-18: a requirement the matcher reaches the end with, while segments follow
+        // the last one the profile matched (RQD in place of OBR on ORM^O01, or a
+        // Z-segment), belongs after that last matched segment: the segments after it
+        // are transparent to the profile match, so the required one may stand before,
+        // between or after them. The finding stays located at the last segment
+        // (fix round 2: "no later than the last segment" was false).
         let lastMatched = ids.indices.last { !StructureMatcher.isTransparent(ids[$0]) && !passedOver.contains(ids[$0]) }
-        let passedOverAfterLast = ids.indices.contains { index in
-            index > (lastMatched ?? -1) && passedOver.contains(ids[index]) && !StructureMatcher.isTransparent(ids[index])
-        }
+        let endPlace = lastMatched.flatMap { $0 < ids.count - 1 ? "after \(location($0).pathDescription)" : nil }
+            ?? "at the end of the message"
         return (kept, match.findings.indices.compactMap { n in
             let finding = match.findings[n]
             guard finding.kind == .missing else { return nil }
@@ -117,9 +116,7 @@ extension Validator {
             let atEnd = index >= ids.count
             let anchor = location(min(index, ids.count - 1))
             guard !reported.contains("\(finding.segmentID)@\(anchor.pathDescription)") else { return nil }
-            let place = !atEnd ? "before \(anchor.pathDescription)"
-                : passedOverAfterLast ? "no later than \(anchor.pathDescription), the last segment"
-                : "at the end of the message"
+            let place = atEnd ? endPlace : "before \(anchor.pathDescription)"
             let scope = finding.group.map { " in group \($0)" } ?? ""
             return ValidationIssue(
                 severity: severity,

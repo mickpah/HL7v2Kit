@@ -23,12 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   v2.7.1 and v2.8.2 ORU_R30 message-level OBR to OBX; v2.8.2 `.obrObxGroup` on ORU_R01; the
   worst-case lookup cost. No shipped condition reads these lookups. The termination comment in
   `GroupScoping.swift` states the real call graph.
-- **HL7au:00060.1 wording:** a required segment the profile expects where the message has a
-  segment the profile passes over (RQD or RQ1 for an ORM^O01 order detail) now reads "no later
-  than RQD[1], the last segment", naming the finding's own location (the last segment, ZXX[1]
-  when a Z-segment follows), not "at the end of the message"; code, severity and location are
-  unchanged (Migration.md row). Fix round 1: the first wording, "in place of RQD[1]", named the
-  first passed-over segment, which could differ from the location and from the segment replaced. The OSR^Q06 register row names every unflagged case against ADRM p 281
+- **HL7au:00060.1 wording:** a required segment the profile still expects when segments follow
+  the last one it matched (RQD or RQ1 for an ORM^O01 order detail, or a Z-segment) now reads
+  "requires OBR in group ORDER after ORC[1]", naming the last matched segment, not "at the end of
+  the message": the segments after it are transparent to the profile match, so OBR may stand
+  anywhere after ORC[1]. Code, severity and location (the last segment) are unchanged
+  (Migration.md row). The fix rounds tried "in place of RQD[1]" (the first passed-over segment,
+  not necessarily the one replaced) and "no later than <last segment>" (false: OBR appended
+  after the last segment satisfies the profile). The OSR^Q06 register row names every unflagged case against ADRM p 281
   (RQD, RQ1, RXO, ODS or ODT in place of OBR, and an OBX after any of them); the conformance
   register is regenerated. The unused `profiles:` test seam of `matchProfileStructure` is removed.
 - **v2.4 group names:** ADR-019 states why the 35 `groupNames` overrides stand in place of
@@ -60,16 +62,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `RUN_PERF_TESTS`; release build, best of three, Apple Silicon) measures:
   - **The spec 9.5 budget** (two rows, both for a 1 KB message, default options): a 1,002-byte
     v2.5.1 ADT^A01 validates in 0.52 ms with the check at `.warning` (budget 2 ms) and 1,000 of
-    them in 0.54 s (budget 10 s). In a debug build the same message takes about 2.5 ms with the
-    check on or off, so the 2 ms row is met in release only.
+    them in 0.54 s (budget 10 s). The 2 ms row is met in a release build only: in a debug build
+    the message takes about 2.5 ms, and took 2.35 ms with the check off at 542f5cd, before the
+    rollout.
   - **Derived scaling checks, not spec budgets** (9.5 prints no budget for a long message; the
     limit is the 1 KB row scaled by size, 2 ms per KB): a 5,002-segment ORU^R01 of 150,084 bytes
     (limit 293 ms) validates in 218 ms on v2.5.1 and 256 ms on v2.8.2 at `.warning` (1.48 and
     1.75 ms per KB). The AU REF^I12 with 200 to 800 ADRM-added segments (3,125 to 12,327 bytes)
     takes 7.9 to 40.3 ms, 2.59 to 3.35 ms per KB, over its derived limit (6.1 to 24.1 ms); it was
-    over it before the rollout too (6.9 to 36.8 ms at 542f5cd), and a profile puts the time in the
-    AU profile's field-level checks, not the structure check (register section E, close-out
-    addendum).
+    over it before the rollout too (6.9 to 36.8 ms at 542f5cd), so the rollout added 1.0 to 3.5 ms;
+    a profile puts the time in the AU profile's field-level checks (register section E, close-out
+    addendum). The three cases are wrapped in `withKnownIssue`, citing that row.
 - The validation digest keeps a preset's own severity unless `VALIDATION_DIGEST_STRUCTURE_SEVERITY`
   is set (`off` forces it off) and accepts `VALIDATION_DIGEST_PRESET=lenient`.
 
@@ -111,16 +114,18 @@ group, cardinality or choice of a modelled structure changes.
 - v2.7.1 and v2.8.2: every registration read and unchanged (Table 0354 rows marked Deprecated,
   templates, CH12 placeholders, prints of segments the version does not define).
 - Register statuses agree for equivalent prints. SUR_P09's `ED` row is permanent on every version
-  (it was blocking on v2.5.1 and v2.6; v2.5.1 CH07 7.11.2, p 7-101, itself calls ED "an invalid
-  ED segment"). A structure registered only for an open slot, whose other segments are printed,
+  (it was blocking on v2.5.1 and v2.6; v2.5.1 CH07 7.11.2 prints the row on p 7-102, and the
+  section's deprecation note on p 7-101 calls it "an invalid ED segment"). A structure registered only for an open slot, whose other segments are printed,
   is blocking on every version (fix round 1 reversed the first pass, which had made them
   permanent): the CH12 `OBR, etc.` order detail on v2.3 to v2.8.2 (52 registrations), the
-  general order detail of ORM_O01, ORR_O02 and OSR_Q06 on v2.3 and v2.3.1, and the ERP ellipsis
-  on v2.3 to v2.5.1. CH04 4.2.2.4 (v2.5.1 p 4-5; 4.1.2.4 on v2.3 and v2.3.1) says "Examples are
+  general order detail of ORM_O01, ORR_O02 and OSR_Q06 on v2.3 and v2.3.1. CH04 4.2.2.4 (v2.5.1 p 4-5; 4.1.2.4 on v2.3 and v2.3.1) says "Examples are
   OBR and RXO. Future ancillary-specific segments may be defined": the slot is open, and an
   open-slot structure element would let the validator check everything printed around it but not
-  what fills it. The 62 reasons say so; the register, NEXT_STEPS and STATUS list the element as
-  a follow-up for the owner.
+  what fills it. The 58 reasons say so; the register, NEXT_STEPS and STATUS list the element as
+  a follow-up for the owner. ERP on v2.3 to v2.5.1 is blocking too, but not on an open slot: ERQ-2
+  (Event Identifier) "dictate[s] the format of the response message", and the ERP returns the
+  segments of the message that event defines (v2.5.1 CH05 5.10.5.2.3, p 5-124), so modelling it
+  needs a structure keyed by a field value, as MFN_M03 needs one keyed by MFI-1.
 - Counts, modelled and registered: v2.3 147 and 22, v2.3.1 100 and 28, v2.4 148 and 24, v2.5.1
   173 and 30, v2.6 190 and 20, v2.7.1 164 and 58, v2.8.2 185 and 58; the P8b-9 and P8b-10
   entries below note their later counts.

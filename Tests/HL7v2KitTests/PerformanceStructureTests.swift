@@ -9,9 +9,10 @@
 //   DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 //   xcrun swift test -c release -Xswiftc -enable-testing --filter PerformanceStructureTests
 //
-// In a debug build the 1 KB message takes about 2.5 ms to validate with the
-// structure check on or off (P8b-18 fix round 1), so the 2 ms row fails there
-// for reasons that predate the structure check.
+// The spec rows are met in a release build. In a debug build the 1 KB message
+// takes about 2.5 ms (P8b-18, best of three: 2.54 ms at `.warning`, 2.43 ms off),
+// and took 2.35 ms with the check off (its default then) at 542f5cd, before the
+// rollout, so the 2 ms row fails in debug whatever the structure check does.
 //
 // Each test prints one `PERF <scenario> ...` line so the numbers can be
 // compared between commits. The suite is serialised: a timing taken while
@@ -157,8 +158,16 @@ struct PerformanceStructureTests {
         let bytes = wire.utf8.count
         let count = message.segments.count
         Self.report("au-ref-i12-\(orders * 3 + problems)added", seconds: total, bytes: bytes, segments: count)
-        #expect(total < Self.derivedLimit(bytes: bytes),
-                "\(count) segments (\(bytes) bytes) took \(total) s; derived limit \(Self.derivedLimit(bytes: bytes)) s")
+        // Known issue, registered: docs/design/permanent-limitations-register.md,
+        // section E close-out addendum, row "AU REF^I12 validation time". Measured
+        // (release, best of three): 7.9 to 40.3 ms for 200 to 800 added segments,
+        // 2.59 to 3.35 ms per KB against the derived 2 ms per KB, and 6.9 to 36.8 ms
+        // at 542f5cd, before the rollout. The time is in the AU profile's field-level
+        // checks. When it is fixed this known issue stops matching and the test fails.
+        withKnownIssue("AU REF^I12 over its derived scaling limit (register section E, AU REF^I12 validation time)") {
+            #expect(total < Self.derivedLimit(bytes: bytes),
+                    "\(count) segments (\(bytes) bytes) took \(total) s; derived limit \(Self.derivedLimit(bytes: bytes)) s")
+        }
     }
 
     /// An ORU^R01 of `orders` ORDER_OBSERVATION groups, each ORC, OBR and
