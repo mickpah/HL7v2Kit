@@ -19,6 +19,7 @@
 // table) rather than newly found here.
 
 import Testing
+import Foundation
 @testable import HL7v2Kit
 
 @Suite("Bare-C guards (P4-15)")
@@ -124,5 +125,45 @@ struct BareConditionalGuardTests {
         let actual = bareConditionals(SegmentGrammarTable.v2_7_1)
         #expect(actual == auditedP105a.union(auditedP105b),
                 "v2.7.1 bare-C set drifted from the register; got \(actual.sorted())")
+    }
+
+    // P7-2 (V251-C12): the literal sets above, and v2.8.2's in MultiVersionTests, pin
+    // the grammar; this pins the register to the grammar. Every bare C on every version
+    // must be named, as `SEG-n`, in docs/design/conditional-completeness-audit.md, so a
+    // field that becomes bare cannot ship with a literal update alone. The check is by
+    // position: the register gives version scope in prose ("v2.3-v2.6", "all six"),
+    // which a test cannot read reliably.
+    @Test("every bare C on every version is named in the conditional-completeness register")
+    func bareCNamedInRegister() throws {
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let register = try String(
+            contentsOf: root.appendingPathComponent("docs/design/conditional-completeness-audit.md"),
+            encoding: .utf8)
+        let tables: [(String, [String: SegmentGrammar])] = [
+            ("v2.3", SegmentGrammarTable.v2_3), ("v2.3.1", SegmentGrammarTable.v2_3_1),
+            ("v2.4", SegmentGrammarTable.v2_4), ("v2.5.1", SegmentGrammarTable.v2_5_1),
+            ("v2.6", SegmentGrammarTable.v2_6), ("v2.7.1", SegmentGrammarTable.v2_7_1),
+            ("v2.8.2", SegmentGrammarTable.v2_8_2),
+        ]
+        for (version, table) in tables {
+            let unnamed = bareConditionals(table).filter { !Self.names(register, $0) }
+            #expect(unnamed.isEmpty, "\(version) bare C not in the register: \(unnamed.sorted())")
+        }
+    }
+
+    /// Whether `text` names `position` (e.g. `RXE-15`) as a whole token: not preceded by a
+    /// letter or digit, not followed by a digit.
+    static func names(_ text: String, _ position: String) -> Bool {
+        var from = text.startIndex
+        while let hit = text.range(of: position, range: from..<text.endIndex) {
+            let before = hit.lowerBound == text.startIndex ? nil : text[text.index(before: hit.lowerBound)]
+            let after = hit.upperBound == text.endIndex ? nil : text[hit.upperBound]
+            if !(before?.isLetter ?? false) && !(before?.isNumber ?? false) && !(after?.isNumber ?? false) {
+                return true
+            }
+            from = hit.upperBound
+        }
+        return false
     }
 }

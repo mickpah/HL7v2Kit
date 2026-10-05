@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P7-2: the conditional-completeness register is pinned to the grammar
+
+- **Every bare `C` must be named in the register (V251-C12).** `BareConditionalGuardTests`
+  already pinned each version's set of `C` fields with no predicate (v2.3 to v2.7.1; v2.8.2
+  in `MultiVersionTests`), but a field could join a set with a literal update alone. A new
+  test reads `docs/design/conditional-completeness-audit.md` and fails when a bare `C` on any
+  of the seven versions is not named there. The two slots V251-C12 found unregistered,
+  TXA-21 (v2.3 to v2.6, registered in P4-15) and OBR-48 on v2.5.1 (scope added in the P1
+  fix round), are named today.
+
 ### Fixed — P8b-final: findings of the whole-branch review of the message-structure rollout
 
 - **An exact-matched structure names what it expected (F-I3).** A structure that fails the
