@@ -49,6 +49,14 @@ group, cardinality or choice of a modelled structure changes.
   two prints agree, but the caption QRY^P04^QRY_P04 gives it an ID of its own and the model has no
   structure alias. DSR_P04 stays permanent (the two Chapter 5 DSR prints differ on MSA). 24
   registered, unchanged.
+- v2.5.1: MFR_M01 and MFN_M03 are blocking, not templates: CH08 gives the staff MFR body only in
+  prose (8.7.1, pp 8-20 to 8-21), the M03 and M08 to M12 bodies by reference (8.8.2, p 8-22),
+  and MFN^M03's other segments as the MFN^M08 to M12 groups, each keyed by MFI-1. QRY_P04 is
+  blocking as on v2.4 (Table 0354 gives it an ID of its own). The Table 0354 reasons now cite the
+  right page and say what the print gives instead: ORU_R31 and ORU_R32 (Appendix A listing only;
+  the chapter prints ORU^R31^ORU_R30 and ORU^R32^ORU_R30), QRY_T12 (CH09 prints QRY^T12^QRY),
+  RSP_K22 (CH03 prints RSP^K22^RSP_K21), RDE_O01 and RRA_O02 (Appendix A only), MFD_MFA (named in
+  CH08 8.4, no syntax). 30 registered, unchanged.
 
 ### Fixed — P8b-18: Table 0354 provenance on every version; citation and guard minors
 

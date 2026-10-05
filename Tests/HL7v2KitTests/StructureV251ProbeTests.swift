@@ -120,6 +120,23 @@ struct StructureV251ProbeTests {
                 "\(p.structure): \(bad.map { Self.describe($0.code) })")
     }
 
+    // P8b-18: registrations classed by the print. CH08 gives the staff MFR body only in prose
+    // (8.7.1, pp 8-20 to 8-21) and MFN^M03's other segments by reference to MFN^M08 to M12, each
+    // keyed by MFI-1 (blocking); CH06 6.4.4 refers P04 to the Chapter 5 QRY/DSR, but Table 0354
+    // gives QRY_P04 an ID of its own (blocking, no alias) and the DSR prints differ (permanent).
+    // Table 0354 IDs that a chapter caption contradicts, or that only Appendix A lists, say so.
+    @Test("Registered v2.5.1 structures are info with the reason the print supports",
+          arguments: [("MFR^M02^MFR_M01", "prose-printed replacement fragments"),
+                      ("MFN^M03^MFN_M03", "keyed by MFI-1"),
+                      ("QRY^P04^QRY_P04", "no structure alias"), ("DSR^P04^DSR_P04", "which mode P04 uses"),
+                      ("ORU^R31^ORU_R31", "ORU^R31^ORU_R30"), ("QRY^T12^QRY_T12", "QRY^T12^QRY"),
+                      ("RSP^K22^RSP_K22", "RSP^K22^RSP_K21"), ("RDE^O01^RDE_O01", "Appendix A")])
+    func registeredByThePrint(_ c: (String, String)) throws {
+        let issues = try structureIssues(c.0, ["MSA|AA|1", "QRD|1"])
+        #expect(issues.count == 1 && issues.first?.severity == .info, "\(c.0): \(issues.map(\.message))")
+        #expect(issues.first?.message.contains(c.1) == true, "\(c.0): \(issues.map(\.message))")
+    }
+
     @Test("At least twelve probes, none a pilot structure")
     func coverage() {
         #expect(Self.probes.count >= 12)

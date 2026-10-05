@@ -1081,7 +1081,11 @@ compiling a structure per message.
   names only examples of order detail segments, so no `expansions` override could be cited;
   eight query and master-file templates; SUR_P09's `ED` row; and 14 Table 0354 rows with no
   printed syntax. The CH05 5.9.1.1 restatement of the RDR structure is excluded under G7.
-  `ADT^A04^ADT_A04` on v2.5.1 is now a mismatch.
+  `ADT^A04^ADT_A04` on v2.5.1 is now a mismatch. (Now 173 and 30. P8b-18: MFR_M01 and MFN_M03
+  are blocking, not templates: CH08 gives the staff MFR body in a prose fragment and MFN^M03's
+  segments by an MFI-1-keyed reference to MFN^M08 to M12; QRY_P04 is blocking for want of a
+  structure alias; ORU_R31, ORU_R32, QRY_T12 and RSP_K22 are Table 0354 IDs a chapter caption
+  contradicts, and ORU_R31, ORU_R32, RDE_O01 and RRA_O02 appear in the Appendix A listing only.)
 - **Primary print, amended (P8b-9 ruling).** When two normative prints of one structure ID
   disagree, the primary is the LOOSER print, the one that accepts every message the other
   accepts, named by a cited overrides.json `primaryPrints` entry (structure, primary and
