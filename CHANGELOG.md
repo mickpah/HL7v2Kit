@@ -62,6 +62,13 @@ group, cardinality or choice of a modelled structure changes.
   groups). ORU_W01's reason now says the CH07 7.17 examples send ORU^W01^ORU_R01 against Table
   0354's ORU_W01; QRF_W02's cites CH07 7.15.2. On v2.5.1 the waveform examples are cited as
   7.17, not 7.16. 20 registered, unchanged.
+- v2.7.1 and v2.8.2: every registration read and unchanged (Table 0354 rows marked Deprecated,
+  templates, CH12 placeholders, prints of segments the version does not define).
+- Register statuses agree for equivalent prints: the CH12 `< OBR | etc. >` placeholders and
+  SUR_P09's `ED` row are permanent on every version (they were blocking on v2.5.1 onwards).
+- Counts, modelled and registered: v2.3 147 and 22, v2.3.1 100 and 28, v2.4 148 and 24, v2.5.1
+  173 and 30, v2.6 190 and 20, v2.7.1 164 and 58, v2.8.2 185 and 58; the P8b-9 and P8b-10
+  entries below note their later counts.
 
 ### Fixed — P8b-18: Table 0354 provenance on every version; citation and guard minors
 
@@ -310,7 +317,7 @@ group, cardinality or choice of a modelled structure changes.
   structures extracted from the chapter prints (23 matched exactly), and v2.6 is marked
   complete. An MSH-9.3 that names no v2.6 structure (`ADT^A04^ADT_A04`) is now
   `messageStructureMismatch` on v2.6 instead of info.
-- 23 v2.6 structures are registered as not modelled, each with its reason (register section
+- 23 v2.6 structures are registered as not modelled (20 since P8b-11 and the P8b-13 fix round; 190 modelled), each with its reason (register section
   E): eight CH12 `< OBR | etc. >` structures, eight query and master-file templates, SUR_P09,
   RSP_K21 (its K21 and K22 prints are incomparable) and five Table 0354 rows with no printed
   syntax.
@@ -330,7 +337,7 @@ group, cardinality or choice of a modelled structure changes.
   structures extracted from the chapter prints (21 matched exactly), and v2.5.1 is marked
   complete. An MSH-9.3 that names no v2.5.1 structure (`ADT^A04^ADT_A04`) is now
   `messageStructureMismatch` on v2.5.1 instead of info.
-- 31 v2.5.1 structures are registered as not modelled, each with its reason (register section
+- 31 v2.5.1 structures are registered as not modelled (30 since the P8b-13 fix round; 173 modelled), each with its reason (register section
   E): eight CH12 structures whose order detail is the unenumerated `< OBR | etc. >`, eight
   query and master-file templates, SUR_P09 (a non-segment `ED` row) and 14 Table 0354 rows with
   no printed syntax. A message naming one draws
