@@ -1611,7 +1611,7 @@ CH02C and Appendix A), caption or query profile trigger row gives, every version
 them): six rows still draw a
 mismatch, each a Table 0354 event misprint that is not a trigger event (v2.3.1 `136` under
 ADT_A30 and `1II` under RPA_I08; v2.4 and v2.5.1 `007` under OMN_O07 and `022` under ORL_O22),
-whose corrected events match.
+whose corrected events match. The sweep is committed as `scripts/check-printed-structure-ids.py` (P7-8), a local guard (it reads the licensed PDFs, so not a CI job) that exits non-zero on any other reported row or a stale allow-list row.
 
 **Counts.** Modelled / registered per version: v2.3 147 / 22, v2.3.1 100 / 38, v2.4 148 / 34,
 v2.5.1 173 / 32, v2.6 190 / 20, v2.7.1 164 / 58, v2.8.2 185 / 62; 1,107 modelled and 266
