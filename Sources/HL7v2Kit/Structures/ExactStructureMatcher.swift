@@ -33,7 +33,12 @@
 /// Findings: none when the sequence is accepted. On rejection exactly one:
 /// at the furthest position any parse reached. If a segment there cannot be
 /// consumed by any live parse, `.unexpected` with that segment and its
-/// message index; if the message ended with no parse complete, `.missing`
+/// message index, and the match's `expectedHere` lists the segments the live
+/// parses could consume there (each once, in structure order, so at most the
+/// structure's distinct segment IDs) with `endExpectedHere` when one is
+/// complete: when a required segment is absent mid-message the finding sits
+/// on the segment after it, and this names the absent one (P8b-final, F-I3);
+/// if the message ended with no parse complete, `.missing`
 /// at `ids.count` naming the first segment of the shortest completion from
 /// any live parse (ties broken by structure order) and its innermost
 /// enclosing group or named choice. `.exceededMaximum` is never reported,
@@ -72,7 +77,15 @@ struct ExactStructureMatcher: Sendable {
                 next += a.edges[state]
             }
             guard !next.isEmpty else {
-                return StructureMatch(findings: [StructureFinding(kind: .unexpected, segmentID: id, group: nil, index: index)], spans: [])
+                // What the live parses could consume here, each ID once in structure
+                // order (states are numbered in structure order): the absent segment
+                // when a required one is missing before this one (F-I3).
+                var seen = Set<String>()
+                let expected = live.sorted().compactMap { a.labels[$0] }.filter { seen.insert($0).inserted }
+                var match = StructureMatch(findings: [StructureFinding(kind: .unexpected, segmentID: id, group: nil, index: index)], spans: [])
+                match.expectedHere = expected
+                match.endExpectedHere = live.contains(a.accept)
+                return match
             }
             steps.append((index, id))
             live = a.closure(next, stamp: steps.count, &mark)

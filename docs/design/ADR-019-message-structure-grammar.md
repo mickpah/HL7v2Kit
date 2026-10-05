@@ -396,7 +396,11 @@ holds).
 **Known ceiling**, recorded in the register:
 
 1. Ambiguous structures (lint failures) are not matched. *Replaced by the P8b-12 amendment:
-   they are matched exactly, with at most one finding and no group spans.*
+   they are matched exactly, with at most one finding and no group spans.* *(P8b-final, F-I3:
+   that one finding sits at the furthest segment any parse reached, so a required segment
+   absent mid-message, BAR_P01 or DFT_P03 without EVN, is reported as the next segment
+   unexpected; its text also names the segments the structure accepts there, see
+   "Findings" in the P8b-12 amendment.)*
 2. After the first divergence, recovery can report a second issue for one real defect (an
    out-of-order PID reports "PID missing" and "PID unexpected"). The first issue is always
    accurate.
@@ -991,7 +995,15 @@ accepts or rejects the wrong messages. Known ceiling 1 is replaced.
   take, or, when the message ends with no parse complete, `messageStructureSegmentMissing` at
   the end naming the first segment of the shortest completion (ties by structure order) and
   its innermost enclosing group or named choice. `.exceededMaximum` is not distinguished, and
-  there is no recovery after the first divergence.
+  there is no recovery after the first divergence. *P8b-final (F-I3):* a required segment
+  absent mid-message is therefore reported on the segment after it (BAR_P01 without EVN:
+  "PID has no place in BAR_P01 at this point"), so the unexpected finding's text also names
+  what the live parses could consume there: "; expected here: SFT or EVN". The list holds
+  each segment ID once, in structure order (automaton states are numbered in structure
+  order); it is bounded by the structure's distinct segment IDs and, in the text, by eight
+  names followed by "and N more"; "or the end of the message" is added when a parse is
+  complete there. The issue code, severity, location and number of findings are unchanged,
+  and the AU profile re-match and the group spans read codes and locations, not text.
 - **New known cost (ceiling 1 as amended).** No group spans are reported for an exact-matched
   structure: an accepted sequence can have several parses with different group boundaries.
   Span-derived group predicates (P8b-17) skip these structures and keep the back-walk

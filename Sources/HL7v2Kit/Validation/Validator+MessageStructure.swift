@@ -203,10 +203,33 @@ extension Validator {
                     severity: severity,
                     code: .messageStructureSegmentUnexpected(structure: structure.id, segmentID: finding.segmentID),
                     location: anchor,
-                    message: "\(finding.segmentID) has no place in \(structure.id) at this point\(why) (\(structure.citation))."
+                    message: "\(finding.segmentID) has no place in \(structure.id) at this point\(why)\(Self.expectedText(match)) (\(structure.citation))."
                 )
             }
         }
+    }
+
+    /// The most segment IDs named in an exact-matched finding's text.
+    static let expectedTextLimit = 8
+
+    /// For an exact-matched structure's unexpected segment, what the structure
+    /// accepts at that point (P8b-final, F-I3): "; expected here: " and the
+    /// first `expectedTextLimit` segment IDs in structure order, then "and N
+    /// more" for the rest, with "or the end of the message" when a parse is
+    /// complete there. The list is bounded by the limit and, before it, by the
+    /// structure's distinct segment IDs. Empty for the one-pass matcher, which
+    /// leaves the list empty.
+    static func expectedText(_ match: StructureMatch) -> String {
+        var items = Array(match.expectedHere.prefix(expectedTextLimit))
+        let more = match.expectedHere.count - items.count
+        guard !items.isEmpty || match.endExpectedHere else { return "" }
+        if more > 0 {
+            return "; expected here: " + items.joined(separator: ", ") + " and \(more) more"
+                + (match.endExpectedHere ? ", or the end of the message" : "")
+        }
+        if match.endExpectedHere { items.append("the end of the message") }
+        let last = items.removeLast()
+        return "; expected here: " + (items.isEmpty ? last : items.joined(separator: ", ") + " or " + last)
     }
 
     /// The matcher's result for the message body, the segments at the indices

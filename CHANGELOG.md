@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P8b-final: findings of the whole-branch review of the message-structure rollout
+
+- **An exact-matched structure names what it expected (F-I3).** A structure that fails the
+  determinism lint reports its one finding at the furthest segment any parse reached, so a
+  required segment absent mid-message was reported only as the next segment unexpected
+  ("PID has no place in BAR_P01 at this point", EVN never named). The text now adds the
+  segments the structure accepts there: "; expected here: SFT or EVN" (each ID once, in
+  structure order, at most eight then "and N more", "or the end of the message" when a parse
+  is complete there). Code, severity, location and the number of findings are unchanged. In
+  the three validation digests 4 lines change (default and strict), each this clause only.
+
 ### Fixed — P8b-18: message-structure rollout close-out
 
 - **Rollout complete.** Every structure the seven versions print is modelled or registered with

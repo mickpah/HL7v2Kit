@@ -64,6 +64,16 @@ struct StructureMatch: Sendable, Equatable {
     /// segment in different group occurrences, so `spans` is empty and no
     /// group is known (``ExactStructureMatcher``, P8b-17).
     var spansWithheld = false
+    /// For an ``ExactStructureMatcher`` rejection at a segment no live parse
+    /// consumes: the segment IDs some live parse could consume at that point,
+    /// each once, in structure order (P8b-final, F-I3). Empty otherwise; the
+    /// one-pass matcher never sets it. It names what the structure expected
+    /// where the finding sits, which is the absent segment when a required
+    /// one is missing mid-message.
+    var expectedHere: [String] = []
+    /// With `expectedHere`: true when some parse is complete at that point, so
+    /// the message could also have ended there.
+    var endExpectedHere = false
 }
 
 /// Matches segment IDs against an HL7 abstract message syntax in one pass.
