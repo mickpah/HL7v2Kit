@@ -1,8 +1,8 @@
 {
   "structure": "ORU_R01",
   "version": "2.4",
-  "citation": "HL7 v2.4 Chapter 7, section 7.3.1 ORU - unsolicited observation message (event R01), p 7-19. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-138). Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT), PATIENT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT), VISIT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT) and OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT).",
-  "triggers": ["ORU^R01"],
+  "citation": "HL7 v2.4 Chapter 7, section 7.3.1 ORU - unsolicited observation message (event R01), p 7-19. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-138). Triggers ORU^W01 added by overrides.json referencedTriggers (the print names this structure for them in prose): HL7 v2.4 Chapter 7, section 7.15.1 W01 - waveform result, unsolicited transmission of requested information, p 7-117: 'The waveform response unsolicited trigger event identifies ORU messages used to transmit waveform data which are results of an ordered test or series of observations'; the section 7.17 examples (pp 7-121 to 7-122) send ORU^W01 as MSH PID OBR OBX, within ORU^R01^ORU_R01 (section 7.3.1); waveform observations, 'like other results', are transmitted per section 7.15.1 (p 7-109). Table 0354 also lists ORU_W01 (event W01), which no chapter prints; it stays registered as not modelled (P8b-final F-I1 c). Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT), PATIENT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT), VISIT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT) and OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT).",
+  "triggers": ["ORU^R01", "ORU^W01"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "group": "PATIENT_RESULT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [

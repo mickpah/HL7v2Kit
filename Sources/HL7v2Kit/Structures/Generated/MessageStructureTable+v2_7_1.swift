@@ -4284,8 +4284,8 @@ extension MessageStructureTable {
     private static let v2_7_1_ORU_R01: MessageStructure = MessageStructure(
         id: "ORU_R01",
         version: "2.7.1",
-        triggers: ["ORU^R01"],
-        citation: "HL7 v2.7.1 Chapter 7, section 7.2.1 ORU - Unsolicited Observation Message (Event R01), pp 12 to 13.",
+        triggers: ["ORU^R01", "ORU^W01"],
+        citation: "HL7 v2.7.1 Chapter 7, section 7.2.1 ORU - Unsolicited Observation Message (Event R01), pp 12 to 13. Triggers ORU^W01 added by overrides.json referencedTriggers (the print names this structure for them in prose): HL7 v2.7.1 Chapter 7, section 7.14.1 W01 - Waveform Result, Unsolicited Transmission Of Requested Information, p 140: 'The waveform response unsolicited trigger event identifies ORU messages used to transmit waveform data which are results of an ordered test or series of observations'; the section 7.16 examples (pp 144 to 146) send MSH-9 'ORU^W01^ORU_R01'. Table 0354 (CH02C section 2.C.2.175, p 106) also lists ORU_W01 (events: W01), marked Deprecated, which no chapter prints; it stays registered as not modelled, so a bare ORU^W01 is shared (P8b-final F-I1 c).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),

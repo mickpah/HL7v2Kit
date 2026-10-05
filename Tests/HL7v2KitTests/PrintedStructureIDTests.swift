@@ -93,6 +93,34 @@ struct PrintedStructureIDTests {
         #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "PPG_PCG")], "v\(version): \(issues.map(\.message))")
     }
 
+    // F-I1 (c): each version's CH07 W01 section says the waveform trigger "identifies ORU
+    // messages" (v2.3.1 7.19.1 p 7-117; v2.4 7.15.1 p 7-117; v2.5.1 7.15.1 p 7-130; v2.6 7.15.1
+    // p 7-110; v2.7.1 7.14.1 p 140; v2.8.2 7.15.1 p 153) and v2.6 to v2.8.2's examples send
+    // ORU^W01^ORU_R01, so W01 is folded onto ORU_R01; Table 0354's ORU_W01 stays registered.
+    static let waveformVersions = ["2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
+    static let waveformBody = ["PID|1||12345", "OBR|1", "OBX|1|NM|1^A||1"]
+
+    @Test("ORU^W01^ORU_R01 is matched against ORU_R01", arguments: waveformVersions)
+    func waveformAsR01(_ version: String) throws {
+        #expect(try resolved("ORU^W01^ORU_R01", version: version) == "ORU_R01", "v\(version)")
+        let issues = try structureIssues("ORU^W01^ORU_R01", version: version, Self.waveformBody)
+        #expect(issues.isEmpty, "v\(version): \(issues.map(\.message))")
+    }
+
+    @Test("ORU^W01^ORU_W01, the Table 0354 ID, is still information", arguments: waveformVersions)
+    func waveformTableID(_ version: String) throws {
+        let issues = try structureIssues("ORU^W01^ORU_W01", version: version, Self.waveformBody)
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ORU_W01")], "v\(version): \(issues.map(\.message))")
+        #expect(issues.first?.severity == .info)
+    }
+
+    @Test("A bare ORU^W01 is never an error or a warning", arguments: waveformVersions)
+    func waveformBare(_ version: String) throws {
+        let issues = try structureIssues("ORU^W01", version: version, Self.waveformBody)
+        #expect(issues.allSatisfy { $0.severity == .info }, "v\(version): \(issues.map(\.message))")
+        #expect(!issues.contains { if case .messageStructureMismatch = $0.code { true } else { false } })
+    }
+
     // M4: v2.7.1 CH02C 2.C.2.175 (p 104) and v2.8.2 CH02C 2.C.2.279 (p 152) print the row
     // 'ORM_O01  O01  Deprecated'; a bare ORM^O01 resolves to that registration and its reason.
     @Test("A bare trigger of a Deprecated Table 0354 row gets the Deprecated reason (M4)",

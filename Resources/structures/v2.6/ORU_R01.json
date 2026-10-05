@@ -1,8 +1,8 @@
 {
   "structure": "ORU_R01",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), p 7-12.",
-  "triggers": ["ORU^R01"],
+  "citation": "HL7 v2.6 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), p 7-12. Triggers ORU^W01 added by overrides.json referencedTriggers (the print names this structure for them in prose): HL7 v2.6 Chapter 7, section 7.15.1 W01 - Waveform Result, Unsolicited Transmission Of Requested Information, p 7-110: 'The waveform response unsolicited trigger event identifies ORU messages used to transmit waveform data which are results of an ordered test or series of observations'; the section 7.17 examples (pp 7-114 to 7-115) send MSH-9 'ORU^W01^ORU_R01'. Table 0354 (CH02 section 2.16.3, p 87) also lists ORU_W01 (event W01), which no chapter prints; it stays registered as not modelled (P8b-final F-I1 c).",
+  "triggers": ["ORU^R01", "ORU^W01"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "SFT", "min": 0, "max": null },

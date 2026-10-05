@@ -34,7 +34,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rows the printed table marks Deprecated (39 and 47) had no triggers, so a bare `ORM^O01` got
   the generic reason; the 76 whose row lists events now carry them (`ORM^O01`), written and
   checked by `scripts/extract-message-structures.py` (`--write` / `--check`) from Table 0354, so a
-  bare trigger gets the Deprecated reason. No trigger is shared with a modelled structure.
+  bare trigger gets the Deprecated reason. No trigger is shared with a modelled structure
+  except `ORU^W01` on v2.7.1 and v2.8.2 (next item).
+- **`ORU^W01` is an ORU_R01 trigger on v2.3.1 to v2.8.2 (F-I1 c).** Each version's CH07 W01
+  section says the waveform trigger "identifies ORU messages" (v2.3.1 7.19.1 p 7-117, v2.4 7.15.1
+  p 7-117, v2.5.1 7.15.1 p 7-130, v2.6 7.15.1 p 7-110, v2.7.1 7.14.1 p 140, v2.8.2 7.15.1 p 153)
+  and v2.6 to v2.8.2's examples send `ORU^W01^ORU_R01`, which was a mismatch. W01 is now folded
+  onto ORU_R01 through `referencedTriggers`, as on v2.3: `ORU^W01^ORU_R01` is matched against
+  ORU_R01; `ORU^W01^ORU_W01` (Table 0354's ID, no printed syntax) stays information; a bare
+  `ORU^W01` resolves to ORU_R01 on v2.3.1 to v2.6 and is ambiguous (information) on v2.7.1 and
+  v2.8.2, where the Deprecated ORU_W01 row carries W01 (declared in `sharedTriggers`). The
+  extractor's shared-trigger check now counts registered structures' triggers, as the codegen
+  guard does.
 
 ### Fixed — P8b-18: message-structure rollout close-out
 

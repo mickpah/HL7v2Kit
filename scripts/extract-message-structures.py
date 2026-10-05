@@ -1480,6 +1480,12 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 [f"{c.code}^{v}" for c, _, _ in prints[sid] for v in c.events] + added.get(sid, [])
                 + referenced_by.get(sid, [])):
             owner.setdefault(trig, []).append(sid)
+    # P8b-final (F-I1 c): a registered (not modelled) structure's triggers claim the trigger too,
+    # as the codegen guard counts them (a Deprecated Table 0354 row's events, M4).
+    for sid, trigs in registered_triggers(ver).items():
+        for trig in trigs:
+            if sid not in owner.setdefault(trig, []):
+                owner[trig].append(sid)
     report += shared_triggers(ver, owner, overrides, full)
     report += reconcile_0354(ver, table_ver, table, prints)
     for g in overrides["groupNames"]:
@@ -1546,6 +1552,14 @@ COMPLETENESS = os.path.join(STRUCTURES, "completeness.json")
 # A registered structure whose Table 0354 row the printed table's Comment column marks
 # Deprecated (v2.7.1, v2.8.2); its reason says so in these words.
 DEPRECATED_ROW = "Comment column marks it"
+
+
+def registered_triggers(ver):
+    """{structure: [CODE^EVT]} of every completeness.json notModelled entry of `ver` that
+    carries triggers."""
+    with open(COMPLETENESS, encoding="utf-8") as f:
+        entries = json.load(f)["versions"].get(ver, {}).get("notModelled", [])
+    return {e["structure"]: e["triggers"] for e in entries if e.get("triggers")}
 
 
 def deprecated_row_triggers(ver, overrides):
