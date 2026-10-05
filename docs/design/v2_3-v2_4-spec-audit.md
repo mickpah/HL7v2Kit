@@ -194,6 +194,23 @@ events Table 0003 v2.4 does not define, the CH03 Q24/K24 example against its que
 TBR^R08 error response without RDF/RDT), and one misfire was fixed (ERP_R09, now registered on
 v2.4 and v2.5.1). 16 probes in `StructureV24ProbeTests`.
 
+## Code tables: Table 0354 and table kinds (P7-8, 2026-10-05)
+
+- **v2.4 Table 0354, two listings.** The code table `Resources/tables/v2.4/0354.json` is
+  extracted from Appendix A section A.6, which lists no QRY_Q26, QRY_Q27, QRY_Q28, QRY_Q29,
+  QRY_Q30 or QRY_P04 row. The CH02 2.17.3 listing prints all six (p 2-139: "QRY_P04 P04",
+  "QRY_Q26 Q26" to "QRY_Q30 Q30"). The code table follows Appendix A and is open
+  (`permitsLocalExtensions`), so a message naming one of them draws no table finding; on the
+  structure side they are registered since P8b-final (above). The same CH02 listing prints
+  OMN_O07 and ORL_O22 with the events "007" and "022" (p 2-138), where Appendix A prints O07 and
+  O22; the code table holds Appendix A's text (convention and note in
+  `Resources/tables/overrides.json`).
+- **Table kinds (audit-schemas KINDMISMATCH).** v2.3 Tables 0174, 0315 and 0316 and v2.4 Table
+  0392 take the kind their defining chapter prints (User-defined) over the Appendix A index;
+  v2.3 Table 0208 is HL7, as CH2 2.24.22.2 prints it, with the AE row Appendix A omits; v2.3
+  PD1-12 and PCR-22 bind 0136 and 0252, the tables their definitions name, not the misprinted
+  TBL# 0129 and 0232. The remaining findings are the print's own bindings (ADR-016).
+
 ## v2.3.1 message structures (P8b-14)
 
 The extractor reads 246 v2.3.1 captions in the one v2.3.1 PDF (none excluded): 113 structure
