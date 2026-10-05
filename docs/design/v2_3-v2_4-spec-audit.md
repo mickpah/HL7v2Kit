@@ -5,9 +5,39 @@
 **Baseline reference:** the now-spec-audited `Resources/schemas/v2.5.1/*.json` (see `v2_5_1-spec-audit.md`).
 **Lens:** the working notes project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. Audit conclusions must be defensible against the HL7 v2 spec text alone, not against test-fixture observations.
 
+## Correction addendum (2026-10-05, remediation P7-3)
+
+The 2026-06-18 text below was written before the v2.3, v2.3.1 and v2.4 Final Standard PDFs
+were on the author's machine, and before NK1, PV1 and IN1 were modelled at full depth. The
+following statements in it were wrong and have been corrected in place:
+
+- **PDF availability.** All three PDFs are on the author's machine (`docs/standards/HL7_v23_PDF`,
+  `HL7_v231_PDF`, `HL7_v24_PDF`; licensed, not in the repository), and every schema on these
+  versions is checked against its own version's attribute table by
+  `python3 scripts/audit-schemas.py --depth` (1010 exact, 0 gaps, 0 suspects on 2026-10-05).
+  The conditional wording that item 1 of "Known limitations (explicit)" deferred for
+  v2.3 and v2.3.1 has since been read from those prints (`conditional-completeness-audit.md`).
+- **Field counts.** The table previously gave MSH 15 / 17 / 20, PID 30 / 30 / 32,
+  OBR 43 / 43 / 47, OBX 11 / 14 / 16, ORC 17 / 17 / 19, NTE 3 / 3 / 3, and NK1 and PV1
+  "capped" at 13 and 20 (v2.3 / v2.3.1 / v2.4). The prints and the schemas give MSH
+  19 / 20 / 21, PID 30 / 30 / 38, OBR 43 / 45 / 47, OBX 17 / 17 / 19, ORC 19 / 24 / 25,
+  NTE 3 / 4 / 4, NK1 37 and PV1 52 on all three (V23-C11, V231-C17, V24-C10).
+- **MSH-16 / MSH-17.** They are not v2.3.1 additions: v2.3 CH2 Figure 2-8 prints MSH-1..19.
+- **OBX-15.** v2.4 names it "Producer's ID" (as v2.3 does), not "producer's facility".
+- **PID-35 / PID-36 on v2.4.** They exist: the v2.4 CH03 PID attribute table prints PID-31..38,
+  and §3.4.2.35 and §3.4.2.36 (p. 3-76) print the same Conditionality Rules as v2.5.1. The
+  v2.4 schema carries both conditions. The note that only the AU ADRM profile "pre-adopts"
+  PID-35..38 was wrong; they are base v2.4 fields.
+- **IN1.** Modelled at 49 fields on all three versions, not a curated subset of 25. IN1-14
+  is `CM` in v2.4 as printed; the v2.5.1 schema types it AUI.
+- **Per-field consistency.** The "0 inconsistencies" result no longer holds: the schemas carry
+  each version's printed attributes, which differ (DG1-2, DG1-15, IN1-17).
+
+Other 2026-06-18 text below is kept as written; `docs/archive/` is not edited.
+
 ## Scope and honest framing
 
-The v2.5.1 audit (S1 / S4) used the v2.5.1 Final Standard PDFs to make spec-text-citable claims. **The v2.3 / v2.3.1 / v2.4 Final Standard PDFs are not available locally.** That changes what S2 can and cannot do honestly:
+The v2.5.1 audit (S1 / S4) used the v2.5.1 Final Standard PDFs to make spec-text-citable claims. **Correction (see the addendum): the v2.3, v2.3.1 and v2.4 Final Standard PDFs are now on the author's machine** (`docs/standards/HL7_v23_PDF`, `HL7_v231_PDF`, `HL7_v24_PDF`; licensed copies, not in the repository). The CAN / CANNOT split below records what S2 could do on 2026-06-18, before they were:
 
 **S2 CAN:**
 
@@ -27,17 +57,23 @@ Under the project's "honesty over completeness" requirement, this S2 commit ship
 
 Field counts per version:
 
-| Segment | v2.3 | v2.3.1 | v2.4 | v2.5.1 | Delta history |
+| Segment | v2.3 | v2.3.1 | v2.4 | v2.5.1 | Source |
 |---|---:|---:|---:|---:|---|
-| **MSH** | 15 | 17 | 20 | 21 | v2.3→v2.3.1: +2 (MSH-16 application-acknowledgement, MSH-17 country code), v2.3.1→v2.4: +3 (MSH-18 charset, MSH-19 principal language, MSH-20 alternate char set handling), v2.4→v2.5.1: +1 (MSH-21 message profile identifier) |
-| **PID** | 30 | 30 | 32 | 39 | v2.3.1→v2.4: +2 (PID-31 identity unknown indicator, PID-32 identity reliability code), v2.4→v2.5.1: +7 (PID-33 last update DT, PID-34 last update facility, PID-35 species code, PID-36 breed code, PID-37 strain, PID-38 production class code, PID-39 tribal citizenship) |
-| **NK1** | 13 | 13 | 13 | 13 | no growth in the typed-surface cap (v0.1.0 capped NK1 at 13 from the original 39; later versions also extend beyond, but the typed cap stays) |
-| **PV1** | 20 | 20 | 20 | 20 | same — capped at 20 in the typed surface |
-| **OBR** | 43 | 43 | 47 | 47 | v2.3.1→v2.4: +4 (OBR-44 procedure code, OBR-45 procedure code modifier, OBR-46 placer supplemental info, OBR-47 filler supplemental info) |
-| **OBX** | 11 | 14 | 16 | 17 | v2.3→v2.3.1: +3 (OBX-12..14 producer's ID / responsible observer / observation method), v2.3.1→v2.4: +2 (OBX-15 producer's facility, OBX-16 responsible observer), v2.4→v2.5.1: +1 (OBX-17 observation method) |
-| **ORC** | 17 | 17 | 19 | 31 | v2.3.1→v2.4: +2 (ORC-18 confidentiality code, ORC-19 entered by), v2.4→v2.5.1: +12 (ORC-20..31 — large facility/address/phone/status block) |
-| **AL1** | 6 | 6 | 6 | 6 | no growth (AL1 is small and stable) |
-| **NTE** | 3 | 3 | 3 | 4 | v2.4→v2.5.1: +1 (NTE-4 entered by) |
+| **MSH** | 19 | 20 | 21 | 21 | v2.3 CH2 Figure 2-8 prints MSH-1..19; v2.3.1 Figure 2-8 adds MSH-20 (Alternate Character Set Handling Scheme); v2.4 CH02 MSH attribute table adds MSH-21 (Conformance Statement ID) |
+| **PID** | 30 | 30 | 38 | 39 | v2.4 CH03 PID attribute table adds PID-31..38 (PID-35 Species Code, PID-36 Breed Code among them); v2.5.1 adds PID-39 |
+| **NK1** | 37 | 37 | 37 | 39 | full printed depth on every version (no typed-surface cap) |
+| **PV1** | 52 | 52 | 52 | 52 | full printed depth on every version (no typed-surface cap) |
+| **OBR** | 43 | 45 | 47 | 50 | v2.3.1 adds OBR-44/45 (Procedure Code, Procedure Code Modifier); v2.4 CH04 adds OBR-46/47 (Placer / Filler Supplemental Service Information) |
+| **OBX** | 17 | 17 | 19 | 25 | v2.3 CH7 Figure 7-5 prints OBX-1..17 (OBX-15 is "Producer's ID" there and in v2.4); v2.4 CH07 adds OBX-18/19 |
+| **ORC** | 19 | 24 | 25 | 31 | v2.3.1 Figure 4-1 adds ORC-20..24; v2.4 CH04 adds ORC-25 (Order Status Modifier) |
+| **AL1** | 6 | 6 | 6 | 6 | no growth |
+| **NTE** | 3 | 4 | 4 | 4 | v2.3.1 Figure 2-22 adds NTE-4 (Comment Type) |
+| **IN1** | 49 | 49 | 49 | 53 | full printed depth; IN1-14 is `CM` on v2.3, v2.3.1 and v2.4 (the v2.4 CH06 table prints CM) |
+
+Counts are the highest field index in `Resources/schemas/<version>/<SEG>.json`, which the
+depth audit (`python3 scripts/audit-schemas.py --depth`) checks against each version's own
+attribute table (on 2026-10-05: 1010 exact, 0 gaps, 0 suspects). The 2026-06-18 values this
+table replaced are listed in the addendum.
 
 ## Per-field consistency check
 
@@ -47,14 +83,16 @@ A pairwise check across the 4 versions: for every `(segment, field_index)` pair 
 
 Every field present in multiple versions has identical per-field attributes. HL7's additive history holds in our schemas. No structural corrections warranted.
 
+_Superseded (P7-3, see the addendum): the schemas now carry each version's printed attributes, which do differ between versions (DG1-2, DG1-15 and IN1-17 below are examples). The authority is the depth audit against each version's own attribute table, not this pairwise comparison._
+
 ## Conditional-rule carry-forward status
 
 The v2.5.1 audit (S4 substage C) added three conditional predicates citable to specific sections of the v2.5.1 Final Standard. The v0.7 cycle (ADR-008 cross-segment DSL) added a further three cross-segment / message-context rules that were mirrored onto v2.4 in v0.7-S4 with the verbatim § citation deferred. Both groups are tracked here:
 
 | Field | Condition | Citation | v2.3 / v2.3.1 / v2.4 status |
 |---|---|---|---|
-| PID-35 | `"PID-36 populated OR PID-38 populated"` | v2.5.1 §3.4.2.35 | **Not applicable** in base v2.3 / v2.3.1 / v2.4 — PID-35 doesn't exist (PID caps are 30 / 30 / 32). Note: the **AU v2.4 ADRM-2021 profile pre-adopts PID-35..38** from v2.5; that's a profile-level extension, handled separately when AU profile support lands. |
-| PID-36 | `"PID-37 populated"` | v2.5.1 §3.4.2.36 | **Not applicable** in base spec — same reason. |
+| PID-35 | `"PID-36 populated OR PID-38 populated"` | v2.5.1 §3.4.2.35 / **v2.4 §3.4.2.35** | **Not applicable** in v2.3 / v2.3.1 (PID ends at PID-30). **v2.4: present and carried** (corrected by P7-3; the 2026-06-18 text said PID-35 did not exist on v2.4). The v2.4 CH03 PID attribute table prints PID-31..38 with PID-35 Species Code `C`, and §3.4.2.35 (p. 3-76) prints _"Conditionality Rule: This field must be valued if PID-36 - Breed Code or PID-38 - Production Class Code is valued."_ `Resources/schemas/v2.4/PID.json` carries the same condition. |
+| PID-36 | `"PID-37 populated"` | v2.5.1 §3.4.2.36 / **v2.4 §3.4.2.36** | **Not applicable** in v2.3 / v2.3.1 (same reason). **v2.4: present and carried**: §3.4.2.36 (p. 3-76) prints _"Conditionality Rule: This field must be valued if PID-37 - Strain is valued."_; the v2.4 schema carries it. |
 | OBX-2 | `"OBX-11 != X"` | v2.5.1 §7.4.2.2 | **v2.4 RESOLVED 2026-06-18** — v2.4 §7.4.2.2 wording is identical to v2.5.1. **v2.3.1 RESOLVED 2026-06-25** — §7.3.2.2 wording: _"This field contains the format of the observation value in OBX. It must be valued if OBX-11-Observ result status is not valued with an 'X'."_ Identical semantics. **v2.3 RESOLVED 2026-06-25** — §7.3.2.2 wording matches v2.3.1 verbatim. Carry-forward applied to all four versions; the v0.4-S2 "v2.3 / v2.3.1 pending PDFs" gap is now CLOSED for OBX-2. |
 | ORC-2 | `"OBR-2 empty"` (XOR with OBR-2) | v2.5.1 §4.5.1.2 / **v2.4 §4.5.1.2 RESOLVED 2026-06-25** | v2.4 wording verbatim (CH04, p. 4-34): _"ORC-2-placer order number is the same as OBR-2-placer order number. If the placer order number is not present in the ORC, it must be present in the associated OBR and vice versa."_ Identical to v2.5.1 — the v0.7-S4 mirror predicate is spec-faithful. |
 | OBR-2 | `"ORC-2 empty"` (symmetric XOR) | v2.5.1 §4.5.3.2 / **v2.4 §4.5.3.2 RESOLVED 2026-06-25** | v2.4 OBR-2 spec text mirrors §4.5.1.2 by the "same as" linkage above; the symmetric predicate is spec-faithful. |
@@ -87,7 +125,7 @@ Per the working notes's "honesty over completeness" requirement, these are the p
    - **ERR** — single CM field (`Error Code and Location`), uniform v2.3–v2.4; v2.5+ expanded to 12.
    - **PD1** — v2.3 / v2.3.1: 12 fields; v2.4: 21.
    - **DG1** — 19 fields v2.3–v2.4. Per-version divergences preserved: v2.3 DG1-2 (Coding Method) is R (v2.4 downgraded to B); v2.3 DG1-15 (Diagnosis Priority) is NM, revised to ID in v2.3.1 (matching v2.4).
-   - **IN1** — 25-field curation (the shared typed-segment surface). Per-version divergences preserved: IN1-14 (Authorization Information) is CM in v2.3 / v2.3.1, retyped AUI in v2.4; IN1-17 (Insured's Relationship To Patient) is IS in v2.3, revised to CE in v2.3.1 (matching v2.4). **Caveat**: the v2.3 / v2.3.1 CH6 IN1 attribute table's OPT column could not be cleanly extracted from the PDF's multi-column layout; field optionality follows the established v2.4 curation (R on IN1-1/2/3, O elsewhere), with the three R-fields cross-checked against the visible v2.3 spec tokens. Types and field count are extracted positionally and are exact. Pins: `MultiVersionTests.v23BackportedSegmentsRecognised`, `v231BackportedSegmentsRecognised`, `v23DG1RequiredFieldsFire`, plus the extended `grammarTablePopulated` / `v23GrammarTablePopulated`.
+   - **IN1** — 49 fields on v2.3, v2.3.1 and v2.4 (full printed depth; corrected in the addendum). Per-version divergences preserved: IN1-14 (Authorization Information) is CM in v2.3, v2.3.1 and v2.4 (the v2.4 CH06 table prints CM; v2.5.1 types it AUI); IN1-17 (Insured's Relationship To Patient) is IS in v2.3, revised to CE in v2.3.1 (matching v2.4). **Caveat (2026-06-18, since resolved)**: the v2.3 / v2.3.1 CH6 IN1 attribute table's OPT column could not then be cleanly extracted; the depth audit's optionality pass (M19) now reads it and finds 0 differences (R on IN1-1/2/3, three B fields, O elsewhere). Pins: `MultiVersionTests.v23BackportedSegmentsRecognised`, `v231BackportedSegmentsRecognised`, `v23DG1RequiredFieldsFire`, plus the extended `grammarTablePopulated` / `v23GrammarTablePopulated`.
 
 ## P6 findings closed (2026-10-02)
 

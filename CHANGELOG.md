@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P7-3: v2.3 / v2.3.1 / v2.4 audit document
+
+- `docs/design/v2_3-v2_4-spec-audit.md` no longer says the v2.3, v2.3.1 and v2.4 PDFs are
+  unavailable. Its field-count table carries the modelled counts, each with the print that
+  grounds it (MSH 19 / 20 / 21, PID 30 / 30 / 38, OBR 43 / 45 / 47, OBX 17 / 17 / 19,
+  ORC 19 / 24 / 25, NTE 3 / 4 / 4, NK1 37, PV1 52, IN1 49), matching the depth audit
+  (1010 exact, 0 gaps). OBX-15 ("Producer's ID"), IN1-14 (`CM` on v2.4) and the IN1 depth
+  are corrected. The conditional table no longer says PID-35 and PID-36 do not exist on
+  v2.4: v2.4 CH03 prints both with the v2.5.1 Conditionality Rules (§3.4.2.35, §3.4.2.36,
+  p. 3-76), and the v2.4 schema carries them. A dated addendum lists every correction
+  (V23-C11, V24-C10, documentation half of V231-C17).
+
 ### Added — P7-2: the conditional-completeness register is pinned to the grammar
 
 - **Every bare `C` must be named in the register (V251-C12).** `BareConditionalGuardTests`
