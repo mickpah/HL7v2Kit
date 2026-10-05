@@ -24,6 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   registered); register section G (component normative length and `B` / `W` component
   warnings).
 
+### Added — P7-final: validator-level pins for the v2.3 table checks
+
+- `V23TableCheckValidationTests`: on v2.3, QAK-2 outside Table 0208, PD1-12 outside Table 0136 and PCR-22 outside Table 0252 each draw `valueNotInTable`; a listed code draws none.
+- ADR-016 records the convention that code tables keep Appendix A rows as printed; Table 0354 misprints are corrected only by cited structure-side errata.
+
 ### Fixed — P7-8: workstream close-out
 
 - **Spec-example harness:** an example whose MSH-12 the print elided validates under the
