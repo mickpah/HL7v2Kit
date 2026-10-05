@@ -27,6 +27,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The validation digest keeps a preset's own severity unless `VALIDATION_DIGEST_STRUCTURE_SEVERITY`
   is set (`off` forces it off) and accepts `VALIDATION_DIGEST_PRESET=lenient`.
 
+### Fixed — P8b-18: registered structures and triggers classed by the print on every version
+
+Every structure and trigger registered as not modelled now says one true thing in one of three
+classes: the print names an already printed structure (modelled through `referencedTriggers`),
+the print gives the segments only in prose fragments (blocking: the extractor does not read
+them), or the print gives neither (permanent, the reason quoting what it does give). No segment,
+group, cardinality or choice of a modelled structure changes.
+
+- v2.3: DSR^P04 (the response of CH06 6.3.4's "QRY/DSP transaction"; CH02 prints DSR twice with
+  MSA required and optional, mode not stated) and ORU^R03 (Table 0003 gives R03 to QRY/DSR; one
+  CH07 7.4.5.3 example sends ORU^R03) are registered with their reason: 22 registered.
+
 ### Fixed — P8b-18: Table 0354 provenance on every version; citation and guard minors
 
 - **Provenance (citations only):** every structure whose ID the extractor reads from Table 0354
@@ -90,13 +102,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cited `overrides.json` `eventsFromTitle` entry (section text or Table 0003).
 - Group names, which v2.3 never prints: 235 derived through the HL7 v2.xml 2.3.1 bundle (new
   `nameSource` `v2xml-v2.3.1`), 7 through the v2.4 bundle, 3 synthesised.
-- 20 v2.3 structures are registered as not modelled, each with its reason (register section E):
+- 22 v2.3 structures are registered as not modelled, each with its reason (register section E):
   the general order's `Order Detail Segment` placeholder (ORM_O01, ORR_O02, OSR_Q06; the four
   specialised ORM and ORR prints of CH04 share the trigger and cannot be told apart from
   MSH-9.1^9.2), eight CH12 `[OBR, etc.` structures, MFN_M01's `[Z..]`, ERP's ellipsis rows,
-  SUR_P09's ED row, MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated), and 4 triggers v2.3 defines only in Table 0003 or prose
-  with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05), whose info now gives
-  the reason. The four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` and matched (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1). The v2.3.1 MFN_M03 reason, and the status of v2.3.1's
+  SUR_P09's ED row, MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated), and 6 triggers v2.3 defines only in Table 0003 or prose
+  with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05; DSR^P04 and ORU^R03
+  since P8b-18), whose info now gives the reason. The four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` and matched (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1). The v2.3.1 MFN_M03 reason, and the status of v2.3.1's
   MFN_M03, MFN_M08 to M11 and MFR rows, are corrected the same way (blocking, not permanent).
 - v2.3.1 MCF (CH02 2.13.2) is now modelled through a `triggerFolds` entry onto `MCF^*`, as on v2.3:
   v2.3.1 has 100 structures.

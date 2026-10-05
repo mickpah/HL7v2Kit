@@ -1232,11 +1232,12 @@ compiling a structure per message.
 ## Amendment 2026-10-04 — v2.3 complete; lookup rule 3 (P8b-15)
 
 - **v2.3 complete, and with it every supported version.** 147 structures modelled (10
-  exact-matched) and 20 registered (register section E v2.3 addendum): 16 unreadable prints (the
+  exact-matched) and 22 registered (register section E v2.3 addendum): 16 unreadable prints (the
   general order's `Order Detail Segment` placeholder in ORM_O01, ORR_O02 and OSR_Q06, eight CH12
   `[OBR, etc.` structures, MFN_M01's `[Z..]`, ERP's ellipsis rows, SUR_P09's ED row, and
-  MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated)), and 4 triggers defined only in Table 0003 or prose
-  with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05), registered under
+  MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated)), and 6 triggers defined only in Table 0003 or prose
+  with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05; DSR^P04 and ORU^R03
+  since P8b-18), registered under
   synthesised IDs with their reason. Fix round 2 adds the override kind `referencedTriggers`
   (a trigger whose prose names an already printed structure without ambiguity is added to that
   structure's triggers, cited): the four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1). v2.3.1 MCF is folded onto `MCF^*` (v2.3.1: 100

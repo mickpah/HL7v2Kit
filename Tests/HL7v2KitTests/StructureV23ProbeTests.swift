@@ -195,7 +195,9 @@ struct StructureV23ProbeTests {
           arguments: [("ORM^O01", "Order Detail Segment"), ("PPR^PC2", "OBR, etc"), ("SUR^P09", "ED"),
                       ("ERP", "ellipsis"), ("MFN^M08", "other segments"), ("MFR^M05", "prose-printed replacement fragments"),
                       ("QRF^W02", "no message type QRF"), ("QRY^R03", "ORU^R03"), ("DSR^R03", "MSA optional"),
-                      ("DSR^R05", "the reference is ambiguous")])
+                      ("DSR^R05", "the reference is ambiguous"),
+                      // P8b-18: the P04 response (6.3.4 names it 'QRY/DSP') and ORU^R03 (one CH07 example)
+                      ("DSR^P04", "which mode P04 uses"), ("ORU^R03", "7.4.5.3")])
     func registered(_ c: (String, String)) throws {
         #expect(MessageStructureTable.isComplete(.v2_3))
         for msh9 in [c.0, c.0 + (c.0.contains("^") ? "^ZZZ_Z99" : "^^ZZZ_Z99")] {

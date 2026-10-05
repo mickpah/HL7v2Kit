@@ -190,9 +190,9 @@ events in the section title, no structure ID and no Table 0354: IDs are synthesi
 from the code and the first title event (or the code alone for the ACK, MCF, EDR, TBR and ERP
 folds), 201 captions take their events from the title and 39 from cited `eventsFromTitle`
 entries (section text, Table 0003). 147 are committed under `Resources/structures/v2.3/` and v2.3
-is `complete: true`; the 16 are registered in `completeness.json` with 4 triggers v2.3 defines
+is `complete: true`; the 16 are registered in `completeness.json` with 6 triggers v2.3 defines
 only in Table 0003 or prose with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03,
-DSR^R05), 20 entries in all (register §E v2.3 addendum); the four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` and matched (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1) (fix round 2).
+DSR^R05; DSR^P04 and ORU^R03 since P8b-18), 22 entries in all (register §E v2.3 addendum); the four triggers whose prose names a printed structure are added to it through overrides.json `referencedTriggers` and matched (ORU^W01 to ORU_R01, CH07 7.19.1 and 7.14; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1) (fix round 2).
 Group names: 235 through the HL7 v2.xml 2.3.1 bundle, 7 through the v2.4 bundle, 3 synthesised.
 
 Lookup rule 3 (ADR-019): v2.3 MSH-9 has two components (CM, CH2 2.24.1.9), so once MSH-12 reads
