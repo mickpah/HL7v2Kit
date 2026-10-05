@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.14.0] — 2026-10-06
+
+### Summary — release 3.14.0: the review remediation
+
+- **Workstreams:** P1 (OBR predicates), P2 (code tables), P3 (version handling, ADR-018), P4
+  (expressible conditions), P5 (datatype grammar), P6 (schema and validator), P7 (audit, documents
+  and coverage), P8 and P8b (message structures, ADR-019), P9 (API surface, ADR-020), P10 (HL7
+  v2.7.1), and the support and contribution policy.
+- **Versions and structures:** seven modelled versions (v2.7.1 added; MSH-12 `2.7` validates as
+  v2.7.1 with an information issue); 1,107 message structures modelled and 266 registered; the
+  structure check is on in `.default` (warning) and `.strict` (error); the AU ADRM-2021 profile
+  structures (ORM_O01, ORU_R01, OSR_Q06, REF_I12, RRI_I12) apply HL7au:00060.1. 1,584 tests.
+- **Public API (additive; `Migration.md` rows marked v3.14.0):** `ValidationOptions`
+  `localTableExtensions` and six severities (field length, normative length, extra components,
+  value format, repetition bound, message structure); eight `IssueCode` cases; `HL7Table.patterns`;
+  `DataTypeGrammarTable.grammar(segment:field:version:)`; `MessageStructure`, `StructureElement`,
+  `MessageStructureTable`; `CompositeView` and `TypedSegment` helpers and 1,148 generated
+  accessors; `AcknowledgmentCode`, `MessageBuilder.acknowledgment(...)`; `Version.v2_7_1`, `.v2_7`.
+
 ### Changed — support and contribution policy (2026-10-06)
 
 - `SUPPORT.md` added: rigidly defined areas of certainty and uncertainty for a one-person project. `CONTRIBUTING.md`, `README.md` and `ROADMAP.md` follow it: contributions are not accepted at this stage; issues, spec-reading disagreements and fork announcements are welcome; the licence applies to every release; the roadmap is the maintainer's working arc, not a commitment.
