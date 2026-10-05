@@ -1422,6 +1422,15 @@ def check_v23_caption_forms():
     # The relaxed forms are the section-title era's only.
     for era in ("caret", "table-0354"):
         assert ext.match_caption("    QRY (A to B)              Synthetic Query        Chapter", era) is None, era
+    # P7-8 (negative case for the v2.3 direction tag): the tag form is a column header ending in
+    # "Chapter"; running prose that starts "QRY (A to B)" is no caption, even with a segment
+    # table right below it, and reads nothing.
+    prose = "    QRY (A to B)  is sent first, and the response follows later in the session."
+    assert ext.match_caption(prose, ext.ERAS["v2.3"][1]) is None, prose
+    text = _page(4, [prose] + _table("QRY", [("MSH", "Header"), ("QRD", "Query")])[1:],
+                 heading="2.18.1 QRY/QCK - deferred (event Q02)")
+    structures, report, count = _run("2.3", [("syn", text)])
+    assert count == 0 and not structures, (count, structures, report)
 
 
 def check_closing_bracket_in_description_column():

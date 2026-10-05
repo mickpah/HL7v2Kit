@@ -152,14 +152,27 @@ struct BareConditionalGuardTests {
         }
     }
 
+    @Test("names() matches a whole position, not a longer field or a component of it")
+    func namesIsWholeToken() {
+        #expect(Self.names("TXA-2 is bare.", "TXA-2"))
+        #expect(Self.names("see TXA-2.", "TXA-2"))
+        #expect(Self.names("(TXA-2, TXA-3)", "TXA-2"))
+        #expect(!Self.names("TXA-23 is bare", "TXA-2"))
+        #expect(!Self.names("XTXA-2 is bare", "TXA-2"))
+        #expect(!Self.names("TXA-2.1 is bare", "TXA-2"))
+    }
+
     /// Whether `text` names `position` (e.g. `RXE-15`) as a whole token: not preceded by a
-    /// letter or digit, not followed by a digit.
+    /// letter or digit, not followed by a digit, nor by a "." and a digit (a component such
+    /// as `TXA-2.1` does not name `TXA-2`).
     static func names(_ text: String, _ position: String) -> Bool {
         var from = text.startIndex
         while let hit = text.range(of: position, range: from..<text.endIndex) {
             let before = hit.lowerBound == text.startIndex ? nil : text[text.index(before: hit.lowerBound)]
             let after = hit.upperBound == text.endIndex ? nil : text[hit.upperBound]
-            if !(before?.isLetter ?? false) && !(before?.isNumber ?? false) && !(after?.isNumber ?? false) {
+            let next = text[hit.upperBound...].dropFirst().first
+            let component = after == "." && (next?.isNumber ?? false)
+            if !(before?.isLetter ?? false) && !(before?.isNumber ?? false) && !(after?.isNumber ?? false) && !component {
                 return true
             }
             from = hit.upperBound

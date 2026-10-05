@@ -952,6 +952,9 @@ def printed_for(defining, union, seg, index, key):
     """The printed values a schema attribute is compared against: the defining table's cell
     when it has one, else the union across chapters (a blank defining cell is an extraction
     gap, not a print)."""
+    # A non-blank defining cell is trusted on its own, with no union fallback: a value printed
+    # only in another chapter's table never excuses a schema that disagrees with the defining
+    # table. A misread defining cell is caught by the AUDIT_TOKENS shape check (UNREADABLE).
     cell = ((defining.get(seg, {}).get(index) or {}).get(key) or "").strip()
     return {cell} if cell else union.get((seg, index), set())
 
