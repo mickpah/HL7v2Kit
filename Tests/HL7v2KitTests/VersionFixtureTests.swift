@@ -26,7 +26,18 @@ struct VersionFixtureTests {
         Fixture(file: "oru_r01_v231.hl7", version: .v2_3_1, messageCode: "ORU", triggerEvent: "R01"),
         Fixture(file: "adt_a01_v231.hl7", version: .v2_3_1, messageCode: "ADT", triggerEvent: "A01"),
         Fixture(file: "ack_a01_v231.hl7", version: .v2_3_1, messageCode: "ACK", triggerEvent: "A01"),
+        Fixture(file: "oru_r01_v26.hl7", version: .v2_6, messageCode: "ORU", triggerEvent: "R01"),
+        Fixture(file: "adt_a01_v26.hl7", version: .v2_6, messageCode: "ADT", triggerEvent: "A01"),
+        Fixture(file: "oru_r01_v271.hl7", version: .v2_7_1, messageCode: "ORU", triggerEvent: "R01"),
+        Fixture(file: "adt_a01_v271.hl7", version: .v2_7_1, messageCode: "ADT", triggerEvent: "A01"),
+        Fixture(file: "adt_a01_v282.hl7", version: .v2_8_2, messageCode: "ADT", triggerEvent: "A01"),
+        Fixture(file: "oru_r01_v282.hl7", version: .v2_8_2, messageCode: "ORU", triggerEvent: "R01"),
+        Fixture(file: "oml_o21_v282.hl7", version: .v2_8_2, messageCode: "OML", triggerEvent: "O21"),
     ]
+
+    /// The ORU^R01 fixture of every version from v2.3 on that has one.
+    static let resultFixtures = ["oru_r01_v23.hl7", "oru_r01_v231.hl7", "oru_r01_v26.hl7",
+                                 "oru_r01_v271.hl7", "oru_r01_v282.hl7"]
 
     static func load(_ file: String) throws -> String {
         let data = try Data(contentsOf: FixtureCorpus.fixtureURL(named: file))
@@ -69,7 +80,7 @@ struct VersionFixtureTests {
     }
 
     @Test("OBX-2 is silent as shipped and fires when emptied (OBX-11 != X)",
-          arguments: ["oru_r01_v23.hl7", "orf_r04_v23.hl7", "oru_r01_v231.hl7"])
+          arguments: resultFixtures + ["orf_r04_v23.hl7"])
     func obx2Pair(_ file: String) throws {
         let wire = try Self.load(file)
         #expect(try Self.reports(wire, .conditionalFieldMissing, "OBX", 2) == false)
@@ -77,7 +88,7 @@ struct VersionFixtureTests {
     }
 
     @Test("OBR-25 is silent as shipped and fires when emptied on an ORU",
-          arguments: ["oru_r01_v23.hl7", "oru_r01_v231.hl7"])
+          arguments: resultFixtures)
     func obr25Pair(_ file: String) throws {
         let wire = try Self.load(file)
         #expect(try Self.reports(wire, .conditionalFieldMissing, "OBR", 25) == false)
@@ -107,5 +118,70 @@ struct VersionFixtureTests {
         #expect(message["ERR-1.4.1"] == "101")
         #expect(message["ERR-1.1"] == "PID")
         #expect(message["ERR-1.3"] == "3")
+    }
+
+    @Test("OBR-7 is silent as shipped and fires when emptied on an ORU",
+          arguments: ["oru_r01_v26.hl7", "oru_r01_v271.hl7", "oru_r01_v282.hl7"])
+    func obr7Pair(_ file: String) throws {
+        let wire = try Self.load(file)
+        #expect(try Self.reports(wire, .conditionalFieldMissing, "OBR", 7) == false)
+        #expect(try Self.reports(Self.setting(wire, "OBR", 7, to: ""), .conditionalFieldMissing, "OBR", 7))
+    }
+
+    @Test("DG1-20 is silent on A01 and fires when the same DG1 rides a P12",
+          arguments: ["adt_a01_v26.hl7", "adt_a01_v271.hl7"])
+    func dg1TriggerGate(_ file: String) throws {
+        let wire = try Self.load(file)
+        #expect(try Self.reports(wire, .conditionalFieldMissing, "DG1", 20) == false)
+        let p12 = Self.setting(wire, "MSH", 9, to: "BAR^P12^BAR_P12")
+        #expect(try Self.reports(p12, .conditionalFieldMissing, "DG1", 20))
+    }
+
+    @Test("PRT one-of rule and PRT-7 prohibition on the wire (PRT-7 may only be valued with PRT-5)",
+          arguments: ["oru_r01_v271.hl7", "oru_r01_v282.hl7"])
+    func prtRules(_ file: String) throws {
+        let wire = try Self.load(file)
+        // Shipped: PRT-5 valued; PRT-7..10 empty. Nothing fires.
+        #expect(try Self.reports(wire, .conditionalFieldMissing, "PRT", 5) == false)
+        #expect(try Self.reports(wire, .conditionalFieldProhibited, "PRT", 7) == false)
+        // PRT-7 valued alongside PRT-5: allowed.
+        let withUnit = Self.setting(wire, "PRT", 7, to: "SYN-UNIT^Synthetic unit^L")
+        #expect(try Self.reports(withUnit, .conditionalFieldProhibited, "PRT", 7) == false)
+        // PRT-5 emptied with no organisation, location or device: the one-of rule fires on PRT-5.
+        let noPerson = Self.setting(wire, "PRT", 5, to: "")
+        #expect(try Self.reports(noPerson, .conditionalFieldMissing, "PRT", 5))
+        // An organisation in place of the person, PRT-7 still valued: PRT-7 is prohibited.
+        let organisation = Self.setting(Self.setting(withUnit, "PRT", 5, to: ""), "PRT", 8, to: "SYNTH_LAB")
+        #expect(try Self.reports(organisation, .conditionalFieldMissing, "PRT", 5) == false)
+        #expect(try Self.reports(organisation, .conditionalFieldProhibited, "PRT", 7))
+    }
+
+    @Test("v2.8.2 fields added in v2.7 and later read back from the fixtures together")
+    func v282LaterFields() throws {
+        let adt = try Parser().parse(try Self.load("adt_a01_v282.hl7"))
+        #expect(adt["PID-40.1"] == nil || adt["PID-40.1"] == "")
+        #expect(adt["PID-40.2"] == "PRN")
+        #expect(adt["PID-40.3"] == "PH")
+        let oru = try Parser().parse(try Self.load("oru_r01_v282.hl7"))
+        #expect(oru["PRT-4.1"] == "OP")
+        #expect(oru["OBX-26"] == "SIMM")
+        #expect(oru["OBX-27.1"] == "SYN-RC1")
+        #expect(oru["OBX-28.1"] == "SYN-LPC1")
+        #expect(oru["OBX-29"] == "RSLT")
+        #expect(oru["OBX-30"] == "UNSP")
+        #expect(oru["SPM-4.1"] == "BLD")
+        #expect(oru["TQ1-7"] == "20240404080000")
+    }
+
+    @Test("v2.8.2 OML: OBR-7 valued; its request leg is registered as not wire-decidable, so emptying it stays silent")
+    func v282OmlObservationDateTime() throws {
+        // conditional-completeness-audit.md, "OBR-7 request leg" (P1-1): the predicate is
+        // the report-message leg, messageCode in (ORU, OUL, OPU) (v2.8.2 CH04 4.5.3.7).
+        // If the request leg is ever modelled, this pin flips and the register row goes.
+        let wire = try Self.load("oml_o21_v282.hl7")
+        let message = try Parser().parse(wire)
+        #expect(message["OBR-7"] == "20240405072000")
+        #expect(message["SPM-4.1"] == "BLD")
+        #expect(try Self.reports(Self.setting(wire, "OBR", 7, to: ""), .conditionalFieldMissing, "OBR", 7) == false)
     }
 }

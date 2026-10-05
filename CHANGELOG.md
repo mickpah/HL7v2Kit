@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P7-7: v2.6, v2.7.1 and v2.8.2 wire fixtures
+
+- Seven synthetic fixtures (v2.6 ORU^R01, ADT^A01; v2.7.1 ORU^R01 with PRT / TQ1 / SPM,
+  ADT^A01; v2.8.2 ADT^A01 with PID-40, ORU^R01 with PRT / TQ1 / SPM / OBX-26..30,
+  OML^O21), each conforming to its version's printed structure and validating with no
+  issues at all under `.strict`.
+- Wire pairs for OBX-2, OBR-7 and OBR-25 on the v2.6, v2.7.1 and v2.8.2 results, DG1-20
+  (silent on A01, fires on P12), the PRT one-of rule and the PRT-7 prohibition ("may
+  only be valued if PRT-5 is valued", v2.8.2 CH07 7.4.4.7), and a read-back of the
+  fields added in v2.7 and later.
+- `VersionPredicateWireTests` gains the v2.7.1 and v2.8.2 runs of the shared pairs.
+- The OML fixture pins the registered OBR-7 request-leg gap
+  (`conditional-completeness-audit.md`): emptying OBR-7 on an order stays silent.
+
 ### Added — P7-6: v2.3 and v2.3.1 wire fixtures
 
 - Six synthetic fixtures (v2.3 ORU^R01 without ORC, ORF^R04, ACK^A01; v2.3.1 ORU^R01,

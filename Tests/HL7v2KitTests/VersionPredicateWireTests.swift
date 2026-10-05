@@ -1,6 +1,6 @@
 // VersionPredicateWireTests.swift
-// V23-C14 / V26-C15: wire-level fire and silent pairs for predicates that were pinned
-// only by condition-string equality. Each pair states the final behaviour of a predicate
+// V23-C14 / V26-C15 (with the v2.7.1 and v2.8.2 equivalents, P7-7): wire-level fire and
+// silent pairs for predicates that were pinned only by condition-string equality. Each pair states the final behaviour of a predicate
 // the remediation leaves unchanged. The wires are minimal (one segment under test), so
 // they are not structure-conformant; the pairs read only the conditional finding.
 
@@ -82,6 +82,8 @@ struct VersionPredicateWireTests {
              segment: "DG1", field: 20),
     ]
 
+    static let laterPairs: [Pair] = shared("2.7.1") + shared("2.8.2")
+
     static func fires(_ wire: String, _ segment: String, _ field: Int) throws -> Bool {
         let report = Validator().validate(try Parser().parse(wire))
         return report.issues.contains {
@@ -97,6 +99,12 @@ struct VersionPredicateWireTests {
 
     @Test("v2.6 predicate pairs fire and stay silent on the wire", arguments: v26Pairs)
     func v26(_ pair: Pair) throws {
+        #expect(try Self.fires(pair.fireWire, pair.segment, pair.field), "\(pair.label) did not fire")
+        #expect(try Self.fires(pair.silentWire, pair.segment, pair.field) == false, "\(pair.label) fired when satisfied")
+    }
+
+    @Test("v2.7.1 and v2.8.2 predicate pairs fire and stay silent on the wire", arguments: laterPairs)
+    func later(_ pair: Pair) throws {
         #expect(try Self.fires(pair.fireWire, pair.segment, pair.field), "\(pair.label) did not fire")
         #expect(try Self.fires(pair.silentWire, pair.segment, pair.field) == false, "\(pair.label) fired when satisfied")
     }

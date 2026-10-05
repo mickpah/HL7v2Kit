@@ -114,6 +114,13 @@ but transparently fake). No real-world data sources.
 | `oru_r01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ORU^R01 with ORC `RE`, order numbers within the printed EI LEN 22; OBX-2 and OBR-25 pairs; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
 | `adt_a01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ADT^A01 admit: EVN (EVN-1 empty, B in v2.3.1), PID with address, PV1; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
 | `ack_a01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ACK^A01 with MSA-1 `AE` and an ERR-1 locating PID-3 (code 101, table 0357); validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
+| `oru_r01_v26.hl7` | Multi-version (v2.6) | v2.6 ORU^R01 with ORC `RE`, three-component MSH-9; OBX-2, OBR-7 and OBR-25 pairs; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
+| `adt_a01_v26.hl7` | Multi-version (v2.6) | v2.6 ADT^A01 with DG1; DG1-20 trigger-gate pair (silent on A01, fires on P12); validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
+| `oru_r01_v271.hl7` | Multi-version (v2.7.1) | v2.7.1 ORU^R01 with ORC, OBR, PRT (person participation), TQ1, OBX and SPM; OBX-2, OBR-7, OBR-25 and PRT one-of / PRT-7 prohibition pairs; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
+| `adt_a01_v271.hl7` | Multi-version (v2.7.1) | v2.7.1 ADT^A01 with DG1 (EVN-1 empty, W from v2.7); DG1-20 trigger-gate pair; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
+| `adt_a01_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 ADT^A01 with PID-40 XTN (XTN.1 empty, withdrawn); fictional-range phone number (02) 5550 1234; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
+| `oru_r01_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 ORU^R01 with PRT, TQ1, SPM and OBX-26..30 populated together; PRT one-of / PRT-7 prohibition pairs; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
+| `oml_o21_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 OML^O21 lab order (ORC `NW`) with TQ1 and SPM; pins the registered OBR-7 request-leg gap; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
 
 ### Batch fixtures (`Batches/` subdirectory)
 
