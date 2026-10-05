@@ -69,14 +69,30 @@ enum GroupScoping: Sendable {
 /// `transparent`; `inside` calls `pairing`. None of them calls back into a
 /// lookup (`context`, `group`), so every chain of calls ends at the
 /// definition's leaves. `region` visits each span at most
-/// once (pre-order, skipping a cut subtree). The cost of one lookup is linear
-/// in the spans and in the definition's size times its depth.
+/// once (pre-order, skipping a cut subtree). The anchor's innermost span is
+/// read from an index built once per message; the rest of a lookup is linear
+/// in the region's spans and in the definition's size times its depth.
 struct GroupSpanIndex: Sendable {
     let spans: [GroupSpan]
     /// The matched structure's top-level elements; a span's `position` indexes them.
     let elements: [StructureElement]
     /// The message's segment IDs, in order.
     let ids: [String]
+    /// The innermost group occurrence holding each message index (nil: none):
+    /// the last span, in `spans` order, whose indices contain it. Built once
+    /// per message, so a lookup no longer searches the spans (P8b-18).
+    let innermost: [Int?]
+
+    init(spans: [GroupSpan], elements: [StructureElement], ids: [String]) {
+        self.spans = spans
+        self.elements = elements
+        self.ids = ids
+        var innermost = [Int?](repeating: nil, count: ids.count)
+        for (s, span) in spans.enumerated() {
+            for index in span.indices where innermost.indices.contains(index) { innermost[index] = s }
+        }
+        self.innermost = innermost
+    }
 
     /// The message indices, in order, where a peer `peer` of the segment at
     /// `anchor` (whose ID is `anchorID`) may be taken from: the scope rule above.
@@ -118,7 +134,8 @@ struct GroupSpanIndex: Sendable {
     /// Never the message: when every enclosing group is transparent up to the
     /// root, the innermost group occurrence itself (no lifting).
     private func scope(of anchor: Int, _ lookup: ScopeLookup) -> Int? {
-        let innermost = spans.lastIndex { $0.indices.contains(anchor) }
+        let innermost = self.innermost.indices.contains(anchor)
+            ? self.innermost[anchor] : spans.lastIndex { $0.indices.contains(anchor) }
         var level = innermost
         while let at = level, lookup.transparent(element(at: spans[at].position)) {
             guard let parent = spans[at].parent else { return innermost }

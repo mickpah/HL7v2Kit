@@ -35,9 +35,12 @@ extension ExactAutomaton {
         guard n > 0 else { return [] }
         // useful[k]: the states consuming segment k + 1 on some accepting parse.
         var useful = [Set<Int>](repeating: [], count: n)
+        // What `t` reaches depends on `t` alone: computed once per state (P8b-18).
+        var reachFrom: [Int: Set<Int>] = [:]
         for k in stride(from: n - 1, through: 0, by: -1) {
             for t in lives[k] where labels[t] == steps[k].id {
-                let reach = reachable(from: edges[t])
+                let reach = reachFrom[t] ?? reachable(from: edges[t])
+                reachFrom[t] = reach
                 if k == n - 1 ? reach.contains(accept) : !reach.isDisjoint(with: useful[k + 1]) {
                     useful[k].insert(t)
                 }

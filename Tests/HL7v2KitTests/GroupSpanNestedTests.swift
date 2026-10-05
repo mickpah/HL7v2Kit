@@ -102,4 +102,18 @@ struct GroupSpanNestedTests {
         let prior = try Self.obrGroup(wire, around: obrs[1])
         #expect(prior.contains(obxs[1]) && !prior.contains(obxs[0]) && !prior.contains(obrs[0]), "\(key): \(prior)")
     }
+
+    /// P8b-18 fix round 1: the innermost group occurrence of each segment is
+    /// read from an index built once per message, and agrees with the linear
+    /// search it replaces (the last span, in pre-order, holding the segment).
+    @Test("The innermost-span index agrees with a linear search for every segment", arguments: cases)
+    func innermostIndex(_ key: String) throws {
+        let wire = Self.wire(key, mainORC: "ORC|NW|PON1", mainOBR: "OBR|1|PON1||X", priorORC: "ORC|NW|PON9",
+                             priorOBR: "OBR|2|PON9||X", mainOBX: true)
+        let spans = try #require(Validator().groupSpans(for: try Parser().parse(wire)))
+        #expect(spans.innermost.count == spans.ids.count, "\(key)")
+        for index in spans.ids.indices {
+            #expect(spans.innermost[index] == spans.spans.lastIndex { $0.indices.contains(index) }, "\(key) [\(index)]")
+        }
+    }
 }

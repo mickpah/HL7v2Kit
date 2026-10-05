@@ -49,12 +49,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Migration.md has the row and a section. The preset pins changed (MessageStructureValidationTests,
   SignatureCompatibilityTests); five tests whose subject is another rule now set the structure
   findings aside, and two acknowledgment-builder tests expect the info issue.
-- **Performance (spec 9.5):** the AU REF^I12 re-match (P8b-4a) passes over every segment the base
-  structure names nowhere in one pass (an 805-segment REF^I12: about 1.0 s to 0.38 s); structure
-  resolution reads a trigger index built once per version (resolve 106 us to 14 us). Validating one
-  message with the check at `.warning` takes about 0.75 ms (budget 2 ms), 1,000 messages 0.75 s
-  (budget 10 s); a 5,000-segment ORU^R01 1.6 s (v2.5.1) and 1.8 s (v2.8.2), inside a budget of
-  3.3 s scaled from 9.5. `PerformanceStructureTests` (gated by `RUN_PERF_TESTS`) records them.
+- **Performance:** the AU REF^I12 re-match (P8b-4a) passes over every segment the base
+  structure names nowhere in one pass; structure resolution reads a trigger index built once per
+  version (resolve 106 us to 14 us); group scoping reads each segment's innermost group occurrence
+  from an index built once per message instead of a linear search per lookup, and the exact
+  matcher's span computation computes each state's reach once (both behaviour-preserving: the
+  three validation digests are byte-identical). `PerformanceStructureTests` (gated by
+  `RUN_PERF_TESTS`; release build, best of three, Apple Silicon) measures:
+  - **The spec 9.5 budget** (two rows, both for a 1 KB message, default options): a 1,002-byte
+    v2.5.1 ADT^A01 validates in 0.52 ms with the check at `.warning` (budget 2 ms) and 1,000 of
+    them in 0.54 s (budget 10 s). In a debug build the same message takes about 2.5 ms with the
+    check on or off, so the 2 ms row is met in release only.
+  - **Derived scaling checks, not spec budgets** (9.5 prints no budget for a long message; the
+    limit is the 1 KB row scaled by size, 2 ms per KB): a 5,002-segment ORU^R01 of 150,084 bytes
+    (limit 293 ms) validates in 218 ms on v2.5.1 and 256 ms on v2.8.2 at `.warning` (1.48 and
+    1.75 ms per KB). The AU REF^I12 with 200 to 800 ADRM-added segments (3,125 to 12,327 bytes)
+    takes 7.9 to 40.3 ms, 2.59 to 3.35 ms per KB, over its derived limit (6.1 to 24.1 ms); it was
+    over it before the rollout too (6.9 to 36.8 ms at 542f5cd), and a profile puts the time in the
+    AU profile's field-level checks, not the structure check (register section E, close-out
+    addendum).
 - The validation digest keeps a preset's own severity unless `VALIDATION_DIGEST_STRUCTURE_SEVERITY`
   is set (`off` forces it off) and accepts `VALIDATION_DIGEST_PRESET=lenient`.
 
