@@ -345,7 +345,7 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
     do {
         completeness = try JSONDecoder().decode(StructureCompleteness.self, from: Data(contentsOf: completenessURL))
         try validateCompleteness(completeness, modelledVersions: modelledVersions, structureCounts: structureCounts,
-                                 structureIDs: structureIDs)
+                                 structureIDs: structureIDs, misprints: try misprintedTableIDs(in: root))
     } catch {
         throw structureFailure(completenessURL.path, error)
     }

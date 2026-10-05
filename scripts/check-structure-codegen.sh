@@ -215,10 +215,11 @@ reject "structure directory for an unlisted version" 'unlisted versions ["2.9"]'
 os.mkdir(os.path.join(S, 'v2.9'))"
 
 # P8b-2a: the extractor's overrides.json and the G9 profiles directory are allowed, and only
-# in that form. The codegen reads its sharedTriggers and (P8b-18, for profile names) groupNames.
+# in that form. The codegen reads its sharedTriggers, (P8b-18, for profile names) groupNames and
+# (P8b-final) the table-0354 errata, whose printed IDs it accepts as registered IDs.
 accept "overrides.json under Resources/structures (P8b-2a)" "$PRE
 o = load('overrides.json')
-save('overrides.json', {'groupNames': o['groupNames'], 'sharedTriggers': o['sharedTriggers']})"
+save('overrides.json', {'groupNames': o['groupNames'], 'sharedTriggers': o['sharedTriggers'], 'errata': o['errata']})"
 
 accept "an empty profile directory under Resources/structures/profiles (G9)" "$PRE
 os.makedirs(os.path.join(S, 'profiles', 'au-test'))"
@@ -439,6 +440,15 @@ gap(structure='ADT_A98', triggers=['ADT^A08'])"
 
 reject "a notModelled entry that is a loaded structure" 'notModelled ACK: it is a loaded structure' "$PRE$SHARED
 gap(structure='ACK', triggers=[])"
+
+reject "a notModelled ID not of the CODE_EVT form that no table-0354 erratum prints (P8b-final)" 'notModelled ZZZZ_Z01: bad structure ID' "$PRE$SHARED
+gap(structure='ZZZZ_Z01', triggers=[])"
+
+accept "a notModelled ID not of the CODE_EVT form that a table-0354 erratum prints (P8b-final)" "$PRE$SHARED
+o = load('overrides.json')
+o['errata'].append({'version': '2.5.1', 'where': 'table-0354', 'structure': 'ZZZ_Z01', 'printed': 'ZZZZ_Z01', 'intended': 'ZZZ_Z01', 'citation': 'x'})
+save('overrides.json', o)
+gap(structure='ZZZZ_Z01', triggers=[])"
 
 reject "a notModelled entry with a bad trigger" 'triggers must be CODE^EVT' "$PRE$SHARED
 gap(triggers=['ZZZ-Z01'])"

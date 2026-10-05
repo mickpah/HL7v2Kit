@@ -1542,6 +1542,54 @@ def reconcile_0354(ver, table_ver, table, prints):
     return rows
 
 
+COMPLETENESS = os.path.join(STRUCTURES, "completeness.json")
+# A registered structure whose Table 0354 row the printed table's Comment column marks
+# Deprecated (v2.7.1, v2.8.2); its reason says so in these words.
+DEPRECATED_ROW = "Comment column marks it"
+
+
+def deprecated_row_triggers(ver, overrides):
+    """{structure: [CODE^EVT]} for each completeness.json notModelled entry of `ver` whose
+    Table 0354 row is marked Deprecated: the events that row prints (cited table-0354 errata
+    applied), each under the message code the structure ID opens with, in row order (P8b-final,
+    M4). The table prints events, never a message code; the ID's code is the code of the
+    message the row's structure served. A row that lists no events ('Deprecated and removed as
+    of V2.7') gives []."""
+    with open(COMPLETENESS, encoding="utf-8") as f:
+        entries = json.load(f)["versions"].get(ver, {}).get("notModelled", [])
+    errata = [e for e in overrides["errata"] if e.get("version") == ver]
+    table = {code: events for code, events, _ in apply_table_errata(load_0354(ver), errata, set())}
+    return {e["structure"]: [f"{e['structure'][:3]}^{ev}" for ev in (table.get(e["structure"]) or [])]
+            for e in entries if DEPRECATED_ROW in e["reason"]}
+
+
+def sync_deprecated_triggers(versions, overrides, write):
+    """Compare (or, with write, set) the triggers of every Deprecated-row registration in
+    completeness.json with deprecated_row_triggers. Edits only the `"triggers": [...]` of those
+    entries, one entry per line, so the hand-curated reasons and layout are untouched. Returns
+    the entries that differ (before any write)."""
+    wanted = {ver: deprecated_row_triggers(ver, overrides) for ver in versions}
+    with open(COMPLETENESS, encoding="utf-8") as f:
+        lines = f.read().split("\n")
+    diffs, ver = [], None
+    for i, line in enumerate(lines):
+        head = re.match(r'^\s*"(\d+(?:\.\d+)+)": \{', line)
+        if head:
+            ver = head.group(1)
+            continue
+        m = re.match(r'^(\s*\{"structure": "([^"]+)", "triggers": )(\[[^\]]*\])(.*)$', line)
+        if not m or ver not in wanted or m.group(2) not in wanted[ver]:
+            continue
+        new = json.dumps(wanted[ver][m.group(2)])
+        if json.loads(m.group(3)) != wanted[ver][m.group(2)]:
+            diffs.append(f"v{ver} {m.group(2)}: triggers {m.group(3)} should be {new} (Table 0354 row, Deprecated)")
+            lines[i] = m.group(1) + new + m.group(4)
+    if write and diffs:
+        with open(COMPLETENESS, "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+    return diffs
+
+
 def summary(version, structures, report, count):
     """One line per version: captions, structures, parsed, skipped by reason and the P8b-3a
     report classes."""
@@ -1661,6 +1709,11 @@ def main(argv=None):
                     print(f"    {line[:160]}")
             elif args.check:
                 print(f"  {sid}: identical")
+    if args.check or args.write:
+        # M4 (P8b-final): a Deprecated Table 0354 row's registration carries the row's events.
+        for line in sync_deprecated_triggers([v[1:] for v in versions], overrides, args.write):
+            print(f"  {line}" + (": written" if args.write else ""))
+            failed |= bool(args.check)
     if args.report:
         with open(args.report, "w", encoding="utf-8") as f:
             f.writelines("\t".join(r) + "\n" for r in tsv)

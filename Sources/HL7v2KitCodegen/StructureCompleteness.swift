@@ -78,9 +78,14 @@ struct StructureCompleteness: Decodable {
 /// - Every citation is one non-empty line.
 /// - A version marked complete has at least one structure.
 /// - A notModelled entry has a structure ID, triggers of the form CODE^EVT,
-///   a one-line reason, is listed once and is not a loaded structure.
+///   a one-line reason, is listed once and is not a loaded structure. The ID
+///   has the CODE_EVT form, or is a Table 0354 misprint the version prints
+///   literally (`misprints`: the `printed` ID of a cited overrides.json
+///   table-0354 erratum, such as v2.3.1 SIIU_S12), registered so that a
+///   message copying it is not a mismatch (P8b-final, F-I1).
 func validateCompleteness(_ data: StructureCompleteness, modelledVersions: Set<String>,
-                          structureCounts: [String: Int], structureIDs: [String: Set<String>] = [:]) throws {
+                          structureCounts: [String: Int], structureIDs: [String: Set<String>] = [:],
+                          misprints: [String: Set<String>] = [:]) throws {
     let listed = Set(data.versions.keys)
     let missing = modelledVersions.subtracting(listed).sorted()
     let extra = listed.subtracting(modelledVersions).sorted()
@@ -103,7 +108,8 @@ func validateCompleteness(_ data: StructureCompleteness, modelledVersions: Set<S
         var seen: Set<String> = []
         for gap in entry.notModelled {
             let label = "version \(version) notModelled \(gap.structure)"
-            guard gap.structure.range(of: "^[A-Z][A-Z0-9]{2}(_[A-Z0-9]{3})?$", options: .regularExpression) != nil else {
+            guard gap.structure.range(of: "^[A-Z][A-Z0-9]{2}(_[A-Z0-9]{3})?$", options: .regularExpression) != nil
+                    || misprints[version]?.contains(gap.structure) == true else {
                 throw StructureSchemaError(description: "\(label): bad structure ID")
             }
             let bad = gap.triggers.filter { $0.range(of: "^[A-Z][A-Z0-9]{2}\\^([A-Z0-9]{3}|\\*)$", options: .regularExpression) == nil }
@@ -154,6 +160,25 @@ func declaredSharedTriggers(in root: URL) throws -> [String: [String: Set<String
             throw StructureSchemaError(description: "\(url.path): a sharedTriggers entry needs version, trigger and structures")
         }
         out[version, default: [:]][trigger] = Set(ids)
+    }
+    return out
+}
+
+/// The structure IDs a version's Table 0354 prints misprinted, as version to
+/// IDs: the `printed` value of each overrides.json `errata` entry with
+/// `where` "table-0354" whose printed text is a structure ID (it holds an
+/// underscore; an event erratum's printed text does not). An absent file or
+/// key gives none.
+func misprintedTableIDs(in root: URL) throws -> [String: Set<String>] {
+    let url = root.appendingPathComponent(structureOverridesFileName)
+    guard FileManager.default.fileExists(atPath: url.path) else { return [:] }
+    let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
+    guard let entries = (object as? [String: Any])?["errata"] as? [[String: Any]] else { return [:] }
+    var out: [String: Set<String>] = [:]
+    for entry in entries where entry["where"] as? String == "table-0354" {
+        if let version = entry["version"] as? String, let printed = entry["printed"] as? String, printed.contains("_") {
+            out[version, default: []].insert(printed)
+        }
     }
     return out
 }

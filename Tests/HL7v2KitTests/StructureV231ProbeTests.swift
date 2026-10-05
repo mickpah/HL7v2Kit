@@ -230,28 +230,31 @@ struct StructureV231ProbeTests {
         #expect(issues.first?.severity == .info)
     }
 
-    // Controller ruling (fix round 1): the two-token Table 0354 errata stand, so a message that
-    // copies a misprinted row literally (TBR_R09, RRE_O01, MFD_P09) is a mismatch on v2.3.1.
-    @Test("Literally printed misprinted Table 0354 IDs are mismatches",
+    // The two-token Table 0354 errata stand (the corrected IDs are modelled), but a message that
+    // copies a misprinted row literally (TBR_R09, RRE_O01, MFD_P09) is information, not a
+    // mismatch: Table 0354 is the only place v2.3.1 prints a structure ID, and a structure ID the
+    // print gives is never a mismatch (P8b-final ruling F-I1, reversing the P8b-14 ruling).
+    @Test("Literally printed misprinted Table 0354 IDs are information, not a mismatch",
           arguments: [("TBR^R09^TBR_R09", "TBR_R09", "TBR^R09"), ("RRE^O01^RRE_O01", "RRE_O01", "RRE^O01"),
                       ("MFD^P09^MFD_P09", "MFD_P09", "MFD^P09")])
     func misprintedIDs(_ c: (String, String, String)) throws {
         let issues = try structureIssues(c.0, ["MSA|AA|1"])
-        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: c.1, trigger: c.2)], "\(issues.map(\.message))")
-        #expect(issues.first?.severity == .error)
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: c.1)], "\(issues.map(\.message))")
+        #expect(issues.first?.severity == .info)
     }
 
     // The single-token Table 0354 misprints are corrected by cited overrides (overrides.json
     // table-0354 entries; Table 0003 pp 2-98 to 2-99 and the chapter captions give the intended
-    // IDs), so the literal printed IDs name no loaded structure: on a complete version a message
-    // that copies one is a mismatch, never matched against the corrected structure (P8b-18).
-    @Test("Literally printed single-token misprints (PIN_107, RPI_I0I, RQI_I0I, ARD_A19) are mismatches",
+    // IDs), so the literal printed IDs name no loaded structure; each is registered as not
+    // modelled, so a message that copies one is information, never matched against the corrected
+    // structure and never a mismatch (P8b-final ruling F-I1).
+    @Test("Literally printed single-token misprints (PIN_107, RPI_I0I, RQI_I0I, ARD_A19) are information",
           arguments: [("PIN^I07^PIN_107", "PIN_107", "PIN^I07"), ("RPI^I01^RPI_I0I", "RPI_I0I", "RPI^I01"),
                       ("RQI^I01^RQI_I0I", "RQI_I0I", "RQI^I01"), ("ADR^A19^ARD_A19", "ARD_A19", "ADR^A19")])
     func misprintedSingleTokenIDs(_ c: (String, String, String)) throws {
         let issues = try structureIssues(c.0, ["MSA|AA|1"])
-        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: c.1, trigger: c.2)], "\(issues.map(\.message))")
-        #expect(issues.first?.severity == .error)
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: c.1)], "\(issues.map(\.message))")
+        #expect(issues.first?.severity == .info)
     }
 
     // Captions Table 0354 places under no structure (overrides.json unresolvedCaptions):

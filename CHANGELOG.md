@@ -17,6 +17,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   structure order, at most eight then "and N more", "or the end of the message" when a parse
   is complete there). Code, severity, location and the number of findings are unchanged. In
   the three validation digests 4 lines change (default and strict), each this clause only.
+- **A structure ID the version's print gives is never a mismatch (F-I1 a, b; reverses the
+  P8b-14 ruling, owner to confirm).** v2.3.1 prints structure IDs only in Table 0354, and ten of
+  its rows are misprinted: TBR_R09, RRE_O01, MFD_P09, PIN_107, RPI_I0I, RQI_I0I, ARD_A19,
+  SIIU_S12, RROR_ROR and ORM__O01 were mismatches (error under `.strict`) for a message that
+  copied them; they are now registered as not modelled, so `TBR^R08^TBR_R09` or
+  `TBR^R09^TBR_R09` is information naming TBR_R08, not structure-checked. The corrected IDs and
+  the bare triggers keep matching. v2.4's CH02 listing of Table 0354 (2.17.3, pp 2-138 to 2-141)
+  prints ten rows Appendix A lacks or prints differently (QRY_Q26 to QRY_Q30, whose CH04
+  captions read QRY^Q26^QRY_Q01 and so on; RPI_I0I, RQI_I0I, ORN_008, TBR_R09, RDE_O01), and
+  v2.5.1's listings disagree on BRP_030 and RSP_Q11: registered likewise. PPG^PCC is registered
+  with PPG_PCG on v2.5.1, v2.6 and v2.8.2, as on v2.3.1, v2.4 and v2.7.1 (every Table 0354 lists
+  PCC under it). The codegen accepts a registered ID that is not of the CODE_EVT form only as the
+  printed ID of a cited table-0354 erratum. Registered: v2.3.1 38, v2.4 34, v2.5.1 32.
+- **Deprecated Table 0354 rows carry their events (M4).** The v2.7.1 and v2.8.2 registrations of
+  rows the printed table marks Deprecated (39 and 47) had no triggers, so a bare `ORM^O01` got
+  the generic reason; the 76 whose row lists events now carry them (`ORM^O01`), written and
+  checked by `scripts/extract-message-structures.py` (`--write` / `--check`) from Table 0354, so a
+  bare trigger gets the Deprecated reason. No trigger is shared with a modelled structure.
 
 ### Fixed — P8b-18: message-structure rollout close-out
 

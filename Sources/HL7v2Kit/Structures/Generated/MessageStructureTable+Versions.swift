@@ -5,9 +5,9 @@
 extension MessageStructureTable {
     // Completeness per grammar version (ADR-019 lookup rule 1):
     //   2.3 (complete): P8b-15: 147 structures extracted from the v2.3 chapter prints (CH1 to CH12), which print the message code alone, the events in the section title, no structure ID and no Table 0354: IDs synthesised CODE_EVT from the code and the first event (the code alone for the MCF, EDR, TBR, ERP and ACK folds), events from the section titles or 39 cited overrides.json eventsFromTitle entries (section text, Table 0003), and lookup rule 3 resolves v2.3 messages from MSH-9.1^9.2 only (v2.3 prints no group names: 235 derived through the HL7-xml 2.3.1 bundle, 7 through HL7-xml v2.4, 3 synthesised); the 16 unreadable prints (G6 placeholders ORM_O01, ORR_O02, OSR_Q06, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, ERP, MFN_M01, MFN_M03 and MFR_M01, the last two a capability gap: the print gives their segments per file in prose fragments the extractor does not read; SUR_P09's ED row) and 6 triggers the print defines only in Table 0003 or prose with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05, and since P8b-18 DSR^P04 and ORU^R03) are registered; 4 prose cross-references to printed structures are added to them through overrides.json referencedTriggers (ORU^W01 to ORU_R01, QRY^P04 and QRY^R05 to QRY_Q01, UDM^R06 to UDM_Q05) (register section E, v2.3 addendum)
-    //   2.3.1 (complete): P8b-14: 99 structures extracted from the v2.3.1 print (100 since P8b-15 fix round 2 folded MCF onto MCF^*, CH02 2.13.2) (one PDF, Hl7V231.pdf), their IDs from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, pp 2-103 to 2-106) through cited overrides.json errata, declared shared triggers (ADT^A28, ADT^A31) and captionStructures (MFK, PPP) (v2.3.1 prints few group names: 247 named from the HL7-xml 2.3.1 bundle, 6 through HL7-xml v2.4, none synthesised), every Table 0354 v2.3.1 row modelled or registered; the 14 unreadable prints (G6 placeholders ORM_O01, ORR_O02, OSR_Q06, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, ERP_R09 and MFN_M03; SUR_P09's ED row) and the 13 Table 0354 rows no print carries are registered below, with DSR^P04 (P8b-18: the response of CH06 6.3.4's QRY/DSR transaction, whose two Chapter 2 DSR prints differ; synthesised ID, 28 registered in all; the query side QRY^P04 is added to QRY_Q01 through overrides.json referencedTriggers); the captions Table 0354 places under no structure (MFN^M01-M06 twice, MFN^M04, MFQ^M01-M06, MFR^M01-M06) are overrides.json unresolvedCaptions (register section E, v2.3.1 not-modelled table)
-    //   2.4 (complete): P8b-13: 148 structures extracted from the v2.4 chapter prints (QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 5-112, P8b-13 fix round 1) (v2.4 prints no group names: 298 named from HL7-xml v2.4, 35 by cited overrides.json groupNames, 1 synthesised), every Table 0354 v2.4 row modelled or registered; the 20 unreadable prints (G6 placeholders ERP_R09, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF and templates MFN_M01, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; MFR_M01 and MFN_M03, whose segments CH08 gives per file in prose fragments the extractor does not read, a capability gap (P8b-18); SUR_P09's ED row; DSR_P04 and QRY_P04, printed as 'see Chapter 5' with no syntax: QRY_P04's reference names one printed QRY but the caption gives it an ID of its own, which the model cannot alias (a capability gap, P8b-18), DSR_P04's names two DSR prints that differ) and the 4 Table 0354 rows with no printed syntax (ORU_W01, QRF_W02, RRA_O02, RRE_O02) are registered as not modelled below (register section E, v2.4 not-modelled table)
-    //   2.5.1 (complete): P8b-9: 173 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints; QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 5-116, P8b-13 fix round 1); the 18 unreadable prints (G6 placeholders ERP_R09 (P8b-13), MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 12 Table 0354 rows with no printed syntax are registered as not modelled below; P8b-18 classed them by the print: MFR_M01 and MFN_M03 are a capability gap (CH08 gives their segments in a prose fragment and by an MFI-1-keyed reference to MFN^M08 to M12), QRY_P04 is one (its reference names one printed QRY, but Table 0354 gives it an ID of its own, which the model cannot alias), and ORU_R31, ORU_R32, QRY_T12 and RSP_K22 are IDs a chapter caption contradicts (ORU_R30, QRY, RSP_K21), ORU_R31, ORU_R32, RDE_O01 and RRA_O02 rows of the Appendix A listing only (register section E, v2.5.1 not-modelled table)
+    //   2.3.1 (complete): P8b-14: 99 structures extracted from the v2.3.1 print (100 since P8b-15 fix round 2 folded MCF onto MCF^*, CH02 2.13.2) (one PDF, Hl7V231.pdf), their IDs from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, pp 2-103 to 2-106) through cited overrides.json errata, declared shared triggers (ADT^A28, ADT^A31) and captionStructures (MFK, PPP) (v2.3.1 prints few group names: 247 named from the HL7-xml 2.3.1 bundle, 6 through HL7-xml v2.4, none synthesised), every Table 0354 v2.3.1 row modelled or registered; the 14 unreadable prints (G6 placeholders ORM_O01, ORR_O02, OSR_Q06, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, ERP_R09 and MFN_M03; SUR_P09's ED row) and the 13 Table 0354 rows no print carries are registered below, with DSR^P04 (P8b-18: the response of CH06 6.3.4's QRY/DSR transaction, whose two Chapter 2 DSR prints differ; synthesised ID), and (P8b-final, ruling F-I1) the 10 IDs Table 0354 prints misprinted (TBR_R09, RRE_O01, MFD_P09, PIN_107, RPI_I0I, RQI_I0I, ARD_A19, SIIU_S12, RROR_ROR, ORM__O01), so a message copying one is information, not a mismatch (38 registered in all; the query side QRY^P04 is added to QRY_Q01 through overrides.json referencedTriggers); the captions Table 0354 places under no structure (MFN^M01-M06 twice, MFN^M04, MFQ^M01-M06, MFR^M01-M06) are overrides.json unresolvedCaptions (register section E, v2.3.1 not-modelled table)
+    //   2.4 (complete): P8b-13: 148 structures extracted from the v2.4 chapter prints (QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 5-112, P8b-13 fix round 1) (v2.4 prints no group names: 298 named from HL7-xml v2.4, 35 by cited overrides.json groupNames, 1 synthesised), every row of both v2.4 listings of Table 0354 (Appendix A, and CH02 section 2.17.3, pp 2-136 to 2-141) modelled or registered (Appendix A's only until P8b-final); the 20 unreadable prints (G6 placeholders ERP_R09, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF and templates MFN_M01, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; MFR_M01 and MFN_M03, whose segments CH08 gives per file in prose fragments the extractor does not read, a capability gap (P8b-18); SUR_P09's ED row; DSR_P04 and QRY_P04, printed as 'see Chapter 5' with no syntax: QRY_P04's reference names one printed QRY but the caption gives it an ID of its own, which the model cannot alias (a capability gap, P8b-18), DSR_P04's names two DSR prints that differ) and the 4 Table 0354 rows with no printed syntax (ORU_W01, QRF_W02, RRA_O02, RRE_O02) are registered as not modelled below, with (P8b-final, ruling F-I1) the 10 CH02 rows Appendix A lacks or prints differently (QRY_Q26 to QRY_Q30, RPI_I0I, RQI_I0I, ORN_008, TBR_R09, RDE_O01), 34 in all (register section E, v2.4 not-modelled table)
+    //   2.5.1 (complete): P8b-9: 173 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints; QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 5-116, P8b-13 fix round 1); the 18 unreadable prints (G6 placeholders ERP_R09 (P8b-13), MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 12 Table 0354 rows with no printed syntax are registered as not modelled below; P8b-18 classed them by the print: MFR_M01 and MFN_M03 are a capability gap (CH08 gives their segments in a prose fragment and by an MFI-1-keyed reference to MFN^M08 to M12), QRY_P04 is one (its reference names one printed QRY, but Table 0354 gives it an ID of its own, which the model cannot alias), and ORU_R31, ORU_R32, QRY_T12 and RSP_K22 are IDs a chapter caption contradicts (ORU_R30, QRY, RSP_K21), ORU_R31, ORU_R32, RDE_O01 and RRA_O02 rows of the Appendix A listing only; P8b-final (ruling F-I1) registered BRP_030 (the Appendix A listing's misprint of BRP_O30) and RSP_Q11 (the CH02 listing only), 32 in all (register section E, v2.5.1 not-modelled table)
     //   2.6 (complete): P8b-10: 190 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints; RSP_K21 as the union of its two incomparable prints, overrides.json unionPrints, P8b-11; QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 96, P8b-13 fix round 1); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 3 Table 0354 rows with no printed syntax (ORU_W01, QRF_W02, RSP_Q11) are registered as not modelled below; P8b-18 classed them by the print: MFR_M01 and MFN_M03 are a capability gap (CH08 gives the staff MFR body in a prose fragment and MFN^M03's segments by an MFI-1-keyed reference to MFN^M08 to M12), and ORU_W01's reason says the CH07 examples send ORU^W01^ORU_R01 against the table (register section E, v2.6 not-modelled table)
     //   2.7.1 (complete): P8b-16: 164 structures extracted from the v2.7.1 chapter prints (ACK from its looser print, overrides.json primaryPrints), every Table 0354 v2.7.1 row modelled or registered; the 13 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF and templates QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS) and QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and QRF, withdrawn as of v2.7), segments v2.7.1 does not define, RDR_RDR (no normative print) and the 39 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.7.1 not-modelled table)
     //   2.8.2 (complete): P8b-11: 185 structures extracted from the v2.8.2 chapter prints (ACK from its looser print, overrides.json primaryPrints), every Table 0354 v2.8.2 row modelled or registered; the 8 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1 and templates QBP_Q11, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS, which v2.8.2 does not define), QBP_Q13 and RDR_RDR (no normative print) and the 47 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.8.2 not-modelled table)
@@ -109,12 +109,18 @@ extension MessageStructureTable {
             ]
         case .v2_3_1:
             return [
+                "ARD_A19": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103; repeated in Appendix A, p A-92) prints the row 'ARD_A19  A19', a misprint of ADR_A19 (overrides.json table-0354 erratum: Table 0076, p 2-96, defines no message type ARD, and Chapter 3 section 3.2.19, p 3-14, prints ADR^A19); ADR_A19 is modelled and matched under its corrected ID; a message that copies the printed ID ARD_A19 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives ARD_A19 a syntax (register section E, v2.3.1 not-modelled table)"),
                 "DSR_P04": NotModelledStructure(
                     triggers: ["DSR^P04"],
                     reason: "Chapter 6 section 6.3.4 (p 6-4) defines P04 only as 'the QRY/DSR transaction, as defined in Chapter 2', and Table 0003 (Chapter 2, section 2.24.1.9), p 2-100, lists 'P04 QRY/DSP - Generate bill and A/R statements'; Table 0354 v2.3.1 has no P04 row, so the ID DSR_P04 is synthesised (as on v2.3). The query side is matched against QRY_Q01 (overrides.json referencedTriggers), but Chapter 2 prints the display response DSR twice with different syntax (section 2.17.1, p 2-84, the immediate response with MSA required; section 2.18.2, p 2-85, the deferred response with MSA optional) and the print does not say which mode P04 uses, so the reference is ambiguous. Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (P8b-18; register section E, v2.3.1 not-modelled table)"),
                 "ERP_R09": NotModelledStructure(
                     triggers: ["ERP^R09"],
                     reason: "Chapter 2 section 2.20.3 (p 2-86) prints the event replay response with ellipsis rows after ERQ, which the note below the table reads as the segments of the corresponding record-oriented unsolicited update message, and ERQ-2 (Event Identifier) names that message: its 'contents dictate the format of the response message', and the ERP returns the segments of the message the event defines, repeating if more than one match is found (Chapter 2 section 2.24.21.2, p 2-132), so the print fixes the segments for each ERQ-2 value; Blocking (field-keyed reference): the extractor does not read the reference and the model has no structure keyed by a field value (as MFN_M03 by MFI-1), which modelling it needs; an open-slot element would not be faithful (ruling G6; register section E, v2.3.1 not-modelled table)"),
+                "MFD_P09": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104; repeated in Appendix A, p A-92) prints the row 'MFD_P09  P09', a misprint of MFD_MFA (overrides.json table-0354 erratum: Table 0003, p 2-100, gives P09 to SUR, and Chapter 8 section 8.3.2, p 8-4, prints MFD^MFA); MFD_MFA is modelled and matched under its corrected ID; a message that copies the printed ID MFD_P09 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives MFD_P09 a syntax (register section E, v2.3.1 not-modelled table)"),
                 "MFN_M01": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M01 (event M01); the only print covering M01 is the section 8.3.1 template captioned MFN^M01-M06 (p 8-3, a '[Z..]' row for the segments of each master file, ruling G6), whose six events no row lists, so no print carries this ID (overrides.json unresolvedCaptions; register section E, v2.3.1 not-modelled table)"),
@@ -145,6 +151,9 @@ extension MessageStructureTable {
                 "ORM_Q06": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) lists ORM_Q06 (event Q06); Table 0003 (p 2-101) gives Q06 to OSQ/OSR, Chapter 4 section 4.2.3 (pp 4-4 to 4-5) prints OSQ^Q06 and OSR^Q06, and no caption prints ORM^Q06 (Table 0354 only; register section E, v2.3.1 not-modelled table)"),
+                "ORM__O01": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104; repeated in Appendix A, p A-93) prints the row 'ORM__O01  O01', a misprint of ORM_O01 (overrides.json table-0354 erratum: a doubled underscore for the O01 structure the Chapter 4 caption ORM^O01^ORM_O01 names); ORM_O01 is registered below with its own reason; a message that copies the printed ID ORM__O01 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives ORM__O01 a syntax (register section E, v2.3.1 not-modelled table)"),
                 "ORR_O02": NotModelledStructure(
                     triggers: ["ORR^O02"],
                     reason: "Chapter 4 section 4.2.2 (p 4-4) prints the order detail as '[Order Detail Segment] OBR, etc.', the placeholder of the general order message, whose segments use note b of section 4.2.1 (p 4-3) does not fix as one segment or a combination (section 4.7, p 4-53, has RQD followed by RQ1); Blocking (open slot): the model has no open-slot element, which would let the validator check the segments the print gives around the order detail but not which order detail segments fill it (ruling G6; register section E, v2.3.1 not-modelled table)"),
@@ -160,6 +169,9 @@ extension MessageStructureTable {
                 "PGL_PC6": NotModelledStructure(
                     triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
                     reason: "Chapter 12 section 12.2.1 (p 12-7) prints the order detail as '[OBR, etc.', which the Chapter 12 note before section 12.2.1 (p 12-7) reads as 'all possible combinations of pharmacy and other order detail segments' per Chapter 4 section 4.1.2.4 (p 4-2), and 4.1.2.4 names only examples (OBR, RXO), so the segments cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.3.1 not-modelled table)"),
+                "PIN_107": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104; repeated in Appendix A, p A-93) prints the row 'PIN_107  I07', a misprint of PIN_I07 (overrides.json table-0354 erratum: the digit one for the letter I; Table 0003, p 2-99, gives I07 to PIN/ACK, and Chapter 11 section 11.2.7, p 11-11, prints PIN^I07); PIN_I07 is modelled and matched under its corrected ID; a message that copies the printed ID PIN_107 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives PIN_107 a syntax (register section E, v2.3.1 not-modelled table)"),
                 "PPG_PCG": NotModelledStructure(
                     triggers: ["PPG^PCC", "PPG^PCG", "PPG^PCH", "PPG^PCJ"],
                     reason: "Chapter 12 section 12.2.4 (p 12-9) prints the order detail as '[OBR, etc.' (PPG^PCC from Table 0354, p 2-104, which maps PCC to PPG_PCG; P8b-11 ruling), which the Chapter 12 note before section 12.2.1 (p 12-7) reads as 'all possible combinations of pharmacy and other order detail segments' per Chapter 4 section 4.1.2.4 (p 4-2), and 4.1.2.4 names only examples (OBR, RXO), so the segments cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.3.1 not-modelled table)"),
@@ -184,6 +196,21 @@ extension MessageStructureTable {
                 "RAS_O02": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105) lists RAS_O02 (event printed O022, erratum O02); Chapter 4 section 4.8.13 (p 4-88) prints RAS^O01 and its acknowledgment RRA^O02, and no caption prints RAS^O02 (Table 0354 only; register section E, v2.3.1 not-modelled table)"),
+                "RPI_I0I": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105; repeated in Appendix A, p A-94) prints the row 'RPI_I0I  I01, I04', a misprint of RPI_I01 (overrides.json table-0354 erratum: the letter I for the final digit one; Chapter 11 section 11.2.1, p 11-7, prints RPI^I01); RPI_I01 is modelled and matched under its corrected ID; a message that copies the printed ID RPI_I0I is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives RPI_I0I a syntax (register section E, v2.3.1 not-modelled table)"),
+                "RQI_I0I": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105; repeated in Appendix A, p A-94) prints the row 'RQI_I0I  I01, I02, I03', a misprint of RQI_I01 (overrides.json table-0354 erratum: the letter I for the final digit one; Chapter 11 section 11.2.1, p 11-7, prints RQI^I01); RQI_I01 is modelled and matched under its corrected ID; a message that copies the printed ID RQI_I0I is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives RQI_I0I a syntax (register section E, v2.3.1 not-modelled table)"),
+                "RRE_O01": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105; repeated in Appendix A, p A-94) prints the row 'RRE_O01  O01', a misprint of RRE_O02 (overrides.json table-0354 erratum: Table 0003, p 2-100, gives O02 to the order responses, RRE among them, and Chapter 4 section 4.8.6, p 4-70, prints RRE^O02); RRE_O02 is modelled and matched under its corrected ID; a message that copies the printed ID RRE_O01 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives RRE_O01 a syntax (register section E, v2.3.1 not-modelled table)"),
+                "RROR_ROR": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105; repeated in Appendix A, p A-94) prints the row 'RROR_ROR  ROR', a misprint of ROR_ROR (overrides.json table-0354 erratum: the ROR pharmacy query response structure of the event ROR); ROR_ROR is modelled and matched under its corrected ID; a message that copies the printed ID RROR_ROR is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives RROR_ROR a syntax (register section E, v2.3.1 not-modelled table)"),
+                "SIIU_S12": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105; repeated in Appendix A, p A-94) prints the row 'SIIU_S12  S12, S13, ... S24, S26', a misprint of SIU_S12 (overrides.json table-0354 erratum: the SIU structure of the Chapter 10 SIU^S12 to S24 captions); SIU_S12 is modelled and matched under its corrected ID; a message that copies the printed ID SIIU_S12 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives SIIU_S12 a syntax (register section E, v2.3.1 not-modelled table)"),
                 "SRM_T12": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106) lists SRM_T12 (event T12); Table 0003 (p 2-102) gives T12 to QRY/DOC, Chapter 9 section 9.7.1 (p 9-19) prints QRY^T12 and DOC^T12, and no caption prints SRM^T12 (Table 0354 only; register section E, v2.3.1 not-modelled table)"),
@@ -193,6 +220,9 @@ extension MessageStructureTable {
                 "SUR_P09": NotModelledStructure(
                     triggers: ["SUR^P09"],
                     reason: "Chapter 7 section 7.10.2 (p 7-85) prints a row 'ED Encapsulated Data' inside the facility group, and v2.3.1 defines no ED segment (ED is a data type, Chapter 2), so the row names nothing a message can carry (unreadable print; register section E, v2.3.1 not-modelled table)"),
+                "TBR_R09": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106; repeated in Appendix A, p A-95) prints the row 'TBR_R09  R09', a misprint of TBR_R08 (overrides.json table-0354 erratum: Table 0003, p 2-101, gives R08 to TBR and R09 to ERP, and Chapter 2 section 2.20.2, p 2-86, prints TBR^R08); TBR_R08 is modelled and matched under its corrected ID; a message that copies the printed ID TBR_R09 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives TBR_R09 a syntax (register section E, v2.3.1 not-modelled table)"),
             ]
         case .v2_4:
             return [
@@ -211,6 +241,9 @@ extension MessageStructureTable {
                 "MFR_M01": NotModelledStructure(
                     triggers: ["MFR^M01", "MFR^M02", "MFR^M03", "MFR^M04", "MFR^M05", "MFR^M06"],
                     reason: "CH08 section 8.4.3 (p 8-11) prints the master files query response as a template whose '[Z..]' row stands for the master-file-specific segments; the master file sections give those segments per file in prose, each saying the MFR part '{MFE [Z..]}' 'is replaced by' a fragment: 8.7.1 (p 8-19) {MFE STF [PRA] [ORG]} for M02, 8.8.2 (p 8-21) the OM1 groups that 'follow the MFI and MFE segments in those messages (replacing the [Z...] section' for M03, 8.9.1 (p 8-58) {MFE LOC [{LCH}] [{LRL}] {LDP [{LCH}] [{LCC}]}} for M05, 8.10.1 (p 8-72) {MFE CDM {[PRC]}} for M04 and 8.11.1 (p 8-81) the CM0 groups of cases 1 and 2 for the clinical trials files (M06); only M01's '[Z..]' (the master file not otherwise specified) cannot be enumerated. Not modelled because the extractor does not read prose-printed replacement fragments, a capability gap that blocks spec-completeness, not a print limitation (P8b-18, as on v2.3 and v2.3.1; register section E, v2.4 not-modelled table)"),
+                "ORN_008": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-138) prints the row 'ORN_008  O08' (digit zeros for the letter O), where the Appendix A listing (p A-103) prints ORN_O08 and Chapter 4 section 4.10.4 (p 4-74) prints ORN^O08^ORN_O08, which is modelled and matched; a message that copies the printed ID ORN_008 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives ORN_008 a syntax (register section E, v2.4 not-modelled table)"),
                 "ORU_W01": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.4 (Appendix A; CH02 section 2.17.3, pp 2-136 to 2-141) lists ORU_W01 (event W01), and no v2.4 chapter prints its syntax (Table 0354 only; register section E, v2.4 not-modelled table)"),
@@ -253,9 +286,33 @@ extension MessageStructureTable {
                 "QRY_P04": NotModelledStructure(
                     triggers: ["QRY^P04"],
                     reason: "CH06 section 6.4.4 (p 6-13) prints the caption QRY^P04^QRY_P04 with no syntax rows, only 'see Chapter 5', and says 'the QRY/DSR transaction, as defined in Chapter 5, will provide the mechanism'; CH05 prints that QRY twice with the same segments, MSH QRD [QRF] [DSC] (section 5.10.2.1 QRY^Q01, p 5-111; section 5.10.3.1 QRY^Q02, p 5-112), so the reference names one syntax, but the caption gives P04 a structure ID of its own, QRY_P04, where v2.3 and v2.3.1 print none (there QRY^P04 is matched against QRY_Q01). Not modelled because the model has no structure alias (a printed ID whose syntax is another printed structure's), a capability gap that blocks spec-completeness (P8b-18; register section E, v2.4 not-modelled table)"),
+                "QRY_Q26": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-139) prints the row 'QRY_Q26  Q26', which the Appendix A listing of Table 0354 (p A-104, whose QRY_Q01 row lists Q01 only) does not print; Chapter 4 section 4.13.13 (p 4-86) prints the caption QRY^Q26^QRY_Q01, so QRY_Q01 is modelled with QRY^Q26 and matches QRY^Q26^QRY_Q01 and a bare QRY^Q26; a message that copies the printed ID QRY_Q26 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent: no print gives QRY_Q26 a syntax (register section E, v2.4 not-modelled table)"),
+                "QRY_Q27": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-139) prints the row 'QRY_Q27  Q27', which the Appendix A listing of Table 0354 (p A-104, whose QRY_Q01 row lists Q01 only) does not print; Chapter 4 section 4.13.14 (p 4-86) prints the caption QRY^Q27^QRY_Q01, so QRY_Q01 is modelled with QRY^Q27 and matches QRY^Q27^QRY_Q01 and a bare QRY^Q27; a message that copies the printed ID QRY_Q27 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent: no print gives QRY_Q27 a syntax (register section E, v2.4 not-modelled table)"),
+                "QRY_Q28": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-139) prints the row 'QRY_Q28  Q28', which the Appendix A listing of Table 0354 (p A-104, whose QRY_Q01 row lists Q01 only) does not print; Chapter 4 section 4.13.15 (p 4-87) prints the caption QRY^Q28^QRY_Q01, so QRY_Q01 is modelled with QRY^Q28 and matches QRY^Q28^QRY_Q01 and a bare QRY^Q28; a message that copies the printed ID QRY_Q28 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent: no print gives QRY_Q28 a syntax (register section E, v2.4 not-modelled table)"),
+                "QRY_Q29": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-139) prints the row 'QRY_Q29  Q29', which the Appendix A listing of Table 0354 (p A-104, whose QRY_Q01 row lists Q01 only) does not print; Chapter 4 section 4.13.16 (p 4-87) prints the caption QRY^Q29^QRY_Q01, so QRY_Q01 is modelled with QRY^Q29 and matches QRY^Q29^QRY_Q01 and a bare QRY^Q29; a message that copies the printed ID QRY_Q29 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent: no print gives QRY_Q29 a syntax (register section E, v2.4 not-modelled table)"),
+                "QRY_Q30": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-139) prints the row 'QRY_Q30  Q30', which the Appendix A listing of Table 0354 (p A-104, whose QRY_Q01 row lists Q01 only) does not print; Chapter 4 section 4.13.17 (p 4-88) prints the caption QRY^Q30^QRY_Q01, so QRY_Q01 is modelled with QRY^Q30 and matches QRY^Q30^QRY_Q01 and a bare QRY^Q30; a message that copies the printed ID QRY_Q30 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent: no print gives QRY_Q30 a syntax (register section E, v2.4 not-modelled table)"),
                 "QVR_Q17": NotModelledStructure(
                     triggers: ["QVR^Q17"],
                     reason: "CH05 section 5.4.5 (p 5-44) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.4 not-modelled table)"),
+                "RDE_O01": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-140) prints the row 'RDE_O01  O01' and no RDE_O11 row, where the Appendix A listing (p A-104) prints RDE_O11 (O11) and no RDE_O01 row; Chapter 4 section 4.13.5 (p 4-80) prints RDE^O11^RDE_O11, which is modelled, and no v2.4 chapter prints an RDE^O01 message or an RDE_O01 syntax; a message that copies the printed ID RDE_O01 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (register section E, v2.4 not-modelled table)"),
+                "RPI_I0I": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-140) prints the row 'RPI_I0I  I01, I04' (the letter I for the final digit one, as v2.3.1's row did), where the Appendix A listing (p A-105) prints RPI_I01, which is modelled and matched; a message that copies the printed ID RPI_I0I is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives RPI_I0I a syntax (register section E, v2.4 not-modelled table)"),
+                "RQI_I0I": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-140) prints the row 'RQI_I0I  I01, I02, I03, I07' (the letter I for the final digit one, as v2.3.1's row did), where the Appendix A listing (p A-105) prints RQI_I01, which is modelled and matched; a message that copies the printed ID RQI_I0I is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives RQI_I0I a syntax (register section E, v2.4 not-modelled table)"),
                 "RRA_O02": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.4 (Appendix A; CH02 section 2.17.3, pp 2-136 to 2-141) lists RRA_O02 (event O02, 'backwards compatibility'), and no v2.4 chapter prints its syntax (Table 0354 only; register section E, v2.4 not-modelled table)"),
@@ -268,9 +325,15 @@ extension MessageStructureTable {
                 "SUR_P09": NotModelledStructure(
                     triggers: ["SUR^P09"],
                     reason: "CH07 section 7.11.2 (p 7-83) prints a row 'ED Encapsulated Data' inside the facility group, and v2.4 defines no ED segment (ED is a data type, CH02), so the row names nothing a message can carry (unreadable print; register section E, v2.4 not-modelled table)"),
+                "TBR_R09": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.4 in Chapter 2 (section 2.17.3, p 2-141) prints the row 'TBR_R09  R09' after TBR_R08, a row the Appendix A listing (p A-105) does not print; Table 0003 (p 2-134) gives R09 to ERP (event replay response, registered as ERP_R09) and no v2.4 chapter prints a TBR^R09 message or a TBR_R09 syntax; a message that copies the printed ID TBR_R09 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (register section E, v2.4 not-modelled table)"),
             ]
         case .v2_5_1:
             return [
+                "BRP_030": NotModelledStructure(
+                    triggers: [],
+                    reason: "The Appendix A listing of Table 0354 v2.5.1 (p A-106) prints the row 'BRP_030  O30' (digit zero for the letter O; overrides.json table-0354 erratum), where the CH02 Table 0354 (p 2-102) prints BRP_O30 and CH04 section 4.20.5 (p 4-209) prints BRP^O30^BRP_O30, which is modelled and matched; a message that copies the printed ID BRP_030 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives BRP_030 a syntax (register section E, v2.5.1 not-modelled table)"),
                 "DSR_P04": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists DSR_P04 (event P04); CH06 section 6.4.4 (p 6-8) prints no syntax, only 'the QRY/DSR transaction, as defined in Chapter 2' and the note 'The associated messages are defined in Chapter 5'; CH05 prints the display response DSR twice with different syntax (section 5.10.2.1 DSR^Q01, p 5-115, the immediate response with MSA required; section 5.10.3.2 DSR^Q03, p 5-116, the deferred response with MSA optional) and the print does not say which mode P04 uses, so the reference is ambiguous. Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (P8b-18; register section E, v2.5.1 not-modelled table)"),
@@ -302,8 +365,8 @@ extension MessageStructureTable {
                     triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
                     reason: "CH12 section 12.3.1 (p 12-8) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.5.1 not-modelled table)"),
                 "PPG_PCG": NotModelledStructure(
-                    triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ"],
-                    reason: "CH12 section 12.3.4 (p 12-14) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                    triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
+                    reason: "CH12 section 12.3.4 (p 12-14) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Table 0354 v2.5.1 (CH02 section 2.17.3, p 2-104, and Appendix A, p A-108) also lists PCC under PPG_PCG, so PPG^PCC is registered with it (P8b-final, F-I1); Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.5.1 not-modelled table)"),
                 "PPP_PCB": NotModelledStructure(
                     triggers: ["PPP^PCB", "PPP^PCC", "PPP^PCD"],
                     reason: "CH12 section 12.3.3 (p 12-12) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.5.1 not-modelled table)"),
@@ -355,6 +418,9 @@ extension MessageStructureTable {
                 "RSP_K22": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-104) lists RSP_K22 (event K22); CH03 section 3.3.57 (pp 3-60 to 3-61) prints the event as RSP^K22^RSP_K21 (modelled under RSP_K21), so no print gives a structure RSP_K22 a syntax. Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (P8b-18; register section E, v2.5.1 not-modelled table)"),
+                "RSP_Q11": NotModelledStructure(
+                    triggers: [],
+                    reason: "Only the CH02 Table 0354 v2.5.1 (section 2.17.3, p 2-105) prints the row 'RSP_Q11  Q11'; the Appendix A listing does not, and its only other v2.5.1 print is the site-specific example RSP^Znn^RSP_Q11 in CH08 section 8.4.5 (p 8-9, a query profile example excluded under ruling G7), so no normative syntax is printed; a message that copies the printed ID RSP_Q11 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (register section E, v2.5.1 not-modelled table)"),
                 "SUR_P09": NotModelledStructure(
                     triggers: ["SUR^P09"],
                     reason: "CH07 section 7.11.2 prints a row 'ED Encapsulated Data' inside FACILITY (p 7-102; the section and the start of its table are on p 7-101, whose deprecation note says 'The message contains an invalid ED segment'), and v2.5.1 defines no ED segment (ED is a data type, CH02A), so the row names nothing a message can carry (register section E, v2.5.1 not-modelled table)"),
@@ -380,8 +446,8 @@ extension MessageStructureTable {
                     triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
                     reason: "CH12 section 12.2.1 (p 12-6 to 12-8) prints the order detail as '< OBR | etc. >', which the CH12 12.2 note (p 12-6) reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4 (p 4-5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.6 not-modelled table)"),
                 "PPG_PCG": NotModelledStructure(
-                    triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ"],
-                    reason: "CH12 section 12.2.4 (p 12-11 to 12-12) prints the order detail as '< OBR | etc. >', which the CH12 12.2 note (p 12-6) reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4 (p 4-5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.6 not-modelled table)"),
+                    triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
+                    reason: "CH12 section 12.2.4 (p 12-11 to 12-12) prints the order detail as '< OBR | etc. >', which the CH12 12.2 note (p 12-6) reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4 (p 4-5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Table 0354 v2.6 (CH02 section 2.16.3, p 86) also lists PCC under PPG_PCG, so PPG^PCC is registered with it (P8b-final, F-I1); Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.6 not-modelled table)"),
                 "PPP_PCB": NotModelledStructure(
                     triggers: ["PPP^PCB", "PPP^PCC", "PPP^PCD"],
                     reason: "CH12 section 12.2.3 (p 12-9 to 12-10) prints the order detail as '< OBR | etc. >', which the CH12 12.2 note (p 12-6) reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4 (p 4-5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.6 not-modelled table)"),
@@ -443,52 +509,52 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 103) lists MFN_M01 (events: none listed), and the printed table's Comment column marks it 'Deprecated and removed as of V2.7'; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "MFN_M03": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFN^M03"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 103) lists MFN_M03 (events: M03), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "MFQ_M01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFQ^M01", "MFQ^M02", "MFQ^M03", "MFQ^M04", "MFQ^M05", "MFQ^M06"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists MFQ_M01 (events: M01, M02, M03, M04, M05, M06), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "MFR_M01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M01", "MFR^M02", "MFR^M03"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists MFR_M01 (events: M01, M02, M03), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "MFR_M04": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M04"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists MFR_M04 (events: M04), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "MFR_M05": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M05"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists MFR_M05 (events: M05), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "MFR_M06": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M06"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists MFR_M06 (events: M06), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "MFR_M07": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M07"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists MFR_M07 (events: M07), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "NMQ_N01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["NMQ^N01"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists NMQ_N01 (events: N01), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "NMR_N01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["NMR^N01"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists NMR_N01 (events: N01), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "ORF_R04": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ORF^R04"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists ORF_R04 (events: R04), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "ORM_O01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ORM^O01"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists ORM_O01 (events: O01), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "ORR_O02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ORR^O02"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists ORR_O02 (events: O02), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "ORU_W01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ORU^W01"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists ORU_W01 (events: W01), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "OSQ_Q06": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["OSQ^Q06"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists OSQ_Q06 (events: Q06), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "OSR_Q06": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["OSR^Q06"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists OSR_Q06 (events: Q06), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "OUL_R21": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["OUL^R21"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists OUL_R21 (events: R21), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "PGL_PC6": NotModelledStructure(
                     triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
@@ -524,34 +590,34 @@ extension MessageStructureTable {
                     triggers: ["QBP^Q15"],
                     reason: "CH05 section 5.4.3 (p 37) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.7.1 not-modelled table)"),
                 "QCK_Q02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QCK^Q02"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QCK_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRF^W02"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists QRF_W02 (events: W02), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "QRY_A19": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^A19"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QRY_A19 (events: A19), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "QRY_PC4": NotModelledStructure(
                     triggers: ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"],
                     reason: "CH12 sections 12.3.5, 12.3.7, 12.3.9 and 12.3.11 (pp 15 to 22) prints QRD and [QRF], the original-mode query segments that v2.7.1 withdrew (CH04A, p 105: 'retained for backward compatibility only as of v 2.4 and withdrawn as of v2.7'; CH02, p 35) and no v2.7.1 chapter defines (the v2.7.1 segment schemas hold neither), so the print cannot be checked against the v2.7.1 segment grammar (register section E, v2.7.1 not-modelled table)"),
                 "QRY_Q01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^Q01", "QRY^Q26", "QRY^Q27", "QRY^Q28", "QRY^Q29", "QRY^Q30"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QRY_Q01 (events: Q01, Q26, Q27, Q28, Q29, Q30), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "QRY_Q02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^Q02"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QRY_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "QRY_R02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^R02"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QRY_R02 (events: R02), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "QRY_T12": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^T12"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QRY_T12 (events: T12), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "QVR_Q17": NotModelledStructure(
                     triggers: ["QVR^Q17"],
                     reason: "CH05 section 5.4.5 (p 39) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.7.1 not-modelled table)"),
                 "RAR_RAR": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RAR^RAR"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists RAR_RAR (events: RAR), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "RCI_I05": NotModelledStructure(
                     triggers: ["RCI^I05"],
@@ -563,13 +629,13 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists RDR_RDR (event RDR); its only v2.7.1 print is the CH05 section 5.9.1.1 (pp 61 to 62) restatement of 'an original-mode query that was defined in Chapter 4', and CH04A 4A.3.17 (p 22) says the pair was 'withdrawn as of v2.7' and prints no syntax (excluded under ruling G7; register section E, v2.7.1 not-modelled table)"),
                 "RER_RER": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RER^RER"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists RER_RER (events: RER), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "RGR_RGR": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RGR^RGR"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists RGR_RGR (events: RGR), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "ROR_ROR": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ROR^ROR"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists ROR_ROR (events: ROR), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "RQC_I05": NotModelledStructure(
                     triggers: ["RQC^I05", "RQC^I06"],
@@ -578,28 +644,28 @@ extension MessageStructureTable {
                     triggers: ["RSP^K11"],
                     reason: "CH05 section 5.4.1 (p 34) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.7.1 not-modelled table)"),
                 "RSP_Q11": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RSP^Q11"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists RSP_Q11 (events: Q11), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "SQM_S25": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["SQM^S25"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists SQM_S25 (events: S25), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "SQR_S25": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["SQR^S25"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists SQR_S25 (events: S25), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "SUR_P09": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["SUR^P09"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists SUR_P09 (events: P09), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "UDM_Q05": NotModelledStructure(
                     triggers: ["UDM^Q05"],
                     reason: "CH05 section 5.10.1.2 (p 106), under 5.10 'retained for backward compatibility', prints URD and [URS]; no v2.7.1 chapter defines either segment (the v2.7.1 segment schemas hold neither), so the print cannot be checked against the v2.7.1 segment grammar (register section E, v2.7.1 not-modelled table)"),
                 "VXQ_V01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["VXQ^V01"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists VXQ_V01 (events: V01), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "VXR_V03": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["VXR^V03"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists VXR_V03 (events: V03), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "VXX_V02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["VXX^V02"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists VXX_V02 (events: V02), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
             ]
         case .v2_8_2:
@@ -620,59 +686,59 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 150) lists MFN_M01 (events: none listed), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFN_M03": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFN^M03"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFN_M03 (events: M03), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFQ_M01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFQ^M01", "MFQ^M02", "MFQ^M03", "MFQ^M04", "MFQ^M05", "MFQ^M06"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFQ_M01 (events: M01, M02, M03, M04, M05, M06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M01", "MFR^M02", "MFR^M03"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M01 (events: M01, M02, M03), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M04": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M04"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M04 (events: M04), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M05": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M05"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M05 (events: M05), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M06": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M06"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M06 (events: M06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M07": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["MFR^M07"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M07 (events: M07), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "NMQ_N01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["NMQ^N01"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists NMQ_N01 (events: N01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "NMR_N01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["NMR^N01"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists NMR_N01 (events: N01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ORF_R04": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ORF^R04"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists ORF_R04 (events: R04), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ORM_O01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ORM^O01"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists ORM_O01 (events: O01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ORR_O02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ORR^O02"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists ORR_O02 (events: O02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ORU_W01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ORU^W01"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists ORU_W01 (events: W01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "OSQ_Q06": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["OSQ^Q06"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OSQ_Q06 (events: Q06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "OSR_Q06": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["OSR^Q06"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OSR_Q06 (events: Q06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "OUL_R21": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["OUL^R21"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OUL_R21 (events: R21), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "PGL_PC6": NotModelledStructure(
                     triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
                     reason: "CH12 section 12.3.1 (pp 7 to 9) prints the order detail as '< OBR | Hxx etc. >', which the CH12 12.3 note (p 7) reads as 'all possible combinations of pharmacy and other order detail segments' per CH04 4.2.2.4 (p 5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "PPG_PCG": NotModelledStructure(
-                    triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ"],
-                    reason: "CH12 section 12.3.4 (pp 14 to 15) prints the order detail as '< OBR | Hxx etc. >', which the CH12 12.3 note (p 7) reads as 'all possible combinations of pharmacy and other order detail segments' per CH04 4.2.2.4 (p 5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.8.2 not-modelled table)"),
+                    triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
+                    reason: "CH12 section 12.3.4 (pp 14 to 15) prints the order detail as '< OBR | Hxx etc. >', which the CH12 12.3 note (p 7) reads as 'all possible combinations of pharmacy and other order detail segments' per CH04 4.2.2.4 (p 5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) also lists PCC under PPG_PCG, so PPG^PCC is registered with it (P8b-final, F-I1); Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "PPP_PCB": NotModelledStructure(
                     triggers: ["PPP^PCB", "PPP^PCC", "PPP^PCD"],
                     reason: "CH12 section 12.3.3 (pp 11 to 13) prints the order detail as '< OBR | Hxx etc. >', which the CH12 12.3 note (p 7) reads as 'all possible combinations of pharmacy and other order detail segments' per CH04 4.2.2.4 (p 5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.8.2 not-modelled table)"),
@@ -680,16 +746,16 @@ extension MessageStructureTable {
                     triggers: ["PPR^PC1", "PPR^PC2", "PPR^PC3"],
                     reason: "CH12 section 12.3.2 (pp 9 to 11) prints the order detail as '< OBR | Hxx etc. >', which the CH12 12.3 note (p 7) reads as 'all possible combinations of pharmacy and other order detail segments' per CH04 4.2.2.4 (p 5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated; Blocking (open slot): the model has no open-slot element, which would let the validator check every segment, group and cardinality the print gives around the slot but not which order detail segments fill it (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "PPT_PCL": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["PPT^PCL"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PPT_PCL (events: PCL), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "PPV_PCA": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["PPV^PCA"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PPV_PCA (events: PCA), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "PRR_PC5": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["PRR^PC5"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PRR_PC5 (events: PC5), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "PTR_PCF": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["PTR^PCF"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PTR_PCF (events: PCF), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QBP_Q11": NotModelledStructure(
                     triggers: ["QBP^Q11", "QBP^Q31"],
@@ -701,82 +767,82 @@ extension MessageStructureTable {
                     triggers: ["QBP^Q15"],
                     reason: "CH05 section 5.4.3 (pp 36 to 37) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "QCK_Q02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QCK^Q02"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QCK_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRF^W02"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists QRF_W02 (events: W02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_A19": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^A19"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_A19 (events: A19), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_PC4": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_PC4 (events: PC4, PC9, PCE, PCK), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_Q01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^Q01", "QRY^Q26", "QRY^Q27", "QRY^Q28", "QRY^Q29", "QRY^Q30"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_Q01 (events: Q01, Q26, Q27, Q28, Q29, Q30), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_Q02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^Q02"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_R02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^R02"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_R02 (events: R02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_T12": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["QRY^T12"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_T12 (events: T12), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QVR_Q17": NotModelledStructure(
                     triggers: ["QVR^Q17"],
                     reason: "CH05 section 5.4.5 (pp 38 to 39) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "RAR_RAR": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RAR^RAR"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RAR_RAR (events: RAR), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RCI_I05": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RCI^I05"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RCI_I05 (events: I05), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RCL_I06": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RCL^I06"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RCL_I06 (events: I06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RDR_RDR": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279) lists RDR_RDR (event RDR); its only v2.8.2 print is the CH05 section 5.9.1.1 (pp 59 to 60) restatement of 'an original-mode query that was defined in Chapter 4', which v2.8.2 Chapter 4A no longer prints (excluded under ruling G7; register section E, v2.8.2 not-modelled table)"),
                 "RER_RER": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RER^RER"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RER_RER (events: RER), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RGR_RGR": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RGR^RGR"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RGR_RGR (events: RGR), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ROR_ROR": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["ROR^ROR"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists ROR_ROR (events: ROR), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RQC_I05": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RQC^I05", "RQC^I06"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RQC_I05 (events: I05, I06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RSP_K11": NotModelledStructure(
                     triggers: ["RSP^K11"],
                     reason: "CH05 section 5.4.1 (p 35) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "RSP_Q11": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["RSP^Q11"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RSP_Q11 (events: Q11), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "SQM_S25": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["SQM^S25"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SQM_S25 (events: S25), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "SQR_S25": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["SQR^S25"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SQR_S25 (events: S25), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "SUR_P09": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["SUR^P09"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SUR_P09 (events: P09), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "UDM_Q05": NotModelledStructure(
                     triggers: ["UDM^Q05"],
                     reason: "CH05 section 5.10.1.2 (pp 102 to 103), under 5.10 'retained for backward compatibility', prints URD and [URS]; v2.8.2 defines neither segment (Appendix A lists URD and URS as 'deprecated', with no definition), so the print cannot be checked against the v2.8.2 segment grammar (register section E, v2.8.2 not-modelled table)"),
                 "VXQ_V01": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["VXQ^V01"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXQ_V01 (events: V01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "VXR_V03": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["VXR^V03"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXR_V03 (events: V03), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "VXX_V02": NotModelledStructure(
-                    triggers: [],
+                    triggers: ["VXX^V02"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXX_V02 (events: V02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
             ]
         default: return [:]

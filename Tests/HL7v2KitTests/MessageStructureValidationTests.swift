@@ -572,7 +572,8 @@ struct MessageStructureValidationTests {
         #expect(unknown.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
         #expect(unknown.first?.severity == .error)
         let misprint = try structureIssues(Self.wire("PIN^I07^PIN_107", version: "2.3.1", ["PRD|1", "PID|1", "IN1|1"]))
-        #expect(misprint.map(\.code) == [.messageStructureMismatch(declared: "PIN_107", trigger: "PIN^I07")])
+        // The literally printed Table 0354 misprint is registered (P8b-final ruling F-I1): info.
+        #expect(misprint.map(\.code) == [.messageStructureNotModelled(structure: "PIN_107")])
         #expect(try structureIssues(Self.wire("PIN^I07^PIN_I07", version: "2.3.1", ["PRD|1", "PID|1", "IN1|1"])).isEmpty)
         for (msh9, id, text) in [("PPR^PC1^PPR_PC1", "PPR_PC1", "OBR, etc."),
                                  ("ORU^W01^ORU_W01", "ORU_W01", "Table 0354 only"),
