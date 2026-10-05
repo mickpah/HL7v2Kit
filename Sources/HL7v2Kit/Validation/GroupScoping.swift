@@ -63,9 +63,12 @@ enum GroupScoping: Sendable {
 ///
 /// Termination: `context` and `group` move strictly outward along the span
 /// parent chain, which ends at the message (nil). Every `ScopeLookup` function
-/// recurses strictly inward over the children of a finite definition tree;
-/// `transparent` calls `pairing`, `extended` and `inside` call those two, and
-/// none of them calls back into a lookup. `region` visits each span at most
+/// recurses strictly inward over the children of a finite definition tree:
+/// `transparent` reads the cardinality only and calls nothing; `extended` calls
+/// `transparent`; `pairing` calls `claims`, which calls `extended` and
+/// `transparent`; `inside` calls `pairing`. None of them calls back into a
+/// lookup (`context`, `group`), so every chain of calls ends at the
+/// definition's leaves. `region` visits each span at most
 /// once (pre-order, skipping a cut subtree). The cost of one lookup is linear
 /// in the spans and in the definition's size times its depth.
 struct GroupSpanIndex: Sendable {

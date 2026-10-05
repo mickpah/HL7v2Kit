@@ -148,6 +148,28 @@ struct GroupSpanSeamTests {
         #expect(exact.spans == match.spans)
     }
 
+    /// The real case: v2.4 REF_I12 (CH11 11.5.1, pp 11-16 to 11-17) prints
+    /// `[PATIENT_VISIT { PV1 [PV2] }]` twice in a row (top-level elements 14 and
+    /// 15). Each PV1 takes the PV2 of its own group occurrence: the first PV1,
+    /// whose group has no PV2, takes none although the second group, with the
+    /// same name, has one; read by name it would take that one.
+    @Test("v2.4 REF_I12: the two PATIENT_VISIT groups are told apart by position", arguments: [false, true])
+    func sameNameSiblingsOnREF_I12(_ firstHasPV2: Bool) throws {
+        let body = ["PRD|1", "PID|1", "PV1|1"] + (firstHasPV2 ? ["PV2|1"] : []) + ["PV1|2", "PV2|2"]
+        let message = try GroupSpanScopeTests.scoped("REF^I12^REF_I12", "2.4", body)
+        guard case .spans(let index) = message.groupScoping else {
+            Issue.record("no spans")
+            return
+        }
+        let visits = index.spans.filter { $0.name == "PATIENT_VISIT" }
+        #expect(visits.map(\.position) == [[14], [15]], "\(visits.map(\.description))")
+        let ids = message.segments.map(\.segmentID)
+        let pv1 = ids.indices.filter { ids[$0] == "PV1" }, pv2 = ids.indices.filter { ids[$0] == "PV2" }
+        #expect(message.associatedIndex("PV2", fromIndex: pv1[0]) == (firstHasPV2 ? pv2.first : nil))
+        #expect(message.associatedIndex("PV2", fromIndex: pv1[1]) == pv2.last)
+        #expect(message.associatedIndex("PV1", fromIndex: try #require(pv2.last)) == pv1[1])
+    }
+
     @Test("The fallback keeps the former gate for its message codes and versions only")
     func fallbackTable() {
         let gated = "gated OBR-2,OBR-29,OBR-3,ORC-2,ORC-3,ORC-8"

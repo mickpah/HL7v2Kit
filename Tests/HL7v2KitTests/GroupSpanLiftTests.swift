@@ -76,6 +76,29 @@ struct GroupSpanLiftTests {
         #expect(fired.count == 1, "\(which): \(fired.map(\.message))")
     }
 
+    /// The same atom as a counting predicate shows each anchor resolved on its
+    /// own: a messageWide rule counts the anchors whose `OBX present` holds. With
+    /// both orders' OBX every anchor counts (2); without the second order's OBX
+    /// only the first does (1); the ORC back-walk would still find the first
+    /// order's OBX for the second OBR and count 2. OPU_R25 requires each ORDER's
+    /// RESULT group, so it has the full case only.
+    @Test("A custom rule on ORC or OBR counting `OBX present` resolves each anchor in its own scope",
+          arguments: [("CCR", true), ("CCR", false), ("OPU", true)])
+    func customRuleCountsEachAnchor(_ which: String, _ secondHasOBX: Bool) throws {
+        let (msh9, full, anchor) = which == "CCR" ? (Self.ccr.0, Self.ccr.1, "OBR") : (Self.opu.0, Self.opu.1, "ORC")
+        let body = secondHasOBX ? full : full.filter { $0 != "OBX|2" }
+        let rule = SegmentCardinalityRule(countedSegmentID: anchor, scope: .messageWide, minCount: 99,
+                                          predicate: "OBX present", specCitation: "test-only:lift")
+        let profile = Profile(locale: .international, cardinalityExtensions: [anchor: [rule]])
+        let message = try GroupSpanScopeTests.scoped(msh9, "2.8.2", body)
+        let issues = Validator(locale: .international, testProfileOverride: profile).validate(message).issues
+        let counted = issues.compactMap { issue -> Int? in
+            if case .segmentCardinalityBelowMinimum(anchor, 99, let actual, _) = issue.code { return actual }
+            return nil
+        }
+        #expect(counted == [secondHasOBX ? 2 : 1], "\(which): \(counted)")
+    }
+
     /// REF_I12 (v2.4 CH11 11.5.1) and RCI_I05 (v2.5.1 CH11) print the provider
     /// group { PRD [{CTD}] } and the OBSERVATION { OBR ... } group as repeating
     /// siblings: a provider is not tied to an observation request, so a PRD has

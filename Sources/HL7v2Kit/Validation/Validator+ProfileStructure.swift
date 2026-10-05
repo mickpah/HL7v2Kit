@@ -28,11 +28,9 @@ extension Validator {
     /// it). Every other base finding is kept; where no profile applies, all of them.
     /// An exact-matched base, which reports its first divergence only, is matched
     /// again past each dropped `unexpected` until a finding is kept or none is left.
-    /// `profiles` replaces the generated table; tests pass synthetic ones.
     func matchProfileStructure(over base: MessageStructure, baseFindings: [ValidationIssue], message: Message,
-                               severity: IssueSeverity,
-                               profiles: [String: MessageStructure]? = nil) -> (base: [ValidationIssue], profile: [ValidationIssue]) {
-        let table = profiles ?? MessageStructureTable.profileStructures(for: locale)
+                               severity: IssueSeverity) -> (base: [ValidationIssue], profile: [ValidationIssue]) {
+        let table = MessageStructureTable.profileStructures(for: locale)
         guard let profile = table[base.id], let rule = profile.rule, profile.baseVersion == base.version,
               profile.accepts(messageCode: message.messageCode ?? "", triggerEvent: message.triggerEvent ?? ""),
               fragmentReason(message, structure: base) == nil else { return (baseFindings, []) }
@@ -102,6 +100,14 @@ extension Validator {
             guard case .messageStructureSegmentMissing(_, let segmentID, _) = issue.code else { return nil }
             return "\(segmentID)@\(issue.location.pathDescription)"
         })
+        // P8b-18: a requirement the matcher reaches the end with, while segments the
+        // profile passes over follow the last one it matched (RQD in place of OBR on
+        // ORM^O01), is worded in place of the first of them, not at the end of the
+        // message. The location stays the last segment.
+        let lastMatched = ids.indices.last { !StructureMatcher.isTransparent(ids[$0]) && !passedOver.contains(ids[$0]) }
+        let standIn = ids.indices.first { index in
+            index > (lastMatched ?? -1) && passedOver.contains(ids[index]) && !StructureMatcher.isTransparent(ids[index])
+        }
         return (kept, match.findings.indices.compactMap { n in
             let finding = match.findings[n]
             guard finding.kind == .missing else { return nil }
@@ -109,7 +115,8 @@ extension Validator {
             let atEnd = index >= ids.count
             let anchor = location(min(index, ids.count - 1))
             guard !reported.contains("\(finding.segmentID)@\(anchor.pathDescription)") else { return nil }
-            let place = atEnd ? "at the end of the message" : "before \(anchor.pathDescription)"
+            let place = !atEnd ? "before \(anchor.pathDescription)"
+                : standIn.map { "in place of \(location($0).pathDescription)" } ?? "at the end of the message"
             let scope = finding.group.map { " in group \($0)" } ?? ""
             return ValidationIssue(
                 severity: severity,

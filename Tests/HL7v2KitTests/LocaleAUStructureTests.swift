@@ -140,6 +140,8 @@ struct LocaleAUStructureTests {
         let found = au(all)
         try #require(found.count == 1, "\(found.map(\.message))")
         #expect(found[0].message.contains("requires OBR "))
+        #expect(found[0].message.contains(" at the end of the message "), "\(found[0].message)")
+        #expect(found[0].location.pathDescription == "ORC[1]")
     }
 
     @Test("AU ORM^O01 with RXO in place of OBR draws nothing (p 280: OBR is replaced by another order detail segment)")
@@ -158,13 +160,19 @@ struct LocaleAUStructureTests {
     }
 
     @Test("AU ORM^O01 with RQD or RQ1 in place of OBR: 00060.1 fires (p 280 replaces OBR only for medication and diet orders)",
-          arguments: ["RQD|1", "RQ1|1"])
-    func ormRequisitionDetail(_ detail: String) throws {
-        let all = try issues("ORM^O01^ORM_O01", ["PID|1", "ORC|NW", detail])
+          arguments: ["RQD|1", "RQ1|1"], [false, true])
+    func ormRequisitionDetail(_ detail: String, _ trailingZ: Bool) throws {
+        let all = try issues("ORM^O01^ORM_O01", ["PID|1", "ORC|NW", detail] + (trailingZ ? ["ZXX|1"] : []))
         #expect(base(all).isEmpty, "base v2.4 accepts the requisition detail: \(base(all).map(\.message))")
         let found = au(all)
         try #require(found.count == 1, "\(found.map(\.message))")
         #expect(found[0].message.contains("requires OBR "))
+        // P8b-18: the profile passes the requisition detail over, so the matcher
+        // reaches the end; the finding names the segment it stands in place of.
+        let id = String(detail.prefix(3))
+        #expect(found[0].message.contains(" in place of \(id)[1] "), "\(found[0].message)")
+        #expect(!found[0].message.contains("at the end of the message"), "\(found[0].message)")
+        #expect(found[0].location.pathDescription == (trailingZ ? "ZXX[1]" : "\(id)[1]"))
     }
 
     @Test("A compliant AU ORM^O01, with the removed NTE segments, draws no finding")

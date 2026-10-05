@@ -241,6 +241,19 @@ struct StructureV231ProbeTests {
         #expect(issues.first?.severity == .error)
     }
 
+    // The single-token Table 0354 misprints are corrected by cited overrides (overrides.json
+    // table-0354 entries; Table 0003 pp 2-98 to 2-99 and the chapter captions give the intended
+    // IDs), so the literal printed IDs name no loaded structure: on a complete version a message
+    // that copies one is a mismatch, never matched against the corrected structure (P8b-18).
+    @Test("Literally printed single-token misprints (PIN_107, RPI_I0I, RQI_I0I, ARD_A19) are mismatches",
+          arguments: [("PIN^I07^PIN_107", "PIN_107", "PIN^I07"), ("RPI^I01^RPI_I0I", "RPI_I0I", "RPI^I01"),
+                      ("RQI^I01^RQI_I0I", "RQI_I0I", "RQI^I01"), ("ADR^A19^ARD_A19", "ARD_A19", "ADR^A19")])
+    func misprintedSingleTokenIDs(_ c: (String, String, String)) throws {
+        let issues = try structureIssues(c.0, ["MSA|AA|1"])
+        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: c.1, trigger: c.2)], "\(issues.map(\.message))")
+        #expect(issues.first?.severity == .error)
+    }
+
     // Captions Table 0354 places under no structure (overrides.json unresolvedCaptions):
     // MFN^M04 (CH08 8.9.1, p 8-60; no MFN_M04 row) and the master files query MFQ (no
     // MFQ row) are not modelled: info, never a false finding.

@@ -293,9 +293,14 @@ struct GroupSpanScopeTests {
     /// linear in the segments, so ten times the orders should cost about ten
     /// times as much; a lookup quadratic in the group occurrences would make it
     /// about a hundred. The ratio, not the wall-clock time, is bounded, because
-    /// the suite runs tests in parallel; each run sits under a watchdog.
-    @Test("A long ORU_R01 and OUL_R22 validate in time linear in their length", arguments: ["ORU", "OUL"])
-    func longMessage(_ which: String) throws {
+    /// the suite runs tests in parallel; each run sits under a watchdog. The
+    /// v2.8.2 cases put each ORC in the non-repeating COMMON_ORDER group (P8b-18):
+    /// before the OBR in ORU_R01 ORDER_OBSERVATION, after it in OUL_R22 ORDER.
+    @Test("A long ORU_R01 and OUL_R22 validate in time linear in their length",
+          arguments: ["2.5.1 ORU", "2.5.1 OUL", "2.8.2 ORU", "2.8.2 OUL"])
+    func longMessage(_ key: String) throws {
+        let parts = key.split(separator: " ").map(String.init)
+        let version = parts[0], which = parts[1]
         func message(orders: Int) throws -> Message {
             var body: [String] = which == "ORU" ? ["PID|1"] : ["PID|1", "SPM|1"]
             for order in 1...orders {
@@ -305,7 +310,7 @@ struct GroupSpanScopeTests {
                 body += pair + (1...10).map { "OBX|\($0)|ST|C^Code||v" }
             }
             let msh9 = which == "ORU" ? "ORU^R01^ORU_R01" : "OUL^R22^OUL_R22"
-            return try GroupSpanScopeTests.message(msh9, "2.5.1", body)
+            return try GroupSpanScopeTests.message(msh9, version, body)
         }
         let long = try message(orders: 300), short = try message(orders: 30)
         #expect(GroupSpanSeamTests.describe(Validator().groupScoping(for: long)) == "spans")
@@ -316,12 +321,12 @@ struct GroupSpanScopeTests {
         }
         let shortTimes = [timed(short), timed(short)].compactMap { $0 }
         let longTime = timed(long)
-        #expect(longTime != nil && shortTimes.count == 2, "\(which): validation did not finish within 120 s")
-        #expect(box.findings.isEmpty, "\(which): \(box.findings.prefix(3))")
+        #expect(longTime != nil && shortTimes.count == 2, "\(key): validation did not finish within 120 s")
+        #expect(box.findings.isEmpty, "\(key): \(box.findings.prefix(3))")
         if let longTime, let shortTime = shortTimes.min() {
             let ratio = longTime / shortTime
-            print("long-message \(which): \(long.segments.count) segments in \(longTime), \(short.segments.count) in \(shortTime), ratio \(ratio)")
-            #expect(ratio < 30, "\(which): \(longTime) against \(shortTime)")
+            print("long-message \(key): \(long.segments.count) segments in \(longTime), \(short.segments.count) in \(shortTime), ratio \(ratio)")
+            #expect(ratio < 30, "\(key): \(longTime) against \(shortTime)")
         }
     }
 
