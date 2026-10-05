@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Summary — workstream P7 (audit, documents and coverage), complete 2026-10-05
+
+- **Audit (P7-1, P7-8):** `audit-schemas.py` compares `C` and the defining attribute table;
+  the `--tables` KINDMISMATCH findings fall from 14 to 7, each remaining one the print's own
+  binding (ADR-016).
+- **Documents (P7-2 to P7-5, P7-8):** the conditional-completeness register is pinned to the
+  grammar on all seven versions; the v2.3 to v2.4, v2.6 and v2.8.2 audit and coverage
+  documents, the DocC "does not check" list, ADR-016 and the design index corrected against
+  the prints; register section G added; the DocC catalogue builds with no warnings.
+- **Coverage (P7-6, P7-7):** thirteen synthetic wire fixtures across v2.3, v2.3.1, v2.6,
+  v2.7.1 and v2.8.2 with wire-level fire and silent pairs.
+- **Guards (P7-8):** the printed-ID sweep committed as a local guard; spec examples with an
+  elided MSH-12 validate under their source version.
+- Rulings awaiting the owner: RXE-15 on v2.3, v2.3.1 and v2.4 (ship the rule or keep it
+  registered); register section G (component normative length and `B` / `W` component
+  warnings).
+
+### Fixed — P7-8: workstream close-out
+
+- **Spec-example harness:** an example whose MSH-12 the print elided validates under the
+  version of the document that prints it, not the v2.5.1 fallback
+  (`SpecExampleMessageTests`, pinned by the new always-on `SpecExampleHarnessTests`).
+  Registry re-baselined: 250 entries, 0 mismatched.
+- **Table kinds and bindings (against the print):** v2.3 Tables 0174, 0315, 0316 and v2.4
+  Table 0392 are User-defined as their chapters print them; v2.3 Table 0208 is HL7 with the
+  AE row (QAK-2 now checked on v2.3); v2.3 PD1-12 binds 0136 and PCR-22 binds 0252, the
+  tables their definitions name. Table 0354 v2.4 and v2.5.1 hold Appendix A's rows as
+  printed, misprints corrected only by structure-side errata (note in `overrides.json`).
+- **Guard:** `scripts/check-printed-structure-ids.py`, a local guard (it reads the licensed
+  PDFs; not CI): no printed (trigger, structure ID) pair is a mismatch beyond six cited
+  misprint rows.
+- **Tests:** the MSH-12 version matrix moved to `VersionMatrixTests.swift`; the bare-C
+  register check no longer takes `TXA-2.1` for `TXA-2`; a v2.3 direction-tag negative case
+  in the structure extractor self-check.
+- **DocC:** symbol links and anchors fixed; the `CharacterEncoding` article renamed
+  `CharacterEncodingGuide` so it no longer hides the enumeration's page; Migration.md cites
+  the extra-component rule per version.
+
 ### Added — P7-7: v2.6, v2.7.1 and v2.8.2 wire fixtures
 
 - Seven synthetic fixtures (v2.6 ORU^R01, ADT^A01; v2.7.1 ORU^R01 with PRT / TQ1 / SPM,
