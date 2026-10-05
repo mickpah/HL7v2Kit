@@ -259,15 +259,16 @@ does not define is passed over (it already raises `segmentNotInVersionGrammar`).
 | Version | Modelled | Registered | Blocking rows left, and why |
 |---|---|---|---|
 | v2.3 | 147 | 22 | MFR_M01 and MFN_M03: the master-file bodies are printed per file as prose fragments, which the extractor does not read; ORM_O01, ORR_O02, OSR_Q06, the eight CH12 `OBR, etc.` structures (open slot); ERP (field-keyed reference: ERQ-2 names the message whose segments fill the ellipsis) |
-| v2.3.1 | 100 | 28 | MFN_M03, MFN_M08 to M11 and MFR^M01 to M06: the same prose fragments; ORM_O01, ORR_O02, OSR_Q06 and the eight CH12 structures (open slot); ERP_R09 (field-keyed reference, ERQ-2) |
-| v2.4 | 148 | 24 | MFR_M01 and MFN_M03 (prose fragments); QRY_P04 (needs a structure alias: the print refers P04 to the CH05 QRY, but its caption prints an ID of its own); the eight CH12 structures (open slot); ERP_R09 (field-keyed reference, ERQ-2) |
-| v2.5.1 | 173 | 30 | MFR_M01 (prose fragments); MFN_M03 (a cross-reference: 8.8.2 refers its other segments to the MFN^M08 to M12 groups, chosen by MFI-1; the extractor does not read the reference and the model has no choice keyed by a field value); QRY_P04 (structure alias); RSP_K21 and RDE_O11 (per-trigger structures: two normative prints of one ID differ); the eight CH12 structures (open slot); ERP_R09 (field-keyed reference, ERQ-2) |
+| v2.3.1 | 100 | 38 | MFN_M03, MFN_M08 to M11 and MFR^M01 to M06: the same prose fragments; ORM_O01, ORR_O02, OSR_Q06 and the eight CH12 structures (open slot); ERP_R09 (field-keyed reference, ERQ-2) |
+| v2.4 | 148 | 34 | MFR_M01 and MFN_M03 (prose fragments); QRY_P04 (needs a structure alias: the print refers P04 to the CH05 QRY, but its caption prints an ID of its own); the eight CH12 structures (open slot); ERP_R09 (field-keyed reference, ERQ-2) |
+| v2.5.1 | 173 | 32 | MFR_M01 (prose fragments); MFN_M03 (a cross-reference: 8.8.2 refers its other segments to the MFN^M08 to M12 groups, chosen by MFI-1; the extractor does not read the reference and the model has no choice keyed by a field value); QRY_P04 (structure alias); RSP_K21 and RDE_O11 (per-trigger structures: two normative prints of one ID differ); the eight CH12 structures (open slot); ERP_R09 (field-keyed reference, ERQ-2) |
 | v2.6 | 190 | 20 | MFR_M01 (prose fragments); MFN_M03 (a cross-reference: 8.8.2 refers its other segments to the MFN^M08 to M12 groups, chosen by MFI-1; the extractor does not read the reference and the model has no choice keyed by a field value); ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4, RDE_O11 and RSP_K21 (per-trigger structures); the eight CH12 structures (open slot) |
-| v2.7.1 | 164 | 58 | ACK (per-trigger structures: CH10 prints `[{UAC}]`, CH02 `[UAC]`); the eight CH12 structures (open slot) |
-| v2.8.2 | 185 | 58 | ACK (per-trigger structures, as v2.7.1); PGL_PC6, PPG_PCG, PPP_PCB and PPR_PC1 (open slot; the other four CH12 IDs are Deprecated rows with no print) |
+| v2.7.1 | 164 | 58 | ACK (per-trigger structures: CH10 prints `[{UAC}]`, CH02 `[UAC]`); the eight CH12 structures (open slot); QRY_PC4, RCI_I05, RQC_I05, RCL_I06 and UDM_Q05 (model limit: their printed syntax names QRD, QRF, URD or URS, which v2.7.1 does not define; P8b-final F-I2) |
+| v2.8.2 | 185 | 62 | ACK (per-trigger structures, as v2.7.1); PGL_PC6, PPG_PCG, PPP_PCB and PPR_PC1 (open slot; the other four CH12 IDs are Deprecated rows with no print); UDM_Q05 (model limit: URD and URS, P8b-final F-I2) |
 
-1,107 structures are modelled and 240 registered (counted from `Resources/structures/v*/` and
-`completeness.json`). Every version also keeps the two cross-version Blocking rows of the table
+1,107 structures are modelled and 266 registered (counted from `Resources/structures/v*/` and
+`completeness.json`; 240 at P8b-18 close-out, 266 after P8b-final registered the printed IDs
+of ruling F-I1), with two printed pairs (`RSP^K32^RSP_K25`, v2.7.1 and v2.8.2). Every version also keeps the two cross-version Blocking rows of the table
 below (message fragments are not reassembled; version provenance), so **no version has left
 Blocking**: section E stays Blocking on every version. The rows and their reasons are in each
 version's addendum.
@@ -293,8 +294,17 @@ version's addendum.
   the ORC walk, except for the message codes the former schema gates covered (v2.5.1 OUL; v2.6,
   v2.7.1 and v2.8.2 OUL, OPU and OPL), whose order-number predicates (ORC-2, ORC-3, OBR-2, OBR-3,
   and ORC-8 and OBR-29 on v2.5.1 and v2.6) are not evaluated, as the gate behaved: the ORC walk is
-  unsound for structures that print OBR before ORC. The scope rule's registered imprecisions are
-  in the close-out addendum at the end of this section.
+  unsound for structures that print OBR before ORC. So on those messages one structure finding
+  anywhere, even one unrelated to the orders, switches the order-number predicates off, and no
+  issue on the message says so (final review M9; whether one should is an owner question). The
+  scope rule's registered imprecisions are in the close-out addendum at the end of this section.
+- *A structure ID the print gives (P8b-final, ruling F-I1):* never a mismatch. A modelled one is
+  matched (`ORU^W01^ORU_R01`, folded onto ORU_R01 on v2.3.1 to v2.8.2; `MCF^A01^ACK` on v2.4); one
+  with no modelled syntax (the v2.3.1 Table 0354 misprints, the v2.4 CH02-only rows, v2.5.1
+  BRP_030 and RSP_Q11, the v2.8.2 CH04 query profile IDs, ORU_W01) is registered and reports
+  information naming the structure the chapters give; `RSP^K32^RSP_K25` (the v2.7.1 and v2.8.2
+  CH03 query profiles; RSP_K25 is modelled for RSP^K25) is a `printedPairs` entry with the same
+  outcome. A mismatch is left only for an ID printed for other triggers, or printed nowhere.
 - *AU (`.auLocalisation`, v2.4):* the five ADRM-2021 profile structures (ORM_O01, ORU_R01,
   OSR_Q06, REF_I12, RRI_I12) report HL7au:00060.1 for a required segment the message lacks and
   drop the base findings the profile accepts (ADR-019 decision 7 as amended). 00060.1 is
@@ -852,7 +862,7 @@ that would.
 | OBR to OBX | v2.4 OML_O21 | Takes a CONTAINER_2 OBX that comes before an OBSERVATION OBX | The OBSERVATION OBX of the request | **Blocking** (same rule) |
 | Message-level OBR to OBX | v2.7.1 and v2.8.2 ORU_R30 | Takes the PATIENT_OBSERVATION OBX | The OBSERVATION group's OBX, which follow the OBR | **Blocking** (same rule) |
 | `.obrObxGroup` count | v2.8.2 ORU_R01 | Counts the ORDER_DOCUMENT and SPECIMEN OBX of the order occurrence with its OBSERVATION OBX | The OBSERVATION group's OBX only | **Blocking** (same rule) |
-| Lookup cost | every version | The anchor's innermost group occurrence is read from an index built once per message (P8b-18 fix round 1; it was a linear search per lookup); the rest of one lookup is linear in the spans of the region it returns and in the definition's size times its depth, so a message-level region costs a pass over the message | (performance, not a spec item) | Measured (release build, best of three): a 5,002-segment ORU^R01 of 150,084 bytes validates at `.warning` in 218 ms (v2.5.1) and 256 ms (v2.8.2), 1.48 and 1.75 ms per KB, inside the derived scaling limit of 293 ms (spec 9.5 prints a budget for a 1 KB message only; the limit scales its 2 ms row by size, 2 ms per KB, and is not a spec budget). The index changed no result (digests byte-identical) and no measured time beyond noise. Each `validate` resolves the structure and runs the base match twice, once for the group spans and once for the check (final review M8, not changed); both runs are inside the measured figures |
+| Lookup cost | every version | The anchor's innermost group occurrence is read from an index built once per message (P8b-18 fix round 1; it was a linear search per lookup); the rest of one lookup is linear in the spans of the region it returns and in the definition's size times its depth, so a message-level region costs a pass over the message | (performance, not a spec item) | Measured (one release run of `PerformanceStructureTests` at 1e3d8f26, 2026-10-05): a 5,002-segment ORU^R01 of 150,084 bytes validates at `.warning` in 227 ms (v2.5.1) and 269 ms (v2.8.2), 1.55 and 1.83 ms per KB (208 and 250 ms with the check off), inside the derived scaling limit of 293 ms (spec 9.5 prints a budget for a 1 KB message only; the limit scales its 2 ms row by size, 2 ms per KB, and is not a spec budget). The index changed no result (digests byte-identical) and no measured time beyond noise. Each `validate` resolves the structure and runs the base match twice, once for the group spans and once for the check (final review M8, not changed); both runs are inside the measured figures |
 | AU REF^I12 validation time | v2.4 with `.auLocalisation` | A REF^I12 with 200 to 800 ADRM-added segments (3,125 to 12,327 bytes) validates in 7.9 to 40.3 ms, 2.59 to 3.35 ms per KB, over the derived scaling limit (6.1 to 24.1 ms, 2 ms per KB); at 542f5cd, before the rollout, 6.9 to 36.8 ms, also over it | (performance, not a spec item) | **Registered, not met.** A sample of the 805-segment case puts the time in the AU profile's field-level checks (`checkProfileCompositeOverrides`, condition referent resolution and message path reads); the structure match, group spans and scoping take under 1 per cent of the samples. Without the AU locale the same message validates in 11.3 ms (0.94 ms per KB). The rollout added 1.0 to 3.5 ms (542f5cd to HEAD, the figures above). With the severity off the 805-segment case took 40.6 ms against 41.8 ms at `.warning` in one probe run; that difference is the findings' emission only, because the base match and its group spans are computed whatever the severity (`Validator+GroupSpans.swift`). `PerformanceStructureTests` wraps the three cases in `withKnownIssue` citing this row |
 
 **v2.4 Table 0354: CH02 and Appendix A disagree (for P7).** The CH02 print of Table 0354 (section

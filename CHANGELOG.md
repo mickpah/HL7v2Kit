@@ -60,6 +60,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   makes such a pair information. The six rows left are Table 0354 event misprints that are not
   trigger events (v2.3.1 `136`, `1II`; v2.4 and v2.5.1 `007`, `022`), whose corrected events
   match.
+- **The rule stated where a consumer reads it (F-I1 e, M7).** Migration.md ("The
+  message-structure check is on by default") and ADR-019 (amendment 2026-10-05) state that a
+  printed structure ID is never a mismatch and what a consumer gets in each case: matched,
+  information (registered, or a `printedPairs` entry), or a mismatch only for an ID printed for
+  other triggers or nowhere. The register's v2.4 Table 0354 and close-out paragraphs, the spec
+  audits and Validation.md say so too; earlier CHANGELOG entries that call the v2.3.1 misprints
+  mismatches are annotated.
+- **Documents and comments (M1, M2, M3, M5, M6, M8, M9).** `ADT^A47^ADT_A30` and
+  `ADT^A49^ADT_A30` on v2.7.1 and v2.8.2 draw information, not a mismatch (ADT_A30 is registered
+  with no triggers there): the register close-out, STATUS.md and NEXT_STEPS.md say so (M1). The
+  resolver's comment says Table 0354 is not consulted at runtime, its rows being merged by the
+  extractor (M2). The `MessageStructureTable` DocC says what a lookup miss does and does not mean
+  (M3). The 00060.1 text says every profile `unexpected` finding is dropped, not only
+  beyond-maximum ones (M5). The `messageStructureSegmentMissing` DocC says v2.3 to v2.4 group
+  names and v2.3 structure IDs are not the print's, and corrects "off by default" (M6). The
+  register's performance row records the two resolutions and base matches per `validate` (M8).
+  Validation.md and Migration.md state that one unrelated structure finding switches the OUL /
+  OPU / OPL order-number predicates off, with no issue saying so (M9). No API change.
 - **The Permanent / Blocking line drawn by its definition (F-I2).** v2.7.1 QRY_PC4, RCI_I05,
   RQC_I05, RCL_I06 and UDM_Q05 and v2.8.2 UDM_Q05 print their full syntax and are registered only
   because it names QRD, QRF, URD or URS, which the version's grammar does not define: a model
@@ -73,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Rollout complete.** Every structure the seven versions print is modelled or registered with
   its reason: v2.3 147 / 22, v2.3.1 100 / 28, v2.4 148 / 24, v2.5.1 173 / 30, v2.6 190 / 20,
-  v2.7.1 164 / 58, v2.8.2 185 / 58 (1,107 modelled, 240 registered), plus five ADRM-2021 profile
+  v2.7.1 164 / 58, v2.8.2 185 / 58 (1,107 modelled, 240 registered; 266 after P8b-final), plus five ADRM-2021 profile
   structures on v2.4. Register section E opens with the state at close-out: what a consumer gets
   per version, and why every version still has Blocking rows (master-file prose fragments on v2.3
   to v2.6, a structure alias for QRY_P04 on v2.4 and v2.5.1, per-trigger structures on v2.5.1 to
@@ -130,8 +148,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     rollout.
   - **Derived scaling checks, not spec budgets** (9.5 prints no budget for a long message; the
     limit is the 1 KB row scaled by size, 2 ms per KB): a 5,002-segment ORU^R01 of 150,084 bytes
-    (limit 293 ms) validates in 218 ms on v2.5.1 and 256 ms on v2.8.2 at `.warning` (1.48 and
-    1.75 ms per KB). The AU REF^I12 with 200 to 800 ADRM-added segments (3,125 to 12,327 bytes)
+    (limit 293 ms) validates in 227 ms on v2.5.1 and 269 ms on v2.8.2 at `.warning` (1.55 and
+    1.83 ms per KB; one release run of `PerformanceStructureTests`, `RUN_PERF_TESTS=1 swift test -c
+    release`, at 1e3d8f26 on 2026-10-05, P8b-final carry-forward). The AU REF^I12 with 200 to 800 ADRM-added segments (3,125 to 12,327 bytes)
     takes 7.9 to 40.3 ms, 2.59 to 3.35 ms per KB, over its derived limit (6.1 to 24.1 ms); it was
     over it before the rollout too (6.9 to 36.8 ms at 542f5cd), so the rollout added 1.0 to 3.5 ms;
     a profile puts the time in the AU profile's field-level checks (register section E, close-out
