@@ -162,6 +162,28 @@ struct StructureV231ProbeTests {
         #expect(bad.map { Self.describe($0.code) } == ["missing MSA"], "\(msh9): \(bad.map(\.message))")
     }
 
+    // P8b-18: CH06 6.3.4 (p 6-4) names "the QRY/DSR transaction, as defined in Chapter 2", and both
+    // Chapter 2 QRY prints (2.17.1 Q01 and 2.18.1 Q02, p 2-84) are MSH QRD [QRF] [DSC], so QRY^P04 is
+    // added to QRY_Q01 (overrides.json referencedTriggers), as on v2.3. Table 0354 v2.3.1 has no P04
+    // row, so the message is matched with MSH-9.3 empty or naming QRY_Q01.
+    @Test("QRY^P04 on v2.3.1 is matched against the Chapter 2 QRY", arguments: ["QRY^P04", "QRY^P04^QRY_Q01"])
+    func p04Query(_ msh9: String) throws {
+        #expect(try structureIssues(msh9, ["QRD|1", "QRF|1"]).isEmpty, "\(msh9)")
+        let bad = try structureIssues(msh9, ["QRF|1"])
+        #expect(bad.map { Self.describe($0.code) } == ["missing QRD"], "\(msh9): \(bad.map(\.message))")
+        let qry = try #require(MessageStructureTable.structure("QRY_Q01", version: .v2_3_1))
+        #expect(qry.citation.contains("added by overrides.json referencedTriggers"))
+    }
+
+    // P8b-18: the P04 response is not modelled: Chapter 2 prints DSR twice (2.17.1 MSA required,
+    // 2.18.2 MSA optional) and the print does not say which mode P04 uses.
+    @Test("DSR^P04 on v2.3.1 is info with its reason")
+    func p04Response() throws {
+        let issues = try structureIssues("DSR^P04", ["MSA|AA|1", "QRD|1", "DSP|1"])
+        #expect(issues.count == 1 && issues.first?.severity == .info, "\(issues.map(\.message))")
+        #expect(issues.first?.message.contains("which mode P04 uses") == true, "\(issues.map(\.message))")
+    }
+
     @Test("At least twelve probes on v2.3.1 structures beyond the resolution cases")
     func coverage() {
         #expect(Self.probes.count >= 12)

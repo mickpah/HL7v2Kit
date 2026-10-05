@@ -1185,7 +1185,7 @@ compiling a structure per message.
 
 ## Amendment 2026-10-04 — v2.3.1 complete (P8b-14)
 
-- **v2.3.1 complete.** 99 structures modelled (100 since P8b-15 fix round 2 folded MCF) (10 exact-matched), 27 registered (register
+- **v2.3.1 complete.** 99 structures modelled (100 since P8b-15 fix round 2 folded MCF) (10 exact-matched), 28 registered (27 until P8b-18 added DSR_P04, the P04 response, under a synthesised ID, and folded QRY^P04 onto QRY_Q01 through `referencedTriggers`) (register
   section E v2.3.1 addendum: the general order's `Order Detail Segment` placeholder in ORM_O01,
   ORR_O02 and OSR_Q06, the CH12 placeholders, ERP_R09, MFN_M03, SUR_P09 and 13 Table 0354 rows
   no print carries); every Table 0354 v2.3.1 row is one or the other.

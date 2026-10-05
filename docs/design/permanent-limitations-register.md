@@ -545,12 +545,16 @@ is `{[OBX] [{NTE}]}`).
 ### Addendum to §E — v2.3.1 complete (P8b-14, 2026-10-04)
 
 v2.3.1 is `complete: true` in `Resources/structures/completeness.json`: 99 structures modelled (100 since P8b-15 fix round 2, which folds MCF, CH02 2.13.2 pp 2-78 to 2-79, onto `MCF^*`: the print gives its syntax under the code alone, so it is modelled, not registered)
-(each cited to chapter, section and pages of the one v2.3.1 PDF) and 27 registered as not
-modelled in that file's `notModelled`; every Table 0354 v2.3.1 row (Chapter 2, section
-2.24.1.9, pp 2-103 to 2-106; 117 rows) is one or the other. Most v2.3.1 captions print
-`CODE^EVT` only: the structure ID comes from that table. Nine printed IDs have no row (ACK,
-folded onto `ACK^*` through CH02 2.13.1, and the eight structures of the shared triggers
-ORM^O01 and ORR^O02, whose captions print their IDs).
+(each cited to chapter, section and pages of the one v2.3.1 PDF) and 28 registered as not
+modelled in that file's `notModelled` (27 until P8b-18 registered DSR_P04); every Table 0354
+v2.3.1 row (Chapter 2, section 2.24.1.9, pp 2-103 to 2-106; 117 rows) is one or the other. Most
+v2.3.1 captions print `CODE^EVT` only: the structure ID comes from that table. Ten printed IDs
+have no row (ACK, folded onto `ACK^*` through CH02 2.13.1; MCF, folded onto `MCF^*` through CH02
+2.13.2 since P8b-15 fix round 2, modelled and not registered; and the eight structures of the
+shared triggers ORM^O01 and ORR^O02, whose captions print their IDs). QRY^P04, which CH06 6.3.4
+(p 6-4) defines as "the QRY/DSR transaction, as defined in Chapter 2", is added to QRY_Q01
+through `referencedTriggers` (P8b-18, as on v2.3: both Chapter 2 QRY prints, 2.17.1 and 2.18.1
+on p 2-84, are MSH QRD [QRF] [DSC]).
 
 | Not modelled (v2.3.1) | Why | Status |
 |---|---|---|
@@ -562,6 +566,7 @@ ORM^O01 and ORR^O02, whose captions print their IDs).
 | MFN_M01, MFN_M02, NUL, ORM_Q06, ORR_Q06, RAS_O02, SRM_T12, SRR_T12 | Table 0354 rows no caption prints (searched in every caption form): MFN_M01's only print is the 8.3.1 template captioned MFN^M01-M06, MFN_M02's the 8.6.1 staff print captioned MFN^M01-M06 (neither caption's six events is one row's); NUL names no message. | **Permanent** for v2.3.1. |
 | MFN_M08 to MFN_M11 | Table 0354 rows no caption prints: M08 to M11 are printed only as prose fragments keyed by MSH-9 event under MFN^M03 (8.7.2, p 8-20). A reader for prose-printed fragments would close them (status corrected from Permanent in P8b-15 fix round 1). | **Blocking** (reading prose-printed fragments and cross-references). |
 | ORU_W01 | Table 0354 (p 2-104) gives W01 a structure ID of its own, ORU_W01; CH07 7.19.1 (p 7-117) says only that W01 "identifies ORU messages used to transmit waveform data" (its 7.20 examples carry ORU^W01), and no chapter prints ORU_W01's syntax. Reading W01 as ORU_R01 would contradict the table, so the print gives neither a syntax nor a reference that names a printed structure (class corrected in P8b-15 fix round 2: fix round 1 had moved it to Blocking, but there is no fragment to read). | **Permanent** for v2.3.1. |
+| DSR_P04 (synthesised ID; P8b-18) | The P04 response: CH06 6.3.4 (p 6-4) names only "the QRY/DSR transaction, as defined in Chapter 2"; Chapter 2 prints DSR twice, 2.17.1 (p 2-84) with MSA required and 2.18.2 (p 2-85) with MSA optional, and the print does not say which mode P04 uses. Table 0354 has no P04 row. The query side, QRY^P04, is matched against QRY_Q01. | **Permanent** for v2.3.1 (DSR^P04 is info with this reason). |
 | Captions with no structure ID: MFN^M01-M06 (8.3.1, p 8-3; 8.6.1, p 8-11), MFQ^M01-M06 (8.3.3, p 8-4), MFN^M04 (8.9.1, p 8-60) | Table 0354 lists no row for their events (no MFQ or MFN_M04 row) and no row lists all six of a range; declared in `overrides.json` `unresolvedCaptions` and reported info on the wire. MFN^M01-M06 at 8.3.1 is also a `[Z..]` template. | **Permanent** for v2.3.1. |
 | MFR^M01-M06 (8.3.3, p 8-4) | Table 0354 lists no MFR row; declared in `unresolvedCaptions`, info on the wire. The 8.3.3 print has a `[Z..]` row, but the master file sections give its segments per file in prose (8.6.1 pp 8-11 to 8-12, 8.7.2 p 8-20, 8.8.1 p 8-49, 8.9.1 p 8-60, 8.10.1 p 8-68: 'When the ... segments are used in the MFR message, the part ... is replaced by'); only M01's cannot be enumerated (status corrected from Permanent in P8b-15 fix round 1). | **Blocking** (reading prose-printed fragments and cross-references). |
 

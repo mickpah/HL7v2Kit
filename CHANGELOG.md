@@ -38,6 +38,10 @@ group, cardinality or choice of a modelled structure changes.
 - v2.3: DSR^P04 (the response of CH06 6.3.4's "QRY/DSP transaction"; CH02 prints DSR twice with
   MSA required and optional, mode not stated) and ORU^R03 (Table 0003 gives R03 to QRY/DSR; one
   CH07 7.4.5.3 example sends ORU^R03) are registered with their reason: 22 registered.
+- v2.3.1: QRY^P04 is matched against QRY_Q01 (CH06 6.3.4, p 6-4, "the QRY/DSR transaction, as
+  defined in Chapter 2"; both Chapter 2 QRY prints are MSH QRD [QRF] [DSC]), as on v2.3, with
+  MSH-9.3 empty or QRY_Q01; DSR^P04 is registered (the two DSR prints differ on MSA): 28
+  registered. MCF, folded in P8b-15, is named among the printed IDs Table 0354 lacks.
 
 ### Fixed — P8b-18: Table 0354 provenance on every version; citation and guard minors
 
@@ -140,7 +144,7 @@ group, cardinality or choice of a modelled structure changes.
 - Group names: 247 from the HL7 v2.xml 2.3.1 bundle (each citation names the file's generator,
   since the bundle mixes two), 6 through the v2.4 bundle (the 2.3.1 bundle's CHOICE name is not
   taken without a cited override), none synthesised.
-- 27 v2.3.1 structures are registered as not modelled, each with its reason (register section
+- 28 v2.3.1 structures are registered as not modelled (27 until P8b-18 added DSR_P04), each with its reason (register section
   E): the general order's `Order Detail Segment` placeholder (ORM_O01, ORR_O02, OSR_Q06), eight
   CH12 `[OBR, etc.` structures, ERP_R09, MFN_M03, SUR_P09 and 13 Table 0354 rows no print
   carries. Every Table 0354 v2.3.1 row is modelled or registered.

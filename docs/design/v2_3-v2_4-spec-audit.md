@@ -158,7 +158,7 @@ structure ID (MFN^M01-M06 twice, MFQ^M01-M06, MFR^M01-M06, MFN^M04; declared in
 Table 0354 v2.3.1 (CH2 2.24.1.9, pp 2-103 to 2-106), read through ten cited errata for its
 misprinted rows, two declared shared triggers (ADT^A28, ADT^A31) and four `captionStructures`
 entries (MFK, PPP). 99 are committed under `Resources/structures/v2.3.1/` (100 with MCF, folded in P8b-15 fix round 2) and v2.3.1 is
-`complete: true`; with the 27 registered in `completeness.json` they account for all 117 Table
+`complete: true`; with the 27 Table 0354 rows registered in `completeness.json` (28 registered since P8b-18 added DSR_P04, the P04 response, under a synthesised ID; QRY^P04 is added to QRY_Q01 through `referencedTriggers`) they account for all 117 Table
 0354 v2.3.1 rows (ten printed IDs, ACK, MCF and the shared ORM^O01 and ORR^O02 structures, have no
 row). Group names: 247 from the HL7 v2.xml 2.3.1 bundle, 6 through the v2.4 bundle, none
 synthesised (register §E v2.3.1 addendum).
