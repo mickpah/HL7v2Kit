@@ -5,7 +5,9 @@ defaults; Option C hybrid; one-pass matcher with determinism lint; HL7 v2.xml na
 unnamed groups; an info issue for unmodelled versions; structure-derived group ranges on
 fully modelled versions; ACK builder plus validation, no protocol logic;
 `messageStructureSeverity` off by default; and the ORC-8 `OBR absent` gate, which already
-shipped in P4-7). Implementation tasks P8-3 onward build from this text.
+shipped in P4-7). Implementation tasks P8-3 onward build from this text. Rollout complete
+2026-10-05 (P8b-18): every structure of the seven versions is modelled or registered, and the
+check is on in the default and strict presets; the last amendment says what stays open.
 
 **Supersedes nothing. Builds on:** ADR-008 (cross-segment DSL and ORC/OBR group semantics),
 ADR-010 (segment presence atoms, group-scope cardinality), ADR-014 (API evolution), ADR-015
@@ -1177,6 +1179,19 @@ compiling a structure per message.
   differently (ORL_O22, RAS_O17, DFT_P03) the override cites the bundle group with the same
   member set. A bundle name no group name can hold (RCI_I05 `c`) makes the print unreadable
   unless a cited override names the group.
+- **Why overrides, not extractor borrowing (P8b-18).** The rollout plan had the extractor
+  borrow these names from a later bundle on its own. P8b-13 instead wrote them as 35 cited
+  `groupNames` entries (SQR_S25 7, SQM_S25 6, ORL_O22 4, VXR_V03 4, VXU_V04 4, OSR_Q06 3,
+  RCI_I05 2, RAS_O17 2, DOC_T12 1, VXX_V02 1, DFT_P03 1), and this stands as the rule: each
+  entry cites the v2.4 print (chapter, section, page, the group's parent path and first
+  segment), the bundle file and group it takes the name from, and why the v2.4 bundle cannot
+  supply it (no such file, a different nesting, or a name no group can hold). The judgement in
+  each (same member set; a superset adding only TQ1 and TQ2; which bundle group the print's
+  group is when the bundle nests it differently) is one the extractor cannot check against the
+  print, so an automatic borrow would assert matches nobody verified; the citation is the audit
+  trail. Moving it into the extractor is not a few lines and is not done. The P8b-3a/3b report
+  counts were reconciled with these results in a34d9b60 (register section E, v2.4 addendum);
+  nothing further is unreconciled.
 - **Extractor.** Footnote marks fused to brackets are dropped; a bracket-only cell in the
   description column is syntax; a `CODE^EVT` row ends the table; an ellipsis row inside a table
   is a G6 placeholder (this registered ERP_R09 on v2.5.1 as well, 171 modelled there); a
@@ -1482,3 +1497,58 @@ and fixtures, only the quoted condition text where a gate leg was removed.
   `messageCode in (ORU, ORF, OUL)` conditions (OBR-7, OBR-25) are print conditions, not gates,
   and stay.
 
+### Registered imprecisions of the scope rule (P8b-17, registered by P8b-18)
+
+The rule above is one principle (transparency for groups that occur at most once per parent
+occurrence; a repeating group that claims its peer is a pairing boundary; an anchor is scoped at
+its nearest repeating enclosing occurrence). Where the print ties no single group occurrence to
+a lookup, that principle still gives an answer, and the answer below is not the print's. None of
+these lookups is read by a shipped condition; each is registered in the limitations register
+(section E, P8b-18 addendum) and none is fixed.
+
+- **Container or specimen OBX beside repeating orders.** On v2.4 ORL_O22, v2.5.1 and v2.6
+  ORL_O34 and ORL_O36, and v2.6 OPR_O38 (six structure-versions), a container or specimen OBX
+  takes the first ORDER occurrence's ORC and OBR, and that order's ORC and OBR take the
+  container OBX. The print (v2.4 CH04 4.4.7, p 4-24) ties no single order to the container, so
+  "none" is the faithful answer. The one general refinement tried ("never descend into a
+  repeating group") changes 352 results and breaks the shipped TXA-3 condition on MDM_T02, the
+  CC* ORC to OBR lookups and DFT; the shape is structurally identical to DFT's, so no principled
+  rule separates them. Behaviour equals that before P8b-17. Cost: a custom rule on such an OBX
+  sees the first order's ORC and OBR.
+- **v2.4 OML_O21 OBR to OBX** takes a CONTAINER_2 OBX that comes before an OBSERVATION OBX.
+- **ORU_R30 message-level OBR to OBX** takes the PATIENT_OBSERVATION OBX.
+- **v2.8.2 `.obrObxGroup` on ORU** counts the ORDER_DOCUMENT and SPECIMEN OBX of the order
+  occurrence with its OBSERVATION OBX (the extended own level reaches them through the
+  non-repeating groups), so a group-scope rule counting OBX there counts those as well.
+- **Lookup cost.** One lookup is linear in the spans and in the definition's size times its
+  depth; a validate call that makes one lookup per segment is therefore quadratic in the worst
+  case (each lookup also scans linearly for the last matching index). Measured: a 3,600-segment
+  ORU_R01 or OUL_R22 (v2.5.1 and v2.8.2) validates in about 1.5 s, 13 to 18 times the
+  30-order message's time for ten times the orders (one run, P8b-18;
+  `GroupSpanScopeTests.longMessage` bounds the ratio at 30).
+
+## Amendment 2026-10-05 — rollout complete (P8b-18)
+
+- **All seven versions complete.** Modelled and registered structures per version (from
+  `Resources/structures/` and `completeness.json`): v2.3 147 / 22, v2.3.1 100 / 28, v2.4
+  148 / 24, v2.5.1 173 / 30, v2.6 190 / 20, v2.7.1 164 / 58, v2.8.2 185 / 58; 1,107 modelled
+  and 240 registered in all. Five ADRM-2021 profile structures (ORM_O01, ORU_R01, OSR_Q06,
+  REF_I12, RRI_I12) layer on v2.4 under `.auLocalisation`; HL7au:00060.1 stays PARTIAL.
+- **Presets.** The check is on in `.default` (warning) and `.strict` (error) and off in
+  `.lenient` since 3ffb31d4 (owner decision G2 b; Migration.md).
+- **Group scoping.** Group-dependent predicates use the matched structure's group spans on a
+  conformant message with an agreeing parse, the ORC walk otherwise, and the former message-code
+  gate for the codes it covered (P8b-17, R4).
+- **Still blocking spec-completeness** (register section E): master-file bodies printed only as
+  prose fragments (v2.3 to v2.6); a structure alias (QRY_P04 on v2.4 and v2.5.1); per-trigger
+  structures where two prints of one ID differ (v2.5.1 to v2.8.2); fragment reassembly and version
+  provenance (every version). Section E therefore stays Blocking on every version.
+- **Open.** The follow-ups and the decisions open for the owner are listed in `STATUS.md` and
+  `NEXT_STEPS.md` at close-out: the structure-alias extension; the prose-printed fragment reader;
+  v2.3.1's R03 / R05 / R06 / W02 prose and Table 0003 rows not yet classed as v2.3's are; which
+  Table 0354 listing governs on v2.5.1 (CH02 omits ORU_R31, ORU_R32, RDE_O01 and RRA_O02,
+  Appendix A lists them) and on v2.4 (CH02 lists QRY_Q26 to Q30 and QRY_P04, Appendix A does
+  not); the spec examples that contradict Table 0354 (ORU^W01^ORU_R01 on v2.6 to v2.8.2;
+  ADT^A47 and ADT^A49 with ADT_A30 on v2.7.1 and v2.8.2); whether the AU profile reports
+  segments beyond the ADRM's narrowed maxima (decision 7); the 00060.1 PV1 prose mandate; and the
+  P8b-17 ruling that extended the exact matcher to produce spans (R1).

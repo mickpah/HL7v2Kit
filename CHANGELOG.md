@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P8b-18: message-structure rollout close-out
+
+- **Rollout complete.** Every structure the seven versions print is modelled or registered with
+  its reason: v2.3 147 / 22, v2.3.1 100 / 28, v2.4 148 / 24, v2.5.1 173 / 30, v2.6 190 / 20,
+  v2.7.1 164 / 58, v2.8.2 185 / 58 (1,107 modelled, 240 registered), plus five ADRM-2021 profile
+  structures on v2.4. Register section E opens with the state at close-out: what a consumer gets
+  per version, and why every version still has Blocking rows (master-file prose fragments on v2.3
+  to v2.6, a structure alias for QRY_P04 on v2.4 and v2.5.1, per-trigger structures on v2.5.1 to
+  v2.8.2, fragment reassembly and version provenance everywhere). ADR-019 gains the close-out
+  amendment and its status line.
+- **Group scoping (P8b-17) imprecisions registered, not fixed:** a container or specimen OBX
+  beside repeating orders takes the first order's ORC and OBR, and that order's ORC and OBR take
+  it (v2.4 ORL_O22; v2.5.1 and v2.6 ORL_O34, ORL_O36; v2.6 OPR_O38); v2.4 OML_O21 OBR to OBX;
+  v2.7.1 and v2.8.2 ORU_R30 message-level OBR to OBX; v2.8.2 `.obrObxGroup` on ORU_R01; the
+  worst-case lookup cost. No shipped condition reads these lookups. The termination comment in
+  `GroupScoping.swift` states the real call graph.
+- **HL7au:00060.1 wording:** a required segment the profile expects where the message has a
+  segment the profile passes over (RQD or RQ1 for an ORM^O01 order detail) now reads "in place
+  of RQD[1]", not "at the end of the message"; code, severity and location are unchanged
+  (Migration.md row). The OSR^Q06 register row names every unflagged case against ADRM p 281
+  (RQD, RQ1, RXO, ODS or ODT in place of OBR, and an OBX after any of them); the conformance
+  register is regenerated. The unused `profiles:` test seam of `matchProfileStructure` is removed.
+- **v2.4 group names:** ADR-019 states why the 35 `groupNames` overrides stand in place of
+  extractor borrowing, and what each cites.
+- **v2.4 Table 0354 listings:** CH02 (p 2-139) lists QRY_P04 and QRY_Q26 to QRY_Q30, which
+  Appendix A and `Resources/tables/v2.4/0354.json` do not; registered for P7 (table JSON unchanged).
+- **Tests (1538 to 1541):** v2.8.2 COMMON_ORDER cases in the long-message growth test;
+  `customRuleCountsEachAnchor`; the real v2.4 REF_I12 same-name PATIENT_VISIT siblings; the
+  v2.3.1 literal misprints PIN_107, RPI_I0I, RQI_I0I and ARD_A19 as mismatches. Validation digests
+  (default, strict, structure off) byte-identical to 9c81e6eb.
+
 ### Changed — P8b-18: the message-structure check is on in `.default` and `.strict`
 
 - **Default output changes (owner decision G2 (b), ADR-019 "Later preset change"):**

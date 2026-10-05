@@ -177,7 +177,8 @@ SHIPPED = {
 PARTIAL = {
     # P8b-4 and P8b-4a (ADR-019 decisions 7 and 8): the segment half through the ADRM-2021
     # structures.
-    'HL7au:00060.1': 'P8b-4, P8b-4a: with `messageStructureSeverity` set, a v2.4 ORU^R01, '
+    'HL7au:00060.1': 'P8b-4, P8b-4a: with the structure check on (`messageStructureSeverity`, '
+                     'on in the default and strict presets since P8b-18), a v2.4 ORU^R01, '
                      'ORM^O01, REF^I12, RRI^I12 or OSR^Q06 is also matched against the ADRM-2021 '
                      'structure (pp 205, 279, 324, 325, 281; '
                      '`Resources/structures/profiles/au-adrm-2021/`) and a segment it requires and '
@@ -190,8 +191,11 @@ PARTIAL = {
                      '(p 484, selected by MSH-12), the ORR^O02 print (pp 280 to 281, unbalanced '
                      'bracket), the prose-only PV1 mandate on ORU^R01 (pp 17, 205), the narrowed '
                      'maxima (REF^I12 `[IN1]`, PV1 and PV2, p 324) and the order detail of the '
-                     'order status response (p 281 prints only OBR; the base choice is kept); '
-                     'permanent-limitations register section E, P8b-4 and P8b-4a addenda',
+                     'order status response (p 281 prints only OBR; the base choice is kept, so '
+                     'RQD, RQ1, RXO, ODS or ODT in its place and an OBX after any of them go '
+                     'unflagged); '
+                     'permanent-limitations register section E, close-out summary and the P8b-4 '
+                     'and P8b-4a addenda',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
                       '(`auNASHTransport`); the "registered organisation name in HI service" half '
                       'needs the HPOS/HI directory and stays out',
