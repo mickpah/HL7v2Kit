@@ -22,6 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the sentence differs from v2.5.1's; it now carries `messageCode in (PGL, PPG, PPP, PPR,
   PPT, PPV, PRR, PTR)`, the eight CH12 messages, each of which carries ROL. ADT, Finance,
   CH13 and PMU messages are unaffected on v2.4. `RoleConditionTests` covers both sides.
+- **RXE-15's bare rationale states the print (P10-5a intake).** The audit now quotes the
+  sentence on all seven versions and gives the reasons no predicate ships: the required set
+  is a description, not message codes; "not PEX" would reach the v2.7.1 and v2.8.2 CH11
+  collaborative-care messages; and the standard's own RSP^K31 example (v2.5.1 onward) sends
+  RXE-15 empty. On v2.3 to v2.4, which print no such example, a rule over the Chapter 4
+  messages is expressible and is registered as open for an owner ruling (register §A).
 
 ### Fixed — P8b-final: findings of the whole-branch review of the message-structure rollout
 
