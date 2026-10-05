@@ -46,6 +46,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   v2.8.2, where the Deprecated ORU_W01 row carries W01 (declared in `sharedTriggers`). The
   extractor's shared-trigger check now counts registered structures' triggers, as the codegen
   guard does.
+- **Every printed (trigger, structure ID) pair swept (F-I1 d).** A sweep validated one message
+  per pair that any printed Table 0354 listing (CH02 / CH02C and Appendix A) or caption gives,
+  on every version (4,731 messages; a table row's events tried under every code a caption prints
+  for them). One printed pair was still a mismatch: v2.4 CH02 2.14.2 (p 2-97) prints the
+  delayed acknowledgment as `MCF^varies^ACK`, so `MCF^A01^ACK` was reported. The general ACK
+  fold now also takes `MCF^*` from that caption (extractor `fold_triggers`, cited in the
+  structure). The six rows left are Table 0354 event misprints that are not trigger events
+  (v2.3.1 `136`, `1II`; v2.4 and v2.5.1 `007`, `022`), whose corrected events match.
 
 ### Fixed — P8b-18: message-structure rollout close-out
 

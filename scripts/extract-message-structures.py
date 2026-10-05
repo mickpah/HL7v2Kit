@@ -1101,6 +1101,17 @@ def union(a, b, path="top level"):
     return out
 
 
+def fold_triggers(fold, sid, entries):
+    """A fold's trigger; a general fold onto CODE^* whose structure ID is the code (ACK) also
+    takes OTHER^* for each other message code a caption prints with that structure ID (v2.4
+    CH02 2.14.2 prints MCF^varies^ACK: P8b-final F-I1 d), since the caption gives that code the
+    structure for every event."""
+    out = [fold["trigger"]]
+    if fold["trigger"] == f"{sid}^*":
+        out += [t for t in dict.fromkeys(f"{c.code}^*" for c, _, _ in entries if c.code != sid) if t not in out]
+    return out
+
+
 def _primary(sid, entries, fold):
     """The primary print (ADR-019 addendum, P8b-3a): exclusions are already gone; a triggerFolds
     entry names it; else the first print in reading order whose caption is the defining trigger
@@ -1433,7 +1444,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 report.append((sid, "duplicate-differs", f"{c.printed} (section {c.section}) prints "
                                f"{compact(theirs)[:160]!r}; primary {cap.printed} (section {cap.section}) prints "
                                f"{compact(elements)[:160]!r}"))
-        triggers = [fold["trigger"]] if fold else triggers + [t for t in added.get(sid, []) if t not in triggers]
+        triggers = fold_triggers(fold, sid, entries) if fold else triggers + [t for t in added.get(sid, []) if t not in triggers]
         referenced = [t for e in overrides.get("referencedTriggers", []) if e["version"] == ver and e["structure"] == sid
                       for t in e["triggers"] if t not in triggers]
         triggers += referenced
@@ -1446,6 +1457,10 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                                              row_errata.get(sid), where_0354)
                                           + table_citation(ver, sid, added.get(sid), where_0354, withdrawn)
                                           + synthesised_provenance(era, sid, entries, fold)
+                                          + "".join(f" Trigger {t} from the caption {c.printed} (section {c.section}, p {c.page})"
+                                                    f", which prints this structure ID for that message code."
+                                                    for t in (fold_triggers(fold, sid, entries)[1:] if fold else [])
+                                                    for c in [next(c for c, _, _ in entries if f"{c.code}^*" == t)])
                                           + "".join(f" Triggers {_join(e['triggers'])} added by overrides.json referencedTriggers "
                                                     f"(the print names this structure for them in prose): {e['citation'].rstrip('.')}."
                                                     for e in overrides.get("referencedTriggers", [])
@@ -1476,7 +1491,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     for sid in sorted(prints):     # every printed structure, parsed or not, claims its triggers
         fold = folds.get(sid)
         # P8b-18: referenced triggers enter the shared-trigger check like printed ones.
-        for trig in [fold["trigger"]] + referenced_by.get(sid, []) if fold else dict.fromkeys(
+        for trig in fold_triggers(fold, sid, prints[sid]) + referenced_by.get(sid, []) if fold else dict.fromkeys(
                 [f"{c.code}^{v}" for c, _, _ in prints[sid] for v in c.events] + added.get(sid, [])
                 + referenced_by.get(sid, [])):
             owner.setdefault(trig, []).append(sid)

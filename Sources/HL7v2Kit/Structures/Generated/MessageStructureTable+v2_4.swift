@@ -157,8 +157,8 @@ extension MessageStructureTable {
     private static let v2_4_ACK: MessageStructure = MessageStructure(
         id: "ACK",
         version: "2.4",
-        triggers: ["ACK^*"],
-        citation: "HL7 v2.4 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-97.",
+        triggers: ["ACK^*", "MCF^*"],
+        citation: "HL7 v2.4 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-97. Trigger MCF^* from the caption MCF^varies^ACK (section 2.14.2, p 2-97), which prints this structure ID for that message code.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),

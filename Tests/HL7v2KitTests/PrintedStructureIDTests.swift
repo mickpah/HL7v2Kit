@@ -121,6 +121,14 @@ struct PrintedStructureIDTests {
         #expect(!issues.contains { if case .messageStructureMismatch = $0.code { true } else { false } })
     }
 
+    // F-I1 (d): v2.4 CH02 2.14.2 (p 2-97) prints MCF^varies^ACK, the delayed acknowledgment,
+    // with the ACK syntax; MCF^<event>^ACK is matched against ACK, not a mismatch.
+    @Test("v2.4 MCF^<event>^ACK is matched against ACK", arguments: ["MCF^A01^ACK", "MCF^R01^ACK", "MCF^A01"])
+    func delayedAcknowledgment(_ msh9: String) throws {
+        #expect(try resolved(msh9, version: "2.4") == "ACK", "\(msh9)")
+        #expect(try structureIssues(msh9, version: "2.4").isEmpty)
+    }
+
     // M4: v2.7.1 CH02C 2.C.2.175 (p 104) and v2.8.2 CH02C 2.C.2.279 (p 152) print the row
     // 'ORM_O01  O01  Deprecated'; a bare ORM^O01 resolves to that registration and its reason.
     @Test("A bare trigger of a Deprecated Table 0354 row gets the Deprecated reason (M4)",
