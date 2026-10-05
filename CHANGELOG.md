@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P7-6: v2.3 and v2.3.1 wire fixtures
+
+- Six synthetic fixtures (v2.3 ORU^R01 without ORC, ORF^R04, ACK^A01; v2.3.1 ORU^R01,
+  ADT^A01, ACK^A01 with ERR), each conforming to its version's printed structure and
+  validating with no issues at all under `.strict` (identifiers kept within the printed
+  LEN: PID-3 20, QRD-4 10, v2.3.1 ORC/OBR-2/3 22).
+- `VersionFixtureTests` and `VersionPredicateWireTests`: wire-level fire and silent pairs
+  for OBX-2, OBR-2/3/25, ORC-2, CSR-9/14, CTI-2, RQ1-2 and RQD-2 on v2.3 (and v2.6, with
+  PYE-3/4 and DG1-20).
+- Two stale fixture README rows corrected (v2.3 MSH has 19 fields; v2.3.1 ORC has 24).
+
 ### Fixed — P7-5: validator limits and design index documented accurately
 
 - **The composite extra-component warning cites the version validated.** It cited "section

@@ -105,9 +105,15 @@ but transparently fake). No real-world data sources.
 | `edge_many_nte.hl7` | Edge | ORU with 4 trailing NTE segments after OBX | N/A — synthetic |
 | `edge_minimal_pid_phone_only.hl7` | Edge | Sparsely populated PID — name + phone only; EVN and a minimal PV1 (PV1-2 `O`) added 2026-10-03 (P8b-5) so the message carries ADT_A01's required segments | N/A — synthetic |
 | `edge_obx_repeating_values.hl7` | Edge | OBX-5 + OBX-8 with `~` repetitions (3-sample BP series) | N/A — synthetic |
-| `adt_a01_v23.hl7` | Multi-version (v2.3) | v2.3 ADT^A01 admit — exercises the v2.3 grammar table (MSH cap at 15); EVN added in P8b-15 (v2.3 Chapter 3 section 3.2.1, p 3-3, prints EVN as required), EVN-1 left empty as v2.3 marks it B | N/A — synthetic from scratch (v0.3-Z2) |
-| `orm_o01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ORM^O01 order — exercises the v2.3.1 grammar table (PID cap at 30, ORC cap at 17) | N/A — synthetic from scratch (v0.3-Z2) |
+| `adt_a01_v23.hl7` | Multi-version (v2.3) | v2.3 ADT^A01 admit — exercises the v2.3 grammar table (MSH-1..19 per v2.3 CH2 Figure 2-8); EVN added in P8b-15 (v2.3 Chapter 3 section 3.2.1, p 3-3, prints EVN as required), EVN-1 left empty as v2.3 marks it B | N/A — synthetic from scratch (v0.3-Z2) |
+| `orm_o01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ORM^O01 order — exercises the v2.3.1 grammar table (PID 30 fields, ORC 24 fields) | N/A — synthetic from scratch (v0.3-Z2) |
 | `oru_r01_v24.hl7` | Multi-version (v2.4) | v2.4 ORU^R01 result — its trailing PID values `N|US` sit at PID-35/36 (Species Code / Breed Code), not at PID-31/32 (identityUnknownIndicator / identityReliabilityCode) as this row first said; corrected 2026-10-01 (P4-31 review), fixture bytes unchanged; MSH-18 declares `ASCII` (base v2.4 Table 0211 has no `UNICODE UTF-8`, which is the AU ADRM-2021 back-port; the file is pure ASCII) | N/A — synthetic from scratch (v0.3-Z2) |
+| `oru_r01_v23.hl7` | Multi-version (v2.3) | v2.3 ORU^R01 without ORC: OBR-2/3 carry the order numbers; OBX-2, OBR-25 and ORC-absent OBR-2/3 fire/silent pairs in `VersionFixtureTests`; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
+| `orf_r04_v23.hl7` | Multi-version (v2.3) | v2.3 ORF^R04 query response: MSA, QRD (QRD-4 within its printed LEN 10), QRF, PID, OBR, OBX; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
+| `ack_a01_v23.hl7` | Multi-version (v2.3) | v2.3 ACK^A01 general acknowledgement, MSA-1 `AA`; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
+| `oru_r01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ORU^R01 with ORC `RE`, order numbers within the printed EI LEN 22; OBX-2 and OBR-25 pairs; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
+| `adt_a01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ADT^A01 admit: EVN (EVN-1 empty, B in v2.3.1), PID with address, PV1; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
+| `ack_a01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ACK^A01 with MSA-1 `AE` and an ERR-1 locating PID-3 (code 101, table 0357); validates with no issues under `.strict` | N/A — synthetic from scratch (P7-6); licence Apache 2.0, as the package |
 
 ### Batch fixtures (`Batches/` subdirectory)
 
