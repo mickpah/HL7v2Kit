@@ -116,7 +116,8 @@ struct MessageStructureDataTests {
             }
             #expect(Set(object.keys) == Self.topKeys.union(aliasOf == nil ? [] : ["aliasOf"])
                         .union(rule == nil ? [] : ["errorResponse"])
-                        .union(syntaxSource == nil ? [] : ["syntaxSource"]), "\(id): keys \(object.keys.sorted())")
+                        .union(syntaxSource == nil ? [] : ["syntaxSource"])
+                        .union(object["variants"] == nil ? [] : ["variants"]), "\(id): keys \(object.keys.sorted())")
             #expect(object["structure"] as? String == id)
             #expect(object["version"] as? String == versionName)
             let triggers = object["triggers"] as? [String] ?? []
@@ -128,11 +129,17 @@ struct MessageStructureDataTests {
             let raw = object["elements"] as? [[String: Any]] ?? []
             let elements = raw.enumerated().compactMap { element($1, at: "\(id)[\($0)]") }
             #expect(elements.first == .segment("MSH", min: 1, max: 1), "\(id): starts with MSH")
+            // S6-1: each per-trigger print carries its triggers, citation and elements.
+            let variants = (object["variants"] as? [[String: Any]] ?? []).enumerated().map { i, v in
+                StructureVariant(triggers: v["triggers"] as? [String] ?? [], citation: v["citation"] as? String ?? "",
+                                 elements: (v["elements"] as? [[String: Any]] ?? []).enumerated()
+                                    .compactMap { element($1, at: "\(id) variant \(i)[\($0)]") })
+            }
             let version = try #require(Version(rawValue: versionName))
             let generated = try #require(MessageStructureTable.structures(for: version)[id], "\(id) is not generated")
             #expect(generated == MessageStructure(id: id, version: versionName, triggers: triggers,
                                                   citation: object["citation"] as? String ?? "", aliasOf: aliasOf,
-                                                  errorResponse: errorResponse, elements: elements))
+                                                  errorResponse: errorResponse, variants: variants, elements: elements))
             // S4-2: an alias carries its target's elements.
             if let aliasOf {
                 #expect(MessageStructureTable.structures(for: version)[aliasOf]?.elements == elements, "\(id): alias of \(aliasOf)")

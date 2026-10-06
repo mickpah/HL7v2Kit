@@ -259,6 +259,18 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// an error response, matched against its head; nil for every other
     /// structure and for every v2.3 and v2.3.1 structure.
     let errorResponse: StructureErrorResponse?
+    /// The prints of this ID that govern some of its triggers with a syntax
+    /// of their own (S6-1, ADR-019 amendment 2026-10-06): where two
+    /// normative prints of one structure ID differ by trigger, ``elements``
+    /// is the default print's syntax and each variant carries another
+    /// print's syntax and the triggers it is printed for. Empty for every
+    /// structure whose prints agree. ``variant(messageCode:triggerEvent:)``
+    /// names the print that governs a trigger.
+    public let variants: [StructureVariant]
+    /// The index in the table structure's ``variants`` of the print this
+    /// structure was selected as (S6-1); nil for a structure as the table
+    /// holds it. It keeps the compiled matchers of the prints apart.
+    let variantIndex: Int?
 
     // Internal (P8 final review): there is no public matcher, so a structure
     // built outside the package has no use. The generated tables and the
@@ -269,7 +281,8 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     init(id: String, version: String, triggers: [String], citation: String,
          profile: String? = nil, baseVersion: String? = nil, rule: String? = nil,
          requiresExactMatch: Bool? = nil, aliasOf: String? = nil, keySelection: String? = nil,
-         errorResponse: StructureErrorResponse? = nil, elements: [StructureElement]) {
+         errorResponse: StructureErrorResponse? = nil, variants: [StructureVariant] = [], variantIndex: Int? = nil,
+         elements: [StructureElement]) {
         self.id = id
         self.version = version
         self.triggers = triggers
@@ -281,6 +294,8 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
         self.aliasOf = aliasOf
         self.keySelection = keySelection
         self.errorResponse = errorResponse
+        self.variants = variants
+        self.variantIndex = variantIndex
         self.requiresExactMatch = requiresExactMatch ?? !StructureMatcher.lint(elements).isDeterministic
     }
 

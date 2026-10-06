@@ -187,12 +187,25 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.7.1",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.7.1 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 18. Two normative prints of ACK disagree: Chapter 2 section 2.13.1 (ACK^varies^ACK, p 46) prints UAC optional and non-repeating ([UAC]), Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 18) prints [{UAC}], which accepts every message the 2.13.1 print accepts (and every CH05 5.4.4 to 5.4.7 ACK print, which also prints [ERR] where 2.13.1 prints [{ERR}]); the looser 10.4 print is primary (P8b-9 ruling; register section E, P8b-16).",
+        citation: "HL7 v2.7.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 46. Two normative prints of ACK differ by trigger: HL7 v2.7.1 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 46), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]); Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 18) prints [{UAC}] for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24, S26 and S27. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ACK^S12", "ACK^S13", "ACK^S14", "ACK^S15", "ACK^S16", "ACK^S17", "ACK^S18", "ACK^S19", "ACK^S20", "ACK^S21", "ACK^S22", "ACK^S23", "ACK^S24", "ACK^S26", "ACK^S27"],
+                citation: "HL7 v2.7.1 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 18. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ACK differ by trigger: HL7 v2.7.1 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 46), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]); Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 18) prints [{UAC}] for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24, S26 and S27. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: nil),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
-            .segment("UAC", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
             .segment("ERR", min: 0, max: nil),
         ]
@@ -6080,8 +6093,29 @@ extension MessageStructureTable {
         id: "RQC_I05",
         version: "2.7.1",
         triggers: ["RQC^I05", "RQC^I06"],
-        citation: "HL7 v2.7.1 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), p 13; the same structure is printed for RQC^I06 (11.3.6). Two normative prints of RQC_I05 disagree: Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 14 to 15) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 13) prints [{GT1}], which accepts every message the 11.3.6 print accepts; the looser 11.3.5 print is primary (P8b-9 ruling; register section E, P8b-16). QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+        citation: "HL7 v2.7.1 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), p 13; the same structure is printed for RQC^I06 (11.3.6). Two normative prints of RQC_I05 differ by trigger: HL7 v2.7.1 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 14 to 15) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 13) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9). QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["RQC^I06"],
+                citation: "HL7 v2.7.1 Chapter 11, section 11.3.6 RQC/RCL - Request/Receipt of Clinical Data Listing (Event I06), pp 14 to 15. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RQC_I05 differ by trigger: HL7 v2.7.1 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 14 to 15) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 13) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("QRD", min: 1, max: 1),
+                    .segment("QRF", min: 0, max: 1),
+                    .group("PROVIDER", min: 1, max: nil, elements: [
+                        .segment("PRD", min: 1, max: 1),
+                        .segment("CTD", min: 0, max: nil),
+                    ]),
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NK1", min: 0, max: nil),
+                    .segment("GT1", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),

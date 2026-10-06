@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — S6-1: per-trigger structure prints (epic P11 sprint 6)
+
+- **Model extension (ADR-019 S6 amendment).** Where two normative prints of one structure ID
+  differ by trigger, each print now governs the triggers it is printed for. New public
+  `StructureVariant` (`triggers`, `citation`, `elements`), `MessageStructure.variants` and
+  `MessageStructure.variant(messageCode:triggerEvent:)` (additive; pinned in
+  SignatureCompatibilityTests; Migration row). The validator selects the print for MSH-9.1^9.2,
+  with or without MSH-9.3, before matching; the group spans and the compiled matcher are per
+  print.
+- **Data.** New cited `overrides.json` section `variantPrints` replaces `primaryPrints` for v2.5.1
+  RSP_K21 and RDE_O11; v2.6 ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11; v2.7.1 ACK and
+  RQC_I05; v2.8.2 ACK; and the v2.6 RSP_K21 `unionPrints` entry. The extractor emits each
+  structure's `variants` (the named print plus every other print equal to it); the codegen checks
+  and renders them (12 new `check-structure-codegen.sh` cases; a new extractor self-check case).
+  v2.3 ORM_O01 and ORR_O02 keep `primaryPrints` (one trigger, the open slot subsumes the specific
+  prints).
+- **Behaviour.** A message under the stricter print's trigger is checked against that print: on
+  v2.6 an ADT^A30 with ARV, an MFK^M01 with UAC or a QRY^PC4 with SFT, and on v2.6 to v2.8.2 an
+  ACK other than S12 to S27 with two UAC, now draw a structure finding. On v2.6 to v2.8.2 ACK's
+  default print is the CH02 general acknowledgment. Register section E: the per-trigger rows are
+  closed. Digests identical to BASE; a supplementary run with MSH-12 set to the chapter version
+  adds one finding, an example defect (the v2.5.1 RSP^K21 example omits the QRI its print
+  requires).
+
 ### Added — S5: the master-file structures the print gives in prose (epic P11 sprint 5)
 
 - **Ruling (S5-1, ADR-019 S5 amendment).** No prose parser. Where the print gives a structure

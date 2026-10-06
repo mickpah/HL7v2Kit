@@ -699,6 +699,54 @@ prose(syntaxSource='table', citation=load('v2.5.1/ADT_A01.json')['citation'] + '
 reject "a transcription whose citation does not name proseFragments" 'syntaxSource prose needs a citation naming "overrides.json proseFragments"' "$PRE$PROSE
 prose(syntaxSource='prose')"
 
+# S6-1: per-trigger prints (overrides.json variantPrints, ADR-019 S6). v2.5.1 RSP_K21 carries one.
+VARIANT='
+def variant(**kw):
+    d = load("v2.5.1/RSP_K21.json"); v = d["variants"][0]
+    for k, x in kw.items():
+        if x == "DROP": del v[k]
+        else: v[k] = x
+    save("v2.5.1/RSP_K21.json", d)
+    return d
+'
+
+accept_rendering "a variant renders as a StructureVariant with its own lint result" 'StructureVariant(' "$PRE$VARIANT
+variant()"
+
+reject "a variant trigger the structure does not accept" 'variants: triggers must be exact CODE^EVT the structure accepts' "$PRE$VARIANT
+variant(triggers=['RSP^K23'])"
+
+reject "a variant trigger with a wildcard event" 'variants: triggers must be exact CODE^EVT the structure accepts' "$PRE$VARIANT
+variant(triggers=['RSP^*'])"
+
+reject "a variant with no triggers" 'variants: triggers must be exact CODE^EVT the structure accepts' "$PRE$VARIANT
+variant(triggers=[])"
+
+reject "a trigger in two variants" 'variants: trigger RSP^K21 is in two variants or named twice' "$PRE$VARIANT
+d = variant(); w = dict(d['variants'][0]); w['elements'] = w['elements'][:-1]; d['variants'].append(w)
+save('v2.5.1/RSP_K21.json', d)"
+
+reject "a variant equal to the default print" 'variants: a print equal to the default or to another variant' "$PRE$VARIANT
+variant(elements=load('v2.5.1/RSP_K21.json')['elements'])"
+
+reject "a variant whose citation does not name variantPrints" 'variants: a citation must name "overrides.json variantPrints"' "$PRE$VARIANT
+variant(citation='HL7 v2.5.1 Chapter 3, section 3.3.56.')"
+
+reject "a variant not starting with MSH" 'variants: a print must start with MSH' "$PRE$VARIANT
+d = load('v2.5.1/RSP_K21.json'); variant(elements=d['variants'][0]['elements'][1:])"
+
+reject "a variant with an unknown key" 'unknown key(s) ["structure"]' "$PRE$VARIANT
+variant(structure='RSP_K21')"
+
+reject "an empty variants list" 'variants: an empty list' "$PRE
+d = load('v2.5.1/RSP_K21.json'); d['variants'] = []; save('v2.5.1/RSP_K21.json', d)"
+
+reject "variants on an alias" 'variants: a profile structure or an alias has no variants' "$PRE
+d = load('v2.5.1/QRY_P04.json'); d['variants'] = load('v2.5.1/RSP_K21.json')['variants']; save('v2.5.1/QRY_P04.json', d)"
+
+accept "a structure without its variants" "$PRE
+d = load('v2.5.1/RSP_K21.json'); del d['variants']; save('v2.5.1/RSP_K21.json', d)"
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

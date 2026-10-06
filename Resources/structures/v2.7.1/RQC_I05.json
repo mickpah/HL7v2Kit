@@ -1,7 +1,7 @@
 {
   "structure": "RQC_I05",
   "version": "2.7.1",
-  "citation": "HL7 v2.7.1 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), p 13; the same structure is printed for RQC^I06 (11.3.6). Two normative prints of RQC_I05 disagree: Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 14 to 15) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 13) prints [{GT1}], which accepts every message the 11.3.6 print accepts; the looser 11.3.5 print is primary (P8b-9 ruling; register section E, P8b-16). QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+  "citation": "HL7 v2.7.1 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), p 13; the same structure is printed for RQC^I06 (11.3.6). Two normative prints of RQC_I05 differ by trigger: HL7 v2.7.1 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 14 to 15) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 13) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9). QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
   "triggers": ["RQC^I05", "RQC^I06"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -17,5 +17,26 @@
     { "segment": "NK1", "min": 0, "max": null },
     { "segment": "GT1", "min": 0, "max": null },
     { "segment": "NTE", "min": 0, "max": null }
+  ],
+  "variants": [
+    {
+      "triggers": ["RQC^I06"],
+      "citation": "HL7 v2.7.1 Chapter 11, section 11.3.6 RQC/RCL - Request/Receipt of Clinical Data Listing (Event I06), pp 14 to 15. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RQC_I05 differ by trigger: HL7 v2.7.1 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 14 to 15) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 13) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "SFT", "min": 0, "max": null },
+        { "segment": "UAC", "min": 0, "max": 1 },
+        { "segment": "QRD", "min": 1, "max": 1 },
+        { "segment": "QRF", "min": 0, "max": 1 },
+        { "group": "PROVIDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "PRD", "min": 1, "max": 1 },
+          { "segment": "CTD", "min": 0, "max": null }
+        ]},
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NK1", "min": 0, "max": null },
+        { "segment": "GT1", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]
+    }
   ]
 }

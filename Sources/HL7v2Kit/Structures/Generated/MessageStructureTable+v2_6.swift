@@ -210,12 +210,25 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.6",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.6 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 10-17. Two normative prints of ACK disagree: Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints UAC optional and non-repeating ([UAC]), Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]), which accepts every message the 2.13.1 print accepts (and every ACK the other chapters print: CH03 3.3.18 without UAC, CH05 5.4.4 to 5.4.7 with ERR non-repeating); the looser 10.4 print is primary (P8b-9 ruling; register section E).",
+        citation: "HL7 v2.6 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 42. Two normative prints of ACK differ by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]), as do the other chapters' ACK prints but CH03 3.3.18 (no UAC) and CH05 5.4.4 to 5.4.7 ([ERR]), each stricter still; Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]) for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24 and S26. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ACK^S12", "ACK^S13", "ACK^S14", "ACK^S15", "ACK^S16", "ACK^S17", "ACK^S18", "ACK^S19", "ACK^S20", "ACK^S21", "ACK^S22", "ACK^S23", "ACK^S24", "ACK^S26"],
+                citation: "HL7 v2.6 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 10-17. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ACK differ by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]), as do the other chapters' ACK prints but CH03 3.3.18 (no UAC) and CH05 5.4.4 to 5.4.7 ([ERR]), each stricter still; Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]) for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24 and S26. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: nil),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
-            .segment("UAC", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
             .segment("ERR", min: 0, max: nil),
         ]
@@ -681,8 +694,23 @@ extension MessageStructureTable {
         id: "ADT_A30",
         version: "2.6",
         triggers: ["ADT^A34", "ADT^A30", "ADT^A35", "ADT^A36", "ADT^A46", "ADT^A47", "ADT^A48", "ADT^A49"],
-        citation: "HL7 v2.6 Chapter 3, section 3.3.34 ADT/ACK - Merge Patient Information - Patient ID Only (Event A34), p 3-33; the same structure is printed for ADT^A30 (3.3.30), ADT^A35 (3.3.35), ADT^A36 (3.3.36), ADT^A46 (3.3.46), ADT^A47 (3.3.47), ADT^A48 (3.3.48) and ADT^A49 (3.3.49). Two normative prints of ADT_A30 disagree: Chapter 3 section 3.3.30 (ADT^A30^ADT_A30, p 3-30) prints no ARV, sections 3.3.34 (ADT^A34^ADT_A30, p 3-33), 3.3.36 (A36, p 3-34), 3.3.46 (A46, pp 3-41 to 3-42) and 3.3.47 (A47, p 3-42) print [{ARV}] after PD1, which accepts every message the 3.3.30 print accepts; the looser 3.3.34 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/ADT_A30.xsd has the ARV.",
+        citation: "HL7 v2.6 Chapter 3, section 3.3.34 ADT/ACK - Merge Patient Information - Patient ID Only (Event A34), p 3-33; the same structure is printed for ADT^A30 (3.3.30), ADT^A35 (3.3.35), ADT^A36 (3.3.36), ADT^A46 (3.3.46), ADT^A47 (3.3.47), ADT^A48 (3.3.48) and ADT^A49 (3.3.49). Two normative prints of ADT_A30 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.30 (ADT^A30^ADT_A30, p 3-30) prints PID [PD1] MRG with no ARV, as do the A35, A48 and A49 prints (pp 3-33, 3-43, 3-44); section 3.3.34 (ADT^A34^ADT_A30, p 3-33) prints [{ARV}] after PD1, as do the A36, A46 and A47 prints (pp 3-34, 3-42); the 3.3.34 print is the default and the 3.3.30 print governs A30, A35, A48 and A49. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ADT^A30", "ADT^A35", "ADT^A48", "ADT^A49"],
+                citation: "HL7 v2.6 Chapter 3, section 3.3.30 ADT/ACK - Merge Person Information (Event A30), p 3-30; the same structure is printed for ADT^A35 (3.3.35), ADT^A48 (3.3.48) and ADT^A49 (3.3.49). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A30 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.30 (ADT^A30^ADT_A30, p 3-30) prints PID [PD1] MRG with no ARV, as do the A35, A48 and A49 prints (pp 3-33, 3-43, 3-44); section 3.3.34 (ADT^A34^ADT_A30, p 3-33) prints [{ARV}] after PD1, as do the A36, A46 and A47 prints (pp 3-34, 3-42); the 3.3.34 print is the default and the 3.3.30 print governs A30, A35, A48 and A49. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("EVN", min: 1, max: 1),
+                    .segment("PID", min: 1, max: 1),
+                    .segment("PD1", min: 0, max: 1),
+                    .segment("MRG", min: 1, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -763,8 +791,25 @@ extension MessageStructureTable {
         id: "ADT_A43",
         version: "2.6",
         triggers: ["ADT^A44", "ADT^A43"],
-        citation: "HL7 v2.6 Chapter 3, section 3.3.44 ADT/ACK - Move Account Information - Patient Account Number (Event A44), p 3-40; the same structure is printed for ADT^A43 (3.3.43). Two normative prints of ADT_A43 disagree: Chapter 3 section 3.3.43 (ADT^A43^ADT_A43, p 3-39) prints PATIENT as PID [PD1] MRG, section 3.3.44 (ADT^A44^ADT_A43, p 3-40) prints [{ARV}] after PD1, which accepts every message the 3.3.43 print accepts; the looser 3.3.44 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/ADT_A43.xsd has the ARV.",
+        citation: "HL7 v2.6 Chapter 3, section 3.3.44 ADT/ACK - Move Account Information - Patient Account Number (Event A44), p 3-40; the same structure is printed for ADT^A43 (3.3.43). Two normative prints of ADT_A43 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.43 (ADT^A43^ADT_A43, p 3-39) prints PATIENT as PID [PD1] MRG, section 3.3.44 (ADT^A44^ADT_A43, p 3-40) prints [{ARV}] after PD1; the 3.3.44 print is the default and the 3.3.43 print governs ADT^A43. HL7-xml v2.6/ADT_A43.xsd has the ARV. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ADT^A43"],
+                citation: "HL7 v2.6 Chapter 3, section 3.3.43 ADT/ACK - Move Patient Information - Patient Identifier List (Event A43), p 3-39. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A43 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.43 (ADT^A43^ADT_A43, p 3-39) prints PATIENT as PID [PD1] MRG, section 3.3.44 (ADT^A44^ADT_A43, p 3-40) prints [{ARV}] after PD1; the 3.3.44 print is the default and the 3.3.43 print governs ADT^A43. HL7-xml v2.6/ADT_A43.xsd has the ARV. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("EVN", min: 1, max: 1),
+                    .group("PATIENT", min: 1, max: nil, elements: [
+                        .segment("PID", min: 1, max: 1),
+                        .segment("PD1", min: 0, max: 1),
+                        .segment("MRG", min: 1, max: 1),
+                    ]),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -2009,8 +2054,22 @@ extension MessageStructureTable {
         id: "MFK_M01",
         version: "2.6",
         triggers: ["MFK^M13", "MFK^M01", "MFK^M14", "MFK^M02", "MFK^M03", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11", "MFK^M12", "MFK^M05", "MFK^M04", "MFK^M06", "MFK^M07", "MFK^M15", "MFK^M16", "MFK^M17"],
-        citation: "HL7 v2.6 Chapter 8, section 8.4.2 MFN/MFK - Master File Notification - General (Event M13), p 8-6; the same structure is printed for MFK^M01 (8.4.1), MFK^M14 (8.4.3), MFK^M02 (8.7.1), MFK^M03 (8.8.2), MFK^M08 (8.8.3), MFK^M09 (8.8.4), MFK^M10 (8.8.5), MFK^M11 (8.8.6), MFK^M12 (8.8.7), MFK^M05 (8.9.1), MFK^M04 (8.10.1), MFK^M06 (8.11.1), MFK^M07 (8.11.1), MFK^M15 (8.12.1), MFK^M16 (8.12.2) and MFK^M17 (8.13.1). Two normative prints of MFK_M01 disagree: Chapter 8 section 8.4.1 (MFK^M01^MFK_M01, p 8-5) prints no UAC (as does 8.8.2 MFK^M03), fourteen others print [UAC] after SFT (8.4.2 MFK^M13, p 8-6; 8.7.1 M02; 8.8.3 to 8.8.7 M08 to M12; 8.9.1 M05; 8.10.1 M04; 8.11.1 M06 and M07; 8.12.1 M15; 8.12.2 M16; 8.13.1 M17), which accepts every message the 8.4.1 print accepts; the looser 8.4.2 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/MFK_M01.xsd has the UAC.",
+        citation: "HL7 v2.6 Chapter 8, section 8.4.2 MFN/MFK - Master File Notification - General (Event M13), p 8-6; the same structure is printed for MFK^M01 (8.4.1), MFK^M14 (8.4.3), MFK^M02 (8.7.1), MFK^M03 (8.8.2), MFK^M08 (8.8.3), MFK^M09 (8.8.4), MFK^M10 (8.8.5), MFK^M11 (8.8.6), MFK^M12 (8.8.7), MFK^M05 (8.9.1), MFK^M04 (8.10.1), MFK^M06 (8.11.1), MFK^M07 (8.11.1), MFK^M15 (8.12.1), MFK^M16 (8.12.2) and MFK^M17 (8.13.1). Two normative prints of MFK_M01 differ by trigger: HL7 v2.6 Chapter 8 section 8.4.1 (MFK^M01^MFK_M01, p 8-5) prints no UAC, as does 8.8.2 (MFK^M03), and fourteen others print [UAC] after SFT (8.4.2 MFK^M13, p 8-6; 8.7.1 M02; 8.8.3 to 8.8.7 M08 to M12; 8.9.1 M05; 8.10.1 M04; 8.11.1 M06 and M07; 8.12.1 M15; 8.12.2 M16; 8.13.1 M17); the 8.4.2 print is the default and the 8.4.1 print governs M01 and M03. HL7-xml v2.6/MFK_M01.xsd has the UAC. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["MFK^M01", "MFK^M03"],
+                citation: "HL7 v2.6 Chapter 8, section 8.4.1 MFN/MFK - Master File Notification (Event M01), p 8-5; the same structure is printed for MFK^M03 (8.8.2). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of MFK_M01 differ by trigger: HL7 v2.6 Chapter 8 section 8.4.1 (MFK^M01^MFK_M01, p 8-5) prints no UAC, as does 8.8.2 (MFK^M03), and fourteen others print [UAC] after SFT (8.4.2 MFK^M13, p 8-6; 8.7.1 M02; 8.8.3 to 8.8.7 M08 to M12; 8.9.1 M05; 8.10.1 M04; 8.11.1 M06 and M07; 8.12.1 M15; 8.12.2 M16; 8.13.1 M17); the 8.4.2 print is the default and the 8.4.1 print governs M01 and M03. HL7-xml v2.6/MFK_M01.xsd has the UAC. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: nil),
+                    .segment("MFI", min: 1, max: 1),
+                    .segment("MFA", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -5089,8 +5148,19 @@ extension MessageStructureTable {
         id: "QRY_PC4",
         version: "2.6",
         triggers: ["QRY^PC9", "QRY^PC4", "QRY^PCE", "QRY^PCK"],
-        citation: "HL7 v2.6 Chapter 12, section 12.2.7 QRY - Patient Goal Query (Event PC9), p 12-14; the same structure is printed for QRY^PC4 (12.2.5), QRY^PCE (12.2.9) and QRY^PCK (12.2.11). Two normative prints of QRY_PC4 disagree: Chapter 12 section 12.2.5 (QRY^PC4^QRY_PC4, p 12-12) prints MSH QRD [QRF], sections 12.2.7 (QRY^PC9^QRY_PC4, p 12-14), 12.2.9 (PCE, p 12-15) and 12.2.11 (PCK, p 12-17) print [{SFT}] [UAC] after MSH, which accepts every message the 12.2.5 print accepts; the looser 12.2.7 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/QRY_PC4.xsd has SFT and UAC.",
+        citation: "HL7 v2.6 Chapter 12, section 12.2.7 QRY - Patient Goal Query (Event PC9), p 12-14; the same structure is printed for QRY^PC4 (12.2.5), QRY^PCE (12.2.9) and QRY^PCK (12.2.11). Two normative prints of QRY_PC4 differ by trigger: HL7 v2.6 Chapter 12 section 12.2.5 (QRY^PC4^QRY_PC4, p 12-12) prints MSH QRD [QRF], sections 12.2.7 (QRY^PC9^QRY_PC4, p 12-14), 12.2.9 (PCE, p 12-15) and 12.2.11 (PCK, p 12-17) print [{SFT}] [UAC] after MSH; the 12.2.7 print is the default and the 12.2.5 print governs QRY^PC4. HL7-xml v2.6/QRY_PC4.xsd has SFT and UAC. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["QRY^PC4"],
+                citation: "HL7 v2.6 Chapter 12, section 12.2.5 QRY - Patient Care Problem Query (Event PC4), p 12-12. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of QRY_PC4 differ by trigger: HL7 v2.6 Chapter 12 section 12.2.5 (QRY^PC4^QRY_PC4, p 12-12) prints MSH QRD [QRF], sections 12.2.7 (QRY^PC9^QRY_PC4, p 12-14), 12.2.9 (PCE, p 12-15) and 12.2.11 (PCK, p 12-17) print [{SFT}] [UAC] after MSH; the 12.2.7 print is the default and the 12.2.5 print governs QRY^PC4. HL7-xml v2.6/QRY_PC4.xsd has SFT and UAC. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("QRD", min: 1, max: 1),
+                    .segment("QRF", min: 0, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -5349,8 +5419,67 @@ extension MessageStructureTable {
         id: "RDE_O11",
         version: "2.6",
         triggers: ["RDE^O25", "RDE^O11"],
-        citation: "HL7 v2.6 Chapter 4, section 4.13.13 RDE - Pharmacy/Treatment Refill Authorization Request Message (Event O25), pp 4-97 to 4-98; the same structure is printed for RDE^O11 (4.13.5). Two normative prints of RDE_O11 disagree: Chapter 4 section 4.13.5 (RDE^O11^RDE_O11, pp 4-88 to 4-89) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11, pp 4-97 to 4-98) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E).",
+        citation: "HL7 v2.6 Chapter 4, section 4.13.13 RDE - Pharmacy/Treatment Refill Authorization Request Message (Event O25), pp 4-97 to 4-98; the same structure is printed for RDE^O11 (4.13.5). Two normative prints of RDE_O11 differ by trigger: HL7 v2.6 Chapter 4 section 4.13.5 (RDE^O11^RDE_O11, pp 4-88 to 4-89) prints OBX required in OBSERVATION and names the RXC group COMPONENT, section 4.13.13 (RDE^O25^RDE_O11, pp 4-97 to 4-98) prints it optional ([OBX]) and names the group COMPONENTS; the 4.13.13 print is the default and the 4.13.5 print governs RDE^O11. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["RDE^O11"],
+                citation: "HL7 v2.6 Chapter 4, section 4.13.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 4-88 to 4-89. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RDE_O11 differ by trigger: HL7 v2.6 Chapter 4 section 4.13.5 (RDE^O11^RDE_O11, pp 4-88 to 4-89) prints OBX required in OBSERVATION and names the RXC group COMPONENT, section 4.13.13 (RDE^O25^RDE_O11, pp 4-97 to 4-98) prints it optional ([OBX]) and names the group COMPONENTS; the 4.13.13 print is the default and the 4.13.5 print governs RDE^O11. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("PATIENT", min: 0, max: 1, elements: [
+                        .segment("PID", min: 1, max: 1),
+                        .segment("PD1", min: 0, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                            .segment("PV1", min: 1, max: 1),
+                            .segment("PV2", min: 0, max: 1),
+                        ]),
+                        .group("INSURANCE", min: 0, max: nil, elements: [
+                            .segment("IN1", min: 1, max: 1),
+                            .segment("IN2", min: 0, max: 1),
+                            .segment("IN3", min: 0, max: 1),
+                        ]),
+                        .segment("GT1", min: 0, max: 1),
+                        .segment("AL1", min: 0, max: nil),
+                    ]),
+                    .group("ORDER", min: 1, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("TIMING", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .segment("RXO", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("RXR", min: 1, max: nil),
+                            .group("COMPONENT", min: 0, max: nil, elements: [
+                                .segment("RXC", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .segment("RXE", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                        .group("OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .segment("FT1", min: 0, max: nil),
+                        .segment("BLG", min: 0, max: 1),
+                        .segment("CTI", min: 0, max: nil),
+                    ]),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6296,14 +6425,37 @@ extension MessageStructureTable {
     private static let v2_6_RSP_K21: MessageStructure = MessageStructure(
         id: "RSP_K21",
         version: "2.6",
-        triggers: ["RSP^K21", "RSP^K22"],
-        citation: "HL7 v2.6 Chapter 3, section 3.3.56 QBP/RSP - Get Person Demographics (QBP) and Response (RSP), pp 3-48 to 3-49; the same structure is printed for RSP^K22 (3.3.57). Two normative prints of RSP_K21 are incomparable: Chapter 3 section 3.3.56 (RSP^K21^RSP_K21, pp 3-48 to 3-49) prints one optional QUERY_RESPONSE with [{ARV}] and QRI required, section 3.3.57 (RSP^K22^RSP_K21, p 3-50) prints a repeating QUERY_RESPONSE with QRI optional and no ARV; neither accepts every message the other accepts, so the structure is their union aligned by name (QUERY_RESPONSE repeating, ARV optional repeating, QRI optional; P8b-10 ruling; register section E).",
+        triggers: ["RSP^K22", "RSP^K21"],
+        citation: "HL7 v2.6 Chapter 3, section 3.3.57 QBP/RSP - Find Candidates (QBP) and Response (RSP) (Events Q22 and K22), p 3-50; the same structure is printed for RSP^K21 (3.3.56). Two normative prints of RSP_K21 differ by trigger and are incomparable: HL7 v2.6 Chapter 3 section 3.3.56 (RSP^K21^RSP_K21, pp 3-48 to 3-49) prints one optional QUERY_RESPONSE with [{ARV}] and QRI required, section 3.3.57 (RSP^K22^RSP_K21, p 3-50) a repeating QUERY_RESPONSE with QRI optional and no ARV; the 3.3.57 print is the default and the 3.3.56 print governs RSP^K21. ADR-019 S6: each print governs the triggers it is printed for (was unionPrints, the union of the two governing both triggers, P8b-10 and P8b-11).",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
             querySegments: ["QPD"],
             noDataQueryStatus: ["NF"],
             citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, pp 52 to 53): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
+        variants: [
+            StructureVariant(
+                triggers: ["RSP^K21"],
+                citation: "HL7 v2.6 Chapter 3, section 3.3.56 QBP/RSP - Get Person Demographics (QBP) and Response (RSP), pp 3-48 to 3-49. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RSP_K21 differ by trigger and are incomparable: HL7 v2.6 Chapter 3 section 3.3.56 (RSP^K21^RSP_K21, pp 3-48 to 3-49) prints one optional QUERY_RESPONSE with [{ARV}] and QRI required, section 3.3.57 (RSP^K22^RSP_K21, p 3-50) a repeating QUERY_RESPONSE with QRI optional and no ARV; the 3.3.57 print is the default and the 3.3.56 print governs RSP^K21. ADR-019 S6: each print governs the triggers it is printed for (was unionPrints, the union of the two governing both triggers, P8b-10 and P8b-11).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: 1),
+                    .segment("QAK", min: 1, max: 1),
+                    .segment("QPD", min: 1, max: 1),
+                    .group("QUERY_RESPONSE", min: 0, max: 1, elements: [
+                        .segment("PID", min: 1, max: 1),
+                        .segment("PD1", min: 0, max: 1),
+                        .segment("ARV", min: 0, max: nil),
+                        .segment("NK1", min: 0, max: nil),
+                        .segment("QRI", min: 1, max: 1),
+                    ]),
+                    .segment("DSC", min: 0, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6315,7 +6467,6 @@ extension MessageStructureTable {
             .group("QUERY_RESPONSE", min: 0, max: nil, elements: [
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NK1", min: 0, max: nil),
                 .segment("QRI", min: 0, max: 1),
             ]),

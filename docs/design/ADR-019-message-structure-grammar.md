@@ -2132,3 +2132,74 @@ with MSH-12 set to the chapter version: 24 lines removed and 24 added, the six v
 MFN^M03 examples whose MFI-1 is the local `LABxxx`, from "not modelled" to the unmapped-key
 information (s5-classes.tsv C1); 0 misfires. Residual (Blocking, register section E): v2.6 MFR_M01
 OMA to OME, which the v2.6 print gives no MFR fragment for.
+
+## Amendment 2026-10-06 — S6 per-trigger prints, scope rule residue, AU beyond-maxima, ceilings
+
+### S6-1 per-trigger structure variants (amends the P8b-9 primary-print ruling)
+
+The P8b-9 ruling committed the looser of two disagreeing normative prints of one structure ID,
+so a message under the stricter print's trigger was checked against the looser print
+(under-checked; register section E listed each as Blocking, "per-trigger structures would be a
+model extension"). The extension is built.
+
+- **Model.** `MessageStructure.variants: [StructureVariant]` (public, read-only, additive):
+  each variant carries the triggers one print governs (exact `CODE^EVT`, never `CODE^*`), its
+  citation and its elements, and an internal lint flag set by the codegen. `elements` stays the
+  default print. `MessageStructure.variant(messageCode:triggerEvent:)` (public) names the variant
+  that governs a trigger, nil when the default does. Selection is by exact trigger only; any
+  other trigger the structure accepts (a `CODE^*` one included) takes the default.
+- **Validator.** `resolveStructure` returns the structure as the print MSH-9.1^9.2 selects, on
+  the MSH-9.3 path and the bare-trigger path alike, so the check, the group spans (P8b-17) and
+  the matcher cache (one compiled matcher per print) all use that print. A finding cites the
+  variant's print.
+- **Data.** `overrides.json` `variantPrints` (version, structure, primary, variant, citation)
+  replaces `primaryPrints` for these cases. The extractor keeps the named primary as the default
+  print, reads the named variant prints (they must agree and differ from the default), and adds
+  to the variant every other print of the ID whose syntax equals it, with that print's caption
+  triggers; a print that equals neither stays reported as `duplicate-differs` and keeps the
+  default. A trigger printed by both sides, a stale or doubly declared entry, or a variant equal
+  to the default is an extractor error; the codegen rejects a variant trigger the structure does
+  not accept, a trigger in two variants, a variant equal to the default or another variant, a
+  keyed choice in a variant, variants on an alias or profile structure, and a variant whose
+  citation does not name `overrides.json variantPrints`. The structure JSON carries `variants`
+  after `elements`.
+- **Per entry.** Every former `primaryPrints` entry but the two v2.3 ones is a variant: none of
+  the differences is a misprint the ADR classes as such (searched: no erratum or misprint ruling
+  names any of them), and each print is a normative message definition for its own captions.
+
+| Version / ID | Default print | Variant print, triggers | Difference |
+|---|---|---|---|
+| v2.5.1 RSP_K21 | CH03 3.3.57 RSP^K22 (p 3-61) | 3.3.56 RSP^K21 (p 3-59): K21 | `[{QUERY_RESPONSE ... [QRI]}]` against one `[QUERY_RESPONSE ... QRI]` |
+| v2.5.1 RDE_O11 | CH04 4.13.13 RDE^O25 | 4.13.5 RDE^O11 (pp 4-115 to 4-116): O11 | OBSERVATION `[OBX]` and COMPONENTS against `OBX` and COMPONENT |
+| v2.6 ACK | CH02 2.13.1 ACK^varies (p 42) | CH10 10.4 ACK^S12-S24, S26 (p 10-17): S12 to S24, S26 | `[ UAC ]` against `[ {UAC} ]` |
+| v2.6 ADT_A30 | CH03 3.3.34 ADT^A34 (p 3-33; A36, A46, A47 alike) | 3.3.30 ADT^A30 (p 3-30): A30, A35, A48, A49 | `[{ ARV }]` after PD1 against none |
+| v2.6 ADT_A43 | 3.3.44 ADT^A44 (p 3-40) | 3.3.43 ADT^A43 (p 3-39): A43 | `[{ARV}]` in PATIENT against none |
+| v2.6 MFK_M01 | CH08 8.4.2 MFK^M13 (p 8-6; twelve others alike) | 8.4.1 MFK^M01 (p 8-5) and 8.8.2 MFK^M03: M01, M03 | `[UAC]` against none |
+| v2.6 QRY_PC4 | CH12 12.2.7 QRY^PC9 (p 12-14; PCE, PCK alike) | 12.2.5 QRY^PC4 (p 12-12): PC4 | `[{SFT}] [UAC]` against none |
+| v2.6 RDE_O11 | CH04 4.13.13 RDE^O25 (pp 4-97 to 4-98) | 4.13.5 RDE^O11 (pp 4-88 to 4-89): O11 | as v2.5.1 |
+| v2.6 RSP_K21 | CH03 3.3.57 RSP^K22 (p 3-50) | 3.3.56 RSP^K21 (pp 3-48 to 3-49): K21 | incomparable: the `unionPrints` entry (P8b-11) is withdrawn; each print governs its own trigger |
+| v2.7.1 ACK | CH02 2.13.1 ACK^varies (p 46) | CH10 10.4 ACK^S12-S24,S26,S27 (p 18): S12 to S24, S26, S27 | `[UAC]` against `[{UAC}]` |
+| v2.7.1 RQC_I05 | CH11 11.3.5 RQC^I05 (p 13) | 11.3.6 RQC^I06 (pp 14 to 15): I06 | `[{GT1}]` against `[GT1]` |
+| v2.8.2 ACK | CH02 2.13.1 ACK^varies (p 47) | CH10 10.4 ACK^S12-S24,S26,S27 (p 20): S12 to S24, S26, S27 | `[UAC]` against `[{UAC}]` |
+
+  ACK's default is the CH02 general acknowledgment, the `triggerFolds` primary for `ACK^*`
+  (P8b-3a), not the CH10 print the `primaryPrints` entry had made primary: a variant must name
+  exact triggers, and only CH02 is printed for every trigger ("varies"). The other ACK prints
+  equal to CH02 (CH03 and the rest, 119 captions on v2.6) take the default; those stricter than
+  both (v2.6 CH03 3.3.18 without UAC, CH05 5.4.4 to 5.4.7 with `[ERR]`) stay `duplicate-differs`
+  on the default, as before. **Kept as `primaryPrints`:** v2.3 ORM_O01 and ORR_O02 (S3-3): the
+  general print's open slot subsumes the four specific prints under the same caption, which
+  share one trigger, so no trigger selects a stricter print.
+- **Evidence.** `StructureVariantProbeTests` (32 probes; RED at BASE 8c3d4d6c: 17 issues, every
+  stricter-trigger probe, and nothing else), `StructureVariantTests` (selection, cache, group
+  spans per print, every generated variant cited, exact, accepted and different).
+  `StructureGuardTests` guards each variant as a matched form. Digests: default, strict and off
+  identical to BASE (no spec example resolves to these triggers with its own MSH-12); a
+  supplementary run of the 71 examples of these structures with MSH-12 set to the chapter version
+  adds one finding: the v2.5.1 CH03 RSP^K21 example (3.3.56) sends a PID with no QRI, which its
+  own print requires, an example defect (`s6-classes.tsv`). Remaining print disagreements that no
+  `primaryPrints` entry named (each duplicate stricter than the reading-order primary: the CH05
+  ACK `[ERR]` prints on v2.5.1 to v2.8.2, v2.3 to v2.4 `ACK^R01` and `ACK^N02`, MFK_M01 on v2.3.1
+  and v2.4, ADT_A09 v2.4, ADT_A05 v2.5.1, ADT_A01 v2.6, RQC_I05 v2.4 to v2.6, RRE_O12 v2.5.1 and
+  v2.6, RDE_O11 v2.7.1 and v2.8.2) are the same class and convertible by one `variantPrints`
+  entry each; they are listed for the owner, not converted in S6.

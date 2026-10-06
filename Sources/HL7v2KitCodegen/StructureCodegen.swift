@@ -124,10 +124,12 @@ struct MessageStructureSchema: Decodable {
     /// `"prose"` when the syntax is a hand transcription of the print's prose (S5-1,
     /// `overrides.json` proseFragments); checked, never rendered.
     let syntaxSource: String?
+    /// The per-trigger prints (S6-1, `overrides.json` variantPrints); nil for most structures.
+    let variants: [StructureVariantSchema]?
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
         case structure, version, citation, triggers, elements, profile, baseVersion, rule, aliasOf, errorResponse,
-             syntaxSource
+             syntaxSource, variants
     }
 
     private static let profileKeys: Set<CodingKeys> = [.profile, .baseVersion, .rule]
@@ -148,6 +150,7 @@ struct MessageStructureSchema: Decodable {
         aliasOf = try c.decodeIfPresent(String.self, forKey: .aliasOf)
         errorResponse = try c.decodeIfPresent(ErrorResponseSchema.self, forKey: .errorResponse)
         syntaxSource = try c.decodeIfPresent(String.self, forKey: .syntaxSource)
+        variants = try c.decodeIfPresent([StructureVariantSchema].self, forKey: .variants)
     }
 }
 
@@ -231,6 +234,66 @@ func requiredNameCitation(name: String, source: String, version: String) -> Stri
     default: return nil
     }
     return "\(name) (\(marker)"
+}
+
+/// One per-trigger print of a structure (S6-1, `overrides.json` variantPrints): the triggers it
+/// governs, its citation and its elements.
+struct StructureVariantSchema: Decodable, Equatable {
+    let triggers: [String]
+    let citation: String
+    let elements: [StructureElementSchema]
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case triggers, citation, elements
+    }
+
+    init(from decoder: any Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "variant")
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        triggers = try c.decode([String].self, forKey: .triggers)
+        citation = try c.decode(String.self, forKey: .citation)
+        elements = try c.decode([StructureElementSchema].self, forKey: .elements)
+    }
+}
+
+/// Check a structure's variants (S6-1): each names exact triggers the structure accepts, none
+/// named twice; its print starts with MSH, passes the element rules, has no keyed choice,
+/// differs from the default print and every other variant, and cites its variantPrints entry.
+func validateVariants(_ s: MessageStructureSchema) throws {
+    guard let variants = s.variants else { return }
+    guard !variants.isEmpty else { throw StructureSchemaError(description: "variants: an empty list") }
+    guard s.profile == nil, s.aliasOf == nil else {
+        throw StructureSchemaError(description: "variants: a profile structure or an alias has no variants")
+    }
+    var seen: Set<String> = []
+    var prints = [s.elements]
+    for variant in variants {
+        let accepted = variant.triggers.filter { trigger in
+            matches(trigger, "^[A-Z][A-Z0-9]{2}\\^[A-Z0-9]{3}$")
+                && (s.triggers.contains(trigger) || s.triggers.contains("\(trigger.prefix(3))^*"))
+        }
+        guard !variant.triggers.isEmpty, accepted.count == variant.triggers.count else {
+            throw StructureSchemaError(description: "variants: triggers must be exact CODE^EVT the structure accepts; "
+                                       + "got \(variant.triggers)")
+        }
+        if let twice = variant.triggers.first(where: { !seen.insert($0).inserted }) {
+            throw StructureSchemaError(description: "variants: trigger \(twice) is in two variants or named twice")
+        }
+        guard variant.citation.contains("overrides.json variantPrints") else {
+            throw StructureSchemaError(description: "variants: a citation must name \"overrides.json variantPrints\"")
+        }
+        guard variant.elements.first?.segment == "MSH" else {
+            throw StructureSchemaError(description: "variants: a print must start with MSH")
+        }
+        try validateStructureSequence(variant.elements, version: s.version, citation: s.citation + " " + variant.citation)
+        guard keyedChoiceKeys(variant.elements).isEmpty else {
+            throw StructureSchemaError(description: "variants: a keyed choice in a variant is not supported")
+        }
+        guard !prints.contains(variant.elements) else {
+            throw StructureSchemaError(description: "variants: a print equal to the default or to another variant")
+        }
+        prints.append(variant.elements)
+    }
 }
 
 /// Reject any element the runtime model cannot represent faithfully. `version` and `citation`
@@ -380,6 +443,7 @@ func validateStructure(_ s: MessageStructureSchema, file: URL, version: String) 
         throw StructureSchemaError(description: "a keyed choice's key segment \(missing) is not in the structure")
     }
     if let rule = s.errorResponse { try validateErrorResponse(rule, elements: s.elements) }
+    try validateVariants(s)
     if let source = s.syntaxSource {
         // S5-1 (ADR-019 S5): a transcription says so, and its citation names the cited entry.
         guard source == "prose" else { throw StructureSchemaError(description: "syntaxSource must be \"prose\"") }
@@ -482,6 +546,22 @@ func renderStructureTable(versionSwiftName: String, sourceDir: String, structure
                 "            noDataQueryStatus: [\(rule.noDataQueryStatus.map(escapeStringLiteral).joined(separator: ", "))],",
                 "            citation: \(escapeStringLiteral(rule.citation))),",
             ]
+        }
+        // S6-1: each per-trigger print, linted on its own.
+        if let variants = s.variants {
+            lines.append("        variants: [")
+            for variant in variants {
+                lines += [
+                    "            StructureVariant(",
+                    "                triggers: [\(variant.triggers.map(escapeStringLiteral).joined(separator: ", "))],",
+                    "                citation: \(escapeStringLiteral(variant.citation)),",
+                    "                requiresExactMatch: \(!structureIsDeterministic(variant.elements)),",
+                    "                elements: [",
+                ]
+                lines += variant.elements.map { renderStructureElement($0, indent: "                    ") }
+                lines += ["                ]),"]
+            }
+            lines.append("        ],")
         }
         lines += [
             "        elements: [",

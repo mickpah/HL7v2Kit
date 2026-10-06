@@ -62,6 +62,10 @@ extension Validator {
     /// ^ <trigger event>, v2.3 Chapter 2 section 2.24.1.9) and its structure
     /// IDs are synthesised, so a v2.3 message resolves from MSH-9.1^9.2 only
     /// and a populated third component is ignored for resolution.
+    /// A resolved structure whose prints differ by trigger is returned as the
+    /// print MSH-9.1^9.2 selects (S6-1, `MessageStructure.variants`), on the
+    /// MSH-9.3 path and the bare-trigger path alike, so the check and the
+    /// group spans both use that print.
     ///
     /// `structures` replaces the version's loaded table, `complete` the
     /// generated completeness set and `gaps` the registered not-modelled
@@ -119,7 +123,7 @@ extension Validator {
             guard let only = byTrigger.first, let structure = table[only] else {
                 return (nil, [notModelled(trigger, message: message)])
             }
-            return (structure, [])
+            return (structure.selectingVariant(messageCode: code, triggerEvent: event), [])
         }
         if table[declared] == nil, let entry = registered[declared] {
             // Its captions print other triggers: the print gives this event another structure.
@@ -187,7 +191,7 @@ extension Validator {
                 message: "MSH-9.3 \(declared) is not printed for \(trigger) in v\(message.version.rawValue) (\(structure.citation)); segment order and groups were not checked (ADR-019)."
             )])
         }
-        return (structure, [])
+        return (structure.selectingVariant(messageCode: code, triggerEvent: event), [])
     }
 
     /// Match the message body against `structure`: fragments are reported as

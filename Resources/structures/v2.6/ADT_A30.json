@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A30",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 3, section 3.3.34 ADT/ACK - Merge Patient Information - Patient ID Only (Event A34), p 3-33; the same structure is printed for ADT^A30 (3.3.30), ADT^A35 (3.3.35), ADT^A36 (3.3.36), ADT^A46 (3.3.46), ADT^A47 (3.3.47), ADT^A48 (3.3.48) and ADT^A49 (3.3.49). Two normative prints of ADT_A30 disagree: Chapter 3 section 3.3.30 (ADT^A30^ADT_A30, p 3-30) prints no ARV, sections 3.3.34 (ADT^A34^ADT_A30, p 3-33), 3.3.36 (A36, p 3-34), 3.3.46 (A46, pp 3-41 to 3-42) and 3.3.47 (A47, p 3-42) print [{ARV}] after PD1, which accepts every message the 3.3.30 print accepts; the looser 3.3.34 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/ADT_A30.xsd has the ARV.",
+  "citation": "HL7 v2.6 Chapter 3, section 3.3.34 ADT/ACK - Merge Patient Information - Patient ID Only (Event A34), p 3-33; the same structure is printed for ADT^A30 (3.3.30), ADT^A35 (3.3.35), ADT^A36 (3.3.36), ADT^A46 (3.3.46), ADT^A47 (3.3.47), ADT^A48 (3.3.48) and ADT^A49 (3.3.49). Two normative prints of ADT_A30 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.30 (ADT^A30^ADT_A30, p 3-30) prints PID [PD1] MRG with no ARV, as do the A35, A48 and A49 prints (pp 3-33, 3-43, 3-44); section 3.3.34 (ADT^A34^ADT_A30, p 3-33) prints [{ARV}] after PD1, as do the A36, A46 and A47 prints (pp 3-34, 3-42); the 3.3.34 print is the default and the 3.3.30 print governs A30, A35, A48 and A49. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
   "triggers": ["ADT^A34", "ADT^A30", "ADT^A35", "ADT^A36", "ADT^A46", "ADT^A47", "ADT^A48", "ADT^A49"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -12,5 +12,20 @@
     { "segment": "PD1", "min": 0, "max": 1 },
     { "segment": "ARV", "min": 0, "max": null },
     { "segment": "MRG", "min": 1, "max": 1 }
+  ],
+  "variants": [
+    {
+      "triggers": ["ADT^A30", "ADT^A35", "ADT^A48", "ADT^A49"],
+      "citation": "HL7 v2.6 Chapter 3, section 3.3.30 ADT/ACK - Merge Person Information (Event A30), p 3-30; the same structure is printed for ADT^A35 (3.3.35), ADT^A48 (3.3.48) and ADT^A49 (3.3.49). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A30 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.30 (ADT^A30^ADT_A30, p 3-30) prints PID [PD1] MRG with no ARV, as do the A35, A48 and A49 prints (pp 3-33, 3-43, 3-44); section 3.3.34 (ADT^A34^ADT_A30, p 3-33) prints [{ARV}] after PD1, as do the A36, A46 and A47 prints (pp 3-34, 3-42); the 3.3.34 print is the default and the 3.3.30 print governs A30, A35, A48 and A49. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "SFT", "min": 0, "max": null },
+        { "segment": "UAC", "min": 0, "max": 1 },
+        { "segment": "EVN", "min": 1, "max": 1 },
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "PD1", "min": 0, "max": 1 },
+        { "segment": "MRG", "min": 1, "max": 1 }
+      ]
+    }
   ]
 }

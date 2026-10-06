@@ -136,9 +136,15 @@ struct StructureGuardTests {
     }
 
     /// The forms the Validator matches `structure` in: itself, or, with a
-    /// keyed choice, its resolution for each key value and for no value.
+    /// keyed choice, its resolution for each key value and for no value;
+    /// with per-trigger prints (S6-1), each variant as selected by its first
+    /// trigger as well.
     static func matchedForms(_ structure: MessageStructure) -> [(label: String, structure: MessageStructure)] {
-        guard structure.hasKeyedChoice else { return [("", structure)] }
+        let variants = structure.variants.map { variant -> (label: String, structure: MessageStructure) in
+            let parts = variant.triggers[0].split(separator: "^").map(String.init)
+            return (" [variant \(variant.triggers[0])]", structure.selectingVariant(messageCode: parts[0], triggerEvent: parts[1]))
+        }
+        guard structure.hasKeyedChoice else { return [("", structure)] + variants }
         var keys: [StructureChoiceKey] = []
         func collect(_ elements: [StructureElement]) {
             for element in elements {

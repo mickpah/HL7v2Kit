@@ -430,21 +430,22 @@ struct MessageStructureValidationTests {
         #expect(structure.citation.contains("3.3.56") && structure.citation.contains("3.3.57"))
     }
 
-    // P8b-10 ruling, applied in P8b-11: on v2.6 the two RSP_K21 prints are incomparable (3.3.56:
-    // one QUERY_RESPONSE with [{ARV}] and QRI required; 3.3.57: repeating, QRI optional, no ARV),
-    // so the structure is their union: a response with ARV in a repeating QUERY_RESPONSE and no
-    // QRI matches; the union still requires PID first in each response.
-    @Test("v2.6 RSP_K21 is the union of its two incomparable prints (unionPrints)")
-    func rspK21UnionOnV26() throws {
+    // P8b-10 ruling, applied in P8b-11 as a union; per-trigger since S6-1 (ADR-019 S6): on v2.6
+    // the two RSP_K21 prints are incomparable (3.3.56: one QUERY_RESPONSE with [{ARV}] and QRI
+    // required; 3.3.57: repeating, QRI optional, no ARV), and each governs its own trigger.
+    @Test("v2.6 RSP_K21: each of its two incomparable prints governs its own trigger (variantPrints)")
+    func rspK21PerTriggerOnV26() throws {
         let head = ["MSA|AA|8699", "QAK|7|OK", "QPD|Q22^Find Candidates^HL7nnn|7"]
         let both = head + [Self.pid, "ARV|1", "QRI|95", Self.pid, "ARV|1", Self.pid]
-        #expect(try structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", both)).isEmpty)
-        #expect(try structureIssues(Self.wire("RSP^K22^RSP_K21", version: "2.6", both)).isEmpty)
+        #expect(try !structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", both)).isEmpty)
+        #expect(try !structureIssues(Self.wire("RSP^K22^RSP_K21", version: "2.6", both)).isEmpty)
+        #expect(try structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", head + [Self.pid, "ARV|1", "QRI|95"])).isEmpty)
+        #expect(try structureIssues(Self.wire("RSP^K22^RSP_K21", version: "2.6", head + [Self.pid, Self.pid, "QRI|95"])).isEmpty)
         let noPID = head + ["ARV|1", "QRI|95"]
         #expect(try !structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", noPID)).isEmpty)
         let structure = try #require(MessageStructureTable.structure("RSP_K21", version: .v2_6))
         #expect(structure.citation.contains("3.3.56") && structure.citation.contains("3.3.57")
-                && structure.citation.contains("union"))
+                && structure.variants.map(\.triggers) == [["RSP^K21"]])
     }
 
     @Test("A registered not-modelled structure is info on a complete version, a mismatch only for a trigger it does not print")

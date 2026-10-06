@@ -110,7 +110,8 @@ extension MessageStructure {
         return .resolved(MessageStructure(id: id, version: version, triggers: triggers, citation: citation,
                                           profile: profile, baseVersion: baseVersion, rule: rule,
                                           aliasOf: aliasOf, keySelection: selections.joined(separator: ","),
-                                          errorResponse: errorResponse, elements: resolved))
+                                          errorResponse: errorResponse, variants: variants, variantIndex: variantIndex,
+                                          elements: resolved))
     }
 
     /// ``resolvingKeyedChoices(_:)`` with each key read from `message`.

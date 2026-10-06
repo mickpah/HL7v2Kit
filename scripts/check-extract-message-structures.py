@@ -32,7 +32,8 @@ OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
          "triggerFolds": [], "primaryPrints": [], "unionPrints": [], "unresolvedCaptions": [],
          "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": [], "withdrawnSegments": [],
-         "keyedChoices": [], "aliases": [], "errorResponses": [], "proseFragments": []}
+         "keyedChoices": [], "aliases": [], "errorResponses": [], "proseFragments": [],
+         "variantPrints": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -1917,6 +1918,54 @@ def check_primary_print_by_section():
         raise AssertionError(f"accepted {bad['stricter']!r}")
 
 
+def check_variant_prints():
+    # S6-1 (ADR-019 S6): two normative prints of one ID that differ by trigger; a cited
+    # variantPrints entry keeps the named primary as the default print and commits the other as a
+    # variant governing its own triggers, with every other print equal to it. Stale, equal or
+    # doubly declared entries are errors.
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", loose), heading="9.1.2           XYZ - synthetic (Event X02)")
+            + _page(3, _table("XYZ^X03^XYZ_X01", strict), heading="9.1.3           XYZ - synthetic (Event X03)")
+            + _page(4, _table("XYZ^X04^XYZ_X01", loose), heading="9.1.4           XYZ - synthetic (Event X04)"))
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01", "variant": "XYZ^X01^XYZ_X01",
+             "citation": "Per-trigger prints (synthetic)."}
+    fix = {**EMPTY, "variantPrints": [entry]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert not [r for r in report if r[1] == "error"], report
+    assert (s["elements"][1]["min"], s["elements"][1]["max"]) == (0, None), s
+    assert s["triggers"] == ["XYZ^X02", "XYZ^X01", "XYZ^X03", "XYZ^X04"], s["triggers"]
+    assert "Per-trigger prints (synthetic)." in s["citation"], s["citation"]
+    [v] = s["variants"]
+    assert v["triggers"] == ["XYZ^X01", "XYZ^X03"], v
+    assert (v["elements"][1]["min"], v["elements"][1]["max"]) == (0, 1), v
+    assert "overrides.json variantPrints" in v["citation"] and "9.1.1" in v["citation"], v["citation"]
+    assert [r[1] for r in report if r[1].startswith("variant")] == ["variant", "variant", "variant-prints"], report
+    assert not [r for r in report if r[1] == "duplicate-differs"], report
+    rendered = ext.render(s)
+    assert json.loads(rendered)["variants"] == s["variants"], rendered
+    for bad, why in (({**entry, "primary": "XYZ^X09^XYZ_X01"}, "matches no print"),
+                     ({**entry, "variant": "XYZ^X04^XYZ_X01"}, "the variant print equals the default print")):
+        _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": [bad]}, full=True)
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+    both = {**fix, "primaryPrints": [{"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01",
+                                      "stricter": "XYZ^X01^XYZ_X01", "citation": "Looser print primary (synthetic)."}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], both, full=True)
+    assert any(r[1] == "error" and "also has a primaryPrints" in r[2] for r in report), report
+    stale = {**EMPTY, "variantPrints": [{**entry, "structure": "XYZ_X09"}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], stale, full=True)
+    assert ("XYZ_X09", "error", "variantPrints entry matches no caption") in report, report
+    for bad in ({**entry, "variant": []}, {**entry, "variant": entry["primary"]}, {**entry, "variant": [entry["primary"]]}):
+        try:
+            ext.validate_overrides({**EMPTY, "variantPrints": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"accepted {bad['variant']!r}")
+
+
 def check_union_prints():
     # P8b-10 ruling (v2.6 RSP_K21): two incomparable normative prints of one ID; a cited
     # unionPrints entry aligns them by segment or group name: per element the lesser min and the
@@ -2455,7 +2504,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override, check_primary_print_by_section,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
-          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints,
+          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints, check_variant_prints,
           check_colon_caption_with_space_ends_table, check_v282_reader_layouts, check_v271_reader_layouts,
           check_0354_triggers_merged, check_v24_reader_layouts, check_syntax_cell_erratum_occurrence,
           check_bundle_name_no_group_can_hold, check_v231_bundle_encoder_style,

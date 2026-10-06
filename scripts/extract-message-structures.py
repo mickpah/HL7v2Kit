@@ -1465,8 +1465,26 @@ def render(structure):
             + (f'  "syntaxSource": "{structure["syntaxSource"]}",\n' if "syntaxSource" in structure else "")
             + (f'  "errorResponse": {json.dumps(structure["errorResponse"], ensure_ascii=False)},\n'
                if "errorResponse" in structure else "")
-            + f'  "elements": [\n{body}\n  ]\n'
-            "}\n")
+            + f'  "elements": [\n{body}\n  ]'
+            + "".join(_render_variants(structure.get("variants", [])))
+            + "\n}\n")
+
+
+def _render_variants(variants):
+    """S6-1: the per-trigger prints, after the default print's elements."""
+    if not variants:
+        return
+    yield ',\n  "variants": [\n'
+    rendered = []
+    for v in variants:
+        body = ",\n".join(render_element(e, "        ") for e in v["elements"])
+        triggers = ", ".join(json.dumps(t) for t in v["triggers"])
+        rendered.append("    {\n"
+                        f'      "triggers": [{triggers}],\n'
+                        f'      "citation": {json.dumps(v["citation"], ensure_ascii=False)},\n'
+                        f'      "elements": [\n{body}\n      ]\n'
+                        "    }")
+    yield ",\n".join(rendered) + "\n  ]"
 
 
 _OVERRIDE_KEYS = {
@@ -1490,6 +1508,7 @@ _OVERRIDE_KEYS = {
     # primary-print amendment). primary and stricter are the captions as printed, or "CAPTION
     # (section N)" where prints share a caption; stricter may list several prints (S3-3).
     "primaryPrints": {"version", "structure", "primary", "stricter", "citation"},
+    "variantPrints": {"version", "structure", "primary", "variant", "citation"},
     # Two normative prints of one structure ID that are incomparable (neither accepts every message
     # the other accepts): the committed structure is their UNION, aligned by segment or group name
     # (P8b-10 ruling, v2.6 RSP_K21; ADR-019 addendum). prints are the two captions as printed, the
@@ -1566,6 +1585,14 @@ def validate_overrides(data):
                         and all(isinstance(s, str) for s in entry["stricter"])
                         and entry.get("primary") not in entry["stricter"])):
                 raise OverridesError(f"primaryPrints entry for {entry.get('structure')}: stricter must be a print "
+                                     "name or a non-empty list of them without the primary")
+            if kind == "variantPrints" and not (
+                    isinstance(entry.get("variant"), str) or (
+                        isinstance(entry.get("variant"), list) and entry["variant"]
+                        and all(isinstance(v, str) for v in entry["variant"])
+                        and entry.get("primary") not in entry["variant"])) or (
+                    kind == "variantPrints" and entry.get("primary") == entry.get("variant")):
+                raise OverridesError(f"variantPrints entry for {entry.get('structure')}: variant must be a print "
                                      "name or a non-empty list of them without the primary")
             if kind == "sharedTriggers" and len(set(entry.get("structures", []))) < 2:
                 raise OverridesError(f"sharedTriggers entry {entry.get('trigger')} names fewer than two structures")
@@ -1878,6 +1905,11 @@ def _names_print(name, cap):
     return name in (cap.printed, f"{cap.printed} (section {cap.section})")
 
 
+def _variant_prints(entry):
+    """A variantPrints entry's variant prints: one name, or a list of them (S6-1)."""
+    return [entry["variant"]] if isinstance(entry["variant"], str) else entry["variant"]
+
+
 def _stricter(entry):
     """A primaryPrints entry's stricter prints: one name, or a list of them (S3-3)."""
     return [entry["stricter"]] if isinstance(entry["stricter"], str) else entry["stricter"]
@@ -2140,12 +2172,25 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
 
     primaries = {e["structure"]: e for e in overrides["primaryPrints"] if e["version"] == ver}
     unions = {e["structure"]: e for e in overrides["unionPrints"] if e["version"] == ver}
+    varied = {e["structure"]: e for e in overrides.get("variantPrints", []) if e["version"] == ver}
     for sid in sorted(prints):
         entries = prints[sid]
         fold = folds.get(sid)
         k = _primary(sid, entries, fold)
         chosen = primaries.get(sid)
         joined = unions.get(sid)
+        split = varied.get(sid)
+        if split and (chosen or joined):
+            report.append((sid, "error", "variantPrints entry for a structure that also has a primaryPrints or "
+                                         "unionPrints entry"))
+            continue
+        if split:
+            # S6-1: the default print and the variant prints; every named print must exist.
+            k = next((j for j, e in enumerate(entries) if _names_print(split["primary"], e[0])), None)
+            if k is None or not all(any(_names_print(v, e[0]) for e in entries) for v in _variant_prints(split)):
+                report.append((sid, "error", f"variantPrints entry {split['primary']!r} / {split['variant']!r} "
+                                             "matches no print"))
+                continue
         if joined:
             # The cited union of two incomparable prints; the first listed is the primary.
             k = next((j for j, e in enumerate(entries) if e[0].printed == joined["prints"][0]), None)
@@ -2206,6 +2251,23 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             report.append((sid, "union", f"{partner[0].printed} (section {partner[0].section}) prints "
                            f"{compact(theirs)[:160]!r}; {cap.printed} (section {cap.section}) prints "
                            f"{before[:160]!r}; union {compact(elements)[:160]!r}"))
+        variant = None
+        if split:
+            # S6-1: the named variant prints must agree with one another and differ from the default.
+            named = [x for x in entries if any(_names_print(v, x[0]) for v in _variant_prints(split))]
+            try:
+                read_named = [read(sid, x[1], x[2]) for x in named]
+            except UnknownNotation as exc:
+                report.append((sid, "error", f"variantPrints entry: a variant print is unreadable: {exc}"))
+                continue
+            if any(uncited(v) != uncited(read_named[0]) for v in read_named[1:]):
+                report.append((sid, "error", "variantPrints entry: the variant prints differ from one another"))
+                continue
+            if uncited(read_named[0]) == uncited(elements):
+                report.append((sid, "error", "variantPrints entry: the variant print equals the default print"))
+                continue
+            variant = {"elements": read_named[0], "prints": [], "triggers": [],
+                       "own": {f"{cap.code}^{v}" for v in cap.events}}
         others, triggers = [], []
         for c, r, e in entries:
             trigs = [f"{c.code}^{v}" for v in c.events]
@@ -2220,10 +2282,27 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 report.append((sid, "duplicate-unreadable", f"{c.printed} ({c.source} line {c.line + 1}, section "
                                                             f"{c.section}): {str(exc)[:120]}"))
                 continue
+            if variant and uncited(theirs) == uncited(variant["elements"]):
+                # S6-1: a print equal to the variant governs its own triggers with it.
+                variant["prints"].append(c)
+                variant["triggers"] += [t for t in trigs if t not in variant["triggers"]]
+                report.append((sid, "variant", f"{c.printed} (section {c.section}, p {c.page}) prints "
+                               f"{compact(theirs)[:160]!r} for {_join(trigs)}"))
+                continue
+            if variant and uncited(theirs) == uncited(elements):
+                variant["own"].update(trigs)
             if uncited(theirs) != uncited(elements):
                 report.append((sid, "duplicate-differs", f"{c.printed} (section {c.section}) prints "
                                f"{compact(theirs)[:160]!r}; primary {cap.printed} (section {cap.section}) prints "
                                f"{compact(elements)[:160]!r}"))
+        if variant:
+            if not all(any(_names_print(v, c) for c in variant["prints"]) for v in _variant_prints(split)):
+                report.append((sid, "error", "variantPrints entry: a named variant print is the default print"))
+                continue
+            if variant["own"] & set(variant["triggers"]) or any(not TRIGGER.match(t) for t in variant["triggers"]):
+                report.append((sid, "error", f"variantPrints entry: the variant triggers {_join(variant['triggers'])} "
+                                             "must be exact and none the default print's"))
+                continue
         triggers = fold_triggers(fold, sid, entries) if fold else triggers + [t for t in added.get(sid, []) if t not in triggers]
         referenced = [t for e in overrides.get("referencedTriggers", []) if e["version"] == ver and e["structure"] == sid
                       for t in e["triggers"] if t not in triggers]
@@ -2232,6 +2311,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
                                           "citation": citation(ver, cap, others, overrides, sid)
                                           + (f" {primaries[sid]['citation']}" if sid in primaries else "")
+                                          + (f" {split['citation']}" if split else "")
                                           + (f" {joined['citation']}" if joined else "")
                                           + "".join(f" {c}" for c in dict.fromkeys(assigned_cites.get(sid, [])))
                                           + table_provenance(ver, table_ver, era, sid, provenance.get(sid),
@@ -2247,6 +2327,17 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                                     for e in overrides.get("referencedTriggers", [])
                                                     if e["version"] == ver and e["structure"] == sid)
                                           + name_citation(log)})
+        if variant:
+            # S6-1: the variant prints' own citation, the entry's, and their group names checked alike.
+            first = variant["prints"][0]
+            vcite = (citation(ver, first, variant["prints"][1:], {"citationNotes": []}, sid)
+                     + f" Per-trigger print (overrides.json variantPrints, ADR-019 S6): {split['citation']}")
+            vel = json.loads(json.dumps(variant["elements"]))
+            cite_slots(vel, ver, first)
+            validate_names({"structure": sid, "version": ver, "elements": vel, "citation": structures[sid]["citation"] + " " + vcite})
+            structures[sid]["variants"] = [{"triggers": variant["triggers"], "citation": vcite, "elements": vel}]
+            report.append((sid, "variant-prints", f"default {cap.printed} (section {cap.section}); variant for "
+                           f"{_join(variant['triggers'])}: {compact(vel)[:160]!r}"))
         for entry in log:
             where = f"[{', '.join(str(p) for p in entry['path'])}]"
             if entry["source"] == "synthesised":
@@ -2305,6 +2396,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         report += [(sid, "error", "triggerFolds entry matches no caption") for sid in sorted(folds) if sid not in prints]
         report += [(sid, "error", "primaryPrints entry matches no caption") for sid in sorted(primaries) if sid not in prints]
         report += [(sid, "error", "unionPrints entry matches no caption") for sid in sorted(unions) if sid not in prints]
+        report += [(sid, "error", "variantPrints entry matches no caption") for sid in sorted(varied) if sid not in prints]
         report += [(sid, "error", "keyedChoices entry matches no read print") for sid in sorted(keyed) if sid not in used_keyed]
         report += [(sid, "error", "proseFragments entry matches no caption") for sid in sorted(prose)
                    if prose[sid]["caption"] is not None and sid not in prints]

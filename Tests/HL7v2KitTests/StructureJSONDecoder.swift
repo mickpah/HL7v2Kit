@@ -96,9 +96,10 @@ enum StructureJSONDecoder {
         let aliasOf: String?
         let errorResponse: ErrorResponse?
         let syntaxSource: String?
+        let variants: [Variant]?
 
         private enum CodingKeys: String, CodingKey, CaseIterable {
-            case structure, version, citation, triggers, elements, aliasOf, errorResponse, syntaxSource
+            case structure, version, citation, triggers, elements, aliasOf, errorResponse, syntaxSource, variants
         }
 
         init(from decoder: any Decoder) throws {
@@ -112,6 +113,24 @@ enum StructureJSONDecoder {
             aliasOf = try c.decodeIfPresent(String.self, forKey: .aliasOf)
             errorResponse = try c.decodeIfPresent(ErrorResponse.self, forKey: .errorResponse)
             syntaxSource = try c.decodeIfPresent(String.self, forKey: .syntaxSource)
+            variants = try c.decodeIfPresent([Variant].self, forKey: .variants)
+        }
+    }
+
+    /// A per-trigger print (S6-1).
+    struct Variant: Decodable {
+        let triggers: [String], citation: String, elements: [Element]
+
+        private enum CodingKeys: String, CodingKey, CaseIterable {
+            case triggers, citation, elements
+        }
+
+        init(from decoder: any Decoder) throws {
+            try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "variant")
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            triggers = try c.decode([String].self, forKey: .triggers)
+            citation = try c.decode(String.self, forKey: .citation)
+            elements = try c.decode([Element].self, forKey: .elements)
         }
     }
 
@@ -172,8 +191,28 @@ enum StructureJSONDecoder {
                 throw Rejected(description: "syntaxSource prose needs a citation naming \"overrides.json proseFragments\"")
             }
         }
+        let variants = try (s.variants ?? []).map { v -> StructureVariant in
+            let exact = v.triggers.allSatisfy {
+                matches($0, "^[A-Z][A-Z0-9]{2}\\^[A-Z0-9]{3}$") && (s.triggers.contains($0) || s.triggers.contains("\($0.prefix(3))^*"))
+            }
+            guard !v.triggers.isEmpty, exact else { throw Rejected(description: "variants: triggers must be exact CODE^EVT the structure accepts") }
+            guard v.citation.contains("overrides.json variantPrints") else {
+                throw Rejected(description: "variants: a citation must name \"overrides.json variantPrints\"")
+            }
+            guard v.elements.first?.segment == "MSH" else { throw Rejected(description: "variants: a print must start with MSH") }
+            try checkSequence(v.elements, version: s.version, citation: s.citation + " " + v.citation)
+            guard keys(v.elements).isEmpty else { throw Rejected(description: "variants: a keyed choice in a variant is not supported") }
+            return StructureVariant(triggers: v.triggers, citation: v.citation, elements: v.elements.map(\.model))
+        }
+        if s.variants?.isEmpty == true { throw Rejected(description: "variants: an empty list") }
+        let triggers = variants.flatMap(\.triggers)
+        guard Set(triggers).count == triggers.count else { throw Rejected(description: "variants: a trigger in two variants or named twice") }
+        let prints = [s.elements.map(\.model)] + variants.map(\.elements)
+        guard Set(prints).count == prints.count else {
+            throw Rejected(description: "variants: a print equal to the default or to another variant")
+        }
         return MessageStructure(id: s.structure, version: s.version, triggers: s.triggers, citation: s.citation,
-                                aliasOf: s.aliasOf, errorResponse: s.errorResponse?.model,
+                                aliasOf: s.aliasOf, errorResponse: s.errorResponse?.model, variants: variants,
                                 elements: s.elements.map(\.model))
     }
 

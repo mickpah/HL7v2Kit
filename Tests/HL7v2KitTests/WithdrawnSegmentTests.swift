@@ -104,8 +104,10 @@ struct WithdrawnSegmentTests {
         let rci = try structureFindings("RCI^I05^RCI_I05", ["MSA|AA|1", "PRD|RP", "PID|1"])
         #expect(rci == ["unexpected PRD"], "\(rci)")
         #expect(try structureFindings("RCL^I06^RCL_I06", ["MSA|AA|1", "QRD|20240101|R|I|Q1", "PRD|RP", "PID|1", "DSP|1"]) == [])
-        // RQC_I05 keeps its primaryPrints entry: the looser 11.3.5 print [{GT1}] is primary.
-        #expect(try structureFindings("RQC^I06^RQC_I05", ["QRD|20240101|R|I|Q1", "PRD|RP", "PID|1", "GT1|1", "GT1|2"]) == [])
+        // RQC_I05: the 11.3.5 print [{GT1}] is the default; the 11.3.6 print [GT1] governs I06 (S6-1).
+        #expect(try structureFindings("RQC^I05^RQC_I05", ["QRD|20240101|R|I|Q1", "PRD|RP", "PID|1", "GT1|1", "GT1|2"]) == [])
+        #expect(try structureFindings("RQC^I06^RQC_I05", ["QRD|20240101|R|I|Q1", "PRD|RP", "PID|1", "GT1|1", "GT1|2"])
+                == ["unexpected GT1"])
         #expect(try structureFindings("RQC^I05^RQC_I05", ["QRD|20240101|R|I|Q1", "PID|1"]).contains("missing PRD"))
     }
 

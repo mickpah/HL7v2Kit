@@ -340,6 +340,21 @@ struct SignatureCompatibilityTests {
         #expect(try #require(MessageStructureTable.structure("QRY_Q01", version: .v2_4)).aliasOf == nil)
     }
 
+    // Deliberate pin of new, unreleased API (S6-1, ADR-019 amendment 2026-10-06):
+    // the per-trigger prints of a structure and the lookup naming the one that governs a trigger.
+    @Test("StructureVariant, MessageStructure.variants and variant(messageCode:triggerEvent:) keep their signatures")
+    func structureVariants() throws {
+        let _: KeyPath<MessageStructure, [StructureVariant]> = \.variants
+        let _: KeyPath<StructureVariant, [String]> = \.triggers
+        let _: KeyPath<StructureVariant, String> = \.citation
+        let _: KeyPath<StructureVariant, [StructureElement]> = \.elements
+        let lookup: (MessageStructure) -> (String, String) -> StructureVariant? = MessageStructure.variant(messageCode:triggerEvent:)
+        let ack = try #require(MessageStructureTable.structure("ACK", version: .v2_8_2))
+        #expect(lookup(ack)("ACK", "S27")?.triggers.contains("ACK^S27") == true)
+        #expect(lookup(ack)("ACK", "A01") == nil)
+        #expect(try #require(MessageStructureTable.structure("ADT_A01", version: .v2_5_1)).variants.isEmpty)
+    }
+
     // Deliberate pin of new, unreleased API (S1-3, owner decision 8, ADR-019
     // amendment 2026-10-06): the public registration lookup that tells a
     // registered-not-modelled structure from an unknown ID.

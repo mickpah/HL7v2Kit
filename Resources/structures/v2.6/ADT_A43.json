@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A43",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 3, section 3.3.44 ADT/ACK - Move Account Information - Patient Account Number (Event A44), p 3-40; the same structure is printed for ADT^A43 (3.3.43). Two normative prints of ADT_A43 disagree: Chapter 3 section 3.3.43 (ADT^A43^ADT_A43, p 3-39) prints PATIENT as PID [PD1] MRG, section 3.3.44 (ADT^A44^ADT_A43, p 3-40) prints [{ARV}] after PD1, which accepts every message the 3.3.43 print accepts; the looser 3.3.44 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/ADT_A43.xsd has the ARV.",
+  "citation": "HL7 v2.6 Chapter 3, section 3.3.44 ADT/ACK - Move Account Information - Patient Account Number (Event A44), p 3-40; the same structure is printed for ADT^A43 (3.3.43). Two normative prints of ADT_A43 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.43 (ADT^A43^ADT_A43, p 3-39) prints PATIENT as PID [PD1] MRG, section 3.3.44 (ADT^A44^ADT_A43, p 3-40) prints [{ARV}] after PD1; the 3.3.44 print is the default and the 3.3.43 print governs ADT^A43. HL7-xml v2.6/ADT_A43.xsd has the ARV. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
   "triggers": ["ADT^A44", "ADT^A43"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -14,5 +14,22 @@
       { "segment": "ARV", "min": 0, "max": null },
       { "segment": "MRG", "min": 1, "max": 1 }
     ]}
+  ],
+  "variants": [
+    {
+      "triggers": ["ADT^A43"],
+      "citation": "HL7 v2.6 Chapter 3, section 3.3.43 ADT/ACK - Move Patient Information - Patient Identifier List (Event A43), p 3-39. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A43 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.43 (ADT^A43^ADT_A43, p 3-39) prints PATIENT as PID [PD1] MRG, section 3.3.44 (ADT^A44^ADT_A43, p 3-40) prints [{ARV}] after PD1; the 3.3.44 print is the default and the 3.3.43 print governs ADT^A43. HL7-xml v2.6/ADT_A43.xsd has the ARV. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "SFT", "min": 0, "max": null },
+        { "segment": "UAC", "min": 0, "max": 1 },
+        { "segment": "EVN", "min": 1, "max": 1 },
+        { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "PID", "min": 1, "max": 1 },
+          { "segment": "PD1", "min": 0, "max": 1 },
+          { "segment": "MRG", "min": 1, "max": 1 }
+        ]}
+      ]
+    }
   ]
 }

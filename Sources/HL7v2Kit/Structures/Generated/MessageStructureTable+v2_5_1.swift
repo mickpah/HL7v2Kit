@@ -4684,8 +4684,66 @@ extension MessageStructureTable {
         id: "RDE_O11",
         version: "2.5.1",
         triggers: ["RDE^O25", "RDE^O11"],
-        citation: "HL7 v2.5.1 Chapter 4, section 4.13.13 RDE - Pharmacy/Treatment Refill Authorization Request Message (Event O25), pp 4-127 to 4-129; the same structure is printed for RDE^O11 (4.13.5). Two normative prints of RDE_O11 disagree: section 4.13.5 (RDE^O11^RDE_O11, pp 4-115 to 4-116) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E).",
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.13 RDE - Pharmacy/Treatment Refill Authorization Request Message (Event O25), pp 4-127 to 4-129; the same structure is printed for RDE^O11 (4.13.5). Two normative prints of RDE_O11 differ by trigger: HL7 v2.5.1 Chapter 4 section 4.13.5 (RDE^O11^RDE_O11, pp 4-115 to 4-116) prints OBX required in OBSERVATION and names the RXC group COMPONENT, section 4.13.13 (RDE^O25^RDE_O11) prints it optional ([OBX]) and names the group COMPONENTS; the 4.13.13 print is the default and the 4.13.5 print governs RDE^O11. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["RDE^O11"],
+                citation: "HL7 v2.5.1 Chapter 4, section 4.13.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 4-115 to 4-116. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RDE_O11 differ by trigger: HL7 v2.5.1 Chapter 4 section 4.13.5 (RDE^O11^RDE_O11, pp 4-115 to 4-116) prints OBX required in OBSERVATION and names the RXC group COMPONENT, section 4.13.13 (RDE^O25^RDE_O11) prints it optional ([OBX]) and names the group COMPONENTS; the 4.13.13 print is the default and the 4.13.5 print governs RDE^O11. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("PATIENT", min: 0, max: 1, elements: [
+                        .segment("PID", min: 1, max: 1),
+                        .segment("PD1", min: 0, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                            .segment("PV1", min: 1, max: 1),
+                            .segment("PV2", min: 0, max: 1),
+                        ]),
+                        .group("INSURANCE", min: 0, max: nil, elements: [
+                            .segment("IN1", min: 1, max: 1),
+                            .segment("IN2", min: 0, max: 1),
+                            .segment("IN3", min: 0, max: 1),
+                        ]),
+                        .segment("GT1", min: 0, max: 1),
+                        .segment("AL1", min: 0, max: nil),
+                    ]),
+                    .group("ORDER", min: 1, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("TIMING", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .segment("RXO", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("RXR", min: 1, max: nil),
+                            .group("COMPONENT", min: 0, max: nil, elements: [
+                                .segment("RXC", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .segment("RXE", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                        .group("OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .segment("FT1", min: 0, max: nil),
+                        .segment("BLG", min: 0, max: 1),
+                        .segment("CTI", min: 0, max: nil),
+                    ]),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -5565,13 +5623,34 @@ extension MessageStructureTable {
         id: "RSP_K21",
         version: "2.5.1",
         triggers: ["RSP^K22", "RSP^K21"],
-        citation: "HL7 v2.5.1 Chapter 3, section 3.3.57 Find Candidates (QBP) and Response (RSP) (Events Q22 and K22), p 3-61; the same structure is printed for RSP^K21 (3.3.56). Two normative prints of RSP_K21 disagree: section 3.3.56 (RSP^K21^RSP_K21, p 3-59) prints one QUERY_RESPONSE with QRI required, section 3.3.57 (RSP^K22^RSP_K21) a repeating QUERY_RESPONSE with QRI optional, which accepts every message the 3.3.56 print accepts; the looser 3.3.57 print is primary (P8b-9 ruling; register section E).",
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.57 Find Candidates (QBP) and Response (RSP) (Events Q22 and K22), p 3-61; the same structure is printed for RSP^K21 (3.3.56). Two normative prints of RSP_K21 differ by trigger: HL7 v2.5.1 Chapter 3 section 3.3.56 (RSP^K21^RSP_K21, p 3-59) prints one optional QUERY_RESPONSE with QRI required, section 3.3.57 (RSP^K22^RSP_K21, p 3-61) a repeating QUERY_RESPONSE with QRI optional ([QRI]); the 3.3.57 print is the default and the 3.3.56 print governs RSP^K21. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
             querySegments: ["QPD"],
             noDataQueryStatus: ["NF"],
             citation: "HL7 v2.5.1 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 5-60 to 5-61: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 5-61): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
+        variants: [
+            StructureVariant(
+                triggers: ["RSP^K21"],
+                citation: "HL7 v2.5.1 Chapter 3, section 3.3.56 Get Person Demographics (QBP) and Response (RSP) (Events Q21 and K21), p 3-59. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RSP_K21 differ by trigger: HL7 v2.5.1 Chapter 3 section 3.3.56 (RSP^K21^RSP_K21, p 3-59) prints one optional QUERY_RESPONSE with QRI required, section 3.3.57 (RSP^K22^RSP_K21, p 3-61) a repeating QUERY_RESPONSE with QRI optional ([QRI]); the 3.3.57 print is the default and the 3.3.56 print governs RSP^K21. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: 1),
+                    .segment("QAK", min: 1, max: 1),
+                    .segment("QPD", min: 1, max: 1),
+                    .group("QUERY_RESPONSE", min: 0, max: 1, elements: [
+                        .segment("PID", min: 1, max: 1),
+                        .segment("PD1", min: 0, max: 1),
+                        .segment("NK1", min: 0, max: nil),
+                        .segment("QRI", min: 1, max: 1),
+                    ]),
+                    .segment("DSC", min: 0, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
