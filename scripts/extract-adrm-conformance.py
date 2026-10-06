@@ -187,13 +187,21 @@ PARTIAL = {
                      'structure accepts the message at that point (a segment it places there, or '
                      'one it makes optional); an exact-matched base is matched again past a dropped '
                      'finding, so later base findings are kept. The field and component half is '
-                     'the Validator core. Not enforced: the Appendix 8 simplified REF structure '
-                     '(p 484, selected by MSH-12), the ORR^O02 print (pp 280 to 281, unbalanced '
-                     'bracket), the prose-only PV1 mandate on ORU^R01 (pp 17, 205), the narrowed '
-                     'maxima (REF^I12 `[IN1]`, PV1 and PV2, p 324) and the order detail of the '
-                     'order status response (p 281 prints only OBR; the base choice is kept, so '
-                     'RQD, RQ1, RXO, ODS or ODT in its place and an OBX after any of them go '
-                     'unflagged); '
+                     'the Validator core. Closed: the RRI^I12 MSA (P8b-4a); the prose-only PV1 '
+                     'mandate on ORU^R01 (pp 17, 205; owner ruling 2026-10-06: the print governs); '
+                     'the narrowed maxima (REF^I12 `[IN1]`, PV1 and PV2, p 324) are reported at '
+                     'information since v3.15.0 (S6-3: each occurrence beyond them draws one '
+                     '`.info` `profileMaximumExceeded(localeRule: "HL7au:00060.1")`, not a '
+                     'finding; every other profile `unexpected` finding is dropped, and the final '
+                     'review traced ORU_R01 and REF_I12 and found no ordering that differs from the '
+                     'base). Not enforced, three leftovers scheduled for P12 S1: the Appendix 8 '
+                     'simplified REF structure (pp 483 to 485, declared in MSH-12; owner ruling '
+                     'G-AU3 2026-10-07: a profile structure selected by the declared profile), the '
+                     'ORR^O02 print (pp 280 to 281, unbalanced bracket; owner ruling G-AU2 '
+                     '2026-10-07: a cited erratum taking the base v2.4 reading, PID optional) and '
+                     'the order detail of the order status response (p 281 prints only OBR; the '
+                     'base choice is kept, so RQD, RQ1, RXO, ODS or ODT in its place and an OBX '
+                     'after any of them go unflagged); '
                      'permanent-limitations register section E, close-out summary and the P8b-4 '
                      'and P8b-4a addenda',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
@@ -454,6 +462,8 @@ def main():
           '    > docs/design/m6-adrm-2021-conformance-register.md\n```\n')
     print(f'**{len(rows)} rows / '
           f'{sum(1 for r in rows if r["verdict"] != "GROUPER")} conformance points.**\n')
+    print('Classification last reconciled with the shipped state on 2026-10-07 '
+          '(P12 S0-1); the counts below are computed from the rows.\n')
     print('| Verdict | Count | Meaning |')
     print('|---|---:|---|')
     meanings = {
