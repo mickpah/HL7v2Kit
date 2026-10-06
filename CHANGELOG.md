@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Summary — epic P11 sprint 1: register section G closed, owner decisions 8 and 9
+
+Register section G is closed: component normative length (v2.7.1, v2.8.2) and populated
+`B`, `X` and `W` components are checked. Its residuals sit one level down, at the
+subcomponent (HD.3 inside CX.4; v2.5.1 TS.2), where the print is silent; they are recorded
+as "print silent, not checked", not as blocking. Four public additions, all additive (ADR-014):
+`IssueCode.componentLengthOutOfRange(length:actual:)`,
+`IssueCode.componentNotSupported(optionality:)`, the structure registration lookup
+(`StructureRegistration` with `registration(_:version:)` and `registrations(for:)`), and
+`IssueCode.conditionNotEvaluated(fields:)`. Whole-sprint validation digest over the 1,455
+spec examples and the fixtures, both locales, against v3.14.0 (47777f9a): 3,188 lines added
+and 0 removed under `.default`, `.strict` and the structure check off (384
+`componentLengthOutOfRange`, 2,180 `componentNotSupported`, 624 `conditionNotEvaluated`);
+624 under `.lenient`, which turns the two component checks off. A 5,002-segment ORU^R01
+validates in 223 ms (v2.5.1) and 282 ms (v2.8.2) at `.warning`, inside the derived limit of
+293 ms.
+
+### Changed — S1-5: sprint 1 close-out
+
+- **`X` components.** The component deprecation check also reports a populated component
+  printed `X` ("not used with this trigger event"), which the same legend defines (v2.8.2
+  CH02 section 2.5.3.5). No extracted component table prints `X`, so no output changes.
+- **Performance.** The component length pass parsed each printed length cell per component
+  per field, which put the 5,002-segment v2.8.2 ORU^R01 at 373 to 385 ms (limit 293 ms).
+  The cells are now parsed once per version, and a field whose grammar has nothing to check
+  skips both component passes on one set lookup. Digests byte-identical before and after.
+- **`conditionNotEvaluated` wording (S1-4 review).** The message no longer says the ORC walk
+  "cannot pair an OBR printed before its ORC", which is untrue of OUL_R21 (`[ORC] OBR`) and
+  of an empty MSH-9.1; it says the gate applies to the message code and the order-number
+  conditions are not evaluated. The DocC lists the fields in the order the code gives
+  (OBR before ORC).
+- **Docs.** Register section G restated as closed with its residuals; ADR-017 note that
+  component length and optionality are enforced; the register's performance row
+  re-measured.
+
 ### Added — S1-1: component normative length (register section G)
 
 - **`IssueCode.componentLengthOutOfRange(length:actual:)`** (additive; open enum per
