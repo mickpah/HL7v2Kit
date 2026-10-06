@@ -1646,3 +1646,10 @@ is never a mismatch) and **the P8b-17 ruling R1** (the exact matcher yields grou
 every accepting parse agrees); both stand as built. Decision 7 (AU removed segments) is to be
 revisited in epic P11 sprint 6, where segments beyond the ADRM's narrowed maxima are to be reported
 at information; scheduled, not built.
+
+## Amendment 2026-10-06 — the register is public (S1-3, owner decision 8)
+
+Owner decision 8 of 2026-10-06: `MessageStructureTable.registration(_:version:)` and
+`registrations(for:)` return `StructureRegistration` (ID, grammar version, triggers, reason), so a
+consumer tells a registered-not-modelled structure from an ID the version does not print without
+running the `Validator`; validation output is unchanged.

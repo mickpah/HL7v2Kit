@@ -63,6 +63,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   synthetic fixtures), mostly v2.5.1 XTN.1 (2.A.89 p. 2-245), a true deprecation notice of
   the kind the field check already gives.
 
+### Added — S1-3: the not-modelled register is public (owner decision 8)
+
+- **`StructureRegistration`** (new public struct: `id`, `version`, `triggers`, `reason`),
+  **`MessageStructureTable.registration(_:version:)`** and
+  **`MessageStructureTable.registrations(for:)`** (sorted by ID). A consumer can now tell a
+  structure the version prints (or its Table 0354 lists) but registers as not modelled
+  (permanent-limitations register section E) from an ID the version does not print, and read
+  the registration's triggers and cited reason. Both return nil / omit a modelled structure;
+  lookups resolve `Version.grammarVersion` (`2.8` reads the v2.8.2 register). Registers: v2.3
+  22, v2.3.1 38, v2.4 34, v2.5.1 32, v2.6 20, v2.7.1 58, v2.8.2 62 structures. ADR-019
+  amendment 2026-10-06.
+- No validation output changes (default-preset digest over the spec examples: 0 lines).
+
 ## [3.14.0] — 2026-10-06
 
 ### Summary — release 3.14.0: the review remediation

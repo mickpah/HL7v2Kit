@@ -196,12 +196,14 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
 /// each structure its print gives is either modelled here or registered as
 /// not modelled with a reason (an unexpandable placeholder or template, a
 /// print naming segments the version does not define, a Table 0354 row with
-/// no printed syntax). A lookup miss therefore means the ID is not a modelled
-/// structure of that version: it may be a registered one, or one the version
-/// does not print at all, and this API does not tell the two apart (the
-/// ``Validator`` does, reporting a registered structure as
+/// no printed syntax). A ``structure(_:version:)`` miss therefore means the ID
+/// is not a modelled structure of that version: it may be a registered one,
+/// or one the version does not print at all. ``registration(_:version:)``
+/// tells the two apart, returning a registered structure's triggers and
+/// reason and nil for an unprinted ID (owner decision 8, 2026-10-06). The
+/// ``Validator`` draws the same line, reporting a registered structure as
 /// ``IssueCode/messageStructureNotModelled(structure:)`` with its reason and
-/// an unprinted ID as ``IssueCode/messageStructureMismatch(declared:trigger:)``).
+/// an unprinted ID as ``IssueCode/messageStructureMismatch(declared:trigger:)``.
 ///
 /// Lookups resolve ``Version/grammarVersion`` first, so ``Version/v2_8``
 /// reads the v2.8.2 structures, as the ``Validator`` does for its grammar.

@@ -285,4 +285,22 @@ struct SignatureCompatibilityTests {
         #expect(element[keyPath: segmentIDs] == ["AIS", "AIG"])
         #expect(element.min == 0 && element.max == nil)
     }
+
+    // Deliberate pin of new, unreleased API (S1-3, owner decision 8, ADR-019
+    // amendment 2026-10-06): the public registration lookup that tells a
+    // registered-not-modelled structure from an unknown ID.
+    @Test("StructureRegistration and the registration lookups keep their signatures")
+    func structureRegistrationLookup() throws {
+        let byID: (String, Version) -> StructureRegistration? = MessageStructureTable.registration(_:version:)
+        let all: (Version) -> [StructureRegistration] = MessageStructureTable.registrations(for:)
+        let _: KeyPath<StructureRegistration, String> = \.id
+        let _: KeyPath<StructureRegistration, Version> = \.version
+        let _: KeyPath<StructureRegistration, [String]> = \.triggers
+        let _: KeyPath<StructureRegistration, String> = \.reason
+        let registration = try #require(byID("UDM_Q05", .v2_8_2))
+        #expect(registration.triggers == ["UDM^Q05"])
+        #expect(byID("ADT_A01", .v2_5_1) == nil)
+        #expect(byID("ZZZ_Z01", .v2_5_1) == nil)
+        #expect(all(.v2_8_2).contains(registration))
+    }
 }
