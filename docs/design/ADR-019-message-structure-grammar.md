@@ -2418,3 +2418,14 @@ limitations register section E).
 
 The structure guards (`StructureGuardTests`) now cover the six profile structures and the
 Appendix 8 variant as well as the base tables.
+
+**Level 1 and the single OBR group.** ADRM-2021 A8.2.1.1 (p 482) says Level 1 "focuses on
+baseline receiving capability of a single OBR observation group". A8.2.1.2 says "Level 2 allows
+for multiple OBR observation groups". HL7au:000008.3.1 requires "The single OBR/OBX group of the
+message must contain an OBX display segment in PDF format". The `-L1` identifier selects the same
+variant as Level 2, so no cap on the OBR group applies to a Level 1 message, and until P12 S1-5
+nothing recorded why. The cap is not enforced: the first sentence is worded as receiving
+capability, not as a limit on what a sender may transmit, and a cap could misfire on a conformant
+Level 1 message. A8.7 ("the current referral must appear as the first OBR/OBX group") applies to
+both levels and is unaffected. This is a reading, put to the owner: the owner may rule to cap
+Level 1 at one group, reported at information severity through the existing beyond-maxima path.
