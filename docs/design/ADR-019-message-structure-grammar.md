@@ -2364,3 +2364,47 @@ localisation narrows and does not widen (P12 S1-2). (G-AU3) ADRM Appendix 8, the
 structure, is modelled as a profile structure selected by the message's declared profile (P12
 S1-1). Both are scheduled; HL7au:00060.1 stays PARTIAL until they and the OSR^Q06 order detail
 (S1-3) land.
+
+## Amendment 2026-10-07 — P12 S1: the AU profile structures completed
+
+P12 S1 builds the two AU gate answers and decides the order status response's order detail.
+Everything is under `.auLocalisation` with `messageStructureSeverity` set, on v2.4 only
+(decision 7 and G-AU1 unchanged).
+
+**S1-1 (G-AU3), a variant selected by the declared profile.** ADRM-2021 Appendix 8, A8.5 (pp 484
+to 485): "the REF_I12 structure of chapter 7 is replaced with the following message structure",
+`MSH RF1 {PRD} PID [{AL1}] { OBR {OBX} } PV1 [PV2] [{ ORC RXO {RXR} [{RXC}] [{OBX}] }]`. A8.3
+(p 483): "Senders must signal conformance with these profile levels by populating MSH-12", with
+MSH-12.3.1 `HL7AU-OO-REF-SIMPLIFIED-201706` (Level 2) or `HL7AU-OO-REF-SIMPLIFIED-201706-L1`
+(Level 1). The S6-1 `StructureVariant` gains `profileIdentifiers` (additive, public, `[String]`,
+empty for a trigger-selected print): a variant that names identifiers governs its triggers only
+for a message whose MSH-12.3.1 equals one of them, exactly (p 42: "These are identifiers and they
+are not intended to be parsed"). `matchProfileStructure` selects it; the trigger-only lookup
+`variant(messageCode:triggerEvent:)` never returns it, and base structures have none (the key is
+admitted in profile files only, and required on every variant there; each identifier must be
+quoted in the variant's citation). The AU `REF_I12.json` carries the A8.5 print as its one
+variant. A declaring REF^I12 that lacks the OBR group, an OBX in it, or the RXO and RXR after an
+ORC is a 00060.1 finding; segments A8.5 omits are not (decision 7); without the declaration the
+section 7.2.1 profile governs; RRI^I12 keeps its chapter 7 structure ("This profile uses the same
+RRI_I12 message structure as specified in Chapter 7").
+
+**S1-2 (G-AU2), ORR^O02 with the erratum cited.** Section 5.2 prints `MSH MSA [ERR] [ [PID { ORC
+OBR } ]` (pp 280 to 281), the cell `[PID` never closed. `ORR_O02.json` reads it as `[PID]`, the
+base v2.4 reading (section 4.4.2 prints the patient group optional); p 280 adds "The ORC/OBR
+segments are optional however", which the optional outer group carries. NTE and CTI are omitted
+(decision 7).
+
+**S1-3 and the ORR^O02 order detail.** Both responses print OBR alone in the order detail place
+(p 280, p 281). The only ADRM text that replaces OBR is p 280, for ORM^O01: "The same message can
+be used for medication and diet orders where the OBR is replaced with other order detail
+segments", and no ADRM print or prose names RQD or RQ1. So every reading excludes the requisition
+detail: the place is the choice OBR, RXO, ODS or ODT, as ORM_O01, and an RQD or RQ1 there (with
+an OBX after it, in the order status response) is a 00060.1 finding requiring OBR. Whether the p
+280 replacement carries over to the responses the print does not settle, and p 287 (ORC-1 `RE`)
+says "An order detail segment (e.g., OBR) can be followed by one or more observation segments
+(OBX)"; so RXO, ODS or ODT in place of OBR, and an OBX after one, are accepted (requirement 4).
+That is the one residual of HL7au:00060.1, which stays **PARTIAL** (conformance register and
+limitations register section E).
+
+The structure guards (`StructureGuardTests`) now cover the six profile structures and the
+Appendix 8 variant as well as the base tables.

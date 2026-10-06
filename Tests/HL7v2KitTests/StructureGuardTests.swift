@@ -70,12 +70,17 @@ struct StructureGuardTests {
 
     /// Every committed structure as "<version> <ID>", one test case each, so
     /// the cases run in parallel and a failure names its structure.
+    /// P12 S1: the ADRM-2021 profile structures (on their base version, v2.4) are
+    /// guarded too, as "au-adrm-2021 <ID>", their declared-profile variants included.
     static let keys: [String] = grammarVersions.flatMap { version in
         MessageStructureTable.structures(for: version).keys.sorted().map { "\(version.rawValue) \($0)" }
-    }
+    } + MessageStructureTable.auADRM2021.keys.sorted().map { "au-adrm-2021 \($0)" }
 
     static func structure(_ key: String) -> (Version, MessageStructure)? {
         let parts = key.split(separator: " ").map(String.init)
+        if parts.count == 2, parts[0] == "au-adrm-2021", let structure = MessageStructureTable.auADRM2021[parts[1]] {
+            return (.v2_4, structure)
+        }
         guard parts.count == 2, let version = Version(rawValue: parts[0]),
               let structure = MessageStructureTable.structures(for: version)[parts[1]] else { return nil }
         return (version, structure)
@@ -142,7 +147,8 @@ struct StructureGuardTests {
     static func matchedForms(_ structure: MessageStructure) -> [(label: String, structure: MessageStructure)] {
         let variants = structure.variants.map { variant -> (label: String, structure: MessageStructure) in
             let parts = variant.triggers[0].split(separator: "^").map(String.init)
-            return (" [variant \(variant.triggers[0])]", structure.selectingVariant(messageCode: parts[0], triggerEvent: parts[1]))
+            return (" [variant \(variant.triggers[0])]", structure.selectingVariant(messageCode: parts[0], triggerEvent: parts[1],
+                                                                                     declaredProfile: variant.profileIdentifiers.first))
         }
         guard structure.hasKeyedChoice else { return [("", structure)] + variants }
         var keys: [StructureChoiceKey] = []

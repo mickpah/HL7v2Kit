@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P12 S1: the AU profile structures completed (epic P12 sprint 1)
+
+Under `.auLocalisation` with `messageStructureSeverity` set (on in the default and strict presets), on v2.4. More `HL7au:00060.1` findings may fire; the international locale is unchanged.
+
+- **`StructureVariant.profileIdentifiers`** (additive public property, `[String]`; Migration row, signature pin): a profile structure's variant selected by the profile the message declares in MSH-12.3.1, matched exactly. Empty for every trigger-selected variant; `variant(messageCode:triggerEvent:)` never returns a declared-profile variant.
+- **S1-1, ADRM-2021 Appendix 8 (owner ruling G-AU3):** the AU `REF_I12` profile structure carries the A8.5 constrained REF_I12 (pp 484 to 485) as a variant selected by `HL7AU-OO-REF-SIMPLIFIED-201706` or `HL7AU-OO-REF-SIMPLIFIED-201706-L1` (A8.3, p 483). A declaring REF^I12 without the OBR group, without an OBX in it, or with an ORC lacking RXO and RXR draws `profileConstraintViolation(localeRule: "HL7au:00060.1")`. Without the declaration the section 7.2.1 profile governs; RRI^I12 is unchanged.
+- **S1-2, ORR^O02 (owner ruling G-AU2):** new profile structure `ORR_O02.json` (section 5.2, pp 280 to 281), the unclosed `[PID` read as the base v2.4 reading (PID optional), cited as an erratum. An RQD or RQ1 in place of OBR draws the 00060.1 finding; a response without PID, or without the order group, is accepted.
+- **S1-3, OSR^Q06 order detail:** RQD and RQ1 are removed from the order detail choice (no ADRM print or prose admits them), so a requisition detail in place of OBR, and an OBX after one, draw the 00060.1 finding. RXO, ODS or ODT in place of OBR in either response stays accepted: the one residual of 00060.1, which stays PARTIAL (the print does not settle whether the p 280 medication and diet replacement carries over).
+- **Codegen:** `profileIdentifiers` is admitted on a variant in a profile file only, required there, each identifier well formed, named once and quoted in the variant's citation; `scripts/check-structure-codegen.sh` gains nine accept and reject cases (150 cases).
+- **Structure guards** (`StructureGuardTests`) now cover the six ADRM profile structures and the Appendix 8 variant.
+- **Docs:** permanent-limitations register section E (the Appendix 8, ORR^O02 and order status response rows), the ADRM conformance register (regenerated; 00060.1 PARTIAL, one residual), ADR-019 amendment "P12 S1".
+
 ### Changed — P12 S0: owner rulings recorded; ADRM conformance register reconciled (epic P12 sprint 0)
 
 Documents only; no code, schema or behaviour change.

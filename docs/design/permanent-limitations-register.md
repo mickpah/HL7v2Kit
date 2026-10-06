@@ -110,8 +110,8 @@ MSH-12 is not 2.4 (v2.5.1 or later, or v2.3 and v2.3.1) this means:
 - *The profile structures apply only on their base version.* The HL7au:00060.1 structure check
   (`Validator+ProfileStructure.swift`, `matchProfileStructure`, lines 11 to 33) applies only when the
   base structure resolved for the message has the profile structure's ID and the same base version,
-  the profile structure prints the message's MSH-9.1^9.2, and the message is not a fragment. All five
-  ADRM structures (ORU_R01, ORM_O01, REF_I12, RRI_I12, OSR_Q06) have base version 2.4, so a v2.5.1+
+  the profile structure prints the message's MSH-9.1^9.2, and the message is not a fragment. All six
+  ADRM structures (ORU_R01, ORM_O01, ORR_O02, REF_I12 with its Appendix 8 variant, RRI_I12, OSR_Q06) have base version 2.4, so a v2.5.1+
   message draws no 00060.1 structure finding, and its base structure findings are kept as the base
   match reports them (none is dropped by the profile).
 
@@ -357,17 +357,20 @@ are reported at information (S6-3). The rows and their reasons are in each versi
   information naming the structure the chapters give; `RSP^K32^RSP_K25` (the v2.7.1 and v2.8.2
   CH03 query profiles; RSP_K25 is modelled for RSP^K25) is a `printedPairs` entry with the same
   outcome. A mismatch is left only for an ID printed for other triggers, or printed nowhere.
-- *AU (`.auLocalisation`, v2.4):* the five ADRM-2021 profile structures (ORM_O01, ORU_R01,
-  OSR_Q06, REF_I12, RRI_I12) report HL7au:00060.1 for a required segment the message lacks and
-  drop the base findings the profile accepts (ADR-019 decision 7 as amended). 00060.1 is
-  **PARTIAL**: the ORU^R01 PV1 prose mandate (ADRM pp 17 and 205, against the print) is closed by
-  the owner's ruling of 2026-10-06: the print governs (the prose stays cited). Not enforced are three
-  leftovers, scheduled for P12 S1: the Appendix 8 simplified REF structure (owner ruled 2026-10-07,
-  G-AU3: a profile structure selected by the message's declared profile), ORR^O02 (bracket erratum;
-  owner ruled 2026-10-07, G-AU2: a cited erratum taking the base v2.4 reading, PID optional), and
-  the order status response's order detail (three cases; the OBX it adds is modelled since P8b-4a
-  fix round 1; P8b-4 addendum below). The narrowed maxima are **closed** (S6-3, owner ruling
-  2026-10-06, ADR-019 decision 7 as amended): a second IN1, PV1 or PV2 on REF^I12 draws one
+- *AU (`.auLocalisation`, v2.4):* the six ADRM-2021 profile structures (ORM_O01, ORR_O02,
+  ORU_R01, OSR_Q06, REF_I12, RRI_I12) report HL7au:00060.1 for a required segment the message lacks
+  and drop the base findings the profile accepts (ADR-019 decision 7 as amended). 00060.1 is
+  **PARTIAL** with one residual. The ORU^R01 PV1 prose mandate (ADRM pp 17 and 205, against the
+  print) is closed by the owner's ruling of 2026-10-06: the print governs (the prose stays cited).
+  P12 S1 (2026-10-07) closed the three leftovers: the Appendix 8 simplified REF structure is a
+  variant of the AU REF_I12 selected by the profile MSH-12.3.1 declares (G-AU3); ORR^O02 is
+  modelled with its bracket erratum read as the base v2.4 reading, PID optional (G-AU2); and the
+  order detail of ORR^O02 and of the order status response excludes RQD and RQ1, which no ADRM
+  print or prose admits. The residual: an RXO, ODS or ODT in place of OBR in those two responses
+  (and an OBX after one in the order status response) is accepted, because the print does not
+  settle whether the p 280 replacement for medication and diet orders, printed for ORM^O01,
+  carries over to them (P8b-4 addendum below). The narrowed maxima are **closed** (S6-3, owner
+  ruling 2026-10-06, ADR-019 decision 7 as amended): a second IN1, PV1 or PV2 on REF^I12 draws one
   `.info` `profileMaximumExceeded(localeRule: "HL7au:00060.1")` per occurrence, naming the ADRM
   print and the maximum; it is not a finding.
 
@@ -872,15 +875,14 @@ blocking spec-completeness of the segment half of 00060.1:
 | RRI^I12 | p 325: `MSH MSA [ERR] [ RF1 {PRD} PID ]`, MSA unbracketed (base v2.4 `[MSA]`); the prose says the RF1, PRD and PID group "has been made optional for backward compatibility" | Closed by P8b-4a: `RRI_I12.json` requires MSA, and the base findings its optional group and `[ERR]` accept are dropped (addendum below) |
 | Appendix 8 simplified REF structure | pp 484 to 485 ("Constrained REF_I12 message structure", normative; the OBR group and OBX required) | **Closed** by P12 S1-1 (2026-10-07; owner ruling G-AU3): the AU `REF_I12.json` carries the A8.5 print as a variant selected by the profile the message declares (`StructureVariant.profileIdentifiers`), A8.3 (p 483): "Senders must signal conformance with these profile levels by populating MSH-12", MSH-12.3.1 `HL7AU-OO-REF-SIMPLIFIED-201706` (Level 2) or `HL7AU-OO-REF-SIMPLIFIED-201706-L1` (Level 1), matched exactly (p 42: "These are identifiers and they are not intended to be parsed"). A declaring REF^I12 that lacks the OBR group, an OBX in it, or the RXO and RXR after an ORC draws `profileConstraintViolation(localeRule: "HL7au:00060.1")`; segments A8.5 omits are not findings (decision 7); a REF^I12 without the declaration keeps the chapter 7 profile; RRI^I12 is unchanged (A8.5: "the same RRI_I12 message structure as specified in Chapter 7") |
 | ORR^O02 | pp 280 to 281: `[ [PID ... {ORC OBR} ]`, one `[` unclosed | **Closed** by P12 S1-2 (2026-10-07; owner ruling G-AU2): `ORR_O02.json` models the print with the erratum cited, the cell `[PID` (p 280) read as `[PID]`, the base v2.4 reading (section 4.4.2 prints the patient group optional), since the localisation narrows and does not widen; p 280: "The ORC/OBR segments are optional however", carried by the optional outer group. The order detail is the choice OBR, RXO, ODS or ODT, as ORM_O01 (the only ADRM text that replaces OBR is p 280, "for medication and diet orders"; no ADRM print or prose names RQD or RQ1), so an RQD or RQ1 in place of OBR draws `profileConstraintViolation(localeRule: "HL7au:00060.1")`. Residual, shared with the order status response row below: RXO, ODS or ODT in place of OBR are accepted, since the print does not settle whether the p 280 replacement carries over to the response |
-| Narrowed maxima | REF^I12 p 324 prints `[IN1]` where the base repeats the insurance group `[{ IN1 [IN2] [IN3] }]`, and PV1 and `[PV2]` once where the base (v2.4 CH11 pp 11-16 to 11-17) prints `[ PV1 [PV2] ]` twice. These are every narrowed maximum in the five modelled ADRM structures (ORU_R01, ORM_O01, REF_I12, RRI_I12, OSR_Q06, each segment's maximum compared with the base's, P8b-4a) | 00060.1 is about required elements; an ADRM maximum below the base is not a finding (the overlay drops `unexpected` and beyond-maximum findings, ADR-019 decision 7). **Closed** 2026-10-06 (S6-3; owner ruling, decision 7 amended): each occurrence beyond a narrowed maximum the base accepts draws one `.info` `IssueCode.profileMaximumExceeded(localeRule: "HL7au:00060.1")` naming the print (pp 324 to 325) and the maximum; pinned by `LocaleAUMaximumTests` |
+| Narrowed maxima | REF^I12 p 324 prints `[IN1]` where the base repeats the insurance group `[{ IN1 [IN2] [IN3] }]`, and PV1 and `[PV2]` once where the base (v2.4 CH11 pp 11-16 to 11-17) prints `[ PV1 [PV2] ]` twice. These are every narrowed maximum in the modelled ADRM structures (ORU_R01, ORM_O01, REF_I12, RRI_I12, OSR_Q06, each segment's maximum compared with the base's, P8b-4a; P12 S1 adds ORR_O02, which narrows none, and the Appendix 8 REF_I12 print, which prints PV1 and `[PV2]` once as section 7.2.1 does and omits IN1) | 00060.1 is about required elements; an ADRM maximum below the base is not a finding (the overlay drops `unexpected` and beyond-maximum findings, ADR-019 decision 7). **Closed** 2026-10-06 (S6-3; owner ruling, decision 7 amended): each occurrence beyond a narrowed maximum the base accepts draws one `.info` `IssueCode.profileMaximumExceeded(localeRule: "HL7au:00060.1")` naming the print (pp 324 to 325) and the maximum; pinned by `LocaleAUMaximumTests` |
 | Order status response | p 281 (`[{OBX}]` inside the order; base v2.4 OSR_Q06 has no OBX; its PID is optional in the base as well) | Mostly closed. The added OBX is closed by P8b-4a fix round 1: `OSR_Q06.json` models it, citing the caption erratum `OSQ^Q06^OSQ_Q06` for OSR^Q06, so the base OBX finding is dropped under AU. The order detail, three cases, decided by P12 S1-3 (2026-10-07) from the print: (1) an RQD or RQ1 in place of OBR is **closed**: the p 281 print says only "OBR Order Detail", the only ADRM text that lets another segment replace OBR is p 280 for ORM^O01 ("The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments"), and no ADRM print or prose names RQD or RQ1, so every reading excludes them; the order detail is the choice OBR, RXO, ODS or ODT, as ORM_O01, and a requisition detail draws `profileConstraintViolation(localeRule: "HL7au:00060.1")` requiring OBR. (3) An OBX after RQD or RQ1 is closed with it (OBR is required before the OBX). (2) An RXO, ODS or ODT in place of OBR, and (3) an OBX after one of them, stay **open**, the residual of 00060.1: whether the p 280 replacement carries over to the response the print does not settle (p 281 has no prose on this message), and p 287 (ORC-1 `RE`) says "An order detail segment (e.g., OBR) can be followed by one or more observation segments (OBX)", so flagging them could misfire on a message the p 280 reading makes conformant (requirement 4) |
 
 The other ADRM prints add nothing over the base for a missing segment: ACK^R01 (p 206) and
 ACK^O01 (p 280) print MSH MSA [ERR], the base ACK; OSQ^Q06 (p 281) is the base; the order status
-response (p 281, captioned "OSQ^Q06^OSQ_Q06 Order Status Response", for OSR^Q06) requires, with
-the order detail read as the base choice, nothing the base does not (modelled since P8b-4a fix
-round 1 for the OBX it adds; its order detail, read against the print as OBR only, stays open:
-the three cases in the "Order status response" row above).
+response (p 281, captioned "OSQ^Q06^OSQ_Q06 Order Status Response", for OSR^Q06) is modelled
+since P8b-4a fix round 1 for the OBX it adds; its order detail excludes RQD and RQ1 since P12 S1-3,
+and RXO, ODS or ODT there stay the residual (the "Order status response" row above).
 
 ### Addendum to §E — AU profile structures govern base structure findings (P8b-4a, 2026-10-04)
 
@@ -903,8 +905,9 @@ review traced ORU_R01 and REF_I12 and found no ordering that differs from the ba
 this is a property of the data, not a gap in the text above (P8b-final M5). A fifth ADRM structure, OSR_Q06 (p 281, the order status response), is modelled in fix
 round 1 (row above). The ORM^O01 order detail is narrowed to OBR, RXO,
 ODS and ODT (p 280 replaces OBR only "for medication and diet orders"), so an RQD or RQ1 in its
-place is a 00060.1 finding. Still not enforced, as the table above records: Appendix 8 and the
-ORR^O02 bracket erratum (both scheduled for P12 S1, owner rulings G-AU3 and G-AU2 of 2026-10-07);
+place is a 00060.1 finding. Appendix 8 and the ORR^O02 bracket erratum are modelled since P12 S1
+(owner rulings G-AU3 and G-AU2 of 2026-10-07; the table above); still not enforced is the one
+residual, RXO, ODS or ODT in place of OBR in the ORR^O02 and order status responses;
 the PV1 prose mandate is closed by the owner's ruling of 2026-10-06: the print governs; the narrowed maxima are reported at
 information since S6-3 (the base allows the repetition; the profile's beyond-maximum finding is
 `profileMaximumExceeded`, `.info`).
