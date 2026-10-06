@@ -46,6 +46,16 @@ struct MessageStructureDataTests {
             #expect(id.range(of: "^[A-Z][A-Z0-9]{2}$", options: .regularExpression) != nil, "\(path): segment \(id)")
             return .segment(id, min: min ?? 0, max: max)
         }
+        // S3-1/S3-3: the open order-detail slot, named or null, always cited, never ID-shaped.
+        if object.keys.contains("slot") {
+            let name = object["slot"] as? String
+            let citation = object["citation"] as? String ?? ""
+            #expect(Set(object.keys) == ["slot", "min", "max", "citation"], "\(path): keys \(object.keys.sorted())")
+            #expect(object["slot"] is NSNull || name.map { $0.range(of: "^[A-Z][A-Z0-9]{2}$", options: .regularExpression) == nil } == true,
+                    "\(path): slot name")
+            #expect(!citation.isEmpty, "\(path): slot citation")
+            return .slot(name, min: min ?? 0, max: max, citation: citation)
+        }
         // P8b-6: a choice, named (with a nameSource) or unnamed (null, no nameSource).
         if object.keys.contains("choice"), let alternatives = object["alternatives"] as? [[String: Any]] {
             let name = object["choice"] as? String

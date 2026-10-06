@@ -49,12 +49,20 @@ extension MessageStructureTable {
         "OMS_O01": v2_3_1_OMS_O01,
         "ORD_O02": v2_3_1_ORD_O02,
         "ORF_R02": v2_3_1_ORF_R02,
+        "ORM_O01": v2_3_1_ORM_O01,
         "ORN_O02": v2_3_1_ORN_O02,
+        "ORR_O02": v2_3_1_ORR_O02,
         "ORS_O02": v2_3_1_ORS_O02,
         "ORU_R01": v2_3_1_ORU_R01,
         "OSQ_Q06": v2_3_1_OSQ_Q06,
+        "OSR_Q06": v2_3_1_OSR_Q06,
         "PEX_P07": v2_3_1_PEX_P07,
         "PIN_I07": v2_3_1_PIN_I07,
+        "PPG_PCG": v2_3_1_PPG_PCG,
+        "PPP_PCB": v2_3_1_PPP_PCB,
+        "PPR_PC1": v2_3_1_PPR_PC1,
+        "PPT_PCL": v2_3_1_PPT_PCL,
+        "PRR_PC5": v2_3_1_PRR_PC5,
         "QCK_Q02": v2_3_1_QCK_Q02,
         "QRY_A19": v2_3_1_QRY_A19,
         "QRY_PC4": v2_3_1_QRY_PC4,
@@ -1134,6 +1142,48 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_3_1_ORM_O01: MessageStructure = MessageStructure(
+        id: "ORM_O01",
+        version: "2.3.1",
+        triggers: ["ORM^O01"],
+        citation: "HL7 v2.3.1 Chapter 4, section 4.2.1 ORM - general order message (O01), p 4-3. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.PATIENT.CONTENT, generator HL7-Database), PATIENT_VISIT (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.PATIENT_VISIT.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.INSURANCE.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.ORDER_DETAIL.CONTENT, generator HL7-Database) and OBSERVATION (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                    .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 4, section 4.2.1 ORM - general order message (O01), p 4-3: the print gives the order detail as 'Order Detail Segment OBR, etc.', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("DG1", min: 0, max: nil),
+                    .group("OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .segment("CTI", min: 0, max: nil),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
     private static let v2_3_1_ORN_O02: MessageStructure = MessageStructure(
         id: "ORN_O02",
         version: "2.3.1",
@@ -1155,6 +1205,32 @@ extension MessageStructureTable {
                     .segment("RQD", min: 1, max: 1),
                     .segment("RQ1", min: 0, max: 1),
                     .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_ORR_O02: MessageStructure = MessageStructure(
+        id: "ORR_O02",
+        version: "2.3.1",
+        triggers: ["ORR^O02"],
+        citation: "HL7 v2.3.1 Chapter 4, section 4.2.2 ORR - general order response message response to any ORM (O02), p 4-4. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/ORR_O02.xsd, ORR_O02.RESPONSE.CONTENT, generator HL7-Database), PATIENT (HL7-xml 2.3.1/ORR_O02.xsd, ORR_O02.PATIENT.CONTENT, generator HL7-Database) and ORDER (HL7-xml 2.3.1/ORR_O02.xsd, ORR_O02.ORDER.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .slot("Order Detail Segment", min: 0, max: nil, citation: "HL7 v2.3.1 Chapter 4, section 4.2.2 ORR - general order response message response to any ORM (O02), p 4-4: the print gives the order detail as '[Order Detail Segment] OBR, etc.', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2); the print brackets the placeholder alone, so the slot is optional."),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
                 ]),
             ]),
         ]
@@ -1229,6 +1305,35 @@ extension MessageStructureTable {
             .segment("MSH", min: 1, max: 1),
             .segment("QRD", min: 1, max: 1),
             .segment("QRF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_3_1_OSR_Q06: MessageStructure = MessageStructure(
+        id: "OSR_Q06",
+        version: "2.3.1",
+        triggers: ["OSR^Q06"],
+        citation: "HL7 v2.3.1 Chapter 4, section 4.2.3 OSQ/OSR- query response for order status (Q06), p 4-5. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/OSR_Q06.xsd, OSR_Q06.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/OSR_Q06.xsd, OSR_Q06.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/OSR_Q06.xsd, OSR_Q06.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .slot("Order Detail Segment", min: 0, max: nil, citation: "HL7 v2.3.1 Chapter 4, section 4.2.3 OSQ/OSR- query response for order status (Q06), p 4-5: the print gives the order detail as '[Order Detail Segment] OBR, etc.', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2); the print brackets the placeholder alone, so the slot is optional."),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
+                ]),
+            ]),
             .segment("DSC", min: 0, max: 1),
         ]
     )
@@ -1312,6 +1417,328 @@ extension MessageStructureTable {
                 ]),
             ]),
             .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_3_1_PPG_PCG: MessageStructure = MessageStructure(
+        id: "PPG_PCG",
+        version: "2.3.1",
+        triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.4 PPG/ACK - patient pathway message (goal-oriented) (events PCG, PCH, PCJ), pp 12-9 to 12-10. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104), its row read through cited overrides.json errata (event PCC read as PCC, PCG). Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to PPG_PCG that no caption prints, accepted with the printed ones (P8b-11 ruling): PPG^PCC. Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATIENT_VISIT.CONTENT, generator HL7-Database), PATHWAY (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATHWAY.CONTENT, generator HL7-Database), PATHWAY_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATHWAY_ROLE.CONTENT, generator HL7-Database), GOAL (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL.CONTENT, generator HL7-Database), GOAL_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL_ROLE.CONTENT, generator HL7-Database), GOAL_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL_OBSERVATION.CONTENT, generator HL7-Database), PROBLEM (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM.CONTENT, generator HL7-Database), PROBLEM_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM_ROLE.CONTENT, generator HL7-Database), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM_OBSERVATION.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER_DETAIL.CONTENT, generator HL7-Database) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER_OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PATHWAY", min: 1, max: nil, elements: [
+                .segment("PTH", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("GOAL", min: 0, max: nil, elements: [
+                    .segment("GOL", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM", min: 0, max: nil, elements: [
+                        .segment("PRB", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.4 PPG/ACK - patient pathway message (goal-oriented) (events PCG, PCH, PCJ), p 12-10: the print gives the order detail as '[OBR, etc... Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PPP_PCB: MessageStructure = MessageStructure(
+        id: "PPP_PCB",
+        version: "2.3.1",
+        triggers: ["PPP^PCB", "PPP^PCC", "PPP^PCD"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.3 PPP/ACK - patient pathway message (problem-oriented) (events PCB, PCC, PCD), p 12-9. HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one PPP row, PPP_PCB (PCB, PCD), which omits PCC, the PPP problem-oriented update of Table 0003 (p 2-101); the Chapter 12 section 12.2.3 print PPP^PCB, PCC, PCD (p 12-9) is therefore read as PPP_PCB (overrides.json captionStructures, P8b-14). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104); the row named for PPP^PCB, PCC, PCD by overrides.json captionStructures. Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PATIENT_VISIT.CONTENT, generator HL7-Database), PATHWAY (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PATHWAY.CONTENT, generator HL7-Database), PATHWAY_ROLE (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PATHWAY_ROLE.CONTENT, generator HL7-Database), PROBLEM (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PROBLEM.CONTENT, generator HL7-Database), PROBLEM_ROLE (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PROBLEM_ROLE.CONTENT, generator HL7-Database), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PROBLEM_OBSERVATION.CONTENT, generator HL7-Database), GOAL (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.GOAL.CONTENT, generator HL7-Database), GOAL_ROLE (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.GOAL_ROLE.CONTENT, generator HL7-Database), GOAL_OBSERVATION (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.GOAL_OBSERVATION.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.ORDER_DETAIL.CONTENT, generator HL7-Database) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.ORDER_OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PATHWAY", min: 1, max: nil, elements: [
+                .segment("PTH", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PROBLEM", min: 0, max: nil, elements: [
+                    .segment("PRB", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("GOAL", min: 0, max: nil, elements: [
+                        .segment("GOL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.3 PPP/ACK - patient pathway message (problem-oriented) (events PCB, PCC, PCD), p 12-9: the print gives the order detail as '[OBR, etc Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PPR_PC1: MessageStructure = MessageStructure(
+        id: "PPR_PC1",
+        version: "2.3.1",
+        triggers: ["PPR^PC1", "PPR^PC2", "PPR^PC3"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.2 PPR/ACK - patient problem message (events PC1, PC2, PC3), p 12-8. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PATIENT_VISIT.CONTENT, generator HL7-Database), PROBLEM (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PROBLEM.CONTENT, generator HL7-Database), PROBLEM_ROLE (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PROBLEM_ROLE.CONTENT, generator HL7-Database), PATHWAY (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PATHWAY.CONTENT, generator HL7-Database), PATHWAY_OBSERVATION (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PATHWAY_OBSERVATION.CONTENT, generator HL7-Database), GOAL (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.GOAL.CONTENT, generator HL7-Database), GOAL_ROLE (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.GOAL_ROLE.CONTENT, generator HL7-Database), GOAL_OBSERVATION (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.GOAL_OBSERVATION.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.ORDER_DETAIL.CONTENT, generator HL7-Database) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.ORDER_OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PROBLEM", min: 1, max: nil, elements: [
+                .segment("PRB", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PATHWAY", min: 0, max: nil, elements: [
+                    .segment("PTH", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PATHWAY_OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("GOAL", min: 0, max: nil, elements: [
+                    .segment("GOL", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .group("ORDER", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                        .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.2 PPR/ACK - patient problem message (events PC1, PC2, PC3), p 12-8: the print gives the order detail as '[OBR, etc Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PPT_PCL: MessageStructure = MessageStructure(
+        id: "PPT_PCL",
+        version: "2.3.1",
+        triggers: ["PPT^PCL"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.12 PPT - patient pathway (goal-oriented) response (event PCL), pp 12-13 to 12-14. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATHWAY (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATHWAY.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATHWAY_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATHWAY_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("PATHWAY", min: 1, max: nil, elements: [
+                    .segment("PTH", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL", min: 0, max: nil, elements: [
+                        .segment("GOL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .group("PROBLEM", min: 0, max: nil, elements: [
+                            .segment("PRB", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                                .segment("ROL", min: 1, max: 1),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                            .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .group("ORDER", min: 0, max: nil, elements: [
+                            .segment("ORC", min: 1, max: 1),
+                            .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                                .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.12 PPT - patient pathway (goal-oriented) response (event PCL), p 12-14: the print gives the order detail as '[OBR, etc. Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                                .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                    .segment("OBX", min: 1, max: 1),
+                                    .segment("NTE", min: 0, max: nil),
+                                    .segment("VAR", min: 0, max: nil),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PRR_PC5: MessageStructure = MessageStructure(
+        id: "PRR_PC5",
+        version: "2.3.1",
+        triggers: ["PRR^PC5"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.6 PRR - patient problem response (event PC5), pp 12-10 to 12-11. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_ROLE (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_PATHWAY (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_PATHWAY.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_ROLE (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("PROBLEM", min: 1, max: nil, elements: [
+                    .segment("PRB", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_PATHWAY", min: 0, max: nil, elements: [
+                        .segment("PTH", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("GOAL", min: 0, max: nil, elements: [
+                        .segment("GOL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.6 PRR - patient problem response (event PC5), p 12-11: the print gives the order detail as '[OBR, etc. Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
         ]
     )
 

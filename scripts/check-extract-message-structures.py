@@ -1725,6 +1725,40 @@ def check_primary_print_override():
                                                          "matches no print"], report
 
 
+def check_primary_print_by_section():
+    # S3-3 (v2.3 ORM^O01, four prints under one caption): a primaryPrints print may be named
+    # "CAPTION (section N)" to tell apart prints under one caption, and stricter may list several.
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    other = [("MSH", "Header"), ("PID", "Patient"), ("[QRI]", "Q"), ("[NTE]", "Notes")]
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, _table("XYZ^X01^XYZ_X01", loose), heading="9.1.2           XYZ - synthetic (Event X01)")
+            + _page(3, _table("XYZ^X01^XYZ_X01", other), heading="9.1.3           XYZ - synthetic (Event X01)"))
+    structures, _, _ = _run("2.5.1", [("syn", text)], full=True)
+    assert structures["XYZ_X01"]["elements"][1]["max"] == 1, structures
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X01^XYZ_X01 (section 9.1.2)",
+             "stricter": ["XYZ^X01^XYZ_X01 (section 9.1.1)", "XYZ^X01^XYZ_X01 (section 9.1.3)"],
+             "citation": "Looser of three prints primary (synthetic)."}
+    fix = {**EMPTY, "primaryPrints": [entry]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert (s["elements"][1]["min"], s["elements"][1]["max"]) == (0, None), s
+    assert "Looser of three prints primary (synthetic)." in s["citation"] and "9.1.2" in s["citation"], s["citation"]
+    assert not [r for r in report if r[1] == "error"], report
+    stale = {**EMPTY, "primaryPrints": [{**entry, "stricter": ["XYZ^X01^XYZ_X01 (section 9.1.9)"]}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], stale, full=True)
+    assert [r[2] for r in report if r[1] == "error"] == [
+        "primaryPrints entry 'XYZ^X01^XYZ_X01 (section 9.1.2)' / ['XYZ^X01^XYZ_X01 (section 9.1.9)'] "
+        "matches no print"], report
+    for bad in ({**entry, "stricter": []}, {**entry, "stricter": [entry["primary"]]}):
+        try:
+            ext.validate_overrides({**EMPTY, "primaryPrints": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"accepted {bad['stricter']!r}")
+
+
 def check_union_prints():
     # P8b-10 ruling (v2.6 RSP_K21): two incomparable normative prints of one ID; a cited
     # unionPrints entry aligns them by segment or group name: per element the lesser min and the
@@ -2138,7 +2172,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_caption_errata, check_reader_layouts,
           check_v23_synthesised_ids_no_table, check_conformance_print_never_primary, check_general_ack_fold_code_alone,
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
-          check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
+          check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override, check_primary_print_by_section,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
           check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints,
           check_colon_caption_with_space_ends_table, check_v282_reader_layouts, check_v271_reader_layouts,

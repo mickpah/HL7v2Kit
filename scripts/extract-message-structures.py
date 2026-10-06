@@ -1067,7 +1067,8 @@ _OVERRIDE_KEYS = {
     "sharedTriggers": {"version", "trigger", "structures", "citation"},
     # Two normative prints of one structure ID that disagree: the LOOSER print (the one that
     # accepts every message the other accepts) is primary, cited to both (P8b-9 ruling; ADR-019
-    # primary-print amendment). primary and stricter are the captions as printed.
+    # primary-print amendment). primary and stricter are the captions as printed, or "CAPTION
+    # (section N)" where prints share a caption; stricter may list several prints (S3-3).
     "primaryPrints": {"version", "structure", "primary", "stricter", "citation"},
     # Two normative prints of one structure ID that are incomparable (neither accepts every message
     # the other accepts): the committed structure is their UNION, aligned by segment or group name
@@ -1112,6 +1113,13 @@ def validate_overrides(data):
                 raise OverridesError(f"errata entry for {entry.get('structure')}: printed equals intended")
             if kind == "unionPrints" and len(set(entry.get("prints", []))) != 2:
                 raise OverridesError(f"unionPrints entry for {entry.get('structure')} needs two distinct prints")
+            if kind == "primaryPrints" and not (
+                    isinstance(entry.get("stricter"), str) or (
+                        isinstance(entry.get("stricter"), list) and entry["stricter"]
+                        and all(isinstance(s, str) for s in entry["stricter"])
+                        and entry.get("primary") not in entry["stricter"])):
+                raise OverridesError(f"primaryPrints entry for {entry.get('structure')}: stricter must be a print "
+                                     "name or a non-empty list of them without the primary")
             if kind == "sharedTriggers" and len(set(entry.get("structures", []))) < 2:
                 raise OverridesError(f"sharedTriggers entry {entry.get('trigger')} names fewer than two structures")
             if "occurrence" in entry and not ((kind == "eventsFromTitle" or (kind == "errata" and entry.get("where") in
@@ -1290,6 +1298,17 @@ def _primary(sid, entries, fold):
     normative = [k for k, e in enumerate(entries) if not _profile(e[0])]
     return next((k for k in normative if any(f"{entries[k][0].code}_{v}" == sid for v in entries[k][0].events)),
                 normative[0] if normative else None)
+
+
+def _names_print(name, cap):
+    """Whether a primaryPrints print name is this caption: the caption as printed, or, to tell
+    apart prints under one caption (v2.3 ORM^O01, four prints; S3-3), "CAPTION (section N)"."""
+    return name in (cap.printed, f"{cap.printed} (section {cap.section})")
+
+
+def _stricter(entry):
+    """A primaryPrints entry's stricter prints: one name, or a list of them (S3-3)."""
+    return [entry["stricter"]] if isinstance(entry["stricter"], str) else entry["stricter"]
 
 
 def _profile(cap):
@@ -1554,9 +1573,9 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 report.append((sid, "error", f"unionPrints entry {joined['prints']!r} matches no print"))
                 continue
         if chosen:
-            # The cited looser print overrides the primary-print rule; both prints must exist.
-            k = next((j for j, e in enumerate(entries) if e[0].printed == chosen["primary"]), None)
-            if k is None or not any(e[0].printed == chosen["stricter"] for e in entries):
+            # The cited looser print overrides the primary-print rule; every named print must exist.
+            k = next((j for j, e in enumerate(entries) if _names_print(chosen["primary"], e[0])), None)
+            if k is None or not all(any(_names_print(s, e[0]) for e in entries) for s in _stricter(chosen)):
                 report.append((sid, "error", f"primaryPrints entry {chosen['primary']!r} / {chosen['stricter']!r} "
                                              "matches no print"))
                 continue

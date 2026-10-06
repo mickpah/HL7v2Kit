@@ -42,8 +42,8 @@ struct StructureRegistrationTests {
         // The counts move with the register (Resources/structures/completeness.json,
         // register section E); they are pinned so a change is seen.
         let expected: [(Version, Int)] = [
-            (.v2_3, 22), (.v2_3_1, 38), (.v2_4, 34), (.v2_5_1, 32),
-            (.v2_6, 20), (.v2_7_1, 53), (.v2_8_2, 61),
+            (.v2_3, 16), (.v2_3_1, 30), (.v2_4, 29), (.v2_5_1, 24),
+            (.v2_6, 12), (.v2_7_1, 45), (.v2_8_2, 57),
         ]
         for (version, count) in expected {
             let list = MessageStructureTable.registrations(for: version)

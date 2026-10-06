@@ -1,0 +1,65 @@
+{
+  "structure": "PPV_PCA",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 12, section 12.3.8 PPV - Patient Goal Response (Event PCA), pp 18 to 19. QRD is listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+  "triggers": ["PPV^PCA"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "QAK", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "GOAL", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "GOL", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "VAR", "min": 0, "max": null },
+        { "group": "GOAL_ROLE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "ROL", "min": 1, "max": 1 },
+          { "segment": "VAR", "min": 0, "max": null }
+        ]},
+        { "group": "GOAL_PATHWAY", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "PTH", "min": 1, "max": 1 },
+          { "segment": "VAR", "min": 0, "max": null }
+        ]},
+        { "group": "GOAL_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "group": "PROBLEM", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "PRB", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "VAR", "min": 0, "max": null },
+          { "group": "PROBLEM_ROLE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "ROL", "min": 1, "max": 1 },
+            { "segment": "VAR", "min": 0, "max": null }
+          ]},
+          { "group": "PROBLEM_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "ORC", "min": 1, "max": 1 },
+          { "group": "ORDER_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+            { "slot": "Order Detail Segment", "min": 1, "max": null, "citation": "HL7 v2.7.1 Chapter 12, section 12.3.8 PPV - Patient Goal Response (Event PCA), p 19: the print gives the order detail as the choice '< OBR | etc. >', whose last alternative is a placeholder for segments it does not enumerate: one open slot in place of the choice (ADR-019 S3-1, S3-2), the listed alternative OBR among its fillers." },
+            { "segment": "NTE", "min": 0, "max": null },
+            { "segment": "VAR", "min": 0, "max": null },
+            { "group": "ORDER_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "NTE", "min": 0, "max": null },
+              { "segment": "VAR", "min": 0, "max": null }
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

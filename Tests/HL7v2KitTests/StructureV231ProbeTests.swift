@@ -192,14 +192,14 @@ struct StructureV231ProbeTests {
 
     // CH04 4.2.1 (p 4-3) prints the general order's detail as "Order Detail Segment OBR,
     // etc.", which use note b and section 4.7 leave open between one segment and a
-    // combination (ruling G6): ORM_O01 is registered, so MSH-9.3 ORM_O01 is info with
-    // the register reason, and ORM^O01 alone is ambiguous (five structures).
-    @Test("ORM^O01: ORM_O01 is registered (info); without MSH-9.3 the trigger is ambiguous")
+    // combination: since S3-3 ORM_O01 is modelled with the open slot, so MSH-9.3 ORM_O01 is
+    // matched (any detail after ORC), and ORM^O01 alone is ambiguous (five structures).
+    @Test("ORM^O01: ORM_O01 is matched with its open slot; without MSH-9.3 the trigger is ambiguous")
     func generalOrder() throws {
-        let declared = try structureIssues("ORM^O01^ORM_O01", ["PID|1", "ORC|NW", "OBR|1"])
-        #expect(declared.map(\.code) == [.messageStructureNotModelled(structure: "ORM_O01")], "\(declared.map(\.message))")
-        #expect(declared.first?.severity == .info && declared.first?.message.contains("Order Detail Segment") == true,
-                "\(declared.map(\.message))")
+        #expect(try structureIssues("ORM^O01^ORM_O01", ["PID|1", "ORC|NW", "OBR|1"]).isEmpty)
+        #expect(try structureIssues("ORM^O01^ORM_O01", ["PID|1", "ORC|NW", "RQD|1", "RQ1|1"]).isEmpty)
+        let declared = try structureIssues("ORM^O01^ORM_O01", ["PID|1", "OBR|1"])
+        #expect(declared.map { Self.describe($0.code) } == ["unexpected OBR"], "\(declared.map(\.message))")
         let bare = try structureIssues("ORM^O01", ["PID|1", "ORC|NW", "OBR|1"])
         #expect(bare.count == 1 && bare.first?.severity == .info && bare.first?.message.contains("ambiguous") == true,
                 "\(bare.map(\.message))")
@@ -220,14 +220,14 @@ struct StructureV231ProbeTests {
 
     // Table 0354 v2.3.1 (p 2-104) lists PPG_PCG as 'PCC, PCH, PCJ'; the cited erratum adds PCG (the
     // CH12 12.2.4 caption, Table 0003) and keeps PCC, which the row maps there, as every later
-    // table does. PPG_PCG is registered (CH12 '[OBR, etc.'): both triggers are info, never a
-    // mismatch (P8b-14 fix round 1).
-    @Test("PPG^PCC^PPG_PCG and PPG^PCG^PPG_PCG resolve to the registered PPG_PCG without a mismatch",
+    // table does. PPG_PCG (CH12 '[OBR, etc.') is modelled with the open slot since S3-3: both
+    // triggers are matched against it, never a mismatch (P8b-14 fix round 1).
+    @Test("PPG^PCC^PPG_PCG and PPG^PCG^PPG_PCG are matched against PPG_PCG without a mismatch",
           arguments: ["PPG^PCC^PPG_PCG", "PPG^PCG^PPG_PCG"])
     func goalPathway(_ msh9: String) throws {
-        let issues = try structureIssues(msh9, ["PID|1", "PTH|AD", "GOL|AD"])
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "PPG_PCG")], "\(issues.map(\.message))")
-        #expect(issues.first?.severity == .info)
+        #expect(try structureIssues(msh9, ["PID|1", "PTH|AD", "GOL|AD", "ORC|NW", "OBR|1"]).isEmpty)
+        let issues = try structureIssues(msh9, ["PID|1", "GOL|AD"])
+        #expect(issues.map { Self.describe($0.code) } == ["unexpected GOL"], "\(issues.map(\.message))")
     }
 
     // The two-token Table 0354 errata stand (the corrected IDs are modelled), but a message that
