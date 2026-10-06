@@ -5,6 +5,7 @@
 extension MessageStructureTable {
     static let auADRM2021: [String: MessageStructure] = [
         "ORM_O01": auADRM2021_ORM_O01,
+        "ORR_O02": auADRM2021_ORR_O02,
         "ORU_R01": auADRM2021_ORU_R01,
         "OSR_Q06": auADRM2021_OSR_Q06,
         "REF_I12": auADRM2021_REF_I12,
@@ -51,6 +52,34 @@ extension MessageStructureTable {
                 .segment("FT1", min: 0, max: nil),
                 .segment("CTI", min: 0, max: nil),
                 .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let auADRM2021_ORR_O02: MessageStructure = MessageStructure(
+        id: "ORR_O02",
+        version: "2.4",
+        triggers: ["ORR^O02"],
+        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.2 ORM - general order message (event O01), Order Response Message, ORR^O02^ORR_O02 General Order Acknowledgment, pp 280 to 281: MSH, MSA, [ERR], [ [PID { ORC OBR } ]. Print erratum (P12 S1-2, owner ruling G-AU2 of 2026-10-07): the cell '[PID' (p 280) opens a bracket that is never closed, so the print alone leaves PID's optionality undecided; it is read as [PID], the base v2.4 reading (HL7 v2.4 Chapter 4, section 4.4.2, p 4-20, prints the patient group optional), since the localisation narrows the base and does not widen it; p 280 also says 'The ORC/OBR segments are optional however', which the optional outer group carries. Constrains HL7 v2.4 Chapter 4, section 4.4.2: NTE and CTI segments are omitted, which is not a finding (ADR-019 decision 7). Order detail: the print gives OBR, as the ORM^O01 print does (p 279); the only ADRM text that lets another segment replace OBR is p 280, 'The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (RXO, ODS, ODT), and no ADRM print or prose names RQD or RQ1, so the place is the choice of OBR, RXO, ODS or ODT, the same as ORM_O01, and the requisition detail the base admits is excluded. Whether the p 280 replacement carries over to the response the print does not settle; RXO, ODS and ODT are accepted, a residual of 00060.1 (permanent-limitations register, section E addendum). Unprinted group names (ADR-019 decision 3), the base v2.4 ORR_O02 groups with the same head segment: RESPONSE (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.RESPONSE.CONTENT) and ORDER (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.ORDER.CONTENT). PID is printed as a bare segment, not the base PATIENT group.",
+        profile: "au-adrm-2021",
+        baseVersion: "2.4",
+        rule: "HL7au:00060.1",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .segment("PID", min: 0, max: 1),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .choice(nil, min: 1, max: 1, alternatives: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("ODS", min: 1, max: 1),
+                        .segment("ODT", min: 1, max: 1),
+                    ]),
+                ]),
             ]),
         ]
     )

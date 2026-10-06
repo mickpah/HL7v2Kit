@@ -72,4 +72,42 @@ struct LocaleAUOrderResponseTests {
         #expect(au(all).isEmpty, "\(au(all).map(\.message))")
         #expect(base(all).isEmpty, "\(base(all).map(\.message))")
     }
+
+    // MARK: - ORR^O02 order response (ADRM-2021 section 5.2, pp 280 to 281; owner ruling G-AU2)
+
+    @Test("A conformant AU ORR^O02 (PID, ORC, OBR) is clean under AU")
+    func orrConformant() throws {
+        let all = try issues("ORR^O02^ORR_O02", ["MSA|AA|1", "PID|1", "ORC|OK", "OBR|1", "ORC|OK", "OBR|2"])
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+    }
+
+    @Test("AU ORR^O02 without PID, or without the order group, is accepted (the erratum takes the base reading: PID optional)",
+          arguments: [["MSA|AA|1", "ORC|OK", "OBR|1"], ["MSA|AA|1", "ERR|"], ["MSA|AA|1", "NTE|1", "ORC|OK", "OBR|1", "NTE|2", "CTI|1"]])
+    func orrPIDAbsent(_ body: [String]) throws {
+        let all = try issues("ORR^O02^ORR_O02", body)
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+    }
+
+    @Test("AU ORR^O02 with RQD or RQ1 in place of OBR: 00060.1 fires; the international locale accepts it as the base does",
+          arguments: ["RQD|1", "RQ1|1"])
+    func orrRequisitionDetail(_ detail: String) throws {
+        let body = ["MSA|AA|1", "PID|1", "ORC|OK", detail]
+        let all = try issues("ORR^O02^ORR_O02", body)
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+        let found = au(all)
+        try #require(found.count == 1, "\(found.map(\.message))")
+        #expect(found[0].message.contains("requires OBR in group ORDER after ORC[1] "), "\(found[0].message)")
+        #expect(found[0].message.contains("erratum"), "\(found[0].message)")
+        #expect(found[0].location.pathDescription == "\(detail.prefix(3))[1]")
+        let intl = try issues("ORR^O02^ORR_O02", body, locale: .international)
+        #expect(au(intl).isEmpty && base(intl).isEmpty, "\(intl.map(\.message))")
+    }
+
+    @Test("AU ORR^O02 with an ORC and no order detail: the requirement is reported once, by the base")
+    func orrWithoutOrderDetail() throws {
+        let all = try issues("ORR^O02^ORR_O02", ["MSA|AA|1", "PID|1", "ORC|OK"])
+        #expect(au(all).count + base(all).count == 1, "\(all.map(\.message))")
+    }
 }
