@@ -75,6 +75,14 @@ struct SignatureCompatibilityTests {
         #expect(make([]) != .conditionalFieldMissing)
     }
 
+    @Test("S6-3 IssueCode.profileMaximumExceeded(localeRule:) is additive and distinct from the violation code")
+    func profileMaximumExceededIssueCode() {
+        let make: (String) -> IssueCode = IssueCode.profileMaximumExceeded(localeRule:)
+        let code = make("HL7au:00060.1")
+        #expect(code == .profileMaximumExceeded(localeRule: "HL7au:00060.1"))
+        #expect(code != .profileConstraintViolation(localeRule: "HL7au:00060.1"))
+    }
+
     @Test("S2-2 IssueCode.segmentWithdrawnInVersion is additive and payload-less")
     func segmentWithdrawnIssueCode() {
         let code: IssueCode = .segmentWithdrawnInVersion

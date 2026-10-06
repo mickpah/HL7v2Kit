@@ -96,6 +96,19 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// failure to the loaded locale. Scaffolded in v0.4-S5-A; fired
     /// once profile overrides ship in S5-B and later. See ADR-007.
     case profileConstraintViolation(localeRule: String)
+    /// A segment occurrence beyond a maximum that a localisation profile's
+    /// message structure narrows below the base structure's: the base accepts
+    /// it, the profile prints fewer. Under `.auLocalisation`, a second IN1, PV1
+    /// or PV2 on a v2.4 REF^I12 (ADRM-2021 section 7.2.1, pp 324 to 325, prints
+    /// `[IN1]` and one PV1 and `[PV2]`, where the base v2.4 structure repeats
+    /// the insurance group and prints the visit group twice). `localeRule`
+    /// names the conformance point (`"HL7au:00060.1"`); the message names the
+    /// profile print and the maximum. Always `.info`, one per occurrence,
+    /// raised when ``ValidationOptions/messageStructureSeverity`` is set: the
+    /// conformance point is about required segments, and the owner ruled the
+    /// narrowed maxima reported at information (2026-10-06; ADR-019 decision 7
+    /// as amended in S6). Additive case; the enum is open per ADR-014.
+    case profileMaximumExceeded(localeRule: String)
     /// A component the spec prints as conditional is empty while the condition
     /// its prose states holds (v2.5.1 RPT.6 "required if RPT-5 is populated").
     /// Located at the component; severity follows

@@ -691,7 +691,7 @@ Owner gate G2, answered 2026-09-30 (all recommended defaults).
 | 4 | Unrecognised or empty MSH-12 | Skip, `messageStructureNotModelled` (info); no fallback grammar |
 | 5 | Group spans gating | On for complete versions with a clean match, independent of severity; behind the `isComplete` probe |
 | 6 | ORC-8 OUL misfire | Interim gate `messageCode not in (...)` shipped in P4-7; removed per version by the rollout task that supplies spans |
-| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point; an exact-matched base is matched again past a dropped `unexpected` until a finding is kept; narrowed maxima stay unreported |
+| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point; an exact-matched base is matched again past a dropped `unexpected` until a finding is kept; narrowed maxima stay unreported Amended 2026-10-06 (S6-3, owner ruling, decision 1 of the epic P11 gate): a segment occurrence beyond a maximum the profile structure narrows below the base's, which the base accepts, is reported once per occurrence as `.info` `profileMaximumExceeded(localeRule:)`, naming the profile print and the maximum; it stays dropped as a finding. |
 | 8 | AU overlay timing | Immediately after the extractor (R1) |
 | 9 | Acknowledgments | Build and validate the general ACK; no protocol logic |
 | 10 | Severity | `messageStructureSeverity = nil` default now; presets `.warning` and `.error` confirmed at close-out |
@@ -2238,3 +2238,38 @@ every version under `.auLocalisation`.
   the peer rule returns one segment per ID); ORU_R30 message-level OBR to OBX. A custom rule on
   those lookups would need the distinction the print does not make (the container) or a lookup by
   group rather than by segment ID (the other two).
+
+### S6-3 AU beyond-maxima at information (decision 7 amended, owner ruling 2026-10-06)
+
+Decision 7 dropped every profile `unexpected` and beyond-maximum finding, so a second IN1, PV1
+or PV2 on a v2.4 REF^I12 under `.auLocalisation` drew nothing: the ADRM-2021 prints `[IN1]`
+and one PV1 and `[PV2]` (section 7.2.1, pp 324 to 325) where the base v2.4 structure repeats
+the insurance group and prints `[ PV1 [PV2] ]` twice (CH11 pp 11-16 to 11-17), and these are
+every narrowed maximum in the five ADRM structures (P8b-4a). The owner ruled them reported at
+information.
+
+- **Code.** New `IssueCode.profileMaximumExceeded(localeRule:)` (additive; open enum), always
+  `.info`, `localeRule` `"HL7au:00060.1"`. Chosen over `profileConstraintViolation` at
+  information: that code is the violation code a consumer treats as failing at the preset's
+  severity, and 00060.1 itself is about required segments, so the narrowed maxima are a
+  different statement about the message; the new case follows the S1-4 and S2-2 precedent of an
+  information-only case.
+- **Where.** `Validator+ProfileStructure.swift`: each `.exceededMaximum` finding of the profile
+  match (the one-pass matcher reports one per occurrence past a saturated element; all five
+  profile structures are one-pass) yields one issue at that occurrence, unless the base kept a
+  finding of its own at that place (then the base already reports it). The message names the
+  profile structure, the segment, the maximum (the product of the maxima on the path to the
+  segment in the profile print) and the profile citation with its pages. Profile `unexpected`
+  findings stay dropped. Raised only when `messageStructureSeverity` is set, as every profile
+  structure finding is.
+- **Example.** REF^I12 RF1 PRD PID PV1 PV2 PV1 PV2 under `.auLocalisation`: two issues, at PV1[2]
+  and PV2[2]: "HL7au:00060.1: the REF_I12 structure of the au-adrm-2021 profile allows PV1 at
+  most once here, and this occurrence is beyond it; the base v2.4 REF_I12 structure accepts
+  it (HL7AUSD-STD-OO-ADRM-2021.1, section 7.2.1 ..., pp 324 to 325 ...). Reported at information
+  (ADR-019 decision 7, owner ruling 2026-10-06)."
+- **Evidence.** `LocaleAUMaximumTests` (RED at 8b9e17c3: 6 issues, no such issue raised; the
+  base and 00060.1 stayed silent, as now); `LocaleAUStructureTests` refDroppedThenSecondPV1, which
+  asserted silence, now expects the one information issue. Digests (default, strict, off; both
+  locales): identical, as no spec example or fixture is a v2.4 REF^I12 past the maxima; a
+  supplementary run of the 44 REF, RRI, ORU, ORM and OSR examples with MSH-12 set to 2.4 is
+  identical as well (the ADRM prints only REF^I12).

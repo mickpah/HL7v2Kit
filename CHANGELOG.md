@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — S6-3: AU beyond-maxima reported at information (epic P11 sprint 6)
+
+- New `IssueCode.profileMaximumExceeded(localeRule:)` (additive; open enum; pinned; Migration
+  row), always `.info`. Under `.auLocalisation` with the structure check on, a segment beyond a
+  maximum the ADRM-2021 narrows below the base v2.4 structure (a second IN1, PV1 or PV2 on
+  REF^I12, section 7.2.1, pp 324 to 325) draws one per occurrence, naming the print and the
+  maximum, where decision 7 dropped it silently. Owner ruling 2026-10-06; ADR-019 decision 7
+  amended. `LocaleAUMaximumTests` (failing first); `LocaleAUStructureTests` updated where it
+  asserted silence. Register section E and the AU conformance register row updated. Digests
+  identical (no example or fixture is a REF^I12 past the maxima).
+
 ### Fixed — S6-2: the group-scope count reads the OBR's own OBX (epic P11 sprint 6)
 
 - The AU HL7au:000008 display-OBX rules (minimum one per OBR/OBX group, `.obrObxGroup`, every

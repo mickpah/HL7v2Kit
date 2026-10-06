@@ -335,10 +335,10 @@ version's addendum.
   **PARTIAL**: not enforced are the ORU^R01 PV1 prose mandate (ADRM pp 17 and 205, against the
   print; owner ruled 2026-10-06: the print governs, the prose is cited), the Appendix 8 simplified REF structure (selected by MSH-12), ORR^O02 (bracket erratum),
   the order status response's order detail (three cases; the OBX it adds is modelled since P8b-4a
-  fix round 1; P8b-4 addendum below), and the narrowed maxima:
-  a second IN1, PV1 or PV2 on REF^I12 is not reported, because decision 7 drops beyond-maximum
-  findings (owner ruled 2026-10-06: reported at information under the AU profile, revisiting
-  decision 7; scheduled for epic P11 sprint 6, not yet built).
+  fix round 1; P8b-4 addendum below). The narrowed maxima are **closed** (S6-3, owner ruling
+  2026-10-06, ADR-019 decision 7 as amended): a second IN1, PV1 or PV2 on REF^I12 draws one
+  `.info` `profileMaximumExceeded(localeRule: "HL7au:00060.1")` per occurrence, naming the ADRM
+  print and the maximum; it is not a finding.
 
 | Capability | Spec | What is not checked today | Status |
 |---|---|---|---|
@@ -840,7 +840,7 @@ blocking spec-completeness of the segment half of 00060.1:
 | RRI^I12 | p 325: `MSH MSA [ERR] [ RF1 {PRD} PID ]`, MSA unbracketed (base v2.4 `[MSA]`); the prose says the RF1, PRD and PID group "has been made optional for backward compatibility" | Closed by P8b-4a: `RRI_I12.json` requires MSA, and the base findings its optional group and `[ERR]` accept are dropped (addendum below) |
 | Appendix 8 simplified REF structure | pp 484 to 485 ("Constrained REF_I12 message structure", normative; the OBR group and OBX required) | It applies only to messages declaring the simplified REF profile in MSH-12 (pp 483 to 484); the overlay has no MSH-12-gated structure variant |
 | ORR^O02 | pp 280 to 281: `[ [PID ... {ORC OBR} ]`, one `[` unclosed | The bracket erratum leaves PID's optionality undecidable, so no structure is modelled; read as for ORM^O01 (p 280: OBR, or RXO, ODS or ODT for medication and diet orders), the order detail would also exclude the base RQD and RQ1, which is not enforced either |
-| Narrowed maxima | REF^I12 p 324 prints `[IN1]` where the base repeats the insurance group `[{ IN1 [IN2] [IN3] }]`, and PV1 and `[PV2]` once where the base (v2.4 CH11 pp 11-16 to 11-17) prints `[ PV1 [PV2] ]` twice. These are every narrowed maximum in the five modelled ADRM structures (ORU_R01, ORM_O01, REF_I12, RRI_I12, OSR_Q06, each segment's maximum compared with the base's, P8b-4a) | 00060.1 is about required elements; an ADRM maximum below the base is not enforced (the overlay drops `unexpected` and beyond-maximum findings, ADR-019 decision 7). A second IN1, PV1 or PV2 on REF^I12 therefore draws no finding under AU. Owner ruled 2026-10-06: such segments are to be reported at information under the AU profile, revisiting decision 7; scheduled for epic P11 sprint 6, not yet built |
+| Narrowed maxima | REF^I12 p 324 prints `[IN1]` where the base repeats the insurance group `[{ IN1 [IN2] [IN3] }]`, and PV1 and `[PV2]` once where the base (v2.4 CH11 pp 11-16 to 11-17) prints `[ PV1 [PV2] ]` twice. These are every narrowed maximum in the five modelled ADRM structures (ORU_R01, ORM_O01, REF_I12, RRI_I12, OSR_Q06, each segment's maximum compared with the base's, P8b-4a) | 00060.1 is about required elements; an ADRM maximum below the base is not a finding (the overlay drops `unexpected` and beyond-maximum findings, ADR-019 decision 7). **Closed** 2026-10-06 (S6-3; owner ruling, decision 7 amended): each occurrence beyond a narrowed maximum the base accepts draws one `.info` `IssueCode.profileMaximumExceeded(localeRule: "HL7au:00060.1")` naming the print (pp 324 to 325) and the maximum; pinned by `LocaleAUMaximumTests` |
 | Order status response | p 281 (`[{OBX}]` inside the order; base v2.4 OSR_Q06 has no OBX; its PID is optional in the base as well) | Partly closed. The added OBX is closed by P8b-4a fix round 1: `OSR_Q06.json` models it, citing the caption erratum `OSQ^Q06^OSQ_Q06` for OSR^Q06, so the base OBX finding is dropped under AU. Still open, the order detail: the p 281 print says only "OBR Order Detail", with no prose on this message; the base v2.4 choice (OBR, RQD, RQ1, RXO, ODS, ODT) is kept because the print does not settle whether the p 280 narrowing for ORM^O01 applies to the response. Against the print as it stands (p 281: `ORC OBR [{OBX}] [{CTI}]`, OBR only), three things therefore go unflagged (P8b-18): an RQD or RQ1 in place of OBR; an RXO, ODS or ODT in place of OBR (the p 280 medication and diet replacement, which p 281 does not repeat); and an OBX after any order detail other than OBR, since the profile places `[{OBX}]` after the choice, not under OBR alone |
 
 The other ADRM prints add nothing over the base for a missing segment: ACK^R01 (p 206) and
@@ -865,15 +865,16 @@ finding is a dropped `unexpected`, the base is matched again with the dropped oc
 over, repeated until a finding is kept or none is left, so a later divergence is still reported
 (fix round 1). What stays unreported is what neither structure reports: the narrowed maxima,
 which the base accepts and the profile reports only as beyond-maximum findings, which decision 7
-drops. The code drops every profile `unexpected` finding (`Validator+ProfileStructure.swift`),
+drops as findings (since S6-3 each is reported at information, `profileMaximumExceeded`). The code drops every profile `unexpected` finding (`Validator+ProfileStructure.swift`),
 so a segment order the ADRM narrowed would go unreported as well; none is known (the final
 review traced ORU_R01 and REF_I12 and found no ordering that differs from the base), so today
 this is a property of the data, not a gap in the text above (P8b-final M5). A fifth ADRM structure, OSR_Q06 (p 281, the order status response), is modelled in fix
 round 1 (row above). The ORM^O01 order detail is narrowed to OBR, RXO,
 ODS and ODT (p 280 replaces OBR only "for medication and diet orders"), so an RQD or RQ1 in its
 place is a 00060.1 finding. Still not enforced, as the table above records: Appendix 8, the
-ORR^O02 bracket erratum, the PV1 prose mandate, the narrowed maxima (the base allows the
-repetition and the profile drops beyond-maximum findings).
+ORR^O02 bracket erratum and the PV1 prose mandate; the narrowed maxima are reported at
+information since S6-3 (the base allows the repetition; the profile's beyond-maximum finding is
+`profileMaximumExceeded`, `.info`).
 Approximation, kept on the side of reporting: a base `missing` finding is compared with the
 profile's by segment ID, not by place, so a segment the profile reports missing elsewhere keeps
 every base `missing` finding for it.
