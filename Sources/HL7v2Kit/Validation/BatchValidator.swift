@@ -59,6 +59,12 @@ public struct BatchValidationReport: Sendable, Equatable, Hashable {
 ///   half ("no information from the file header/footer or batch
 ///   segments must be used") is receiver processing behaviour and is
 ///   not decidable from the file.
+/// - **HL7au:000024.1 to .5** — "FHS, BHS, and MSH segments must
+///   specify" the AU delimiters `|^~\&` (Appendix 5, pp. 440 to 441).
+///   The FHS and BHS legs are checked here on the raw header, scoped by
+///   the messages the header carries: the field separator and the
+///   component separator on Orders, Results and Referrals, all four
+///   encoding characters on Orders and Results.
 public struct BatchValidator: Sendable {
     public let locale: HL7Locale
     public let options: ValidationOptions
@@ -81,6 +87,13 @@ public struct BatchValidator: Sendable {
         if locale == .auLocalisation {
             checkSingleBatchPerFile(file, issues: &batchIssues)
             checkReferralBatchSize(file, issues: &batchIssues)
+            if let header = file.fileHeader {
+                checkDelimiters(header, segmentIndex: 1, messages: file.allMessages, issues: &batchIssues)
+            }
+            for (index, group) in file.batches.enumerated() {
+                guard let header = group.header else { continue }
+                checkDelimiters(header, segmentIndex: index + 1, messages: group.messages, issues: &batchIssues)
+            }
         }
 
         return BatchValidationReport(
@@ -126,6 +139,50 @@ public struct BatchValidator: Sendable {
                 location: IssueLocation(segmentID: "BHS", segmentIndex: index + 1),
                 message: "AU batch rule violated: batch \(index + 1) carries a referral (REF) among \(group.messages.count) messages but referral batches must contain no more than 1 message (\(citation))"
             ))
+        }
+    }
+
+    /// HL7au:000024.1 to .5 on FHS and BHS (P12 S2-2). Each point reads
+    /// "FHS, BHS, and MSH segments must specify the ..." (Appendix 5,
+    /// .1 p. 440, .2 to .5 p. 441); the MSH legs are profile rules. The
+    /// header is the raw segment string, so the field separator is the
+    /// character after the segment ID and the encoding characters run to
+    /// the next field separator. Scoped by the messages the header
+    /// carries, as the points are: .1 and .2 on Orders, Results and
+    /// Referrals; .3, .4 and .5 on Orders and Results. As on MSH, the
+    /// four encoding characters are one literal on ORM/ORU and only the
+    /// component separator is checked when the scope is Referrals alone.
+    private func checkDelimiters(
+        _ header: String,
+        segmentIndex: Int,
+        messages: [Message],
+        issues: inout [ValidationIssue]
+    ) {
+        let segmentID = String(header.prefix(3))
+        let codes = Set(messages.compactMap(\.messageCode))
+        guard !codes.isDisjoint(with: ["ORM", "ORU", "REF"]),
+              let separator = header.dropFirst(3).first else { return }
+        func report(_ field: Int, _ citation: String, _ detail: String) {
+            issues.append(ValidationIssue(
+                severity: .error,
+                code: .profileConstraintViolation(localeRule: citation),
+                location: IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: field),
+                message: "AU batch rule violated at \(segmentID)-\(field): \(detail) (\(citation))"
+            ))
+        }
+        if separator != "|" {
+            report(1, "HL7au:000024.1 — \(segmentID)-1 field separator must be \"|\"; AU ADRM-2021 Appendix 5 p. 440",
+                   "field separator is \"\(separator)\"")
+        }
+        let encoding = String(header.dropFirst(4).prefix { $0 != separator })
+        if !codes.isDisjoint(with: ["ORM", "ORU"]) {
+            if encoding != "^~\\&" {
+                report(2, "HL7au:000024.2/.3/.4/.5 — \(segmentID)-2 encoding characters must be \"^~\\&\" (component, repeat, escape, sub-component); AU ADRM-2021 Appendix 5 p. 441",
+                       "encoding characters are \"\(encoding)\"")
+            }
+        } else if !encoding.hasPrefix("^") {
+            report(2, "HL7au:000024.2 — \(segmentID)-2 must specify the component separator as \"^\" on Referrals; AU ADRM-2021 Appendix 5 p. 441",
+                   "encoding characters are \"\(encoding)\"")
         }
     }
 }

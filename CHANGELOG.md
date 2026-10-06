@@ -16,6 +16,12 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 - New AU locale table `Resources/tables/locale/au-adrm-2021/0396.json` (27 rows, kind User, open; ADR-016 note). Internal: `ComponentCorrespondence` gains a `forbidden(prefixes:)` value rule. No public API change.
 - The point stays PARTIAL: a public system outside the printed table and a local system spelt otherwise skip; the equivalence half (000034.3) is terminology. Conformance register regenerated (the 000008.3.1 S1-5 note now comes from the script); limitations register row updated.
 
+### Added — P12 S2-2: HL7au:000024 on Referrals and on FHS and BHS
+
+- HL7au:000024.2 (Appendix 5 p 441, Orders, Results, Referrals: "FHS, BHS, and MSH segments must specify the Components separator character as '^'") now holds on Referrals: MSH-2 must begin with `^` on a REF (a first-character `ComponentPattern`; .3, .4 and .5 do not apply to Referrals, so the whole literal stays pinned on ORM and ORU only). The point moves PARTIAL to SHIPPED.
+- `BatchValidator` (`.auLocalisation`) checks the FHS and BHS legs that every 000024 point names (.1 p 440, .2 to .5 p 441) on the raw header, scoped by the messages the header carries: FHS-1/BHS-1 `|` and the component separator `^` on Orders, Results and Referrals, the full `^~\&` on Orders and Results. Before, the SHIPPED rows 000024.1, .3, .4 and .5 claimed FHS and BHS but only MSH was checked.
+- Tests: `AUDelimiterTests`. Conformance register regenerated; the M6-O3 gap note in `m6-adrm-2021-localisation-audit.md` is closed.
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).

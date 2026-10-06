@@ -17,8 +17,8 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 74 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 18 | partly enforced — see each row's note for what is not |
+| SHIPPED | 75 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 17 | partly enforced — see each row's note for what is not |
 | BASE | 9 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 8 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
@@ -27,7 +27,7 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## SHIPPED (74)
+## SHIPPED (75)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -44,10 +44,11 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:000022.3` |  | Senders | Referrals | Senders must generate batches containing no more than 1 message. |  |
 | `HL7au:000023` |  | Senders | Orders, Results, Referrals | The NTE segment must NOT be used in messages. |  |
 | `HL7au:000023.1` |  | Senders | Orders, Results, Referrals | User defined segments (Z segments) must not be used in messages. |  |
-| `HL7au:000024.1` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Field separator character as '\|' |  |
-| `HL7au:000024.3` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the Sub-components separator characters '&' |  |
-| `HL7au:000024.4` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the repeat separator character as '~' |  |
-| `HL7au:000024.5` |  | Senders General Conforma | Orders, Results | FHS, BHS, and MSH segments must specify the escape separator character as '\' |  |
+| `HL7au:000024.1` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Field separator character as '\|' | MSH-1 (profile) and FHS-1 / BHS-1 (`BatchValidator`, scoped by the messages the header carries), Orders/Results/Referrals |
+| `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | MSH-2 whole literal on Orders/Results and first character on Referrals (P12 S2-2); FHS-2 / BHS-2 the same in `BatchValidator` |
+| `HL7au:000024.3` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the Sub-components separator characters '&' | MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator` |
+| `HL7au:000024.4` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the repeat separator character as '~' | MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator` |
+| `HL7au:000024.5` |  | Senders General Conforma | Orders, Results | FHS, BHS, and MSH segments must specify the escape separator character as '\' | MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator` |
 | `HL7au:000028` |  | Senders | Results | When there are multiple OBR segments in an ORU message, the OBR-3 Filler order number must be unique within messages. |  |
 | `HL7au:000028.2` |  | Senders | Referrals | When there are multiple OBR/OBX groups in a REF message, each OBR-3 Filler order number pair must be unique for each OBR/OBX group. |  |
 | `HL7au:000032` |  | Senders | Results | In the ORU message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section. |  |
@@ -106,14 +107,13 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (18)
+## PARTIAL (17)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000008.3.2` |  | Senders | Referrals(L2) | If an RTF display segment is sent in an OBR/OBX group, then the same content must be sent in one of either HTML, PDF, or TXT (HL7 FT) same OBR/OBX group. | the STRUCTURAL half is enforced: an RTF display OBX in an OBR group without an HTML/PDF/TXT sibling fires (relational cardinality via activationPredicate); the "same content" equality half needs cross-format rendering comparison and is not machine-checkable |
 | `HL7au:000020` |  | Senders | Orders, Results, Referrals(L2) | All message types and trigger event codes beginning with the letter “Z” are reserved for locally-defined messages and must NOT be used. | Z-prefixed trigger events prohibited on Orders/Results and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 profile gate; the message-CODE leg stays unenforced — a wholly-Z message code never satisfies any message-type gate, so that half is undecidable inside this rule shape |
 | `HL7au:000022.1` |  | Senders | Orders, Results, Referrals | If the batch header is used it must specify individual message acknowledgement. No information from the file header/footer or batch segments must be used. | the individual-acknowledgement half is enforced: BHS carries no acknowledgement field, so the mode lives in each contained message's MSH-15/16, and BatchValidator runs the per-message AU rules (00047.1/.2, MSH-15/16 = AL) on every batched message; the "no information from the file header/footer or batch segments must be used" half is receiver processing behaviour |
-| `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
 | `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 presence + table 0074 membership enforced on Referrals; the "appropriate for the content in the OBR/OBX group" half is receiver-judgement over content and is not machine-checkable |
 | `HL7au:000034.1` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment in either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.... | OBX-3 and coded OBX-5 (OBX-2 CE/CWE/CNE) on Results/Referrals: a local primary (`L` or `99zzz`, Table 0396 p 144) with a non-local row of the ADRM Table 0396 (pp 142-145, AU locale axis) in the alternate fires; two public systems are outside the point. Public systems outside the printed table and other local spellings skip; the equivalence half is 000034.3 (terminology) |
 | `HL7au:000034.2` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, in OBX-3 (Observation Identifier), if the system transmits both a public (e.g. LOINC) and a local terminology, then the local terminology must be transmitted in th... | OBX-3, the same rule as 000034.1 (P12 S2-2); same residual |

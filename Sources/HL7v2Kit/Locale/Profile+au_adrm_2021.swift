@@ -336,14 +336,14 @@ extension Profile {
             // so the conjunction of the four points is a single pin:
             // MSH-2 == "^~\&".
             //
-            // KNOWN GAP, registered: .2 (component separator) is scoped
-            // to Orders, Results AND Referrals, while .3/.4/.5 are
-            // Orders/Results only. Pinning the whole literal on REF
-            // would enforce .3/.4/.5 where the spec does not, so the
-            // gate is the (ORM, ORU) intersection and .2-on-Referrals
-            // goes unenforced. Expressing it needs character-position
-            // addressing inside a component — see M6-B in
-            // `docs/design/m6-adrm-2021-localisation-audit.md`.
+            // .2 (component separator) is scoped to Orders, Results AND
+            // Referrals, while .3/.4/.5 are Orders/Results only, so the
+            // whole-literal pin is gated (ORM, ORU) and the Referrals leg
+            // of .2 is a first-character check (P12 S2-2; the M6-B gap
+            // closed): MSH-2 must begin with "^" on REF. 000024.2, p 441:
+            // "FHS, BHS, and MSH segments must specify the Components
+            // separator character as '^'". The FHS and BHS legs of
+            // 000024.1 to .5 are in BatchValidator.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 2,
@@ -353,6 +353,15 @@ extension Profile {
                         allowedValues: ["^~\\&"],
                         condition: "messageCode in (ORM, ORU)",
                         specCitation: "HL7au:000024.2/.3/.4/.5 — MSH-2 encoding characters must be \"^~\\&\" (component, repeat, escape, sub-component)"
+                    )
+                ],
+                componentPatterns: [
+                    ComponentPattern(
+                        component: 1,
+                        prefix: "^",
+                        condition: "messageCode = REF",
+                        allowEmpty: true,
+                        specCitation: "HL7au:000024.2 — MSH-2 must specify the component separator as \"^\" on Referrals; AU ADRM-2021 Appendix 5 p. 441"
                     )
                 ],
                 specCitation: "HL7au:000024.2/.3/.4/.5 — encoding characters narrowed to the AU literal"

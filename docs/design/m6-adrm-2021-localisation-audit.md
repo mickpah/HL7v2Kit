@@ -311,6 +311,10 @@ The rule therefore gates on the `(ORM, ORU)` intersection and `000024.2` is
 recorded PARTIAL. Expressing it fully needs character-position addressing
 inside a component — folded into M6-B's value-correspondence capability.
 
+_Closed 2026-10-07 (P12 S2-2)._ No character-position addressing was needed: the Referrals leg is a
+first-character `ComponentPattern` (prefix `^`) on MSH-2 gated `messageCode = REF`, and the FHS and
+BHS legs of `000024.1` to `.5` are checked on the raw headers in `BatchValidator`. `000024.2` is SHIPPED.
+
 ### M6-O4 — `00048.3.1`'s value lies entirely in the alias gap
 
 `CharacterEncoding` already rejects an unknown MSH-18 with

@@ -100,6 +100,15 @@ CALLER_ASSERTED = {
 
 # Shipped points whose register row needs a scope note.
 SHIPPED_NOTES = {
+    # P12 S2-2: the FHS and BHS legs, named by every 000024 point, ship in
+    # BatchValidator; before S2-2 only MSH was checked.
+    'HL7au:000024.1': 'MSH-1 (profile) and FHS-1 / BHS-1 (`BatchValidator`, scoped by '
+                      'the messages the header carries), Orders/Results/Referrals',
+    'HL7au:000024.2': 'MSH-2 whole literal on Orders/Results and first character on '
+                      'Referrals (P12 S2-2); FHS-2 / BHS-2 the same in `BatchValidator`',
+    'HL7au:000024.3': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
+    'HL7au:000024.4': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
+    'HL7au:000024.5': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
     # P4-20 / P4-24 / P4-26 / P4-31 (owner rulings G6, G9): see
     # permanent-limitations-register (00060.4 row) and ADR-021.
     'HL7au:00060.4': 'explicit prohibitions on C fields (`prohibitedWhen` / '
@@ -138,6 +147,8 @@ SHIPPED = {
     'HL7au:00044.6.4', 'HL7au:00044.6.5',
     # M6-A stage 1 — MSH envelope literals (2026-09-04).
     'HL7au:000024.1', 'HL7au:000024.3', 'HL7au:000024.4', 'HL7au:000024.5',
+    # P12 S2-2 — the REF leg (MSH-2 first character) and the FHS/BHS legs.
+    'HL7au:000024.2',
     'HL7au:00047.1', 'HL7au:00047.2',
     'HL7au:00048.3.1', 'HL7au:00049.2', 'HL7au:00049.3',
     # M6-A stage 2 — XCN required components (2026-09-04).
@@ -213,10 +224,6 @@ PARTIAL = {
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
                       '(`auNASHTransport`); the "registered organisation name in HI service" half '
                       'needs the HPOS/HI directory and stays out',
-    'HL7au:000024.2': 'enforced on Orders/Results as part of the MSH-2 '
-                      'literal pin; unenforced on Referrals, where .3/.4/.5 '
-                      'do not apply and pinning the whole literal would '
-                      'over-fire — needs character-position addressing (M6-B)',
     'HL7au:000020': 'Z-prefixed trigger events prohibited on Orders/Results '
                     'and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 '
                     'profile gate; the message-CODE leg stays unenforced — '
