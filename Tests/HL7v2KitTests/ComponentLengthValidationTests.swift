@@ -167,7 +167,7 @@ struct ComponentLengthValidationTests {
     // per-call parse selected: a range or list, never a maximum, on every grammar.
     @Test("The parsed-once index selects exactly the components a per-call parse would")
     func indexMatchesParse() {
-        let versions: [Version] = [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2]
+        let versions = Set(Version.allCases.map(\.grammarVersion))
         #expect(Set(Validator.componentLengthRules.keys) == [.v2_7_1, .v2_8_2])
         for version in versions {
             let grammars = DataTypeGrammarTable.grammars(for: version).merging(
@@ -190,5 +190,15 @@ struct ComponentLengthValidationTests {
                         "\(version) \(key)")
             }
         }
+    }
+
+    // S1-fix M2: the indexes are built over the grammar versions `Version` defines, so a
+    // grammar version added later is indexed rather than silently skipped.
+    @Test("The component indexes cover every grammar version Version defines")
+    func indexesCoverEveryGrammarVersion() {
+        let versions = Set(Version.allCases.map(\.grammarVersion))
+        #expect(Set(Validator.indexedGrammarVersions) == versions)
+        #expect(Validator.indexedGrammarVersions.count == versions.count)
+        #expect(Set(Validator.grammarKeys { _, _ in true }.keys) == versions)
     }
 }

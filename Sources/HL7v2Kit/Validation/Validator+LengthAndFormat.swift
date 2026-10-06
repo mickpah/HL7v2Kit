@@ -64,7 +64,7 @@ extension Validator {
     /// check returns there before resolving a grammar.
     static let componentLengthRules: [Version: [String: FieldLengthRule]] = {
         var table: [Version: [String: FieldLengthRule]] = [:]
-        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
+        for version in indexedGrammarVersions {
             var rules: [String: FieldLengthRule] = [:]
             let grammars = Array(DataTypeGrammarTable.grammars(for: version).values)
                 + Array(DataTypeGrammarTable.fieldGrammars(for: version).values)
@@ -79,6 +79,13 @@ extension Validator {
         return table
     }()
 
+    /// The grammar versions the component indexes are built over: every grammar
+    /// version ``Version`` defines, once each, so a grammar version added later is
+    /// indexed rather than silently skipped (S1-fix M2).
+    static let indexedGrammarVersions: [Version] = Version.allCases.reduce(into: []) { versions, version in
+        if !versions.contains(version.grammarVersion) { versions.append(version.grammarVersion) }
+    }
+
     /// The grammar keys of each grammar version that print a checkable component length.
     static let componentLengthKeys: [Version: Set<String>] = grammarKeys { entry, version in
         entry.length.flatMap { componentLengthRules[version]?[$0] } != nil
@@ -90,7 +97,7 @@ extension Validator {
     /// so a field whose grammar has nothing to check costs one set lookup (S1-5).
     static func grammarKeys(_ relevant: (ComponentGrammar, Version) -> Bool) -> [Version: Set<String>] {
         var table: [Version: Set<String>] = [:]
-        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
+        for version in indexedGrammarVersions {
             let grammars = DataTypeGrammarTable.grammars(for: version).merging(
                 DataTypeGrammarTable.fieldGrammars(for: version)) { own, _ in own }
             let keys = grammars.filter { $0.value.components.contains { relevant($0, version) } }.keys
