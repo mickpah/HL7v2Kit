@@ -43,6 +43,9 @@ struct GroupSpanPredicateTests {
                 case .choice(_, _, _, let alternatives):
                     let pick = alternatives.first { !$0.segmentIDs.isDisjoint(with: want) } ?? alternatives[0]
                     out += skeleton([pick])
+                case .slot:
+                    // An order detail segment (S3-1); no committed structure has a slot yet.
+                    out.append("RXO")
                 }
             }
         }

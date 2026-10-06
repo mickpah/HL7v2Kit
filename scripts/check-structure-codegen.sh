@@ -339,7 +339,7 @@ d = ack_choice(); c = d['elements'][2]; c['elements'] = c.pop('alternatives'); s
 reject "choice with max 0" 'bad occurrence bounds' "$PRE$CH
 ack_choice(min=0, max=0)"
 
-reject "element that is both a choice and a group" 'exactly one of "segment", "group" or "choice"' "$PRE$CH
+reject "element that is both a choice and a group" 'exactly one of "segment", "group", "choice" or "slot"' "$PRE$CH
 ack_choice(group='X', nameSource='printed')"
 
 reject "unnamed choice with a nameSource" 'unnamed choice cannot have a nameSource' "$PRE$CH
@@ -410,6 +410,52 @@ ack_shape(alt(0, 1, [seg('AAA', 1, 1), seg('BBB', 1, 1)]), seg('AAA', 0, None))"
 
 flagged "deterministic repeating choice is not flagged" 0 "$PRE$SH
 ack_shape(alt(0, None, [seg('AAA', 1, 1), seg('BBB', 1, None)]), seg('CCC', 1, 1))"
+
+# S3-1: the open slot (ADR-019 amendment 2026-10-06). A slot with its keys renders as .slot and
+# its structure is flagged for exact matching; an uncited slot, a slot inside a choice and two
+# adjacent slots are rejected.
+SL='
+def slot(**fields):
+    s = {"slot": "Order Detail Segment", "min": 1, "max": None, "citation": "synthetic, after v2.3 CH04 4.2.1 p 4-4"}
+    s.update(fields)
+    for k in [k for k, v in fields.items() if v == "DROP"]: del s[k]
+    return s
+def ack_slot(*extra, **fields):
+    d = load("v2.5.1/ACK.json"); d["elements"].insert(3, slot(**fields))
+    for e in extra: d["elements"].insert(3, e)
+    save("v2.5.1/ACK.json", d)
+    return d
+'
+
+accept_rendering "slot with the keys renders as .slot" '.slot("Order Detail Segment", min: 1, max: nil, citation: "synthetic, after v2.3 CH04 4.2.1 p 4-4"),' "$PRE$SL
+ack_slot()"
+
+accept_rendering "unnamed optional slot renders as .slot(nil, ...)" '.slot(nil, min: 0, max: nil, citation: ' "$PRE$SL
+ack_slot(slot=None, min=0)"
+
+flagged "a structure with a slot is flagged for exact matching" 1 "$PRE$SL
+ack_slot()"
+
+reject "uncited slot" 'a slot needs a non-empty "citation"' "$PRE$SL
+ack_slot(citation='DROP')"
+
+reject "slot with an empty citation" 'a slot needs a non-empty "citation"' "$PRE$SL
+ack_slot(citation=' ')"
+
+reject "slot named like a segment" 'bad slot name "OBR"' "$PRE$SL
+ack_slot(slot='OBR')"
+
+reject "slot with elements" 'a slot cannot have elements, alternatives or a nameSource' "$PRE$SL
+ack_slot(elements=[slot()])"
+
+reject "citation on a segment" 'only a slot has a "citation"' "$PRE
+d = load('v2.5.1/ACK.json'); d['elements'][2]['citation'] = 'CH02'; save('v2.5.1/ACK.json', d)"
+
+reject "slot inside a choice" 'a slot cannot be inside a choice' "$PRE$CH$SL
+d = ack_choice(); d['elements'][2]['alternatives'][1] = slot(); save('v2.5.1/ACK.json', d)"
+
+reject "two adjacent slots" 'two adjacent slots' "$PRE$SL
+ack_slot(slot())"
 
 # P8b-9: a trigger under two structures (loaded, or registered as not modelled in
 # completeness.json) must be a declared sharedTriggers entry (ADR-019 lookup rule 2); the

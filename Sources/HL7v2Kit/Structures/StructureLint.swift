@@ -108,6 +108,14 @@ extension StructureMatcher {
             if case .choice(_, _, _, let alternatives) = element {
                 choiceConflicts(alternatives, path: path + [name], &conflicts)
             }
+            if case .slot = element {
+                // S3-1: the one-pass matcher enters an element by its FIRST
+                // set, and a slot's is every segment, FOLLOW set included. A
+                // slot is always a conflict, so its structure is matched
+                // exactly, where the automaton bounds it by its FOLLOW set.
+                conflicts.append(.init(path: path + [name], segmentIDs: [StructureElement.anySegment], exemptVia: nil))
+                continue
+            }
             if element.isNullable || element.max != 1 {
                 var hard = first.intersection(follow.plain)
                 var viaGroup: [(group: String, ids: Set<String>)] = []

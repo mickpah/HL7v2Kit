@@ -301,6 +301,16 @@ struct SignatureCompatibilityTests {
         #expect(element.min == 0 && element.max == nil)
     }
 
+    // Deliberate pin of new, unreleased API (S3-1, ADR-019 amendment 2026-10-06):
+    // the open-slot case of the open StructureElement enum.
+    @Test("StructureElement.slot keeps its signature")
+    func structureSlot() {
+        let slot: (String?, Int, Int?, String) -> StructureElement = StructureElement.slot(_:min:max:citation:)
+        let element = slot("Order Detail Segment", 1, nil, "CH04 4.2.1")
+        #expect(element.children.isEmpty && element.segmentIDs.isEmpty)
+        #expect(element.min == 1 && element.max == nil)
+    }
+
     // Deliberate pin of new, unreleased API (S1-3, owner decision 8, ADR-019
     // amendment 2026-10-06): the public registration lookup that tells a
     // registered-not-modelled structure from an unknown ID.

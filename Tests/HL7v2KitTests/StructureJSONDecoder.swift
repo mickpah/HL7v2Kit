@@ -30,11 +30,12 @@ enum StructureJSONDecoder {
 
     struct Element: Decodable {
         let segment: String?, group: String?, isChoice: Bool, choice: String?, nameSource: String?
+        let isSlot: Bool, slot: String?, citation: String?
         let min: Int, max: Int?
         let elements: [Element]?, alternatives: [Element]?
 
         private enum CodingKeys: String, CodingKey, CaseIterable {
-            case segment, group, choice, nameSource, min, max, elements, alternatives
+            case segment, group, choice, slot, nameSource, min, max, elements, alternatives, citation
         }
 
         init(from decoder: any Decoder) throws {
@@ -44,6 +45,9 @@ enum StructureJSONDecoder {
             group = try c.decodeIfPresent(String.self, forKey: .group)
             isChoice = c.contains(.choice)
             choice = try isChoice && !c.decodeNil(forKey: .choice) ? c.decode(String.self, forKey: .choice) : nil
+            isSlot = c.contains(.slot)
+            slot = try isSlot && !c.decodeNil(forKey: .slot) ? c.decode(String.self, forKey: .slot) : nil
+            citation = try c.decodeIfPresent(String.self, forKey: .citation)
             nameSource = try c.decodeIfPresent(String.self, forKey: .nameSource)
             min = try c.decode(Int.self, forKey: .min)
             guard c.contains(.max) else { throw Rejected(description: "element: missing key \"max\"") }
@@ -55,6 +59,7 @@ enum StructureJSONDecoder {
         var model: StructureElement {
             if let id = segment { return .segment(id, min: min, max: max) }
             if let name = group { return .group(name, min: min, max: max, elements: (elements ?? []).map(\.model)) }
+            if isSlot { return .slot(slot, min: min, max: max, citation: citation ?? "") }
             return .choice(choice, min: min, max: max, alternatives: (alternatives ?? []).map(\.model))
         }
     }
@@ -93,24 +98,44 @@ enum StructureJSONDecoder {
             throw Rejected(description: "triggers must be non-empty CODE^EVT or CODE^*; bad: \(badTriggers)")
         }
         guard s.elements.first?.segment == "MSH" else { throw Rejected(description: "a structure must start with MSH") }
-        for element in s.elements { try check(element, version: s.version, citation: s.citation) }
+        try checkSequence(s.elements, version: s.version, citation: s.citation)
         return MessageStructure(id: s.structure, version: s.version, triggers: s.triggers, citation: s.citation,
                                 elements: s.elements.map(\.model))
     }
 
-    private static func check(_ e: Element, version: String, citation: String) throws {
-        guard [e.segment != nil, e.group != nil, e.isChoice].filter({ $0 }).count == 1 else {
-            throw Rejected(description: "an element needs exactly one of \"segment\", \"group\" or \"choice\"")
+    /// One sequence's elements; two slots side by side are rejected (S3-1).
+    private static func checkSequence(_ list: [Element], version: String, citation: String, inChoice: Bool = false) throws {
+        for (i, e) in list.enumerated() {
+            if e.isSlot, i > 0, list[i - 1].isSlot { throw Rejected(description: "two adjacent slots") }
+            try check(e, version: version, citation: citation, inChoice: inChoice)
+        }
+    }
+
+    private static func check(_ e: Element, version: String, citation: String, inChoice: Bool) throws {
+        guard [e.segment != nil, e.group != nil, e.isChoice, e.isSlot].filter({ $0 }).count == 1 else {
+            throw Rejected(description: "an element needs exactly one of \"segment\", \"group\", \"choice\" or \"slot\"")
         }
         guard e.min >= 0, e.max.map({ $0 >= Swift.max(1, e.min) }) ?? true else {
             throw Rejected(description: "bad occurrence bounds min \(e.min) max \(String(describing: e.max))")
         }
+        guard e.isSlot || e.citation == nil else { throw Rejected(description: "only a slot has a \"citation\"") }
         if let name = e.group {
             try checkName(name, kind: "group", source: e.nameSource, version: version, citation: citation)
             guard let children = e.elements, !children.isEmpty, e.alternatives == nil else {
                 throw Rejected(description: "group \(name) needs a non-empty \"elements\" and no \"alternatives\"")
             }
-            for child in children { try check(child, version: version, citation: citation) }
+            try checkSequence(children, version: version, citation: citation, inChoice: inChoice)
+        } else if e.isSlot {
+            guard !inChoice else { throw Rejected(description: "a slot cannot be inside a choice") }
+            guard let cited = e.citation, !cited.trimmingCharacters(in: .whitespaces).isEmpty else {
+                throw Rejected(description: "a slot needs a non-empty \"citation\"")
+            }
+            if let name = e.slot, name.trimmingCharacters(in: .whitespaces).isEmpty || matches(name, "^[A-Z][A-Z0-9]{2}$") {
+                throw Rejected(description: "bad slot name \"\(name)\"")
+            }
+            guard e.elements == nil, e.alternatives == nil, e.nameSource == nil else {
+                throw Rejected(description: "a slot cannot have elements, alternatives or a nameSource")
+            }
         } else if e.isChoice {
             let what = e.choice.map { "choice \($0)" } ?? "unnamed choice"
             if let name = e.choice {
@@ -121,7 +146,7 @@ enum StructureJSONDecoder {
             guard let alternatives = e.alternatives, alternatives.count >= 2, e.elements == nil else {
                 throw Rejected(description: "\(what) needs at least two \"alternatives\" and no \"elements\"")
             }
-            for alternative in alternatives { try check(alternative, version: version, citation: citation) }
+            for alternative in alternatives { try check(alternative, version: version, citation: citation, inChoice: true) }
         } else if let id = e.segment {
             guard matches(id, "^[A-Z][A-Z0-9]{2}$") else { throw Rejected(description: "bad segment ID \"\(id)\"") }
             guard e.elements == nil, e.alternatives == nil, e.nameSource == nil else {

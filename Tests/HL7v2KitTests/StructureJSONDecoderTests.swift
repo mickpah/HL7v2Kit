@@ -84,6 +84,22 @@ struct StructureJSONDecoderTests {
         return d
     }
 
+    /// A slot as the codegen reads it (S3-1).
+    static var slotJSON: JSON {
+        ["slot": "Order Detail Segment", "min": 1, "max": NSNull(), "citation": "synthetic, after v2.3 CH04 4.2.1 p 4-4"]
+    }
+
+    /// ACK with a slot inserted after MSA, then `change` applied to the slot.
+    static func ackSlot(_ change: (inout JSON) -> Void = { _ in }) throws -> JSON {
+        var d = try load("ACK")
+        var elements = try #require(d["elements"] as? [JSON])
+        var slot = slotJSON
+        change(&slot)
+        elements.insert(slot, at: 3)
+        d["elements"] = elements
+        return d
+    }
+
     static func element(_ d: JSON, _ index: Int, _ change: (inout JSON) -> Void) -> JSON {
         var d = d
         var elements = d["elements"] as? [JSON] ?? []
@@ -163,7 +179,7 @@ struct StructureJSONDecoderTests {
         try reject("choice with no alternatives", two, try Self.ackChoice { $0["alternatives"] = [JSON]() }, "ACK")
         try reject("choice with elements in place of alternatives", two, try Self.ackChoice { $0["elements"] = $0["alternatives"]; $0["alternatives"] = nil }, "ACK")
         try reject("choice with max 0", "bad occurrence bounds", try Self.ackChoice { $0["min"] = 0; $0["max"] = 0 }, "ACK")
-        try reject("element that is both a choice and a group", "exactly one of \"segment\", \"group\" or \"choice\"",
+        try reject("element that is both a choice and a group", "exactly one of \"segment\", \"group\", \"choice\" or \"slot\"",
                    try Self.ackChoice { $0["group"] = "X"; $0["nameSource"] = "printed" }, "ACK")
         try reject("unnamed choice with a nameSource", "unnamed choice cannot have a nameSource", try Self.ackChoice { $0["nameSource"] = "printed" }, "ACK")
         try reject("named choice without nameSource", "choice ACKNOWLEDGMENT needs nameSource", try Self.ackChoice { $0["choice"] = "ACKNOWLEDGMENT" }, "ACK")
@@ -178,7 +194,28 @@ struct StructureJSONDecoderTests {
         try reject("segment with alternatives", "cannot have elements, alternatives or a nameSource",
                    Self.element(try Self.load("ACK"), 2) { $0["alternatives"] = [JSON]() }, "ACK")
 
-        #expect(cases.count == 35)
+        // S3-1 open-slot cases.
+        try accept("slot with a printed name", try Self.ackSlot(), "ACK")
+        try accept("unnamed slot", try Self.ackSlot { $0["slot"] = NSNull() }, "ACK")
+        try reject("uncited slot", "a slot needs a non-empty \"citation\"", try Self.ackSlot { $0["citation"] = nil }, "ACK")
+        try reject("slot with an empty citation", "a slot needs a non-empty \"citation\"", try Self.ackSlot { $0["citation"] = " " }, "ACK")
+        try reject("slot named like a segment", "bad slot name \"OBR\"", try Self.ackSlot { $0["slot"] = "OBR" }, "ACK")
+        try reject("slot with elements", "a slot cannot have elements, alternatives or a nameSource",
+                   try Self.ackSlot { $0["elements"] = [Self.slotJSON] }, "ACK")
+        try reject("citation on a segment", "only a slot has a \"citation\"",
+                   Self.element(try Self.load("ACK"), 2) { $0["citation"] = "CH02" }, "ACK")
+        try reject("slot inside a choice", "a slot cannot be inside a choice", try Self.ackChoice {
+            var alternatives = $0["alternatives"] as? [JSON] ?? []
+            alternatives[1] = Self.slotJSON
+            $0["alternatives"] = alternatives
+        }, "ACK")
+        var adjacent = try Self.ackSlot()
+        var list = adjacent["elements"] as? [JSON] ?? []
+        list.insert(Self.slotJSON, at: 3)
+        adjacent["elements"] = list
+        try reject("two adjacent slots", "two adjacent slots", adjacent, "ACK")
+
+        #expect(cases.count == 44)
         for c in cases {
             if let expected = c.expected {
                 #expect(c.verdict?.contains(expected) == true, "\(c.label): \(c.verdict ?? "accepted")")

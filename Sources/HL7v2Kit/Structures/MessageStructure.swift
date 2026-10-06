@@ -5,14 +5,15 @@
 // into MessageStructureTable by HL7v2KitCodegen; nothing is parsed at runtime.
 
 /// One element of an abstract message syntax: a segment, a segment group,
-/// or a choice between alternatives.
+/// a choice between alternatives, or an open slot.
 ///
 /// `min` is 0 for an optional element (`[ ]`) and 1 otherwise; `max` is `nil`
 /// for a repeating element (`{ }`) and 1 otherwise (v2.5.1 CH02 section 2.5.2).
 /// The print's `{[X]}` reads the same as `[{X}]`: `min` 0, `max` `nil`.
 ///
 /// - Note: This is an **open** enum per the API evolution policy (ADR-014):
-///   a later release may add cases, as P8b-6 added ``choice(_:min:max:alternatives:)``.
+///   a later release may add cases, as P8b-6 added ``choice(_:min:max:alternatives:)``
+///   and v3.15.0 ``slot(_:min:max:citation:)``.
 ///   Code that walks the tree must handle `@unknown default`; ``children``
 ///   and ``segmentIDs`` cover every case, so a walker that recurses through
 ///   them never skips the segments inside a case it does not know.
@@ -27,33 +28,49 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// nil; `alternatives` holds at least two elements, each with its own
     /// occurrence bounds.
     case choice(String?, min: Int, max: Int?, alternatives: [StructureElement])
+    /// An open slot (S3-1, ADR-019 amendment 2026-10-06): the print's
+    /// "Order Detail Segment OBR, etc." or `< OBR | etc. >`, whose filling
+    /// segments the standard does not enumerate (CH04 4.2.2.4 names only
+    /// examples). `min` and `max` bound the number of segments it takes. It
+    /// takes any segment except MSH and the segments of its FOLLOW set (those
+    /// that can come next in the structure): a FOLLOW-set segment ends the
+    /// slot, so the structure after the slot is still checked, and a filler
+    /// that shares an ID with a following segment is read as that segment.
+    /// The name is the one the print gives ("Order Detail Segment"), or nil;
+    /// findings about an absent slot name it. `citation` gives where the slot
+    /// is printed and what says it is open. A slot has no ``children`` and no
+    /// ``segmentIDs``; a structure holding one is matched exactly.
+    case slot(String?, min: Int, max: Int?, citation: String)
 
     /// The minimum number of occurrences: 0 for an optional element.
     public var min: Int {
         switch self {
-        case .segment(_, let min, _), .group(_, let min, _, _), .choice(_, let min, _, _): return min
+        case .segment(_, let min, _), .group(_, let min, _, _), .choice(_, let min, _, _),
+             .slot(_, let min, _, _): return min
         }
     }
 
     /// The maximum number of occurrences; `nil` when unbounded.
     public var max: Int? {
         switch self {
-        case .segment(_, _, let max), .group(_, _, let max, _), .choice(_, _, let max, _): return max
+        case .segment(_, _, let max), .group(_, _, let max, _), .choice(_, _, let max, _),
+             .slot(_, _, let max, _): return max
         }
     }
 
     /// The elements directly inside this one: a group's elements in order,
-    /// a choice's alternatives in order, and none for a segment.
+    /// a choice's alternatives in order, and none for a segment or a slot.
     public var children: [StructureElement] {
         switch self {
-        case .segment: return []
+        case .segment, .slot: return []
         case .group(_, _, _, let elements): return elements
         case .choice(_, _, _, let alternatives): return alternatives
         }
     }
 
     /// Every segment ID this element can contain, at any depth and in any
-    /// alternative.
+    /// alternative. A slot names no segment, so it contributes none: the
+    /// segments that fill it are not part of the structure's definition.
     public var segmentIDs: Set<String> {
         if case .segment(let id, _, _) = self { return [id] }
         return children.reduce(into: Set<String>()) { $0.formUnion($1.segmentIDs) }
@@ -62,31 +79,39 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// The group or choice name, or nil for a segment and an unnamed choice.
     var groupName: String? {
         switch self {
-        case .segment: return nil
+        case .segment, .slot: return nil
         case .group(let name, _, _, _): return name
         case .choice(let name, _, _, _): return name
         }
     }
 
     /// How the lint names this element in a path: the segment ID, the group
-    /// or choice name, or `<A|B>` (the alternatives' labels) for an unnamed choice.
+    /// or choice name, or `<A|B>` (the alternatives' labels) for an unnamed
+    /// choice; a slot's printed name, or `open slot`. Findings about an
+    /// absent slot name it by this label.
     var label: String {
         switch self {
         case .segment(let id, _, _): return id
         case .group(let name, _, _, _): return name
         case .choice(let name, _, _, let alternatives):
             return name ?? "<" + alternatives.map(\.label).joined(separator: "|") + ">"
+        case .slot(let name, _, _, _): return name ?? "open slot"
         }
     }
 
+    /// The FIRST-set member that stands for a slot: any segment. No segment
+    /// ID is `*`, so it meets a FOLLOW set only at another slot.
+    static let anySegment = "*"
+
     /// The segment IDs that can begin one occurrence of this element; for a
-    /// choice, the union over its alternatives.
+    /// choice, the union over its alternatives; for a slot, ``anySegment``.
     var firstSet: Set<String> {
         switch self {
         case .segment(let id, _, _): return [id]
         case .group(_, _, _, let elements): return StructureElement.firstSet(of: elements[...])
         case .choice(_, _, _, let alternatives):
             return alternatives.reduce(into: Set<String>()) { $0.formUnion($1.firstSet) }
+        case .slot: return [StructureElement.anySegment]
         }
     }
 
@@ -95,7 +120,7 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// whose alternatives is nullable.
     var isNullable: Bool {
         switch self {
-        case .segment(_, let min, _):
+        case .segment(_, let min, _), .slot(_, let min, _, _):
             return min == 0
         case .group(_, let min, _, let elements):
             return min == 0 || elements.allSatisfy(\.isNullable)
@@ -106,11 +131,13 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
 
     /// The segment reported when this element is required and absent: the
     /// first non-nullable segment it contains, or its first segment; for a
-    /// choice, its first alternative's.
+    /// choice, its first alternative's; for a slot, its label.
     var headSegmentID: String {
         switch self {
         case .segment(let id, _, _):
             return id
+        case .slot:
+            return label
         case .group(_, _, _, let elements):
             let head = elements.first { !$0.isNullable } ?? elements.first
             return head?.headSegmentID ?? ""

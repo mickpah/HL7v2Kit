@@ -26,7 +26,10 @@ func rejectUnknownKeys(_ decoder: any Decoder, allowed: Set<String>, in what: St
 
 /// One element of a structure file: exactly one of `segment`, `group` or `choice`. A choice
 /// (P8b-6) is `{"choice": "<name>" or null, "nameSource" (named only), "min", "max",
-/// "alternatives": [...]}`; the `choice` key is present even when the print gives no name.
+/// "alternatives": [...]}`; the `choice` key is present even when the print gives no name. An
+/// open slot (S3-1) is `{"slot": "<printed name>" or null, "min", "max", "citation"}`; the
+/// `slot` key is present even when the print gives no name, and `citation` (required, and
+/// allowed on a slot only) says where the slot is printed and what makes it open.
 struct StructureElementSchema: Decodable {
     let segment: String?
     let group: String?
@@ -34,6 +37,12 @@ struct StructureElementSchema: Decodable {
     let isChoice: Bool
     /// The printed choice name, or nil for an unnamed choice.
     let choice: String?
+    /// True when the `slot` key is present (its value may be null).
+    let isSlot: Bool
+    /// The printed slot name, or nil.
+    let slot: String?
+    /// A slot's citation; nil on every other element.
+    let citation: String?
     /// One of `structureNameSources`; required on a group and a named choice (ADR-019 data model).
     let nameSource: String?
     let min: Int
@@ -42,7 +51,7 @@ struct StructureElementSchema: Decodable {
     let alternatives: [StructureElementSchema]?
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case segment, group, choice, nameSource, min, max, elements, alternatives
+        case segment, group, choice, slot, nameSource, min, max, elements, alternatives, citation
     }
 
     init(from decoder: any Decoder) throws {
@@ -52,6 +61,9 @@ struct StructureElementSchema: Decodable {
         group = try c.decodeIfPresent(String.self, forKey: .group)
         isChoice = c.contains(.choice)
         choice = try isChoice && !c.decodeNil(forKey: .choice) ? c.decode(String.self, forKey: .choice) : nil
+        isSlot = c.contains(.slot)
+        slot = try isSlot && !c.decodeNil(forKey: .slot) ? c.decode(String.self, forKey: .slot) : nil
+        citation = try c.decodeIfPresent(String.self, forKey: .citation)
         nameSource = try c.decodeIfPresent(String.self, forKey: .nameSource)
         min = try c.decode(Int.self, forKey: .min)
         // `max` is required: an integer, or null for unbounded.
@@ -132,20 +144,50 @@ func requiredNameCitation(name: String, source: String, version: String) -> Stri
 
 /// Reject any element the runtime model cannot represent faithfully. `version` and `citation`
 /// are the file's: every non-printed group name must be cited.
-func validateStructureElement(_ element: StructureElementSchema, version: String, citation: String) throws {
-    let kinds = [element.segment != nil, element.group != nil, element.isChoice].filter { $0 }.count
+/// The elements of one sequence (the structure's, or a group's). Two slots side by side are
+/// rejected: nothing printed would tell where one ends and the other begins (S3-1).
+func validateStructureSequence(_ elements: [StructureElementSchema], version: String, citation: String,
+                               inChoice: Bool = false) throws {
+    for (i, element) in elements.enumerated() {
+        if element.isSlot, i > 0, elements[i - 1].isSlot {
+            throw StructureSchemaError(description: "two adjacent slots")
+        }
+        try validateStructureElement(element, version: version, citation: citation, inChoice: inChoice)
+    }
+}
+
+/// One element. `inChoice` is true anywhere inside a choice, where a slot is rejected: the print
+/// never puts one there, and `< OBR | etc. >` is itself the slot (OBR one of its fillers).
+func validateStructureElement(_ element: StructureElementSchema, version: String, citation: String,
+                              inChoice: Bool = false) throws {
+    let kinds = [element.segment != nil, element.group != nil, element.isChoice, element.isSlot].filter { $0 }.count
     guard kinds == 1 else {
-        throw StructureSchemaError(description: "an element needs exactly one of \"segment\", \"group\" or \"choice\"")
+        throw StructureSchemaError(description: "an element needs exactly one of \"segment\", \"group\", \"choice\" or \"slot\"")
     }
     guard element.min >= 0, element.max.map({ $0 >= Swift.max(1, element.min) }) ?? true else {
         throw StructureSchemaError(description: "bad occurrence bounds min \(element.min) max \(String(describing: element.max))")
+    }
+    guard element.isSlot || element.citation == nil else {
+        throw StructureSchemaError(description: "only a slot has a \"citation\"")
     }
     if let name = element.group {
         try validateName(name, kind: "group", source: element.nameSource, version: version, citation: citation)
         guard let children = element.elements, !children.isEmpty, element.alternatives == nil else {
             throw StructureSchemaError(description: "group \(name) needs a non-empty \"elements\" and no \"alternatives\"")
         }
-        for child in children { try validateStructureElement(child, version: version, citation: citation) }
+        try validateStructureSequence(children, version: version, citation: citation, inChoice: inChoice)
+    } else if element.isSlot {
+        guard !inChoice else { throw StructureSchemaError(description: "a slot cannot be inside a choice") }
+        guard let cited = element.citation, !cited.trimmingCharacters(in: .whitespaces).isEmpty else {
+            throw StructureSchemaError(description: "a slot needs a non-empty \"citation\"")
+        }
+        // A name shaped like a segment ID would read as one in a finding.
+        if let name = element.slot, name.trimmingCharacters(in: .whitespaces).isEmpty || matches(name, "^[A-Z][A-Z0-9]{2}$") {
+            throw StructureSchemaError(description: "bad slot name \"\(name)\"")
+        }
+        guard element.elements == nil, element.alternatives == nil, element.nameSource == nil else {
+            throw StructureSchemaError(description: "a slot cannot have elements, alternatives or a nameSource")
+        }
     } else if element.isChoice {
         let what = element.choice.map { "choice \($0)" } ?? "unnamed choice"
         if let name = element.choice {
@@ -156,7 +198,9 @@ func validateStructureElement(_ element: StructureElementSchema, version: String
         guard let alternatives = element.alternatives, alternatives.count >= 2, element.elements == nil else {
             throw StructureSchemaError(description: "\(what) needs at least two \"alternatives\" and no \"elements\"")
         }
-        for alternative in alternatives { try validateStructureElement(alternative, version: version, citation: citation) }
+        for alternative in alternatives {
+            try validateStructureElement(alternative, version: version, citation: citation, inChoice: true)
+        }
     } else if let id = element.segment {
         guard matches(id, "^[A-Z][A-Z0-9]{2}$") else {
             throw StructureSchemaError(description: "bad segment ID \"\(id)\"")
@@ -204,13 +248,17 @@ func validateStructure(_ s: MessageStructureSchema, file: URL, version: String) 
     guard s.elements.first?.segment == "MSH" else {
         throw StructureSchemaError(description: "a structure must start with MSH")
     }
-    for element in s.elements { try validateStructureElement(element, version: s.version, citation: s.citation) }
+    try validateStructureSequence(s.elements, version: s.version, citation: s.citation)
 }
 
 func renderStructureElement(_ element: StructureElementSchema, indent: String) -> String {
     let max = element.max.map(String.init) ?? "nil"
     if let id = element.segment {
         return "\(indent).segment(\(escapeStringLiteral(id)), min: \(element.min), max: \(max)),"
+    }
+    if element.isSlot {
+        let name = element.slot.map(escapeStringLiteral) ?? "nil"
+        return "\(indent).slot(\(name), min: \(element.min), max: \(max), citation: \(escapeStringLiteral(element.citation ?? ""))),"
     }
     if element.isChoice {
         let name = element.choice.map(escapeStringLiteral) ?? "nil"

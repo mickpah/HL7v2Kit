@@ -16,6 +16,7 @@ struct MessageStructureTableTests {
             case .segment(let id, _, _): return id
             case .group(let name, _, _, _): return name
             case .choice(let name, _, _, _): return name ?? "<choice>"
+            case .slot(let name, _, _, _): return name ?? "<slot>"
             }
         }
     }

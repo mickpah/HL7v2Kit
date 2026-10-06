@@ -95,6 +95,10 @@ struct StructureMatch: Sendable, Equatable {
 /// alternative present is reported `.missing` with its first alternative's
 /// head segment; a second alternative where the choice's maximum is reached
 /// is a stray like any other (`.exceededMaximum`).
+///
+/// An open slot (S3-1) is not matched here: the lint fails every structure
+/// holding one, so it is matched by ``ExactStructureMatcher``; compiling a
+/// slot is an assertion failure in a debug build.
 struct StructureMatcher: Sendable {
     let structure: MessageStructure
     /// The structure with every FIRST set and suffix FIRST union computed
@@ -214,6 +218,10 @@ struct StructureMatcher: Sendable {
                     } else {
                         matchSequence(alternative, path: path, parent: parent, follow: inner, &state)
                     }
+                case .slot:
+                    // Unreachable: no segment ID is in a slot's FIRST set, and
+                    // a slot's structure is exact-matched (CompiledElement).
+                    break
                 }
                 if state.cursor == before { break }
                 count += 1
@@ -257,6 +265,11 @@ private struct CompiledElement: Sendable {
         nullable = element.isNullable
         switch element {
         case .segment: bodies = []
+        case .slot:
+            // The lint fails every slot, so the codegen and the lint-now init
+            // route its structure to ExactStructureMatcher (S3-1).
+            assertionFailure("a structure with an open slot is matched by ExactStructureMatcher")
+            bodies = []
         case .group(_, _, _, let children):
             bodies = [CompiledSequence(children, positions: children.indices.map { position + [$0] })]
         case .choice(_, _, _, let choices):

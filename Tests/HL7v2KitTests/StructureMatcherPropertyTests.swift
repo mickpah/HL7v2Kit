@@ -18,25 +18,66 @@ struct StructureMatcherPropertyTests {
 
     // MARK: - Reference recogniser
 
-    /// Every end position reachable by matching `elements` from any of `starts`.
-    private static func ends(_ elements: ArraySlice<StructureElement>, _ ids: [String], from starts: Set<Int>) -> Set<Int> {
-        elements.reduce(starts) { ends(of: $1, ids, from: $0) }
+    /// Every end position reachable by matching `elements` from any of `starts`;
+    /// `follow` is the FOLLOW set of the sequence as a whole (S3-1: it bounds a slot).
+    private static func ends(_ elements: ArraySlice<StructureElement>, _ ids: [String], from starts: Set<Int>,
+                             follow: Set<String> = []) -> Set<Int> {
+        var current = starts
+        for i in elements.indices {
+            current = ends(of: elements[i], ids, from: current, follow: followOf(elements[(i + 1)...], then: follow))
+        }
+        return current
     }
 
-    private static func ends(of element: StructureElement, _ ids: [String], from starts: Set<Int>) -> Set<Int> {
+    // The slot's FOLLOW set, computed from the grammar here (the matcher reads it
+    // off its automaton): what can begin the rest of the sequence, then, when all
+    // of the rest can be empty, what follows the sequence.
+    private static func refFirst(_ element: StructureElement) -> Set<String> {
+        switch element {
+        case .segment(let id, _, _): return [id]
+        case .group(_, _, _, let children): return followOf(children[...], then: [])
+        case .choice(_, _, _, let alternatives): return alternatives.reduce(into: Set<String>()) { $0.formUnion(refFirst($1)) }
+        case .slot: return []
+        }
+    }
+
+    private static func refNullable(_ element: StructureElement) -> Bool {
+        switch element {
+        case .segment(_, let min, _), .slot(_, let min, _, _): return min == 0
+        case .group(_, let min, _, let children): return min == 0 || children.allSatisfy(refNullable)
+        case .choice(_, let min, _, let alternatives): return min == 0 || alternatives.contains(where: refNullable)
+        }
+    }
+
+    private static func followOf(_ rest: ArraySlice<StructureElement>, then after: Set<String>) -> Set<String> {
+        var result: Set<String> = []
+        for element in rest {
+            result.formUnion(refFirst(element))
+            if !refNullable(element) { return result }
+        }
+        return result.union(after)
+    }
+
+    private static func ends(of element: StructureElement, _ ids: [String], from starts: Set<Int>,
+                             follow: Set<String>) -> Set<Int> {
         var result: Set<Int> = element.min == 0 ? starts : []
         var frontier = starts
         var count = 0
+        // Inside a repeating element, its own re-entry follows each occurrence.
+        let inner = element.max == 1 ? follow : follow.union(refFirst(element))
         while !frontier.isEmpty, element.max.map({ count < $0 }) ?? true, count <= ids.count {
             switch element {
             case .segment(let id, _, _):
                 frontier = Set(frontier.filter { $0 < ids.count && ids[$0] == id }.map { $0 + 1 })
             case .group(_, _, _, let children):
-                frontier = ends(children[...], ids, from: frontier)
+                frontier = ends(children[...], ids, from: frontier, follow: inner)
             case .choice(_, _, _, let alternatives):
                 // One occurrence takes exactly one alternative, any of them.
                 let current = frontier
-                frontier = alternatives.reduce(into: Set<Int>()) { $0.formUnion(ends(of: $1, ids, from: current)) }
+                frontier = alternatives.reduce(into: Set<Int>()) { $0.formUnion(ends(of: $1, ids, from: current, follow: inner)) }
+            case .slot:
+                // One segment per occurrence: any but MSH and the FOLLOW set.
+                frontier = Set(frontier.filter { $0 < ids.count && ids[$0] != "MSH" && !follow.contains(ids[$0]) }.map { $0 + 1 })
             }
             count += 1
             if count >= element.min { result.formUnion(frontier) }
@@ -63,20 +104,34 @@ struct StructureMatcherPropertyTests {
         }
     }
 
+    /// The segments a derivation puts in a slot (S3-1): order detail segments
+    /// the structure does not name, so none is in a slot's FOLLOW set.
+    static func slotFillers(_ elements: [StructureElement]) -> [String] {
+        let named = elements.reduce(into: Set<String>()) { $0.formUnion($1.segmentIDs) }
+        return ["OBR", "RXO", "RXR", "ODS", "RQD"].filter { !named.contains($0) }
+    }
+
     static func alphabet(_ elements: [StructureElement]) -> [String] {
         var ids: Set<String> = []
+        var slot = false
         func walk(_ element: StructureElement) {
             switch element {
             case .segment(let id, _, _): ids.insert(id)
             case .group(_, _, _, let children): children.forEach(walk)
             case .choice(_, _, _, let alternatives): alternatives.forEach(walk)
+            case .slot: slot = true
             }
         }
         elements.forEach(walk)
+        if slot { ids.formUnion(slotFillers(elements).prefix(2)) }
         return ids.sorted()
     }
 
     static func derive(_ elements: [StructureElement], _ rng: inout Seeded) -> [String] {
+        derive(elements, &rng, fillers: Array(slotFillers(elements).prefix(2)))
+    }
+
+    private static func derive(_ elements: [StructureElement], _ rng: inout Seeded, fillers: [String]) -> [String] {
         elements.flatMap { element -> [String] in
             // An optional element is present one time in four, so derivations
             // of the larger structures stay short.
@@ -87,9 +142,10 @@ struct StructureMatcherPropertyTests {
             return (0..<count).flatMap { _ -> [String] in
                 switch element {
                 case .segment(let id, _, _): return [id]
-                case .group(_, _, _, let children): return derive(children, &rng)
+                case .group(_, _, _, let children): return derive(children, &rng, fillers: fillers)
                 case .choice(_, _, _, let alternatives):
-                    return derive([alternatives.randomElement(using: &rng)!], &rng)
+                    return derive([alternatives.randomElement(using: &rng)!], &rng, fillers: fillers)
+                case .slot: return [fillers.randomElement(using: &rng)!]
                 }
             }
         }
@@ -110,7 +166,7 @@ struct StructureMatcherPropertyTests {
         elements.reduce(0) { total, element in
             guard element.min > 0 else { return total }
             switch element {
-            case .segment: return total + 1
+            case .segment, .slot: return total + 1
             case .group(_, _, _, let children): return total + shortest(children)
             case .choice(_, _, _, let alternatives): return total + (alternatives.map { shortest([$0]) }.min() ?? 0)
             }

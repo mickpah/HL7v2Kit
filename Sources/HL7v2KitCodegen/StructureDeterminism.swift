@@ -10,11 +10,21 @@
 // flag on lint-failing and exempt synthetic shapes.
 
 /// Whether greedy one-pass matching is exact for `elements`: no conflict
-/// under the library's lint rule (exempt overlaps allowed).
+/// under the library's lint rule (exempt overlaps allowed). A structure
+/// holding an open slot (S3-1) never is: the one-pass matcher enters an
+/// element by its FIRST set, and a slot's is every segment, so where the slot
+/// ends depends on the segments that may follow it, not on the current one.
+/// The library's lint reports every slot as a conflict; the exact matcher
+/// bounds the slot by its FOLLOW set.
 func structureIsDeterministic(_ elements: [StructureElementSchema]) -> Bool {
+    guard !containsSlot(elements) else { return false }
     var deterministic = true
     lintSequence(elements, inherited: LintFollow(), &deterministic)
     return deterministic
+}
+
+private func containsSlot(_ elements: [StructureElementSchema]) -> Bool {
+    elements.contains { $0.isSlot || containsSlot(($0.elements ?? []) + ($0.alternatives ?? [])) }
 }
 
 private struct LintReentry {

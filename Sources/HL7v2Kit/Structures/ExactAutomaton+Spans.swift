@@ -38,7 +38,7 @@ extension ExactAutomaton {
         // What `t` reaches depends on `t` alone: computed once per state (P8b-18).
         var reachFrom: [Int: Set<Int>] = [:]
         for k in stride(from: n - 1, through: 0, by: -1) {
-            for t in lives[k] where labels[t] == steps[k].id {
+            for t in lives[k] where consumes(t, steps[k].id) {
                 let reach = reachFrom[t] ?? reachable(from: edges[t])
                 reachFrom[t] = reach
                 if k == n - 1 ? reach.contains(accept) : !reach.isDisjoint(with: useful[k + 1]) {
