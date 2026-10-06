@@ -2015,7 +2015,7 @@ after MSH, MSA, ERR, QAK, its query defining segments, DSC), each once at its fi
 (ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required, the rest optional, ERR and SFT with
 their printed repetition; an ERR the structure does not print goes after MSA and a QAK after ERR.
 Anything else is unexpected. Findings cite the head and 5.6.5; group spans come from the head; an
-AU profile structure is not applied to the head. AA (and any other value) keeps the full structure.
+AU profile structure is not applied to the head. AA keeps the full structure unless the first QAK's field 2 is a listed no-data value; CE and CR keep it.
 Internal model only (`StructureErrorResponse`); no public API change.
 
 **Situation 3, no data found (added in the same wave).** 5.6.5 goes on: the responder "returns
@@ -2034,6 +2034,16 @@ alike. (2) MSA-1 CE and CR (enhanced acknowledgment) are not named by 5.6.5 and 
 (3) v2.3 and v2.3.1 keep the full structure, because CH02 2.22 (pp 2-78 and 2-87) has no
 rest-absent sentence: the v2.5.1 CH05 5.10.6.2.12 example, which declares MSH-12 2.3, still draws
 its missing ERQ against the v2.3 ERP print, and a v2.3 no-data TBR draws its missing body.
+(4) A no-data response without QAK. The Situation 3 note reads "If the QAK segment is being used,
+the field QAK-2 ... is valued with NF" (v2.5.1 p 5-61; the same on v2.4 to v2.8.2), so a no-data AA
+response may carry no QAK. The no-data head is selected only when QAK-2 is NF, so such a response
+keeps the full structure and is flagged for its missing body; without QAK the data cannot tell a
+no-data reply from a cut-off one, so this cannot be modelled from the message. Of the 129 governed
+structures, 42 print QAK as optional and 35 do not print it. Blocking (requirement 3); see the
+permanent limitations register, section E.
+Ruling: an ERR on a no-data response is reported as unexpected, because Situation 3 names MSH, MSA,
+QAK and the query defining segment only; SFT and UAC are kept because the structure prints them as
+message-header segments. The owner may revisit.
 
 **Evidence.** `StructureErrorResponseTests` (the 5.10.6.2.12 shape on v2.5.1 clean, with a DSP or
 a replay body unexpected; the TBR^R08 error shape and an AR response clean; AA with the body

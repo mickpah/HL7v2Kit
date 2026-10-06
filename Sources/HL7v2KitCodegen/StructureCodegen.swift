@@ -150,6 +150,8 @@ struct MessageStructureSchema: Decodable {
 /// error response, the query defining segments the structure prints, the QAK-2 values that with
 /// MSA-1 AA make it a no-data response (Situation 3), and the citation.
 struct ErrorResponseSchema: Decodable, Equatable {
+    // The codes are checked only by the extractor's override check, as distinct two-letter codes;
+    // nothing reads them against Table 0008.
     let acknowledgmentCodes: [String]
     let querySegments: [String]
     let noDataQueryStatus: [String]
