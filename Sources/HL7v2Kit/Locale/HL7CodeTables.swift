@@ -95,20 +95,30 @@ enum HL7CodeTables {
         "x-hl7-cda-xdm-zip": ["application"],
     ]
 
-    /// Public coding systems the ADRM names (M6-B-9, HL7au:000034.1/.2):
-    /// LN (LOINC — named throughout), SCT (SNOMED CT-AU — the referral
-    /// OBR-4 codes §4.4.1.4.1), UCUM (units §4.4.2.6). Used as a
-    /// correspondence map: a public system in the ALTERNATE coding-system
-    /// slot requires the PRIMARY slot to also be public — i.e. the
-    /// public code was not relegated behind a local one. Systems the
-    /// ADRM does not name skip (PARTIAL).
-    static let publicCodingSystems: [String] = ["LN", "SCT", "UCUM"]
+    /// User defined Table 0396 — Coding System, as printed in AU
+    /// ADRM-2021 §3.3.3 (pp. 142–145). Consumed by HL7au:000034.1/.2.
+    static let table0396: [String] = auCodes("0396")
 
-    /// key = a public system appearing in CE/CWE/CNE-6 (alternate);
-    /// allowed values for CE-3 (primary) = the public set.
-    static let publicInAlternateMap: [String: [String]] = [
-        "ln": publicCodingSystems,
-        "sct": publicCodingSystems,
-        "ucum": publicCodingSystems,
-    ]
+    /// The local coding-system forms Table 0396 prints in its "99ZZZ or L"
+    /// row (p. 144): "L", and "99zzz, where z is an alphanumeric
+    /// character" (the same row: "The 'zzz' SHALL be any printable ASCII
+    /// string"), read as the prefix `99`.
+    static let localCodingSystemValues: [String] = ["L"]
+    static let localCodingSystemPrefixes: [String] = ["99"]
+
+    /// HL7au:000034.1/.2 (P12 S2-2, replacing the M6-B-9 three-system
+    /// map, which fired on two public systems): key = a non-local row of
+    /// the ADRM's Table 0396 in the ALTERNATE coding-system slot (CE-6);
+    /// the PRIMARY slot (CE-3) must then not be local. Read with
+    /// `CorrespondenceValueRule.forbidden(prefixes: localCodingSystemPrefixes)`.
+    /// A public system outside the printed table, and a local system
+    /// spelt other than `L` or `99zzz`, skip (PARTIAL).
+    static let localPrimaryForbiddenMap: [String: [String]] = Dictionary(
+        uniqueKeysWithValues: table0396
+            .filter { code in
+                !localCodingSystemValues.contains(code)
+                    && !localCodingSystemPrefixes.contains(where: { code.hasPrefix($0) })
+            }
+            .map { ($0.lowercased(), localCodingSystemValues) }
+    )
 }

@@ -651,21 +651,27 @@ extension Profile {
                         specCitation: "HL7au:000008.1 (r2) — OBX-3.1 (Identifier) must be HTML / PDF / RTF / TXT (deprecated PIT permitted) on display segments (AUSPDI); AU ADRM-2021 pp. 420-421, table p. 247"
                     )
                 ],
-                // M6-B-9 — HL7au:000034.1/.2: on OBX-3, when both a
-                // public and a local terminology are transmitted, the
-                // public code must be the PRIMARY triplet (1-3) and the
-                // local the alternate (4-6). Encoded as: a public
-                // coding system in the ALTERNATE slot (key CE-6)
-                // requires the primary slot (CE-3) to be public too.
-                // Public set = the systems the ADRM names (LN,
-                // SNOMED CT-AU as SCT, UCUM); others skip — PARTIAL.
+                // HL7au:000034.1/.2 (p 444: "if the system transmits both
+                // the public (e.g. LOINC) and local terminology, then the
+                // public (e.g. LOINC) code must appear in the identifier";
+                // p 445: "the local terminology must be transmitted in the
+                // second CE triplet i.e. the alternate identifier"). The
+                // point constrains a public/local PAIR only. P12 S2-2
+                // replaces the M6-B-9 encoding (a LN/SCT/UCUM alternate
+                // required a LN/SCT/UCUM primary), which fired on two
+                // public systems such as I10 with SCT (requirement 4).
+                // Now: a non-local ADRM Table 0396 row in the alternate
+                // (CE-6) forbids a local primary (CE-3), local being the
+                // printed "99ZZZ or L" (p 144). Public systems outside the
+                // printed table, and other local spellings, skip: PARTIAL.
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 6,
                         valueComponent: 3,
-                        map: HL7CodeTables.publicInAlternateMap,
+                        map: HL7CodeTables.localPrimaryForbiddenMap,
+                        valueRule: .forbidden(prefixes: HL7CodeTables.localCodingSystemPrefixes),
                         condition: "messageCode in (ORU, REF)",
-                        specCitation: "HL7au:000034.1/.2 — when both public and local terminology are transmitted in OBX-3, the public code must be primary and the local the alternate; AU ADRM-2021 Appendix 5 pp. 441-442"
+                        specCitation: "HL7au:000034.1/.2 — when both public and local terminology are transmitted in OBX-3, the public code must be primary and the local (\"99ZZZ or L\", Table 0396 p. 144) the alternate; AU ADRM-2021 Appendix 5 pp. 444-445"
                     ),
                 ],
                 specCitation: "HL7au:000008.1 (r2) — OBX-3 display-format identifier value set on AUSPDI display segments"
@@ -723,13 +729,18 @@ extension Profile {
                         specCitation: "ADRM-prose:P-6 — VMR header OBX-5.4 (data subtype) must be \"Octet-stream\"; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                 ],
+                // HL7au:000034.1's Observation Value leg, as on OBX-3
+                // above. The point opens "When using CE, CWE, CNE data
+                // types" (p 444), so the leg is gated on OBX-2: a
+                // non-coded OBX-5 (XPN, XAD, ...) is outside it.
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 6,
                         valueComponent: 3,
-                        map: HL7CodeTables.publicInAlternateMap,
-                        condition: "messageCode in (ORU, REF)",
-                        specCitation: "HL7au:000034.1 — when both public and local terminology are transmitted in a coded Observation Value, the public code must be primary; AU ADRM-2021 Appendix 5 p. 441"
+                        map: HL7CodeTables.localPrimaryForbiddenMap,
+                        valueRule: .forbidden(prefixes: HL7CodeTables.localCodingSystemPrefixes),
+                        condition: "messageCode in (ORU, REF) AND OBX-2 in (CE, CWE, CNE)",
+                        specCitation: "HL7au:000034.1 — when both public and local terminology are transmitted in a coded Observation Value, the public code must be primary and the local (\"99ZZZ or L\", Table 0396 p. 144) the alternate; AU ADRM-2021 Appendix 5 p. 444"
                     ),
                 ],
                 // HL7au:00060.4 route B (P4-24): OBX-5 must not be valued

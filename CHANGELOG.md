@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-profile`: HL7au:00060.1 now has the simplified REF profile (Appendix 8) selected by the declared profile, ORR^O02 with its cited print erratum, and OSR^Q06 narrowed with one documented residual; ruling 6 (an optional ERR in the 5.6.5 no-data head) is built; `StructureVariant.profileIdentifiers` is the one additive public API. Review pins, the p 43 citation and the recorded Level 1 reading (an owner item) close the sprint.
 
+### Fixed — P12 S2-2: HL7au:000034.1/.2 coding-system precedence (a requirement 4 defect)
+
+- The M6-B-9 rule read "an alternate system in LN, SCT or UCUM requires a primary in LN, SCT or UCUM", so a conformant OBX-3 or coded OBX-5 carrying two public systems (for example `E11.9^...^I10^44054006^...^SCT`, both rows of the ADRM's own Table 0396) drew a `profileConstraintViolation`. The point constrains a public and local pair only (AU ADRM-2021.1 Appendix 5 p 444: "if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.g. LOINC) code must appear in the identifier"; p 445: "the local terminology must be transmitted in the second CE triplet i.e. the alternate identifier").
+- The rule now fires when the primary coding system is local, as the ADRM prints it ("99ZZZ or L", Table 0396 p 144: `L`, or `99` followed by the local name), and the alternate is a non-local row of the ADRM's Table 0396 (pp 142 to 145). A local primary with a `PBS`, `I10` or any other printed public alternate now fires; two local systems, and a public primary with a local alternate, are silent. The OBX-5 leg is gated on OBX-2 CE, CWE or CNE ("When using CE, CWE, CNE data types", p 444).
+- New AU locale table `Resources/tables/locale/au-adrm-2021/0396.json` (27 rows, kind User, open; ADR-016 note). Internal: `ComponentCorrespondence` gains a `forbidden(prefixes:)` value rule. No public API change.
+- The point stays PARTIAL: a public system outside the printed table and a local system spelt otherwise skip; the equivalence half (000034.3) is terminology. Conformance register regenerated (the 000008.3.1 S1-5 note now comes from the script); limitations register row updated.
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).

@@ -11,6 +11,7 @@ extension HL7TableRegistry {
         "0211": t0211_au_adrm_2021,
         "0301": t0301_au_adrm_2021,
         "0363": t0363_au_adrm_2021,
+        "0396": t0396_au_adrm_2021,
     ]
 
     static let t0074_au_adrm_2021 = HL7Table(
@@ -309,6 +310,42 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "AUSLINK", description: "Australian CentreLink"),
             HL7Table.Entry(code: "AUSHICPR", description: "Medicare Australia provider number"),
             HL7Table.Entry(code: "IHI", description: "Accommodation carried from the M6 seed: Individual Healthcare Identifier; not printed in ADRM Table 0363 (p. 310)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0396_au_adrm_2021 = HL7Table(
+        number: "0396",
+        name: "Coding system",
+        kind: .userDefined,
+        permitsLocalExtensions: true,
+        entries: [
+            HL7Table.Entry(code: "DCM", description: "DICOM Controlled Terminology"),
+            HL7Table.Entry(code: "I10", description: "ICD-10"),
+            HL7Table.Entry(code: "ICD10AM", description: "ICD-10 Australian modification"),
+            HL7Table.Entry(code: "ISO3166_1", description: "ISO 3166-1 Country Codes"),
+            HL7Table.Entry(code: "ISO3166_2", description: "ISO 3166-2 Country subdivisions"),
+            HL7Table.Entry(code: "ISO+", description: "ISO 2955.83 (units of measure) with HL7 extensions"),
+            HL7Table.Entry(code: "IUPP", description: "IUPAC/IFCC Property Codes"),
+            HL7Table.Entry(code: "LN", description: "Logical Observation Identifier Names and Codes"),
+            HL7Table.Entry(code: "SCT", description: "SNOMED Clinical Terms"),
+            HL7Table.Entry(code: "UCUM", description: "UCUM code set for units of measure (from Regenstrief)"),
+            HL7Table.Entry(code: "AUSPDI", description: "Australian Pathology Display Interface (Display Segment)"),
+            HL7Table.Entry(code: "HL7AU", description: "HL7 Australia"),
+            HL7Table.Entry(code: "ROLECODE", description: "Participation Mode"),
+            HL7Table.Entry(code: "PHENX", description: "PhenX ID"),
+            HL7Table.Entry(code: "DOCLE", description: "Doctor Command Language"),
+            HL7Table.Entry(code: "EN13606", description: "CEN 13606"),
+            HL7Table.Entry(code: "99ZZZ", description: "Local Coding system"),
+            HL7Table.Entry(code: "L", description: "Local Coding system"),
+            HL7Table.Entry(code: "AMT", description: "Australian Medicines Terminology"),
+            HL7Table.Entry(code: "EAN", description: "GTIN product code"),
+            HL7Table.Entry(code: "TGA", description: "Therapeutic Good Authority codes"),
+            HL7Table.Entry(code: "mims-codes", description: ""),
+            HL7Table.Entry(code: "MIMS-UNITS", description: "MIMS Units of measurement"),
+            HL7Table.Entry(code: "MIMS-FORM", description: "MIMS Drug Form code"),
+            HL7Table.Entry(code: "MIMS-GENCODE", description: "MIMS Generic code"),
+            HL7Table.Entry(code: "PBS", description: "PBS Medicines Item Codes"),
+            HL7Table.Entry(code: "FHIR-ResourceType", description: "FHIR Resource Type codes"),
         ] as [HL7Table.Entry]
     )
 }

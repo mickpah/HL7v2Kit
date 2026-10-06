@@ -1,0 +1,118 @@
+{
+  "table": "0396",
+  "version": "au-adrm-2021",
+  "name": "Coding system",
+  "kind": "User",
+  "permitsLocalExtensions": true,
+  "citation": "HL7au ADRM-2021.1 sec 3.3.3 (pp. 142-145), User defined Table 0396 - Coding System, as printed by the localisation; the 99ZZZ or L row (p. 144) prints the local form, and NOTE 1 (p. 145) says the table is not exhaustive",
+  "entries": [
+    {
+      "code": "DCM",
+      "description": "DICOM Controlled Terminology"
+    },
+    {
+      "code": "I10",
+      "description": "ICD-10"
+    },
+    {
+      "code": "ICD10AM",
+      "description": "ICD-10 Australian modification"
+    },
+    {
+      "code": "ISO3166_1",
+      "description": "ISO 3166-1 Country Codes"
+    },
+    {
+      "code": "ISO3166_2",
+      "description": "ISO 3166-2 Country subdivisions"
+    },
+    {
+      "code": "ISO+",
+      "description": "ISO 2955.83 (units of measure) with HL7 extensions"
+    },
+    {
+      "code": "IUPP",
+      "description": "IUPAC/IFCC Property Codes"
+    },
+    {
+      "code": "LN",
+      "description": "Logical Observation Identifier Names and Codes"
+    },
+    {
+      "code": "SCT",
+      "description": "SNOMED Clinical Terms"
+    },
+    {
+      "code": "UCUM",
+      "description": "UCUM code set for units of measure (from Regenstrief)"
+    },
+    {
+      "code": "AUSPDI",
+      "description": "Australian Pathology Display Interface (Display Segment)"
+    },
+    {
+      "code": "HL7AU",
+      "description": "HL7 Australia"
+    },
+    {
+      "code": "ROLECODE",
+      "description": "Participation Mode"
+    },
+    {
+      "code": "PHENX",
+      "description": "PhenX ID"
+    },
+    {
+      "code": "DOCLE",
+      "description": "Doctor Command Language"
+    },
+    {
+      "code": "EN13606",
+      "description": "CEN 13606"
+    },
+    {
+      "code": "99ZZZ",
+      "description": "Local Coding system"
+    },
+    {
+      "code": "L",
+      "description": "Local Coding system"
+    },
+    {
+      "code": "AMT",
+      "description": "Australian Medicines Terminology"
+    },
+    {
+      "code": "EAN",
+      "description": "GTIN product code"
+    },
+    {
+      "code": "TGA",
+      "description": "Therapeutic Good Authority codes"
+    },
+    {
+      "code": "mims-codes",
+      "description": ""
+    },
+    {
+      "code": "MIMS-UNITS",
+      "description": "MIMS Units of measurement"
+    },
+    {
+      "code": "MIMS-FORM",
+      "description": "MIMS Drug Form code"
+    },
+    {
+      "code": "MIMS-GENCODE",
+      "description": "MIMS Generic code"
+    },
+    {
+      "code": "PBS",
+      "description": "PBS Medicines Item Codes"
+    },
+    {
+      "code": "FHIR-ResourceType",
+      "description": "FHIR Resource Type codes"
+    }
+  ]
+}

@@ -764,20 +764,38 @@ struct ComponentCorrespondence: Sendable, Equatable, Hashable {
     let condition: String?
     /// Spec citation surfaced in the violation.
     let specCitation: String?
+    /// What the mapped values mean: allowed (the M6-B-8 default) or
+    /// forbidden (P12 S2-2).
+    let valueRule: CorrespondenceValueRule
 
     init(
         keyComponent: Int,
         valueComponent: Int,
         map: [String: [String]],
+        valueRule: CorrespondenceValueRule = .allowed,
         condition: String? = nil,
         specCitation: String? = nil
     ) {
         self.keyComponent = keyComponent
         self.valueComponent = valueComponent
         self.map = map
+        self.valueRule = valueRule
         self.condition = condition
         self.specCitation = specCitation
     }
+}
+
+/// How a `ComponentCorrespondence` reads its mapped values.
+///
+/// - `allowed`: the value component must carry one of the mapped values.
+/// - `forbidden(prefixes:)`: the value component must carry none of the
+///   mapped values and must not begin with any of `prefixes`. Expresses
+///   HL7au:000034.1/.2, where the ADRM prints the local side as a value
+///   and a form ("99ZZZ or L", Table 0396 p 144) rather than a list of
+///   public systems the primary must come from. P12 S2-2.
+enum CorrespondenceValueRule: Sendable, Equatable, Hashable {
+    case allowed
+    case forbidden(prefixes: [String])
 }
 
 /// Profile usage codes from the AU ADRM spec. The base HL7 v2 set is

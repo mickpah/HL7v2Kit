@@ -117,6 +117,10 @@ SHIPPED_NOTES = {
                      'no predicate the text settles as a prohibition (RQ1-2/3/4/5 read '
                      'inclusively, RXE-10/18/19 bare, PTH-6 undefined event), 12 whose '
                      'predicate the message does not carry',
+    # P12 S1-5 (carried here by P12 S2-2 so the register stays generated).
+    'HL7au:000008.3.1': 'Level 1 is served by the same simplified variant as Level 2 with no '
+                        'cap on the OBR group (a reading, P12 S1-5; owner item open; see '
+                        'ADR-019 P12 S1, "Level 1 and the single OBR group").',
 }
 
 SHIPPED = {
@@ -240,13 +244,20 @@ PARTIAL = {
                         'activationPredicate); the "same content" '
                         'equality half needs cross-format rendering '
                         'comparison and is not machine-checkable',
-    'HL7au:000034.1': 'enforced for the public systems the ADRM names '
-                      '(LN, SCT, UCUM): a named public system relegated '
-                      'to the CE/CWE alternate triplet behind a '
-                      'non-public primary fires; systems the ADRM does '
-                      'not name skip fail-safe',
-    'HL7au:000034.2': 'same machinery on OBX-5 coded values; same '
-                      'named-public-systems scope as 000034.1',
+    # P12 S2-2: the M6-B-9 rule (a LN/SCT/UCUM alternate required a
+    # LN/SCT/UCUM primary) fired on two public systems, e.g. I10 with SCT;
+    # a requirement 4 defect, fixed by detecting the local side the ADRM
+    # prints ("99ZZZ or L", Table 0396 p 144).
+    'HL7au:000034.1': 'OBX-3 and coded OBX-5 (OBX-2 CE/CWE/CNE) on Results/'
+                      'Referrals: a local primary (`L` or `99zzz`, Table '
+                      '0396 p 144) with a non-local row of the ADRM Table '
+                      '0396 (pp 142-145, AU locale axis) in the alternate '
+                      'fires; two public systems are outside the point. '
+                      'Public systems outside the printed table and other '
+                      'local spellings skip; the equivalence half is '
+                      '000034.3 (terminology)',
+    'HL7au:000034.2': 'OBX-3, the same rule as 000034.1 (P12 S2-2); same '
+                      'residual',
     # P3 fix wave — the BASE rows these replace cited CX/EI/XCN base
     # requirements that the v2.4 grammar (the AU base) does not carry.
     'HL7au:00044.1.1': 'the presence half is enforced on Orders/Results/'

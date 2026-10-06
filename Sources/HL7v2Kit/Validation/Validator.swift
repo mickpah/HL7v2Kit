@@ -1421,12 +1421,22 @@ public struct Validator: Sendable {
             }
             let key = valueSetScalarValue(
                 in: repetition, component: rule.keyComponent, subcomponent: nil)
-            guard !key.isEmpty, let allowed = rule.map[key.lowercased()] else { continue }
+            guard !key.isEmpty, let mapped = rule.map[key.lowercased()] else { continue }
             let value = valueSetScalarValue(
                 in: repetition, component: rule.valueComponent, subcomponent: nil)
             guard !value.isEmpty else { continue }
-            guard !allowed.contains(where: { $0.caseInsensitiveCompare(value) == .orderedSame })
-            else { continue }
+            let listed = mapped.contains(where: { $0.caseInsensitiveCompare(value) == .orderedSame })
+            let expectation: String
+            switch rule.valueRule {
+            case .allowed:
+                guard !listed else { continue }
+                expectation = "in [\(mapped.joined(separator: ", "))]"
+            case .forbidden(let prefixes):
+                let lowered = value.lowercased()
+                guard listed || prefixes.contains(where: { lowered.hasPrefix($0.lowercased()) })
+                else { continue }
+                expectation = "not in [\(mapped.joined(separator: ", "))] and not beginning with [\(prefixes.joined(separator: ", "))]"
+            }
             let location = IssueLocation(
                 segmentID: segmentID,
                 segmentIndex: occurrence,
@@ -1438,7 +1448,7 @@ public struct Validator: Sendable {
             appendProfileIssue(
                 citation: citation,
                 location: location,
-                message: "AU profile correspondence rule violated at \(location.pathDescription): \(dataTypeLabel)-\(rule.keyComponent) \"\(key)\" requires \(dataTypeLabel)-\(rule.valueComponent) in [\(allowed.joined(separator: ", "))] but got \"\(value)\" (\(citation))",
+                message: "AU profile correspondence rule violated at \(location.pathDescription): \(dataTypeLabel)-\(rule.keyComponent) \"\(key)\" requires \(dataTypeLabel)-\(rule.valueComponent) \(expectation) but got \"\(value)\" (\(citation))",
                 into: &issues
             )
         }
