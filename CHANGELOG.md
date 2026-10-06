@@ -13,8 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5 and PTR_PCF (v2.3 to v2.7.1; the first four
   on v2.8.2) are modelled with the open order-detail slot, on all seven versions: 1,171 structures
   modelled and 202 registered (1,113 and 260 before). Messages of these triggers, information
-  before, are body-checked: the segments the print gives around the order detail, the required
-  segments after it and the end of the message.
+  before, are body-checked: the segments the print gives around the order detail, that every
+  required segment after it is present, and the end of the message; nothing optional after the
+  slot can be found misplaced, since the slot may absorb it.
 - **`overrides.json`**: v2.3 ORM_O01 and ORR_O02 take the general print (CH04 4.2.1, 4.2.2) as
   primary over the four specific prints under the same trigger, whose messages its slot accepts
   (`primaryPrints`, which may now name a print "CAPTION (section N)" and list several stricter

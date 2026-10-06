@@ -1830,7 +1830,7 @@ brackets keep their printed meaning: v2.3 CH04 ORM^O01 reads `ORC [ slot [{NTE}]
 [{NTE}]}] ]` and v2.4 CH12 PPR^PC1 `[{ORC [ slot [{NTE}] [{VAR}] [{OBX ...}] ] }]`, the slot the
 head of an optional inner group, so a bare ORC draws no finding. The slot is min 1 there; where
 the print brackets the placeholder alone (v2.3 and v2.3.1 CH04 4.2.2 ORR^O02 and 4.2.3 OSR^Q06,
-p 4-5: "[Order Detail Segment] OBR, etc.") it is min 0, which corrects "min 1 in all 58 cases"
+v2.3 pp 4-5 and 4-6, v2.3.1 pp 4-4 and 4-5: "[Order Detail Segment] OBR, etc.") it is min 0, which corrects "min 1 in all 58 cases"
 above. The name is the description column's ("Order Detail Segment"), else null; the citation is
 the structure's (version, chapter, section, title) at the page of the slot's row, with the print
 quoted. An unnamed group holding a slot takes its HL7 v2.xml name when the bundle group sits at

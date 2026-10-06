@@ -2142,6 +2142,22 @@ def check_slot_bundle_naming():
     assert s["elements"][2]["elements"][1]["group"] == "NTE_GROUP", s["elements"][2]
 
 
+def check_slot_bundle_naming_path_bound():
+    # S3-4 (S3-2 review): the slot-heads rule takes any non-printed first segment, so the parent
+    # path is what bounds it. The bundle's ORDER_DETAIL would match the slot's group (OBR heads it,
+    # NTE and more are members) but sits under WRAP, not at the root where the print sets the
+    # group, so it does not name it; the root's own group WRAP is headed by a printed segment.
+    b = _bundles("2.5.1", {"XYZ_X01": _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, PID 1 1, XYZ_X01.WRAP 0 1;"
+                                                      "XYZ_X01.WRAP: NTE 1 1, XYZ_X01.ORDER_DETAIL 0 1;"
+                                                      "XYZ_X01.ORDER_DETAIL: XYZ_X01.CHOICE 1 1, NTE 0 unbounded;"
+                                                      "XYZ_X01.CHOICE choice: OBR 1 1, RXO 1 1")})
+    body = [_row("MSH", "Header"), _row("PID", "Patient"),
+            _row("[OBR, etc", "Order Detail Segment, etc.", "4"), _row("[{NTE}]", "Notes", "2"), _row("]")]
+    s, report = _raw_structure(body, bundles=b)
+    assert s, report
+    assert s["elements"][2]["nameSource"] == "synthesised", s["elements"][2]
+
+
 def check_first_row_left_of_caption():
     # P8b-10 (v2.6 ADT^A31^ADT_A05 at 3.3.31): the caption at column 7, its rows from column 3; the
     # MSH row sets the column. Any other row that far left still ends the table.
@@ -2186,7 +2202,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_single_space_cell_and_shifted_page, check_referenced_triggers, check_withdrawn_segments,
           check_slot_ch04_own_line, check_slot_ch04_bracketed_alone, check_slot_ch12_bracket_form,
           check_slot_choice_with_placeholder, check_slot_citation_and_render,
-          check_slot_never_from_query_template_or_prose, check_slot_bundle_naming]
+          check_slot_never_from_query_template_or_prose, check_slot_bundle_naming,
+          check_slot_bundle_naming_path_bound]
 
 
 def main():

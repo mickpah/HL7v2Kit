@@ -34,13 +34,27 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// examples). `min` and `max` bound the number of segments it takes. It
     /// takes any segment except MSH, including one that could begin what
     /// follows it: a message is reported only when no reading of it fits the
-    /// structure. So a required segment after the slot is still enforced and
-    /// a defect before it is still found, but a misplaced optional segment
-    /// after it may be read as slot content and is then not reported, the
-    /// faithful reading of an unbounded "etc.". The name is the one the print gives ("Order Detail Segment"), or nil;
-    /// findings about an absent slot name it. `citation` gives where the slot
-    /// is printed and what says it is open. A slot has no ``children`` and no
-    /// ``segmentIDs``; a structure holding one is matched exactly.
+    /// structure. The consequences:
+    ///
+    /// - A required segment after the slot is still enforced, and a defect
+    ///   before it is still found.
+    /// - A misplaced optional segment after the slot may be read as slot
+    ///   content and is then not reported: the faithful reading of an
+    ///   unbounded "etc.".
+    /// - Z-segments and ADD are skipped as everywhere, so they never fill
+    ///   the slot: a slot holding only them counts as empty.
+    /// - A finding at a point where the slot could still take a segment
+    ///   names the slot among the segments expected there, and a finding
+    ///   about an absent slot names it.
+    /// - With the slot inside a repeating group, two or more occurrences of
+    ///   that group make the readings disagree on the group boundaries, so
+    ///   the group spans are withheld for that message (one occurrence
+    ///   keeps its span).
+    ///
+    /// The name is the one the print gives ("Order Detail Segment"), or nil.
+    /// `citation` gives where the slot is printed and what says it is open.
+    /// A slot has no ``children`` and no ``segmentIDs``; a structure holding
+    /// one is matched exactly.
     case slot(String?, min: Int, max: Int?, citation: String)
 
     /// The minimum number of occurrences: 0 for an optional element.

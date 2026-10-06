@@ -267,9 +267,9 @@ private struct CompiledElement: Sendable {
         case .segment: bodies = []
         case .slot:
             // The lint fails every slot, so the codegen and the lint-now init
-            // route its structure to ExactStructureMatcher (S3-1).
-            assertionFailure("a structure with an open slot is matched by ExactStructureMatcher")
-            bodies = []
+            // route its structure to ExactStructureMatcher (S3-1). A precondition,
+            // not an assertion: a release build must not silently ignore a slot.
+            preconditionFailure("a structure with an open slot is matched by ExactStructureMatcher")
         case .group(_, _, _, let children):
             bodies = [CompiledSequence(children, positions: children.indices.map { position + [$0] })]
         case .choice(_, _, _, let choices):

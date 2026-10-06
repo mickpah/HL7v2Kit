@@ -64,6 +64,15 @@ struct StructureSlotTests {
         #expect(CompiledStructureMatcher(Self.structure(Self.grouped)).isExact)
     }
 
+    // The routing above makes this unreachable; the one-pass matcher must still stop
+    // rather than ignore a slot in a release build, where an assertion is compiled out.
+    @Test("The one-pass matcher refuses a slot structure in every build")
+    func onePassRefusesSlot() async {
+        await #expect(processExitsWith: .failure) {
+            _ = StructureMatcher(structure: StructureSlotTests.structure(StructureSlotTests.plain))
+        }
+    }
+
     @Test("A slot has no children and no segment IDs; the structure's IDs exclude it")
     func walkers() {
         #expect(Self.slot.children.isEmpty)
@@ -145,6 +154,22 @@ struct StructureSlotTests {
         #expect(inside.expectedHere == [Self.name, "NTE", "DSC"])
         #expect(inside.endExpectedHere)
         #expect(Validator.expectedText(inside) == "; expected here: \(Self.name), NTE, DSC or the end of the message")
+    }
+
+    @Test("A second MSH after an order's slot content is unexpected (ORC OBR MSH)")
+    func secondMSHAfterOrder() {
+        let result = Self.match(Self.order, ["MSH", "PID", "ORC", "OBR", "MSH"])
+        #expect(result.findings.map(\.kind) == [.unexpected])
+        #expect(result.findings.map(\.segmentID) == ["MSH"])
+        #expect(result.findings.map(\.index) == [4])
+        #expect(result.expectedHere.contains(Self.name))
+    }
+
+    @Test("Z-segments and ADD never fill the slot: a slot holding only them is empty")
+    func transparentOnlySlot() {
+        #expect(Self.match(Self.plain, ["MSH", "PID", "ZL1", "ADD"]).findings
+            == [StructureFinding(kind: .missing, segmentID: Self.name, group: nil, index: 4)])
+        #expect(Self.match(Self.plain, ["MSH", "PID", "ZL1", "OBR", "ADD"]).findings.isEmpty)
     }
 
     @Test("Group spans cover the slot's segments; ambiguous parses withhold them")

@@ -173,7 +173,13 @@ def matches(sig, elements):
     holding an open slot (S3-2; the bundle gives the slot's place as a choice of OBR, RXO, ... or
     anyHL7Segment) matches when the bundle group has every printed segment and at least one
     more (the slot's fillers), and its first segment is the printed first one, or, when the slot
-    heads the print, one of those fillers."""
+    heads the print, one of those fillers.
+
+    Residual risk (S3-2 review): when the slot heads the print, any first segment the print does
+    not spell is accepted, so a bundle group that merely holds the printed members and something
+    more could match. The caller bounds it: only groups at the same parent path are tried, and
+    exactly one must match (self-check check_slot_bundle_naming_path_bound pins the path bound).
+    A wrong hit could only give a group its name, never change the structure."""
     theirs = signature(elements)
     if theirs == sig or OPEN not in sig[1]:
         return theirs == sig
