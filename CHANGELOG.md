@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.15.0] — 2026-10-06
+
+### Summary — release 3.15.0: spec completeness (epic P11)
+
+- **Scope:** epic P11, register sections E (abstract message syntax) and G (base-spec checks).
+  1,190 message structures modelled and 183 registered across seven versions (1,107 and 266 at
+  v3.14.0). Section G is closed outright. Section E is blocking only for residuals the print
+  leaves open: v2.6 MFR_M01 with MFI-1 OMA to OME (8.8.2 gives no MFR fragment), a no-data query
+  response without QAK on v2.4 to v2.8.2, and the v2.3 event replay error example.
+- **Model extensions (ADR-019 amendments):** open slot, field-keyed choice, structure alias,
+  per-trigger variants, withdrawn segments, the CH05 5.6.5 error and no-data responses, and cited
+  transcriptions of prose-printed fragments.
+- **Public API (additive; `Migration.md` rows marked v3.15.0):** `IssueCode`
+  `componentLengthOutOfRange`, `componentNotSupported`, `conditionNotEvaluated`,
+  `segmentWithdrawnInVersion`, `profileMaximumExceeded`; `StructureRegistration` with
+  `MessageStructureTable.registration(_:version:)` and `registrations(for:)`; `StructureElement`
+  `.slot` and `.keyedChoice`, `StructureChoiceKey`; `MessageStructure.aliasOf`, `variants`,
+  `variant(messageCode:triggerEvent:)` and `StructureVariant`.
+- **Behaviour:** new default warnings for component length and populated B, W and X components;
+  withdrawn segments at information; `MessageStructure.elements` is the CH02 print for ACK on v2.6
+  to v2.8.2 and the K22 print for v2.6 RSP_K21; information issues for gated conditions not
+  evaluated and AU segments beyond the ADRM maxima. Validation is faster than v3.14.0: the
+  5,000-segment ORU in about 153 / 205 ms (v2.5.1 / v2.8.2), against 218 / 260. 1,712 tests.
+
 ### Summary — epic P11 sprint 6: per-trigger prints, scope residue, AU beyond-maxima
 
 - **Per-trigger prints (S6-1 and the fix wave).** Where two normative prints of one structure ID
