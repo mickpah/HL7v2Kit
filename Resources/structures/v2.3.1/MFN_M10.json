@@ -1,0 +1,19 @@
+{
+  "structure": "MFN_M10",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M10 for MFN^M10; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M10 and no caption prints MFN^M10; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M10 (MFI-1 = OMC) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M10 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'for observation batteries (second component of MSH-9-message type = M10)'. Unprinted group names (ADR-019 decision 3): MF_TEST_BATTERIES (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_TEST_BATT_DETAIL (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["MFN^M10"],
+  "syntaxSource": "prose",
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_TEST_BATTERIES", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "group": "MF_TEST_BATT_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "OM5", "min": 1, "max": 1 },
+        { "segment": "OM4", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

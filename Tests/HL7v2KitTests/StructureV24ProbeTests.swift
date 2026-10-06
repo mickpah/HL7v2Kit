@@ -187,7 +187,9 @@ struct StructureV24ProbeTests {
     // the Chapter 5 QRY/DSR: the QRY prints agree, so QRY_P04 is an alias of QRY_Q01 since S4-2;
     // the two DSR prints differ on MSA (permanent).
     @Test("Registered v2.4 structures are info with the reason the print supports",
-          arguments: [("MFR^M02^MFR_M01", "prose-printed replacement fragments"),
+          // MFR_M01, here until S5-2, is transcribed from the print's prose fragments since
+          // (StructureProseFragmentProbeTests); the MFN template's '[Z..]' row stays unenumerable.
+          arguments: [("MFN^M01^MFN_M01", "Z-segments carrying the data"),
                       ("DSR^P04^DSR_P04", "which mode P04 uses")])
     func registeredByThePrint(_ c: (String, String)) throws {
         let issues = try structureIssues(c.0, ["MSA|AA|1", "QRD|1"])

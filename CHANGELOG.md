@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — S5: the master-file structures the print gives in prose (epic P11 sprint 5)
+
+- **Ruling (S5-1, ADR-019 S5 amendment).** No prose parser. Where the print gives a structure
+  only as prose fragments ("the part of the message represented by: {MFE [Z..]} is replaced
+  by: ...") or by cross-reference, the syntax is transcribed by hand into a new cited
+  `overrides.json` section `proseFragments` (version, chapter, section, page and the quoted
+  sentence for the structure and for every alternative), in the tables' bracket notation. The
+  extractor substitutes a transcription only where it cannot read the printed table, keys
+  `@NAME` placeholders as S4-1 choices, checks an alternative taken `from` another print against
+  its transcription, and marks the structure `"syntaxSource": "prose"`; the codegen accepts that
+  key only with a citation naming `overrides.json proseFragments` (not rendered; no public API
+  change).
+- **Structures (S5-2).** Ten registrations closed: MFN_M03 on v2.3 and v2.3.1 (CH08 8.7.2, the
+  four combinations keyed by MFI-1 OMA to OMD); MFN_M08 to MFN_M11 on v2.3.1 (Table 0354 rows no
+  caption prints: the MFN^M03 syntax with the M08 to M11 combination); MFR_M01 on v2.3, v2.4,
+  v2.5.1 and v2.6 (the `{MFE [Z..]}` part keyed by MFI-1: STF and PRA the staff fragment, OMA to
+  OME the test/observation groups, CDM, LOC, CMA and CMB their fragments or, where the
+  fragments are misprinted or printed as tables of their own, the prints they refer to). M01,
+  locally extended files and, on v2.6, OMA to OME (8.8.2 gives no MFR fragment) are reported as
+  not modelled, at information, naming the MFI-1 value. MFR_M01 on v2.4 to v2.6 takes the query
+  error response rule. 1,190 structures modelled, 183 registered (1,180 and 193 before).
+- **Evidence.** `StructureProseFragmentProbeTests` (24 probes, a clean message and a defect per
+  structure; unmapped files at information; every resolution linted). Digests against the
+  sprint's base: default, strict and off identical; supplementary run with MSH-12 set to the
+  chapter version: the six v2.3 and v2.3.1 MFN^M03 examples, whose MFI-1 is the local `LABxxx`,
+  move from "not modelled" to the unmapped-key information (24 lines each way; 0 misfires).
+
 ### Fixed — S4-3: query error responses (CH05 5.6.5; epic P11 sprint 4 close-out)
 
 - **Rule.** CH05 5.6.5 on v2.4 to v2.8.2 returns a query error as AE or AR in MSA-1 "of the

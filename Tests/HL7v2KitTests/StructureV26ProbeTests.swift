@@ -126,7 +126,9 @@ struct StructureV26ProbeTests {
     // S4-1 (StructureKeyedChoiceTests). Table 0354 gives W01 its own ID while the CH07 examples send
     // ORU^W01^ORU_R01 (permanent; the reason says both).
     @Test("Registered v2.6 structures are info with the reason the print supports",
-          arguments: [("MFR^M02^MFR_M01", "prose-printed replacement fragments"),
+          // MFR_M01, here until S5-2, is transcribed from the print's prose fragments since
+          // (StructureProseFragmentProbeTests); the MFN template's '[Z..]' row stays unenumerable.
+          arguments: [("MFN^M01^MFN_M01", "Z-segments carrying the data"),
                       ("ORU^W01^ORU_W01", "ORU^W01^ORU_R01"), ("QRF^W02^QRF_W02", "7.15.2")])
     func registeredByThePrint(_ c: (String, String)) throws {
         let issues = try structureIssues(c.0, ["MSA|AA|1", "QRD|1"])

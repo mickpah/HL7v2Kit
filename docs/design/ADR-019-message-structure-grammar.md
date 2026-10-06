@@ -2093,3 +2093,42 @@ pins the form: a cited transcription is accepted, an uncited one rejected, and o
 has a printed table rejected. A fragment that cannot be written as one syntax without choosing
 between readings the print leaves open is not transcribed: it stays registered, its reason quoting
 the print.
+
+**What the print gives (S5-2).** CH08 on v2.3 (8.3.3, p 8-5) and v2.4 (8.4.3, p 8-11) print the
+MFR template with `{MFE [Z..]}`, v2.5.1 and v2.6 (8.4.4) with `[...]` under `--- MF_QUERY`. Each
+master file section then says the part "is replaced by" a fragment: the staff and practitioner
+files ("When the STF and PRA segments are used in the MFR message"), CDM, LOC and the clinical
+trials cases 1 and 2, each naming its file by MFI-1 ("should equal "LOC"", "MFI-1 ... = CMA"); the
+test/observation section says the groupings "follow the MFI and MFE segments in those messages
+(replacing the [Z...] section" (v2.3 8.7.2 p 8-21; v2.3.1 p 8-20; v2.4 8.8.2 p 8-21; v2.5.1 8.8.2 p
+8-22), each combination introduced by "MFI-1-master file identifier code = OMA" and the second
+component of MSH-9 (M08 to M11). v2.6 8.8.2 (p 8-20) drops that sentence and only refers back to
+8.4.1 and 8.4.4. v2.3.1 Table 0354 lists MFN_M08 to MFN_M11, which no caption prints.
+
+**Readings.** (1) The key is MFI-1, the field every fragment's section names; MSH-9.2 is named only
+beside it in the test/observation prose, and Table 0003 defines the M events for MFN/MFK. So
+MFN_M03 on v2.3 and v2.3.1 is keyed as S4 keys it on v2.4 to v2.6, and MFR_M01 on v2.3 to v2.6 is
+keyed by MFI-1 at the `[Z..]` (the `{MFE ...}` group kept, the key being message-level). (2) STF
+and PRA, the Table 0175 codes of the staff and practitioner files, both select the staff fragment.
+(3) The v2.3 and v2.4 clinical-trials fragments print unbalanced brackets (`}]` moved from case 1
+to case 2) and refer to "case 1 above" and "case 2 above": their segments are taken from those MFN
+prints (MFN_M06, MFN_M07). (4) Where a fragment's segments are printed as a table of their own
+(the MFN^M08 to MFN^M12 groups on v2.4 and v2.5.1; MFR^M04 to M07 on v2.5.1 and v2.6) the
+alternative is taken `from` that print, checked equal to the transcription where both are given.
+(5) A file the print gives no fragment for (M01's, a locally extended or CLN/INV code, and on v2.6
+OMA to OME) is unmapped: `messageStructureNotModelled` at information naming MFI-1 and the value.
+No fragment needed a choice between readings the print leaves open, so none stays registered.
+
+**After.** Ten registrations closed: MFN_M03 on v2.3 and v2.3.1, MFN_M08 to MFN_M11 on v2.3.1
+(synthesised from the Table 0354 row: the MFN^M03 syntax with the combination in place of the row),
+MFR_M01 on v2.3, v2.4, v2.5.1 and v2.6 (on v2.4 to v2.6 with the 5.6.5 error response rule). 1,190
+structures are modelled and 183 registered (1,180 and 193 before).
+
+**Evidence.** `StructureProseFragmentProbeTests` (24 probes: per structure a clean message and a
+defect; unmapped files at information; every key value resolves and is linted). The self-check
+(`check_prose_fragments`, `check_prose_fragment_from_and_synthesis`) and three codegen cases pin
+the form. Digests (BASE 89d074ea against HEAD): default, strict and off identical; supplementary
+with MSH-12 set to the chapter version: 24 lines removed and 24 added, the six v2.3 and v2.3.1
+MFN^M03 examples whose MFI-1 is the local `LABxxx`, from "not modelled" to the unmapped-key
+information (s5-classes.tsv C1); 0 misfires. Residual (Blocking, register section E): v2.6 MFR_M01
+OMA to OME, which the v2.6 print gives no MFR fragment for.

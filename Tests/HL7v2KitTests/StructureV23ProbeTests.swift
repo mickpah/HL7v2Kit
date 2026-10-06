@@ -195,7 +195,8 @@ struct StructureV23ProbeTests {
           // ORM^O01 and PPR^PC2, here until S3-3, are modelled with the open slot since; ERP,
           // here until S4-1, with an open slot after ERQ.
           arguments: [("SUR^P09", "ED"),
-                      ("MFN^M08", "other segments"), ("MFR^M05", "prose-printed replacement fragments"),
+                      // MFN_M03 and MFR_M01, here until S5-2, are transcribed from prose since.
+                      ("MFN^M01", "Z-segments carrying the data"),
                       ("QRF^W02", "no message type QRF"), ("QRY^R03", "ORU^R03"), ("DSR^R03", "MSA optional"),
                       ("DSR^R05", "the reference is ambiguous"),
                       // P8b-18: the P04 response (6.3.4 names it 'QRY/DSP') and ORU^R03 (one CH07 example)

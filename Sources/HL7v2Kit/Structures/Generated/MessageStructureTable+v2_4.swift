@@ -68,6 +68,7 @@ extension MessageStructureTable {
         "MFN_M11": v2_4_MFN_M11,
         "MFN_M12": v2_4_MFN_M12,
         "MFQ_M01": v2_4_MFQ_M01,
+        "MFR_M01": v2_4_MFR_M01,
         "NMD_N02": v2_4_NMD_N02,
         "NMQ_N01": v2_4_NMQ_N01,
         "NMR_N01": v2_4_NMR_N01,
@@ -1554,6 +1555,98 @@ extension MessageStructureTable {
             .segment("MSH", min: 1, max: 1),
             .segment("QRD", min: 1, max: 1),
             .segment("QRF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_4_MFR_M01: MessageStructure = MessageStructure(
+        id: "MFR_M01",
+        version: "2.4",
+        triggers: ["MFR^M01", "MFR^M02", "MFR^M03", "MFR^M04", "MFR^M05", "MFR^M06"],
+        citation: "HL7 v2.4 Chapter 8, section 8.4.3 MFQ/MFR - master files query, p 8-11. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.4 Chapter 8, section 8.4.3 (p 8-11) prints the MFR template MFR^M01-M06^MFR_M01 whose '[Z..]' row stands for the segments of the master file queried; the master file sections give them per file: the staff and practitioner files (8.7.1, p 8-19: the part '{MFE [Z..]}' 'is replaced by' a fragment; Table 0175 codes the files STF and PRA), the five test/observation files (8.8.2, pp 8-21 to 8-22: the groupings 'follow the MFI and MFE segments in those messages (replacing the [Z...] section', keyed by MFI-1 OMA to OME; their segments as the MFN^M08 to MFN^M12 prints after MFE give them), and the clinical trials cases 1 and 2 (8.11.1, p 8-81, MFI-1 CMA and CMB), whose fragments print unbalanced brackets and refer to 'case 1 above' and 'case 2 above', so their segments are those the MFN case prints give (MFN_M06, MFN_M07); each section names its file by MFI-1, so the body is keyed by MFI-1; a file the print gives no fragment for (M01, a locally extended MFI-1, CLN) is not modelled and reported as such. HL7 v2.4 Chapter 8, section 8.4.3, p 8-11: 'One or more HL7 and/or Z-segments carrying the data for the entry'. The placeholder @DATA is a choice keyed by MFI-1 (section 8.5.1.1, p 8-11: 'identifies a standard HL7 master file'): PRA and STF select MF_STAFF (section 8.7.1, p 8-19: 'When the STF and PRA segments are used in the MFR message'; the segments as MFN_M02 prints them); OMA select MF_TEST_NUMERIC (section 8.8.2, p 8-21: 'MFI-1 - Master file identifier = OMA, for numeric observations'; the segments as MFN_M08 prints them); OMB select MF_TEST_CATEGORICAL (section 8.8.2, p 8-21: 'MFI-1 - Master file identifier = OMB, for categorical observations'; the segments as MFN_M09 prints them); OMC select MF_TEST_BATTERIES (section 8.8.2, p 8-22: 'MFI-1 - Master file identifier = OMC, for observation batteries'; the segments as MFN_M10 prints them); OMD select MF_TEST_CALCULATED (section 8.8.2, p 8-22: 'MFI-1 - Master file identifier = OMD, calculated observations'; the segments as MFN_M11 prints them); OME select MF_OBS_ATTRIBUTES (section 8.8.2, p 8-22: 'MFI-1 - Master file identifier = OME, Additional basic observation/service attributes'; the segments as MFN_M12 prints them); CDM select MF_CDM (section 8.10.1, p 8-72: 'When the CDM segment is used in the MFR message'; the segments as MFN_M04 prints them); LOC select MF_LOCATION (section 8.9.1, p 8-58: 'When the LOC segment is used in the MFR message'; the segments as MFN_M05 prints them); CMA select MF_CLIN_STUDY (section 8.11.1, p 8-81: 'is replaced by, in case 1 above'; the segments as MFN_M06 prints them); CMB select MF_CLIN_STUDY_SCHED (section 8.11.1, p 8-81: 'In case 2 above, the corresponding segments in the MFR message'; the segments as MFN_M07 prints them). Group names of the alternatives (the print names none): MF_STAFF (HL7-xml v2.4/MFN_M02.xsd, MFN_M02.MF_STAFF.CONTENT), MF_TEST_NUMERIC (HL7-xml v2.4/MFN_M08.xsd, MFN_M08.MF_TEST_NUMERIC.CONTENT), MF_TEST_CAT_DETAIL (HL7-xml v2.4/MFN_M09.xsd, MFN_M09.MF_TEST_CAT_DETAIL.CONTENT), MF_TEST_CATEGORICAL (HL7-xml v2.4/MFN_M09.xsd, MFN_M09.MF_TEST_CATEGORICAL.CONTENT), MF_TEST_BATT_DETAIL (HL7-xml v2.4/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT), MF_TEST_BATTERIES (HL7-xml v2.4/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT), MF_TEST_CALC_DETAIL (HL7-xml v2.4/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT), MF_TEST_CALCULATED (HL7-xml v2.4/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT), MF_OBS_ATTRIBUTES (HL7-xml v2.4/MFN_M12.xsd, MFN_M12.MF_OBS_ATTRIBUTES.CONTENT), MF_CDM (HL7-xml v2.4/MFN_M04.xsd, MFN_M04.MF_CDM.CONTENT), MF_LOC_DEPT (HL7-xml v2.4/MFN_M05.xsd, MFN_M05.MF_LOC_DEPT.CONTENT), MF_LOCATION (HL7-xml v2.4/MFN_M05.xsd, MFN_M05.MF_LOCATION.CONTENT), MF_PHASE_SCHED_DETAIL (HL7-xml v2.4/MFN_M06.xsd, MFN_M06.MF_PHASE_SCHED_DETAIL.CONTENT), MF_CLIN_STUDY (HL7-xml v2.4/MFN_M06.xsd, MFN_M06.MF_CLIN_STUDY.CONTENT), MF_CLIN_STUDY_SCHED (HL7-xml v2.4/MFN_M07.xsd, MFN_M07.MF_CLIN_STUDY_SCHED.CONTENT). Unprinted group names (ADR-019 decision 3): MF_QUERY (overrides.json: HL7 v2.4 Chapter 8, section 8.4.3 (p 8-11) prints the group {MFE [Z..]} unnamed; HL7-xml v2.4/MFR_M01.xsd names it MF_QUERY (MFR_M01.MF_QUERY.CONTENT); its members there are the template's, not the transcribed fragments, so the name is cited here (S5-2, ADR-019 S5).).",
+        requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.4 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), p 5-62: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 5-63): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_QUERY", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .keyedChoice(nil, min: 1, max: 1, key: StructureChoiceKey(
+                    segmentID: "MFI", field: 1, component: 1,
+                    alternatives: ["CDM": "MF_CDM", "CMA": "MF_CLIN_STUDY", "CMB": "MF_CLIN_STUDY_SCHED", "LOC": "MF_LOCATION", "OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL", "OMC": "MF_TEST_BATTERIES", "OMD": "MF_TEST_CALCULATED", "OME": "MF_OBS_ATTRIBUTES", "PRA": "MF_STAFF", "STF": "MF_STAFF"],
+                    citation: "HL7 v2.4 Chapter 8, section 8.5.1.1, p 8-11: 'identifies a standard HL7 master file' (overrides.json proseFragments, ADR-019 S5)."), alternatives: [
+                    .group("MF_STAFF", min: 1, max: 1, elements: [
+                        .segment("STF", min: 1, max: 1),
+                        .segment("PRA", min: 0, max: 1),
+                        .segment("ORG", min: 0, max: 1),
+                    ]),
+                    .group("MF_TEST_NUMERIC", min: 1, max: 1, elements: [
+                        .segment("OM1", min: 1, max: 1),
+                        .segment("OM2", min: 0, max: 1),
+                        .segment("OM3", min: 0, max: 1),
+                        .segment("OM4", min: 0, max: 1),
+                    ]),
+                    .group("MF_TEST_CATEGORICAL", min: 1, max: 1, elements: [
+                        .segment("OM1", min: 1, max: 1),
+                        .group("MF_TEST_CAT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM3", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_BATTERIES", min: 1, max: 1, elements: [
+                        .segment("OM1", min: 1, max: 1),
+                        .group("MF_TEST_BATT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM5", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_CALCULATED", min: 1, max: 1, elements: [
+                        .segment("OM1", min: 1, max: 1),
+                        .group("MF_TEST_CALC_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM6", min: 1, max: 1),
+                            .segment("OM2", min: 1, max: 1),
+                        ]),
+                    ]),
+                    .group("MF_OBS_ATTRIBUTES", min: 1, max: 1, elements: [
+                        .segment("OM1", min: 1, max: 1),
+                        .segment("OM7", min: 0, max: 1),
+                    ]),
+                    .group("MF_CDM", min: 1, max: 1, elements: [
+                        .segment("CDM", min: 1, max: 1),
+                        .segment("PRC", min: 0, max: nil),
+                    ]),
+                    .group("MF_LOCATION", min: 1, max: 1, elements: [
+                        .segment("LOC", min: 1, max: 1),
+                        .segment("LCH", min: 0, max: nil),
+                        .segment("LRL", min: 0, max: nil),
+                        .group("MF_LOC_DEPT", min: 1, max: nil, elements: [
+                            .segment("LDP", min: 1, max: 1),
+                            .segment("LCH", min: 0, max: nil),
+                            .segment("LCC", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_CLIN_STUDY", min: 1, max: 1, elements: [
+                        .segment("CM0", min: 1, max: 1),
+                        .group("MF_PHASE_SCHED_DETAIL", min: 0, max: nil, elements: [
+                            .segment("CM1", min: 1, max: 1),
+                            .segment("CM2", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_CLIN_STUDY_SCHED", min: 1, max: 1, elements: [
+                        .segment("CM0", min: 1, max: 1),
+                        .segment("CM2", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
             .segment("DSC", min: 0, max: 1),
         ]
     )

@@ -42,9 +42,14 @@ extension MessageStructureTable {
         "MDM_T02": v2_3_1_MDM_T02,
         "MFD_MFA": v2_3_1_MFD_MFA,
         "MFK_M01": v2_3_1_MFK_M01,
+        "MFN_M03": v2_3_1_MFN_M03,
         "MFN_M05": v2_3_1_MFN_M05,
         "MFN_M06": v2_3_1_MFN_M06,
         "MFN_M07": v2_3_1_MFN_M07,
+        "MFN_M08": v2_3_1_MFN_M08,
+        "MFN_M09": v2_3_1_MFN_M09,
+        "MFN_M10": v2_3_1_MFN_M10,
+        "MFN_M11": v2_3_1_MFN_M11,
         "OMD_O01": v2_3_1_OMD_O01,
         "OMN_O01": v2_3_1_OMN_O01,
         "OMS_O01": v2_3_1_OMS_O01,
@@ -915,6 +920,52 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_3_1_MFN_M03: MessageStructure = MessageStructure(
+        id: "MFN_M03",
+        version: "2.3.1",
+        triggers: ["MFN^M03"],
+        citation: "HL7 v2.3.1 Chapter 8, section 8.7.2 MFN/MFR - test/observation master file, p 8-20. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Chapter 8, section 8.7.2 (p 8-20) prints MFN^M03 with '???' and '[other segments(s)]' after OM1 and gives the four combinations that replace it in prose, each introduced by 'MFI-1-master file identifier = OMA' (OMB, OMC, OMD) and the second component of MSH-9 (M08 to M11); the choice is keyed by MFI-1, as v2.4 to v2.6 key MFN_M03 (ADR-019 S4-1). HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'the segment groupings described below follow the MFI and MFE segments'. The placeholder @OTHER is a choice keyed by MFI-1 (section 8.7.2, p 8-20: 'where other segments can be any of the following combinations'): OMA select MF_TEST_NUMERIC (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMA, for numeric observations'); OMB select MF_TEST_CATEGORICAL (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMB, for categorical observations'); OMC select MF_TEST_BATTERIES (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMC, for observation batteries'); OMD select MF_TEST_CALCULATED (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMD, calculated observations'). Group names of the alternatives (the print names none): MF_TEST_NUMERIC (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_TEST_NUMERIC.CONTENT), MF_TEST_CATEGORICAL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CATEGORICAL.CONTENT), MF_TEST_BATTERIES (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT), MF_TEST_CALCULATED (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT). Unprinted group names (ADR-019 decision 3): MF_TEST (overrides.json: HL7 v2.3.1 Chapter 8, section 8.7.2, transcribed from prose (overrides.json proseFragments), prints the group {MFE OM1 [other segments(s)]} unnamed; HL7-xml v2.4/MFN_M03.xsd names it MF_TEST (MFN_M03.MF_TEST.CONTENT), the name v2.4 to v2.6 give the same group; the v2.4 bundle's members include OME's OM7, so its group does not match by members and the name is cited here (S5-2, ADR-019 S5).), MF_NUMERIC_OBSERVATION (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_NUMERIC_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M08 only by trigger), MF_TEST_CAT_DETAIL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CAT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M09 only by trigger), MF_TEST_BATT_DETAIL (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M10 only by trigger) and MF_TEST_CALC_DETAIL (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M11 only by trigger).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .keyedChoice(nil, min: 1, max: 1, key: StructureChoiceKey(
+                    segmentID: "MFI", field: 1, component: 1,
+                    alternatives: ["OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL", "OMC": "MF_TEST_BATTERIES", "OMD": "MF_TEST_CALCULATED"],
+                    citation: "HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'where other segments can be any of the following combinations' (overrides.json proseFragments, ADR-019 S5)."), alternatives: [
+                    .group("MF_TEST_NUMERIC", min: 1, max: 1, elements: [
+                        .group("MF_NUMERIC_OBSERVATION", min: 0, max: 1, elements: [
+                            .segment("OM2", min: 0, max: 1),
+                            .segment("OM3", min: 0, max: 1),
+                            .segment("OM4", min: 0, max: 1),
+                        ]),
+                    ]),
+                    .group("MF_TEST_CATEGORICAL", min: 1, max: 1, elements: [
+                        .group("MF_TEST_CAT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM3", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_BATTERIES", min: 1, max: 1, elements: [
+                        .group("MF_TEST_BATT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM5", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_CALCULATED", min: 1, max: 1, elements: [
+                        .group("MF_TEST_CALC_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM6", min: 1, max: 1),
+                            .segment("OM2", min: 1, max: 1),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
     private static let v2_3_1_MFN_M05: MessageStructure = MessageStructure(
         id: "MFN_M05",
         version: "2.3.1",
@@ -971,6 +1022,87 @@ extension MessageStructureTable {
                 .segment("MFE", min: 1, max: 1),
                 .segment("CM0", min: 1, max: 1),
                 .segment("CM2", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M08: MessageStructure = MessageStructure(
+        id: "MFN_M08",
+        version: "2.3.1",
+        triggers: ["MFN^M08"],
+        citation: "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M08 for MFN^M08; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M08 and no caption prints MFN^M08; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M08 (MFI-1 = OMA) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M08 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'for numeric observations (second component of MSH-9-message type = M08)'. Unprinted group names (ADR-019 decision 3): MF_TEST_NUMERIC (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_TEST_NUMERIC.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_NUMERIC_OBSERVATION (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_NUMERIC_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_NUMERIC", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_NUMERIC_OBSERVATION", min: 0, max: 1, elements: [
+                    .segment("OM2", min: 0, max: 1),
+                    .segment("OM3", min: 0, max: 1),
+                    .segment("OM4", min: 0, max: 1),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M09: MessageStructure = MessageStructure(
+        id: "MFN_M09",
+        version: "2.3.1",
+        triggers: ["MFN^M09"],
+        citation: "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M09 for MFN^M09; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M09 and no caption prints MFN^M09; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M09 (MFI-1 = OMB) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M09 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'for categorical observations (second component of MSH-9-message type = M09)'. Unprinted group names (ADR-019 decision 3): MF_TEST_CATEGORICAL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CATEGORICAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_TEST_CAT_DETAIL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CAT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_CATEGORICAL", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_CAT_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM3", min: 1, max: 1),
+                    .segment("OM4", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M10: MessageStructure = MessageStructure(
+        id: "MFN_M10",
+        version: "2.3.1",
+        triggers: ["MFN^M10"],
+        citation: "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M10 for MFN^M10; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M10 and no caption prints MFN^M10; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M10 (MFI-1 = OMC) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M10 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'for observation batteries (second component of MSH-9-message type = M10)'. Unprinted group names (ADR-019 decision 3): MF_TEST_BATTERIES (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_TEST_BATT_DETAIL (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_BATTERIES", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_BATT_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM5", min: 1, max: 1),
+                    .segment("OM4", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M11: MessageStructure = MessageStructure(
+        id: "MFN_M11",
+        version: "2.3.1",
+        triggers: ["MFN^M11"],
+        citation: "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M11 for MFN^M11; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M11 and no caption prints MFN^M11; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M11 (MFI-1 = OMD) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M11 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'calculated observations (second component of MSH-9-message type = M11)'. Unprinted group names (ADR-019 decision 3): MF_TEST_CALCULATED (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_TEST_CALC_DETAIL (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_CALCULATED", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_CALC_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM6", min: 1, max: 1),
+                    .segment("OM2", min: 1, max: 1),
+                ]),
             ]),
         ]
     )

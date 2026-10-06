@@ -126,7 +126,9 @@ struct StructureV251ProbeTests {
     // CH06 6.4.4 refers P04 to the Chapter 5 DSR, whose prints differ (permanent).
     // Table 0354 IDs that a chapter caption contradicts, or that only Appendix A lists, say so.
     @Test("Registered v2.5.1 structures are info with the reason the print supports",
-          arguments: [("MFR^M02^MFR_M01", "prose-printed replacement fragments"),
+          // MFR_M01, here until S5-2, is transcribed from the print's prose fragments since
+          // (StructureProseFragmentProbeTests); the MFN template's '[Z..]' row stays unenumerable.
+          arguments: [("MFN^M01^MFN_M01", "Z-segments carrying the data"),
                       ("DSR^P04^DSR_P04", "which mode P04 uses"),
                       ("ORU^R31^ORU_R31", "ORU^R31^ORU_R30"), ("QRY^T12^QRY_T12", "QRY^T12^QRY"),
                       ("RSP^K22^RSP_K22", "RSP^K22^RSP_K21"), ("RDE^O01^RDE_O01", "Appendix A")])
