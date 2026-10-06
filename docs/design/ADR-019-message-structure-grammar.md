@@ -1110,7 +1110,9 @@ compiling a structure per message.
   would misfire on messages the other print allows (requirement 4); per-trigger structures would
   be a model extension and are registered as a limitation instead. v2.5.1: RSP_K21 from 3.3.57
   (K22; the K21 print 3.3.56 misfired on CH03's own K22 example) and RDE_O11 from 4.13.13 (O25,
-  OBX optional in OBSERVATION).
+  OBX optional in OBSERVATION). (Superseded by S6-1, see the amendment below: two prints under
+  different triggers are per-trigger variants, `variantPrints`; `primaryPrints` keeps only two
+  prints under one trigger, v2.3 ORM_O01 and ORR_O02.)
 
 ## Amendment 2026-10-04 — v2.6 complete (P8b-10)
 
@@ -1119,12 +1121,16 @@ compiling a structure per message.
   templates: CH08 gives the staff MFR body in prose and MFN^M03's segments by an MFI-1-keyed
   reference to MFN^M08 to M12); ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their
   looser prints. Where two prints are incomparable (v2.6 RSP_K21) the structure is registered,
-  not guessed.
+  not guessed. (Superseded: MFN_M03 is modelled since S4 and MFR_M01 since S5, see the
+  amendments below; the six looser-print structures check each trigger against its own print
+  since S6-1, see the amendment below.)
 - **Union of incomparable prints (P8b-11).** A cited `unionPrints` entry names two
   incomparable normative prints of one ID; the extractor aligns them by segment or group name
   and commits the union (per element the lesser min and the greater max; an element in one
   print only is optional), or reports an error and leaves the ID not modelled when they do not
   align. v2.6 RSP_K21 is modelled this way (register section E, both relaxations as the cost).
+  (Superseded by S6-1, see the amendment below: v2.6 RSP_K21's default is the K22 print and the
+  K21 print a variant; `unionPrints` is empty.)
 - **Extractor.** A `--- NAME begin` / `--- NAME end` pair on empty syntax cells is a required,
   non-repeating named group (CH02 2.5.2), and a named `< ... >` with no `|` is a named required
   group (the P8b-6 ruling); a `syntax-cell` erratum corrects a printed cell; an MSH row left of
@@ -1142,8 +1148,9 @@ compiling a structure per message.
 - **v2.8.2 complete.** 185 structures modelled (32 exact-matched), 58 registered (register
   section E v2.8.2 addendum: CH12 placeholders, CH05 templates, UDM_Q05, QBP_Q13, RDR_RDR and
   the 47 Table 0354 rows marked Deprecated); every Table 0354 v2.8.2 row is one or the other.
-  ACK from its looser print. A 2.8 message is checked against the v2.8.2 structures through
-  `Version.grammarVersion`.
+  ACK from its looser print (superseded by S6-1, see the amendment below: the CH02 print is the
+  default and the CH05 and CH10 prints are variants). A 2.8 message is checked against the
+  v2.8.2 structures through `Version.grammarVersion`.
 - **Extractor.** In the caret-colon era (v2.7.1, v2.8.2) a caption may carry a space before
   its colon, a title may wrap before the Segments row, the header may read `Descriptions`,
   and section headings may be indented (accepted only when the number opens with the file's
@@ -1162,7 +1169,9 @@ compiling a structure per message.
 - **v2.7.1 complete.** 164 structures modelled (20 exact-matched), 58 registered (register
   section E v2.7.1 addendum: CH12 placeholders, CH05 templates, RDR_RDR, UDM_Q05, the four
   QRD/QRF structures and the 39 Table 0354 rows marked Deprecated); every Table 0354 v2.7.1 row
-  is one or the other. ACK from its looser print. A 2.7 message is checked against the v2.7.1
+  is one or the other. ACK from its looser print (superseded by S6-1, see the amendment below:
+  the CH02 print is the default and the CH05 and CH10 prints are variants). A 2.7 message is
+  checked against the v2.7.1
   structures through `Version.grammarVersion` (resolution table above).
 - **Segments the version does not define.** A print whose segments the version's grammar does
   not define (v2.7.1: URD and URS; QRD and QRF, withdrawn as of v2.7) is registered as not
@@ -1393,6 +1402,8 @@ compiling a structure per message.
   unreported is what neither structure reports: the narrowed maxima (REF^I12 `[IN1]`, PV1 and
   `[PV2]`, which the base prints twice, CH11 pp 11-16 to 11-17), where the base accepts the
   repetition and the profile's beyond-maximum finding is dropped by decision 7, unchanged.
+  (Superseded by S6-3, see the amendment below: the beyond-maximum segment is reported at
+  information.)
 - **OSR_Q06, the fifth profile structure** (p 281, caption erratum `OSQ^Q06^OSQ_Q06` for the
   response): `MSH MSA [ERR] QRD [QRF] [ [PID] { ORC <order detail> [{OBX}] [{CTI}] } ] [DSC]`. The
   print says only "OBR Order Detail", with no prose on this message; the base v2.4 choice (OBR,
@@ -1569,7 +1580,8 @@ peer lookups re-classed Permanent; see the S6 amendment.)
   ADT^A47 and ADT^A49 with ADT_A30 on v2.7.1 and v2.8.2) (P8b-final: both listings' IDs are now
   registered or matched and `ORU^W01^ORU_R01` is matched; the ADT_A30 pairs draw information,
   ADT_A30 being registered with no triggers there); whether the AU profile reports
-  segments beyond the ADRM's narrowed maxima (decision 7); the 00060.1 PV1 prose mandate; and the
+  segments beyond the ADRM's narrowed maxima (decision 7; superseded by S6-3, see the amendment
+  below: reported at information); the 00060.1 PV1 prose mandate; and the
   P8b-17 ruling that extended the exact matcher to produce spans (R1).
 
 ## Amendment 2026-10-05 — a printed structure ID is never a mismatch (P8b-final)
@@ -1751,7 +1763,8 @@ order detail segment(s) is appropriate". v2.4 CH12 12.3.2 (PPR^PC1, pp 12-10 to 
 same position as `< OBR | etc. >`. In every form the slot is unbracketed within its enclosing
 optional group (`[OBR, etc` opens the group with it), so it is required once that group is
 present; "segment(s)" and "combinations" admit more than one segment. A slot is therefore
-`min 1, max nil` in all 58 cases.
+`min 1, max nil` in all 58 cases. (Corrected by the Extraction paragraph below: the CH04
+general-order slot of v2.3 and v2.3.1 is min 0.)
 
 **The element.** `StructureElement.slot(_ name: String?, min: Int, max: Int?, citation:
 String)`, public and additive (the enum is open). `min` and `max` bound the number of segments

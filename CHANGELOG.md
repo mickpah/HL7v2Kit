@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Summary — epic P11 sprint 6: per-trigger prints, scope residue, AU beyond-maxima
+
+- **Per-trigger prints (S6-1 and the fix wave).** Where two normative prints of one structure ID
+  differ by trigger, each governs the triggers it is printed for: 32 cited `overrides.json`
+  `variantPrints` entries across the seven versions; new public `StructureVariant`,
+  `MessageStructure.variants` and `MessageStructure.variant(messageCode:triggerEvent:)`.
+  `MessageStructure.elements` changes for two structures (S6-1; see the `StructureVariant` row of
+  `Migration.md`): ACK on v2.6 to v2.8.2 is now the CH02 general acknowledgment (was the looser
+  CH10 print), and v2.6 RSP_K21 is now the K22 print (was the union of its two prints).
+- **Left on the looser print.** Two prints under one trigger (v2.3 ORM_O01 and ORR_O02) and
+  MFK_M01 for the triggers printed both ways (M01 to M06 on v2.3.1; M02, M04 to M06 on v2.4);
+  the v2.4 ADT^A31 print, with an unbalanced `{ ROL }]`, is left unread.
+- **Scope residue (S6-2), AU maxima (S6-3), Permanent rows (S6-4).** The group-scope count reads
+  the OBR's own OBX; the remaining scope-rule peer lookups are Permanent with reasons. New
+  `IssueCode.profileMaximumExceeded(localeRule:)` reports a segment beyond the ADRM's narrowed
+  maxima at information. Fragment reassembly and version provenance are Permanent.
+- **Result.** Register section E is blocking only for three residuals; 1712 tests in 144 suites.
+
 ### Changed — S6 fix wave: every remaining per-trigger print disagreement is a variant (epic P11 sprint 6)
 
 - Twenty more `overrides.json` `variantPrints` entries, each read against both prints (ADR-019 S6
@@ -81,6 +99,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   adds one finding, an example defect (the v2.5.1 RSP^K21 example omits the QRI its print
   requires).
 
+### Summary — epic P11 sprint 5: the master-file structures the print gives in prose
+
+- **Ruling (S5-1).** No prose parser: where the print gives a structure's segments as prose
+  fragments ("When the ... segments are used in the MFR message, the part ... is replaced by"),
+  the structure is a hand transcription, cited sentence by sentence in `overrides.json`
+  `proseFragments` and marked `syntaxSource: prose`.
+- **Structures (S5-2).** Ten registrations closed: MFR_M01 on v2.3 to v2.6, MFN_M03 on v2.3 and
+  v2.3.1, MFN_M08 to MFN_M11 on v2.3.1, each keyed by MFI-1, the field every master file section
+  names: 1,190 structures modelled, 183 registered.
+- **Behaviour.** An MFI-1 value the print gives no fragment for (a local file; on v2.6 MFR_M01,
+  OMA to OME, for which 8.8.2 gives no MFR fragment) is reported not modelled, at information.
+- **Evidence.** `StructureProseFragmentProbeTests` (24 probes); digests identical to the base;
+  1693 tests in 139 suites. Fix wave: the v2.4 and v2.5.1 OMA to OME citations quote the
+  bridging sentence.
+
 ### Added — S5: the master-file structures the print gives in prose (epic P11 sprint 5)
 
 - **Ruling (S5-1, ADR-019 S5 amendment).** No prose parser. Where the print gives a structure
@@ -107,6 +140,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   sprint's base: default, strict and off identical; supplementary run with MSH-12 set to the
   chapter version: the six v2.3 and v2.3.1 MFN^M03 examples, whose MFI-1 is the local `LABxxx`,
   move from "not modelled" to the unmapped-key information (24 lines each way; 0 misfires).
+
+### Summary — epic P11 sprint 4: field-keyed choice, structure alias, query error responses
+
+- **Model (S4-1, S4-2).** New public `StructureElement.keyedChoice(_:min:max:key:alternatives:)`,
+  `StructureChoiceKey` and `MessageStructure.aliasOf` (additive).
+- **Structures.** MFN_M03 on v2.4 to v2.6, keyed by MFI-1; ERP (v2.3) and ERP_R09 (v2.3.1 to
+  v2.5.1) with an optional open slot after ERQ (min 0, after the print's no-data sentence);
+  QRY_P04 on v2.4 and v2.5.1 as the alias of QRY_Q01. Nine registrations closed: 1,180 modelled,
+  193 registered.
+- **Query error responses (S4-3).** On v2.4 to v2.8.2 a query response with MSA-1 AE or AR is
+  matched against the CH05 5.6.5 head ("The rest of the message is absent"), and a no-data
+  response (MSA-1 AA, QAK-2 NF; Situation 3) against its own head: `overrides.json`
+  `errorResponses`, 129 structures. The TBR^R08 error example no longer misfires.
+- **Residuals.** A no-data response without QAK keeps the full structure (it cannot be told from
+  a cut-off reply) and the event replay error example (#63, printed with MSH-12 2.3) keeps its
+  missing ERQ: both Blocking. An AE response without QAK is not reported; MSA-1 CE and CR are not
+  keyed; an ERR on a no-data response is reported. 1690 tests in 138 suites.
 
 ### Fixed — S4-3: query error responses (CH05 5.6.5; epic P11 sprint 4 close-out)
 

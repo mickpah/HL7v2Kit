@@ -2050,6 +2050,48 @@ def check_variant_prints_kept_on_default():
         raise AssertionError(f"accepted {bad['keptOnDefault']!r}")
 
 
+def check_variant_prints_one_trigger_two_variants():
+    # S7-1 (S6 re-review gap): two variant prints that differ from each other but both print one
+    # trigger leave that trigger with two governing prints; the extractor rejects the entries.
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    third = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("}]", "--- R end")]
+    text = (_page(1, _table("XYZ^X02^XYZ_X01", loose), heading="9.1.1           XYZ - synthetic (Event X02)")
+            + _page(2, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.2           XYZ - synthetic (Event X01)")
+            + _page(3, _table("XYZ^X01,X03^XYZ_X01", third), heading="9.1.3           XYZ - synthetic (Events X01, X03)"))
+    one = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01", "variant": "XYZ^X01^XYZ_X01",
+           "citation": "First per-trigger print (synthetic)."}
+    two = {**one, "variant": "XYZ^X01,X03^XYZ_X01", "citation": "Second per-trigger print, X01 again (synthetic)."}
+    fix = {**EMPTY, "variantPrints": [one, two]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    assert "XYZ_X01" not in structures, structures.get("XYZ_X01")
+    assert any(r[1] == "error" and "another variant's" in r[2] for r in report), report
+
+
+def check_variant_prints_kept_on_default_strict_subset():
+    # S7-1 (S6 re-review gap): a keptOnDefault naming only some of the triggers both the default
+    # and the variant print (here X02, not X03) would leave X03 under two prints; rejected. The
+    # exact overlap is accepted.
+    strict = [("MSH", "Header"), ("MSA", "Ack"), ("MFI", "Master")]
+    loose = [("MSH", "Header"), ("MSA", "Ack"), ("[ERR]", "Error"), ("MFI", "Master")]
+    text = (_page(1, _table("XYZ^X01-X03^XYZ_X01", loose), heading="9.1.1           XYZ - synthetic (Events X01-X03)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", strict), heading="9.1.2           XYZ - synthetic (Event X02)")
+            + _page(3, _table("XYZ^X03^XYZ_X01", strict), heading="9.1.3           XYZ - synthetic (Event X03)")
+            + _page(4, _table("XYZ^X04^XYZ_X01", strict), heading="9.1.4           XYZ - synthetic (Event X04)"))
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X01-X03^XYZ_X01", "variant": "XYZ^X04^XYZ_X01",
+             "keptOnDefault": ["XYZ^X02", "XYZ^X03"], "citation": "Per-trigger prints, X02 and X03 printed both ways (synthetic)."}
+    structures, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": [entry]}, full=True)
+    assert not [r for r in report if r[1] == "error"], report
+    [v] = structures["XYZ_X01"]["variants"]
+    assert v["triggers"] == ["XYZ^X04"], v
+    subset = {**entry, "keptOnDefault": ["XYZ^X02"]}
+    ext.validate_overrides({**EMPTY, "variantPrints": [subset]})
+    structures, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": [subset]}, full=True)
+    assert "XYZ_X01" not in structures, structures.get("XYZ_X01")
+    assert any(r[1] == "error" and "variantPrints entry" in r[2] for r in report), report
+
+
 def check_union_prints():
     # P8b-10 ruling (v2.6 RSP_K21): two incomparable normative prints of one ID; a cited
     # unionPrints entry aligns them by segment or group name: per element the lesser min and the
@@ -2589,6 +2631,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override, check_primary_print_by_section,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
           check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints, check_variant_prints, check_variant_prints_several, check_variant_prints_kept_on_default,
+          check_variant_prints_one_trigger_two_variants, check_variant_prints_kept_on_default_strict_subset,
           check_colon_caption_with_space_ends_table, check_v282_reader_layouts, check_v271_reader_layouts,
           check_0354_triggers_merged, check_v24_reader_layouts, check_syntax_cell_erratum_occurrence,
           check_bundle_name_no_group_can_hold, check_v231_bundle_encoder_style,
