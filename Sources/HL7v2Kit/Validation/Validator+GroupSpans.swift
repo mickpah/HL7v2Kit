@@ -56,13 +56,89 @@ extension Validator {
     /// finding, and its accepting parses agree on the groups. Computed
     /// whatever `messageStructureSeverity` is (ADR-019 decision 5).
     func groupSpans(for message: Message, complete: Set<Version>? = nil) -> GroupSpanIndex? {
+        groupSpanOutcome(for: message, complete: complete).spans
+    }
+
+    /// The group spans of `message` as ``groupSpans(for:complete:)`` gives
+    /// them, or, when there are none, the first reason in the same order of
+    /// checks, phrased for ``IssueCode/conditionNotEvaluated(fields:)`` (S1-4).
+    func groupSpanOutcome(for message: Message, complete: Set<Version>? = nil)
+        -> (spans: GroupSpanIndex?, cause: String?) {
         guard MessageStructureTable.isComplete(message.version,
-                                               completeVersions: complete ?? MessageStructureTable.completeVersions),
-              let structure = resolveStructure(message, severity: .info).structure,
-              fragmentReason(message, structure: structure) == nil
-        else { return nil }
-        return Self.spanIndex(structureMatch(structure, message: message), structure: structure,
-                              ids: message.segments.map(\.segmentID))
+                                               completeVersions: complete ?? MessageStructureTable.completeVersions)
+        else { return (nil, "the v\(message.version.rawValue) structures are not complete") }
+        let resolution = resolveStructure(message, severity: .info)
+        guard let structure = resolution.structure else {
+            switch resolution.issues.first?.code {
+            case .messageStructureMismatch(let declared, let trigger)?:
+                return (nil, "MSH-9.3 \(declared) is not printed for \(trigger)")
+            case .messageStructureNotModelled(let name)? where name.isEmpty:
+                return (nil, "MSH-9 is empty, so no structure is resolved")
+            case .messageStructureNotModelled(let name)?:
+                return (nil, "no abstract message syntax is applied to \(name)")
+            default:
+                return (nil, "no message structure was resolved")
+            }
+        }
+        if let reason = fragmentReason(message, structure: structure) {
+            return (nil, "the message is a fragment (\(reason)), so \(structure.id) is not matched")
+        }
+        let match = structureMatch(structure, message: message)
+        let ids = message.segments.map(\.segmentID)
+        if let finding = match.findings.first {
+            let more = match.findings.count > 1 ? " (and \(match.findings.count - 1) more structure findings)" : ""
+            return (nil, Self.describe(finding, structure: structure.id, segmentCount: ids.count) + more)
+        }
+        if match.spansWithheld {
+            return (nil, "the accepting parses of \(structure.id) place a segment in different group occurrences")
+        }
+        return (Self.spanIndex(match, structure: structure, ids: ids), nil)
+    }
+
+    /// One structure finding in words, for the fallback issue.
+    private static func describe(_ finding: StructureFinding, structure: String, segmentCount: Int) -> String {
+        switch finding.kind {
+        case .missing:
+            let place = finding.index >= segmentCount ? "at the end" : "before segment \(finding.index + 1)"
+            let group = finding.group.map { " group \($0)" } ?? ""
+            return "\(structure)\(group) is missing \(finding.segmentID) \(place)"
+        case .unexpected:
+            return "\(finding.segmentID) at segment \(finding.index + 1) has no place in \(structure)"
+        case .exceededMaximum:
+            return "\(finding.segmentID) at segment \(finding.index + 1) exceeds its maximum in \(structure)"
+        }
+    }
+
+    /// Owner decision 9 (S1-4): when the fallback gates the order-number
+    /// predicates off (``GroupScoping/gated(_:)``) and the message carries an
+    /// ORC or OBR, one `.info` issue at the first gated field of the first
+    /// such segment, naming the gated fields and the structure finding that
+    /// withheld the spans. `message` already carries its scoping.
+    func checkGatedConditions(message: Message, issues: inout [ValidationIssue]) {
+        guard case .gated(let gated) = message.groupScoping else { return }
+        func split(_ name: String) -> (segment: String, field: Int) {
+            let parts = name.split(separator: "-")
+            return (String(parts[0]), Int(parts[1]) ?? 0)
+        }
+        let carried = Set(message.segments.map(\.segmentID))
+        let fields = gated.map(split).filter { carried.contains($0.segment) }
+            .sorted { ($0.segment, $0.field) < ($1.segment, $1.field) }
+        guard let first = message.segments.first(where: { segment in fields.contains { $0.segment == segment.segmentID } }),
+              let field = fields.first(where: { $0.segment == first.segmentID })
+        else { return }
+        let names = fields.map { "\($0.segment)-\($0.field)" }
+        let list = names.count > 1 ? names.dropLast().joined(separator: ", ") + " and " + names[names.count - 1] : names[0]
+        let cause = groupSpanOutcome(for: message).cause ?? "no group spans are known"
+        let code = message.messageCode.map { $0.isEmpty ? "an empty MSH-9.1" : $0 } ?? "an empty MSH-9.1"
+        issues.append(ValidationIssue(
+            severity: .info,
+            code: .conditionNotEvaluated(fields: names),
+            location: IssueLocation(segmentID: first.segmentID, segmentIndex: 1, fieldIndex: field.field),
+            message: "The conditions of \(list) were not evaluated: they pair the ORC and OBR of one order group, "
+                + "and no group spans are known because \(cause); without spans the v\(message.version.rawValue) "
+                + "gate for \(code) holds, since the ORC walk cannot pair an OBR printed before its ORC "
+                + "(ADR-019, P8b-17)."
+        ))
     }
 
     /// The span index of `match` against `structure`, or nil when it has a

@@ -67,6 +67,14 @@ struct SignatureCompatibilityTests {
         #expect(make("B") != .fieldNotSupported)
     }
 
+    @Test("S1-4 IssueCode.conditionNotEvaluated is additive with a (fields:) payload")
+    func conditionNotEvaluatedIssueCode() {
+        let make: ([String]) -> IssueCode = IssueCode.conditionNotEvaluated(fields:)
+        #expect(make(["OBR-2", "ORC-2"]) == .conditionNotEvaluated(fields: ["OBR-2", "ORC-2"]))
+        #expect(make(["OBR-2"]) != .conditionNotEvaluated(fields: ["ORC-2"]))
+        #expect(make([]) != .conditionalFieldMissing)
+    }
+
     @Test("P6-13 extra-component setting and issue code are additive")
     func extraComponents() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.extraComponentsSeverity

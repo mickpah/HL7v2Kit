@@ -147,6 +147,10 @@ public struct Validator: Sendable {
             checkMessageStructure(message: message, severity: severity, issues: &issues)
         }
 
+        // S1-4 (owner decision 9): say so when the P8b-17 fallback gate
+        // skipped the order-number predicates.
+        checkGatedConditions(message: message, issues: &issues)
+
         return ValidationReport(issues: issues, locale: locale)
     }
 

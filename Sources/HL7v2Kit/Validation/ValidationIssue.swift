@@ -330,6 +330,25 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// when ``ValidationOptions/messageStructureSeverity`` is set. Located at
     /// MSH-9. ADR-019; additive case introduced in P8-5.
     case messageStructureNotModelled(structure: String)
+
+    /// The conditions of `fields` (`SEG-n`, for example `ORC-2`) were not
+    /// evaluated on this message, so a missing order number in those fields
+    /// is not reported. Their predicates read the ORC and OBR of one order
+    /// group. They are scoped by the matched structure's group spans
+    /// (the P8b-17 scope rule, ADR-019 amendment "group spans scope the
+    /// group-dependent predicates"); under its fallback rule R4 an OUL (v2.5.1), or an OUL, OPU or OPL (v2.6,
+    /// v2.7.1, v2.8.2), whose structure match yields no spans keeps the
+    /// former message-code gate, because these structures print OBR before
+    /// ORC inside one group and the ORC-anchored fallback would read the
+    /// next group's OBR. `fields` lists the gated fields of the segments
+    /// the message carries, sorted by segment then field number: ORC-2,
+    /// ORC-3, OBR-2 and OBR-3, plus ORC-8 and OBR-29 on v2.5.1 and v2.6.
+    /// The message text names the structure finding that withheld the
+    /// spans. Always `.info`; raised once per message, at the first
+    /// gated field of the first ORC or OBR, whatever
+    /// ``ValidationOptions/messageStructureSeverity`` is. Owner decision 9
+    /// (2026-10-06); additive case introduced in S1-4.
+    case conditionNotEvaluated(fields: [String])
 }
 
 /// One observation from validation. Always non-fatal: collected into a

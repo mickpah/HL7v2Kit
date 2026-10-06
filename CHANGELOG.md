@@ -76,6 +76,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   amendment 2026-10-06.
 - No validation output changes (default-preset digest over the spec examples: 0 lines).
 
+### Added — S1-4: the fallback gate says so (owner decision 9)
+
+- **`IssueCode.conditionNotEvaluated(fields:)`** (additive; open enum per ADR-014), always
+  `.info`. When the P8b-17 fallback (ADR-019 rule R4) keeps the former message-code gate (a
+  v2.5.1 OUL, or a v2.6, v2.7.1 or v2.8.2 OUL, OPU or OPL, or an empty MSH-9.1, with no group
+  spans), the conditions of ORC-2, ORC-3, OBR-2 and OBR-3 (plus ORC-8 and OBR-29 on v2.5.1 and
+  v2.6) are not evaluated; the message now carries one information issue saying so, at the first
+  gated field of its first ORC or OBR, naming the gated fields of the segments it carries and the
+  structure finding that withheld the spans. Not raised when the message carries neither ORC nor
+  OBR, nor for any other message code. Raised whatever `messageStructureSeverity` is; the
+  predicates themselves are unchanged. Closes final review M9 (permanent-limitations register).
+- Default output: on the printed spec examples, 624 added digest lines (156 examples x 4
+  profile/preset rows), all this issue, none removed: 155 examples whose print abbreviates the
+  header (`MSH|^~\&|`, so MSH-9 is empty and the gate holds as it always has), and one v2.5.1
+  OUL^R21 whose accepting parses disagree on the groups.
+
 ## [3.14.0] — 2026-10-06
 
 ### Summary — release 3.14.0: the review remediation

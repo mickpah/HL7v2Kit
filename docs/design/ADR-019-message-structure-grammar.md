@@ -1653,3 +1653,10 @@ Owner decision 8 of 2026-10-06: `MessageStructureTable.registration(_:version:)`
 `registrations(for:)` return `StructureRegistration` (ID, grammar version, triggers, reason), so a
 consumer tells a registered-not-modelled structure from an ID the version does not print without
 running the `Validator`; validation output is unchanged.
+
+## Amendment 2026-10-06 — the R4 fallback says so (S1-4, owner decision 9)
+
+Owner decision 9 of 2026-10-06 (final review M9): when R4 of the P8b-17 amendment keeps the gate,
+a message that carries an ORC or OBR gets one `.info` `IssueCode.conditionNotEvaluated(fields:)`,
+at the first gated field of its first ORC or OBR, naming the gated fields and the structure
+finding that withheld the spans; the conditions stay unevaluated, as R4 rules.
