@@ -347,13 +347,12 @@ def check_choice_separate_rows_and_placeholder():
     s, _ = _structure([("MSH", "Header"), ("<", ""), ("OBR", "Order Detail Segment"), ("|", ""),
                        ("{RXO}", "Pharmacy order"), (">", ""), ("[{NTE}]", "Notes")])
     assert s["elements"][1] == _choice([_seg("OBR"), _seg("RXO", 1, None)]), s["elements"][1]
-    # "etc." in place of the alternatives (CH12's "< OBR | etc. >") is a G6 placeholder: skipped.
+    # "etc." in place of the last alternative (CH12's "< OBR | etc. >") is the open order detail:
+    # one slot in place of the whole choice (S3-2; check_slot_choice_with_placeholder).
     s, report = _structure([("MSH", "Header"), ("<", ""), ("OBR", "Order Detail Segment"), ("|", ""),
                             ("", "etc."), (">", "")])
-    assert s is None, s
-    [line] = [r for r in report if r[1] == "skipped"]
-    assert "placeholder (G6): 'etc.' among a choice's alternatives" in line[2], line
-    assert "of which placeholder (G6) 1" in ext.summary("2.5.1", {}, report, 1), ext.summary("2.5.1", {}, report, 1)
+    assert s and "slot" in s["elements"][1], (s, report)
+    assert not [r for r in report if r[1] == "skipped"], report
     # "etc." in the description column outside a choice is ordinary description text.
     s, _ = _structure([("MSH", "Header"), ("OBR", "Order"), ("", "etc."), ("NTE", "Notes")])
     assert [e["segment"] for e in s["elements"]] == ["MSH", "OBR", "NTE"], s
@@ -1908,6 +1907,207 @@ def check_caption_scoped_exclusion():
     assert any(r[1] == "error" and "9.1.3" in r[0] for r in report), report
 
 
+def _raw_structure(body, sid="XYZ_X01", bundles=None):
+    """A synthetic print whose rows are raw lines (columns: syntax at 4, description at 30)."""
+    caption = f"XYZ^X01^{sid}".ljust(26)
+    text = _page(1, [f"    {caption}Synthetic Message        Status    Chapter"] + body,
+                 heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = ext.extract_version("2.5.1", [("syn", text)], EMPTY, tables=[], bundles=bundles)
+    return structures.get(sid), report
+
+
+def _row(left, desc="", chapter=""):
+    return f"    {left.ljust(26)}{desc}".ljust(70) + chapter if chapter else f"    {left.ljust(26)}{desc}".rstrip()
+
+
+def _slot(name="Order Detail Segment", lo=1):
+    return {"slot": name, "min": lo, "max": None}
+
+
+def _uncited(e):
+    """An element tree with each slot's citation dropped (asserted separately)."""
+    if "slot" in e:
+        return {k: v for k, v in e.items() if k != "citation"}
+    if "elements" in e:
+        return {**e, "elements": [_uncited(x) for x in e["elements"]]}
+    if "alternatives" in e:
+        return {**e, "alternatives": [_uncited(x) for x in e["alternatives"]]}
+    return e
+
+
+def _order_group(s):
+    """The repeating ORC group's elements (index 2 after MSH and PID)."""
+    group = s["elements"][2]
+    assert (group["min"], group["max"]) in ((0, None), (1, None)), group
+    return [_uncited(e) for e in group["elements"]]
+
+
+ORDER_HEAD = [_row("MSH", "Header"), _row("PID", "Patient"), _row("{", ""), _row("ORC", "Common Order", "4")]
+
+
+def check_slot_ch04_own_line():
+    # S3-2, v2.3 CH04 4.2.1 ORM^O01 (p 4-4): "[" on its own line, then "Order Detail Segment OBR,
+    # etc." crossing the description column, then the detail's segments and "]". The slot heads
+    # the optional inner group: ORC [ slot [{NTE}] [{DG1}] ], never ORC slot [{NTE}] (a bare ORC
+    # is compliant).
+    body = ORDER_HEAD + [_row("["), "    Order Detail Segment OBR, etc.".ljust(70) + "4",
+                         _row("[{NTE}]", "Notes", "2"), _row("[{DG1}]", "Diagnosis", "6"), _row("]"), _row("}")]
+    s, report = _raw_structure(body)
+    assert s, report
+    detail = _order_group(s)
+    assert detail[0] == _seg("ORC"), detail
+    inner = detail[1]
+    assert (inner["min"], inner["max"]) == (0, 1), inner
+    assert inner["elements"] == [_slot(), _seg("NTE", 0, None), _seg("DG1", 0, None)], inner["elements"]
+    assert len(detail) == 2, detail
+    # v2.3.1 CH04 4.2.1 (p 4-4) wraps it: "Order Detail" then "Segment OBR, etc." further left.
+    body = ORDER_HEAD + [_row("["), _row("Order Detail", "", "4"), "  Segment OBR, etc.",
+                         _row("[{NTE}]", "Notes", "2"), _row("]"), _row("}")]
+    s, report = _raw_structure(body)
+    assert s, report
+    assert _order_group(s)[1]["elements"] == [_slot(), _seg("NTE", 0, None)], _order_group(s)
+
+
+def check_slot_ch04_bracketed_alone():
+    # S3-2, v2.3 CH04 4.2.2 ORR^O02 (p 4-5) and 4.2.3 OSR^Q06: "[Order Detail Segment] OBR, etc."
+    # brackets the placeholder alone: the slot is optional (min 0) and the citation says why.
+    body = ORDER_HEAD + ["    [Order Detail Segment] OBR, etc.".ljust(70) + "4", _row("[{NTE}]", "Notes", "2"),
+                         _row("}")]
+    s, report = _raw_structure(body)
+    assert s, report
+    detail = _order_group(s)
+    assert detail == [_seg("ORC"), _slot(lo=0), _seg("NTE", 0, None)], detail
+    slot = s["elements"][2]["elements"][1]
+    assert "brackets the placeholder alone" in slot["citation"], slot["citation"]
+    # Wrapped (v2.3.1 ORR^O02): "[Order Detail" then "Segment] OBR, etc.".
+    body = ORDER_HEAD + [_row("[Order Detail", "", "4"), "  Segment] OBR, etc.", _row("[{NTE}]", "Notes", "2"),
+                         _row("}")]
+    s, report = _raw_structure(body)
+    assert s and _order_group(s)[1] == _slot(lo=0), (s, report)
+    # In the description column with an empty syntax cell (v2.3.1 OSR^Q06, p 4-5).
+    body = ORDER_HEAD + [" " * 30 + "[Order Detail Segment] OBR, etc.".ljust(36) + "4", _row("[{NTE}]", "Notes", "2"),
+                         _row("}")]
+    s, report = _raw_structure(body)
+    assert s and _order_group(s)[1] == _slot(lo=0), (s, report)
+
+
+def check_slot_ch12_bracket_form():
+    # S3-2, v2.4 CH12 12.3.2 PPR^PC1 (p 12-11): [{ORC [OBR, etc [{NTE}] [{VAR}] [{OBX [{NTE}]}] ] }].
+    # "[OBR, etc" opens the inner group with the slot as its head: slot min 1 inside an optional
+    # group; the repeating ORC group keeps its brackets. Every printed spelling reads the same.
+    for cell in ("[OBR, etc", "[OBR, etc.", "[OBR, etc..."):
+        body = [_row("MSH", "Header"), _row("PID", "Patient"), _row("[{ORC", "Common Order", "4"),
+                _row(cell, "Order Detail Segment, etc.", "4"), _row("[{NTE}]", "Notes", "2"),
+                _row("[{VAR}]", "Variance", "12"), _row("[{OBX", "Observation", "7"), _row("[{NTE}]", "Notes", "2"),
+                _row("}]"), _row("]"), _row("}]")]
+        s, report = _raw_structure(body)
+        assert s, (cell, report)
+        group = s["elements"][2]
+        assert (group["min"], group["max"]) == (0, None), group
+        detail = _order_group(s)
+        assert detail[0] == _seg("ORC") and len(detail) == 2, detail
+        inner = detail[1]
+        assert (inner["min"], inner["max"]) == (0, 1), inner
+        assert inner["elements"][:3] == [_slot(), _seg("NTE", 0, None), _seg("VAR", 0, None)], inner["elements"]
+    # One space between the cell and the description (v2.3 CH12 12.3.3 PPP^PCB, p 12-11).
+    body = [_row("MSH", "Header"), _row("PID", "Patient"), _row("[{ORC", "Common Order", "4"),
+            "    [OBR, etc Order Detail Segment, etc.".ljust(70) + "4", _row("[{NTE}]", "Notes", "2"), _row("]"),
+            _row("}]")]
+    s, report = _raw_structure(body)
+    assert s, report
+    assert _order_group(s)[1]["elements"] == [_slot(), _seg("NTE", 0, None)], _order_group(s)
+
+
+def check_slot_choice_with_placeholder():
+    # S3-2, v2.5.1 to v2.8.2 CH12 "< OBR | etc. >": a choice whose last alternative is the
+    # placeholder is one slot in place of the whole choice (a slot never sits inside a choice);
+    # the listed alternatives are named in the citation. Spellings: "etc." alone in the
+    # description column, "..." with "etc." (v2.5.1 PRR^PC5), "Hxx" with "etc." (v2.8.2), and a
+    # "--- CHOICE" mark with or without begin/end (v2.7.1, v2.8.2 PGL^PC6).
+    for alt, marks in ((("", "etc."), ("", "")), (("...", "etc."), ("", "")), (("Hxx", "etc."), ("", "")),
+                       (("Hxx", "etc."), ("--- CHOICE begin", "--- CHOICE end")),
+                       (("Hxx", "etc."), ("--- CHOICE", "--- CHOICE"))):
+        body = [_row("MSH", "Header"), _row("PID", "Patient"), _row("[{", "--- ORDER begin"), _row("ORC", "Common Order"),
+                _row("[", "--- ORDER_DETAIL begin"), _row("<", marks[0]), _row("OBR", "Order Detail Segment", "4"),
+                _row("|"), _row(*alt), _row(">", marks[1]), _row("[{NTE}]", "Notes", "2"),
+                _row("]", "--- ORDER_DETAIL end"), _row("}]", "--- ORDER end")]
+        s, report = _raw_structure(body)
+        assert s, (alt, marks, report)
+        detail = s["elements"][2]["elements"][1]
+        assert detail["group"] == "ORDER_DETAIL" and detail["min"] == 0, detail
+        assert [_uncited(e) for e in detail["elements"]] == [_slot(), _seg("NTE", 0, None)], detail["elements"]
+        cite = detail["elements"][0]["citation"]
+        assert "< OBR | " in cite and "OBR" in cite.split("alternative")[-1], cite
+    # A bare "--- CHOICE" mark on a choice that is NOT a slot is still unread.
+    body = [_row("MSH", "Header"), _row("<", "--- CHOICE"), _row("OBR", "Order"), _row("|"), _row("RXO", "Pharmacy"),
+            _row(">", "--- CHOICE")]
+    s, report = _raw_structure(body)
+    assert s is None and "group mark not read" in [r for r in report if r[1] == "skipped"][0][2], report
+    # The placeholder anywhere but last, or "..." with any description but "etc.", stays unread.
+    for rows in ([_row("<"), _row("", "etc."), _row("|"), _row("OBR", "Order"), _row(">")],
+                 [_row("<"), _row("OBR", "Order"), _row("|"), _row("...", "more"), _row(">")]):
+        s, report = _raw_structure([_row("MSH", "Header")] + rows)
+        assert s is None, (rows, s)
+
+
+def check_slot_citation_and_render():
+    # S3-2: the slot's citation is built like the structure's (version, chapter, section, title)
+    # plus the page of the slot's own row, quotes the print, and renders in the S3-1 JSON form.
+    body = ORDER_HEAD + [_row("["), "    Order Detail Segment OBR, etc.".ljust(70) + "4",
+                         _row("[{NTE}]", "Notes", "2"), _row("]"), _row("}")]
+    s, _ = _raw_structure(body)
+    slot = s["elements"][2]["elements"][1]["elements"][0]
+    assert slot["citation"].startswith("HL7 v2.5.1 Chapter 9, section 9.1.1 XYZ - synthetic (Event X01), p 9-1: "), \
+        slot["citation"]
+    assert "'Order Detail Segment OBR, etc.'" in slot["citation"], slot["citation"]
+    assert "_at" not in slot, slot
+    text = ext.render(s)
+    assert ('{ "slot": "Order Detail Segment", "min": 1, "max": null, "citation": "HL7 v2.5.1 Chapter 9' in text), text
+    assert "Order Detail Segment" in ext.compact(s["elements"]), ext.compact(s["elements"])
+
+
+def check_slot_never_from_query_template_or_prose():
+    # S3-2 keeps ruling G6 for query templates and S5 for prose: an ellipsis row, "[...]", a
+    # lone "..." cell and a "see section" prose row inside a group still leave the print unread.
+    cases = [[_row("MSH", "Header"), _row("ERQ", "Query"), _row("", "..."), _row("[ DSC ]", "Continuation")],
+             [_row("MSH", "Header"), _row("[...]", "Query results")],
+             [_row("MSH", "Header"), _row("...", "Segments of the query")],
+             [_row("MSH", "Header"), _row("[", ""), _row("PID", "Patient"),
+              "    see section 4.2.1 for the order detail segments that may appear here", _row("]", "")]]
+    for body in cases:
+        s, report = _raw_structure(body)
+        assert s is None and [r for r in report if r[1] == "skipped"], (body, report)
+    # Nor does "OBR, etc." in a plain description (the CH04 choice's description column).
+    s, _ = _structure([("MSH", "Header"), ("ORC", "Order"), ("<OBR|RQD|RXO>", "Order Detail Segment OBR, etc."),
+                       ("[{NTE}]", "Notes")])
+    assert not any("slot" in e for e in s["elements"]), s["elements"]
+
+
+def check_slot_bundle_naming():
+    # S3-2: an unnamed group holding a slot takes the bundle's name when the bundle group sits at
+    # the same path, its members include every printed segment and more (the slot's fillers),
+    # and its first segment is one of those fillers when the slot is the head (v2.4 PPR^PC1's
+    # ORDER and ORDER_DETAIL against HL7-xml v2.4, where the slot's place is a CHOICE of OBR, RXO).
+    b = _bundles("2.5.1", {"XYZ_X01": _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, PID 1 1, XYZ_X01.ORDER 0 unbounded;"
+                                                      "XYZ_X01.ORDER: ORC 1 1, XYZ_X01.ORDER_DETAIL 0 1;"
+                                                      "XYZ_X01.ORDER_DETAIL: XYZ_X01.CHOICE 1 1, NTE 0 unbounded;"
+                                                      "XYZ_X01.CHOICE choice: OBR 1 1, RXO 1 1")})
+    body = [_row("MSH", "Header"), _row("PID", "Patient"), _row("[{ORC", "Common Order", "4"),
+            _row("[OBR, etc", "Order Detail Segment, etc.", "4"), _row("[{NTE}]", "Notes", "2"), _row("]"), _row("}]")]
+    s, report = _raw_structure(body, bundles=b)
+    assert s, report
+    order = s["elements"][2]
+    assert (order["group"], order["nameSource"]) == ("ORDER", "v2xml"), order
+    assert (order["elements"][1]["group"], order["elements"][1]["nameSource"]) == ("ORDER_DETAIL", "v2xml"), order
+    # A bundle group whose first segment is a printed one is not the slot's group.
+    b = _bundles("2.5.1", {"XYZ_X01": _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, PID 1 1, XYZ_X01.ORDER 0 unbounded;"
+                                                      "XYZ_X01.ORDER: ORC 1 1, XYZ_X01.ORDER_DETAIL 0 1;"
+                                                      "XYZ_X01.ORDER_DETAIL: NTE 0 unbounded, OBR 1 1")})
+    s, report = _raw_structure(body, bundles=b)
+    assert s["elements"][2]["elements"][1]["nameSource"] == "synthesised", s["elements"][2]
+    assert s["elements"][2]["elements"][1]["group"] == "NTE_GROUP", s["elements"][2]
+
+
 def check_first_row_left_of_caption():
     # P8b-10 (v2.6 ADT^A31^ADT_A05 at 3.3.31): the caption at column 7, its rows from column 3; the
     # MSH row sets the column. Any other row that far left still ends the table.
@@ -1949,7 +2149,10 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_caption_erratum_occurrence, check_caption_structure_declared, check_v231_own_bundle_other_trigger,
           check_table_0354_provenance, check_table_0354_event_erratum_union, check_v23_events_from_title,
           check_v23_caption_forms, check_closing_bracket_in_description_column, check_v23_names_through_v231_then_v24,
-          check_single_space_cell_and_shifted_page, check_referenced_triggers, check_withdrawn_segments]
+          check_single_space_cell_and_shifted_page, check_referenced_triggers, check_withdrawn_segments,
+          check_slot_ch04_own_line, check_slot_ch04_bracketed_alone, check_slot_ch12_bracket_form,
+          check_slot_choice_with_placeholder, check_slot_citation_and_render,
+          check_slot_never_from_query_template_or_prose, check_slot_bundle_naming]
 
 
 def main():

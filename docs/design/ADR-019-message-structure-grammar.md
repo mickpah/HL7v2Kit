@@ -1816,3 +1816,25 @@ fillers included, is unaffected.
 the print gives everything around it). Query-template rows (`[...]`, `...` and the ellipsis rows
 of CH05 5.4 and CH08 8.4.1) stay Permanent as classed: their position stands for a whole message
 body chosen by a field value, not for a run of segments inside a printed structure.
+
+**Extraction (S3-2, 2026-10-06).** `scripts/extract-message-structures.py` emits the slot wherever
+the print gives the open order detail, in three forms: the CH04 row "Order Detail Segment OBR,
+etc." (v2.3 and v2.3.1 4.2.1 to 4.2.3, on its own line, wrapped as "Order Detail" / "Segment OBR,
+etc.", or in the description column); the CH12 cell `[OBR, etc`, `OBR, etc.` or `OBR, etc...`
+(v2.3 to v2.4); and a choice whose last alternative is a placeholder (`< OBR | etc. >`, with `...`
+or `Hxx` described "etc." in v2.5.1 PRR^PC5 and v2.8.2), which becomes one slot in place of the
+whole choice, since a slot never sits inside one; the listed alternatives are named in the slot's
+citation, and a mark on the choice's own rows (`--- CHOICE`, with or without begin and end) names
+nothing that remains. The slot takes the placeholder's place in the parsed sequence, so the
+brackets keep their printed meaning: v2.3 CH04 ORM^O01 reads `ORC [ slot [{NTE}] [{DG1}] [{OBX
+[{NTE}]}] ]` and v2.4 CH12 PPR^PC1 `[{ORC [ slot [{NTE}] [{VAR}] [{OBX ...}] ] }]`, the slot the
+head of an optional inner group, so a bare ORC draws no finding. The slot is min 1 there; where
+the print brackets the placeholder alone (v2.3 and v2.3.1 CH04 4.2.2 ORR^O02 and 4.2.3 OSR^Q06,
+p 4-5: "[Order Detail Segment] OBR, etc.") it is min 0, which corrects "min 1 in all 58 cases"
+above. The name is the description column's ("Order Detail Segment"), else null; the citation is
+the structure's (version, chapter, section, title) at the page of the slot's row, with the print
+quoted. An unnamed group holding a slot takes its HL7 v2.xml name when the bundle group sits at
+the same path, has every printed segment and at least one more (the slot's fillers), and starts
+with the printed first segment, or, when the slot heads the group, with one of those fillers.
+Query-template ellipses (`[...]`, `...` rows) and prose rows stay unreadable as before (ruling G6,
+S5).

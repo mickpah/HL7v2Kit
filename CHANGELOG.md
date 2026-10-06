@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — S3-2: the extractor emits the open slot
+
+- **`scripts/extract-message-structures.py`** reads the open order detail into a slot element in
+  its three printed forms: the CH04 row "Order Detail Segment OBR, etc." (v2.3, v2.3.1: own line,
+  wrapped, or in the description column), the CH12 cell `[OBR, etc` (v2.3 to v2.4), and a choice
+  whose last alternative is a placeholder (`< OBR | etc. >`, `...` or `Hxx` described "etc.";
+  v2.5.1 to v2.8.2), which becomes one slot in place of the choice. The slot keeps the print's
+  brackets around it (the head of an optional inner group after ORC); it is min 0 only where the
+  print brackets the placeholder alone (v2.3 and v2.3.1 ORR^O02 and OSR^Q06). Its citation is the
+  structure's at the slot's page, with the print quoted. Query-template ellipses and prose rows
+  stay unreadable (ruling G6, S5).
+- **`scripts/read-v2xml-bundles.py`**: an unnamed group holding a slot takes the bundle's name
+  when the bundle group at the same path has every printed segment and at least one more.
+- **Self-check**: 7 new cases (90 in all). No structure file and no `completeness.json` entry
+  changes (`--check` byte-identical); a dry run parses 47 of the 58 slot registrations, which
+  S3-3 writes with the per-structure print reading.
+- **ADR-019**: an Extraction paragraph under the S3-1 amendment, which also corrects "min 1 in
+  all 58 cases" (four ORR^O02 and OSR^Q06 slots are min 0).
+
 ### Added — S3-1: the open-slot structure element (owner decision 4, model only)
 
 - **`StructureElement.slot(_:min:max:citation:)`** (additive; the enum is open per ADR-014).

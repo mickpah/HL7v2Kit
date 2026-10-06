@@ -21,8 +21,20 @@ override), else <FIRSTSEG>_GROUP (nameSource synthesised, a no-bundle-name repor
 non-printed name is cited in the structure citation. The bundle's element tree is compared with
 the print, report only (bundle-differs rows); the print stays normative. Choice notation
 (< X | Y >, P8b-6) is read in every row layout into a choice element, named when the print
-names it; a choice whose alternatives are a placeholder ("etc.", "...") is skipped under ruling
-G6 (unreadable: placeholder (G6)). Every caption form is read (P8b-3a, see
+names it. The open order detail (S3-2, ADR-019 S3-1 amendment) is a slot element {"slot": name,
+"min", "max": null, "citation"}, read in three printed forms: the CH04 row "Order Detail Segment
+OBR, etc." (v2.3, v2.3.1; on its own line, wrapped, or in the description column), the CH12 cell
+"[OBR, etc" / "OBR, etc." / "OBR, etc..." (v2.3 to v2.4), and a choice whose last alternative is a
+placeholder ("< OBR | etc. >", "..." or "Hxx" described "etc."; v2.5.1 to v2.8.2), which becomes
+one slot in place of the whole choice, its listed alternatives named in the citation. The slot
+takes the print's place in the parsed sequence, so the brackets around it keep their meaning: the
+slot is min 1 (required once its group is present) unless the print brackets the placeholder
+alone ("[Order Detail Segment] OBR, etc.", or "[ < OBR | etc. > ]"), then min 0; max is always
+null. Its name is the description column's ("Order Detail Segment", ", etc." dropped), else null;
+its citation is the structure's (version, chapter, section, title) at the page of the slot's row,
+with the print quoted. Every other placeholder stays unreadable under ruling G6 (placeholder
+(G6)): an ellipsis row, "[...]", a lone "...", a second placeholder in a choice, or one that is
+not the choice's last alternative. Every caption form is read (P8b-3a, see
 captions()); exclusions, errata and shared triggers are cited overrides entries; the report
 adds duplicate-differs, needs-structure-id, needs-event, shared-trigger and the Table 0354
 reconciliation (0354-missing-row, 0354-missing-caption). On a version that prints its own Table
@@ -134,7 +146,15 @@ GROUP_MARK = re.compile(r"^---\s*([A-Z][A-Z0-9_]*)\s+((?i:begin|end))\b")   # "-
 # A mark as printed, misprints included ("--- INVOICE INFORMATION end", v2.6 EHC_E01): parse reads
 # it through GROUP_MARK after any cited group-mark erratum, and an unreadable one is an error.
 MARK_LIKE = re.compile(r"^---\s*[A-Z][A-Za-z0-9_ /+-]*?\s+(?i:begin|end)\b")
-TOKEN = re.compile(r"\s+|[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_])|\.\.\.|…|.")
+# S3-2: the open order detail. SLOT_CELL is the placeholder in a syntax cell ("[OBR, etc", "OBR,
+# etc.", "OBR, etc..."; CH04 and CH12); ETC_ALT and "Hxx" are a choice's placeholder alternative
+# ("< OBR | etc. >", v2.5.1 to v2.8.2 CH12); ORDER_DETAIL is the CH04 row "Order Detail Segment OBR,
+# etc.", its spaces collapsed, with or without brackets around "Order Detail Segment" alone.
+SLOT_CELL = r"OBR,?\s*etc\b\.*"
+ETC_ALT = r"etc\b\.?"
+ORDER_DETAIL = re.compile(r"(\[?)Order Detail Segment(\]?) OBR,? etc\b\.*")
+TOKEN = re.compile(r"\s+|" + SLOT_CELL + "|" + ETC_ALT + r"|Hxx(?![A-Za-z0-9_])|[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_])"
+                   r"|\.\.\.|…|.")
 TRIGGER = re.compile(r"^[A-Z][A-Z0-9]{2}\^([A-Z0-9]{3}|\*)$")
 
 
@@ -192,6 +212,7 @@ class Row:
     desc: str
     line: int
     page: str
+    printed: str = ""      # S3-2: the order detail placeholder as printed, when the cell is rewritten
 
 
 def page_labels(lines):
@@ -432,6 +453,21 @@ _NOTATION = re.compile(r"^(?:[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_^])|\.\.\
 _PROSE = re.compile(r"^[A-Z][A-Z0-9]{2}\s+[A-Z]?[a-z]+\b")
 
 
+def _no_chapter(text):
+    return re.sub(r"\s+\d{1,2}\s*$", "", text.replace("\f", "")).strip()
+
+
+def _order_detail(text):
+    """(cell, printed) when text prints the CH04 order detail row (S3-2): the cell rewritten in
+    the CH12 notation ("OBR, etc.", bracketed when the print brackets "Order Detail Segment"
+    alone), printed the row as the print gives it, spaces collapsed."""
+    printed = " ".join(_no_chapter(text).split())
+    m = ORDER_DETAIL.fullmatch(printed)
+    if not m or bool(m[1]) != bool(m[2]):
+        return None
+    return f"{m[1]}OBR, etc.{m[2]}", printed
+
+
 def syntax_rows(lines, caption):
     """The syntax rows of caption's table, in order. Records page-break repeats of the caption
     and the page of the last row on the caption. A repeated Segments/Description row (v2.7.1,
@@ -487,21 +523,41 @@ def syntax_rows(lines, caption):
             # The table's first row (MSH) left of an indented caption (v2.6 ADT^A31^ADT_A05 at
             # 3.3.31: the caption at column 7, its rows at 3): the rows set the column.
             code_col = indent
-        cells = split_row(line, desc_col)
+        # S3-2: the CH04 order detail row "Order Detail Segment OBR, etc." crosses the description
+        # column (v2.3 CH04 4.2.1, p 4-4), or wraps "Order Detail" / "Segment OBR, etc." onto a
+        # line further left (v2.3.1 CH04 4.2.1, p 4-4): one row, its cell in the CH12 notation.
+        printed, detail = "", rows and _order_detail(line)
+        if rows and not detail and re.fullmatch(r"\[?Order Detail", _no_chapter(line)):
+            j = next((k for k in range(i + 1, min(i + 3, len(lines))) if lines[k].strip()), None)
+            detail = j is not None and _order_detail(_no_chapter(line) + " " + lines[j])
+            skip = j - i if detail else 0
+        cells = (detail[0], "Order Detail Segment") if detail else split_row(line, desc_col)
+        printed = detail[1] if detail else ""
+        if cells is None and rows:
+            # The CH12 cell one space from its description (v2.3 CH12 12.3.3 PPP^PCB, p 12-11:
+            # "[OBR, etc Order Detail Segment, etc."; S3-2).
+            m = re.fullmatch(r"([\[{]*" + SLOT_CELL + r")\s+(\S.*)", _no_chapter(line))
+            cells = (m[1], m[2]) if m else None
         if cells is None:
             if depth == 0:
                 break
             raise UnknownNotation(f"line {i + 1}: prose inside an open group: {line.strip()[:60]!r}")
         left, desc = cells
-        if not left and choices > 0 and PLACEHOLDER.match(desc.strip()):
-            # The alternatives are not enumerated (v2.5.1 CH12 "< OBR | etc. >"; the bundle has
-            # anyHL7Segment): expanded only by a cited G6 entry, never guessed. Read on to the end
-            # of the table first, so its page-break repeats of the caption are consumed.
+        if not left and choices > 0 and re.fullmatch(ETC_ALT, desc.strip()):
+            # "etc." alone in place of an alternative (v2.5.1 to v2.7.1 CH12 "< OBR | etc. >"): the
+            # open order detail, read by parse as the choice's placeholder alternative (S3-2).
+            left, desc = desc.strip(), ""
+        elif not left and choices > 0 and PLACEHOLDER.match(desc.strip()):
+            # Any other placeholder among the alternatives: ruling G6, never guessed. Read on to the
+            # end of the table first, so its page-break repeats of the caption are consumed.
             placeholder = placeholder or f"line {i + 1}: placeholder (G6): {desc.strip()!r} among a choice's alternatives"
             continue
-        if not left and rows and depth > 0 and (re.match(r"[\[{<]", desc.strip()) or re.search(r"\bOBR,? etc\b", desc)):
-            # Notation printed in the description column inside an open group (v2.3.1 CH04 4.2.3
-            # OSR^Q06, p 4-5: "[Order Detail Segment] OBR, etc." with an empty syntax cell): read as
+        if not left and rows and depth > 0 and _order_detail(desc):
+            # The order detail row in the description column with an empty syntax cell (v2.3.1 CH04
+            # 4.2.3 OSR^Q06, p 4-5: "[Order Detail Segment] OBR, etc."): the slot (S3-2).
+            (left, printed), desc = _order_detail(desc), "Order Detail Segment"
+        elif not left and rows and depth > 0 and (re.match(r"[\[{<]", desc.strip()) or re.search(r"\bOBR,? etc\b", desc)):
+            # Other notation printed in the description column inside an open group: read as
             # description it would vanish from the structure; a placeholder, ruling G6 (P8b-14).
             placeholder = placeholder or f"line {i + 1}: placeholder (G6): {desc.strip()[:60]!r} in the description column"
             continue
@@ -530,7 +586,7 @@ def syntax_rows(lines, caption):
             break       # prose or another table's header after the table (v2.5.1 RSP_K23's QPD field table)
         depth += sum(left.count(c) for c in "[{<") - sum(left.count(c) for c in "]}>")
         choices += left.count("<") - left.count(">")
-        rows.append(Row(left, desc, i, pages[i]))
+        rows.append(Row(left, desc, i, pages[i], printed))
         caption.end_page = pages[i]
         placeholder = placeholder or ellipsis
     if placeholder:
@@ -616,7 +672,7 @@ def parse(rows, marks=None, used=None):
                     raise UnknownNotation(f"unbalanced {tok!r} in {row.left!r}")
                 closed.append(stack.pop())
             elif tok == "<":
-                node = {"kind": "<", "children": [], "alts": [], "name": None}
+                node = {"kind": "<", "children": [], "alts": [], "name": None, "page": row.page}
                 stack[-1]["children"].append(node)
                 stack.append(node)
                 opened.append(node)
@@ -627,8 +683,17 @@ def parse(rows, marks=None, used=None):
                 stack[-1]["children"] = []
                 if tok == ">":
                     closed.append(stack.pop())
+            elif re.fullmatch(SLOT_CELL, tok):
+                # S3-2: the open order detail ("[OBR, etc", "OBR, etc."), named by its description
+                # ("Order Detail Segment, etc." reads "Order Detail Segment").
+                stack[-1]["children"].append({"kind": "slot", "row": row, "tok": tok})
+            elif stack[-1]["kind"] == "<" and (re.fullmatch(ETC_ALT, tok) or (
+                    tok in ("...", "…", "Hxx") and re.fullmatch(ETC_ALT, row.desc.strip()))):
+                # A choice's placeholder alternative: "etc." (v2.5.1 to v2.7.1 CH12), "..." or
+                # "Hxx" with the description "etc." (v2.5.1 PRR^PC5, v2.8.2); _choice reads it.
+                stack[-1]["children"].append({"kind": "etc", "tok": tok})
             elif re.fullmatch(r"[A-Z][A-Z0-9]{2}", tok):
-                stack[-1]["children"].append({"kind": "seg", "id": tok})
+                stack[-1]["children"].append({"kind": "seg", "id": tok, "desc": row.desc})
             elif tok in ("...", "…"):
                 raise UnknownNotation(f"placeholder (G6): {row.left!r}")
             else:
@@ -637,7 +702,13 @@ def parse(rows, marks=None, used=None):
         mark = GROUP_MARK.match(desc)
         name = mark and mark.group(1)
         if not mark and re.match(r"^---\s*\S", desc):
-            raise UnknownNotation(f"group mark not read: {desc[:50]!r}")
+            # A mark with no begin or end on a choice's "<" or ">" row (v2.7.1 and v2.8.2 CH12
+            # PGL^PC6 "--- CHOICE") is unread unless the choice turns out to be a slot (S3-2).
+            choice = next((n for n in opened + closed if n["kind"] == "<"), None)
+            if choice is None:
+                raise UnknownNotation(f"group mark not read: {desc[:50]!r}")
+            choice["loose"] = desc
+            continue
         if mark and mark.group(2).lower() == "begin":
             if not opened:
                 raise UnknownNotation(f"--- {name} begin on a row that opens no group")
@@ -650,9 +721,26 @@ def parse(rows, marks=None, used=None):
     return [_element(child) for child in root["children"]]
 
 
+def _slot(node, alone=False):
+    """The slot element for a SLOT_CELL node (S3-2). min 1, max null: unbracketed within its
+    group, the slot is required once the group is present, and "segment(s)" (CH04 use note b) or
+    "all possible combinations" (CH12 note) admit more than one; brackets around the placeholder
+    alone make it optional. "_at" carries what cite_slots needs (the print and its page)."""
+    row = node["row"]
+    name = re.sub(r",?\s*etc\b\.*$", "", _no_chapter(row.desc)).strip()
+    name = None if not name or name.startswith("---") else name
+    printed = row.printed or " ".join(f"{row.left} {row.desc}".split())
+    return {"slot": name, "min": 0 if alone else 1, "max": None,
+            "_at": {"page": row.page, "printed": printed, "alone": alone}}
+
+
 def _element(node):
     if node["kind"] == "seg":
         return {"segment": node["id"], "min": 1, "max": 1}
+    if node["kind"] == "slot":
+        return _slot(node)
+    if node["kind"] == "etc":
+        raise UnknownNotation(f"placeholder (G6): {node['tok']!r} among a choice's alternatives, not the last")
     if node["kind"] == "<":
         return _choice(node, {"<"}, [node["name"]] if node["name"] else [])
     # Nested brackets around one child are one element: [{X}], {[X]} and [ { A B } ] (ADR-019:
@@ -666,7 +754,7 @@ def _element(node):
         # Two printed names are two groups, nested: never merge them; nor a named group into
         # the choice it holds (the group, not the choice, carries the name).
         # A bracketless named group ("=", P8b-10) is required: never merged into the brackets it holds.
-        if (only is not None and only["kind"] != "seg" and node["kind"] != "="
+        if (only is not None and only["kind"] not in ("seg", "slot") and node["kind"] != "="
                 and not (names and (only["name"] or only["kind"] == "<"))):
             node = only
             continue
@@ -676,6 +764,10 @@ def _element(node):
     if not node["children"]:
         raise UnknownNotation("an empty group")
     bounds = {"min": 0 if "[" in kinds else 1, "max": None if "{" in kinds else 1}
+    if len(node["children"]) == 1 and not names and node["children"][0]["kind"] == "slot":
+        # "[Order Detail Segment] OBR, etc." (v2.3 CH04 4.2.2 ORR^O02, p 4-5): the placeholder
+        # alone in brackets is an optional slot (S3-2).
+        return _slot(node["children"][0], alone="[" in kinds)
     if len(node["children"]) == 1 and not names:
         return {"segment": node["children"][0]["id"], **bounds}
     return {"group": names[0] if names else None, "nameSource": "printed" if names else None,
@@ -688,6 +780,11 @@ def _choice(node, kinds, names):
     segment groups) is an unnamed group, named like any unnamed printed group by name_groups."""
     if any(not alt for alt in node["alts"]):
         raise UnknownNotation("an empty alternative in a choice")
+    last = node["alts"][-1]
+    if len(node["alts"]) > 1 and len(last) == 1 and last[0]["kind"] == "etc":
+        return _choice_slot(node, kinds)
+    if node.get("loose"):
+        raise UnknownNotation(f"group mark not read: {node['loose'][:50]!r}")
     if len(node["alts"]) < 2 and names:
         # "< QPD RCP >" named QUERY_INFORMATION (v2.8.2 CH16; v2.6 SDR_S31): CH02 defines a choice
         # by "|" between alternatives, so with none the print is a required sequence: a NAMED
@@ -705,6 +802,24 @@ def _choice(node, kinds, names):
                     {"group": None, "nameSource": None, "min": 1, "max": 1, "elements": [_element(c) for c in alt]}
                     for alt in node["alts"]]
     return {"choice": name, "nameSource": "printed" if name else None, **bounds, "alternatives": alternatives}
+
+
+def _choice_slot(node, kinds):
+    """A choice whose last alternative is the placeholder ("< OBR | etc. >", v2.5.1 to v2.8.2
+    CH12): one slot in place of the whole choice (S3-2). A slot never sits inside a choice, and the
+    print says the detail is any of the listed segments or others, which a slot covers; the listed
+    alternatives go into its citation. The choice's own mark, if any, names nothing that remains.
+    Named by the first listed alternative's description ("OBR  Order Detail Segment")."""
+    listed = node["alts"][:-1]
+    if any(n["kind"] in ("etc", "slot") for alt in listed for n in alt):
+        raise UnknownNotation("placeholder (G6): a choice holding more than one placeholder")
+    alts = [compact([_element(n) for n in alt]) for alt in listed]
+    first = listed[0][0]
+    name = _no_chapter(first.get("desc", "")) if first["kind"] == "seg" else ""
+    name = None if not name or name.startswith("---") else name
+    return {"slot": name, "min": 0 if "[" in kinds else 1, "max": None,
+            "_at": {"page": node.get("page", ""), "printed": "< " + " | ".join(alts + [node["alts"][-1][0]["tok"]]) + " >",
+                    "alone": "[" in kinds, "alternatives": alts}}
 
 
 def name_groups(elements, version, structure, overrides, used=None, path=(), bundles=None, log=None, taken=None):
@@ -737,7 +852,8 @@ def name_groups(elements, version, structure, overrides, used=None, path=(), bun
             if name is None and hit:
                 name, source, cite = hit[0]["name"], "override", f"overrides.json: {hit[0]['citation']}"
             elif name is None:
-                base = f"{_v2xml.signature(element['elements'])[0]}_GROUP"
+                # A slot is no segment: the first printed segment names it (S3-2).
+                base = f"{next((x for x in _v2xml.leaves(element['elements']) if x != _v2xml.OPEN), 'SLOT')}_GROUP"
                 name = next(n for n in [base] + [f"{base}{k}" for k in range(2, 100)] if n not in taken)
                 source, cite = "synthesised", f"synthesised: {cite}"
             if hit and used is not None:
@@ -869,7 +985,42 @@ def citation(version, primary, others, overrides, structure):
     return text + (notes[0] if notes else ".")
 
 
+def cite_slots(elements, version, cap):
+    """Every slot's citation (S3-2), in place of its "_at": the structure's own citation form
+    (version, chapter, section, title) at the page of the slot's row, the print quoted, and why
+    it is a slot. Returns elements."""
+    for e in elements:
+        if "slot" in e and "_at" in e:
+            at = e.pop("_at")
+            text = (f"HL7 v{version} Chapter {cap.chapter}, section {cap.section} {cap.section_title}, p {at['page']}: ")
+            if "alternatives" in at:
+                text += (f"the print gives the order detail as the choice {at['printed']!r}, whose last alternative is "
+                         "a placeholder for segments it does not enumerate: one open slot in place of the choice "
+                         f"(ADR-019 S3-1, S3-2), the listed alternative{'s' if len(at['alternatives']) > 1 else ''} "
+                         f"{_join(at['alternatives'])} among its fillers")
+            else:
+                text += (f"the print gives the order detail as {at['printed']!r}, segments it names by example and "
+                         "does not enumerate: an open slot (ADR-019 S3-1, S3-2)")
+            if at["alone"]:
+                text += ("; the print brackets the placeholder alone, so the slot is optional" if "alternatives" not in at
+                         else "; the print brackets the choice, so the slot is optional")
+            e["citation"] = text + "."
+        for key in ("elements", "alternatives"):
+            cite_slots(e.get(key, []), version, cap)
+    return elements
+
+
+def uncited(elements):
+    """elements with each slot's "_at" or citation dropped, to compare two prints (S3-2)."""
+    return [{k: v for k, v in e.items() if k not in ("_at", "citation")} if "slot" in e else
+            {**e, "elements": uncited(e["elements"])} if "elements" in e else
+            {**e, "alternatives": uncited(e["alternatives"])} if "alternatives" in e else e for e in elements]
+
+
 def render_element(element, indent):
+    if "slot" in element:     # S3-2: the S3-1 open-slot form
+        return (f'{indent}{{ "slot": {json.dumps(element["slot"])}, "min": {element["min"]}, '
+                f'"max": {json.dumps(element["max"])}, "citation": {json.dumps(element["citation"], ensure_ascii=False)} }}')
     if "segment" in element:
         return (f'{indent}{{ "segment": "{element["segment"]}", "min": {element["min"]}, '
                 f'"max": {json.dumps(element["max"])} }}')
@@ -1052,6 +1203,9 @@ def compact(elements):
     """A one-line rendering of elements in print notation, for report rows."""
     out = []
     for e in elements:
+        if "slot" in e:     # S3-2: unbounded by definition, so no braces
+            out.append(("[" if e["min"] == 0 else "") + f"{e['slot'] or 'open slot'} etc." + ("]" if e["min"] == 0 else ""))
+            continue
         if "alternatives" in e:
             inner = (f"{e['choice']}: " if e["choice"] else "") + "<" + " | ".join(compact([a]) for a in e["alternatives"]) + ">"
         else:
@@ -1065,6 +1219,8 @@ def compact(elements):
 
 
 def _key(e):
+    if "slot" in e:
+        return ("slot", e["slot"])
     return e["segment"] if "segment" in e else ("choice", e["choice"]) if "alternatives" in e else ("group", e["group"])
 
 
@@ -1449,7 +1605,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 report.append((sid, "duplicate-unreadable", f"{c.printed} ({c.source} line {c.line + 1}, section "
                                                             f"{c.section}): {str(exc)[:120]}"))
                 continue
-            if theirs != elements:
+            if uncited(theirs) != uncited(elements):
                 report.append((sid, "duplicate-differs", f"{c.printed} (section {c.section}) prints "
                                f"{compact(theirs)[:160]!r}; primary {cap.printed} (section {cap.section}) prints "
                                f"{compact(elements)[:160]!r}"))
@@ -1457,6 +1613,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         referenced = [t for e in overrides.get("referencedTriggers", []) if e["version"] == ver and e["structure"] == sid
                       for t in e["triggers"] if t not in triggers]
         triggers += referenced
+        cite_slots(elements, ver, cap)
         structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
                                           "citation": citation(ver, cap, others, overrides, sid)
                                           + (f" {primaries[sid]['citation']}" if sid in primaries else "")

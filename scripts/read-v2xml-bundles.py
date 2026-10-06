@@ -148,10 +148,17 @@ def _members(e):
     return e["elements"] if "elements" in e else e["alternatives"]
 
 
+OPEN = "*"      # a printed open slot in a signature (S3-2): no segment ID is spelt so
+
+
 def leaves(elements):
+    """Segment IDs in order; a printed open slot (S3-2) yields OPEN, standing for the segments
+    the print does not enumerate."""
     for e in elements:
         if "segment" in e:
             yield e["segment"]
+        elif "slot" in e:
+            yield OPEN
         else:
             yield from leaves(_members(e))
 
@@ -159,6 +166,21 @@ def leaves(elements):
 def signature(elements):
     segs = list(leaves(elements))
     return (segs[0] if segs else None, frozenset(segs))
+
+
+def matches(sig, elements):
+    """A bundle group's elements against a printed signature. Equal signatures match. A print
+    holding an open slot (S3-2; the bundle gives the slot's place as a choice of OBR, RXO, ... or
+    anyHL7Segment) matches when the bundle group has every printed segment and at least one
+    more (the slot's fillers), and its first segment is the printed first one, or, when the slot
+    heads the print, one of those fillers."""
+    theirs = signature(elements)
+    if theirs == sig or OPEN not in sig[1]:
+        return theirs == sig
+    known = sig[1] - {OPEN}
+    if not known <= theirs[1] or not theirs[1] - known:
+        return False
+    return theirs[0] not in known if sig[0] == OPEN else theirs[0] == sig[0]
 
 
 def groups(elements, path=()):
@@ -205,7 +227,7 @@ def resolve(bundles, version, sid, path, elements):
         elif tree is None:
             own_miss = f"{folder(version)} has no {sid}.xsd"
         else:
-            hits = [g for p, g in groups(tree) if p == tuple(path) and signature(g["elements"]) == sig]
+            hits = [g for p, g in groups(tree) if p == tuple(path) and matches(sig, g["elements"])]
             if len(hits) == 1 and hits[0]["group"] in REFUSED.get(version, ()):
                 own_miss = (f"{folder(version)}/{sid}.xsd names it {hits[0]['group']} ({hits[0]['type']}), a name "
                             "refused without a cited override (P8b-14 ruling)")
@@ -231,8 +253,8 @@ def _by_code(bundles, version, sid, path, sig):
     sig's first segment and member set (the parent path breaks a tie), else (None, None)."""
     code = sid.split("_")[0]
     hits = [(s, p, g) for s in bundles.structures(version) if s.split("_")[0] == code and s != sid
-            for p, g in groups(bundles.tree(version, s) or []) if signature(g["elements"]) == sig]
-    if len({g["group"] for _, _, g in hits}) > 1:
+            for p, g in groups(bundles.tree(version, s) or []) if matches(sig, g["elements"])]
+    if len({g["group"] for _, _, g in hits}) > 1 or OPEN in sig[1]:
         hits = [h for h in hits if h[1] == tuple(path)]
     if not hits or len({g["group"] for _, _, g in hits}) != 1:
         return None, None
@@ -250,8 +272,8 @@ def _derive(bundles, version, base, sid, path, sig, want):
     candidates = [sid] if own is not None else \
         [s for s in bundles.structures(base) if s.split("_")[0] == sid.split("_")[0] and s != sid]
     hits = [(s, p, g) for s in candidates for p, g in groups(bundles.tree(base, s) or [])
-            if signature(g["elements"]) == sig]
-    if len({g["group"] for _, _, g in hits}) > 1:
+            if matches(sig, g["elements"])]
+    if len({g["group"] for _, _, g in hits}) > 1 or OPEN in sig[1]:
         hits = [h for h in hits if h[1] == tuple(path)]
     if hits and len({g["group"] for _, _, g in hits}) == 1:
         s, _, g = hits[0]
@@ -278,6 +300,8 @@ def differences(printed, bundle, where="root"):
     list in the same order, recursively. A printed choice is compared with the bundle group of
     the same label (its name, or CHOICE when unnamed), which must be an xsd:choice (P8b-6)."""
     def label(e):
+        if "slot" in e:     # S3-2: the bundle prints a choice (or anyHL7Segment) in its place
+            return f"slot {e['slot'] or 'open slot'}"
         return e.get("segment") or e.get("group") or e.get("choice") or "CHOICE"
     a, b = [label(e) for e in printed], [label(e) for e in bundle]
     out = []
@@ -288,7 +312,7 @@ def differences(printed, bundle, where="root"):
             p, q = printed[block.a + i], bundle[block.b + i]
             if _bounds(p) != _bounds(q):
                 out.append(f"{label(p)} at {where}: print {_bounds(p)}, bundle {_bounds(q)}")
-            if "segment" not in p and "group" in q:
+            if "segment" not in p and "slot" not in p and "group" in q:
                 inner = label(p) if where == "root" else f"{where}/{label(p)}"
                 if ("alternatives" in p) != q["choice"]:
                     out.append(f"{inner}: print {'choice' if 'alternatives' in p else 'sequence'}, "
