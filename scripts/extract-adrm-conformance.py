@@ -115,6 +115,13 @@ SHIPPED_NOTES = {
     'HL7au:00044.10.1.6': 'ED subtype => type of data for every v2.4 Table 0291 value '
                           '(all 15 are map keys; pinned)',
     'HL7au:00044.11.1.6': 'RP subtype => type of data, as 00044.10.1.6 (RP fire/silent pair pinned)',
+    # P12 S2-2: CX-5 membership built (the row named it, only presence was
+    # checked); the printed NNxxx pattern row of Table 0203 (p 306) is
+    # accepted on CX-5, XCN-13 and PRD-7.3 alike (XCN-13 used to fire on it).
+    'HL7au:00044.1.3': 'CX-5 presence and membership in the ADRM Table 0203 (pp 301-309, '
+                       'AU locale axis), the NNxxx pattern row (p 306) included (P12 S2-2)',
+    'HL7au:00044.7.4': 'XCN-13 presence and Table 0203 membership; the NNxxx pattern row '
+                       '(p 306) accepted since P12 S2-2',
     # P4-20 / P4-24 / P4-26 / P4-31 (owner rulings G6, G9): see
     # permanent-limitations-register (00060.4 row) and ADR-021.
     'HL7au:00060.4': 'explicit prohibitions on C fields (`prohibitedWhen` / '

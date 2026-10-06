@@ -244,7 +244,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "WCN", description: "Workers’ Comp Number"),
             HL7Table.Entry(code: "WP", description: "Work Permit"),
             HL7Table.Entry(code: "XX", description: "Organization identifier"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code", regex: "^NN[A-Z]{3}$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0211_au_adrm_2021 = HL7Table(

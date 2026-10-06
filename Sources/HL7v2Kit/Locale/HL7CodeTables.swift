@@ -49,6 +49,13 @@ enum HL7CodeTables {
     /// footnote markers had hidden them from that transcription.
     static let table0203: [String] = auCodes("0203")
 
+    /// The pattern rows of the same table: `NNxxx`, "National Person
+    /// Identifier where the xxx is the ISO table 3166 3-character
+    /// (alphabetic) country code" (p. 306). A value set over 0203 passes
+    /// these with `table0203` (P12 S2-2), or a conformant `NNAUS` fires.
+    static let table0203Patterns: [HL7Table.CodePattern] =
+        HL7TableRegistry.table("0203", locale: .auLocalisation)?.patterns ?? []
+
     /// User-defined Table 0363 — Assigning Authority, the AU-defined
     /// value set printed in AU ADRM-2021 (p. 310). NOT consumed by a
     /// membership rule: the table is user-defined and the ADRM's own

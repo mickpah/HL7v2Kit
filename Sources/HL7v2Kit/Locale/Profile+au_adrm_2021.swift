@@ -782,6 +782,7 @@ extension Profile {
                     ComponentValueSet(
                         component: 3,
                         allowedValues: HL7CodeTables.table0203,
+                        allowedPatterns: HL7CodeTables.table0203Patterns,
                         condition: "messageCode = REF",
                         specCitation: "HL7au:00104.7.3.1 — PRD-7.3 (other qualifying info) must be valued from HL7 Table 0203 (Identifier Type) on Senders Referrals; AU ADRM-2021 Appendix 5 p. 472, table p. 301"
                     ),
@@ -986,7 +987,21 @@ extension Profile {
                         specCitation: "HL7au:00044.1.3 — CX-5 identifier type code must be valued"
                     ),
                 ],
-                pairRules: []
+                pairRules: [],
+                // P12 S2-2 — HL7au:00044.1.3's membership half, p 449: "CX
+                // <identifier type code (ID)> component must be valued with
+                // a valid value from HL7 Table 0203 - Identifier type (see
+                // page 301)". The value set XCN-13 uses (00044.7.4), with
+                // the printed NNxxx pattern row (p 306). Populated-only:
+                // presence is the requirement above.
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 5,
+                        allowedValues: HL7CodeTables.table0203,
+                        allowedPatterns: HL7CodeTables.table0203Patterns,
+                        specCitation: "HL7au:00044.1.3 — CX-5 (identifier type code) must be a valid value from HL7 Table 0203 (Identifier Type); AU ADRM-2021 Appendix 5 p. 449, table pp. 301-309"
+                    ),
+                ]
             ),
             // CE datatype — HL7au:00044.4 series.
             // - 44.4.1/.2/.5/.6: identifier ⇔ coding-system pairs (pairRules).
@@ -1067,6 +1082,7 @@ extension Profile {
                     ComponentValueSet(
                         component: 13,
                         allowedValues: HL7CodeTables.table0203,
+                        allowedPatterns: HL7CodeTables.table0203Patterns,
                         specCitation: "HL7au:00044.7.4 — XCN-13 (identifier type code) must be a valid value from HL7 Table 0203 (Identifier Type); AU ADRM-2021 table pp. 301-309"
                     ),
                 ]

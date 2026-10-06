@@ -26,6 +26,12 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 
 - No rule change. The points (Appendix 5 pp 456 and 457: "When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used", and the same for RP) were PARTIAL on the belief that some 0291 subtypes skip; all 15 v2.4 Table 0291 values are keys of the subtype map. `AUSubtypeCorrespondenceTests` walks the v2.4 registry table and pins an RP fire/silent pair (RP had only a dispatch pin). Conformance and limitations registers updated.
 
+### Added — P12 S2-2: HL7au:00044.1.3 CX-5 membership in Table 0203; the NNxxx row accepted
+
+- HL7au:00044.1.3 (Appendix 5 p 449: "CX <identifier type code (ID)> component must be valued with a valid value from HL7 Table 0203 - Identifier type (see page 301)") was SHIPPED for presence only; CX-5 membership in the ADRM's Table 0203 is now checked on Orders, Results and Referrals, the same value set as XCN-13 (00044.7.4).
+- **Fixed (requirement 4):** the ADRM's Table 0203 prints a pattern row, "NNxxx National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code" (p 306), which the AU locale table had not carried, so XCN-13 (00044.7.4) and PRD-7.3 (00104.7.3.1) fired on a conformant `NNAUS`. The AU locale `0203.json` gains the pattern row (`^NN[A-Z]{3}$`, as the base tables carry it); the profile value sets accept a full match. Internal: `ComponentValueSet.allowedPatterns`. No public API change.
+- Tests: `AUIdentifierTypeTests`. Registers updated (section B row 00044.1.2/.1.3 corrected).
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).

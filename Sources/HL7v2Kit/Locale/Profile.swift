@@ -567,18 +567,31 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
     let specCitation: String?
 
+    /// Printed pattern rows of the source table (P12 S2-2): a value that
+    /// fully matches one is allowed too. The ADRM's Table 0203 prints
+    /// `NNxxx` (p. 306), a family no list of values can hold.
+    let allowedPatterns: [HL7Table.CodePattern]
+
     init(
         component: Int,
         subcomponent: Int? = nil,
         allowedValues: [String],
+        allowedPatterns: [HL7Table.CodePattern] = [],
         condition: String? = nil,
         specCitation: String? = nil
     ) {
         self.component = component
         self.subcomponent = subcomponent
         self.allowedValues = allowedValues
+        self.allowedPatterns = allowedPatterns
         self.condition = condition
         self.specCitation = specCitation
+    }
+
+    /// `true` when `value` is one of `allowedValues` or fully matches one
+    /// of `allowedPatterns`.
+    func allows(_ value: String) -> Bool {
+        allowedValues.contains(value) || allowedPatterns.contains { $0.matches(value) }
     }
 }
 

@@ -1004,7 +1004,7 @@ public struct Validator: Sendable {
                     component: valueSet.component,
                     subcomponent: valueSet.subcomponent
                 )
-                guard !value.isEmpty, !valueSet.allowedValues.contains(value) else { continue }
+                guard !value.isEmpty, !valueSet.allows(value) else { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,
@@ -1540,7 +1540,7 @@ public struct Validator: Sendable {
                     component: valueSet.component,
                     subcomponent: valueSet.subcomponent
                 )
-                if valueSet.allowedValues.contains(actual) { continue }
+                if valueSet.allows(actual) { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: occurrence,
