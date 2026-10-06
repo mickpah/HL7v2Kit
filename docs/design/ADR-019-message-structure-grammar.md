@@ -693,7 +693,7 @@ Owner gate G2, answered 2026-09-30 (all recommended defaults).
 | 4 | Unrecognised or empty MSH-12 | Skip, `messageStructureNotModelled` (info); no fallback grammar |
 | 5 | Group spans gating | On for complete versions with a clean match, independent of severity; behind the `isComplete` probe |
 | 6 | ORC-8 OUL misfire | Interim gate `messageCode not in (...)` shipped in P4-7; removed per version by the rollout task that supplies spans |
-| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point; an exact-matched base is matched again past a dropped `unexpected` until a finding is kept; narrowed maxima stay unreported Amended 2026-10-06 (S6-3, owner ruling, decision 1 of the epic P11 gate): a segment occurrence beyond a maximum the profile structure narrows below the base's, which the base accepts, is reported once per occurrence as `.info` `profileMaximumExceeded(localeRule:)`, naming the profile print and the maximum; it stays dropped as a finding. |
+| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point; an exact-matched base is matched again past a dropped `unexpected` until a finding is kept; narrowed maxima stay unreported. Amended 2026-10-06 (S6-3, owner ruling, decision 1 of the epic P11 gate): a segment occurrence beyond a maximum the profile structure narrows below the base's, which the base accepts, is reported once per occurrence as `.info` `profileMaximumExceeded(localeRule:)`, naming the profile print and the maximum; it stays dropped as a finding. |
 | 8 | AU overlay timing | Immediately after the extractor (R1) |
 | 9 | Acknowledgments | Build and validate the general ACK; no protocol logic |
 | 10 | Severity | `messageStructureSeverity = nil` default now; presets `.warning` and `.error` confirmed at close-out |
@@ -2190,8 +2190,8 @@ model extension"). The extension is built.
   (P8b-3a), not the CH10 print the `primaryPrints` entry had made primary: a variant must name
   exact triggers, and only CH02 is printed for every trigger ("varies"). The other ACK prints
   equal to CH02 (CH03 and the rest, 119 captions on v2.6) take the default; those stricter than
-  both (v2.6 CH03 3.3.18 without UAC, CH05 5.4.4 to 5.4.7 with `[ERR]`) stay `duplicate-differs`
-  on the default, as before. **Kept as `primaryPrints`:** v2.3 ORM_O01 and ORR_O02 (S3-3): the
+  both (v2.6 CH03 3.3.18 without UAC, CH05 5.4.4 to 5.4.7 with `[ERR]`) stayed `duplicate-differs`
+  on the default in S6-1 and are variants since the S6 fix wave (below). **Kept as `primaryPrints`:** v2.3 ORM_O01 and ORR_O02 (S3-3): the
   general print's open slot subsumes the four specific prints under the same caption, which
   share one trigger, so no trigger selects a stricter print.
 - **Evidence.** `StructureVariantProbeTests` (32 probes; RED at BASE 8c3d4d6c: 17 issues, every
@@ -2207,6 +2207,36 @@ model extension"). The extension is built.
   and v2.4, ADT_A09 v2.4, ADT_A05 v2.5.1, ADT_A01 v2.6, RQC_I05 v2.4 to v2.6, RRE_O12 v2.5.1 and
   v2.6, RDE_O11 v2.7.1 and v2.8.2) are the same class and convertible by one `variantPrints`
   entry each; they are listed for the owner, not converted in S6.
+- **S6 fix wave (2026-10-06; owner ruling on S6 item 1).** Each is now a variant, read against
+  both prints. The extractor takes several `variantPrints` entries per structure (one per distinct
+  variant print, all naming the same default; equal variant prints, different defaults or a
+  trigger in two variants are errors), cites a variant's unprinted group names in the variant's
+  own citation, and takes an optional `keptOnDefault`: the triggers a variant print shares with
+  the default print's caption. Those have two prints under one trigger, the `primaryPrints` case,
+  so the looser default keeps them; the list must be exactly that overlap. No default print
+  changed, so no `elements` changed. A v2.5.1 RQI_I01 group-mark erratum (as on v2.6 to v2.8.2)
+  lets the I03 print be read; it agrees with I01.
+
+| Version / ID | Default print | Variant print, triggers | Difference |
+|---|---|---|---|
+| v2.3, v2.3.1 ACK | CH02 2.13.1 ACK (pp 2-68, 2-78) | CH07 7.2.1 ACK^R01 (pp 7-14, 7-16): R01 | `[ERR]` against none |
+| v2.4 ACK | CH02 2.14.1 ACK^varies (p 2-97) | CH07 7.3.1 ACK^R01 (p 7-19), CH14 14.3.2 ACK^N02 (p 14-4): R01, N02 | `[ERR]` against none |
+| v2.5.1 to v2.8.2 ACK | CH02 ACK^varies | CH05 5.4.4 to 5.4.7: Q16, Q17, J01, J02 | `[{ERR}]` against `[ERR]` |
+| v2.6 ACK | CH02 2.13.1 (p 42) | CH03 3.3.18 ACK^A18 (p 3-21): A18 | `[UAC]` against none |
+| v2.3.1 MFK_M01 | CH08 8.3.1 MFK^M01-M06 (p 8-3) | 8.10.1 (p 8-68): M07; M01 to M06 kept (8.6.1 and the others print them without ERR too) | `[ERR]` against none |
+| v2.4 MFK_M01 | CH08 8.4.1 MFK^M01-M06 (pp 8-9 to 8-10) | 8.11.1 (p 8-81): M07; M02, M04 to M06 kept | `[ERR]` against none |
+| v2.4 ADT_A09 | CH03 3.3.9 ADT^A09 (p 3-18; A10, A11 alike) | 3.3.12 ADT^A12 (p 3-20): A12 | `[{DG1}]` against `[DG1]` |
+| v2.5.1 ADT_A05 | CH03 3.3.5 ADT^A05 (A14, A28 alike) | 3.3.31 ADT^A31 (pp 3-37 to 3-38): A31 | PROCEDURE `PR1 [{ROL}]` against `PR1 {ROL}` |
+| v2.6 ADT_A01 | CH03 3.3.1 ADT^A01 (p 3-4; A04, A08 alike) | 3.3.13 ADT^A13 (pp 3-16 to 3-17): A13 | `[{ARV}]` after PD1 against none |
+| v2.4 to v2.6 RQC_I05 | CH11 11.3.5 RQC^I05 | 11.3.6 RQC^I06: I06 | `[{GT1}]` against `[GT1]` |
+| v2.5.1, v2.6 RRE_O12 | CH04 4.13.6 RRE^O12 | 4.13.14 RRE^O26: O26 | `RXE [{NTE}]` against `RXE` |
+| v2.7.1, v2.8.2 RDE_O11 | CH04A 4A.3.5 RDE^O11 | 4A.3.13 RDE^O25: O25 | group COMPONENT against COMPONENTS (names only) |
+
+  Left on the default: the v2.4 ADT^A31 print (3.3.31) prints `{ ROL }]` in PROCEDURE, which
+  reads neither as `[{ROL}]` nor as `{ROL}` without choosing; no erratum is taken, so A31 takes the
+  A05 print. Evidence: `StructureVariantFixProbeTests` (40 probes; RED at d063d728: the 21
+  stricter-trigger probes and the RDE^O25 name test, nothing else), `StructureVariantTests`,
+  `check_variant_prints_several` and `check_variant_prints_kept_on_default`.
 
 ### S6-2 the P8b-17 scope-rule residue (2026-10-06)
 

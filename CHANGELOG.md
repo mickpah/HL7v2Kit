@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — S6 fix wave: every remaining per-trigger print disagreement is a variant (epic P11 sprint 6)
+
+- Twenty more `overrides.json` `variantPrints` entries, each read against both prints (ADR-019 S6
+  fix wave): ACK^R01 on v2.3 and v2.3.1, ACK^R01 and ACK^N02 on v2.4 (no ERR); the CH05 ACK
+  prints for Q16, Q17, J01 and J02 on v2.5.1 to v2.8.2 (`[ERR]`); ACK^A18 on v2.6 (no UAC);
+  MFK_M01 M07 on v2.3.1 and v2.4 (no ERR); ADT_A09 A12 on v2.4 (`[DG1]`); ADT_A05 A31 on v2.5.1
+  (PROCEDURE `{ROL}`); ADT_A01 A13 on v2.6 (no ARV after PD1); RQC_I05 I06 on v2.4 to v2.6
+  (`[GT1]`); RRE_O12 O26 on v2.5.1 and v2.6 (no NTE after RXE); RDE_O11 O25 on v2.7.1 and v2.8.2
+  (group COMPONENTS). A message under the stricter trigger can now draw that print's finding (an
+  ACK^Q16 with two ERR). No default print changed, so `MessageStructure.elements` is unchanged
+  for all of them.
+- The extractor takes several variant prints per structure and `keptOnDefault`: triggers printed
+  both ways under one trigger (MFK_M01 M01 to M06 on v2.3.1, M02 and M04 to M06 on v2.4) keep the
+  looser default. A v2.5.1 RQI_I01 group-mark erratum lets the I03 print be read (it agrees). Left
+  on the default: the v2.4 ADT^A31 print, unreadable as printed (`{ ROL }]`).
+- The AU beyond-maximum information names the profile's maximum, or says the segment occurs more
+  times than the profile structure allows (no "bounded number of times").
+
 ### Changed — S6-4: fragment reassembly and version provenance re-classed Permanent (epic P11 sprint 6)
 
 - Register section E: message fragments are not reassembled because reassembly is a transport

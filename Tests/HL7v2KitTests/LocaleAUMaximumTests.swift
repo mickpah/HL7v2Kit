@@ -72,4 +72,14 @@ struct LocaleAUMaximumTests {
         #expect(beyond(try issues(Self.head + ["PV1|1", "PV1|2"], severity: nil)).isEmpty)
         #expect(beyond(try issues(Self.head + ["IN1|1", "PV1|1", "PV2|1"])).isEmpty)
     }
+
+    @Test("The message names the profile's maximum, or says the occurrence is more than the profile allows")
+    func maximumWording() {
+        #expect(Validator.beyondMaximumClause(segmentID: "PV1", maximum: 1, structure: "the REF_I12 structure")
+            == "the REF_I12 structure allows PV1 at most once here, and this occurrence is beyond it")
+        #expect(Validator.beyondMaximumClause(segmentID: "IN1", maximum: 3, structure: "the REF_I12 structure")
+            == "the REF_I12 structure allows IN1 at most 3 times here, and this occurrence is beyond it")
+        #expect(Validator.beyondMaximumClause(segmentID: "PV1", maximum: nil, structure: "the REF_I12 structure")
+            == "PV1 occurs here more times than the REF_I12 structure allows")
+    }
 }

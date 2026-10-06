@@ -117,14 +117,15 @@ extension Validator {
             guard finding.kind == .exceededMaximum, finding.index < ids.count else { return nil }
             let anchor = location(finding.index)
             guard !keptPlaces.contains(anchor.pathDescription) else { return nil }
-            let most = Self.profileMaximum(of: finding.segmentID, in: profile.elements)
-                .map { $0 == 1 ? "at most once" : "at most \($0) times" } ?? "a bounded number of times"
+            let clause = Self.beyondMaximumClause(
+                segmentID: finding.segmentID,
+                maximum: Self.profileMaximum(of: finding.segmentID, in: profile.elements),
+                structure: "the \(profile.id) structure of the \(profile.profile ?? "profile") profile")
             return ValidationIssue(
                 severity: .info,
                 code: .profileMaximumExceeded(localeRule: rule),
                 location: anchor,
-                message: "\(rule): the \(profile.id) structure of the \(profile.profile ?? "profile") profile allows "
-                    + "\(finding.segmentID) \(most) here, and this occurrence is beyond it; the base v\(base.version) "
+                message: "\(rule): \(clause); the base v\(base.version) "
                     + "\(base.id) structure accepts it (\(profile.citation)). Reported at information (ADR-019 decision 7, "
                     + "owner ruling 2026-10-06)."
             )
@@ -176,6 +177,15 @@ extension Validator {
     /// How many times `segmentID` may occur at its first place in `elements`: the
     /// product of the maxima on the path to that segment element, nil when one
     /// of them is unbounded or the segment is not named.
+    /// The first clause of a beyond-maximum finding: the profile's maximum where one product of
+    /// the printed cardinalities gives it, else that the occurrence is more than the profile allows
+    /// (S6 fix wave M4: no vague "bounded number of times").
+    static func beyondMaximumClause(segmentID: String, maximum: Int?, structure: String) -> String {
+        guard let maximum else { return "\(segmentID) occurs here more times than \(structure) allows" }
+        let most = maximum == 1 ? "at most once" : "at most \(maximum) times"
+        return "\(structure) allows \(segmentID) \(most) here, and this occurrence is beyond it"
+    }
+
     static func profileMaximum(of segmentID: String, in elements: [StructureElement]) -> Int? {
         for element in elements {
             if case .segment(segmentID, _, let max) = element { return max }
