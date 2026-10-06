@@ -32,8 +32,37 @@ struct ConditionNotEvaluatedTests {
         for name in ["OBR-2", "OBR-3", "OBR-29", "ORC-2", "ORC-3", "ORC-8", "NK1", "OUL_R22"] {
             #expect(issue.message.contains(name), "\(name) not in: \(issue.message)")
         }
-        #expect(issue.message.contains("because NK1 at segment 6 has no place in OUL_R22; without spans the v2.6 gate for OUL holds"),
+        #expect(issue.message.contains("because NK1 at segment 6 has no place in OUL_R22; without spans the v2.6 gate "
+                                       + "applies to OUL, so these order-number conditions are not evaluated"),
                 "\(issue.message)")
+        // S1-4 review: the text makes no structural claim about where the OBR is printed,
+        // which would be untrue of OUL_R21 (`[ORC] OBR`) and of an empty MSH-9.1.
+        #expect(!issue.message.contains("printed before"), "\(issue.message)")
+    }
+
+    @Test("The issue sits at the first gated segment occurrence when an OBR precedes the ORC")
+    func firstOccurrenceObrFirst() throws {
+        let body = ["PID|1", "SPM|1", "OBR|1|P1|F1|X", "OBR|2|P2|F2|X", "ORC|SC|P1|F1", "NK1|1"]
+        let message = try GroupSpanScopeTests.message("OUL^R22^OUL_R22", "2.6", body)
+        let found = Self.notEvaluated(message)
+        try #require(found.count == 1)
+        #expect(found[0].location == IssueLocation(segmentID: "OBR", segmentIndex: 1, fieldIndex: 2))
+    }
+
+    @Test("An empty MSH-9.1 on v2.6 carrying ORC gets one info issue naming the empty MSH-9.1")
+    func emptyMessageCodeV26() throws {
+        let message = try GroupSpanScopeTests.message("", "2.6", ["PID|1", "ORC|NW|P1"])
+        let found = Self.notEvaluated(message)
+        try #require(found.count == 1)
+        #expect(found[0].severity == .info)
+        #expect(found[0].location == IssueLocation(segmentID: "ORC", segmentIndex: 1, fieldIndex: 2))
+        #expect(found[0].message.contains("the v2.6 gate applies to an empty MSH-9.1"), "\(found[0].message)")
+    }
+
+    @Test("v2.4 has no gate, so an empty MSH-9.1 there gets none")
+    func noGateV24() throws {
+        let message = try GroupSpanScopeTests.message("", "2.4", ["PID|1", "ORC|NW|P1", "OBR|1|P1|F1|X"])
+        #expect(Self.notEvaluated(message).isEmpty)
     }
 
     @Test("v2.8.2 and v2.7.1 name only the order-number fields")

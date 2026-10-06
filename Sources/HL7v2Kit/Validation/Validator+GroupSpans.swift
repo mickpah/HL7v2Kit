@@ -136,8 +136,7 @@ extension Validator {
             location: IssueLocation(segmentID: first.segmentID, segmentIndex: 1, fieldIndex: field.field),
             message: "The conditions of \(list) were not evaluated: they pair the ORC and OBR of one order group, "
                 + "and no group spans are known because \(cause); without spans the v\(message.version.rawValue) "
-                + "gate for \(code) holds, since the ORC walk cannot pair an OBR printed before its ORC "
-                + "(ADR-019, P8b-17)."
+                + "gate applies to \(code), so these order-number conditions are not evaluated (ADR-019, P8b-17)."
         ))
     }
 
