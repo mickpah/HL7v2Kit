@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-profile`: HL7au:00060.1 now has the simplified REF profile (Appendix 8) selected by the declared profile, ORR^O02 with its cited print erratum, and OSR^Q06 narrowed with one documented residual; ruling 6 (an optional ERR in the 5.6.5 no-data head) is built; `StructureVariant.profileIdentifiers` is the one additive public API. Review pins, the p 43 citation and the recorded Level 1 reading (an owner item) close the sprint.
+
 ### Added — P12 S1: the AU profile structures completed (epic P12 sprint 1)
 
 Under `.auLocalisation` with `messageStructureSeverity` set (on in the default and strict presets), on v2.4. More `HL7au:00060.1` findings may fire; the international locale is unchanged.
