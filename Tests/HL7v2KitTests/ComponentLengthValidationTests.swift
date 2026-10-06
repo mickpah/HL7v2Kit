@@ -208,6 +208,20 @@ struct ComponentLengthValidationTests {
         #expect(try componentLengthIssues(wire, options).map(\.severity) == [.error])
     }
 
+    // S1-fix M3: OBX-5 takes its type from OBX-2, and the component check follows it.
+    @Test("v2.7.1 OBX-5 typed XAD by OBX-2: XAD.6 Country (3..3) of two characters is reported")
+    func obxValueTypedByObx2() throws {
+        let wire = msh("2.7.1", profile: "", type: "ORU^R01^ORU_R01") + "PID|||1^^^H^MR||DOE^JOHN\rOBR|1\r"
+            + "OBX|1|XAD|CODE^Name||1 Main St^^City^^^AU||||||F\r"
+        let issues = try componentLengthIssues(wire)
+        try #require(issues.count == 1)
+        #expect(issues[0].code == .componentLengthOutOfRange(length: "3..3", actual: 2))
+        #expect(issues[0].location == IssueLocation(segmentID: "OBX", segmentIndex: 1, fieldIndex: 5,
+                                                    componentIndex: 6, subcomponentIndex: nil))
+        let fine = wire.replacingOccurrences(of: "^^^AU|", with: "^^^AUS|")
+        #expect(try componentLengthIssues(fine).isEmpty)
+    }
+
     // S1-5 (performance): the printed cells are parsed once and a field whose grammar has
     // nothing to check is skipped by key. The index must select exactly the components the
     // per-call parse selected: a range or list, never a maximum, on every grammar. S1-fix

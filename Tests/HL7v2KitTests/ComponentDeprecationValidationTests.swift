@@ -162,6 +162,19 @@ struct ComponentDeprecationValidationTests {
         #expect(found[0].location == at("PID", 5, 10))
     }
 
+    // S1-fix M3: OBX-5 takes its type from OBX-2, and the component check follows it.
+    @Test("v2.8.2 OBX-5 typed XTN by OBX-2: XTN.1 (W) populated is reported")
+    func obxValueTypedByObx2() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ORU^R01^ORU_R01|M1|P|2.8.2\r"
+            + "PID|1||123^^^H^MR||Doe^John\rOBR|1\rOBX|1|XTN|CODE^Name||555-1234||||||F\r"
+        let found = try componentIssues(wire)
+        try #require(found.count == 1)
+        #expect(found[0].code == .componentNotSupported(optionality: "W"))
+        #expect(found[0].location == at("OBX", 5, 1))
+        let fine = wire.replacingOccurrences(of: "||555-1234|", with: "||^PRN^PH^^61^2^12345678|")
+        #expect(try componentIssues(fine).isEmpty)
+    }
+
     // S1-5: the optionality legend (v2.8.2 CH02 section 2.5.3.5, pp. 9-10) defines `X`
     // ("not used with this trigger event") beside `B` and `W`, and the same legend governs
     // component tables from v2.5. No extracted component table prints `X` today, so the
