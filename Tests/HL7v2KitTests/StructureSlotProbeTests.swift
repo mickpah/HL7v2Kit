@@ -96,13 +96,19 @@ struct StructureSlotProbeTests {
 
     // The eleven prints read through cited syntax-cell errata (overrides.json, S3-3): v2.3 CH12
     // 12.2.1 PGL '[{VAR}]}', 12.2.3 PPP and 12.2.8 PPV '[{NTE]}', 12.2.10 PTR '{NTE}]', 12.2.12 PPT
-    // a pathway group never closed; v2.3.1 12.2.x and v2.4 12.3.x PGL, PPV and PTR likewise. Each
-    // probe pins the reading: the observation NTE optional, the order inside the problem (PPP,
-    // PTR) or the goal (PGL, PPV, PPT), the pathway closed at the end (PPT).
+    // a pathway group never closed; v2.3.1 12.2.x and v2.4 12.3.x PGL, PPV and PTR likewise.
+    // Everything after the slot can be absorbed by it (ADR-019 S3-1), so only an erratum whose
+    // cell precedes the order can be discriminated by a message. Discriminating probes: PTR's
+    // problem-observation '{NTE}]' (OBX then ORC: a required NTE would be missing) and PPT's
+    // pathway closure (PID PTH GOL PTH GOL, no order: a pathway closed before the goal group
+    // could not repeat after GOL). Not discriminable: PGL's '[{VAR}]}' and PPP's and PPV's
+    // '[{NTE]}' are cells of the order detail group, after the slot, where any reading is
+    // absorbed (and each pair of balanced readings has the same cardinality); their probes pin
+    // only what the structure requires before the slot.
     static let misprinted: [Probe] = [
         Probe(version: "2.3", msh9: "PGL^PC6", structure: "PGL_PC6",
-              body: ["PID|1", "GOL|1", "ORC|NW", "OBR|1", "OBX|1", "NTE|1", "VAR|1", "OBX|2"], findings: [],
-              note: "order observations with variance"),
+              body: ["PID|1", "GOL|1", "ORC|NW", "OBR|1"], findings: [],
+              note: "goal with an order: the required segments before the slot"),
         Probe(version: "2.3", msh9: "PGL^PC6", structure: "PGL_PC6",
               body: ["PID|1", "ORC|NW", "OBR|1"], findings: ["unexpected ORC at ORC[1]"], note: "no goal"),
         Probe(version: "2.3", msh9: "PPP^PCB", structure: "PPP_PCB",
@@ -123,15 +129,15 @@ struct StructureSlotProbeTests {
               body: ["MSA|AA|1", "QRD|1", "PID|1", "PTH|1", "ORC|NW"], findings: ["unexpected ORC at ORC[1]"],
               note: "order with no problem"),
         Probe(version: "2.3", msh9: "PPT^PCL", structure: "PPT_PCL",
-              body: ["MSA|AA|1", "QRD|1", "PID|1", "PTH|1", "GOL|1", "PRB|1", "ORC|NW", "OBR|1", "PTH|2", "PID|2", "PTH|3"],
-              findings: [], note: "two pathways, two patients"),
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "PTH|1", "GOL|1", "PTH|2", "GOL|2", "PID|2", "PTH|3", "GOL|3"],
+              findings: [], note: "two pathways each with a goal, two patients, no order"),
         Probe(version: "2.3", msh9: "PPT^PCL", structure: "PPT_PCL",
               body: ["MSA|AA|1", "QRD|1", "PID|1", "GOL|1"], findings: ["unexpected GOL at GOL[1]"],
               note: "goal with no pathway"),
     ] + ["2.3.1", "2.4"].flatMap { v in [
         Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
-              body: ["PID|1", "GOL|1", "ORC|NW", "RXO|1", "OBX|1", "VAR|1", "OBX|2"], findings: [],
-              note: "order observations with variance"),
+              body: ["PID|1", "GOL|1", "ORC|NW", "RXO|1"], findings: [],
+              note: "goal with an order: the required segments before the slot"),
         Probe(version: v, msh9: "PPV^PCA^PPV_PCA", structure: "PPV_PCA",
               body: ["MSA|AA|1", "QRD|1", "PID|1", "GOL|1", "ORC|NW", "OBR|1", "NTE|1"], findings: [],
               note: "goal response with an order"),

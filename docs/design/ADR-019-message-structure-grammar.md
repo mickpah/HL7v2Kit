@@ -1900,7 +1900,14 @@ message; one occurrence keeps its span.
 **Evidence.** `StructureSlotProbeTests` gives each version conformant messages (an OBR detail, a
 pharmacy detail fitting the general print, a bare ORC, a CH12 `ORC OBR NTE VAR OBX`, a detail
 the v2.5.1 and later choice does not list) and defects outside the slot (a required segment
-missing, an unexpected segment before the slot, a second MSH), and pins each erratum's reading.
+missing, an unexpected segment before the slot, a second MSH). An erratum's reading can be pinned
+only where its cell precedes the slot, since anything after the slot can be absorbed by it: the
+probes pin the PTR_PCF problem-observation `{NTE}]` (OBX then ORC, no NTE) and the v2.3 PPT_PCL
+closure (`PID PTH GOL PTH GOL` and a second patient, no order; a pathway closed before the goal
+group fails it, shown red in S3-4). PGL_PC6's `[{VAR}]}` and the `[{NTE]}` of PPP_PCB and
+PPV_PCA are order-detail cells after the slot: no message can discriminate their readings (each
+pair of balanced readings has the same cardinality anyway), so their probes pin only the
+segments the structure requires before the slot.
 The spec examples of these triggers print MSH-12 empty or the message code alone, so the digest
 does not change; with MSH-12 set to the chapter's version the 18 that resolve to a slot structure
 are body-checked clean.
