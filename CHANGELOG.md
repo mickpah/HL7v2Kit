@@ -32,6 +32,11 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 - **Fixed (requirement 4):** the ADRM's Table 0203 prints a pattern row, "NNxxx National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code" (p 306), which the AU locale table had not carried, so XCN-13 (00044.7.4) and PRD-7.3 (00104.7.3.1) fired on a conformant `NNAUS`. The AU locale `0203.json` gains the pattern row (`^NN[A-Z]{3}$`, as the base tables carry it); the profile value sets accept a full match. Internal: `ComponentValueSet.allowedPatterns`. No public API change.
 - Tests: `AUIdentifierTypeTests`. Registers updated (section B row 00044.1.2/.1.3 corrected).
 
+### Added — P12 S2-2: HL7au:000043.1 / 00044.2.1 HD Namespace ID presence under `auNASHTransport`
+
+- With `ValidationOptions.auNASHTransport` set, MSH-4.1 and MSH-6.1 must be valued: 000043.1 (Appendix 5 p 447: "The format must be "registered organisation name in HI service^1.2.36.1.2001.1003.0.<hpio>^ISO"") and 00044.2.1 (p 449: "the HD Namespace ID component must contain the registered organisation name", under the grouper "HD Datatype conformance points for MSH-4, and MSH-6"). Silent when not asserted, as before.
+- Both points stay PARTIAL: whether the name is the one the HPOS/HI service registers needs the directory. 00044.2.1 moves OUT to PARTIAL in the conformance register; limitations register and the option's DocC updated. Tests: `AUNASHNamespaceTests`.
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).

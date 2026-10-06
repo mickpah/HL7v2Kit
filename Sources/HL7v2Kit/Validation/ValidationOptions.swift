@@ -130,9 +130,11 @@ public struct ValidationOptions: Sendable {
     /// the 16-digit HPI-O, per HL7au:000043.1) and HL7au:00044.2.3 (the
     /// Universal ID Type must be `"ISO"`) — and the transport is not on
     /// the wire. `false`, the default, leaves them unchecked; `true`
-    /// applies them under ``HL7Locale/auLocalisation``. The sibling
-    /// points that name the HPOS/HI registered organisation name, or a
-    /// vendor X.509 certificate, need a directory and stay out of scope.
+    /// applies them under ``HL7Locale/auLocalisation``. Since P12 S2-2 it
+    /// also requires the HD Namespace ID (MSH-4.1, MSH-6.1) to be valued,
+    /// the presence half of HL7au:000043.1 and 00044.2.1; whether the name
+    /// is the one the HPOS/HI service registers, and the points that name
+    /// a vendor X.509 certificate, need a directory and stay out of scope.
     /// Not an init parameter. M32.
     public var auNASHTransport: Bool = false
 

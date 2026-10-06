@@ -18,12 +18,12 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
 | SHIPPED | 77 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 15 | partly enforced — see each row's note for what is not |
+| PARTIAL | 16 | partly enforced — see each row's note for what is not |
 | BASE | 9 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 8 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
-| OUT | 77 | out of scope by nature (transport, payload, cross-message) |
+| OUT | 76 | out of scope by nature (transport, payload, cross-message) |
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
@@ -109,7 +109,7 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (15)
+## PARTIAL (16)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -119,8 +119,9 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 presence + table 0074 membership enforced on Referrals; the "appropriate for the content in the OBR/OBX group" half is receiver-judgement over content and is not machine-checkable |
 | `HL7au:000034.1` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment in either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.... | OBX-3 and coded OBX-5 (OBX-2 CE/CWE/CNE) on Results/Referrals: a local primary (`L` or `99zzz`, Table 0396 p 144) with a non-local row of the ADRM Table 0396 (pp 142-145, AU locale axis) in the alternate fires; two public systems are outside the point. Public systems outside the printed table and other local spellings skip; the equivalence half is 000034.3 (terminology) |
 | `HL7au:000034.2` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, in OBX-3 (Observation Identifier), if the system transmits both a public (e.g. LOINC) and a local terminology, then the local terminology must be transmitted in th... | OBX-3, the same rule as 000034.1 (P12 S2-2); same residual |
-| `HL7au:000043.1` |  | Senders | Orders, Results, Referrals | MSH-4 – Sending Facility must be filled in with the sending facility HPI-O when sending a message via Secure Message Delivery (SMD) and secured by NASH Certificates. The format must be "registered organisation name in... | M32: the format's OID and "ISO" halves ship caller-asserted on MSH-4 (`auNASHTransport`); the "registered organisation name in HI service" half needs the HPOS/HI directory and stays out |
+| `HL7au:000043.1` |  | Senders | Orders, Results, Referrals | MSH-4 – Sending Facility must be filled in with the sending facility HPI-O when sending a message via Secure Message Delivery (SMD) and secured by NASH Certificates. The format must be "registered organisation name in... | M32: the format's OID and "ISO" halves ship caller-asserted on MSH-4 (`auNASHTransport`); since P12 S2-2 the organisation name must be present (MSH-4.1); whether it is the name "in HI service" needs the HPOS/HI directory and stays out |
 | `HL7au:00044.1.1` |  | Senders | Orders, Results, Referrals | CX <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | the presence half is enforced on Orders/Results/Referrals (CX-1 valued; yields to the base CX.1 check from v2.5.1); "valid according to the identifier scheme" needs identifier-scheme recognition and is not checked |
+| `HL7au:00044.2.1` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the HD Namespace ID component must contain the registered organisation name as registered by in the Medicare Australia HPOS/HI service. | caller-asserted (`auNASHTransport`): MSH-4.1 and MSH-6.1 must carry the organisation name (P12 S2-2); whether it is the name "as registered by in the Medicare Australia HPOS/HI service" needs the HI directory |
 | `HL7au:00044.3.1` | r2 | Senders | Orders, Results, Referrals | The EI Entity identifier component must be valued and for each document/report must be unique within the sender facility namespace (HD). | the presence half is enforced on Orders/Results/Referrals (EI-1 valued); the uniqueness half is cross-message and out of scope |
 | `HL7au:00044.7.1` |  | Senders | Orders, Results, Referrals | XCN <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | the presence half is enforced on Orders/Results/Referrals (XCN-1 valued); "valid according to the identifier scheme" needs identifier-scheme recognition and is not checked |
 | `HL7au:00044.8.1` |  | Senders | Orders, Results, Referrals | Correct timezone must be specified | the offset-PRESENCE half is enforced: a TS with hour-or-greater precision and no +/-ZZZZ suffix fires on Orders/Results/Referrals; the "offset is CORRECT for the stated local time" half needs a timezone database and is out of scope |
@@ -243,7 +244,7 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00101.8` |  | Receivers | Results, Referrals(L2) | Receiver systems must restrict access to attachments of trusted MIME types (the trusted MIME types may be configurable according to an organisation policy). | receiver behaviour — observed at runtime |
 | `HL7au:00104.2.2` |  | Receivers Senders | Referrals Referrals | The receiving system must present the referral message to intended recipient indicated by PRD-1 value of "IR". PRD-7 must have at least 1 repeat (for providers | receiver behaviour — observed at runtime |
 
-## OUT (77)
+## OUT (76)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -288,7 +289,6 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00043.3` | r2 | Senders | Orders, Results, Referrals | When SMD is used with vendor based certificates and identifiers, then the components of the MSH-4 HD must match with content of the sender as valued in the provider directory and also as identified in the sender's X.5... | transport addressing / SMD directory |
 | `HL7au:00043.4` | r2 | Senders | Orders, Results, Referrals | When SMD is used with vendor based certificates and identifiers, then the components of the MSH-6 HD must match with content of the receiver as valued in the provider directory and also as identified in the receiver's... | transport addressing / SMD directory |
 | `HL7au:00044.0.1` |  | Senders | Orders, Results, Referrals | User defined datatypes are prohibited in all segment fields, components, and subcomponents. (Note that this prohibits the use of user defined datatypes in variable datatype fields such as OBX-5). | user-defined datatypes are not detectable on the wire |
-| `HL7au:00044.2.1` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the HD Namespace ID component must contain the registered organisation name as registered by in the Medicare Australia HPOS/HI service. | the organisation name "as registered in the Medicare Australia HPOS/HI service" — needs the HI directory |
 | `HL7au:00044.2.4` |  | Senders | Orders, Results, Referrals | When SMD is used with vendor based certificates and identifiers, then the components of the HD must match with content of the receiver as valued in the provider directory and also as identified in the organisation's X... | vendor X.509 certificate + provider-directory agreement |
 | `HL7au:00044.3.2` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the EI Namespace ID component must contain the registered organisation name as registered by in the Medicare Australia HPOS/HI service. | EI twin of 00044.2.1 — needs the HI directory |
 | `HL7au:00044.3.4` |  | Senders | Orders, Results, Referrals | When SMD is used with vendor based certificates and identifiers, then the components of the HD must match with content of the receiver as valued in the provider directory and also as identified in the organisation's X... | the ADRM's SECOND row with this number: vendor X.509 certificate + provider-directory agreement (the first, the EI Universal ID rule, ships caller-asserted — M33) |

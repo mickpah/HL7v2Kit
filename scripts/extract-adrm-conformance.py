@@ -237,8 +237,13 @@ PARTIAL = {
                      'permanent-limitations register section E, close-out summary and the P8b-4 '
                      'and P8b-4a addenda',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
-                      '(`auNASHTransport`); the "registered organisation name in HI service" half '
-                      'needs the HPOS/HI directory and stays out',
+                      '(`auNASHTransport`); since P12 S2-2 the organisation name must be present '
+                      '(MSH-4.1); whether it is the name "in HI service" needs the HPOS/HI '
+                      'directory and stays out',
+    # P12 S2-2: the presence half, caller-asserted, on MSH-4 and MSH-6.
+    'HL7au:00044.2.1': 'caller-asserted (`auNASHTransport`): MSH-4.1 and MSH-6.1 must carry '
+                       'the organisation name (P12 S2-2); whether it is the name "as registered '
+                       'by in the Medicare Australia HPOS/HI service" needs the HI directory',
     'HL7au:000020': 'Z-prefixed trigger events prohibited on Orders/Results '
                     'and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 '
                     'profile gate; the message-CODE leg stays unenforced — '
@@ -384,8 +389,6 @@ OUT_OF_SCOPE = [
                          'a the message to the receiving system"'),
     ('HL7au:000043',     'transport addressing / NASH PKI'),
     ('HL7au:00043',      'transport addressing / SMD directory'),
-    ('HL7au:00044.2.1',  'the organisation name "as registered in the Medicare Australia '
-                         'HPOS/HI service" — needs the HI directory'),
     ('HL7au:00044.2.4',  'vendor X.509 certificate + provider-directory agreement'),
     ('HL7au:00044.2',    'transport addressing / NASH PKI'),
     ('HL7au:00044.3.2',  'EI twin of 00044.2.1 — needs the HI directory'),

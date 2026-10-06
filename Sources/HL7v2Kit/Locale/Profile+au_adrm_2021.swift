@@ -82,8 +82,13 @@ extension Profile {
             //          where <hpio> is a 16-digit number.
             //   .2.3 — "the HD Universal ID Type component must be ISO".
             //
-            // Siblings deliberately NOT shipped: .2.1 and 00044.3.2 name
-            // the organisation name "as registered in the Medicare
+            //   .2.1 / 000043.1 — HD-1 presence only (P12 S2-2): the
+            //          organisation name must be there; whether it is the
+            //          one "registered by in the Medicare Australia HPOS/HI
+            //          service" needs the directory.
+            //
+            // Siblings deliberately NOT shipped: 00044.3.2 names the
+            // organisation name "as registered in the Medicare
             // Australia HPOS/HI service" (needs the directory); .2.4 and
             // the second .3.4 compare against a vendor X.509 certificate;
             // 00043.2 is an anti-spoofing check the ADRM marks "applies
@@ -104,6 +109,19 @@ extension Profile {
                     ),
                 ],
                 componentPatterns: [
+                    // P12 S2-2 — the presence half of HL7au:000043.1 (p 447:
+                    // "The format must be "registered organisation name in
+                    // HI service^1.2.36.1.2001.1003.0.<hpio>^ISO"") and of
+                    // 00044.2.1 (p 449: "the HD Namespace ID component must
+                    // contain the registered organisation name"). A pattern
+                    // with no prefix and no digit count, empty not allowed,
+                    // is a presence check. Whether the name is the one the
+                    // HPOS/HI service holds needs the directory: not checked.
+                    ComponentPattern(
+                        component: 1,
+                        condition: "auNASHTransport populated",
+                        specCitation: "HL7au:000043.1 / 00044.2.1 (r2) — when using SMD with NASH certificates MSH-4 HD Namespace ID must carry the registered organisation name; AU ADRM-2021 Appendix 5 pp. 447, 449. Applied on the caller's NASH-transport assertion."
+                    ),
                     ComponentPattern(
                         component: 2,
                         prefix: "1.2.36.1.2001.1003.0.",
@@ -126,6 +144,14 @@ extension Profile {
                     ),
                 ],
                 componentPatterns: [
+                    // P12 S2-2 — 00044.2.1's presence half on MSH-6, as on
+                    // MSH-4 above (the 00044.2 grouper names "MSH-4, and
+                    // MSH-6"; 000043.1 is MSH-4 only).
+                    ComponentPattern(
+                        component: 1,
+                        condition: "auNASHTransport populated",
+                        specCitation: "HL7au:00044.2.1 (r2) — when using SMD with NASH certificates MSH-6 HD Namespace ID must carry the registered organisation name; AU ADRM-2021 Appendix 5 p. 449. Applied on the caller's NASH-transport assertion."
+                    ),
                     ComponentPattern(
                         component: 2,
                         prefix: "1.2.36.1.2001.1003.0.",
