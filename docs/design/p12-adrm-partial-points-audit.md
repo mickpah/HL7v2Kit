@@ -60,7 +60,7 @@ Legend for the table: `P` = `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift`
 | 16 | 00044.11.1.6 (p 457) | as 00044.10.1.6, for RP | P:1129-1136; T:2389 (dispatch only) | as 00044.10.1.6 | as row 14 | CLOSABLE (to SHIPPED; pin test over the registry's 0291 rows on RP, then the register row) | none new |
 | 17 | 00060.1 (p 466) | "HL7 message elements with a usage of R (required) must be valued." | the six AU structures (ORU_R01, ORM_O01, ORR_O02, REF_I12 with the Appendix 8 variant, RRI_I12, OSR_Q06): `Validator+ProfileStructure.swift:33`; `LocaleAUStructureTests.swift:51` onward | RXO, ODS or ODT in place of OBR in ORR^O02 and OSR^Q06 (section E) | `choice` and `keyedChoice` elements can express the replacement; the print does not settle whether the p 280 ORM replacement carries over to the responses | PARTIAL STAYS (print ambiguity: an owner reading is needed, after which the existing `choice` element closes it) | if read as carrying over: none found; if not: n/a |
 | 18 | 00104.7.1.4 (p 473) | "the correct matching `<type of ID number (IS)>` and `<other qualifying info (ST)>` must be used as per table" | AUSHICPR => UPIN, AUSHIC => NPIO/NOI on REF: P:769-783; T:1984 | vendor authorities are open-ended examples and skip | ADR-016 locale axis: AU 0363 (`Resources/tables/locale/au-adrm-2021/0363.json`, 6 rows). The PRD-7 prose (p 334): vendor identifiers "must use "VDI" as the value for `<other qualifying info (ST)>`" and 0363 "may be extended to allow for secure messaging vendor assigning authorities" | CLOSABLE (narrows: PRD-7.2 outside the printed 0363 => PRD-7.3 = VDI; stays PARTIAL: AUSDVA, AUSNATA, AUSLINK and IHI have no printed pair) | a site that extends 0363 with a non-vendor authority (the print sanctions only vendor extensions) |
-| 19 | 000001 (p 417) | "Senders and receivers must ensure an order message is addressed using MSH-6 Receiving facility" | nothing (MSH-6 HD format ships caller-asserted under 00044.2.2/.2.3: P:115-137) | "receiver-runtime semantics", "soft should guidance" or PKI-deferred 00044.2; "none is a wire-checkable MUST" (section B) | none needed: the sender half of the parent MUST implies MSH-6 is valued on an order message; MSH-6 is O in the ADRM MSH table (p 38), so nothing enforces it today | CLOSABLE (to PARTIAL: MSH-6 populated when `messageCode = ORM`; 000001.1 is receiver behaviour and the 00044.2.1 name needs the HI directory) | an ORM routed by transport alone with MSH-6 empty: the point forbids exactly that, so the flag is correct |
+| 19 | 000001 (p 417) | "Senders and receivers must ensure an order message is addressed using MSH-6 Receiving facility" | nothing (MSH-6 HD format ships caller-asserted under 00044.2.2/.2.3: P:115-137) | "receiver-runtime semantics", "soft should guidance" or PKI-deferred 00044.2; "none is a wire-checkable MUST" (section B) | none needed: the sender half of the parent MUST implies MSH-6 is valued on an order message; MSH-6 is O in the ADRM MSH table (p 37), so nothing enforces it today | CLOSABLE (to PARTIAL: MSH-6 populated when `messageCode = ORM`; 000001.1 is receiver behaviour and the 00044.2.1 name needs the HI directory) | an ORM routed by transport alone with MSH-6 empty: the point forbids exactly that, so the flag is correct |
 | 20 | 000008.1.5 (p 422) | "The OBX display segment(s) must be the last in a set of OBX segments in each OBR/OBX group" | nothing | the signature identifiers live in HB 308-2011, which the ADRM does not reproduce (section D) | the ADRM itself identifies both kinds: display segments "by having AUSPDI OBX-3 `<name of coding system>`" (p 422; also p 247), and "Digital signature OBX can identified by OBX-3 (CE) identifier component starting with "AUSETAV", and OBX-3 name of code system component "L"" (000010 comment, p 438). Group spans (`GroupScoping`, scope `.obrObxGroup`) bound the set | CLOSABLE (to SHIPPED; needs one new rule shape, an in-group ordering rule) | a signature OBX encoded per HB 308 but without the AUSETAV/L identifier the ADRM prints |
 | 21 | 000034.3 (p 445) | "concepts from the different terminologies must convey the same clinical meaning" | nothing | terminology-equivalence judgement (section C) | none | REGISTERED STAYS (terminology service) | n/a |
 | 22 | 00044.4.7 (p 452) | "Both `<identifier>` and `<alternative identifier>` must reflect the same concept" | nothing | needs a terminology service to compare concepts (section B) | none | REGISTERED STAYS (terminology service) | n/a |
@@ -68,3 +68,147 @@ Legend for the table: `P` = `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift`
 | 24 | 00044.6.7 (p 454) | as 00044.4.7, for CWE | nothing | as row 23 (the print marks 00044.6.6 (r2) Removed, not .6.7) | none | REGISTERED STAYS (terminology service; section B's reason is wrong) | n/a |
 | 25 | 00100.1 (p 468) | "The current referral summary OBR/OBX group must appear as the first OBR/OBX group in the message." | nothing (the Appendix 8 variant, S1-1, does not mark the group) | section D: "REF-4 referral-priority ordering according to the SNOMED CT hierarchy" | group spans give "the first group"; identifying the referral-summary group needs OBR-4 to be a child of SNOMED CT-AU 373942005 or 3457005 (p 212), and the printed list is "non-exhaustive"; older referrals may follow (p 212, p 485) | REGISTERED STAYS (terminology: SNOMED CT-AU subsumption; section D's wording should name OBR-4, not REF-4) | n/a |
 | 26 | 00104.7.2.1 (p 473) | "PRD-7 `<type of ID number (IS)>` must be valued from User-defined Table 0363" | nothing (`CT:52-59` keeps the AU 0363 rows for reference) | a closed check would misfire on vendor authorities (`Medical-Objects`, `Argus`, p 334) | ADR-016 locale axis plus a caller declaration: the print allows 0363 to "be extended to allow for secure messaging vendor assigning authorities" (p 334), so membership is the printed six plus the caller's declared vendor authorities | CLOSABLE (to SHIPPED caller-asserted, default silent; needs one additive `ValidationOptions` property, owner approval) | none by default; when asserted, an authority the caller did not declare fires, which is the point |
+
+## The CLOSABLE points
+
+**000034.1 and 000034.2 (rows 6, 7): a defect first, then a widening.** The shipped
+correspondence (CT:105-115) reads "an alternate system in {LN, SCT, UCUM} requires a primary in
+{LN, SCT, UCUM}". The point constrains only a pair of one public and one local terminology. Two
+public systems are outside it, yet the rule fires on them: OBX-5 `E11.9^...^I10^44054006^...^SCT`
+(ICD-10 primary, SNOMED CT alternate; both are rows of the ADRM's own Table 0396, pp 142-145) draws
+a finding. That is a known misfire, so under requirement 4 it is a defect, not a residual. The
+faithful rule detects the *local* side, which the ADRM prints: "99ZZZ or L" (p 144). Rule shape:
+fire when the primary system (CE-3) is `L` or matches `99` followed by alphanumerics, and the
+alternate system (CE-6) is a non-local row of the ADRM's printed Table 0396 (seeded on the AU
+locale axis like 0074, 0200, 0203). OBX-3 for 000034.2; OBX-3 and coded OBX-5 for 000034.1; gate
+`messageCode in (ORU, REF)` as today. Failing tests: (a) `I10` primary with `SCT` alternate is
+silent (fails today); (b) `L` primary with `PBS` alternate fires (silent today, as PBS is not in
+the named three); (c) `99ABC` primary with `LN` alternate keeps firing (it fires today). Residual after: a primary system
+that is local but not spelt `L` or `99zzz` (the print says the format "should be 99zzz"), and
+public systems outside the printed table, skip; the point stays PARTIAL with that smaller residual.
+
+**000024.2 (row 4): no new model.** MSH-2 is read as one literal (P:335-337), so the REF leg is
+`SegmentCardinalityRule(countedSegmentID: "MSH", scope: .messageWide, maxCount: 0, predicate:
+"MSH-2 not startsWith ^", applicableWhen: "messageCode = REF")`. The FHS and BHS legs belong in
+BV: `BatchFile.fileHeader` and `BatchGroup.header` are the raw segment strings, so the component
+separator is the character after `FHS|` or `BHS|`. Failing tests: a REF with MSH-2 `#~\&` fires
+(silent today); a REF with `^~\&` is silent; a batch of ORU whose BHS-2 starts with another
+character fires. The same BV check closes the FHS and BHS legs of the SHIPPED 000024.1, .3, .4 and
+.5, which are not enforced today (see owner items). The S2-2 test must also confirm the predicate
+lexer accepts `^` as a value.
+
+**00044.10.1.6 and 00044.11.1.6 (rows 14, 16): a register correction backed by a pin.** All 15
+v2.4 Table 0291 values are keys of `subtypeToTypeMap`, so no 0291 subtype skips. Evidence: a test
+that walks `HL7TableRegistry` v2.4 table 0291 and asserts every value is a map key, plus one RP
+pair test (`RP` with subtype `PDF` and type `IM` fires; `AP` is silent), since RP has only a
+dispatch pin today. Then the two rows read SHIPPED.
+
+**000043.1 (row 8): HD-1 presence under the assertion.** The printed format begins with the
+registered organisation name, so an asserted NASH MSH-4 with HD-1 empty is non-conformant whatever
+the directory says. Rule: a `ComponentRequirement(component: 1)` on the MSH-4 HD override with
+condition `auNASHTransport populated` (and on MSH-6 for 00044.2.1, whose presence half is the same).
+Failing test: asserted, MSH-4 `^1.2.36.1.2001.1003.0.8003621566684455^ISO` fires (silent today).
+
+**000001 (row 19): MSH-6 on an order.** Rule: MSH-6 populated when `messageCode = ORM`, cited
+HL7au:000001. Failing test: an AU ORM^O01 with MSH-6 empty fires; ORU with MSH-6 empty stays silent.
+The point then reads PARTIAL: 000001.1 is receiver behaviour, 000001.2 and .2.1 are "should".
+
+**00104.7.1.4 (row 18): VDI for vendor authorities.** Rule: on REF, a PRD-7 repetition whose
+PRD-7.2 is valued and is not one of the six printed 0363 values requires PRD-7.3 = `VDI`.
+Failing tests: `JD455600041^Medical-Objects^VDI` silent; `JD455600041^Medical-Objects^UPIN`
+fires (silent today). Expressible as a `ComponentCorrespondence` only if it gains a "key not in
+set" form; otherwise a condition `PRD-7.2 not in (AUSHIC, AUSDVA, AUSNATA, AUSLINK, AUSHICPR, IHI)`
+on a value set `[VDI]` for component 3. The point stays PARTIAL: AUSDVA, AUSNATA, AUSLINK and IHI
+have no printed pair.
+
+**00104.7.2.1 (row 26): caller-asserted 0363.** Shape: a new stored `ValidationOptions` property
+(house style: not an init parameter) asserting a closed 0363, read with `localTableExtensions["0363"]`
+as the caller's vendor authorities; condition `<assertion> populated AND messageCode = REF`. Failing
+test: asserted with `["0363": ["Medical-Objects"]]`, `Argus` fires and `Medical-Objects` and
+`AUSHICPR` are silent; unasserted, nothing fires. Needs owner approval (new public property).
+
+**000008.1.5 (row 20): an in-group ordering rule.** The registered reason (HB 308) no longer holds:
+the ADRM itself prints how to recognise both a display OBX (OBX-3.3 = `AUSPDI`) and a signature
+OBX (OBX-3.1 starting `AUSETAV` with OBX-3.3 = `L`). No current rule shape expresses "nothing of
+kind A after the first of kind B within a group": `previousSegment(OBX)` sees only the nearest OBX
+and crosses group boundaries. New shape: an ordering rule over each `.obrObxGroup` span, gate
+`messageCode in (ORU, REF)`: after the first OBX whose OBX-3.3 = `AUSPDI`, every later OBX in the
+same group must be a display OBX or a signature OBX. Failing tests: atomic, display, atomic fires
+once at the third OBX; atomic, display, signature is silent; group 1 ending in a display followed by
+group 2 starting with an atomic OBX is silent. Pre-check done for this audit: no OBR/OBX example
+printed in the ADRM places a non-display OBX after a display OBX on the same page; S2-2 must also
+run the rule over every AU fixture.
+
+## The plan's named questions
+
+- **000020.** Neither a per-trigger variant nor a keyed rule helps: both select on MSH-9, and a
+  `Z..` message code is by definition none of ORM, ORU or REF. `messageCode startsWith Z` is already
+  expressible; the blocker is scope, not the model. An owner ruling could adopt the ungated reading
+  (any message under `.auLocalisation`), at the risk named in row 2.
+- **000008.1.5.** Yes: the display segment is identified from the message by the ADRM's own words
+  (OBX-3 coding system `AUSPDI`, p 422 and p 247), and so is the signature OBX (p 438). OBX-2 ED/RP
+  or a PDF payload is not the ADRM's test and should not be used. CLOSABLE as above.
+- **00044.1.2 and 00044.1.3.** Both are SHIPPED rows, presence only (P:960-967). The .1.3 value set
+  is enumerable from the ADRM: Table 0203 (p 301) is already seeded as `HL7CodeTables.table0203`
+  and enforced on XCN-13 (00044.7.4, P:1049) and PRD-7.3; every CX-5 value in the ADRM's PID
+  examples is in it. The HI service is not needed. CX-5 membership is simply not built (owner
+  items). For .1.2 the 00044.2 sub-points are headed "for MSH-4, and MSH-6"; applying the NASH OID
+  form to CX-4 would misfire on the ADRM's own `AUSHIC` and `AUSHICPR` authorities, and .2.1 needs
+  the directory. Section B's row ("value-set dispatch against externally-maintained tables")
+  should be corrected.
+- **000024.2.** A first-character test on a literal already read whole; not a `Path` extension and
+  not a different model. See the paragraph above.
+- **000022.1 and 000022.3.** 000022.3 is SHIPPED (BV:111-122) and needs nothing. 000022.1's first
+  half is as complete as the wire allows (BHS has no acknowledgement field); the second half is
+  receiver behaviour. PARTIAL STAYS.
+- **000043.1, 00044.3.1, 00044.7.1.** 000043.1 narrows (HD-1 presence). 00044.3.1's within-message
+  leg already fires through 000028 on OBR-3; only the cross-message leg remains. 00044.7.1 needs
+  identifier-scheme specifications the ADRM does not print.
+
+## Summary
+
+| Verdict | Count | Points |
+|---|---|---|
+| CLOSABLE | 10 | 000024.2, 00044.10.1.6, 00044.11.1.6, 000008.1.5, 00104.7.2.1 (to SHIPPED); 000001 (REGISTERED to PARTIAL); 000034.1, 000034.2, 000043.1, 00104.7.1.4 (narrow, stay PARTIAL) |
+| PARTIAL STAYS | 11 | 000008.3.2, 000020, 000022.1, 000032.2, 00044.1.1, 00044.3.1, 00044.7.1, 00044.8.1, 00044.10.1.5, 00044.11.1.5, 00060.1 |
+| REGISTERED STAYS | 5 | 000034.3, 00044.4.7, 00044.5.7, 00044.6.7, 00100.1 |
+
+If S2-2 builds all ten, the register moves from 18 PARTIAL and 8 REGISTERED to 16 PARTIAL
+(18, less 000024.2 and the two .6 rows, plus 000001) and 5 REGISTERED, with five more SHIPPED.
+Four of the sixteen carry a smaller residual than today.
+
+## Proposed S2-2 task list (ordered by value, then risk)
+
+1. **000034.1 / 000034.2 defect fix and widening** (requirement 4: the shipped rule misfires on
+   two public systems). Seed the ADRM Table 0396 (pp 142-145) on the AU locale axis; replace
+   `publicInAlternateMap` with local-primary detection. Highest value, low risk once the seed is
+   checked row by row against the print.
+2. **000024.2 REF leg and the FHS/BHS legs of 000024.1 to .5** in BV. Small; no misfire found.
+3. **00044.10.1.6 / 00044.11.1.6 pins** (registry walk over v2.4 0291, one RP pair test) and the
+   register rows. Test-only.
+4. **00044.1.3 CX-5 membership in AU 0203** (a SHIPPED row that enforces presence only; the same
+   value set as 00044.7.4). Small; the ADRM's PID examples all pass.
+5. **000043.1 / 00044.2.1 HD-1 presence** under `auNASHTransport`. Small; caller-asserted.
+6. **000001 MSH-6 on ORM.** Small; register row REGISTERED to PARTIAL.
+7. **000008.1.5 in-group ordering rule.** Medium: a new rule shape over `.obrObxGroup` spans; run
+   over every AU fixture before it ships.
+8. **00104.7.1.4 VDI rule.** Small to medium (a "key not in set" correspondence or a condition).
+9. **00104.7.2.1 caller-asserted 0363.** Needs owner approval of one additive public property.
+10. **Register text corrections** (no rule change): section B rows for 00044.5.7/.6.7 and
+    00044.1.2/.1.3; section D rows for 00100.1 (OBR-4, not REF-4) and 000008.1.5 (the HB 308
+    reason is superseded by p 438); the 00044.3.1 note credits 000028 for the within-message leg.
+
+## Items for the owner
+
+- **Defect:** the SHIPPED 000034.1/.2 correspondence fires on a pair of two public systems (row 6
+  paragraph). Fix first.
+- **SHIPPED rows that over-claim:** 000024.1, .3, .4, .5 name FHS and BHS, but only MSH-2 is
+  checked; 00044.1.3 names Table 0203 membership, but only CX-5 presence is checked.
+- **Register errors:** section B says 00044.5.7/.6.7 are "Removed" in r2; the print (pp 453-454)
+  marks 00044.5.6 and 00044.6.6 Removed, and .5.7/.6.7 stand. Section D describes 00100.1 as
+  "REF-4" ordering; the ADRM's test is the OBR-4 code (p 212).
+- **Rulings wanted:** 000020 ungated message-code leg (row 2 risk); 00060.1 whether the p 280
+  RXO/ODS/ODT replacement carries over to ORR^O02 and OSR^Q06; 00104.7.2.1 a new caller-asserted
+  property.
+- The test suite was not re-run for this stage: no source, test or resource file changed since
+  `478e3ac1` (1730 tests in 146 suites).
