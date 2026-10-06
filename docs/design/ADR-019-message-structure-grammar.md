@@ -2388,7 +2388,7 @@ to 485): "the REF_I12 structure of chapter 7 is replaced with the following mess
 MSH-12.3.1 `HL7AU-OO-REF-SIMPLIFIED-201706` (Level 2) or `HL7AU-OO-REF-SIMPLIFIED-201706-L1`
 (Level 1). The S6-1 `StructureVariant` gains `profileIdentifiers` (additive, public, `[String]`,
 empty for a trigger-selected print): a variant that names identifiers governs its triggers only
-for a message whose MSH-12.3.1 equals one of them, exactly (p 42: "These are identifiers and they
+for a message whose MSH-12.3.1 equals one of them, exactly (p 43: "These are identifiers and they
 are not intended to be parsed"). `matchProfileStructure` selects it; the trigger-only lookup
 `variant(messageCode:triggerEvent:)` never returns it, and base structures have none (the key is
 admitted in profile files only, and required on every variant there; each identifier must be

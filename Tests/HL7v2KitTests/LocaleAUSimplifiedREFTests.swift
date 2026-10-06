@@ -93,7 +93,7 @@ struct LocaleAUSimplifiedREFTests {
         #expect(au(all).isEmpty, "\(au(all).map(\.message))")
     }
 
-    @Test("A REF^I12 declaring another internal version ID keeps the full AU profile (p 42: identifiers are not parsed)",
+    @Test("A REF^I12 declaring another internal version ID keeps the full AU profile (p 43: identifiers are not parsed)",
           arguments: ["HL7AU-OO-REF-SIMPLIFIED-201801", "HL7AU-OO-REF-201701", "hl7au-oo-ref-simplified-201706"])
     func otherDeclarationKeepsFullProfile(_ profile: String) throws {
         #expect(au(try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "PV1|1"], declaring: profile)).isEmpty)
