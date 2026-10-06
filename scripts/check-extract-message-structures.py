@@ -1966,6 +1966,41 @@ def check_variant_prints():
         raise AssertionError(f"accepted {bad['variant']!r}")
 
 
+def check_variant_prints_several():
+    # S6 fix wave (I1): three normative prints of one ID that differ by trigger; one variantPrints
+    # entry per variant print, all naming the same default, commit two variants. Entries naming
+    # different defaults, or variant prints equal to one another, are errors.
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    third = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("}]", "--- R end")]
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", loose), heading="9.1.2           XYZ - synthetic (Event X02)")
+            + _page(3, _table("XYZ^X03^XYZ_X01", third), heading="9.1.3           XYZ - synthetic (Event X03)")
+            + _page(4, _table("XYZ^X04^XYZ_X01", strict), heading="9.1.4           XYZ - synthetic (Event X04)"))
+    one = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01", "variant": "XYZ^X01^XYZ_X01",
+           "citation": "First per-trigger print (synthetic)."}
+    two = {**one, "variant": "XYZ^X03^XYZ_X01", "citation": "Second per-trigger print (synthetic)."}
+    fix = {**EMPTY, "variantPrints": [one, two]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert not [r for r in report if r[1] == "error"], report
+    assert (s["elements"][1]["min"], s["elements"][1]["max"]) == (0, None), s
+    assert "First per-trigger print" in s["citation"] and "Second per-trigger print" in s["citation"], s["citation"]
+    first, second = s["variants"]
+    assert first["triggers"] == ["XYZ^X01", "XYZ^X04"], first
+    assert second["triggers"] == ["XYZ^X03"], second
+    assert "First per-trigger" in first["citation"] and "Second" not in first["citation"], first["citation"]
+    assert "Second per-trigger" in second["citation"] and "9.1.3" in second["citation"], second["citation"]
+    assert (second["elements"][1]["min"], second["elements"][1]["max"]) == (0, None), second
+    assert not [r for r in report if r[1] == "duplicate-differs"], report
+    assert [r[1] for r in report if r[1] == "variant-prints"] == ["variant-prints", "variant-prints"], report
+    for bad, why in (([one, {**two, "primary": "XYZ^X01^XYZ_X01"}], "name different default prints"),
+                     ([one, {**two, "variant": "XYZ^X04^XYZ_X01"}], "name equal variant prints")):
+        _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": bad}, full=True)
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+
+
 def check_union_prints():
     # P8b-10 ruling (v2.6 RSP_K21): two incomparable normative prints of one ID; a cited
     # unionPrints entry aligns them by segment or group name: per element the lesser min and the
@@ -2504,7 +2539,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override, check_primary_print_by_section,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
-          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints, check_variant_prints,
+          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints, check_variant_prints, check_variant_prints_several,
           check_colon_caption_with_space_ends_table, check_v282_reader_layouts, check_v271_reader_layouts,
           check_0354_triggers_merged, check_v24_reader_layouts, check_syntax_cell_erratum_occurrence,
           check_bundle_name_no_group_can_hold, check_v231_bundle_encoder_style,

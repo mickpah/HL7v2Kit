@@ -2172,24 +2172,32 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
 
     primaries = {e["structure"]: e for e in overrides["primaryPrints"] if e["version"] == ver}
     unions = {e["structure"]: e for e in overrides["unionPrints"] if e["version"] == ver}
-    varied = {e["structure"]: e for e in overrides.get("variantPrints", []) if e["version"] == ver}
+    varied = {}     # S6 fix wave: one variantPrints entry per variant print, several per structure
+    for e in overrides.get("variantPrints", []):
+        if e["version"] == ver:
+            varied.setdefault(e["structure"], []).append(e)
     for sid in sorted(prints):
         entries = prints[sid]
         fold = folds.get(sid)
         k = _primary(sid, entries, fold)
         chosen = primaries.get(sid)
         joined = unions.get(sid)
-        split = varied.get(sid)
+        splits = varied.get(sid, [])
+        split = splits[0] if splits else None
         if split and (chosen or joined):
             report.append((sid, "error", "variantPrints entry for a structure that also has a primaryPrints or "
                                          "unionPrints entry"))
             continue
         if split:
             # S6-1: the default print and the variant prints; every named print must exist.
+            if len({x["primary"] for x in splits}) > 1:
+                report.append((sid, "error", "variantPrints entries for one structure name different default prints"))
+                continue
             k = next((j for j, e in enumerate(entries) if _names_print(split["primary"], e[0])), None)
-            if k is None or not all(any(_names_print(v, e[0]) for e in entries) for v in _variant_prints(split)):
-                report.append((sid, "error", f"variantPrints entry {split['primary']!r} / {split['variant']!r} "
-                                             "matches no print"))
+            if k is None or not all(any(_names_print(v, e[0]) for e in entries)
+                                    for x in splits for v in _variant_prints(x)):
+                report.append((sid, "error", f"variantPrints entry {split['primary']!r} / "
+                                             f"{[x['variant'] for x in splits]!r} matches no print"))
                 continue
         if joined:
             # The cited union of two incomparable prints; the first listed is the primary.
@@ -2251,23 +2259,29 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             report.append((sid, "union", f"{partner[0].printed} (section {partner[0].section}) prints "
                            f"{compact(theirs)[:160]!r}; {cap.printed} (section {cap.section}) prints "
                            f"{before[:160]!r}; union {compact(elements)[:160]!r}"))
-        variant = None
-        if split:
-            # S6-1: the named variant prints must agree with one another and differ from the default.
-            named = [x for x in entries if any(_names_print(v, x[0]) for v in _variant_prints(split))]
+        variants, own, bad = [], {f"{cap.code}^{v}" for v in cap.events}, None
+        for x in splits:
+            # S6-1: the named variant prints must agree with one another and differ from the default
+            # and, with several entries (S6 fix wave), from every other entry's variant print.
+            named = [y for y in entries if any(_names_print(v, y[0]) for v in _variant_prints(x))]
             try:
-                read_named = [read(sid, x[1], x[2]) for x in named]
+                read_named = [read(sid, y[1], y[2]) for y in named]
             except UnknownNotation as exc:
-                report.append((sid, "error", f"variantPrints entry: a variant print is unreadable: {exc}"))
-                continue
+                bad = f"variantPrints entry: a variant print is unreadable: {exc}"
+                break
             if any(uncited(v) != uncited(read_named[0]) for v in read_named[1:]):
-                report.append((sid, "error", "variantPrints entry: the variant prints differ from one another"))
-                continue
+                bad = "variantPrints entry: the variant prints differ from one another"
+                break
             if uncited(read_named[0]) == uncited(elements):
-                report.append((sid, "error", "variantPrints entry: the variant print equals the default print"))
-                continue
-            variant = {"elements": read_named[0], "prints": [], "triggers": [],
-                       "own": {f"{cap.code}^{v}" for v in cap.events}}
+                bad = "variantPrints entry: the variant print equals the default print"
+                break
+            if any(uncited(read_named[0]) == uncited(w["elements"]) for w in variants):
+                bad = "variantPrints entries for one structure name equal variant prints"
+                break
+            variants.append({"elements": read_named[0], "prints": [], "triggers": [], "entry": x})
+        if bad:
+            report.append((sid, "error", bad))
+            continue
         others, triggers = [], []
         for c, r, e in entries:
             trigs = [f"{c.code}^{v}" for v in c.events]
@@ -2282,27 +2296,30 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 report.append((sid, "duplicate-unreadable", f"{c.printed} ({c.source} line {c.line + 1}, section "
                                                             f"{c.section}): {str(exc)[:120]}"))
                 continue
-            if variant and uncited(theirs) == uncited(variant["elements"]):
-                # S6-1: a print equal to the variant governs its own triggers with it.
+            variant = next((w for w in variants if uncited(theirs) == uncited(w["elements"])), None)
+            if variant:
+                # S6-1: a print equal to a variant governs its own triggers with it.
                 variant["prints"].append(c)
                 variant["triggers"] += [t for t in trigs if t not in variant["triggers"]]
                 report.append((sid, "variant", f"{c.printed} (section {c.section}, p {c.page}) prints "
                                f"{compact(theirs)[:160]!r} for {_join(trigs)}"))
                 continue
-            if variant and uncited(theirs) == uncited(elements):
-                variant["own"].update(trigs)
+            if uncited(theirs) == uncited(elements):
+                own.update(trigs)
             if uncited(theirs) != uncited(elements):
                 report.append((sid, "duplicate-differs", f"{c.printed} (section {c.section}) prints "
                                f"{compact(theirs)[:160]!r}; primary {cap.printed} (section {cap.section}) prints "
                                f"{compact(elements)[:160]!r}"))
-        if variant:
-            if not all(any(_names_print(v, c) for c in variant["prints"]) for v in _variant_prints(split)):
-                report.append((sid, "error", "variantPrints entry: a named variant print is the default print"))
-                continue
-            if variant["own"] & set(variant["triggers"]) or any(not TRIGGER.match(t) for t in variant["triggers"]):
-                report.append((sid, "error", f"variantPrints entry: the variant triggers {_join(variant['triggers'])} "
-                                             "must be exact and none the default print's"))
-                continue
+        for variant in variants:
+            if not all(any(_names_print(v, c) for c in variant["prints"]) for v in _variant_prints(variant["entry"])):
+                bad = "variantPrints entry: a named variant print is the default print"
+            elif (own & set(variant["triggers"]) or any(not TRIGGER.match(t) for t in variant["triggers"])
+                  or any(set(variant["triggers"]) & set(w["triggers"]) for w in variants if w is not variant)):
+                bad = (f"variantPrints entry: the variant triggers {_join(variant['triggers'])} must be exact and none "
+                       "the default print's or another variant's")
+        if bad:
+            report.append((sid, "error", bad))
+            continue
         triggers = fold_triggers(fold, sid, entries) if fold else triggers + [t for t in added.get(sid, []) if t not in triggers]
         referenced = [t for e in overrides.get("referencedTriggers", []) if e["version"] == ver and e["structure"] == sid
                       for t in e["triggers"] if t not in triggers]
@@ -2311,7 +2328,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
                                           "citation": citation(ver, cap, others, overrides, sid)
                                           + (f" {primaries[sid]['citation']}" if sid in primaries else "")
-                                          + (f" {split['citation']}" if split else "")
+                                          + "".join(f" {x['citation']}" for x in splits)
                                           + (f" {joined['citation']}" if joined else "")
                                           + "".join(f" {c}" for c in dict.fromkeys(assigned_cites.get(sid, [])))
                                           + table_provenance(ver, table_ver, era, sid, provenance.get(sid),
@@ -2327,15 +2344,17 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                                     for e in overrides.get("referencedTriggers", [])
                                                     if e["version"] == ver and e["structure"] == sid)
                                           + name_citation(log)})
-        if variant:
-            # S6-1: the variant prints' own citation, the entry's, and their group names checked alike.
+        for variant in variants:
+            # S6-1: the variant prints' own citation, the entry's, and their group names checked alike;
+            # one variant per variantPrints entry, in the entries' order (S6 fix wave).
             first = variant["prints"][0]
             vcite = (citation(ver, first, variant["prints"][1:], {"citationNotes": []}, sid)
-                     + f" Per-trigger print (overrides.json variantPrints, ADR-019 S6): {split['citation']}")
+                     + f" Per-trigger print (overrides.json variantPrints, ADR-019 S6): {variant['entry']['citation']}")
             vel = json.loads(json.dumps(variant["elements"]))
             cite_slots(vel, ver, first)
             validate_names({"structure": sid, "version": ver, "elements": vel, "citation": structures[sid]["citation"] + " " + vcite})
-            structures[sid]["variants"] = [{"triggers": variant["triggers"], "citation": vcite, "elements": vel}]
+            structures[sid].setdefault("variants", []).append({"triggers": variant["triggers"], "citation": vcite,
+                                                               "elements": vel})
             report.append((sid, "variant-prints", f"default {cap.printed} (section {cap.section}); variant for "
                            f"{_join(variant['triggers'])}: {compact(vel)[:160]!r}"))
         for entry in log:
