@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — S1-1: component normative length (register section G)
+
+- **`IssueCode.componentLengthOutOfRange(length:actual:)`** (additive; open enum per
+  ADR-014). A primitive component of a composite field whose value lies outside the
+  normative length its datatype's component table prints (`m..n` or `x,y,z`) is reported
+  at the component (segment, field, component; the repetition is named in the message),
+  under the existing `ValidationOptions.normativeLengthSeverity` (`.warning` by default and
+  in `.strict`, off in `.lenient`). Basis: "When a normative length is asserted, conformant
+  messages must have a length that lies within the boundaries specified" (v2.7.1 CH02
+  section 2.5.5.0, p. 11; v2.8.2 section 2.5.5.0, p. 12, "SHALL"), and lengths "may also be
+  specified on the components and/or fields where the data type is used" (v2.7.1 section
+  2.5.5.4, p. 12; v2.8.2 section 2.5.5.4, p. 13).
+- Applies on v2.7.1 (81 components) and v2.8.2 (78); no earlier version prints a normative
+  component length. Bare, `n=` and `n#` cells are conformance lengths (section 2.5.5.3) and
+  are not checked. Subcomponents are not checked: section 2.5.5.4 speaks of components and
+  fields only (residual recorded in register section G).
+- Length is measured as the field length check measures a field: escape sequences count
+  the characters between their delimiters (`\F\` is 1; v2.8.2 section 2.7), the HL7 null
+  `""` has no length, and content after a primitive component's value is set aside while
+  `extraComponentsInPrimitiveField` is at least as severe.
+- Default output: on the printed spec examples, 96 new findings (384 digest lines across
+  the two profiles), every one an example's own defect against the printed cell (for
+  example RDF-2.1 `MedicationDispensed` against RCD.1 `6..12`, v2.8.2 2.A.62 p. 69; XAD.6
+  `US` against `3..3`, 2.A.87 p. 86). Twelve of them are a blank the print sets inside
+  the value (`ACK ` in MSH-9.3, ` MFK` in MSH-9.1, `UP `, `USA `), counted as the field
+  check counts it; the same values already draw a table or structure finding.
+
 ## [3.14.0] — 2026-10-06
 
 ### Summary — release 3.14.0: the review remediation

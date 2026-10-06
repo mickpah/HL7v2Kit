@@ -148,8 +148,10 @@ public struct ValidationOptions: Sendable {
     /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
     /// v2.7+ normative length (`m..n`, `m..`, `x,y,z`) on a primitive-typed field:
     /// "conformant messages SHALL have a length that lies within the boundaries
-    /// specified" (v2.8.2 section 2.5.5.0). `.warning` by default; `nil` turns it
-    /// off. Conformance lengths (`40=`, `250#`, a bare integer) bound what a
+    /// specified" (v2.8.2 section 2.5.5.0), and for
+    /// ``IssueCode/componentLengthOutOfRange(length:actual:)`` against the same
+    /// forms printed on a primitive component (section 2.5.5.4; S1-1, v3.15.0).
+    /// `.warning` by default; `nil` turns both off. Conformance lengths (`40=`, `250#`, a bare integer) bound what a
     /// receiver stores, not what a message carries (section 2.5.5.3), and are
     /// never checked. Not an init parameter. P6-6.
     public var normativeLengthSeverity: IssueSeverity? = .warning

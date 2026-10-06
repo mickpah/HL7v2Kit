@@ -186,6 +186,26 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Additive case introduced in P6-6; the enum is open per ADR-014.
     case fieldLengthOutOfRange(length: String, actual: Int)
 
+    /// A populated primitive component of a composite field has a length outside
+    /// the normative length its datatype's component table prints. `length` is the
+    /// printed cell (`"1..6"`, `"3,7"`); `actual` is the measured length of that
+    /// component in one repetition, counted as for
+    /// ``fieldLengthOutOfRange(length:actual:)`` (an escape sequence counts the
+    /// characters between its escape delimiters; the HL7 null `""` has no length).
+    /// Located at the component; the repetition is named in the message.
+    ///
+    /// Only v2.7.1 and v2.8.2 print normative component lengths. "When a normative
+    /// length is asserted, conformant messages must have a length that lies within
+    /// the boundaries specified" (v2.7.1 CH02 section 2.5.5.0, p. 11; v2.8.2 section
+    /// 2.5.5.0, p. 12, prints "SHALL"), and lengths "may also be specified on the
+    /// components and/or fields where the data type is used" (v2.7.1 section
+    /// 2.5.5.4, p. 12; v2.8.2 section 2.5.5.4, p. 13). Bare, `n=` and `n#` cells
+    /// are conformance lengths (section 2.5.5.3) and are not checked. A
+    /// subcomponent is not checked: the print names fields and components only.
+    /// Follows ``ValidationOptions/normativeLengthSeverity``. Additive case
+    /// introduced in S1-1 (v3.15.0); the enum is open per ADR-014.
+    case componentLengthOutOfRange(length: String, actual: Int)
+
     /// A primitive-typed field repetition carries content after its value (any
     /// primitive since P6-14, ID and IS before), or a primitive component of a
     /// composite carries a subcomponent after its value: an unescaped component or

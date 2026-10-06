@@ -57,6 +57,59 @@ extension Validator {
         }
     }
 
+    /// Normative length of each primitive component of a composite field (S1-1,
+    /// register section G). v2.7.1 and v2.8.2 print `m..n` or `x,y,z` on components
+    /// as well as fields ("they may also be specified on the components and/or fields
+    /// where the data type is used", section 2.5.5.4) and conformant messages lie
+    /// within them (section 2.5.5.0). Only those two forms are read, through
+    /// ``FieldLengthRule/parse(_:version:)``; a pre-v2.7 component cell is a maximum
+    /// no component table enforces, and conformance lengths are not limits. A
+    /// component is measured as ``checkFieldLength`` measures a field
+    /// (``occupiedLength(_:encoding:)``), reduced to the subcomponents its datatype
+    /// admits while the extra-content report is at least as severe. Subcomponents
+    /// are not checked: section 2.5.5.4 names fields and components only.
+    func checkComponentLength(
+        field: Field,
+        version: Version,
+        dataType: String,
+        encoding: EncodingCharacters,
+        location: IssueLocation,
+        issues: inout [ValidationIssue]
+    ) {
+        guard let severity = options.normativeLengthSeverity,
+              let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
+                                                dataType: dataType, version: version.grammarVersion) else { return }
+        let reduce = Self.rank(options.extraComponentsSeverity) >= Self.rank(severity)
+        for entry in composite.components {
+            guard let printed = entry.length,
+                  let rule = FieldLengthRule.parse(printed, version: version) else { continue }
+            if case .maximum = rule { continue }
+            guard let subcomponentLimit = Self.subcomponentLimit(
+                componentType: entry.dataType, component: entry.index, fieldType: dataType,
+                segmentID: location.segmentID, fieldIndex: location.fieldIndex, version: version.grammarVersion
+            ) else { continue }
+            for (offset, repetition) in field.repetitions.enumerated()
+            where repetition.components.count >= entry.index {
+                var component = repetition.components[entry.index - 1]
+                // As checkFieldLength: set aside only content the extra-content check reports.
+                if reduce, component.subcomponents.dropFirst(subcomponentLimit).contains(where: { !$0.value.isEmpty }) {
+                    component = Component(subcomponents: Array(component.subcomponents.prefix(subcomponentLimit)))
+                }
+                guard let length = Self.occupiedLength(Repetition(components: [component]), encoding: encoding),
+                      !rule.admits(length) else { continue }
+                let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
+                                       fieldIndex: location.fieldIndex, componentIndex: entry.index,
+                                       subcomponentIndex: nil)
+                issues.append(ValidationIssue(
+                    severity: severity,
+                    code: .componentLengthOutOfRange(length: printed, actual: length),
+                    location: at,
+                    message: "Component \(at.pathDescription) ('\(entry.name)') repetition \(offset + 1) has length \(length); the v\(version.grammarVersion.rawValue) \(composite.dataType) component table prints LEN \(printed)"
+                ))
+            }
+        }
+    }
+
     /// Severity order for comparing two settings: error > warning > info > off (`nil`).
     static func rank(_ severity: IssueSeverity?) -> Int {
         switch severity {

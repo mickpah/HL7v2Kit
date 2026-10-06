@@ -52,6 +52,13 @@ struct SignatureCompatibilityTests {
         #expect(make("20", 21) == .fieldLengthOutOfRange(length: "20", actual: 21))
     }
 
+    @Test("S1-1 IssueCode.componentLengthOutOfRange is additive with a (length:actual:) payload")
+    func componentLengthIssueCode() {
+        let make: (String, Int) -> IssueCode = IssueCode.componentLengthOutOfRange(length:actual:)
+        #expect(make("1..6", 7) == .componentLengthOutOfRange(length: "1..6", actual: 7))
+        #expect(make("1..6", 7) != .fieldLengthOutOfRange(length: "1..6", actual: 7))
+    }
+
     @Test("P6-13 extra-component setting and issue code are additive")
     func extraComponents() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.extraComponentsSeverity
