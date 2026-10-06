@@ -20,7 +20,7 @@ Once `v1.0.0` ships, the public surface is frozen under an **additive-only** rul
 
 ### Open enums — may gain cases in a minor; switch with `@unknown default`
 
-``Version``, ``HL7Locale``, ``IssueCode``, ``ParseError``, ``PathError``, ``BuilderError``, and (unreleased) ``StructureElement`` (P8-3; its `choice` case added in P8b-6) and ``AcknowledgmentCode`` (P8-7).
+``Version``, ``HL7Locale``, ``IssueCode``, ``ParseError``, ``PathError``, ``BuilderError``, and, since v3.14.0, ``StructureElement`` (P8-3; its `choice` case added in P8b-6) and ``AcknowledgmentCode`` (P8-7).
 
 These grow as the domain grows (new HL7 versions, localisation profiles, validation checks, failure modes). Each carries a DocC `- Note:` at its declaration. Consumer code that switches over them **must** include `@unknown default`:
 
