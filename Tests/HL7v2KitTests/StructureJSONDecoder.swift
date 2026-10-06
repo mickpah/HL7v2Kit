@@ -115,20 +115,24 @@ enum StructureJSONDecoder {
 
     /// A query response's CH05 5.6.5 rule (S4-3).
     struct ErrorResponse: Decodable {
-        let acknowledgmentCodes: [String], querySegments: [String], citation: String
+        let acknowledgmentCodes: [String], querySegments: [String], noDataQueryStatus: [String], citation: String
 
-        private enum CodingKeys: String, CodingKey, CaseIterable { case acknowledgmentCodes, querySegments, citation }
+        private enum CodingKeys: String, CodingKey, CaseIterable {
+            case acknowledgmentCodes, querySegments, noDataQueryStatus, citation
+        }
 
         init(from decoder: any Decoder) throws {
             try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "errorResponse")
             let c = try decoder.container(keyedBy: CodingKeys.self)
             acknowledgmentCodes = try c.decode([String].self, forKey: .acknowledgmentCodes)
             querySegments = try c.decode([String].self, forKey: .querySegments)
+            noDataQueryStatus = try c.decode([String].self, forKey: .noDataQueryStatus)
             citation = try c.decode(String.self, forKey: .citation)
         }
 
         var model: StructureErrorResponse {
-            StructureErrorResponse(acknowledgmentCodes: acknowledgmentCodes, querySegments: querySegments, citation: citation)
+            StructureErrorResponse(acknowledgmentCodes: acknowledgmentCodes, querySegments: querySegments,
+                                   noDataQueryStatus: noDataQueryStatus, citation: citation)
         }
     }
 

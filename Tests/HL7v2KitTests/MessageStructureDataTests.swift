@@ -105,6 +105,7 @@ struct MessageStructureDataTests {
             let errorResponse = rule.map {
                 StructureErrorResponse(acknowledgmentCodes: $0["acknowledgmentCodes"] as? [String] ?? [],
                                        querySegments: $0["querySegments"] as? [String] ?? [],
+                                       noDataQueryStatus: $0["noDataQueryStatus"] as? [String] ?? [],
                                        citation: $0["citation"] as? String ?? "")
             }
             #expect(Set(object.keys) == Self.topKeys.union(aliasOf == nil ? [] : ["aliasOf"])

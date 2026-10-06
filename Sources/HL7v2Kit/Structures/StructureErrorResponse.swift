@@ -1,11 +1,13 @@
 // StructureErrorResponse.swift
-// S4-3 (ADR-019 amendment "S4-3 error responses"): the query error response. CH05 5.6.5 on
-// v2.4 to v2.8.2 returns an error as AE or AR in MSA-1 "of the applicable query response
-// message"; the response "contains the MSH, MSA, ERR, QAK and the query defining segment if
-// available" and "The rest of the message is absent" (v2.5.1 p 5-61); the DSC "is not sent or,
-// if it is, its continuation pointer field ... is null". A query response whose MSA-1 is one of
-// those codes is therefore matched against that head instead of its full structure. v2.3 and
-// v2.3.1 (CH02 2.22) print no such sentence, so their structures carry no rule.
+// S4-3 (ADR-019 amendment "S4-3 error responses"): the short query responses of CH05 5.6.5
+// "Query error response" on v2.4 to v2.8.2. Situations 1 and 2: an error is AE or AR in MSA-1
+// "of the applicable query response message"; the response "contains the MSH, MSA, ERR, QAK and
+// the query defining segment if available" and "The rest of the message is absent" (v2.5.1
+// p 5-61). Situation 3 (no data found): MSA-1 AA and QAK-2 NF; "The Response message contains
+// MSH, MSA, QAK, and query defining segment" and the rest is absent (v2.5.1 p 5-61). The DSC
+// "is not sent or, if it is", its pointer is null. Such a response is matched against that head
+// instead of its full structure. v2.3 and v2.3.1 (CH02 2.22) print no rest-absent sentence, so
+// their structures carry no rule.
 
 /// The 5.6.5 rule of one query response structure, from `overrides.json` errorResponses.
 struct StructureErrorResponse: Sendable, Equatable, Hashable {
@@ -14,8 +16,18 @@ struct StructureErrorResponse: Sendable, Equatable, Hashable {
     /// The query defining segments the structure prints (`["QRD", "QRF"]`, `["QPD"]`,
     /// `["ERQ"]`), empty when it prints none (TBR, EDR).
     let querySegments: [String]
+    /// The QAK-2 values that, with MSA-1 AA, make the message a no-data response (`["NF"]`,
+    /// 5.6.5 Situation 3).
+    let noDataQueryStatus: [String]
     /// Where the version prints the rule.
     let citation: String
+
+    init(acknowledgmentCodes: [String], querySegments: [String], noDataQueryStatus: [String] = [], citation: String) {
+        self.acknowledgmentCodes = acknowledgmentCodes
+        self.querySegments = querySegments
+        self.noDataQueryStatus = noDataQueryStatus
+        self.citation = citation
+    }
 }
 
 extension MessageStructure {
@@ -23,15 +35,32 @@ extension MessageStructure {
     /// message header that the structures print after MSH (v2.5 on, v2.6 on).
     private static let errorResponseSegments: Set<String> = ["MSH", "SFT", "UAC", "MSA", "ERR", "QAK", "DSC"]
 
-    /// The error-response head of this structure when `acknowledgmentCode` (MSA-1) is one of
-    /// its rule's codes, or nil: the segments 5.6.5 names, each taken once at its first place in
-    /// the print (so ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required and the rest
-    /// optional; ERR and SFT keep their printed repetition. An ERR the structure does not print
-    /// goes after MSA, a QAK after ERR, as 5.6.5 lists them. Slots are not entered.
-    func errorResponseHead(acknowledgmentCode: String?) -> MessageStructure? {
-        guard let rule = errorResponse, let code = acknowledgmentCode,
-              rule.acknowledgmentCodes.contains(code) else { return nil }
-        let named = Self.errorResponseSegments.union(rule.querySegments)
+    /// The MSA-1 value of a no-data response: "returns an Application Accept (AA)" (5.6.5
+    /// Situation 3 note).
+    private static let noDataAcknowledgmentCode = "AA"
+
+    /// The short-response head of this structure, or nil to match the full structure.
+    /// `acknowledgmentCode` (MSA-1) among the rule's codes gives the error response head
+    /// (Situations 1 and 2); MSA-1 AA with `queryResponseStatus` (QAK-2) among the rule's
+    /// no-data values gives the no-data head (Situation 3), which names no ERR and requires
+    /// the QAK that carries the key. The segments named are each taken once at their first
+    /// place in the print (so ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required and
+    /// the rest optional; ERR and SFT keep their printed repetition. An ERR the structure does
+    /// not print goes after MSA, a QAK after ERR (after MSA with no ERR), as 5.6.5 lists them.
+    /// Slots are not entered.
+    func errorResponseHead(acknowledgmentCode: String?, queryResponseStatus: String? = nil) -> MessageStructure? {
+        guard let rule = errorResponse, let code = acknowledgmentCode else { return nil }
+        let noData: Bool
+        if rule.acknowledgmentCodes.contains(code) {
+            noData = false
+        } else if code == Self.noDataAcknowledgmentCode, let status = queryResponseStatus,
+                  rule.noDataQueryStatus.contains(status) {
+            noData = true
+        } else {
+            return nil
+        }
+        var named = Self.errorResponseSegments.union(rule.querySegments)
+        if noData { named.remove("ERR") }
         var head: [StructureElement] = []
         var seen: Set<String> = []
         func walk(_ elements: [StructureElement]) {
@@ -39,7 +68,7 @@ extension MessageStructure {
                 switch element {
                 case .segment(let id, _, let max) where named.contains(id) && !seen.contains(id):
                     seen.insert(id)
-                    let required = id == "MSH" || id == "MSA"
+                    let required = id == "MSH" || id == "MSA" || (noData && id == "QAK")
                     let repeats = id == "SFT" || id == "ERR"
                     head.append(.segment(id, min: required ? 1 : 0, max: repeats ? max : 1))
                 case .slot:
@@ -50,31 +79,42 @@ extension MessageStructure {
             }
         }
         walk(elements)
-        func insert(_ id: String, after previous: String) {
+        func insert(_ id: String, after previous: String, min: Int = 0) {
             guard !seen.contains(id), let at = head.firstIndex(where: { $0.label == previous }) else { return }
-            head.insert(.segment(id, min: 0, max: 1), at: at + 1)
+            head.insert(.segment(id, min: min, max: 1), at: at + 1)
             seen.insert(id)
         }
-        insert("ERR", after: "MSA")
-        insert("QAK", after: "ERR")
+        if noData {
+            insert("QAK", after: "MSA", min: 1)
+        } else {
+            insert("ERR", after: "MSA")
+            insert("QAK", after: "ERR")
+        }
         let shape = head.map { element -> String in
             guard case .segment(let id, let min, let max) = element else { return element.label }
             let item = max == 1 ? id : "{\(id)}"
             return min == 0 ? "[\(item)]" : item
         }.joined(separator: " ")
+        let why = noData
+            ? "MSA-1 is AA and QAK-2 is \(queryResponseStatus ?? ""), so \(id) is matched as its no-data query response"
+            : "MSA-1 is \(code), so \(id) is matched as its query error response"
         return MessageStructure(
             id: id, version: version, triggers: triggers,
-            citation: "MSA-1 is \(code), so \(id) is matched as its query error response, \(shape), "
-                + "the rest of the message absent (\(rule.citation)); the full structure: \(citation)",
+            citation: "\(why), \(shape), the rest of the message absent (\(rule.citation)); the full structure: \(citation)",
             profile: profile, baseVersion: baseVersion, rule: self.rule, aliasOf: aliasOf,
-            keySelection: "MSA-1=\(code)", elements: head)
+            keySelection: noData ? "MSA-1=AA,QAK-2=\(queryResponseStatus ?? "")" : "MSA-1=\(code)",
+            elements: head)
     }
 
-    /// ``errorResponseHead(acknowledgmentCode:)`` with MSA-1 (the first MSA's field 1,
-    /// component 1) read from `message`.
+    /// ``errorResponseHead(acknowledgmentCode:queryResponseStatus:)`` with MSA-1 (the first
+    /// MSA's field 1, component 1) and QAK-2 (the first QAK's field 2, component 1) read from
+    /// `message`.
     func errorResponseHead(in message: Message) -> MessageStructure? {
         guard errorResponse != nil else { return nil }
-        let msa1 = StructureChoiceKey(segmentID: "MSA", field: 1, component: 1, alternatives: [:], citation: "")
-        return errorResponseHead(acknowledgmentCode: msa1.value(in: message))
+        func read(_ segment: String, _ field: Int) -> String? {
+            StructureChoiceKey(segmentID: segment, field: field, component: 1, alternatives: [:], citation: "")
+                .value(in: message)
+        }
+        return errorResponseHead(acknowledgmentCode: read("MSA", 1), queryResponseStatus: read("QAK", 2))
     }
 }

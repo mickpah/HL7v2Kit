@@ -14,11 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   defining segment if available" and "The rest of the message is absent" (v2.5.1 p 5-61). A query
   response whose MSA-1 is AE or AR is now matched against that head, in its printed order (MSH,
   the SFT and UAC it prints, MSA, ERR, QAK, its query defining segments, DSC; all but MSH and MSA
-  optional), not its full structure; an AA response keeps the full structure. v2.3 and v2.3.1
-  (CH02 2.22) print no such sentence and are unchanged.
+  optional), not its full structure. Situation 3 (no data found): MSA-1 AA with QAK-2 NF is
+  matched against MSH, MSA, QAK, its query defining segment and DSC, with no ERR (5.6.5 names
+  none); any other AA response keeps the full structure. v2.3 and v2.3.1 (CH02 2.22) print no
+  rest-absent sentence and are unchanged.
 - **Data.** New `overrides.json` section `errorResponses`, cited per version: 129 query
   responses (v2.4 32, v2.5.1 35, v2.6 34, v2.7.1 16, v2.8.2 12), each with the query defining
-  segments of its own print (QRD and QRF, QPD, ERQ, or none). The extractor copies the rule into
+  segments of its own print (QRD and QRF, QPD, ERQ, or none), and `noDataQueryStatus: ["NF"]`. The extractor copies the rule into
   each structure file as `errorResponse` and fails a full read that leaves a query response out;
   the codegen checks the codes, a top-level MSA and that each named segment is printed. No public
   API change.
@@ -27,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   supplementary run with MSH-12 set to the chapter version: 12 removed (the TBR example and the
   event replay error response), 0 added. The event replay example as printed declares MSH-12 2.3,
   whose print has no such rule, so it keeps its missing ERQ.
+  Situation 3 against the first S4-3 commit: default, strict and off byte-identical; supplementary
+  run over the CH04 DSR^Q01 no-data examples with MSH-12 set: 12 lines (missing DSP) removed.
 
 ### Added — S4-1 and S4-2: field-keyed choice and structure alias (epic P11 sprint 4)
 

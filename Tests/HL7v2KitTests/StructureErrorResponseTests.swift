@@ -63,6 +63,28 @@ struct StructureErrorResponseTests {
         Probe(version: "2.3.1", msh9: "TBR^R08^TBR_R08", structure: "TBR_R08",
               body: ["MSA|AE|MSG00001", "QAK|TAG0001|AE"],
               findings: ["missing RDF at the end", "missing RDT at the end"], note: "v2.3.1 keeps the full structure"),
+        // 5.6.5 Situation 3 (v2.5.1 p 5-61): no data found, MSA-1 AA and QAK-2 NF; the response
+        // "contains MSH, MSA, QAK, and query defining segment" and the rest is absent; ERR is not named.
+        Probe(version: "2.5.1", msh9: "TBR^R08^TBR_R08", structure: "TBR_R08",
+              body: ["MSA|AA|MSG00001", "QAK|TAG0001|NF"], findings: [], note: "no data found, TBR"),
+        Probe(version: "2.5.1", msh9: "TBR^R08^TBR_R08", structure: "TBR_R08",
+              body: ["MSA|AA|MSG00001", "QAK|TAG0001|OK"],
+              findings: ["missing RDF at the end", "missing RDT at the end"], note: "QAK-2 OK keeps the full structure"),
+        Probe(version: "2.5.1", msh9: "TBR^R08^TBR_R08", structure: "TBR_R08",
+              body: ["MSA|AA|MSG00001", "QAK|TAG0001|NF", "RDF|1|COL^ST^10"],
+              findings: ["unexpected RDF at RDF[1]"], note: "no data found, with a row definition"),
+        Probe(version: "2.5.1", msh9: "TBR^R08^TBR_R08", structure: "TBR_R08",
+              body: ["MSA|AA|MSG00001", "ERR|EQL^^4^207&&HL70357", "QAK|TAG0001|NF"],
+              findings: ["unexpected ERR at ERR[1]"], note: "no data found names no ERR"),
+        Probe(version: "2.5.1", msh9: "RSP^K21^RSP_K21", structure: "RSP_K21",
+              body: ["MSA|AA|1", "QAK|Q1|NF", "QPD|Q22^Find Candidates^HL70471|Q1", "DSC|"],
+              findings: [], note: "no data found, RSP_K21"),
+        Probe(version: "2.8.2", msh9: "RSP^K21^RSP_K21", structure: "RSP_K21",
+              body: ["MSA|AA|1", "QAK|Q1|NF", "QPD|Q22^Find Candidates^HL70471|Q1", "PID|1"],
+              findings: ["unexpected PID at PID[1]"], note: "no data found, with a patient"),
+        Probe(version: "2.3", msh9: "TBR^R08", structure: "TBR",
+              body: ["MSA|AA|MSG00001", "QAK|TAG0001|NF"],
+              findings: ["missing RDF at the end", "missing RDT at the end"], note: "v2.3 no data keeps the full structure"),
     ]
 
     @Test("Error responses match the 5.6.5 head; AA responses and v2.3 to v2.3.1 the full structure",
@@ -88,6 +110,7 @@ struct StructureErrorResponseTests {
         let tbr = try #require(MessageStructureTable.structure("TBR_R08", version: .v2_4))
         #expect(tbr.errorResponse?.acknowledgmentCodes == ["AE", "AR"])
         #expect(tbr.errorResponse?.querySegments == [])
+        #expect(tbr.errorResponse?.noDataQueryStatus == ["NF"])
         let erp = try #require(MessageStructureTable.structure("ERP_R09", version: .v2_5_1))
         #expect(erp.errorResponse?.querySegments == ["ERQ"])
         #expect(erp.errorResponse?.citation.contains("5.6.5") == true)
@@ -109,6 +132,16 @@ struct StructureErrorResponseTests {
                                   .segment("QRF", min: 0, max: 1), .segment("DSC", min: 0, max: 1)])
         #expect(head.keySelection == "MSA-1=AE" && head.errorResponse == nil)
         #expect(rar.errorResponseHead(acknowledgmentCode: "AA") == nil)
+        #expect(rar.errorResponseHead(acknowledgmentCode: "AA", queryResponseStatus: "OK") == nil)
+        #expect(rar.errorResponseHead(acknowledgmentCode: "AE", queryResponseStatus: "NF")?.keySelection == "MSA-1=AE")
+        // Situation 3: no ERR, QAK required (its QAK-2 is the key).
+        let noData = try #require(rar.errorResponseHead(acknowledgmentCode: "AA", queryResponseStatus: "NF"))
+        #expect(noData.elements == [.segment("MSH", min: 1, max: 1), .segment("MSA", min: 1, max: 1),
+                                    .segment("QAK", min: 1, max: 1), .segment("SFT", min: 0, max: nil),
+                                    .segment("QRD", min: 0, max: 1), .segment("QRF", min: 0, max: 1),
+                                    .segment("DSC", min: 0, max: 1)])
+        #expect(noData.keySelection == "MSA-1=AA,QAK-2=NF")
+        #expect(noData.citation.contains("no-data query response"), "\(noData.citation)")
         #expect(rar.errorResponseHead(acknowledgmentCode: nil) == nil)
     }
 

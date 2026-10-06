@@ -1621,7 +1621,8 @@ def check_error_responses():
                         _seg("QRF", 0, 1), _seg("DSP", 1, None), _seg("DSC", 0, 1)]}
     adt = {"structure": "ADT_A01", "version": "2.4", "triggers": ["ADT^A01"], "citation": "ADT print.",
            "elements": [_seg("MSH"), _seg("EVN"), _seg("PID")]}
-    entry = {"version": "2.4", "acknowledgmentCodes": ["AE", "AR"], "structures": {"TBR_R08": [], "DSR_Q01": ["QRD", "QRF"]},
+    entry = {"version": "2.4", "acknowledgmentCodes": ["AE", "AR"], "noDataQueryStatus": ["NF"],
+             "structures": {"TBR_R08": [], "DSR_Q01": ["QRD", "QRF"]},
              "citation": "HL7 v2.4 Chapter 5, section 5.6.5 Query error response, p 5-62: the rest is absent."}
     overrides = {**EMPTY, "errorResponses": [entry]}
     ext.validate_overrides(overrides)
@@ -1629,6 +1630,7 @@ def check_error_responses():
     report = ext.add_error_responses("2.4", structures, overrides, True)
     assert [r[1] for r in report] == ["error-response", "error-response"], report
     assert structures["TBR_R08"]["errorResponse"] == {"acknowledgmentCodes": ["AE", "AR"], "querySegments": [],
+                                                      "noDataQueryStatus": ["NF"],
                                                       "citation": entry["citation"]}, structures["TBR_R08"]
     assert structures["DSR_Q01"]["errorResponse"]["querySegments"] == ["QRD", "QRF"]
     assert "errorResponse" not in structures["ADT_A01"]
@@ -1650,7 +1652,8 @@ def check_error_responses():
     for broken in ({**entry, "acknowledgmentCodes": []}, {**entry, "acknowledgmentCodes": ["AE", "AE"]},
                    {**entry, "acknowledgmentCodes": ["ae"]}, {**entry, "structures": {}},
                    {**entry, "structures": {"TBR_R08": ["RDF"]}}, {**entry, "structures": {"DSR_Q01": ["QRD", "QRD"]}},
-                   {**entry, "citation": ""}):
+                   {**entry, "citation": ""}, {**entry, "noDataQueryStatus": ["nf"]},
+                   {**entry, "noDataQueryStatus": ["NF", "NF"]}, {k: v for k, v in entry.items() if k != "noDataQueryStatus"}):
         try:
             ext.validate_overrides({**EMPTY, "errorResponses": [broken]})
         except ext.OverridesError:

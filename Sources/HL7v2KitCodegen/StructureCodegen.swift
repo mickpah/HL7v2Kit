@@ -147,19 +147,24 @@ struct MessageStructureSchema: Decodable {
 }
 
 /// A structure's `errorResponse` (S4-3, CH05 5.6.5): the MSA-1 codes that make the message an
-/// error response, the query defining segments the structure prints, and the citation.
+/// error response, the query defining segments the structure prints, the QAK-2 values that with
+/// MSA-1 AA make it a no-data response (Situation 3), and the citation.
 struct ErrorResponseSchema: Decodable, Equatable {
     let acknowledgmentCodes: [String]
     let querySegments: [String]
+    let noDataQueryStatus: [String]
     let citation: String
 
-    private enum CodingKeys: String, CodingKey, CaseIterable { case acknowledgmentCodes, querySegments, citation }
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case acknowledgmentCodes, querySegments, noDataQueryStatus, citation
+    }
 
     init(from decoder: any Decoder) throws {
         try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "errorResponse")
         let c = try decoder.container(keyedBy: CodingKeys.self)
         acknowledgmentCodes = try c.decode([String].self, forKey: .acknowledgmentCodes)
         querySegments = try c.decode([String].self, forKey: .querySegments)
+        noDataQueryStatus = try c.decode([String].self, forKey: .noDataQueryStatus)
         citation = try c.decode(String.self, forKey: .citation)
     }
 }
@@ -173,6 +178,10 @@ func validateErrorResponse(_ rule: ErrorResponseSchema, elements: [StructureElem
     guard !rule.acknowledgmentCodes.isEmpty, Set(rule.acknowledgmentCodes).count == rule.acknowledgmentCodes.count,
           rule.acknowledgmentCodes.allSatisfy({ matches($0, "^[A-Z]{2}$") }) else {
         throw StructureSchemaError(description: "errorResponse: acknowledgmentCodes must be distinct two-letter codes")
+    }
+    guard Set(rule.noDataQueryStatus).count == rule.noDataQueryStatus.count,
+          rule.noDataQueryStatus.allSatisfy({ matches($0, "^[A-Z]{2}$") }) else {
+        throw StructureSchemaError(description: "errorResponse: noDataQueryStatus must be distinct two-letter values")
     }
     guard elements.contains(where: { $0.segment == "MSA" }) else {
         throw StructureSchemaError(description: "errorResponse: the structure has no top-level MSA")
@@ -456,6 +465,7 @@ func renderStructureTable(versionSwiftName: String, sourceDir: String, structure
                 "        errorResponse: StructureErrorResponse(",
                 "            acknowledgmentCodes: [\(rule.acknowledgmentCodes.map(escapeStringLiteral).joined(separator: ", "))],",
                 "            querySegments: [\(rule.querySegments.map(escapeStringLiteral).joined(separator: ", "))],",
+                "            noDataQueryStatus: [\(rule.noDataQueryStatus.map(escapeStringLiteral).joined(separator: ", "))],",
                 "            citation: \(escapeStringLiteral(rule.citation))),",
             ]
         }

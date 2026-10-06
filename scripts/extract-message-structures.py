@@ -1040,7 +1040,8 @@ def is_query_response(structure):
 
 def add_error_responses(ver, structures, overrides, full):
     """S4-3: each errorResponses entry of the version (CH05 5.6.5, v2.4 to v2.8.2) copies its rule
-    into every structure it lists: the MSA-1 codes, the query defining segments that structure
+    into every structure it lists: the MSA-1 codes, the no-data QAK-2 values (Situation 3), the
+    query defining segments that structure
     prints (exactly those of QRD, QRF, QPD and ERQ it prints), and the citation. A listed structure
     that is not a query response, or whose segments differ, is an error; on a full read so are a
     listed structure not read and a query response the entry leaves out."""
@@ -1062,7 +1063,9 @@ def add_error_responses(ver, structures, overrides, full):
                                              f"{sorted(s for s in ERROR_RESPONSE_QUERY_SEGMENTS if s in printed)}"))
             else:
                 structure["errorResponse"] = {"acknowledgmentCodes": list(e["acknowledgmentCodes"]),
-                                              "querySegments": list(segments), "citation": e["citation"]}
+                                              "querySegments": list(segments),
+                                              "noDataQueryStatus": list(e["noDataQueryStatus"]),
+                                              "citation": e["citation"]}
                 report.append((sid, "error-response", f"{_join(e['acknowledgmentCodes'])}: {' '.join(segments)}"))
         if full:
             report += [(sid, "error", "a query response the errorResponses entry does not list")
@@ -1324,7 +1327,9 @@ _OVERRIDE_KEYS = {
     # query response an error response, matched as MSH MSA [ERR] [QAK] [query defining segment]
     # [DSC] with the rest absent; structures maps each query response of the version to the query
     # defining segments its print carries.
-    "errorResponses": {"version", "acknowledgmentCodes", "structures", "citation"},
+    # noDataQueryStatus: the QAK-2 values that, with MSA-1 AA, make it a no-data response (5.6.5
+    # Situation 3), matched as MSH MSA QAK [query defining segment] [DSC] with no ERR.
+    "errorResponses": {"version", "acknowledgmentCodes", "noDataQueryStatus", "structures", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
@@ -1375,12 +1380,15 @@ def validate_overrides(data):
                     isinstance(entry.get("acknowledgmentCodes"), list) and entry["acknowledgmentCodes"]
                     and all(isinstance(c, str) and re.fullmatch(r"[A-Z]{2}", c) for c in entry["acknowledgmentCodes"])
                     and len(set(entry["acknowledgmentCodes"])) == len(entry["acknowledgmentCodes"])
+                    and isinstance(entry.get("noDataQueryStatus"), list)
+                    and all(isinstance(c, str) and re.fullmatch(r"[A-Z]{2}", c) for c in entry["noDataQueryStatus"])
+                    and len(set(entry["noDataQueryStatus"])) == len(entry["noDataQueryStatus"])
                     and isinstance(entry.get("structures"), dict) and entry["structures"]
                     and all(re.fullmatch(_SID, sid) and isinstance(segs, list) and len(set(segs)) == len(segs)
                             and all(s in ERROR_RESPONSE_QUERY_SEGMENTS for s in segs)
                             for sid, segs in entry["structures"].items())):
                 raise OverridesError(f"errorResponses entry for v{entry.get('version')}: needs distinct two-letter "
-                                     "acknowledgmentCodes and a non-empty structures map of structure ID to distinct "
+                                     "acknowledgmentCodes, distinct two-letter noDataQueryStatus values, and a non-empty structures map of structure ID to distinct "
                                      f"query defining segments among {ERROR_RESPONSE_QUERY_SEGMENTS}")
             if kind == "aliases" and not (re.fullmatch(_SID, entry.get("structure", "")) and re.fullmatch(
                     _SID, entry.get("aliasOf", "")) and entry["structure"] != entry["aliasOf"]

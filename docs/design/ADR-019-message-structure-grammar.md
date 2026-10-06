@@ -2018,19 +2018,32 @@ Anything else is unexpected. Findings cite the head and 5.6.5; group spans come 
 AU profile structure is not applied to the head. AA (and any other value) keeps the full structure.
 Internal model only (`StructureErrorResponse`); no public API change.
 
-**What it cannot say.** (1) Situation 3 (no data found, AA, QAK-2 NF): the response is "MSH,
-MSA, QAK, and query defining segment" with the rest absent; it is not keyed (MSA-1 AA), so a
-no-data response of a structure whose body is required (TBR's RDF and RDT) still draws the missing
-body. This blocks spec-completeness until QAK-2 is read as a second key. (2) The head is the union
-of Situations 1 and 2 (QAK optional under AR and AE alike); it does not report an AE response
-without QAK. (3) MSA-1 CE and CR (enhanced acknowledgment) are not named by 5.6.5 and are not
-keyed. (4) v2.3 and v2.3.1 keep the full structure: the v2.5.1 CH05 5.10.6.2.12 example, which
-declares MSH-12 2.3, still draws its missing ERQ against the v2.3 ERP print.
+**Situation 3, no data found (added in the same wave).** 5.6.5 goes on: the responder "returns
+an Application Accept (AA)", QAK-2 "is valued with NF", and "The Response message contains MSH,
+MSA, QAK, and query defining segment" with "The rest of the message is absent" (v2.4 p 5-63, v2.5.1
+p 5-61, v2.6 pp 52 to 53, v2.7.1 p 56, v2.8.2 p 55; the same text on each). ERR is not named. Each
+`errorResponses` entry carries `noDataQueryStatus: ["NF"]` (copied into the structure file); when
+MSA-1 is AA and the first QAK's field 2 is a listed value, the structure is matched against MSH,
+the SFT and UAC it prints, MSA, QAK (required: it carries the key), its query defining segments
+and DSC (the note keeps the DSC "not sent or" with a null pointer), with no ERR. The section keeps
+its name: 5.6.5 is the print's "Query error response" section and Situation 3 is part of it.
+
+**What it cannot say.** (1) An AE response without QAK is not reported: the head is the union of
+Situations 1 and 2 (AR is "MSH, MSA and the ERR", AE adds QAK), so QAK is optional under AE and AR
+alike. (2) MSA-1 CE and CR (enhanced acknowledgment) are not named by 5.6.5 and are not keyed.
+(3) v2.3 and v2.3.1 keep the full structure, because CH02 2.22 (pp 2-78 and 2-87) has no
+rest-absent sentence: the v2.5.1 CH05 5.10.6.2.12 example, which declares MSH-12 2.3, still draws
+its missing ERQ against the v2.3 ERP print, and a v2.3 no-data TBR draws its missing body.
 
 **Evidence.** `StructureErrorResponseTests` (the 5.10.6.2.12 shape on v2.5.1 clean, with a DSP or
 a replay body unexpected; the TBR^R08 error shape and an AR response clean; AA with the body
 missing draws it; ORF_R04 in printed order; RSP_K21 on v2.6 and v2.8.2; v2.3 and v2.3.1
-unchanged; the finding text; the tables; the head; spans). Digests (BASE 22da5799 against HEAD):
+unchanged; the finding text; the tables; the head; spans; Situation 3: a v2.5.1 TBR^R08 with AA
+and QAK-2 NF and no RDF or RDT clean, with QAK-2 OK the missing body, with an RDF or an ERR
+unexpected, RSP_K21 on v2.5.1 and v2.8.2, v2.3 unchanged). Digests (BASE 22da5799 against HEAD):
 default and strict 8 lines removed (the TBR^R08 error example, MSH-12 2.4, formerly an "example
 defect"), 0 added; off identical; supplementary with MSH-12 set to the chapter version 12 removed
-(the same and the event replay error response), 0 added; 0 misfires (s4-fix-classes.tsv).
+(the same and the event replay error response), 0 added; 0 misfires (s4-fix-classes.tsv) F1 to F3). Situation 3 (BASE
+e53f1e05): default, strict and off byte-identical (the CH04 DSR^Q01 no-data examples print no
+MSH-12); supplementary with MSH-12 set to the chapter version 12 removed (v2.4, v2.5.1 and v2.6
+DSR_Q01 missing DSP), 0 added (F4).

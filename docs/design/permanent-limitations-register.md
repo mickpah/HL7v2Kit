@@ -927,8 +927,9 @@ errorResponses: 129 structures, each with the query defining segments of its own
 |---|---|---|
 | TBR^R08 error example (v2.5.1 CH05 5.10.6.2.11, MSH-12 2.4: MSH MSA ERR QAK) | Classed an example defect at P8b-13 (missing RDF and RDT) | **Misfire, corrected**: the 5.6.5 head; clean |
 | ERP^R09 event replay error example (5.10.6.2.12, p 5-143) | Classed an example defect at S4 (missing ERQ) | **Misfire, corrected** under v2.4 to v2.8.2 (clean with MSH-12 2.5.1); as printed it declares MSH-12 2.3, whose print has no such rule, so the missing ERQ stays (owner ruling) |
-| No-data response (5.6.5 Situation 3: AA, QAK-2 NF, "MSH, MSA, QAK, and query defining segment", the rest absent) | Full structure | **Blocking**: not keyed (MSA-1 AA); a structure with a required body (TBR's RDF and RDT, RSP's PID group) draws the missing body on a no-data response |
+| No-data response (5.6.5 Situation 3: AA, QAK-2 NF, "MSH, MSA, QAK, and query defining segment", the rest absent; v2.4 p 5-63, v2.5.1 p 5-61, v2.6 pp 52 to 53, v2.7.1 p 56, v2.8.2 p 55) | Full structure: a no-data TBR or RSP drew its missing body | **Closed** (S4-3): `noDataQueryStatus: ["NF"]` per entry; MSA-1 AA with QAK-2 NF is matched against MSH MSA QAK [query defining segment] [DSC], no ERR (not named); the CH04 DSR^Q01 no-data examples with MSH-12 set are clean |
 | MSA-1 CE and CR; an AE response without QAK | n/a | Not named by 5.6.5 and not keyed; the head takes QAK as optional under AE and AR alike, so a missing QAK under AE is not reported |
+| v2.3 and v2.3.1 query responses | Full structure | Full structure: CH02 2.22 names AE and AR but prints no rest-absent sentence, so no head applies (the 5.10.6.2.12 example as printed, MSH-12 2.3, keeps its missing ERQ) |
 
 ## F. Excluded HL7 v2.x versions (ADR-018)
 

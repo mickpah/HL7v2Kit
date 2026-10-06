@@ -669,6 +669,15 @@ reject "an error response on a structure with no top-level MSA" 'errorResponse: 
 d = load('v2.5.1/ADT_A01.json'); d['errorResponse'] = load('v2.5.1/DSR_Q01.json')['errorResponse']
 d['errorResponse']['querySegments'] = []; save('v2.5.1/ADT_A01.json', d)"
 
+reject "an error response with a repeated no-data status" 'noDataQueryStatus must be distinct two-letter values' "$PRE$ERRRESP
+rule(noDataQueryStatus=['NF', 'NF'])"
+
+reject "an error response with a malformed no-data status" 'noDataQueryStatus must be distinct two-letter values' "$PRE$ERRRESP
+rule(noDataQueryStatus=['nf'])"
+
+accept "an error response with no no-data status" "$PRE$ERRRESP
+rule(noDataQueryStatus=[])"
+
 accept "an error response with no query defining segment (TBR)" "$PRE$ERRRESP
 rule(querySegments=[])"
 
