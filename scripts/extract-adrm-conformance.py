@@ -109,6 +109,12 @@ SHIPPED_NOTES = {
     'HL7au:000024.3': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
     'HL7au:000024.4': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
     'HL7au:000024.5': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
+    # P12 S2-2: register correction, no rule change. All 15 v2.4 Table 0291
+    # values are keys of subtypeToTypeMap, so no 0291 subtype skips
+    # (AUSubtypeCorrespondenceTests pins it).
+    'HL7au:00044.10.1.6': 'ED subtype => type of data for every v2.4 Table 0291 value '
+                          '(all 15 are map keys; pinned)',
+    'HL7au:00044.11.1.6': 'RP subtype => type of data, as 00044.10.1.6 (RP fire/silent pair pinned)',
     # P4-20 / P4-24 / P4-26 / P4-31 (owner rulings G6, G9): see
     # permanent-limitations-register (00060.4 row) and ADR-021.
     'HL7au:00060.4': 'explicit prohibitions on C fields (`prohibitedWhen` / '
@@ -149,6 +155,8 @@ SHIPPED = {
     'HL7au:000024.1', 'HL7au:000024.3', 'HL7au:000024.4', 'HL7au:000024.5',
     # P12 S2-2 — the REF leg (MSH-2 first character) and the FHS/BHS legs.
     'HL7au:000024.2',
+    # P12 S2-2 — every v2.4 Table 0291 subtype is mapped (register correction).
+    'HL7au:00044.10.1.6', 'HL7au:00044.11.1.6',
     'HL7au:00047.1', 'HL7au:00047.2',
     'HL7au:00048.3.1', 'HL7au:00049.2', 'HL7au:00049.3',
     # M6-A stage 2 — XCN required components (2026-09-04).
@@ -233,10 +241,7 @@ PARTIAL = {
     'HL7au:00044.10.1.5': 'ED subtype => type enforced for spec-stated pairs '
                           '(ADRM §3.20.5 + example annotations); arbitrary IANA '
                           'subtypes skip, fail-safe',
-    'HL7au:00044.10.1.6': 'ED subtype => type enforced for the 0291 subtypes '
-                          'whose 0191 main type §3.20.5 states; unstated ones skip',
     'HL7au:00044.11.1.5': 'RP subtype => type, as 00044.10.1.5',
-    'HL7au:00044.11.1.6': 'RP subtype => type, as 00044.10.1.6',
     'HL7au:00104.7.1.4': 'authority => qualifier pairs enforced for the closed AU '
                          'authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor '
                          'authorities are open-ended examples and skip',

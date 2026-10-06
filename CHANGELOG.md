@@ -22,6 +22,10 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 - `BatchValidator` (`.auLocalisation`) checks the FHS and BHS legs that every 000024 point names (.1 p 440, .2 to .5 p 441) on the raw header, scoped by the messages the header carries: FHS-1/BHS-1 `|` and the component separator `^` on Orders, Results and Referrals, the full `^~\&` on Orders and Results. Before, the SHIPPED rows 000024.1, .3, .4 and .5 claimed FHS and BHS but only MSH was checked.
 - Tests: `AUDelimiterTests`. Conformance register regenerated; the M6-O3 gap note in `m6-adrm-2021-localisation-audit.md` is closed.
 
+### Changed — P12 S2-2: HL7au:00044.10.1.6 and 00044.11.1.6 read SHIPPED (register correction)
+
+- No rule change. The points (Appendix 5 pp 456 and 457: "When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used", and the same for RP) were PARTIAL on the belief that some 0291 subtypes skip; all 15 v2.4 Table 0291 values are keys of the subtype map. `AUSubtypeCorrespondenceTests` walks the v2.4 registry table and pins an RP fire/silent pair (RP had only a dispatch pin). Conformance and limitations registers updated.
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).
