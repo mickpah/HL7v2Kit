@@ -1,7 +1,7 @@
 {
   "structure": "ACK",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 42. Two normative prints of ACK differ by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]), as do the other chapters' ACK prints but CH03 3.3.18 (no UAC) and CH05 5.4.4 to 5.4.7 ([ERR]), each stricter still; Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]) for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24 and S26. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+  "citation": "HL7 v2.6 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 42. Two normative prints of ACK differ by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]), as do the other chapters' ACK prints but CH03 3.3.18 (no UAC) and CH05 5.4.4 to 5.4.7 ([ERR]), each stricter still; Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]) for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24 and S26. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9). A third normative print of ACK differs by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints [{ ERR }]; Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 33; ACK^Q17 and ACK^J01, p 34; ACK^J02, p 35) print [ ERR ], UAC as 2.13.1; the 2.13.1 print is the default and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). A fourth normative print of ACK differs by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints [ UAC ] after SFT; Chapter 3 section 3.3.18 (ACK^A18^ACK, p 3-21) prints MSH [{ SFT }] MSA [ { ERR } ], no UAC; the 2.13.1 print is the default and the 3.3.18 print governs ACK^A18. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
   "triggers": ["ACK^*"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -18,6 +18,27 @@
         { "segment": "MSH", "min": 1, "max": 1 },
         { "segment": "SFT", "min": 0, "max": null },
         { "segment": "UAC", "min": 0, "max": null },
+        { "segment": "MSA", "min": 1, "max": 1 },
+        { "segment": "ERR", "min": 0, "max": null }
+      ]
+    },
+    {
+      "triggers": ["ACK^Q16", "ACK^Q17", "ACK^J01", "ACK^J02"],
+      "citation": "HL7 v2.6 Chapter 5, section 5.4.4 QSB - Create subscription (Event Q16), p 33; the same structure is printed for ACK^Q17 (5.4.5), ACK^J01 (5.4.6) and ACK^J02 (5.4.7). Per-trigger print (overrides.json variantPrints, ADR-019 S6): A third normative print of ACK differs by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints [{ ERR }]; Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 33; ACK^Q17 and ACK^J01, p 34; ACK^J02, p 35) print [ ERR ], UAC as 2.13.1; the 2.13.1 print is the default and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "SFT", "min": 0, "max": null },
+        { "segment": "UAC", "min": 0, "max": 1 },
+        { "segment": "MSA", "min": 1, "max": 1 },
+        { "segment": "ERR", "min": 0, "max": 1 }
+      ]
+    },
+    {
+      "triggers": ["ACK^A18"],
+      "citation": "HL7 v2.6 Chapter 3, section 3.3.18 ADT/ACK - Merge Patient Information (Event A18), p 3-21. Per-trigger print (overrides.json variantPrints, ADR-019 S6): A fourth normative print of ACK differs by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints [ UAC ] after SFT; Chapter 3 section 3.3.18 (ACK^A18^ACK, p 3-21) prints MSH [{ SFT }] MSA [ { ERR } ], no UAC; the 2.13.1 print is the default and the 3.3.18 print governs ACK^A18. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "SFT", "min": 0, "max": null },
         { "segment": "MSA", "min": 1, "max": 1 },
         { "segment": "ERR", "min": 0, "max": null }
       ]

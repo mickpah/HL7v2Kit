@@ -1,7 +1,7 @@
 {
   "structure": "RQC_I05",
   "version": "2.4",
-  "citation": "HL7 v2.4 Chapter 11, section 11.3.5 RQC/RCI - request for patient clinical information (event I05), p 11-12; the same structure is printed for RQC^I06 (11.3.6). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RQC_I05.xsd, RQC_I05.PROVIDER.CONTENT).",
+  "citation": "HL7 v2.4 Chapter 11, section 11.3.5 RQC/RCI - request for patient clinical information (event I05), p 11-12; the same structure is printed for RQC^I06 (11.3.6). Two normative prints of RQC_I05 differ by trigger: HL7 v2.4 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 11-12 to 11-13) prints GT1 optional and non-repeating ([ GT1 ]), section 11.3.5 (RQC^I05^RQC_I05, p 11-12) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RQC_I05.xsd, RQC_I05.PROVIDER.CONTENT).",
   "triggers": ["RQC^I05", "RQC^I06"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -15,5 +15,24 @@
     { "segment": "NK1", "min": 0, "max": null },
     { "segment": "GT1", "min": 0, "max": null },
     { "segment": "NTE", "min": 0, "max": null }
+  ],
+  "variants": [
+    {
+      "triggers": ["RQC^I06"],
+      "citation": "HL7 v2.4 Chapter 11, section 11.3.6 RQC/RCL - request/receipt of clinical data listing (event I06), pp 11-12 to 11-13. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RQC_I05 differ by trigger: HL7 v2.4 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 11-12 to 11-13) prints GT1 optional and non-repeating ([ GT1 ]), section 11.3.5 (RQC^I05^RQC_I05, p 11-12) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RQC_I05.xsd, RQC_I05.PROVIDER.CONTENT).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "QRD", "min": 1, "max": 1 },
+        { "segment": "QRF", "min": 0, "max": 1 },
+        { "group": "PROVIDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+          { "segment": "PRD", "min": 1, "max": 1 },
+          { "segment": "CTD", "min": 0, "max": null }
+        ]},
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NK1", "min": 0, "max": null },
+        { "segment": "GT1", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]
+    }
   ]
 }

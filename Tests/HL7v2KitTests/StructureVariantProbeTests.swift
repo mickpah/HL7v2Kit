@@ -86,6 +86,8 @@ struct StructureVariantProbeTests {
               findings: ["unexpected PID at PID[2]", "unexpected QRI at QRI[2]"], note: "demographics response, two persons"),
         Probe(version: "2.6", msh9: "RSP^K21^RSP_K21", structure: "RSP_K21",
               body: k21Head + ["PID|1", "ARV|1", "QRI|1"], findings: [], note: "demographics response with ARV"),
+        Probe(version: "2.6", msh9: "RSP^K21^RSP_K21", structure: "RSP_K21", body: k21Head + ["PID|1"],
+              findings: ["missing QRI at the end"], note: "demographics response without QRI"),
         Probe(version: "2.6", msh9: "RSP^K22^RSP_K21", structure: "RSP_K21",
               body: k21Head + ["PID|1", "ARV|1"], findings: ["unexpected ARV at ARV[1]"],
               note: "candidates response with ARV"),

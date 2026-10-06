@@ -210,7 +210,7 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.6",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.6 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 42. Two normative prints of ACK differ by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]), as do the other chapters' ACK prints but CH03 3.3.18 (no UAC) and CH05 5.4.4 to 5.4.7 ([ERR]), each stricter still; Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]) for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24 and S26. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+        citation: "HL7 v2.6 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 42. Two normative prints of ACK differ by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]), as do the other chapters' ACK prints but CH03 3.3.18 (no UAC) and CH05 5.4.4 to 5.4.7 ([ERR]), each stricter still; Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]) for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24 and S26. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9). A third normative print of ACK differs by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints [{ ERR }]; Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 33; ACK^Q17 and ACK^J01, p 34; ACK^J02, p 35) print [ ERR ], UAC as 2.13.1; the 2.13.1 print is the default and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). A fourth normative print of ACK differs by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints [ UAC ] after SFT; Chapter 3 section 3.3.18 (ACK^A18^ACK, p 3-21) prints MSH [{ SFT }] MSA [ { ERR } ], no UAC; the 2.13.1 print is the default and the 3.3.18 print governs ACK^A18. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
         variants: [
             StructureVariant(
@@ -221,6 +221,27 @@ extension MessageStructureTable {
                     .segment("MSH", min: 1, max: 1),
                     .segment("SFT", min: 0, max: nil),
                     .segment("UAC", min: 0, max: nil),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: nil),
+                ]),
+            StructureVariant(
+                triggers: ["ACK^Q16", "ACK^Q17", "ACK^J01", "ACK^J02"],
+                citation: "HL7 v2.6 Chapter 5, section 5.4.4 QSB - Create subscription (Event Q16), p 33; the same structure is printed for ACK^Q17 (5.4.5), ACK^J01 (5.4.6) and ACK^J02 (5.4.7). Per-trigger print (overrides.json variantPrints, ADR-019 S6): A third normative print of ACK differs by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints [{ ERR }]; Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 33; ACK^Q17 and ACK^J01, p 34; ACK^J02, p 35) print [ ERR ], UAC as 2.13.1; the 2.13.1 print is the default and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: 1),
+                ]),
+            StructureVariant(
+                triggers: ["ACK^A18"],
+                citation: "HL7 v2.6 Chapter 3, section 3.3.18 ADT/ACK - Merge Patient Information (Event A18), p 3-21. Per-trigger print (overrides.json variantPrints, ADR-019 S6): A fourth normative print of ACK differs by trigger: HL7 v2.6 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints [ UAC ] after SFT; Chapter 3 section 3.3.18 (ACK^A18^ACK, p 3-21) prints MSH [{ SFT }] MSA [ { ERR } ], no UAC; the 2.13.1 print is the default and the 3.3.18 print governs ACK^A18. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
                     .segment("MSA", min: 1, max: 1),
                     .segment("ERR", min: 0, max: nil),
                 ]),
@@ -293,8 +314,48 @@ extension MessageStructureTable {
         id: "ADT_A01",
         version: "2.6",
         triggers: ["ADT^A01", "ADT^A04", "ADT^A08", "ADT^A13"],
-        citation: "HL7 v2.6 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), p 3-4; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13).",
+        citation: "HL7 v2.6 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), p 3-4; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Two normative prints of ADT_A01 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.1 (ADT^A01^ADT_A01, p 3-4) prints [{ ARV }] after PD1, as do 3.3.4 (A04) and 3.3.8 (A08); section 3.3.13 (ADT^A13^ADT_A01, pp 3-16 to 3-17) prints no ARV after PD1 (only the one after PV2); the 3.3.1 print is the default and the 3.3.13 print governs ADT^A13. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ADT^A13"],
+                citation: "HL7 v2.6 Chapter 3, section 3.3.13 ADT/ACK - Cancel Discharge / End Visit (Event A13), pp 3-16 to 3-17. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A01 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.1 (ADT^A01^ADT_A01, p 3-4) prints [{ ARV }] after PD1, as do 3.3.4 (A04) and 3.3.8 (A08); section 3.3.13 (ADT^A13^ADT_A01, pp 3-16 to 3-17) prints no ARV after PD1 (only the one after PV2); the 3.3.1 print is the default and the 3.3.13 print governs ADT^A13. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("EVN", min: 1, max: 1),
+                    .segment("PID", min: 1, max: 1),
+                    .segment("PD1", min: 0, max: 1),
+                    .segment("ROL", min: 0, max: nil),
+                    .segment("NK1", min: 0, max: nil),
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                    .segment("ARV", min: 0, max: nil),
+                    .segment("ROL", min: 0, max: nil),
+                    .segment("DB1", min: 0, max: nil),
+                    .segment("OBX", min: 0, max: nil),
+                    .segment("AL1", min: 0, max: nil),
+                    .segment("DG1", min: 0, max: nil),
+                    .segment("DRG", min: 0, max: 1),
+                    .group("PROCEDURE", min: 0, max: nil, elements: [
+                        .segment("PR1", min: 1, max: 1),
+                        .segment("ROL", min: 0, max: nil),
+                    ]),
+                    .segment("GT1", min: 0, max: nil),
+                    .group("INSURANCE", min: 0, max: nil, elements: [
+                        .segment("IN1", min: 1, max: 1),
+                        .segment("IN2", min: 0, max: 1),
+                        .segment("IN3", min: 0, max: nil),
+                        .segment("ROL", min: 0, max: nil),
+                    ]),
+                    .segment("ACC", min: 0, max: 1),
+                    .segment("UB1", min: 0, max: 1),
+                    .segment("UB2", min: 0, max: 1),
+                    .segment("PDA", min: 0, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6103,8 +6164,29 @@ extension MessageStructureTable {
         id: "RQC_I05",
         version: "2.6",
         triggers: ["RQC^I05", "RQC^I06"],
-        citation: "HL7 v2.6 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), p 11-11; the same structure is printed for RQC^I06 (11.3.6).",
+        citation: "HL7 v2.6 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), p 11-11; the same structure is printed for RQC^I06 (11.3.6). Two normative prints of RQC_I05 differ by trigger: HL7 v2.6 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, p 11-12) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 11-11) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["RQC^I06"],
+                citation: "HL7 v2.6 Chapter 11, section 11.3.6 RQC/RCL - Request/Receipt of Clinical Data Listing (Event I06), p 11-12. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RQC_I05 differ by trigger: HL7 v2.6 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, p 11-12) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 11-11) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("QRD", min: 1, max: 1),
+                    .segment("QRF", min: 0, max: 1),
+                    .group("PROVIDER", min: 1, max: nil, elements: [
+                        .segment("PRD", min: 1, max: 1),
+                        .segment("CTD", min: 0, max: nil),
+                    ]),
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NK1", min: 0, max: nil),
+                    .segment("GT1", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6243,8 +6325,44 @@ extension MessageStructureTable {
         id: "RRE_O12",
         version: "2.6",
         triggers: ["RRE^O12", "RRE^O26"],
-        citation: "HL7 v2.6 Chapter 4, section 4.13.6 RRE - Pharmacy/Treatment Encoded Order Acknowledgment (Event O12), p 4-90; the same structure is printed for RRE^O26 (4.13.14).",
+        citation: "HL7 v2.6 Chapter 4, section 4.13.6 RRE - Pharmacy/Treatment Encoded Order Acknowledgment (Event O12), p 4-90; the same structure is printed for RRE^O26 (4.13.14). Two normative prints of RRE_O12 differ by trigger: HL7 v2.6 Chapter 4 section 4.13.6 (RRE^O12^RRE_O12, p 4-90) prints [{ NTE }] after RXE in ENCODING, section 4.13.14 (RRE^O26^RRE_O12, pp 4-98 to 4-99) prints no NTE there; the 4.13.6 print is the default and the 4.13.14 print governs RRE^O26. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["RRE^O26"],
+                citation: "HL7 v2.6 Chapter 4, section 4.13.14 RRE - Pharmacy/Treatment Refill Authorization Request, pp 4-98 to 4-99. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RRE_O12 differ by trigger: HL7 v2.6 Chapter 4 section 4.13.6 (RRE^O12^RRE_O12, p 4-90) prints [{ NTE }] after RXE in ENCODING, section 4.13.14 (RRE^O26^RRE_O12, pp 4-98 to 4-99) prints no NTE there; the 4.13.6 print is the default and the 4.13.14 print governs RRE^O26. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: nil),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("RESPONSE", min: 0, max: 1, elements: [
+                        .group("PATIENT", min: 0, max: 1, elements: [
+                            .segment("PID", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .group("ORDER", min: 1, max: nil, elements: [
+                            .segment("ORC", min: 1, max: 1),
+                            .group("TIMING", min: 0, max: nil, elements: [
+                                .segment("TQ1", min: 1, max: 1),
+                                .segment("TQ2", min: 0, max: nil),
+                            ]),
+                            .group("ENCODING", min: 0, max: 1, elements: [
+                                .segment("RXE", min: 1, max: 1),
+                                .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                                    .segment("TQ1", min: 1, max: 1),
+                                    .segment("TQ2", min: 0, max: nil),
+                                ]),
+                                .segment("RXR", min: 1, max: nil),
+                                .segment("RXC", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),

@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A01",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), p 3-4; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13).",
+  "citation": "HL7 v2.6 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), p 3-4; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Two normative prints of ADT_A01 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.1 (ADT^A01^ADT_A01, p 3-4) prints [{ ARV }] after PD1, as do 3.3.4 (A04) and 3.3.8 (A08); section 3.3.13 (ADT^A13^ADT_A01, pp 3-16 to 3-17) prints no ARV after PD1 (only the one after PV2); the 3.3.1 print is the default and the 3.3.13 print governs ADT^A13. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
   "triggers": ["ADT^A01", "ADT^A04", "ADT^A08", "ADT^A13"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -37,5 +37,45 @@
     { "segment": "UB1", "min": 0, "max": 1 },
     { "segment": "UB2", "min": 0, "max": 1 },
     { "segment": "PDA", "min": 0, "max": 1 }
+  ],
+  "variants": [
+    {
+      "triggers": ["ADT^A13"],
+      "citation": "HL7 v2.6 Chapter 3, section 3.3.13 ADT/ACK - Cancel Discharge / End Visit (Event A13), pp 3-16 to 3-17. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A01 differ by trigger: HL7 v2.6 Chapter 3 section 3.3.1 (ADT^A01^ADT_A01, p 3-4) prints [{ ARV }] after PD1, as do 3.3.4 (A04) and 3.3.8 (A08); section 3.3.13 (ADT^A13^ADT_A01, pp 3-16 to 3-17) prints no ARV after PD1 (only the one after PV2); the 3.3.1 print is the default and the 3.3.13 print governs ADT^A13. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "SFT", "min": 0, "max": null },
+        { "segment": "UAC", "min": 0, "max": 1 },
+        { "segment": "EVN", "min": 1, "max": 1 },
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "PD1", "min": 0, "max": 1 },
+        { "segment": "ROL", "min": 0, "max": null },
+        { "segment": "NK1", "min": 0, "max": null },
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 },
+        { "segment": "ARV", "min": 0, "max": null },
+        { "segment": "ROL", "min": 0, "max": null },
+        { "segment": "DB1", "min": 0, "max": null },
+        { "segment": "OBX", "min": 0, "max": null },
+        { "segment": "AL1", "min": 0, "max": null },
+        { "segment": "DG1", "min": 0, "max": null },
+        { "segment": "DRG", "min": 0, "max": 1 },
+        { "group": "PROCEDURE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "PR1", "min": 1, "max": 1 },
+          { "segment": "ROL", "min": 0, "max": null }
+        ]},
+        { "segment": "GT1", "min": 0, "max": null },
+        { "group": "INSURANCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "IN1", "min": 1, "max": 1 },
+          { "segment": "IN2", "min": 0, "max": 1 },
+          { "segment": "IN3", "min": 0, "max": null },
+          { "segment": "ROL", "min": 0, "max": null }
+        ]},
+        { "segment": "ACC", "min": 0, "max": 1 },
+        { "segment": "UB1", "min": 0, "max": 1 },
+        { "segment": "UB2", "min": 0, "max": 1 },
+        { "segment": "PDA", "min": 0, "max": 1 }
+      ]
+    }
   ]
 }

@@ -201,9 +201,24 @@ def _structure(rows, sid="XYZ_X01", overrides=EMPTY):
     return structures.get(sid), report
 
 
+def _no_variants(version):
+    """OVERRIDES without the version's variantPrints: a golden text holds only the default print, so
+    the committed file is compared without its variants and their entries' citations (S6 fix wave)."""
+    return {**OVERRIDES, "variantPrints": [e for e in OVERRIDES["variantPrints"] if e["version"] != version]}
+
+
+def _default_only(version, structure):
+    data = json.loads(_committed(version, structure))
+    data.pop("variants", None)
+    for e in OVERRIDES["variantPrints"]:
+        if e["version"] == version and e["structure"] == structure:
+            data["citation"] = data["citation"].replace(f" {e['citation']}", "")
+    return ext.render(data)
+
+
 def check_ack_golden():
-    structures, report, _ = _extract([("CH02", ACK_CH02), ("CH03", ADT_CH03), ("CH07", ORU_CH07)])
-    assert ext.render(structures["ACK"]) == _committed("2.5.1", "ACK"), ext.render(structures["ACK"])
+    structures, report, _ = _extract([("CH02", ACK_CH02), ("CH03", ADT_CH03), ("CH07", ORU_CH07)], _no_variants("2.5.1"))
+    assert ext.render(structures["ACK"]) == _default_only("2.5.1", "ACK"), ext.render(structures["ACK"])
     assert not [r for r in report if r[0] == "ACK" and r[1] == "note"], [r for r in report if r[0] == "ACK"]
 
 
@@ -225,7 +240,7 @@ def check_oru_r01_golden():
     # The five unprinted names come from the bundle; the synthetic schema stands in for
     # HL7-xml v2.5.1/ORU_R01.xsd with the committed file's own groups (ruling D4).
     schema = _xsd_from_json(json.loads(_committed("2.5.1", "ORU_R01")))
-    structures, report, _ = ext.extract_version("2.5.1", [("CH07", ORU_CH07)], OVERRIDES,
+    structures, report, _ = ext.extract_version("2.5.1", [("CH07", ORU_CH07)], _no_variants("2.5.1"),
                                                 bundles=_bundles("2.5.1", {"ORU_R01": schema}))
     got = ext.render(structures["ORU_R01"])
     assert got == _committed("2.5.1", "ORU_R01"), got
@@ -2001,6 +2016,40 @@ def check_variant_prints_several():
         assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
 
 
+def check_variant_prints_kept_on_default():
+    # S6 fix wave (I1, MFK_M01 v2.3.1 and v2.4): a print equal to the variant whose caption names a
+    # trigger the default print's caption also names. That trigger has two prints (the primaryPrints
+    # case) and stays on the default only when the entry lists it in keptOnDefault; the variant
+    # keeps the triggers only it prints. Unlisted or stale kept triggers are errors.
+    strict = [("MSH", "Header"), ("MSA", "Ack"), ("MFI", "Master")]
+    loose = [("MSH", "Header"), ("MSA", "Ack"), ("[ERR]", "Error"), ("MFI", "Master")]
+    text = (_page(1, _table("XYZ^X01-X03^XYZ_X01", loose), heading="9.1.1           XYZ - synthetic (Events X01-X03)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", strict), heading="9.1.2           XYZ - synthetic (Event X02)")
+            + _page(3, _table("XYZ^X04^XYZ_X01", strict), heading="9.1.3           XYZ - synthetic (Event X04)"))
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X01-X03^XYZ_X01", "variant": "XYZ^X04^XYZ_X01",
+             "keptOnDefault": ["XYZ^X02"], "citation": "Per-trigger prints, X02 printed both ways (synthetic)."}
+    fix = {**EMPTY, "variantPrints": [entry]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert not [r for r in report if r[1] == "error"], report
+    assert "XYZ^X02" in s["triggers"] and "XYZ^X04" in s["triggers"], s["triggers"]
+    [v] = s["variants"]
+    assert v["triggers"] == ["XYZ^X04"], v
+    assert [e["segment"] for e in v["elements"]] == ["MSH", "MSA", "MFI"], v
+    bare = {k: x for k, x in entry.items() if k != "keptOnDefault"}
+    for bad, why in ((bare, "must be exact and none the default print's"),
+                     ({**entry, "keptOnDefault": ["XYZ^X02", "XYZ^X03"]}, "keptOnDefault")):
+        _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": [bad]}, full=True)
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+    for bad in ({**entry, "keptOnDefault": []}, {**entry, "keptOnDefault": "XYZ^X02"}, {**entry, "keptOnDefault": ["X02"]}):
+        try:
+            ext.validate_overrides({**EMPTY, "variantPrints": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"accepted {bad['keptOnDefault']!r}")
+
+
 def check_union_prints():
     # P8b-10 ruling (v2.6 RSP_K21): two incomparable normative prints of one ID; a cited
     # unionPrints entry aligns them by segment or group name: per element the lesser min and the
@@ -2539,7 +2588,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override, check_primary_print_by_section,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
-          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints, check_variant_prints, check_variant_prints_several,
+          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints, check_variant_prints, check_variant_prints_several, check_variant_prints_kept_on_default,
           check_colon_caption_with_space_ends_table, check_v282_reader_layouts, check_v271_reader_layouts,
           check_0354_triggers_merged, check_v24_reader_layouts, check_syntax_cell_erratum_occurrence,
           check_bundle_name_no_group_can_hold, check_v231_bundle_encoder_style,

@@ -1594,6 +1594,11 @@ def validate_overrides(data):
                     kind == "variantPrints" and entry.get("primary") == entry.get("variant")):
                 raise OverridesError(f"variantPrints entry for {entry.get('structure')}: variant must be a print "
                                      "name or a non-empty list of them without the primary")
+            if kind == "variantPrints" and "keptOnDefault" in entry and not (
+                    isinstance(entry["keptOnDefault"], list) and entry["keptOnDefault"]
+                    and all(isinstance(t, str) and TRIGGER.match(t) for t in entry["keptOnDefault"])):
+                raise OverridesError(f"variantPrints entry for {entry.get('structure')}: keptOnDefault must be a "
+                                     "non-empty list of exact CODE^EVT triggers")
             if kind == "sharedTriggers" and len(set(entry.get("structures", []))) < 2:
                 raise OverridesError(f"sharedTriggers entry {entry.get('trigger')} names fewer than two structures")
             if "occurrence" in entry and not ((kind == "eventsFromTitle" or (kind == "errata" and entry.get("where") in
@@ -1643,7 +1648,9 @@ def validate_overrides(data):
                                      "a non-empty list of CODE^EVT triggers with the alias's message code")
             optional = {"exclusions": {"caption"}, "errata": {"occurrence"}, "eventsFromTitle": {"occurrence"},
                         "keyedChoices": {"alternatives", "slot"},
-                        "proseFragments": {"triggers", "choices"}}.get(kind, set())
+                        "proseFragments": {"triggers", "choices"},
+                        # S6 fix wave: triggers a variant print shares with the default's caption.
+                        "variantPrints": {"keptOnDefault"}}.get(kind, set())
             if not keys <= set(entry) <= keys | optional:
                 raise OverridesError(f"{kind} entry keys {sorted(entry)}, expected {sorted(keys)}")
             text = entry.get("citation", entry.get("note", ""))
@@ -2264,8 +2271,9 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             # S6-1: the named variant prints must agree with one another and differ from the default
             # and, with several entries (S6 fix wave), from every other entry's variant print.
             named = [y for y in entries if any(_names_print(v, y[0]) for v in _variant_prints(x))]
+            vlog = []       # the variant's unprinted group names, cited in its own citation
             try:
-                read_named = [read(sid, y[1], y[2]) for y in named]
+                read_named = [read(sid, y[1], y[2], vlog if i == 0 else None) for i, y in enumerate(named)]
             except UnknownNotation as exc:
                 bad = f"variantPrints entry: a variant print is unreadable: {exc}"
                 break
@@ -2278,7 +2286,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             if any(uncited(read_named[0]) == uncited(w["elements"]) for w in variants):
                 bad = "variantPrints entries for one structure name equal variant prints"
                 break
-            variants.append({"elements": read_named[0], "prints": [], "triggers": [], "entry": x})
+            variants.append({"elements": read_named[0], "prints": [], "triggers": [], "entry": x, "log": vlog})
         if bad:
             report.append((sid, "error", bad))
             continue
@@ -2298,9 +2306,13 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 continue
             variant = next((w for w in variants if uncited(theirs) == uncited(w["elements"])), None)
             if variant:
-                # S6-1: a print equal to a variant governs its own triggers with it.
+                # S6-1: a print equal to a variant governs its own triggers with it, but for the
+                # triggers its entry keeps on the default: those the default's caption prints too
+                # (two prints under one trigger, the primaryPrints case; S6 fix wave).
+                kept = variant["entry"].get("keptOnDefault", [])
                 variant["prints"].append(c)
-                variant["triggers"] += [t for t in trigs if t not in variant["triggers"]]
+                variant["kept"] = variant.get("kept", set()) | (set(trigs) & set(kept))
+                variant["triggers"] += [t for t in trigs if t not in variant["triggers"] and t not in kept]
                 report.append((sid, "variant", f"{c.printed} (section {c.section}, p {c.page}) prints "
                                f"{compact(theirs)[:160]!r} for {_join(trigs)}"))
                 continue
@@ -2311,8 +2323,12 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                f"{compact(theirs)[:160]!r}; primary {cap.printed} (section {cap.section}) prints "
                                f"{compact(elements)[:160]!r}"))
         for variant in variants:
+            kept = variant["entry"].get("keptOnDefault")
             if not all(any(_names_print(v, c) for c in variant["prints"]) for v in _variant_prints(variant["entry"])):
                 bad = "variantPrints entry: a named variant print is the default print"
+            elif kept and (variant.get("kept", set()) != set(kept) or not set(kept) <= own):
+                bad = (f"variantPrints entry: keptOnDefault {_join(kept)} must be exactly the variant prints' "
+                       "triggers that the default print's caption also prints")
             elif (own & set(variant["triggers"]) or any(not TRIGGER.match(t) for t in variant["triggers"])
                   or any(set(variant["triggers"]) & set(w["triggers"]) for w in variants if w is not variant)):
                 bad = (f"variantPrints entry: the variant triggers {_join(variant['triggers'])} must be exact and none "
@@ -2349,7 +2365,8 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             # one variant per variantPrints entry, in the entries' order (S6 fix wave).
             first = variant["prints"][0]
             vcite = (citation(ver, first, variant["prints"][1:], {"citationNotes": []}, sid)
-                     + f" Per-trigger print (overrides.json variantPrints, ADR-019 S6): {variant['entry']['citation']}")
+                     + f" Per-trigger print (overrides.json variantPrints, ADR-019 S6): {variant['entry']['citation']}"
+                     + name_citation(variant["log"]))
             vel = json.loads(json.dumps(variant["elements"]))
             cite_slots(vel, ver, first)
             validate_names({"structure": sid, "version": ver, "elements": vel, "citation": structures[sid]["citation"] + " " + vcite})

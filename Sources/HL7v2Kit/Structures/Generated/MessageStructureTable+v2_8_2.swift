@@ -200,7 +200,7 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.8.2",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.8.2 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 47. Two normative prints of ACK differ by trigger: HL7 v2.8.2 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]); Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 20) prints [{UAC}] for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24, S26 and S27. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+        citation: "HL7 v2.8.2 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 47. Two normative prints of ACK differ by trigger: HL7 v2.8.2 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]); Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 20) prints [{UAC}] for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24, S26 and S27. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9). A third normative print of ACK differs by trigger: HL7 v2.8.2 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47) prints [{ ERR }]; Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 38; ACK^Q17 and ACK^J01, p 39; ACK^J02, p 40) print [ ERR ], UAC as 2.13.1; the 2.13.1 print is the default and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
         variants: [
             StructureVariant(
@@ -213,6 +213,17 @@ extension MessageStructureTable {
                     .segment("UAC", min: 0, max: nil),
                     .segment("MSA", min: 1, max: 1),
                     .segment("ERR", min: 0, max: nil),
+                ]),
+            StructureVariant(
+                triggers: ["ACK^Q16", "ACK^Q17", "ACK^J01", "ACK^J02"],
+                citation: "HL7 v2.8.2 Chapter 5, section 5.4.4 QSB - Create subscription (Event Q16), p 38; the same structure is printed for ACK^Q17 (5.4.5), ACK^J01 (5.4.6) and ACK^J02 (5.4.7). Per-trigger print (overrides.json variantPrints, ADR-019 S6): A third normative print of ACK differs by trigger: HL7 v2.8.2 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47) prints [{ ERR }]; Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 38; ACK^Q17 and ACK^J01, p 39; ACK^J02, p 40) print [ ERR ], UAC as 2.13.1; the 2.13.1 print is the default and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: 1),
                 ]),
         ],
         elements: [
@@ -6139,8 +6150,85 @@ extension MessageStructureTable {
         id: "RDE_O11",
         version: "2.8.2",
         triggers: ["RDE^O11", "RDE^O25"],
-        citation: "HL7 v2.8.2 Chapter 4A, section 4A.3.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 6 to 8; the same structure is printed for RDE^O25 (4A.3.13).",
+        citation: "HL7 v2.8.2 Chapter 4A, section 4A.3.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 6 to 8; the same structure is printed for RDE^O25 (4A.3.13). Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.8.2 Chapter 4A section 4A.3.5 (RDE^O11^RDE_O11, p 6) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.13 (RDE^O25^RDE_O11, p 20) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.5 print is the default and the 4A.3.13 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["RDE^O25"],
+                citation: "HL7 v2.8.2 Chapter 4A, section 4A.3.13 RDE - Pharmacy/Treatment Refill Authorization Request Message, pp 20 to 22. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.8.2 Chapter 4A section 4A.3.5 (RDE^O11^RDE_O11, p 6) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.13 (RDE^O25^RDE_O11, p 20) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.5 print is the default and the 4A.3.13 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Unprinted group names (ADR-019 decision 3): PHARMACY_TREATMENT_INFUSION_ORDER (HL7-xml v2.8.2/RDE_O11.xsd, RDE_O11.PHARMACY_TREATMENT_INFUSION_ORDER.CONTENT).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("PATIENT", min: 0, max: 1, elements: [
+                        .segment("PID", min: 1, max: 1),
+                        .segment("PD1", min: 0, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("ARV", min: 0, max: nil),
+                        .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                            .segment("PV1", min: 1, max: 1),
+                            .segment("PV2", min: 0, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("ARV", min: 0, max: nil),
+                        ]),
+                        .group("INSURANCE", min: 0, max: nil, elements: [
+                            .segment("IN1", min: 1, max: 1),
+                            .segment("IN2", min: 0, max: 1),
+                            .segment("IN3", min: 0, max: 1),
+                        ]),
+                        .segment("GT1", min: 0, max: 1),
+                        .segment("AL1", min: 0, max: nil),
+                    ]),
+                    .group("ORDER", min: 1, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .group("TIMING", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .segment("RXO", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("RXR", min: 1, max: nil),
+                            .group("COMPONENTS", min: 0, max: nil, elements: [
+                                .segment("RXC", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .segment("RXE", min: 1, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("PHARMACY_TREATMENT_INFUSION_ORDER", min: 0, max: nil, elements: [
+                            .segment("RXV", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                            .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                                .segment("TQ1", min: 1, max: 1),
+                                .segment("TQ2", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                        .segment("CDO", min: 0, max: nil),
+                        .group("OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .segment("FT1", min: 0, max: nil),
+                        .segment("BLG", min: 0, max: 1),
+                        .segment("CTI", min: 0, max: nil),
+                    ]),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),

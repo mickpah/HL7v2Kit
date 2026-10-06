@@ -127,8 +127,18 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.3.1",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-78. Structure ID ACK is the message code alone (overrides.json triggerFolds): the caption prints the code alone and Table 0354 has no ACK row.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-78. Two normative prints of ACK differ by trigger: HL7 v2.3.1 Chapter 2 section 2.13.1 (ACK, p 2-78), the general acknowledgment, prints MSH MSA [ERR]; Chapter 7 section 7.2.1 (ACK^R01, p 7-16) prints MSH MSA, no ERR; the 2.13.1 print is the default (the triggerFolds primary) and the 7.2.1 print governs ACK^R01. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Structure ID ACK is the message code alone (overrides.json triggerFolds): the caption prints the code alone and Table 0354 has no ACK row.",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ACK^R01"],
+                citation: "HL7 v2.3.1 Chapter 7, section 7.2.1 ORU/ACK - unsolicited transmission of an observation message (event R01), p 7-16. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ACK differ by trigger: HL7 v2.3.1 Chapter 2 section 2.13.1 (ACK, p 2-78), the general acknowledgment, prints MSH MSA [ERR]; Chapter 7 section 7.2.1 (ACK^R01, p 7-16) prints MSH MSA, no ERR; the 2.13.1 print is the default (the triggerFolds primary) and the 7.2.1 print governs ACK^R01. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -909,8 +919,20 @@ extension MessageStructureTable {
         id: "MFK_M01",
         version: "2.3.1",
         triggers: ["MFK^M01", "MFK^M02", "MFK^M03", "MFK^M04", "MFK^M05", "MFK^M06", "MFK^M07", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11"],
-        citation: "HL7 v2.3.1 Chapter 8, section 8.3.1 MFN/MFK - master files notification, p 8-3; the same structure is printed for MFK^M07 (8.10.1). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the general acknowledgment MFK^M01-M06 (Chapter 8 section 8.3.1, p 8-3) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the staff/practitioner acknowledgment MFK^M01-M06 (Chapter 8 section 8.6.1, p 8-11) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the charge description acknowledgment MFK^M04 (Chapter 8 section 8.9.1, p 8-60) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104); the row named for MFK^M01-M06 and MFK^M04 by overrides.json captionStructures. Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
+        citation: "HL7 v2.3.1 Chapter 8, section 8.3.1 MFN/MFK - master files notification, p 8-3; the same structure is printed for MFK^M07 (8.10.1). Two normative prints of MFK_M01 differ: HL7 v2.3.1 Chapter 8 section 8.3.1 (MFK^M01-M06, p 8-3) prints MSH MSA [ERR] MFI { [MFA] }; sections 8.6.1 (MFK^M01-M06, p 8-11), 8.8.1 (MFK^M05, p 8-48), 8.9.1 (MFK^M04, p 8-60) and 8.10.1 (MFK^M06, p 8-67; MFK^M07, p 8-68, the caption erratum) print no ERR. M01 to M06 are printed both ways (two prints under one trigger, the primaryPrints case: the looser 8.3.1 print governs them, keptOnDefault); M07 is printed only without ERR, so the 8.10.1 print governs MFK^M07. ADR-019 S6 (S6 fix wave; was duplicate-differs on the default). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the general acknowledgment MFK^M01-M06 (Chapter 8 section 8.3.1, p 8-3) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the staff/practitioner acknowledgment MFK^M01-M06 (Chapter 8 section 8.6.1, p 8-11) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the charge description acknowledgment MFK^M04 (Chapter 8 section 8.9.1, p 8-60) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104); the row named for MFK^M01-M06 and MFK^M04 by overrides.json captionStructures. Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["MFK^M07"],
+                citation: "HL7 v2.3.1 Chapter 8, section 8.6.1 MFN/MFK - staff/practitioner master file message, p 8-11; the same structure is printed for MFK^M05 (8.8.1), MFK^M04 (8.9.1), MFK^M06 (8.10.1) and MFK^M07 (8.10.1). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of MFK_M01 differ: HL7 v2.3.1 Chapter 8 section 8.3.1 (MFK^M01-M06, p 8-3) prints MSH MSA [ERR] MFI { [MFA] }; sections 8.6.1 (MFK^M01-M06, p 8-11), 8.8.1 (MFK^M05, p 8-48), 8.9.1 (MFK^M04, p 8-60) and 8.10.1 (MFK^M06, p 8-67; MFK^M07, p 8-68, the caption erratum) print no ERR. M01 to M06 are printed both ways (two prints under one trigger, the primaryPrints case: the looser 8.3.1 print governs them, keptOnDefault); M07 is printed only without ERR, so the 8.10.1 print governs MFK^M07. ADR-019 S6 (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("MFI", min: 1, max: 1),
+                    .segment("MFA", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),

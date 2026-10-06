@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A09",
   "version": "2.4",
-  "citation": "HL7 v2.4 Chapter 3, section 3.3.9 ADT/ACK - patient departing - tracking (event A09), p 3-18; the same structure is printed for ADT^A10 (3.3.10), ADT^A11 (3.3.11) and ADT^A12 (3.3.12).",
+  "citation": "HL7 v2.4 Chapter 3, section 3.3.9 ADT/ACK - patient departing - tracking (event A09), p 3-18; the same structure is printed for ADT^A10 (3.3.10), ADT^A11 (3.3.11) and ADT^A12 (3.3.12). Two normative prints of ADT_A09 differ by trigger: HL7 v2.4 Chapter 3 section 3.3.9 (ADT^A09^ADT_A09, p 3-18) prints DG1 optional and repeating ([{ DG1 }]), as do 3.3.10 (A10, p 3-19) and 3.3.11 (A11, p 3-20); section 3.3.12 (ADT^A12^ADT_A09, p 3-20) prints it optional and non-repeating ([ DG1 ]); the 3.3.9 print is the default and the 3.3.12 print governs ADT^A12. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
   "triggers": ["ADT^A09", "ADT^A10", "ADT^A11", "ADT^A12"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -13,5 +13,22 @@
     { "segment": "DB1", "min": 0, "max": null },
     { "segment": "OBX", "min": 0, "max": null },
     { "segment": "DG1", "min": 0, "max": null }
+  ],
+  "variants": [
+    {
+      "triggers": ["ADT^A12"],
+      "citation": "HL7 v2.4 Chapter 3, section 3.3.12 ADT/ACK - cancel transfer (event A12), p 3-20. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A09 differ by trigger: HL7 v2.4 Chapter 3 section 3.3.9 (ADT^A09^ADT_A09, p 3-18) prints DG1 optional and repeating ([{ DG1 }]), as do 3.3.10 (A10, p 3-19) and 3.3.11 (A11, p 3-20); section 3.3.12 (ADT^A12^ADT_A09, p 3-20) prints it optional and non-repeating ([ DG1 ]); the 3.3.9 print is the default and the 3.3.12 print governs ADT^A12. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "EVN", "min": 1, "max": 1 },
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "PD1", "min": 0, "max": 1 },
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 },
+        { "segment": "DB1", "min": 0, "max": null },
+        { "segment": "OBX", "min": 0, "max": null },
+        { "segment": "DG1", "min": 0, "max": 1 }
+      ]
+    }
   ]
 }

@@ -170,8 +170,18 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.4",
         triggers: ["ACK^*", "MCF^*"],
-        citation: "HL7 v2.4 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-97. Trigger MCF^* from the caption MCF^varies^ACK (section 2.14.2, p 2-97), which prints this structure ID for that message code.",
+        citation: "HL7 v2.4 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-97. Two normative prints of ACK differ by trigger: HL7 v2.4 Chapter 2 section 2.14.1 (ACK^varies^ACK, p 2-97), the general acknowledgment for every trigger, prints MSH MSA [ERR]; Chapter 7 section 7.3.1 (ACK^R01, p 7-19) and Chapter 14 section 14.3.2 (ACK^N02, p 14-4) print MSH MSA, no ERR; the 2.14.1 print is the default (the triggerFolds primary) and the 7.3.1 and 14.3.2 prints govern R01 and N02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Trigger MCF^* from the caption MCF^varies^ACK (section 2.14.2, p 2-97), which prints this structure ID for that message code.",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ACK^R01", "ACK^N02"],
+                citation: "HL7 v2.4 Chapter 7, section 7.3.1 ORU - unsolicited observation message (event R01), p 7-19; the same structure is printed for ACK^N02 (14.3.2). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ACK differ by trigger: HL7 v2.4 Chapter 2 section 2.14.1 (ACK^varies^ACK, p 2-97), the general acknowledgment for every trigger, prints MSH MSA [ERR]; Chapter 7 section 7.3.1 (ACK^R01, p 7-19) and Chapter 14 section 14.3.2 (ACK^N02, p 14-4) print MSH MSA, no ERR; the 2.14.1 print is the default (the triggerFolds primary) and the 7.3.1 and 14.3.2 prints govern R01 and N02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -398,8 +408,25 @@ extension MessageStructureTable {
         id: "ADT_A09",
         version: "2.4",
         triggers: ["ADT^A09", "ADT^A10", "ADT^A11", "ADT^A12"],
-        citation: "HL7 v2.4 Chapter 3, section 3.3.9 ADT/ACK - patient departing - tracking (event A09), p 3-18; the same structure is printed for ADT^A10 (3.3.10), ADT^A11 (3.3.11) and ADT^A12 (3.3.12).",
+        citation: "HL7 v2.4 Chapter 3, section 3.3.9 ADT/ACK - patient departing - tracking (event A09), p 3-18; the same structure is printed for ADT^A10 (3.3.10), ADT^A11 (3.3.11) and ADT^A12 (3.3.12). Two normative prints of ADT_A09 differ by trigger: HL7 v2.4 Chapter 3 section 3.3.9 (ADT^A09^ADT_A09, p 3-18) prints DG1 optional and repeating ([{ DG1 }]), as do 3.3.10 (A10, p 3-19) and 3.3.11 (A11, p 3-20); section 3.3.12 (ADT^A12^ADT_A09, p 3-20) prints it optional and non-repeating ([ DG1 ]); the 3.3.9 print is the default and the 3.3.12 print governs ADT^A12. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ADT^A12"],
+                citation: "HL7 v2.4 Chapter 3, section 3.3.12 ADT/ACK - cancel transfer (event A12), p 3-20. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A09 differ by trigger: HL7 v2.4 Chapter 3 section 3.3.9 (ADT^A09^ADT_A09, p 3-18) prints DG1 optional and repeating ([{ DG1 }]), as do 3.3.10 (A10, p 3-19) and 3.3.11 (A11, p 3-20); section 3.3.12 (ADT^A12^ADT_A09, p 3-20) prints it optional and non-repeating ([ DG1 ]); the 3.3.9 print is the default and the 3.3.12 print governs ADT^A12. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("EVN", min: 1, max: 1),
+                    .segment("PID", min: 1, max: 1),
+                    .segment("PD1", min: 0, max: 1),
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                    .segment("DB1", min: 0, max: nil),
+                    .segment("OBX", min: 0, max: nil),
+                    .segment("DG1", min: 0, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -1296,8 +1323,20 @@ extension MessageStructureTable {
         id: "MFK_M01",
         version: "2.4",
         triggers: ["MFK^M01", "MFK^M02", "MFK^M03", "MFK^M04", "MFK^M05", "MFK^M06", "MFK^M07", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11"],
-        citation: "HL7 v2.4 Chapter 8, section 8.4.1 MFN/MFK - master files notification, pp 8-9 to 8-10; the same structure is printed for MFK^M07 (8.11.1). Triggers Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-138) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
+        citation: "HL7 v2.4 Chapter 8, section 8.4.1 MFN/MFK - master files notification, pp 8-9 to 8-10; the same structure is printed for MFK^M07 (8.11.1). Two normative prints of MFK_M01 differ: HL7 v2.4 Chapter 8 section 8.4.1 (MFK^M01-M06^MFK_M01, pp 8-9 to 8-10) prints MSH MSA [ERR] MFI [{MFA}]; sections 8.7.1 (MFK^M02, p 8-19), 8.9.1 (MFK^M05, p 8-58), 8.10.1 (MFK^M04, p 8-72) and 8.11.1 (MFK^M06, p 8-80; MFK^M07, p 8-81) print no ERR. M02, M04, M05 and M06 are printed both ways (two prints under one trigger, the primaryPrints case: the looser 8.4.1 print governs them, keptOnDefault); M07 is printed only without ERR, so the 8.11.1 print governs MFK^M07. ADR-019 S6 (S6 fix wave; was duplicate-differs on the default). Triggers Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-138) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["MFK^M07"],
+                citation: "HL7 v2.4 Chapter 8, section 8.7.1 MFN/MFK - staff/practitioner master file message, p 8-19; the same structure is printed for MFK^M05 (8.9.1), MFK^M04 (8.10.1), MFK^M06 (8.11.1) and MFK^M07 (8.11.1). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of MFK_M01 differ: HL7 v2.4 Chapter 8 section 8.4.1 (MFK^M01-M06^MFK_M01, pp 8-9 to 8-10) prints MSH MSA [ERR] MFI [{MFA}]; sections 8.7.1 (MFK^M02, p 8-19), 8.9.1 (MFK^M05, p 8-58), 8.10.1 (MFK^M04, p 8-72) and 8.11.1 (MFK^M06, p 8-80; MFK^M07, p 8-81) print no ERR. M02, M04, M05 and M06 are printed both ways (two prints under one trigger, the primaryPrints case: the looser 8.4.1 print governs them, keptOnDefault); M07 is printed only without ERR, so the 8.11.1 print governs MFK^M07. ADR-019 S6 (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("MFI", min: 1, max: 1),
+                    .segment("MFA", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -3963,8 +4002,27 @@ extension MessageStructureTable {
         id: "RQC_I05",
         version: "2.4",
         triggers: ["RQC^I05", "RQC^I06"],
-        citation: "HL7 v2.4 Chapter 11, section 11.3.5 RQC/RCI - request for patient clinical information (event I05), p 11-12; the same structure is printed for RQC^I06 (11.3.6). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RQC_I05.xsd, RQC_I05.PROVIDER.CONTENT).",
+        citation: "HL7 v2.4 Chapter 11, section 11.3.5 RQC/RCI - request for patient clinical information (event I05), p 11-12; the same structure is printed for RQC^I06 (11.3.6). Two normative prints of RQC_I05 differ by trigger: HL7 v2.4 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 11-12 to 11-13) prints GT1 optional and non-repeating ([ GT1 ]), section 11.3.5 (RQC^I05^RQC_I05, p 11-12) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RQC_I05.xsd, RQC_I05.PROVIDER.CONTENT).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["RQC^I06"],
+                citation: "HL7 v2.4 Chapter 11, section 11.3.6 RQC/RCL - request/receipt of clinical data listing (event I06), pp 11-12 to 11-13. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RQC_I05 differ by trigger: HL7 v2.4 Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 11-12 to 11-13) prints GT1 optional and non-repeating ([ GT1 ]), section 11.3.5 (RQC^I05^RQC_I05, p 11-12) prints [{GT1}]; the 11.3.5 print is the default and the 11.3.6 print governs RQC^I06. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RQC_I05.xsd, RQC_I05.PROVIDER.CONTENT).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("QRD", min: 1, max: 1),
+                    .segment("QRF", min: 0, max: 1),
+                    .group("PROVIDER", min: 1, max: nil, elements: [
+                        .segment("PRD", min: 1, max: 1),
+                        .segment("CTD", min: 0, max: nil),
+                    ]),
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NK1", min: 0, max: nil),
+                    .segment("GT1", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("QRD", min: 1, max: 1),

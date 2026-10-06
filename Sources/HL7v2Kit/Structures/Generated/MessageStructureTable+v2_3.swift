@@ -171,8 +171,18 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.3",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.3 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-68. Structure ID ACK synthesised as the message code alone (overrides.json triggerFolds) (v2.3 prints no structure ID and no Table 0354).",
+        citation: "HL7 v2.3 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-68. Two normative prints of ACK differ by trigger: HL7 v2.3 Chapter 2 section 2.13.1 (ACK, p 2-68), the general acknowledgment, prints MSH MSA [ERR]; Chapter 7 section 7.2.1 (ACK^R01, p 7-14) prints MSH MSA, no ERR; the 2.13.1 print is the default (the triggerFolds primary) and the 7.2.1 print governs ACK^R01. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Structure ID ACK synthesised as the message code alone (overrides.json triggerFolds) (v2.3 prints no structure ID and no Table 0354).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ACK^R01"],
+                citation: "HL7 v2.3 Chapter 7, section 7.2.1 ORU/ACK - unsolicited transmission of an observation message (event R01), p 7-14. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ACK differ by trigger: HL7 v2.3 Chapter 2 section 2.13.1 (ACK, p 2-68), the general acknowledgment, prints MSH MSA [ERR]; Chapter 7 section 7.2.1 (ACK^R01, p 7-14) prints MSH MSA, no ERR; the 2.13.1 print is the default (the triggerFolds primary) and the 7.2.1 print governs ACK^R01. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),

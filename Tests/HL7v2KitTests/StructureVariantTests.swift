@@ -34,10 +34,13 @@ struct StructureVariantTests {
     }
 
     static let expected: [String: Set<String>] = [
-        "2.5.1": ["RDE_O11", "RSP_K21"],
-        "2.6": ["ACK", "ADT_A30", "ADT_A43", "MFK_M01", "QRY_PC4", "RDE_O11", "RSP_K21"],
-        "2.7.1": ["ACK", "RQC_I05"],
-        "2.8.2": ["ACK"],
+        "2.3": ["ACK"],
+        "2.3.1": ["ACK", "MFK_M01"],
+        "2.4": ["ACK", "ADT_A09", "MFK_M01", "RQC_I05"],
+        "2.5.1": ["ACK", "ADT_A05", "RDE_O11", "RQC_I05", "RRE_O12", "RSP_K21"],
+        "2.6": ["ACK", "ADT_A01", "ADT_A30", "ADT_A43", "MFK_M01", "QRY_PC4", "RDE_O11", "RQC_I05", "RRE_O12", "RSP_K21"],
+        "2.7.1": ["ACK", "RDE_O11", "RQC_I05"],
+        "2.8.2": ["ACK", "RDE_O11"],
     ]
 
     @Test("Every variant is cited, exact, accepted by its structure and differs from the default print")
