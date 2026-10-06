@@ -2042,7 +2042,8 @@ p 5-61, v2.6 pp 52 to 53, v2.7.1 p 56, v2.8.2 p 55; the same text on each). ERR 
 `errorResponses` entry carries `noDataQueryStatus: ["NF"]` (copied into the structure file); when
 MSA-1 is AA and the first QAK's field 2 is a listed value, the structure is matched against MSH,
 the SFT and UAC it prints, MSA, QAK (required: it carries the key), its query defining segments
-and DSC (the note keeps the DSC "not sent or" with a null pointer), with no ERR. The section keeps
+and DSC (the note keeps the DSC "not sent or" with a null pointer), with no ERR (since ruling 6
+below, an optional ERR after MSA). The section keeps
 its name: 5.6.5 is the print's "Query error response" section and Situation 3 is part of it.
 
 **What it cannot say.** (1) An AE response without QAK is not reported: the head is the union of
@@ -2058,9 +2059,18 @@ keeps the full structure and is flagged for its missing body; without QAK the da
 no-data reply from a cut-off one, so this cannot be modelled from the message. Of the 129 governed
 structures, 42 print QAK as optional and 35 do not print it. Blocking (requirement 3); see the
 permanent limitations register, section E.
-Ruling: an ERR on a no-data response is reported as unexpected, because Situation 3 names MSH, MSA,
-QAK and the query defining segment only; SFT and UAC are kept because the structure prints them as
-message-header segments. The owner may revisit.
+SFT and UAC are kept in the no-data head because the structure prints them as message-header
+segments.
+Ruling 6 (owner, 2026-10-07): ERR optional in the no-data head. This replaces the S4-3 ruling that
+an ERR on a no-data response is reported as unexpected. Situation 3 names MSH, MSA, QAK and the
+query defining segment, but an AA reply may carry a warning or informational ERR: ERR-4 takes
+Table 0516 "W" (Warning) and "I" (Information: "Transaction was successful but includes
+information"; v2.5.1 CH02 2.15.5.4, p 2-68), so reporting it would misfire (requirement 4). Built
+in P12 S1-4: the no-data head gains `[ERR]` after MSA, as Situation 2 orders it, with its printed
+repetition (`[{ERR}]` where the structure prints ERR as repeating); the AE/AR head is unchanged,
+an ERR before MSA is still reported, and v2.3 and v2.3.1 keep the full structure. The
+`StructureErrorResponseTests` pin "no data found names no ERR" (a v2.5.1 TBR^R08 with AA, QAK-2 NF
+and an ERR, formerly "unexpected ERR at ERR[1]") flipped to clean.
 
 **Evidence.** `StructureErrorResponseTests` (the 5.10.6.2.12 shape on v2.5.1 clean, with a DSP or
 a replay body unexpected; the TBR^R08 error shape and an AR response clean; AA with the body
@@ -2352,8 +2362,8 @@ S6-1 are confirmed; v2.3.1 MFR^M01-M06 stays Permanent (S7-1).
 
 **Ruling 6 changes:** an optional ERR is allowed in the CH05 5.6.5 no-data head (S4-3 amendment),
 since an AA reply may carry an informational ERR and reporting it would misfire (requirement 4).
-It is scheduled as P12 S1-4 and is not built: until it lands, an ERR in a no-data response is
-still reported.
+Built in P12 S1-4 (see the S4-3 amendment's ruling 6 note): an ERR after MSA in a no-data
+response is no longer reported.
 
 **AU gate answers:** (G-AU1) the AU profile governs a message of every version, and this is
 documented (limitations register section B): its field rules run on the message's own version,

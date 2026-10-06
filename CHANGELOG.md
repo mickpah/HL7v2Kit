@@ -19,6 +19,12 @@ Under `.auLocalisation` with `messageStructureSeverity` set (on in the default a
 - **Structure guards** (`StructureGuardTests`) now cover the six ADRM profile structures and the Appendix 8 variant.
 - **Docs:** permanent-limitations register section E (the Appendix 8, ORR^O02 and order status response rows), the ADRM conformance register (regenerated; 00060.1 PARTIAL, one residual), ADR-019 amendment "P12 S1".
 
+### Changed — P12 S1-4: an optional ERR in the CH05 5.6.5 no-data head (owner ruling 6)
+
+- A v2.4 to v2.8.2 query response with MSA-1 AA and QAK-2 NF (5.6.5 Situation 3) is now matched against `MSH [{SFT}] [UAC] MSA [ERR] QAK [<query segments>] [DSC]`: an ERR after MSA is no longer reported as unexpected, since an AA reply may carry a warning or informational ERR (ERR-4 severity W or I, v2.5.1 CH02 2.15.5.4, p 2-68). ERR keeps its printed repetition (`[{ERR}]` where the structure repeats it). Fewer findings only: an ERR before MSA is still reported, the AE/AR error-response head is unchanged, and v2.3 and v2.3.1 keep the full structure. No public API change.
+- **Tests:** the `StructureErrorResponseTests` pin "no data found names no ERR" (formerly `unexpected ERR at ERR[1]`) flips to clean; new probes for an informational ERR, two ERRs on v2.5.1 RSP_K25, an ERR before MSA and v2.3.1 with an ERR; the no-data head test gains `[{ERR}]`.
+- **Docs:** ADR-019 S4-3 amendment (ruling 6 note replaces the earlier ruling) and the P12 gate amendment, the permanent-limitations register no-data row, `Validation.md`.
+
 ### Changed — P12 S0: owner rulings recorded; ADRM conformance register reconciled (epic P12 sprint 0)
 
 Documents only; no code, schema or behaviour change.

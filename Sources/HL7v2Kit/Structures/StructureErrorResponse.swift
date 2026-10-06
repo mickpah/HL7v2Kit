@@ -6,7 +6,8 @@
 // p 5-61). Situation 3 (no data found): MSA-1 AA and QAK-2 NF; "The Response message contains
 // MSH, MSA, QAK, and query defining segment" and the rest is absent (v2.5.1 p 5-61). The DSC
 // "is not sent or, if it is", its pointer is null. Such a response is matched against that head
-// instead of its full structure. v2.3 and v2.3.1 (CH02 2.22) print no rest-absent sentence, so
+// instead of its full structure. The no-data head also allows an optional ERR after MSA (ruling
+// 6, owner, 2026-10-07: an AA reply may carry an informational or warning ERR). v2.3 and v2.3.1 (CH02 2.22) print no rest-absent sentence, so
 // their structures carry no rule.
 
 /// The 5.6.5 rule of one query response structure, from `overrides.json` errorResponses.
@@ -42,11 +43,13 @@ extension MessageStructure {
     /// The short-response head of this structure, or nil to match the full structure.
     /// `acknowledgmentCode` (MSA-1) among the rule's codes gives the error response head
     /// (Situations 1 and 2); MSA-1 AA with `queryResponseStatus` (QAK-2) among the rule's
-    /// no-data values gives the no-data head (Situation 3), which names no ERR and requires
-    /// the QAK that carries the key. The segments named are each taken once at their first
-    /// place in the print (so ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required and
-    /// the rest optional; ERR and SFT keep their printed repetition. An ERR the structure does
-    /// not print goes after MSA, a QAK after ERR (after MSA with no ERR), as 5.6.5 lists them.
+    /// no-data values gives the no-data head (Situation 3), which requires the QAK that carries
+    /// the key. Situation 3 names no ERR, but the no-data head allows an optional one (ruling 6,
+    /// owner, 2026-10-07): an AA reply may carry a warning or informational ERR (ERR-4 severity
+    /// W or I). The segments named are each taken once at their first place in the print (so
+    /// ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required and the rest optional; ERR and
+    /// SFT keep their printed repetition. An ERR the structure does not print goes after MSA, a
+    /// QAK after ERR, as 5.6.5 Situation 2 lists them.
     /// Slots are not entered.
     func errorResponseHead(acknowledgmentCode: String?, queryResponseStatus: String? = nil) -> MessageStructure? {
         guard let rule = errorResponse, let code = acknowledgmentCode else { return nil }
@@ -59,8 +62,7 @@ extension MessageStructure {
         } else {
             return nil
         }
-        var named = Self.errorResponseSegments.union(rule.querySegments)
-        if noData { named.remove("ERR") }
+        let named = Self.errorResponseSegments.union(rule.querySegments)
         var head: [StructureElement] = []
         var seen: Set<String> = []
         func walk(_ elements: [StructureElement]) {
@@ -84,12 +86,8 @@ extension MessageStructure {
             head.insert(.segment(id, min: min, max: 1), at: at + 1)
             seen.insert(id)
         }
-        if noData {
-            insert("QAK", after: "MSA", min: 1)
-        } else {
-            insert("ERR", after: "MSA")
-            insert("QAK", after: "ERR")
-        }
+        insert("ERR", after: "MSA")
+        insert("QAK", after: "ERR", min: noData ? 1 : 0)
         let shape = head.map { element -> String in
             guard case .segment(let id, let min, let max) = element else { return element.label }
             let item = max == 1 ? id : "{\(id)}"
