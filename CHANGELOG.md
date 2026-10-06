@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — S6-2: the group-scope count reads the OBR's own OBX (epic P11 sprint 6)
+
+- The AU HL7au:000008 display-OBX rules (minimum one per OBR/OBX group, `.obrObxGroup`, every
+  ORU and REF under `.auLocalisation`) counted OBX the OBR does not own: the SPECIMEN OBX of
+  v2.5.1 to v2.8.2 ORU_R01, the v2.8.2 ORDER_DOCUMENT OBX and the ORU_R30 patient OBX. A display
+  OBX there satisfied the rule. The count now keeps the OBX after the OBR, outside nested groups
+  another segment heads; the OBR walk (no spans) stops at SPM as well (ADR-019 S6 amendment;
+  `GroupScopeCountTests`). Register section E: the count rows closed; the peer-lookup rows
+  (container OBX on ORL_O22, ORL_O34, ORL_O36, OPR_O38; v2.4 OML_O21 OBR to OBX; ORU_R30 OBR to
+  OBX), which no shipped predicate reads, re-classed Permanent. Digests identical.
+
 ### Added — S6-1: per-trigger structure prints (epic P11 sprint 6)
 
 - **Model extension (ADR-019 S6 amendment).** Where two normative prints of one structure ID

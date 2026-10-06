@@ -1517,7 +1517,9 @@ occurrence; a repeating group that claims its peer is a pairing boundary; an anc
 its nearest repeating enclosing occurrence). Where the print ties no single group occurrence to
 a lookup, that principle still gives an answer, and the answer below is not the print's. None of
 these lookups is read by a shipped condition; each is registered in the limitations register
-(section E, P8b-18 addendum) and none is fixed.
+(section E, P8b-18 addendum) and none is fixed. (Corrected 2026-10-06, S6-2: the AU HL7au:000008
+display-OBX rules read the `.obrObxGroup` count on every ORU and REF; the count is fixed and the
+peer lookups re-classed Permanent; see the S6 amendment.)
 
 - **Container or specimen OBX beside repeating orders.** On v2.4 ORL_O22, v2.5.1 and v2.6
   ORL_O34 and ORL_O36, and v2.6 OPR_O38 (six structure-versions), a container or specimen OBX
@@ -2203,3 +2205,36 @@ model extension"). The extension is built.
   and v2.4, ADT_A09 v2.4, ADT_A05 v2.5.1, ADT_A01 v2.6, RQC_I05 v2.4 to v2.6, RRE_O12 v2.5.1 and
   v2.6, RDE_O11 v2.7.1 and v2.8.2) are the same class and convertible by one `variantPrints`
   entry each; they are listed for the owner, not converted in S6.
+
+### S6-2 the P8b-17 scope-rule residue (2026-10-06)
+
+Each registered imprecision was read against the shipped predicates: the base schemas'
+conditions (every version; the cross-segment ones are the ORC/OBR pair, MFA and MFE to MFI, PAC
+to SHP, ROL to STF, TQ1 to TQ2 and TXA to OBX: none reads ORC or OBR from an OBX, or OBX from an
+ORC or OBR), the data-type conditions (none names these segments), the AU profile's field
+conditions (each reads its own segment) and its group-scope cardinality rules: four
+`.obrObxGroup` rules on OBR counting OBX (HL7au:000008, 000008.3.1, 000008.3.2 and the Level 1
+PDF rule; minimum one display OBX per OBR/OBX group, `messageCode in (ORU, REF)`), applied on
+every version under `.auLocalisation`.
+
+- **Read by a shipped rule, fixed:** the `.obrObxGroup` count. It counted every OBX of the
+  OBR's group occurrence: on v2.5.1 to v2.8.2 ORU_R01 the SPECIMEN `{ SPM [{OBX}] }` OBX, on
+  v2.8.2 COMMON_ORDER's ORDER_DOCUMENT OBX before the OBR, and on v2.7.1 and v2.8.2 ORU_R30
+  (OBR at message level) the PATIENT_OBSERVATION OBX before it, so a display OBX there satisfied
+  the AU rule. The count now keeps, of the counted segment, only the head's own: those after the
+  first head in the occurrence, outside nested group occurrences that do not hold the head and
+  whose definition cannot begin with the counted segment (another segment heads them).
+  OBSERVATION_REQUEST `{ OBR ... }` holds the head and OBSERVATION `{ OBX ... }` begins with it,
+  so both stay the head's. Every other segment of the occurrence is kept (the dedupe key's first
+  index is unchanged). The OBR walk, the fallback without spans, also stops at SPM. Pinned by
+  `GroupScopeCountTests` (RED at 491f80be: 5 issues, a display OBX only in the specimen, the
+  order document or the patient observation satisfied the rule; the walk test failed alike).
+  Digests (default, strict, off) identical.
+- **Read by no shipped predicate, re-classed Permanent:** the container or specimen OBX peer
+  lookups and their mirror (v2.4 ORL_O22; v2.5.1 and v2.6 ORL_O34, ORL_O36; v2.6 OPR_O38: the
+  print sets the container beside the repeating orders, `{GENERAL_ORDER: [CONTAINER: SAC [{OBX}]]
+  [{ORDER: ORC [OBSERVATION_REQUEST: OBR [{SAC}]]}]}`, v2.4 CH04 4.4.7, p 4-24, and ties it to no
+  order); v2.4 OML_O21 OBR to OBX (`OBR [{CONTAINER_2: SAC [{OBX}]}] ... [{OBSERVATION: OBX ...}]`;
+  the peer rule returns one segment per ID); ORU_R30 message-level OBR to OBX. A custom rule on
+  those lookups would need the distinction the print does not make (the container) or a lookup by
+  group rather than by segment ID (the other two).

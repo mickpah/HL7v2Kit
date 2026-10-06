@@ -409,10 +409,14 @@ public struct Validator: Sendable {
             }
             // No OBR at or before the anchor → no OBR group here.
             guard segs[head].segmentID == "OBR" else { return nil }
+            // S6-2: an SPM opens a specimen group (v2.5.1 to v2.8.2 ORU_R01
+            // SPECIMEN { SPM [{OBX}] }), whose OBX are the specimen's, not
+            // the OBR's, as the span rule reads it (GroupSpanIndex.owned).
             var end = head + 1
             while end < segs.count
                     && segs[end].segmentID != "OBR"
-                    && segs[end].segmentID != "ORC" {
+                    && segs[end].segmentID != "ORC"
+                    && segs[end].segmentID != "SPM" {
                 end += 1
             }
             return ResolvedGroup(indices: Array(head..<end), in: segs)
