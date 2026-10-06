@@ -8,7 +8,15 @@ extension Validator {
     func checkMessageStructure(message: Message, severity: IssueSeverity, issues: inout [ValidationIssue]) {
         let resolution = resolveStructure(message, severity: severity)
         issues += resolution.issues
-        guard let structure = resolution.structure else { return }
+        guard let declared = resolution.structure else { return }
+        let structure: MessageStructure
+        switch declared.resolvingKeyedChoices(in: message) {
+        case .resolved(let resolved):
+            structure = resolved
+        case .unmapped(let key, let value):
+            issues.append(notModelled(declared.id, message: message, reason: Self.unmappedReason(key, value, structure: declared.id)))
+            return
+        }
         let findings = matchStructure(structure, message: message, severity: severity)
         let governed = matchProfileStructure(over: structure, baseFindings: findings, message: message, severity: severity)
         issues += governed.base
@@ -293,6 +301,15 @@ extension Validator {
         if populated(last.field(1)) { return "it ends in a DSC whose DSC-1 continuation pointer is populated" }
         if case .segment("DSC", _, _) = structure.elements.last { return nil }
         return "it ends in a DSC, which \(structure.id) does not define there"
+    }
+
+    /// Why a structure whose keyed choice the message's key value does not
+    /// select is not matched (S4-1): the print's map is the only list of
+    /// values it gives, so another value is not a mismatch.
+    static func unmappedReason(_ key: StructureChoiceKey, _ value: String, structure: String) -> String {
+        let known = key.alternatives.keys.sorted().joined(separator: ", ")
+        return "\(key.fieldName) is \"\(value)\", which the print does not map to a body of \(structure) "
+            + "(it maps \(known); \(key.citation))"
     }
 
     /// The info issue for a message no structure is applied to. An empty

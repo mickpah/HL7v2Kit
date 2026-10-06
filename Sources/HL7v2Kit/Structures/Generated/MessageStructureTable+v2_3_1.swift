@@ -36,6 +36,7 @@ extension MessageStructureTable {
         "DSR_Q03": v2_3_1_DSR_Q03,
         "EDR_R07": v2_3_1_EDR_R07,
         "EQQ_Q04": v2_3_1_EQQ_Q04,
+        "ERP_R09": v2_3_1_ERP_R09,
         "MCF": v2_3_1_MCF,
         "MDM_T01": v2_3_1_MDM_T01,
         "MDM_T02": v2_3_1_MDM_T02,
@@ -821,6 +822,23 @@ extension MessageStructureTable {
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("EQL", min: 1, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_3_1_ERP_R09: MessageStructure = MessageStructure(
+        id: "ERP_R09",
+        version: "2.3.1",
+        triggers: ["ERP^R09"],
+        citation: "HL7 v2.3.1 Chapter 2, section 2.20.3 ERP - event replay response (event R09), p 2-86. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). The placeholder '...' is an open slot (overrides.json keyedChoices, ADR-019 S4-1): the print fills it with the message ERQ-2 names and enumerates no map.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("ERQ", min: 1, max: 1),
+            .slot(nil, min: 0, max: nil, citation: "HL7 v2.3.1 Chapter 2, section 2.20.3 ERP - event replay response (event R09), p 2-86: the description column prints ellipsis rows after ERQ and the note says 'The remainder of this message is defined by the contents of the corresponding segment-oriented record-oriented unsolicited update message, excluding the MSH' and 'the segment group after the ERQ segment may repeat'; ERQ-2 (section 2.24.21.2, p 2-132) names that message. The print gives no map from ERQ-2 values to message bodies, only that rule, so the rows are an open slot (no segment but MSH is out of place in it), keyed by ERQ-2 in this citation only; optional, since section 2.22 (p 2-87) says a query that finds no qualifying data 'does not return any data segments (DSP, RDT, or event replay segments)' (ADR-019 S4-1)."),
             .segment("DSC", min: 0, max: 1),
         ]
     )

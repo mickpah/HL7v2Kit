@@ -59,9 +59,22 @@ struct MessageStructureDataTests {
         // P8b-6: a choice, named (with a nameSource) or unnamed (null, no nameSource).
         if object.keys.contains("choice"), let alternatives = object["alternatives"] as? [[String: Any]] {
             let name = object["choice"] as? String
-            #expect(Set(object.keys) == Self.choiceKeys.union(name == nil ? [] : ["nameSource"]), "\(path): keys \(object.keys.sorted())")
+            let keyed = object["key"] as? [String: Any]
+            #expect(Set(object.keys) == Self.choiceKeys.union(name == nil ? [] : ["nameSource"]).union(keyed == nil ? [] : ["key"]),
+                    "\(path): keys \(object.keys.sorted())")
             #expect(alternatives.count >= 2, "\(path): alternatives")
             let options = alternatives.enumerated().compactMap { element($1, at: "\(path)/<\($0)>") }
+            // S4-1: a keyed choice, its key read from the message.
+            if let keyed {
+                #expect(Set(keyed.keys) == ["segment", "field", "component", "values", "citation"], "\(path): key keys")
+                let key = StructureChoiceKey(segmentID: keyed["segment"] as? String ?? "", field: keyed["field"] as? Int ?? 0,
+                                             component: keyed["component"] as? Int ?? 0,
+                                             alternatives: keyed["values"] as? [String: String] ?? [:],
+                                             citation: keyed["citation"] as? String ?? "")
+                #expect(!key.citation.isEmpty && Set(key.alternatives.values) == Set(options.compactMap(\.groupName)),
+                        "\(path): key")
+                return .keyedChoice(name, min: min ?? 0, max: max, key: key, alternatives: options)
+            }
             return .choice(name, min: min ?? 0, max: max, alternatives: options)
         }
         guard let name = object["group"] as? String, let children = object["elements"] as? [[String: Any]] else {
@@ -86,7 +99,8 @@ struct MessageStructureDataTests {
         for (versionName, url) in all {
             let id = url.deletingPathExtension().lastPathComponent
             let object = try #require(try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
-            #expect(Set(object.keys) == Self.topKeys, "\(id): keys \(object.keys.sorted())")
+            let aliasOf = object["aliasOf"] as? String
+            #expect(Set(object.keys) == Self.topKeys.union(aliasOf == nil ? [] : ["aliasOf"]), "\(id): keys \(object.keys.sorted())")
             #expect(object["structure"] as? String == id)
             #expect(object["version"] as? String == versionName)
             let triggers = object["triggers"] as? [String] ?? []
@@ -101,7 +115,12 @@ struct MessageStructureDataTests {
             let version = try #require(Version(rawValue: versionName))
             let generated = try #require(MessageStructureTable.structures(for: version)[id], "\(id) is not generated")
             #expect(generated == MessageStructure(id: id, version: versionName, triggers: triggers,
-                                                  citation: object["citation"] as? String ?? "", elements: elements))
+                                                  citation: object["citation"] as? String ?? "", aliasOf: aliasOf,
+                                                  elements: elements))
+            // S4-2: an alias carries its target's elements.
+            if let aliasOf {
+                #expect(MessageStructureTable.structures(for: version)[aliasOf]?.elements == elements, "\(id): alias of \(aliasOf)")
+            }
             #expect(!generated.citation.isEmpty)
             seen[version, default: []].insert(id)
         }

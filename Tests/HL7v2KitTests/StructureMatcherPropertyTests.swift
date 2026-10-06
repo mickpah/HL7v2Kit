@@ -33,8 +33,9 @@ struct StructureMatcherPropertyTests {
                 frontier = Set(frontier.filter { $0 < ids.count && ids[$0] == id }.map { $0 + 1 })
             case .group(_, _, _, let children):
                 frontier = ends(children[...], ids, from: frontier)
-            case .choice(_, _, _, let alternatives):
-                // One occurrence takes exactly one alternative, any of them.
+            case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
+                // One occurrence takes exactly one alternative, any of them (a keyed
+                // choice unresolved: no key value selects one, S4-1).
                 let current = frontier
                 frontier = alternatives.reduce(into: Set<Int>()) { $0.formUnion(ends(of: $1, ids, from: current)) }
             case .slot:
@@ -82,7 +83,7 @@ struct StructureMatcherPropertyTests {
             switch element {
             case .segment(let id, _, _): ids.insert(id)
             case .group(_, _, _, let children): children.forEach(walk)
-            case .choice(_, _, _, let alternatives): alternatives.forEach(walk)
+            case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives): alternatives.forEach(walk)
             case .slot: slot = true
             }
         }
@@ -107,7 +108,7 @@ struct StructureMatcherPropertyTests {
                 switch element {
                 case .segment(let id, _, _): return [id]
                 case .group(_, _, _, let children): return derive(children, &rng, fillers: fillers)
-                case .choice(_, _, _, let alternatives):
+                case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
                     return derive([alternatives.randomElement(using: &rng)!], &rng, fillers: fillers)
                 case .slot: return [fillers.randomElement(using: &rng)!]
                 }
@@ -132,7 +133,8 @@ struct StructureMatcherPropertyTests {
             switch element {
             case .segment, .slot: return total + 1
             case .group(_, _, _, let children): return total + shortest(children)
-            case .choice(_, _, _, let alternatives): return total + (alternatives.map { shortest([$0]) }.min() ?? 0)
+            case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
+                return total + (alternatives.map { shortest([$0]) }.min() ?? 0)
             }
         }
     }

@@ -46,6 +46,7 @@ extension MessageStructureTable {
         "EAR_U08": v2_4_EAR_U08,
         "EDR_R07": v2_4_EDR_R07,
         "EQQ_Q04": v2_4_EQQ_Q04,
+        "ERP_R09": v2_4_ERP_R09,
         "ESR_U02": v2_4_ESR_U02,
         "ESU_U01": v2_4_ESU_U01,
         "INR_U06": v2_4_INR_U06,
@@ -56,6 +57,7 @@ extension MessageStructureTable {
         "MFD_MFA": v2_4_MFD_MFA,
         "MFK_M01": v2_4_MFK_M01,
         "MFN_M02": v2_4_MFN_M02,
+        "MFN_M03": v2_4_MFN_M03,
         "MFN_M04": v2_4_MFN_M04,
         "MFN_M05": v2_4_MFN_M05,
         "MFN_M06": v2_4_MFN_M06,
@@ -104,6 +106,7 @@ extension MessageStructureTable {
         "QCK_Q02": v2_4_QCK_Q02,
         "QCN_J01": v2_4_QCN_J01,
         "QRY_A19": v2_4_QRY_A19,
+        "QRY_P04": v2_4_QRY_P04,
         "QRY_PC4": v2_4_QRY_PC4,
         "QRY_Q01": v2_4_QRY_Q01,
         "QRY_Q02": v2_4_QRY_Q02,
@@ -1128,6 +1131,23 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_4_ERP_R09: MessageStructure = MessageStructure(
+        id: "ERP_R09",
+        version: "2.4",
+        triggers: ["ERP^R09"],
+        citation: "HL7 v2.4 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), p 5-116. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-137). The placeholder '...' is an open slot (overrides.json keyedChoices, ADR-019 S4-1): the print fills it with the message ERQ-2 names and enumerates no map.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("ERQ", min: 1, max: 1),
+            .slot(nil, min: 0, max: nil, citation: "HL7 v2.4 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), p 5-116 (and the same print in section 5.10.4.3, p 5-117): the description column prints ellipsis rows after ERQ and the note says 'The remainder of this message is defined by the contents of the corresponding segment-oriented record-oriented unsolicited update message, excluding the MSH' and 'the segment group after the ERQ segment may repeat'; ERQ-2 (section 5.10.5.2.2, p 5-119) names that message. The print gives no map from ERQ-2 values to message bodies, only that rule, so the rows are an open slot (no segment but MSH is out of place in it), keyed by ERQ-2 in this citation only; optional, since section 5.6.5 (p 5-63) says a query that finds no qualifying data does not return any data segments (ADR-019 S4-1)."),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
     private static let v2_4_ESR_U02: MessageStructure = MessageStructure(
         id: "ESR_U02",
         version: "2.4",
@@ -1270,6 +1290,53 @@ extension MessageStructureTable {
                 .segment("STF", min: 1, max: 1),
                 .segment("PRA", min: 0, max: 1),
                 .segment("ORG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_4_MFN_M03: MessageStructure = MessageStructure(
+        id: "MFN_M03",
+        version: "2.4",
+        triggers: ["MFN^M03"],
+        citation: "HL7 v2.4 Chapter 8, section 8.8.2 MFN/MFK - service/test/observation master file, p 8-21. Unprinted group names (ADR-019 decision 3): MF_TEST (HL7-xml v2.4/MFN_M03.xsd, MFN_M03.MF_TEST.CONTENT). The placeholder '???' is a choice keyed by MFI-1 (overrides.json keyedChoices, ADR-019 S4-1): OMA, OMB, OMC, OMD and OME select MF_TEST_NUMERIC, MF_TEST_CATEGORICAL, MF_TEST_BATTERIES, MF_TEST_CALCULATED and MF_OBS_ATTRIBUTES. Unprinted group names of the alternatives: MF_TEST_NUMERIC (HL7-xml v2.4/MFN_M08.xsd, MFN_M08.MF_TEST_NUMERIC.CONTENT), MF_TEST_CATEGORICAL (HL7-xml v2.4/MFN_M09.xsd, MFN_M09.MF_TEST_CATEGORICAL.CONTENT), MF_TEST_CAT_DETAIL (HL7-xml v2.4/MFN_M09.xsd, MFN_M09.MF_TEST_CAT_DETAIL.CONTENT), MF_TEST_BATTERIES (HL7-xml v2.4/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT), MF_TEST_BATT_DETAIL (HL7-xml v2.4/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT), MF_TEST_CALCULATED (HL7-xml v2.4/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT), MF_TEST_CALC_DETAIL (HL7-xml v2.4/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT), MF_OBS_ATTRIBUTES (HL7-xml v2.4/MFN_M12.xsd, MFN_M12.MF_OBS_ATTRIBUTES.CONTENT).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .keyedChoice(nil, min: 1, max: 1, key: StructureChoiceKey(
+                    segmentID: "MFI", field: 1, component: 1,
+                    alternatives: ["OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL", "OMC": "MF_TEST_BATTERIES", "OMD": "MF_TEST_CALCULATED", "OME": "MF_OBS_ATTRIBUTES"],
+                    citation: "HL7 v2.4 Chapter 8, section 8.8.2 MFN/MFK - Master File Notification - Test/Observation (Event M03), pp 8-21 to 8-22: the syntax prints '??? [other segments(s)]' after OM1 in the MFE group and says 'where other segments can be any of the following combinations', each introduced by its key ('MFI-1 - Master file identifier = OMA, for numeric observations (second component of MSH-9 - Message type = M08)', OMB for M09 on p 8-21, OMC for M10, OMD for M11 and OME for M12 on p 8-22) and printed as the segments after OM1 of the MFN^M08^MFN_M08 to MFN^M12^MFN_M12 syntax that follows it, so the other segments are those of the group MFI-1 component 1 names (ADR-019 S4-1)."), alternatives: [
+                    .group("MF_TEST_NUMERIC", min: 1, max: 1, elements: [
+                        .segment("OM2", min: 0, max: 1),
+                        .segment("OM3", min: 0, max: 1),
+                        .segment("OM4", min: 0, max: 1),
+                    ]),
+                    .group("MF_TEST_CATEGORICAL", min: 1, max: 1, elements: [
+                        .group("MF_TEST_CAT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM3", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_BATTERIES", min: 1, max: 1, elements: [
+                        .group("MF_TEST_BATT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM5", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_CALCULATED", min: 1, max: 1, elements: [
+                        .group("MF_TEST_CALC_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM6", min: 1, max: 1),
+                            .segment("OM2", min: 1, max: 1),
+                        ]),
+                    ]),
+                    .group("MF_OBS_ATTRIBUTES", min: 1, max: 1, elements: [
+                        .segment("OM7", min: 0, max: 1),
+                    ]),
+                ]),
             ]),
         ]
     )
@@ -2911,6 +2978,21 @@ extension MessageStructureTable {
             .segment("MSH", min: 1, max: 1),
             .segment("QRD", min: 1, max: 1),
             .segment("QRF", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_4_QRY_P04: MessageStructure = MessageStructure(
+        id: "QRY_P04",
+        version: "2.4",
+        triggers: ["QRY^P04"],
+        citation: "HL7 v2.4 Chapter 6, section 6.4.4 QRY/DSR - generate bills and accounts receivable statements (event P04), p 6-13: the caption QRY^P04^QRY_P04 prints no syntax rows, only 'see' Chapter 5, and the section says 'the QRY/DSR transaction, as defined in Chapter 5, will provide the mechanism'; Chapter 5 prints that query twice with the same segments, MSH QRD [QRF] [DSC] (section 5.10.2.1 QRY^Q01, p 5-111; section 5.10.3.1 QRY^Q02, p 5-112), so QRY_P04 keeps its printed ID and takes the syntax of QRY_Q01, the first of the two (the structure v2.3 and v2.3.1 match QRY^P04 against). The syntax is that of QRY_Q01 (overrides.json aliases, ADR-019 S4-2), as cited there: HL7 v2.4 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-111; the same structure is printed for QRY^Q26 (4.13.13), QRY^Q27 (4.13.14), QRY^Q28 (4.13.15), QRY^Q29 (4.13.16) and QRY^Q30 (4.13.17). Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-139).",
+        requiresExactMatch: false,
+        aliasOf: "QRY_Q01",
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
         ]
     )
 

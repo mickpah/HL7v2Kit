@@ -187,20 +187,20 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .warning)
     }
 
-    // P8b-9: MFN_M03 is registered as not modelled (CH08 8.8.2 prints '[other segment(s)]'; PGL_PC6,
-    // the example here until S3-3, is modelled with the open slot since).
+    // P8b-9: MFN_M01 is registered as not modelled (CH08 8.4.1 prints a master file template;
+    // PGL_PC6, the example until S3-3, and MFN_M03, until S4-1, are modelled since).
     @Test("An unmodelled structure is an info issue, never a silent pass")
     func notModelledStructure() throws {
-        let issues = try structureIssues(Self.wire("MFN^M03^MFN_M03", []))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "MFN_M03")])
+        let issues = try structureIssues(Self.wire("MFN^M01^MFN_M01", []))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "MFN_M01")])
         #expect(issues.first?.severity == .info)
         #expect(issues.first?.location.pathDescription == "MSH[1]-9")
-        #expect(issues.first?.message.contains("8.8.2") == true)
+        #expect(issues.first?.message.contains("8.4.1") == true)
     }
 
     @Test("An unmodelled two-component MSH-9 reports the trigger")
     func notModelledTrigger() throws {
-        #expect(try structureIssues(Self.wire("MFN^M03", [])).map(\.code) == [.messageStructureNotModelled(structure: "MFN^M03")])
+        #expect(try structureIssues(Self.wire("MFN^M01", [])).map(\.code) == [.messageStructureNotModelled(structure: "MFN^M01")])
     }
 
     // ADR-019 lookup rule 1: v2.5.1 is complete (P8b-9), so an MSH-9.3 ID that
@@ -231,8 +231,8 @@ struct MessageStructureValidationTests {
         #expect(registered.map(\.code) == [.messageStructureNotModelled(structure: "QBP_Q13")])
         #expect(registered.first?.severity == .info)
         #expect(registered.first?.message.contains("query template") == true, "\(registered.map(\.message))")
-        let placeholder = try structureIssues(Self.wire("MFN^M03", version: "2.6", []))
-        #expect(placeholder.map(\.code) == [.messageStructureNotModelled(structure: "MFN^M03")])
+        let placeholder = try structureIssues(Self.wire("MFN^M01", version: "2.6", []))
+        #expect(placeholder.map(\.code) == [.messageStructureNotModelled(structure: "MFN^M01")])
         #expect(MessageStructureTable.isComplete(.v2_6))
         #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.6", [Self.evn, Self.pid, Self.pv1])).isEmpty)
         #expect(try structureIssues(Self.wire("ADT^A04", version: "2.6", [Self.evn, Self.pid, Self.pv1])).isEmpty)
@@ -601,7 +601,7 @@ struct MessageStructureValidationTests {
         for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
                                  ("MFN^M01^MFN_M01", "MFN_M01", "master file template"),
                                  ("ORU^W01^ORU_W01", "ORU_W01", "Table 0354 only"),
-                                 ("QRY^P04^QRY_P04", "QRY_P04", "see Chapter 5")] {
+                                 ("DSR^P04^DSR_P04", "DSR_P04", "see Chapter 5")] {
             let issues = try structureIssues(Self.wire(msh9, version: "2.4", ["QPD|1", "RCP|I"]))
             #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
             #expect(issues.first?.message.contains(text) == true, "\(msh9): \(issues.map(\.message))")

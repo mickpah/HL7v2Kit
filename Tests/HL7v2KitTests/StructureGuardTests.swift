@@ -95,21 +95,29 @@ struct StructureGuardTests {
         // 1. The generated flag equals the library lint.
         check(structure.requiresExactMatch == !StructureMatcher.lint(elements).isDeterministic, "\(name): flag differs from the lint")
 
-        // 2. The selected matcher agrees with the reference; not vacuous.
-        let (sequences, derived) = Self.sequences(elements, derivations: derivations)
-        let accepts = selectedAccepts(structure)
-        var accepted = 0
-        var wrong: [String] = []
-        for sequence in sequences {
-            let reference = Property.referenceAccepts(elements, sequence)
-            if reference { accepted += 1 }
-            if accepts(sequence) != reference { wrong.append(sequence.joined(separator: " ")) }
-        }
-        let kind = structure.requiresExactMatch ? "exact" : "one-pass"
-        check(wrong.isEmpty, "\(name): the \(kind) matcher disagrees with the reference on \(wrong.count), e.g. \(wrong.prefix(2))")
-        check(derived == 0 || derived == derivations, "\(name): \(derived) derivations")
-        if all.count > 1 {
-            check(accepted > 0 && accepted < sequences.count, "\(name): vacuous, \(accepted) of \(sequences.count) accepted")
+        // 2. The selected matcher agrees with the reference; not vacuous. A
+        // structure with a keyed choice (S4-1) is matched only as resolved for
+        // a message, so each resolution is guarded: every value of the key,
+        // and no value (the plain choice), each routed by its own lint.
+        var checked = 0
+        for (label, variant) in Self.matchedForms(structure) {
+            let elements = variant.elements
+            let (sequences, derived) = Self.sequences(elements, derivations: derivations)
+            let accepts = selectedAccepts(variant)
+            var accepted = 0
+            var wrong: [String] = []
+            for sequence in sequences {
+                let reference = Property.referenceAccepts(elements, sequence)
+                if reference { accepted += 1 }
+                if accepts(sequence) != reference { wrong.append(sequence.joined(separator: " ")) }
+            }
+            let kind = variant.requiresExactMatch ? "exact" : "one-pass"
+            check(wrong.isEmpty, "\(name)\(label): the \(kind) matcher disagrees with the reference on \(wrong.count), e.g. \(wrong.prefix(2))")
+            check(derived == 0 || derived == derivations, "\(name)\(label): \(derived) derivations")
+            if all.count > 1 {
+                check(accepted > 0 && accepted < sequences.count, "\(name)\(label): vacuous, \(accepted) of \(sequences.count) accepted")
+            }
+            checked += sequences.count
         }
 
         // 3. MSH first; every segment in the version grammar, or ADD.
@@ -124,7 +132,26 @@ struct StructureGuardTests {
             let elsewhere = elements.dropLast().contains { $0.segmentIDs.contains("DSC") }
             check(last && !elsewhere, "\(name): DSC is not only the last top-level element")
         }
-        return (problems, sequences.count)
+        return (problems, checked)
+    }
+
+    /// The forms the Validator matches `structure` in: itself, or, with a
+    /// keyed choice, its resolution for each key value and for no value.
+    static func matchedForms(_ structure: MessageStructure) -> [(label: String, structure: MessageStructure)] {
+        guard structure.hasKeyedChoice else { return [("", structure)] }
+        var keys: [StructureChoiceKey] = []
+        func collect(_ elements: [StructureElement]) {
+            for element in elements {
+                if case .keyedChoice(_, _, _, let key, _) = element { keys.append(key) }
+                collect(element.children)
+            }
+        }
+        collect(structure.elements)
+        let values = keys.flatMap { $0.alternatives.keys }.sorted()
+        return ([nil] + values).compactMap { value -> (String, MessageStructure)? in
+            guard case .resolved(let resolved) = structure.resolvingKeyedChoices({ _ in value }) else { return nil }
+            return (" [\(value.map { "key \($0)" } ?? "no key")]", resolved)
+        }
     }
 
     @Test("Every committed structure passes the guards (default budget)", arguments: keys)
@@ -140,7 +167,8 @@ struct StructureGuardTests {
         // misfires under the parallel suite's contention. 200 sequences cost
         // about 6 to 60 ms per structure alone in a debug build (P8b-7).
         // At most 200 sampled, or 127 exhaustive (two IDs, length 6).
-        #expect(result.sequences <= Self.defaultDerivations * 5, "\(key): \(result.sequences) sequences")
+        #expect(result.sequences <= Self.defaultDerivations * 5 * Self.matchedForms(structure).count,
+                "\(key): \(result.sequences) sequences")
     }
 
     @Test("Every committed structure passes the guards (full budget)",

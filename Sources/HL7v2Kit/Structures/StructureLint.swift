@@ -108,6 +108,10 @@ extension StructureMatcher {
             if case .choice(_, _, _, let alternatives) = element {
                 choiceConflicts(alternatives, path: path + [name], &conflicts)
             }
+            // S4-1: a keyed choice's alternative is selected by its key, not by
+            // the current segment, so the choice rule does not apply; the
+            // Validator matches the resolved structure, linted as it is.
+            // Each alternative is still linted against what follows the choice.
             if case .slot = element {
                 // S3-1: the one-pass matcher enters an element by its FIRST
                 // set, and a slot's is every segment, so where it ends is
@@ -153,7 +157,7 @@ extension StructureMatcher {
                 } else if max != 1 {
                     childInherited.plain.formUnion(first)
                 }
-                if case .choice = element {
+                if case .choice = element.unkeyed {
                     // Each alternative is the one element of its own sequence:
                     // what follows it is what follows the choice.
                     for alternative in children {

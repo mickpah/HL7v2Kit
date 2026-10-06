@@ -31,7 +31,8 @@ ext = _load("extract_message_structures", "extract-message-structures.py")
 OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
          "triggerFolds": [], "primaryPrints": [], "unionPrints": [], "unresolvedCaptions": [],
-         "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": [], "withdrawnSegments": []}
+         "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": [], "withdrawnSegments": [],
+         "keyedChoices": [], "aliases": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -1503,6 +1504,108 @@ def check_withdrawn_segments():
             ext.COMPLETENESS, ext.STRUCTURES = saved
 
 
+def _keyed_entry(**kw):
+    entry = {"version": "2.5.1", "structure": "MFN_M03", "caption": "MFN^M03^MFN_M03", "printed": "...",
+             "key": {"segment": "MFI", "field": 1, "component": 1},
+             "alternatives": [{"value": "OMA", "structure": "MFN_M08", "group": "MF_TEST_NUMERIC", "after": "OM1", "page": "8-24"},
+                              {"value": "OMB", "structure": "MFN_M09", "group": "MF_TEST_CATEGORICAL", "after": "OM1", "page": "8-25"}],
+             "citation": "HL7 v2.5.1 Chapter 8, section 8.8.2, p 8-23: keyed by MFI-1."}
+    entry.update(kw)
+    return entry
+
+
+def check_keyed_choices():
+    # S4-1 (ADR-019 S4 amendment): a keyedChoices placeholder is read as one element (a run of
+    # placeholder rows merged; "???" read as a whole row), the keyed choice put in its place from
+    # the named groups' segments after `after`, or an open slot where the entry has no map.
+    entry = _keyed_entry()
+    rows = ["MSH", "MFI", "{", "MFE", "OM1", "...", "...", "}"]
+    tree = ext.parse([ext.Row(left, "", i, "8-23") for i, left in enumerate(rows)], keyed=entry)
+    body = tree[2]["elements"]
+    assert [e.get("segment") for e in body[:2]] == ["MFE", "OM1"] and len(body) == 3 and "_keyed" in body[2], body
+    try:
+        ext.parse([ext.Row(left, "", i, "") for i, left in enumerate(rows)])
+        raise AssertionError("an unclaimed placeholder must stay unreadable (ruling G6)")
+    except ext.UnknownNotation as exc:
+        assert "placeholder (G6)" in str(exc), exc
+    q = ext.parse([ext.Row(left, "", i, "") for i, left in enumerate(["MSH", "MFI", "{MFE", "OM1", "???", "}"])],
+                  keyed=_keyed_entry(printed="???"))
+    assert "_keyed" in q[2]["elements"][2], q
+    m08 = {"structure": "MFN_M08", "version": "2.5.1", "triggers": ["MFN^M08"], "citation": "c8",
+           "elements": [_seg("MSH"), _seg("MFI"), {"group": "MF_TEST_NUMERIC", "nameSource": "printed", "min": 1, "max": None,
+                                                   "elements": [_seg("MFE"), _seg("OM1"), _seg("OM2", 0, 1)]}]}
+    m09 = {"structure": "MFN_M09", "version": "2.5.1", "triggers": ["MFN^M09"], "citation": "c9",
+           "elements": [_seg("MSH"), _seg("MFI"), {"group": "MF_TEST_CATEGORICAL", "nameSource": "printed", "min": 1, "max": None,
+                                                   "elements": [_seg("MFE"), _seg("OM1"), _seg("OM3", 0, 1)]}]}
+    m03 = {"structure": "MFN_M03", "version": "2.5.1", "triggers": ["MFN^M03"], "citation": "c3",
+           "elements": [_seg("MSH"), _seg("MFI"), {"group": "MF_TEST", "nameSource": "printed", "min": 1, "max": None,
+                                                   "elements": [_seg("MFE"), _seg("OM1"), dict(body[2])]}]}
+    structures = {"MFN_M03": m03, "MFN_M08": m08, "MFN_M09": m09}
+    report = ext.resolve_keyed_choices("2.5.1", structures, {"MFN_M03": entry})
+    assert report == [("MFN_M03", "keyed-choice", "MFI-1: OMA=MF_TEST_NUMERIC, OMB=MF_TEST_CATEGORICAL")], report
+    choice = m03["elements"][2]["elements"][2]
+    assert choice["key"]["values"] == {"OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL"}, choice
+    assert [a["elements"] for a in choice["alternatives"]] == [[_seg("OM2", 0, 1)], [_seg("OM3", 0, 1)]], choice
+    assert "choice keyed by MFI-1 (overrides.json keyedChoices" in m03["citation"], m03["citation"]
+    text = ext.render(m03)
+    assert '"key": { "segment": "MFI", "field": 1, "component": 1, "values": { "OMA": "MF_TEST_NUMERIC", ' in text, text
+    # A named group with nothing after `after` is an error, never an empty alternative.
+    bad = {"MFN_M03": json.loads(json.dumps({**m03, "elements": [_seg("MSH"), {**body[2]}]})), "MFN_M08": m08, "MFN_M09": m09}
+    report = ext.resolve_keyed_choices("2.5.1", bad, {"MFN_M03": _keyed_entry(alternatives=[
+        {**entry["alternatives"][0], "after": "OM2"}, entry["alternatives"][1]])})
+    assert report and report[0][1] == "error" and "no segments after OM2" in report[0][2], report
+    # No map: the placeholder is an open slot, cited, with the marker dropped.
+    erp = _keyed_entry(structure="ERP_R09", caption="ERP^R09", key={"segment": "ERQ", "field": 2, "component": 1},
+                       slot={"name": None, "min": 0, "max": None})
+    del erp["alternatives"]
+    slot = ext._keyed({"entry": erp})
+    s = {"structure": "ERP_R09", "version": "2.5.1", "triggers": ["ERP^R09"], "citation": "c",
+         "elements": [_seg("MSH"), _seg("ERQ"), slot]}
+    assert ext.resolve_keyed_choices("2.5.1", {"ERP_R09": s}, {"ERP_R09": erp}) == [("ERP_R09", "keyed-slot", "ERQ-2: open slot")]
+    assert s["elements"][2] == {"slot": None, "min": 0, "max": None, "citation": erp["citation"]}, s["elements"][2]
+    ext.validate_overrides({**EMPTY, "keyedChoices": [entry, erp]})
+    for broken in (_keyed_entry(slot={"name": None, "min": 0, "max": None}),
+                   _keyed_entry(key={"segment": "MFI", "field": 0, "component": 1}),
+                   _keyed_entry(alternatives=[entry["alternatives"][0], entry["alternatives"][0]]),
+                   {k: v for k, v in erp.items() if k != "slot"} | {"slot": {"name": None, "min": 0, "max": 1}}):
+        try:
+            ext.validate_overrides({**EMPTY, "keyedChoices": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"keyedChoices entry {broken} must be rejected")
+
+
+def check_aliases():
+    # S4-2: an aliases entry adds a structure with its own ID, triggers and citation and the
+    # target's elements, copied; rendered with "aliasOf"; never over a printed syntax, never the
+    # alias of an alias or of a structure the version does not have.
+    q01 = {"structure": "QRY_Q01", "version": "2.4", "triggers": ["QRY^Q01"], "citation": "Q01 print.",
+           "elements": [_seg("MSH"), _seg("QRD"), _seg("QRF", 0, 1), _seg("DSC", 0, 1)]}
+    entry = {"version": "2.4", "structure": "QRY_P04", "aliasOf": "QRY_Q01", "triggers": ["QRY^P04"],
+             "citation": "HL7 v2.4 Chapter 6, section 6.4.4, p 6-13: see Chapter 5."}
+    structures = {"QRY_Q01": q01}
+    assert ext.add_aliases("2.4", structures, {**EMPTY, "aliases": [entry]}, True) == [("QRY_P04", "alias", "of QRY_Q01")]
+    alias = structures["QRY_P04"]
+    assert alias["elements"] == q01["elements"] and alias["elements"] is not q01["elements"], alias
+    assert alias["triggers"] == ["QRY^P04"] and alias["aliasOf"] == "QRY_Q01", alias
+    assert alias["citation"].startswith(entry["citation"]) and alias["citation"].endswith("Q01 print."), alias["citation"]
+    assert '  "triggers": ["QRY^P04"],\n  "aliasOf": "QRY_Q01",\n  "elements": [' in ext.render(alias)
+    assert '"aliasOf"' not in ext.render(q01)
+    for structures, expected in (({"QRY_Q01": q01, "QRY_P04": q01}, "names a structure the print gives a syntax"),
+                                 ({}, "QRY_Q01 is not a structure read"),
+                                 ({"QRY_Q01": {**q01, "aliasOf": "QRY_Q02"}}, "QRY_Q01 is not a structure read")):
+        report = ext.add_aliases("2.4", dict(structures), {**EMPTY, "aliases": [entry]}, True)
+        assert report and report[0][1] == "error" and expected in report[0][2], report
+    assert ext.add_aliases("2.4", {}, {**EMPTY, "aliases": [entry]}, False) == [], "a partial read skips it"
+    ext.validate_overrides({**EMPTY, "aliases": [entry]})
+    for broken in ({**entry, "aliasOf": "QRY_P04"}, {**entry, "triggers": ["DSR^P04"]}, {**entry, "triggers": []}):
+        try:
+            ext.validate_overrides({**EMPTY, "aliases": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"aliases entry {broken} must be rejected")
+
+
 def check_referenced_triggers():
     # P8b-15 fix round 2: a trigger the print defines only in prose that names an already printed
     # structure without ambiguity (v2.3 CH07 7.19.1: W01 "identifies ORU messages") is added to that
@@ -2203,7 +2306,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_slot_ch04_own_line, check_slot_ch04_bracketed_alone, check_slot_ch12_bracket_form,
           check_slot_choice_with_placeholder, check_slot_citation_and_render,
           check_slot_never_from_query_template_or_prose, check_slot_bundle_naming,
-          check_slot_bundle_naming_path_bound]
+          check_slot_bundle_naming_path_bound, check_keyed_choices, check_aliases]
 
 
 def main():

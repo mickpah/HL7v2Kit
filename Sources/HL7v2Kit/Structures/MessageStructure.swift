@@ -13,7 +13,8 @@
 ///
 /// - Note: This is an **open** enum per the API evolution policy (ADR-014):
 ///   a later release may add cases, as P8b-6 added ``choice(_:min:max:alternatives:)``
-///   and v3.15.0 ``slot(_:min:max:citation:)``.
+///   and v3.15.0 ``slot(_:min:max:citation:)`` and
+///   ``keyedChoice(_:min:max:key:alternatives:)``.
 ///   Code that walks the tree must handle `@unknown default`; ``children``
 ///   and ``segmentIDs`` cover every case, so a walker that recurses through
 ///   them never skips the segments inside a case it does not know.
@@ -56,12 +57,29 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// A slot has no ``children`` and no ``segmentIDs``; a structure holding
     /// one is matched exactly.
     case slot(String?, min: Int, max: Int?, citation: String)
+    /// A choice whose alternative a field value of the message selects
+    /// (S4-1, ADR-019 amendment 2026-10-06): v2.4 to v2.6 CH08 8.8.2 MFN^M03
+    /// prints "other segment(s)" after OM1, which are those of the MFN^M08 to
+    /// MFN^M12 group that MFI-1 names. `key` gives the field and the printed
+    /// value-to-alternative map; every alternative is a named group.
+    ///
+    /// Before matching, the Validator reads the key field from the first
+    /// occurrence of the key segment and matches the structure with the
+    /// choice replaced by the selected alternative (with the choice's
+    /// bounds), so the group spans follow that alternative. A value the map
+    /// does not hold is reported as
+    /// ``IssueCode/messageStructureNotModelled(structure:)`` naming the key
+    /// and the value, and the body is not matched: the print's map is the
+    /// only list it gives. With no key segment, or an empty key field, the
+    /// choice admits any alternative and the structure's own rules report
+    /// the missing segment. ``children`` are the alternatives.
+    case keyedChoice(String?, min: Int, max: Int?, key: StructureChoiceKey, alternatives: [StructureElement])
 
     /// The minimum number of occurrences: 0 for an optional element.
     public var min: Int {
         switch self {
         case .segment(_, let min, _), .group(_, let min, _, _), .choice(_, let min, _, _),
-             .slot(_, let min, _, _): return min
+             .slot(_, let min, _, _), .keyedChoice(_, let min, _, _, _): return min
         }
     }
 
@@ -69,7 +87,7 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     public var max: Int? {
         switch self {
         case .segment(_, _, let max), .group(_, _, let max, _), .choice(_, _, let max, _),
-             .slot(_, _, let max, _): return max
+             .slot(_, _, let max, _), .keyedChoice(_, _, let max, _, _): return max
         }
     }
 
@@ -79,7 +97,7 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
         switch self {
         case .segment, .slot: return []
         case .group(_, _, _, let elements): return elements
-        case .choice(_, _, _, let alternatives): return alternatives
+        case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives): return alternatives
         }
     }
 
@@ -96,8 +114,18 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
         switch self {
         case .segment, .slot: return nil
         case .group(let name, _, _, _): return name
-        case .choice(let name, _, _, _): return name
+        case .choice(let name, _, _, _), .keyedChoice(let name, _, _, _, _): return name
         }
+    }
+
+    /// A keyed choice as the plain choice of the same alternatives (what
+    /// the print's row admits when no key selects one); every other element
+    /// unchanged at this level.
+    var unkeyed: StructureElement {
+        if case .keyedChoice(let name, let min, let max, _, let alternatives) = self {
+            return .choice(name, min: min, max: max, alternatives: alternatives)
+        }
+        return self
     }
 
     /// How the lint names this element in a path: the segment ID, the group
@@ -111,6 +139,7 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
         case .choice(let name, _, _, let alternatives):
             return name ?? "<" + alternatives.map(\.label).joined(separator: "|") + ">"
         case .slot(let name, _, _, _): return name ?? "open slot"
+        case .keyedChoice: return unkeyed.label
         }
     }
 
@@ -127,6 +156,7 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
         case .choice(_, _, _, let alternatives):
             return alternatives.reduce(into: Set<String>()) { $0.formUnion($1.firstSet) }
         case .slot: return [StructureElement.anySegment]
+        case .keyedChoice: return unkeyed.firstSet
         }
     }
 
@@ -141,6 +171,8 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
             return min == 0 || elements.allSatisfy(\.isNullable)
         case .choice(_, let min, _, let alternatives):
             return min == 0 || alternatives.contains(where: \.isNullable)
+        case .keyedChoice:
+            return unkeyed.isNullable
         }
     }
 
@@ -156,7 +188,7 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
         case .group(_, _, _, let elements):
             let head = elements.first { !$0.isNullable } ?? elements.first
             return head?.headSegmentID ?? ""
-        case .choice(_, _, _, let alternatives):
+        case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
             return alternatives.first?.headSegmentID ?? ""
         }
     }
@@ -206,6 +238,19 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// The conformance point a profile structure enforces
     /// (`"HL7au:00060.1"`); nil for a base structure.
     let rule: String?
+    /// The structure whose syntax this one takes, when the print gives this
+    /// ID a trigger of its own and refers its syntax to another printed
+    /// structure of the same version (S4-2, ADR-019 amendment 2026-10-06):
+    /// v2.4 CH06 6.4.4 captions `QRY^P04^QRY_P04` and refers it to "the
+    /// QRY/DSR transaction, as defined in Chapter 5", so `QRY_P04` is an
+    /// alias of `"QRY_Q01"`. The alias keeps its own ID, triggers and
+    /// citation, and its ``elements`` are the target's, copied when the
+    /// table is generated. Nil for every other structure.
+    public let aliasOf: String?
+    /// The keyed-choice selection this structure was resolved with (S4-1),
+    /// e.g. `"MFI-1=OMA"`; nil for a structure as the table holds it. It
+    /// keeps the compiled matchers of the selections apart.
+    let keySelection: String?
 
     // Internal (P8 final review): there is no public matcher, so a structure
     // built outside the package has no use. The generated tables and the
@@ -215,7 +260,8 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     // profile tables (P8b-4).
     init(id: String, version: String, triggers: [String], citation: String,
          profile: String? = nil, baseVersion: String? = nil, rule: String? = nil,
-         requiresExactMatch: Bool? = nil, elements: [StructureElement]) {
+         requiresExactMatch: Bool? = nil, aliasOf: String? = nil, keySelection: String? = nil,
+         elements: [StructureElement]) {
         self.id = id
         self.version = version
         self.triggers = triggers
@@ -224,6 +270,8 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
         self.baseVersion = baseVersion
         self.rule = rule
         self.elements = elements
+        self.aliasOf = aliasOf
+        self.keySelection = keySelection
         self.requiresExactMatch = requiresExactMatch ?? !StructureMatcher.lint(elements).isDeterministic
     }
 

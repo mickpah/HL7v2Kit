@@ -83,8 +83,9 @@ private func lintSequence(_ elements: [StructureElementSchema], inherited: LintF
         }
         let first = element.firstSet
         let children = element.children
-        if element.isChoice {
-            // Choice rule: pairwise-disjoint FIRST sets, no nullable alternative.
+        if element.isChoice, element.key == nil {
+            // Choice rule: pairwise-disjoint FIRST sets, no nullable alternative. A keyed
+            // choice (S4-1) is decided by its key, so the rule does not apply to it.
             var seen: Set<String> = []
             for alternative in children {
                 if !seen.isDisjoint(with: alternative.firstSet) || alternative.isNullable { deterministic = false }

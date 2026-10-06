@@ -70,6 +70,7 @@ extension MessageStructureTable {
         "MDM_T02": v2_6_MDM_T02,
         "MFK_M01": v2_6_MFK_M01,
         "MFN_M02": v2_6_MFN_M02,
+        "MFN_M03": v2_6_MFN_M03,
         "MFN_M04": v2_6_MFN_M04,
         "MFN_M05": v2_6_MFN_M05,
         "MFN_M06": v2_6_MFN_M06,
@@ -2021,6 +2022,54 @@ extension MessageStructureTable {
                 .segment("EDU", min: 0, max: nil),
                 .segment("CER", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_6_MFN_M03: MessageStructure = MessageStructure(
+        id: "MFN_M03",
+        version: "2.6",
+        triggers: ["MFN^M03"],
+        citation: "HL7 v2.6 Chapter 8, section 8.8.2 MFN/MFK - Master File Notification - Test/Observation (Event M03), p 8-20. The placeholder '...' is a choice keyed by MFI-1 (overrides.json keyedChoices, ADR-019 S4-1): OMA, OMB, OMC, OMD and OME select MF_TEST_NUMERIC, MF_TEST_CATEGORICAL, MF_TEST_BATTERIES, MF_TEST_CALCULATED and MF_OBS_ATTRIBUTES.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .keyedChoice(nil, min: 1, max: 1, key: StructureChoiceKey(
+                    segmentID: "MFI", field: 1, component: 1,
+                    alternatives: ["OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL", "OMC": "MF_TEST_BATTERIES", "OMD": "MF_TEST_CALCULATED", "OME": "MF_OBS_ATTRIBUTES"],
+                    citation: "HL7 v2.6 Chapter 8, section 8.8.2 MFN/MFK - Master File Notification - Test/Observation (Event M03), p 8-20: the syntax prints '... [other segment(s)]' after OM1 in MF_TEST and says 'Other segment(s) represents segments that follows the OM1 segment. The available segment groups are described below in the following messages: MFN^M08, MFN^M09, MFN^M10, MFN^M11, and MFN^M12'; sections 8.8.3 to 8.8.7 each note the key ('Note: MFI-1 - Master File Identifier = OMA for numeric observations', p 8-21; OMB p 8-22; OMC p 8-22; OMD p 8-23; OME p 8-24), so the other segments are those after OM1 of the group MFI-1 component 1 names (ADR-019 S4-1)."), alternatives: [
+                    .group("MF_TEST_NUMERIC", min: 1, max: 1, elements: [
+                        .segment("OM2", min: 0, max: 1),
+                        .segment("OM3", min: 0, max: 1),
+                        .segment("OM4", min: 0, max: 1),
+                    ]),
+                    .group("MF_TEST_CATEGORICAL", min: 1, max: 1, elements: [
+                        .group("MF_TEST_CAT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM3", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_BATTERIES", min: 1, max: 1, elements: [
+                        .group("MF_TEST_BATT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM5", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_CALCULATED", min: 1, max: 1, elements: [
+                        .group("MF_TEST_CALC_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM6", min: 1, max: 1),
+                            .segment("OM2", min: 1, max: 1),
+                        ]),
+                    ]),
+                    .group("MF_OBS_ATTRIBUTES", min: 1, max: 1, elements: [
+                        .segment("OM7", min: 0, max: 1),
+                    ]),
+                ]),
             ]),
         ]
     )

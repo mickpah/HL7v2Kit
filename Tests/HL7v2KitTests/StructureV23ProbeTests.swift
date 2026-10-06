@@ -192,9 +192,10 @@ struct StructureV23ProbeTests {
     // P8b-15: v2.3 complete. Rule 1's unknown-MSH-9.3 branch cannot fire (rule 3 ignores MSH-9.3);
     // a trigger printed under a registered structure is info with the register reason, never an error.
     @Test("v2.3 complete: registered triggers are info with their reason; a declared ID changes nothing",
-          // ORM^O01 and PPR^PC2, here until S3-3, are modelled with the open slot since.
+          // ORM^O01 and PPR^PC2, here until S3-3, are modelled with the open slot since; ERP,
+          // here until S4-1, with an open slot after ERQ.
           arguments: [("SUR^P09", "ED"),
-                      ("ERP", "ellipsis"), ("MFN^M08", "other segments"), ("MFR^M05", "prose-printed replacement fragments"),
+                      ("MFN^M08", "other segments"), ("MFR^M05", "prose-printed replacement fragments"),
                       ("QRF^W02", "no message type QRF"), ("QRY^R03", "ORU^R03"), ("DSR^R03", "MSA optional"),
                       ("DSR^R05", "the reference is ambiguous"),
                       // P8b-18: the P04 response (6.3.4 names it 'QRY/DSP') and ORU^R03 (one CH07 example)

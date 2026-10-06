@@ -100,6 +100,22 @@ struct StructureJSONDecoderTests {
         return d
     }
 
+    /// v2.5.1 MFN_M03 with `change` applied to its keyed choice (S4-1: MF_TEST, after MFE OM1).
+    static func mfnKeyed(_ change: (inout JSON) -> Void = { _ in }) throws -> JSON {
+        try element(load("MFN_M03"), 3) { group in
+            var inner = group["elements"] as? [JSON] ?? []
+            change(&inner[2])
+            group["elements"] = inner
+        }
+    }
+
+    /// `choice`'s key with `change` applied.
+    static func rekey(_ choice: inout JSON, _ change: (inout JSON) -> Void) {
+        var key = choice["key"] as? JSON ?? [:]
+        change(&key)
+        choice["key"] = key
+    }
+
     static func element(_ d: JSON, _ index: Int, _ change: (inout JSON) -> Void) -> JSON {
         var d = d
         var elements = d["elements"] as? [JSON] ?? []
@@ -215,7 +231,38 @@ struct StructureJSONDecoderTests {
         adjacent["elements"] = list
         try reject("two adjacent slots", "two adjacent slots", adjacent, "ACK")
 
-        #expect(cases.count == 44)
+        // S4-1 keyed-choice cases (v2.5.1 MFN_M03, keyed by MFI-1).
+        let every = "every alternative must be a group occurring once, with a distinct name"
+        try accept("keyed choice as committed", try Self.mfnKeyed(), "MFN_M03")
+        try reject("key on a group", "only a choice has a \"key\"", try Self.element(Self.load("MFN_M03"), 3) {
+            $0["key"] = ["segment": "MFI", "field": 1, "component": 1, "values": ["OMA": "MF_TEST"], "citation": "CH08"] as JSON
+        }, "MFN_M03")
+        try reject("keyed value mapping to no alternative", "values map to no alternative: [\"MF_NOPE\"]",
+                   try Self.mfnKeyed { Self.rekey(&$0) { var v = $0["values"] as? [String: String] ?? [:]; v["ZZZ"] = "MF_NOPE"; $0["values"] = v } }, "MFN_M03")
+        try reject("keyed alternative no value selects", "no value selects [\"MF_OBS_ATTRIBUTES\"]",
+                   try Self.mfnKeyed { Self.rekey(&$0) { var v = $0["values"] as? [String: String] ?? [:]; v["OME"] = nil; $0["values"] = v } }, "MFN_M03")
+        try reject("keyed alternative that is a segment", every, try Self.mfnKeyed {
+            var alternatives = $0["alternatives"] as? [JSON] ?? []
+            alternatives[4] = ["segment": "OM7", "min": 1, "max": 1]
+            $0["alternatives"] = alternatives
+        }, "MFN_M03")
+        try reject("optional keyed alternative", every, try Self.mfnKeyed {
+            var alternatives = $0["alternatives"] as? [JSON] ?? []
+            alternatives[4]["min"] = 0
+            $0["alternatives"] = alternatives
+        }, "MFN_M03")
+        try reject("key with an empty citation", "the key needs a non-empty \"citation\"",
+                   try Self.mfnKeyed { Self.rekey(&$0) { $0["citation"] = " " } }, "MFN_M03")
+        try reject("key segment not in the structure", "a keyed choice's key segment PID is not in the structure",
+                   try Self.mfnKeyed { Self.rekey(&$0) { $0["segment"] = "PID" } }, "MFN_M03")
+        try reject("unknown key in a key", "key: unknown key(s) [\"name\"]",
+                   try Self.mfnKeyed { Self.rekey(&$0) { $0["name"] = "MFI-1" } }, "MFN_M03")
+
+        try accept("keyed choice whose two values select one alternative",
+                   try Self.mfnKeyed { Self.rekey(&$0) { var v = $0["values"] as? [String: String] ?? [:]; v["OMX"] = "MF_TEST_NUMERIC"; $0["values"] = v } }, "MFN_M03")
+        // The S4-2 alias cases concern the codegen's directory walk (validateAliases), not one file.
+
+        #expect(cases.count == 54)
         for c in cases {
             if let expected = c.expected {
                 #expect(c.verdict?.contains(expected) == true, "\(c.label): \(c.verdict ?? "accepted")")

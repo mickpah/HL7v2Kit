@@ -199,7 +199,9 @@ struct StructureMatcher: Sendable {
                     } else {
                         state.spans[span].end = state.lastConsumed
                     }
-                case .choice(let name, _, _, _):
+                case .choice(let name, _, _, _), .keyedChoice(let name, _, _, _, _):
+                    // A keyed choice is resolved before matching (S4-1); one
+                    // left unresolved is matched as its plain choice.
                     // The lint guarantees the alternatives' FIRST sets are
                     // disjoint, so at most one can begin with `id`.
                     guard let alternative = item.bodies.first(where: { $0.items[0].first.contains(id) }) else { break }
@@ -272,7 +274,7 @@ private struct CompiledElement: Sendable {
             preconditionFailure("a structure with an open slot is matched by ExactStructureMatcher")
         case .group(_, _, _, let children):
             bodies = [CompiledSequence(children, positions: children.indices.map { position + [$0] })]
-        case .choice(_, _, _, let choices):
+        case .choice(_, _, _, let choices), .keyedChoice(_, _, _, _, let choices):
             bodies = choices.indices.map { CompiledSequence([choices[$0]], positions: [position + [$0]]) }
         }
     }

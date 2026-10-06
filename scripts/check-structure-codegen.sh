@@ -582,6 +582,65 @@ edit('2.8.2', 'URD', definedThrough='2.7.1')"
 reject "a withdrawnSegments entry with an unknown printed status" 'bad segment ID or printed status "removed"' "$PRE$WITHDRAWN
 edit('2.7.1', 'URS', printed='removed')"
 
+# S4-1: the keyed choice (v2.5.1 MFN_M03, MF_TEST's third element, keyed by MFI-1).
+KEYED='
+def keyed(change):
+    d = load("v2.5.1/MFN_M03.json")
+    change(d["elements"][3]["elements"][2])
+    save("v2.5.1/MFN_M03.json", d)
+'
+EVERY="every alternative must be a group occurring once, with a distinct name"
+
+reject "a key on a group" 'only a choice has a "key"' "$PRE$KEYED
+d = load('v2.5.1/MFN_M03.json'); d['elements'][3]['key'] = {'segment': 'MFI', 'field': 1, 'component': 1, 'values': {'OMA': 'MF_TEST'}, 'citation': 'CH08'}
+save('v2.5.1/MFN_M03.json', d)"
+
+reject "a keyed value mapping to no alternative" 'values map to no alternative: ["MF_NOPE"]' "$PRE$KEYED
+keyed(lambda c: c['key']['values'].update(ZZZ='MF_NOPE'))"
+
+reject "a keyed alternative no value selects" 'no value selects ["MF_OBS_ATTRIBUTES"]' "$PRE$KEYED
+keyed(lambda c: c['key']['values'].pop('OME'))"
+
+reject "a keyed alternative that is a segment" "$EVERY" "$PRE$KEYED
+keyed(lambda c: c['alternatives'].__setitem__(4, {'segment': 'OM7', 'min': 1, 'max': 1}))"
+
+reject "an optional keyed alternative" "$EVERY" "$PRE$KEYED
+keyed(lambda c: c['alternatives'][4].update(min=0))"
+
+reject "a key with an empty citation" 'the key needs a non-empty "citation"' "$PRE$KEYED
+keyed(lambda c: c['key'].update(citation=' '))"
+
+reject "a key segment not in the structure" "a keyed choice's key segment PID is not in the structure" "$PRE$KEYED
+keyed(lambda c: c['key'].update(segment='PID'))"
+
+reject "an unknown key in a key" 'key: unknown key(s) ["name"]' "$PRE$KEYED
+keyed(lambda c: c['key'].update(name='MFI-1'))"
+
+accept "a keyed choice whose two values select one alternative" "$PRE$KEYED
+keyed(lambda c: c['key']['values'].update(OMX='MF_TEST_NUMERIC'))"
+
+# S4-2: the alias (v2.5.1 QRY_P04, aliasOf QRY_Q01).
+ALIAS='
+def alias(**kw):
+    d = load("v2.5.1/QRY_P04.json"); d.update(kw); save("v2.5.1/QRY_P04.json", d)
+'
+
+reject "an alias of a structure the version does not have" 'QRY_P04: aliasOf QRY_Q99 is not another structure of v2.5.1' "$PRE$ALIAS
+alias(aliasOf='QRY_Q99')"
+
+reject "an alias of itself" 'QRY_P04: aliasOf QRY_P04 is not another structure of v2.5.1' "$PRE$ALIAS
+alias(aliasOf='QRY_P04')"
+
+reject "an alias whose elements differ from its target's" 'QRY_P04: its elements differ from those of QRY_Q01, which it aliases' "$PRE$ALIAS
+d = load('v2.5.1/QRY_P04.json'); d['elements'][3]['min'] = 1; save('v2.5.1/QRY_P04.json', d)"
+
+reject "an alias of an alias" 'QRY_X04: aliasOf QRY_P04, which is itself an alias' "$PRE$ALIAS
+d = load('v2.5.1/QRY_P04.json'); d.update(structure='QRY_X04', aliasOf='QRY_P04', triggers=['QRY^X04'])
+save('v2.5.1/QRY_X04.json', d)"
+
+accept "the alias as a plain structure (no aliasOf)" "$PRE$ALIAS
+d = load('v2.5.1/QRY_P04.json'); del d['aliasOf']; save('v2.5.1/QRY_P04.json', d)"
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

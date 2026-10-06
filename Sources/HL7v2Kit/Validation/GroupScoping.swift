@@ -209,7 +209,7 @@ struct ScopeLookup {
     /// unnamed choices among them).
     static func ownLevel(_ children: [StructureElement]) -> Set<String> {
         children.reduce(into: Set<String>()) { result, child in
-            switch child {
+            switch child.unkeyed {
             case .segment(let id, _, _): result.insert(id)
             case .choice(.none, _, _, let alternatives): result.formUnion(ownLevel(alternatives))
             default: break
@@ -232,7 +232,7 @@ struct ScopeLookup {
         // extended level first; a non-repeating group in between is transparent.
         func unclaimed(_ children: [StructureElement]) -> Bool {
             children.contains { child in
-                switch child {
+                switch child.unkeyed {
                 case .segment(let id, _, _): return id == anchor
                 case .choice(.none, _, _, let alternatives): return unclaimed(alternatives)
                 default:
@@ -253,7 +253,7 @@ struct ScopeLookup {
     /// The segment IDs of the extended own level of a group with `children`.
     func extended(_ children: [StructureElement]) -> Set<String> {
         children.reduce(into: Set<String>()) { result, child in
-            switch child {
+            switch child.unkeyed {
             case .segment(let id, _, _): result.insert(id)
             case .choice(.none, _, _, let alternatives): result.formUnion(extended(alternatives))
             default: if transparent(child) { result.formUnion(extended(child.children)) }
@@ -264,7 +264,7 @@ struct ScopeLookup {
     /// The segment IDs defined anywhere in `children` outside pairing boundaries.
     func inside(_ children: [StructureElement]) -> Set<String> {
         children.reduce(into: Set<String>()) { result, child in
-            switch child {
+            switch child.unkeyed {
             case .segment(let id, _, _): result.insert(id)
             case .choice(.none, _, _, let alternatives): result.formUnion(inside(alternatives))
             default: if !pairing(child) { result.formUnion(inside(child.children)) }

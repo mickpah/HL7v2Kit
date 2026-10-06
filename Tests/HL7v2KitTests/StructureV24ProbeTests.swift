@@ -146,14 +146,13 @@ struct StructureV24ProbeTests {
         #expect(Self.groups(dft.elements).contains("FINANCIAL_PROCEDURE"))
     }
 
-    // CH05 5.10.4.2 prints ERP^R09 with ellipsis rows standing for another message's
-    // segments (ruling G6): registered as not modelled on v2.4 and v2.5.1 (a corpus misfire
-    // fixed in P8b-13), so an event replay response is info, never a false finding.
-    @Test("ERP^R09 is registered (info) on v2.4 and v2.5.1", arguments: ["2.4", "2.5.1"])
+    // CH05 5.10.4.2 prints ERP^R09 with ellipsis rows standing for the message ERQ-2 names,
+    // which the print does not enumerate: an open slot since S4-1 (registered until then, a
+    // corpus misfire fixed in P8b-13), so an event replay response is clean, never a false finding.
+    @Test("ERP^R09 is matched with an open slot after ERQ on v2.4 and v2.5.1", arguments: ["2.4", "2.5.1"])
     func eventReplayResponse(_ version: String) throws {
         let issues = try structureIssues("ERP^R09^ERP_R09", ["MSA|AA|1", "QAK|1|OK", "ERQ|1", "EVN|A01", "PID|1"], version: version)
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ERP_R09")], "\(issues.map(\.message))")
-        #expect(issues.first?.severity == .info && issues.first?.message.contains("ellipsis") == true, "\(issues.map(\.message))")
+        #expect(issues.isEmpty, "\(issues.map(\.message))")
     }
 
     // CH05 5.10.3.1 (v2.4 p 5-112; v2.5.1 p 5-116; v2.6 CH05 5.10.3.1) prints the deferred
@@ -184,13 +183,11 @@ struct StructureV24ProbeTests {
 
     // P8b-18: registrations classed by the print. v2.4 CH08 gives the MFR body per master file
     // in prose ("is replaced by", 8.7.1 p 8-19 and on) and keys MFN^M03's other segments by MFI-1
-    // (8.8.2, p 8-21): blocking, the extractor does not read prose fragments. CH06 6.4.4 (p 6-13)
-    // refers P04 to the Chapter 5 QRY/DSR: the QRY prints agree, but the caption gives P04 its own
-    // ID, QRY_P04 (blocking: no structure alias); the two DSR prints differ on MSA (permanent).
+    // (8.8.2, p 8-21), modelled as a keyed choice since S4-1. CH06 6.4.4 (p 6-13) refers P04 to
+    // the Chapter 5 QRY/DSR: the QRY prints agree, so QRY_P04 is an alias of QRY_Q01 since S4-2;
+    // the two DSR prints differ on MSA (permanent).
     @Test("Registered v2.4 structures are info with the reason the print supports",
           arguments: [("MFR^M02^MFR_M01", "prose-printed replacement fragments"),
-                      ("MFN^M03^MFN_M03", "any of the following combinations"),
-                      ("QRY^P04^QRY_P04", "no structure alias"),
                       ("DSR^P04^DSR_P04", "which mode P04 uses")])
     func registeredByThePrint(_ c: (String, String)) throws {
         let issues = try structureIssues(c.0, ["MSA|AA|1", "QRD|1"])

@@ -40,7 +40,7 @@ struct GroupSpanPredicateTests {
                     out.append(id)
                 case .group(_, _, _, let children):
                     out += skeleton(children)
-                case .choice(_, _, _, let alternatives):
+                case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
                     let pick = alternatives.first { !$0.segmentIDs.isDisjoint(with: want) } ?? alternatives[0]
                     out += skeleton([pick])
                 case .slot:
@@ -58,7 +58,8 @@ struct GroupSpanPredicateTests {
         switch element {
         case .slot: true
         case .group(_, _, _, let children): children.contains(where: holdsSlot)
-        case .choice(_, _, _, let alternatives): alternatives.contains(where: holdsSlot)
+        case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
+            alternatives.contains(where: holdsSlot)
         case .segment: false
         }
     }

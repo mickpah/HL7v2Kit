@@ -311,6 +311,35 @@ struct SignatureCompatibilityTests {
         #expect(element.min == 1 && element.max == nil)
     }
 
+    // Deliberate pin of new, unreleased API (S4-1, ADR-019 amendment 2026-10-06):
+    // the keyed-choice case of the open StructureElement enum and its key.
+    @Test("StructureElement.keyedChoice and StructureChoiceKey keep their signatures")
+    func structureKeyedChoice() throws {
+        let make: (String, Int, Int, [String: String], String) -> StructureChoiceKey =
+            StructureChoiceKey.init(segmentID:field:component:alternatives:citation:)
+        let _: KeyPath<StructureChoiceKey, String> = \.segmentID
+        let _: KeyPath<StructureChoiceKey, Int> = \.field
+        let _: KeyPath<StructureChoiceKey, Int> = \.component
+        let _: KeyPath<StructureChoiceKey, [String: String]> = \.alternatives
+        let _: KeyPath<StructureChoiceKey, String> = \.citation
+        let keyed: (String?, Int, Int?, StructureChoiceKey, [StructureElement]) -> StructureElement =
+            StructureElement.keyedChoice(_:min:max:key:alternatives:)
+        let a = StructureElement.group("A", min: 1, max: 1, elements: [.segment("OM2", min: 0, max: 1)])
+        let b = StructureElement.group("B", min: 1, max: 1, elements: [.segment("OM3", min: 0, max: 1)])
+        let element = keyed(nil, 1, 1, make("MFI", 1, 1, ["OMA": "A", "OMB": "B"], "CH08 8.8.2"), [a, b])
+        #expect(element.children == [a, b] && element.segmentIDs == ["OM2", "OM3"])
+        #expect(element.min == 1 && element.max == 1)
+    }
+
+    // Deliberate pin of new, unreleased API (S4-2, ADR-019 amendment 2026-10-06):
+    // the alias target of a structure whose print refers its syntax to another.
+    @Test("MessageStructure.aliasOf keeps its signature")
+    func structureAliasOf() throws {
+        let _: KeyPath<MessageStructure, String?> = \.aliasOf
+        #expect(try #require(MessageStructureTable.structure("QRY_P04", version: .v2_4)).aliasOf == "QRY_Q01")
+        #expect(try #require(MessageStructureTable.structure("QRY_Q01", version: .v2_4)).aliasOf == nil)
+    }
+
     // Deliberate pin of new, unreleased API (S1-3, owner decision 8, ADR-019
     // amendment 2026-10-06): the public registration lookup that tells a
     // registered-not-modelled structure from an unknown ID.

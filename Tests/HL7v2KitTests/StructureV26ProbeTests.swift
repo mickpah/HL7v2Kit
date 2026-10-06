@@ -122,12 +122,11 @@ struct StructureV26ProbeTests {
     }
 
     // P8b-18: registrations classed by the print. CH08 gives the staff MFR body only in prose
-    // (8.7.1, pp 8-18 to 8-19) and MFN^M03's other segments by reference to MFN^M08 to M12, each
-    // keyed by MFI-1 (blocking). Table 0354 gives W01 its own ID while the CH07 examples send
+    // (8.7.1, pp 8-18 to 8-19); MFN^M03's other segments, keyed by MFI-1, are modelled since
+    // S4-1 (StructureKeyedChoiceTests). Table 0354 gives W01 its own ID while the CH07 examples send
     // ORU^W01^ORU_R01 (permanent; the reason says both).
     @Test("Registered v2.6 structures are info with the reason the print supports",
           arguments: [("MFR^M02^MFR_M01", "prose-printed replacement fragments"),
-                      ("MFN^M03^MFN_M03", "keyed by MFI-1"),
                       ("ORU^W01^ORU_W01", "ORU^W01^ORU_R01"), ("QRF^W02^QRF_W02", "7.15.2")])
     func registeredByThePrint(_ c: (String, String)) throws {
         let issues = try structureIssues(c.0, ["MSA|AA|1", "QRD|1"])

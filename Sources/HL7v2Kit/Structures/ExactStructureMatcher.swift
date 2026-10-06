@@ -214,7 +214,9 @@ struct ExactAutomaton: Sendable {
                 self.element(children[$1], from: $0, group: name, position: position + [$1], ancestry: ancestry + [id])
             }, exit)
             return exit
-        case .choice(let name, _, _, let alternatives):
+        case .choice(let name, _, _, let alternatives), .keyedChoice(let name, _, _, _, let alternatives):
+            // A keyed choice is resolved before matching (S4-1); one left
+            // unresolved is matched as its plain choice.
             let exit = add(nil, group: nil)
             var start = from, inner = ancestry
             if let name {

@@ -468,11 +468,13 @@ def _order_detail(text):
     return f"{m[1]}OBR, etc.{m[2]}", printed
 
 
-def syntax_rows(lines, caption):
+def syntax_rows(lines, caption, claimed=False):
     """The syntax rows of caption's table, in order. Records page-break repeats of the caption
     and the page of the last row on the caption. A repeated Segments/Description row (v2.7.1,
     v2.8.2) resets the columns; a footnote digit on a line of its own is furniture, and one at
-    the left margin opens the page-foot footnotes, read as furniture up to the page footer."""
+    the left margin opens the page-foot footnotes, read as furniture up to the page footer.
+    claimed: an overrides.json keyedChoices entry names the caption (S4-1), so a run of ellipsis
+    rows in the description column is one "..." row, which parse reads through that entry."""
     pages = page_labels(lines)
     rows, depth, choices, foot, placeholder, ellipsis = [], 0, 0, False, None, None
     code_col, desc_col = caption.code_col, caption.desc_col
@@ -561,6 +563,12 @@ def syntax_rows(lines, caption):
             # description it would vanish from the structure; a placeholder, ruling G6 (P8b-14).
             placeholder = placeholder or f"line {i + 1}: placeholder (G6): {desc.strip()[:60]!r} in the description column"
             continue
+        if not left and rows and claimed and re.fullmatch(r"(?:\.\s*){3}|…", desc.strip()):
+            # S4-1: the ellipsis a keyedChoices entry reads (the body ERQ-2 names); one row per run.
+            if rows[-1].left != "...":
+                rows.append(Row("...", "", i, pages[i]))
+                caption.end_page = pages[i]
+            continue
         if not left and rows and re.fullmatch(r"(?:\.\s*){3}|…", desc.strip()):
             # An ellipsis alone in the description column between syntax rows stands for segments
             # the print does not enumerate (v2.4 and v2.5.1 CH05 5.10.4.2 ERP^R09: 'the segments
@@ -628,13 +636,15 @@ def _cells_fixed(rows, fixes, used):
     return out
 
 
-def parse(rows, marks=None, used=None):
+def parse(rows, marks=None, used=None, keyed=None):
     """Elements from syntax rows, by bracket balance. A group the print leaves unnamed has
     "group": None until name_groups resolves it. A choice (P8b-6) is "<", alternatives split
     by "|", then ">", in any row layout (inline, one alternative per row, or each token on its
     own row); "--- NAME begin" on its "<" row names it (v2.7.1 on). marks maps a misprinted group-mark name to the
     intended one (a cited errata entry); used receives every printed name it corrected."""
     marks = marks or {}
+    # keyed: the overrides.json keyedChoices entry for this structure (S4-1); its placeholder as
+    # printed ("...", "???") is read as one keyed element, consecutive placeholder rows merged.
     root = {"kind": "root", "children": [], "name": None}
     stack = [root]
     for row in rows:
@@ -659,6 +669,12 @@ def parse(rows, marks=None, used=None):
         # P8b-13) is not notation: a segment ID starts with a letter, so digits after a bracket are
         # always the footnote mark.
         left = re.sub(r"(?<=[\[\]{}<>])\d{1,2}(?=\s|$)", "", row.left)
+        if keyed and left.strip() == keyed["printed"]:
+            # S4-1: the placeholder row a keyedChoices entry reads ("...", "???"); one per run.
+            children = stack[-1]["children"]
+            if not (children and children[-1]["kind"] == "keyed"):
+                children.append({"kind": "keyed", "entry": keyed, "row": row})
+            continue
         for tok in (t.group(0) for t in TOKEN.finditer(left)):
             if tok.isspace():
                 continue
@@ -734,11 +750,25 @@ def _slot(node, alone=False):
             "_at": {"page": row.page, "printed": printed, "alone": alone}}
 
 
+def _keyed(node):
+    """The element a keyedChoices placeholder stands for (S4-1): an open slot with the entry's
+    bounds and citation where the print enumerates no body (ERP: the message ERQ-2 names), or,
+    where it maps key values to printed groups (MFN_M03), a slot standing in until
+    resolve_keyed_choices puts the keyed choice in its place once every structure is read."""
+    entry = node["entry"]
+    if "slot" in entry:
+        return {"slot": entry["slot"]["name"], "min": entry["slot"]["min"], "max": entry["slot"]["max"],
+                "citation": entry["citation"], "_keyed": entry}
+    return {"slot": None, "min": 0, "max": None, "citation": entry["citation"], "_keyed": entry}
+
+
 def _element(node):
     if node["kind"] == "seg":
         return {"segment": node["id"], "min": 1, "max": 1}
     if node["kind"] == "slot":
         return _slot(node)
+    if node["kind"] == "keyed":
+        return _keyed(node)
     if node["kind"] == "etc":
         raise UnknownNotation(f"placeholder (G6): {node['tok']!r} among a choice's alternatives, not the last")
     if node["kind"] == "<":
@@ -754,7 +784,7 @@ def _element(node):
         # Two printed names are two groups, nested: never merge them; nor a named group into
         # the choice it holds (the group, not the choice, carries the name).
         # A bracketless named group ("=", P8b-10) is required: never merged into the brackets it holds.
-        if (only is not None and only["kind"] not in ("seg", "slot") and node["kind"] != "="
+        if (only is not None and only["kind"] not in ("seg", "slot", "keyed") and node["kind"] != "="
                 and not (names and (only["name"] or only["kind"] == "<"))):
             node = only
             continue
@@ -865,6 +895,132 @@ def name_groups(elements, version, structure, overrides, used=None, path=(), bun
         name_groups(element["elements"], version, structure, overrides, used, tuple(path) + (element["group"],),
                     bundles, log, taken)
     return elements
+
+
+def _holds_keyed(elements):
+    """Whether a keyedChoices placeholder (S4-1) is among elements, at any depth."""
+    return any("_keyed" in e or _holds_keyed(e.get("elements", []) + e.get("alternatives", [])) for e in elements)
+
+
+def _slots(elements):
+    """(parent list, element) for every element holding "_keyed", at any depth."""
+    for e in elements:
+        if "_keyed" in e:
+            yield elements, e
+        yield from _slots(e.get("elements", []) + e.get("alternatives", []))
+
+
+def _find_group(elements, name):
+    for e in elements:
+        if e.get("group") == name:
+            return e
+        found = _find_group(e.get("elements", []) + e.get("alternatives", []), name)
+        if found:
+            return found
+    return None
+
+
+def _replace_keyed(elements, choice):
+    """Put choice in place of the keyedChoices placeholder; True when one was replaced."""
+    for i, e in enumerate(elements):
+        if "_keyed" in e:
+            elements[i] = choice
+            return True
+        if "elements" in e and _replace_keyed(e["elements"], choice):
+            return True
+    return False
+
+
+def resolve_keyed_choices(ver, structures, keyed):
+    """S4-1: each keyedChoices entry with alternatives puts a keyed choice in place of its
+    placeholder: alternative k is the named group of the structure the print names for value k,
+    from the segment after `after` on (MFN_M03: "Other segment(s) represents segments that follow
+    the OM1 segment", the groups of MFN^M08 to MFN^M12). The group keeps its name and nameSource;
+    an unprinted name is cited as the referenced structure cites it. Returns report rows."""
+    report = []
+    for sid, entry in sorted(keyed.items()):
+        if sid not in structures:
+            continue
+        structure = structures[sid]
+        if "slot" in entry:
+            # No enumerable map (ERP: the message ERQ-2 names): the open slot stays.
+            for _, e in _slots(structure["elements"]):
+                e.pop("_keyed", None)
+            key = entry["key"]
+            structure["citation"] += (f" The placeholder {entry['printed']!r} is an open slot (overrides.json "
+                                      f"keyedChoices, ADR-019 S4-1): the print fills it with the message "
+                                      f"{key['segment']}-{key['field']} names and enumerates no map.")
+            report.append((sid, "keyed-slot", f"{key['segment']}-{key['field']}: open slot"))
+            continue
+        alternatives, values, cites = [], {}, []
+        try:
+            for alt in entry["alternatives"]:
+                ref = structures.get(alt["structure"])
+                if ref is None:
+                    raise UnknownNotation(f"{alt['structure']} is not read from the print")
+                group = _find_group(ref["elements"], alt["group"])
+                if group is None:
+                    raise UnknownNotation(f"{alt['structure']} has no group {alt['group']}")
+                ids = [e.get("segment") for e in group["elements"]]
+                if alt["after"] not in ids or ids.index(alt["after"]) == len(ids) - 1:
+                    raise UnknownNotation(f"{alt['structure']} {alt['group']} has no segments after {alt['after']}")
+                tail = json.loads(json.dumps(group["elements"][ids.index(alt["after"]) + 1:]))
+                alternatives.append({"group": alt["group"], "nameSource": group["nameSource"], "min": 1, "max": 1,
+                                     "elements": tail})
+                values[alt["value"]] = alt["group"]
+                for _, inner in _v2xml.groups([alternatives[-1]]):
+                    if inner["nameSource"] != "printed":
+                        m = re.search(re.escape(inner["group"]) + r" \([^()]*\)", ref["citation"])
+                        if not m:
+                            raise UnknownNotation(f"{alt['structure']} does not cite the name {inner['group']}")
+                        cites.append(m.group(0))
+        except UnknownNotation as exc:
+            report.append((sid, "error", f"keyedChoices: {exc}"))
+            continue
+        key = entry["key"]
+        choice = {"choice": None, "min": 1, "max": 1,
+                  "key": {"segment": key["segment"], "field": key["field"], "component": key["component"],
+                          "values": values, "citation": entry["citation"]},
+                  "alternatives": alternatives}
+        if not _replace_keyed(structure["elements"], choice):
+            report.append((sid, "error", "keyedChoices: the placeholder is not in the structure"))
+            continue
+        field_name = f"{key['segment']}-{key['field']}"
+        structure["citation"] += (f" The placeholder {entry['printed']!r} is a choice keyed by {field_name} "
+                                  f"(overrides.json keyedChoices, ADR-019 S4-1): {_join(sorted(values))} select "
+                                  f"{_join([a['group'] for a in alternatives])}.")
+        if cites:
+            structure["citation"] += f" Unprinted group names of the alternatives: {', '.join(dict.fromkeys(cites))}."
+        validate_names(structure)
+        report.append((sid, "keyed-choice", f"{field_name}: {', '.join(f'{v}={g}' for v, g in sorted(values.items()))}"))
+    return report
+
+
+def add_aliases(ver, structures, overrides, full):
+    """S4-2: each aliases entry of the version adds a structure whose print gives an ID and a
+    trigger of its own and refers its syntax to another printed structure: its elements are the
+    target's, copied; its triggers and citation are its own. Returns report rows; a target not
+    read is an error on a full read only (a partial read may not reach it)."""
+    report = []
+    for e in overrides["aliases"]:
+        if e["version"] != ver:
+            continue
+        sid, target = e["structure"], e["aliasOf"]
+        if sid in structures:
+            report.append((sid, "error", "aliases entry names a structure the print gives a syntax"))
+        elif target not in structures and not full:
+            continue
+        elif target not in structures or "aliasOf" in structures[target]:
+            report.append((sid, "error", f"aliases entry: {target} is not a structure read from the v{ver} print"))
+        else:
+            original = structures[target]
+            structures[sid] = validate_names({
+                "structure": sid, "version": ver, "triggers": list(e["triggers"]), "aliasOf": target,
+                "elements": json.loads(json.dumps(original["elements"])),
+                "citation": (f"{e['citation']} The syntax is that of {target} (overrides.json aliases, ADR-019 S4-2), "
+                             f"as cited there: {original['citation']}")})
+            report.append((sid, "alias", f"of {target}"))
+    return report
 
 
 def table_citation(ver, sid, triggers, where, withdrawn):
@@ -1026,8 +1182,14 @@ def render_element(element, indent):
                 f'"max": {json.dumps(element["max"])} }}')
     if "alternatives" in element:     # P8b-6: {"choice": NAME or null, "nameSource" (named), ...}
         source = f'"nameSource": "{element["nameSource"]}", ' if element["choice"] else ""
+        key = ""
+        if "key" in element:     # S4-1: a keyed choice
+            k = element["key"]
+            values = ", ".join(f"{json.dumps(v)}: {json.dumps(k['values'][v])}" for v in sorted(k["values"]))
+            key = (f'"key": {{ "segment": "{k["segment"]}", "field": {k["field"]}, "component": {k["component"]}, '
+                   f'"values": {{ {values} }}, "citation": {json.dumps(k["citation"], ensure_ascii=False)} }}, ')
         head = (f'{indent}{{ "choice": {json.dumps(element["choice"])}, {source}"min": {element["min"]}, '
-                f'"max": {json.dumps(element["max"])}, "alternatives": [')
+                f'"max": {json.dumps(element["max"])}, {key}"alternatives": [')
         body = ",\n".join(render_element(e, indent + "  ") for e in element["alternatives"])
         return f"{head}\n{body}\n{indent}]}}"
     head = (f'{indent}{{ "group": "{element["group"]}", "nameSource": "{element["nameSource"]}", '
@@ -1045,7 +1207,8 @@ def render(structure):
             f'  "version": "{structure["version"]}",\n'
             f'  "citation": {json.dumps(structure["citation"], ensure_ascii=False)},\n'
             f'  "triggers": [{triggers}],\n'
-            f'  "elements": [\n{body}\n  ]\n'
+            + (f'  "aliasOf": "{structure["aliasOf"]}",\n' if "aliasOf" in structure else "")
+            + f'  "elements": [\n{body}\n  ]\n'
             "}\n")
 
 
@@ -1098,6 +1261,16 @@ _OVERRIDE_KEYS = {
     # structure may name it beside the version's segments; it is matched by ID and not field-checked.
     # printed is the Appendix A status as printed; definedThrough the last version that defines it.
     "withdrawnSegments": {"version", "segment", "printed", "definedThrough", "citation"},
+    # S4-1: a placeholder (printed, under the caption as printed) that stands for a body a field
+    # value of the message chooses. With "alternatives" the print maps each value to a printed
+    # group ({"value", "structure", "group", "after", "page"}: the group's segments after `after`),
+    # read as a keyed choice; with "slot" ({"name", "min", "max"}) it enumerates no map and the
+    # placeholder is an open slot. key is {"segment", "field", "component"}.
+    "keyedChoices": {"version", "structure", "caption", "printed", "key", "citation"},
+    # S4-2: a structure ID the print gives a trigger of its own (a caption or a Table 0354 row)
+    # whose syntax it refers to another printed structure of the version: the alias keeps its ID,
+    # triggers and citation and takes aliasOf's elements.
+    "aliases": {"version", "structure", "aliasOf", "triggers", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
@@ -1142,7 +1315,17 @@ def validate_overrides(data):
             if kind == "captionStructures" and not re.fullmatch(_SID, entry.get("structure", "")):
                 raise OverridesError(f"captionStructures entry for {entry.get('caption')}: bad structure ID "
                                      f"{entry.get('structure')!r}")
-            optional = {"exclusions": {"caption"}, "errata": {"occurrence"}, "eventsFromTitle": {"occurrence"}}.get(kind, set())
+            if kind == "keyedChoices":
+                validate_keyed_entry(entry)
+            if kind == "aliases" and not (re.fullmatch(_SID, entry.get("structure", "")) and re.fullmatch(
+                    _SID, entry.get("aliasOf", "")) and entry["structure"] != entry["aliasOf"]
+                    and isinstance(entry.get("triggers"), list) and entry["triggers"]
+                    and all(isinstance(t, str) and TRIGGER.match(t) and t.split("^")[0] == entry["structure"].split("_")[0]
+                            for t in entry["triggers"])):
+                raise OverridesError(f"aliases entry for {entry.get('structure')}: needs two distinct structure IDs and "
+                                     "a non-empty list of CODE^EVT triggers with the alias's message code")
+            optional = {"exclusions": {"caption"}, "errata": {"occurrence"}, "eventsFromTitle": {"occurrence"},
+                        "keyedChoices": {"alternatives", "slot"}}.get(kind, set())
             if not keys <= set(entry) <= keys | optional:
                 raise OverridesError(f"{kind} entry keys {sorted(entry)}, expected {sorted(keys)}")
             text = entry.get("citation", entry.get("note", ""))
@@ -1152,6 +1335,33 @@ def validate_overrides(data):
             if kind == "groupNames" and not re.fullmatch(r"[A-Z][A-Z0-9_]*", entry["name"]):
                 raise OverridesError(f"bad group name {entry['name']!r}")
     return data
+
+
+def validate_keyed_entry(entry):
+    """A keyedChoices entry (S4-1): exactly one of alternatives and slot, a well-formed key, and
+    alternatives with distinct values and groups."""
+    sid = entry.get("structure")
+    if ("alternatives" in entry) == ("slot" in entry):
+        raise OverridesError(f"keyedChoices entry for {sid}: exactly one of 'alternatives' and 'slot'")
+    key = entry.get("key")
+    if not (isinstance(key, dict) and set(key) == {"segment", "field", "component"}
+            and re.fullmatch(r"[A-Z][A-Z0-9]{2}", str(key["segment"]))
+            and all(isinstance(key[k], int) and key[k] >= 1 for k in ("field", "component"))):
+        raise OverridesError(f"keyedChoices entry for {sid}: key is {{segment, field, component}}")
+    if "slot" in entry:
+        slot = entry["slot"]
+        if not (isinstance(slot, dict) and set(slot) == {"name", "min", "max"}
+                and isinstance(slot["min"], int) and slot["min"] >= 0 and slot["max"] is None):
+            raise OverridesError(f"keyedChoices entry for {sid}: slot is {{name, min, max: null}}")
+        return
+    alts = entry["alternatives"]
+    if not (isinstance(alts, list) and len(alts) >= 2 and all(
+            isinstance(a, dict) and set(a) == {"value", "structure", "group", "after", "page"} for a in alts)):
+        raise OverridesError(f"keyedChoices entry for {sid}: two or more alternatives, each "
+                             "{value, structure, group, after, page}")
+    for k in ("value", "group"):
+        if len({a[k] for a in alts}) != len(alts):
+            raise OverridesError(f"keyedChoices entry for {sid}: alternatives repeat a {k}")
 
 
 def load_overrides(path=OVERRIDES):
@@ -1399,6 +1609,9 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     general = {sid for sid, f in folds.items() if f["trigger"] == f"{sid}^*"}
     shared = {e["trigger"]: sorted(e["structures"]) for e in overrides["sharedTriggers"] if e["version"] == ver}
     unresolved = {(u["section"], u["caption"]): u for u in overrides["unresolvedCaptions"] if u["version"] == ver}
+    keyed = {e["structure"]: e for e in overrides["keyedChoices"] if e["version"] == ver}     # S4-1
+    keyed_captions = {e["caption"] for e in keyed.values()}
+    used_keyed = set()
     assigned = {(u["section"], u["caption"]): u for u in overrides["captionStructures"] if u["version"] == ver}
     # Table 0354 row: its message code, the code the row prints before "_" (the ACK row: ACK itself).
     rows_of_table = {row: row.split("_")[0] for row, _, _ in table}
@@ -1423,7 +1636,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             fix = next((e for e in caption_errata.get(printed_as, [])
                         if e.get("occurrence") in (None, seen_captions[printed_as])), None)
             try:
-                rows, error = syntax_rows(lines, cap), None
+                rows, error = syntax_rows(lines, cap, claimed=cap.printed in keyed_captions), None
             except UnknownNotation as exc:
                 rows, error = None, exc
             consumed.update(cap.repeats)
@@ -1547,7 +1760,10 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         used_errata.update(id(closes[sid][r.desc]) for r in rows if r.desc in closes.get(sid, {}))
         rows = _cells_fixed(rows, cells[sid], used_errata) if sid in cells else rows
         seen = set()
-        tree = parse(rows, {k: v["intended"] for k, v in marks.get(sid, {}).items()}, seen)
+        tree = parse(rows, {k: v["intended"] for k, v in marks.get(sid, {}).items()}, seen, keyed.get(sid))
+        if sid in keyed and not _holds_keyed(tree):
+            raise UnknownNotation(f"keyedChoices placeholder {keyed[sid]['printed']!r} not found in the print")
+        used_keyed.update([sid] if sid in keyed else [])
         # P8b-3b: an empty print, or rows that run on into the next table (a second top-level
         # MSH, e.g. the acknowledgment printed after it), is a reader gap, never a structure.
         if not tree:
@@ -1664,6 +1880,8 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         if (ver, sid) in bundles.defects:
             report.append((sid, "bundle-differs", f"{_v2xml.folder(ver)}/{sid}.xsd is unreadable: {bundles.defects[(ver, sid)]}"))
         report.append((sid, "parsed", f"{len(entries)} caption(s)"))
+    report += resolve_keyed_choices(ver, structures, keyed)
+    report += add_aliases(ver, structures, overrides, full)
     referenced_by = {}
     for e in overrides.get("referencedTriggers", []):
         if e["version"] == ver:
@@ -1700,6 +1918,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         report += [(sid, "error", "triggerFolds entry matches no caption") for sid in sorted(folds) if sid not in prints]
         report += [(sid, "error", "primaryPrints entry matches no caption") for sid in sorted(primaries) if sid not in prints]
         report += [(sid, "error", "unionPrints entry matches no caption") for sid in sorted(unions) if sid not in prints]
+        report += [(sid, "error", "keyedChoices entry matches no read print") for sid in sorted(keyed) if sid not in used_keyed]
         report += [(key[1], "error", f"unresolvedCaptions entry for section {key[0]} matches no unresolved caption")
                    for key in sorted(set(unresolved) - used_unresolved)]
         report += [(key[1], "error", f"captionStructures entry for section {key[0]} matches no unresolved caption")

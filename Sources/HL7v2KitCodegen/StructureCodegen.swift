@@ -29,8 +29,10 @@ func rejectUnknownKeys(_ decoder: any Decoder, allowed: Set<String>, in what: St
 /// "alternatives": [...]}`; the `choice` key is present even when the print gives no name. An
 /// open slot (S3-1) is `{"slot": "<printed name>" or null, "min", "max", "citation"}`; the
 /// `slot` key is present even when the print gives no name, and `citation` (required, and
-/// allowed on a slot only) says where the slot is printed and what makes it open.
-struct StructureElementSchema: Decodable {
+/// allowed on a slot only) says where the slot is printed and what makes it open. A keyed
+/// choice (S4-1) is a choice with a `key`: `{"segment", "field", "component", "values":
+/// {value: alternative group name}, "citation"}`.
+struct StructureElementSchema: Decodable, Equatable {
     let segment: String?
     let group: String?
     /// True when the `choice` key is present (its value may be null).
@@ -49,9 +51,11 @@ struct StructureElementSchema: Decodable {
     let max: Int?
     let elements: [StructureElementSchema]?
     let alternatives: [StructureElementSchema]?
+    /// A keyed choice's key (S4-1); nil on every other element.
+    let key: StructureChoiceKeySchema?
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case segment, group, choice, slot, nameSource, min, max, elements, alternatives, citation
+        case segment, group, choice, slot, nameSource, min, max, elements, alternatives, citation, key
     }
 
     init(from decoder: any Decoder) throws {
@@ -71,6 +75,31 @@ struct StructureElementSchema: Decodable {
         max = try c.decodeNil(forKey: .max) ? nil : c.decode(Int.self, forKey: .max)
         elements = try c.decodeIfPresent([StructureElementSchema].self, forKey: .elements)
         alternatives = try c.decodeIfPresent([StructureElementSchema].self, forKey: .alternatives)
+        key = try c.decodeIfPresent(StructureChoiceKeySchema.self, forKey: .key)
+    }
+}
+
+/// A keyed choice's key (S4-1): the field whose value selects the alternative, and the printed
+/// map from each value to an alternative's group name, with where the print gives it.
+struct StructureChoiceKeySchema: Decodable, Equatable {
+    let segment: String
+    let field: Int
+    let component: Int
+    let values: [String: String]
+    let citation: String
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case segment, field, component, values, citation
+    }
+
+    init(from decoder: any Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "key")
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        segment = try c.decode(String.self, forKey: .segment)
+        field = try c.decode(Int.self, forKey: .field)
+        component = try c.decode(Int.self, forKey: .component)
+        values = try c.decode([String: String].self, forKey: .values)
+        citation = try c.decode(String.self, forKey: .citation)
     }
 }
 
@@ -87,9 +116,12 @@ struct MessageStructureSchema: Decodable {
     let profile: String?
     let baseVersion: String?
     let rule: String?
+    /// The structure of the same version whose syntax this one takes (S4-2); its elements
+    /// must equal the target's.
+    let aliasOf: String?
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case structure, version, citation, triggers, elements, profile, baseVersion, rule
+        case structure, version, citation, triggers, elements, profile, baseVersion, rule, aliasOf
     }
 
     private static let profileKeys: Set<CodingKeys> = [.profile, .baseVersion, .rule]
@@ -107,6 +139,7 @@ struct MessageStructureSchema: Decodable {
         profile = try c.decodeIfPresent(String.self, forKey: .profile)
         baseVersion = try c.decodeIfPresent(String.self, forKey: .baseVersion)
         rule = try c.decodeIfPresent(String.self, forKey: .rule)
+        aliasOf = try c.decodeIfPresent(String.self, forKey: .aliasOf)
     }
 }
 
@@ -170,6 +203,9 @@ func validateStructureElement(_ element: StructureElementSchema, version: String
     guard element.isSlot || element.citation == nil else {
         throw StructureSchemaError(description: "only a slot has a \"citation\"")
     }
+    guard element.isChoice || element.key == nil else {
+        throw StructureSchemaError(description: "only a choice has a \"key\"")
+    }
     if let name = element.group {
         try validateName(name, kind: "group", source: element.nameSource, version: version, citation: citation)
         guard let children = element.elements, !children.isEmpty, element.alternatives == nil else {
@@ -201,6 +237,9 @@ func validateStructureElement(_ element: StructureElementSchema, version: String
         for alternative in alternatives {
             try validateStructureElement(alternative, version: version, citation: citation, inChoice: true)
         }
+        if let key = element.key {
+            try validateChoiceKey(key, alternatives: alternatives, what: what)
+        }
     } else if let id = element.segment {
         guard matches(id, "^[A-Z][A-Z0-9]{2}$") else {
             throw StructureSchemaError(description: "bad segment ID \"\(id)\"")
@@ -208,6 +247,34 @@ func validateStructureElement(_ element: StructureElementSchema, version: String
         guard element.elements == nil, element.alternatives == nil, element.nameSource == nil else {
             throw StructureSchemaError(description: "segment \(id) cannot have elements, alternatives or a nameSource")
         }
+    }
+}
+
+/// A keyed choice (S4-1): every alternative a named group occurring once, the names distinct;
+/// the key a segment ID, field and component; every value maps to an alternative and every
+/// alternative is selected by some value; a non-empty citation.
+func validateChoiceKey(_ key: StructureChoiceKeySchema, alternatives: [StructureElementSchema], what: String) throws {
+    let names = alternatives.compactMap(\.group)
+    guard names.count == alternatives.count, Set(names).count == names.count,
+          alternatives.allSatisfy({ $0.min == 1 && $0.max == 1 }) else {
+        throw StructureSchemaError(description: "keyed \(what): every alternative must be a group occurring once, with a distinct name")
+    }
+    guard matches(key.segment, "^[A-Z][A-Z0-9]{2}$"), key.field >= 1, key.component >= 1 else {
+        throw StructureSchemaError(description: "keyed \(what): bad key \(key.segment)-\(key.field).\(key.component)")
+    }
+    guard !key.values.isEmpty, key.values.keys.allSatisfy({ !$0.isEmpty }) else {
+        throw StructureSchemaError(description: "keyed \(what): the key needs non-empty values")
+    }
+    let unknown = Set(key.values.values).subtracting(names)
+    guard unknown.isEmpty else {
+        throw StructureSchemaError(description: "keyed \(what): values map to no alternative: \(unknown.sorted())")
+    }
+    let unselected = Set(names).subtracting(key.values.values)
+    guard unselected.isEmpty else {
+        throw StructureSchemaError(description: "keyed \(what): no value selects \(unselected.sorted())")
+    }
+    guard !key.citation.trimmingCharacters(in: .whitespaces).isEmpty else {
+        throw StructureSchemaError(description: "keyed \(what): the key needs a non-empty \"citation\"")
     }
 }
 
@@ -249,6 +316,35 @@ func validateStructure(_ s: MessageStructureSchema, file: URL, version: String) 
         throw StructureSchemaError(description: "a structure must start with MSH")
     }
     try validateStructureSequence(s.elements, version: s.version, citation: s.citation)
+    let keySegments = keyedChoiceKeys(s.elements).map(\.segment)
+    let named = s.elements.reduce(into: Set<String>()) { $0.formUnion(schemaSegmentIDs([$1])) }
+    if let missing = keySegments.first(where: { !named.contains($0) }) {
+        throw StructureSchemaError(description: "a keyed choice's key segment \(missing) is not in the structure")
+    }
+}
+
+/// The aliases of one version (S4-2): each names another structure of the same version that is
+/// not itself an alias, and carries exactly its elements (the extractor copies them; a target
+/// re-extracted without its alias fails here, never ships stale).
+func validateAliases(_ structures: [MessageStructureSchema]) throws {
+    let byID = Dictionary(uniqueKeysWithValues: structures.map { ($0.structure, $0) })
+    for s in structures {
+        guard let target = s.aliasOf else { continue }
+        guard target != s.structure, let original = byID[target] else {
+            throw StructureSchemaError(description: "\(s.structure): aliasOf \(target) is not another structure of v\(s.version)")
+        }
+        guard original.aliasOf == nil else {
+            throw StructureSchemaError(description: "\(s.structure): aliasOf \(target), which is itself an alias")
+        }
+        guard original.elements == s.elements else {
+            throw StructureSchemaError(description: "\(s.structure): its elements differ from those of \(target), which it aliases")
+        }
+    }
+}
+
+/// Every keyed choice's key in `elements`, at any depth.
+func keyedChoiceKeys(_ elements: [StructureElementSchema]) -> [StructureChoiceKeySchema] {
+    elements.flatMap { e in (e.key.map { [$0] } ?? []) + keyedChoiceKeys((e.elements ?? []) + (e.alternatives ?? [])) }
 }
 
 func renderStructureElement(_ element: StructureElementSchema, indent: String) -> String {
@@ -259,6 +355,18 @@ func renderStructureElement(_ element: StructureElementSchema, indent: String) -
     if element.isSlot {
         let name = element.slot.map(escapeStringLiteral) ?? "nil"
         return "\(indent).slot(\(name), min: \(element.min), max: \(max), citation: \(escapeStringLiteral(element.citation ?? ""))),"
+    }
+    if element.isChoice, let key = element.key {
+        let name = element.choice.map(escapeStringLiteral) ?? "nil"
+        let values = key.values.keys.sorted()
+            .map { "\(escapeStringLiteral($0)): \(escapeStringLiteral(key.values[$0] ?? ""))" }.joined(separator: ", ")
+        var lines = ["\(indent).keyedChoice(\(name), min: \(element.min), max: \(max), key: StructureChoiceKey(",
+                     "\(indent)    segmentID: \(escapeStringLiteral(key.segment)), field: \(key.field), component: \(key.component),",
+                     "\(indent)    alternatives: [\(values)],",
+                     "\(indent)    citation: \(escapeStringLiteral(key.citation))), alternatives: ["]
+        lines += (element.alternatives ?? []).map { renderStructureElement($0, indent: indent + "    ") }
+        lines.append("\(indent)]),")
+        return lines.joined(separator: "\n")
     }
     if element.isChoice {
         let name = element.choice.map(escapeStringLiteral) ?? "nil"
@@ -296,6 +404,10 @@ func renderStructureTable(versionSwiftName: String, sourceDir: String, structure
         lines += [
             // P8b-12: the determinism lint, run here so the Validator never lints a message.
             "        requiresExactMatch: \(!structureIsDeterministic(s.elements)),",
+        ]
+        // S4-2: an alias names its target; its elements are the target's (checked equal).
+        if let target = s.aliasOf { lines.append("        aliasOf: \(escapeStringLiteral(target)),") }
+        lines += [
             "        elements: [",
         ]
         lines += s.elements.map { renderStructureElement($0, indent: "            ") }
@@ -394,6 +506,12 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
                 FileHandle.standardError.write(Data("HL7v2KitCodegen: \(fileURL.path): \(error)\n".utf8))
                 throw ExitCode.failure
             }
+        }
+        do {
+            try validateAliases(structures)
+        } catch {
+            FileHandle.standardError.write(Data("HL7v2KitCodegen: \(dirURL.path): \(error)\n".utf8))
+            throw ExitCode.failure
         }
         let swiftName = versionDirName(version)
         let outFile = outputRoot.appendingPathComponent("MessageStructureTable+\(swiftName).swift")
