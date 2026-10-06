@@ -1911,3 +1911,81 @@ segments the structure requires before the slot.
 The spec examples of these triggers print MSH-12 empty or the message code alone, so the digest
 does not change; with MSH-12 set to the chapter's version the 18 that resolve to a slot structure
 are body-checked clean.
+
+## Amendment 2026-10-06 — S4 field-keyed choice and structure alias
+
+Two model extensions close the section E rows that blocked on them. Before: v2.3 ERP, ERP_R09 on
+v2.3.1, v2.4 and v2.5.1, MFN_M03 on v2.4, v2.5.1 and v2.6, and QRY_P04 on v2.4 and v2.5.1 were
+registered as not modelled. After: all nine are modelled; 1,180 structures are modelled and 193
+registered (1,171 and 202 before). MFN_M03 stays registered on v2.3 and v2.3.1, where the groups
+that replace its `[other segments(s)]` row are given in prose, keyed by MSH-9.2, not printed as
+structures the key could name.
+
+**What the print gives.** v2.5.1 CH08 8.8.2 (pp 8-22 to 8-23) prints `... [other segment(s)]`
+after OM1 and says "Other segment(s) represents segments that follow the OM1 segment", the groups
+"described below in the following messages: MFN^M08, MFN^M09, MFN^M10, MFN^M11, and MFN^M12";
+8.8.3 to 8.8.7 each note the key ("MFI-1 - Master File Identifier = OMA for numeric
+observations", p 8-24; OMB to OME, pp 8-25 to 8-27). v2.6 prints the same (8.8.2, p 8-20; notes
+pp 8-21 to 8-24). v2.4 (8.8.2, pp 8-21 to 8-22) prints `??? [other segments(s)]` and "where
+other segments can be any of the following combinations", each introduced by its key ("MFI-1 -
+Master file identifier = OMA, for numeric observations") and printed as the M08 to M12 segments
+after OM1. The ERP prints (v2.3 2.20.3 p 2-77; v2.3.1 2.20.3 p 2-86; v2.4 and v2.5.1 CH05
+5.10.4.2, pp 5-116 and 5-120) fill the rows after ERQ with "the corresponding segment-oriented
+record-oriented unsolicited update message, excluding the MSH", which ERQ-2 names ("Its contents
+dictate the format of the response message"); they give no map from ERQ-2 values to bodies, only
+that rule. v2.4 CH06 6.4.4 (p 6-13) captions `QRY^P04^QRY_P04` with "see" Chapter 5, where the
+QRY prints of 5.10.2.1 (QRY^Q01) and 5.10.3.1 (QRY^Q02) give one syntax; v2.5.1 lists QRY_P04 in
+Table 0354 (p 2-104) and refers 6.4.4 (p 6-8) to the same prints.
+
+**Keyed choice (S4-1).** `StructureElement.keyedChoice(_:min:max:key:alternatives:)`, with a
+`StructureChoiceKey` (segment, field, component, the printed value-to-alternative map, citation),
+is a new case of the open enum, so the meaning of `.choice` is unchanged. Every alternative is a
+named group occurring once. Before matching, the Validator reads the key from the first
+occurrence of the key segment (field, first repetition, component) and matches the structure
+with the choice replaced by the selected alternative, as a group with the choice's bounds: the
+one-pass or exact matcher is chosen by that resolution's own lint, and the group spans follow the
+selected alternative. A value the map does not hold draws `messageStructureNotModelled` at
+information naming the key and the value, with no body match (the print's map is the only list
+it gives; the v2.5.1 MFN^M03 examples carry the local identifier `LABxxx^Lab Test Dictionary^L`
+and stay information). With no key segment, or an empty key, the choice admits any alternative
+and the structure's own rules report the missing segment. The lint does not apply the choice rule
+to a keyed choice (the key, not the current segment, selects the alternative); the codegen's
+determinism port does the same; `StructureGuardTests` guards every resolution of a keyed
+structure (each key value and no value) against the reference recogniser. MFN_M03's alternatives
+are MF_TEST_NUMERIC, MF_TEST_CATEGORICAL, MF_TEST_BATTERIES, MF_TEST_CALCULATED and
+MF_OBS_ATTRIBUTES holding the segments after OM1 of the MFN^M08 to MFN^M12 groups, named as those
+groups (an unprinted name cited as the referenced structure cites it).
+
+**ERP is a slot, not a keyed choice.** The print enumerates no ERQ-2 map, so the ellipsis rows
+are the S3-1 open slot after ERQ, `MSH MSA [ERR] QAK ERQ [slot] [DSC]` (v2.5.1 also `[{SFT}]`),
+cited to the ERQ-2 rule. The slot is optional: a query that finds no qualifying data "does not
+return any data segments (DSP, RDT, or event replay segments)" (v2.3 2.22, p 2-79; v2.4 and
+v2.5.1 5.6.5). The prefix is checked; the body is the slot's (any segment but MSH).
+
+**Alias (S4-2).** `MessageStructure.aliasOf` names the structure whose syntax a structure takes
+when its print gives it an ID and a trigger of its own and refers its syntax to another printed
+structure of the same version. QRY_P04 is the alias of QRY_Q01 (the first of the two identical
+CH05 prints, and the structure v2.3 and v2.3.1 match QRY^P04 against): it keeps its ID, triggers
+and citation, so `QRY^P04^QRY_P04` is matched, never a mismatch and never folded. The extractor
+copies the target's elements; the codegen checks that the target is another structure of the
+version, not itself an alias, with equal elements, so matching needs no new path. DSR_P04 stays
+registered (the two CH05 DSR prints differ on MSA and the print does not say which mode P04
+uses).
+
+**Extraction.** `overrides.json` gains `keyedChoices` (version, structure, caption as printed,
+the placeholder as printed, the key, and either the alternatives, each value with the structure,
+group, the segment after which its segments are taken and the page, or a slot with its bounds;
+cited) and `aliases` (version, structure, aliasOf, triggers, cited). The extractor reads the
+claimed placeholder as one element (a run of ellipsis rows merged), puts the keyed choice in its
+place once every structure of the version is read, or keeps the slot, and adds each alias from its
+read target; `--write` wrote the nine files and the registration sync removed their entries.
+Prose is never parsed: the map is the override's, cited to the print.
+
+**Evidence.** `StructureKeyedChoiceTests` (MFN^M03 on v2.4, v2.5.1 and v2.6 under several keys,
+clean and with a wrong body; an unmapped value; no MFI; ERP on all four versions, clean, no data,
+and a prefix defect; spans; lint and resolution) and `StructureAliasTests` (declared and bare
+QRY^P04 on v2.4 and v2.5.1, a defect). Digests (BASE 50368d61 against HEAD, default, strict and
+off): 16 lines removed and 4 added on default and strict, none on off; the v2.6 MFN^M03 examples
+(MFI-1 OMA) and the v2.4 ERP^R09 example are body-checked clean, and the v2.5.1 CH05 event replay
+error response (5.10.6.2.12, p 5-143), which omits the ERQ the print requires, draws the missing
+ERQ as BASE draws the missing RDF of the TBR error example beside it.

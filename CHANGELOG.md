@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — S4-1 and S4-2: field-keyed choice and structure alias (epic P11 sprint 4)
+
+- **Model.** New public `StructureElement.keyedChoice(_:min:max:key:alternatives:)` and
+  `StructureChoiceKey` (additive; the enum is open per ADR-014): a choice whose alternative a
+  field value selects. The Validator reads the key from the first key segment and matches the
+  structure with the selected alternative (the group spans follow it); a value the print does not
+  map is `messageStructureNotModelled` at information naming the key and the value. New public
+  `MessageStructure.aliasOf`: a structure whose print gives an ID and a trigger of its own and
+  refers its syntax to another printed structure keeps its ID and takes the target's elements.
+- **Structures.** MFN_M03 on v2.4, v2.5.1 and v2.6 (its other segments keyed by MFI-1: OMA to OME
+  select the MFN^M08 to MFN^M12 groups' segments after OM1, CH08 8.8.2 to 8.8.7); ERP on v2.3 and
+  ERP_R09 on v2.3.1 to v2.5.1 (an optional open slot after ERQ: the print fills the rows with the
+  message ERQ-2 names and enumerates no map); QRY_P04 on v2.4 and v2.5.1 (alias of QRY_Q01, CH06
+  6.4.4). Nine registrations closed: 1,180 structures modelled, 193 registered. MFN_M03 stays
+  registered on v2.3 and v2.3.1 (prose groups keyed by MSH-9.2).
+- **Extractor and codegen.** `overrides.json` sections `keyedChoices` and `aliases`, cited; the
+  codegen validates a keyed choice (named groups occurring once, every value mapped, every
+  alternative selected, the key segment in the structure) and an alias (another structure of the
+  version, not an alias, equal elements); the lint does not apply the choice rule to a keyed
+  choice, and each resolution is routed by its own lint and guarded.
+- **Evidence.** Digests against the sprint's base: default and strict 16 lines removed, 4 added;
+  off unchanged. The v2.6 MFN^M03 examples and the v2.4 ERP^R09 example are body-checked clean;
+  the v2.5.1 event replay error response example (CH05 5.10.6.2.12), which omits the ERQ the
+  print requires, draws it as the TBR error example beside it already did.
+
 ### Summary — epic P11 sprint 3: the open-slot element (owner decision 4)
 
 - **Model.** New public `StructureElement.slot(_:min:max:citation:)` (additive; the enum is open per ADR-014) for the order detail the print gives as "Order Detail Segment OBR, etc.", `[OBR, etc` or `< OBR | etc. >`. The slot takes any segment but MSH and is nondeterministic: a message draws a finding only when no reading fits. Every required segment after the slot is enforced and a defect before it is found; nothing optional after it can be found misplaced, since the slot may absorb it. A structure holding a slot is always exact-matched; the one-pass matcher refuses one with a precondition.
