@@ -44,6 +44,12 @@
 /// enclosing group or named choice. `.exceededMaximum` is never reported,
 /// and there is no recovery after the first divergence.
 ///
+/// An open slot (S3-1, controller ruling) compiles like a segment whose state
+/// consumes any segment except MSH, its occurrences bounded by the slot's
+/// `min` and `max`. It is nondeterministic: a segment that could begin what
+/// follows the slot may also stay in it, and a sequence is rejected only when
+/// no parse accepts. A finding that names the slot uses its printed name.
+///
 /// Group spans (P8b-17, amending P8b-12): an exact match can be ambiguous,
 /// several parses accepting the same sequence. An accepted sequence has spans
 /// only when every accepting parse assigns every segment to the same group
@@ -73,7 +79,7 @@ struct ExactStructureMatcher: Sendable {
         var steps: [(index: Int, id: String)] = []
         for (index, id) in ids.enumerated() where !StructureMatcher.isTransparent(id) && !transparent.contains(id) {
             var next: [Int] = []
-            for state in live where a.labels[state] == id {
+            for state in live where a.consumes(state, id) {
                 next += a.edges[state]
             }
             guard !next.isEmpty else {
@@ -124,11 +130,19 @@ struct ExactAutomaton: Sendable {
     private(set) var accept = 0
     /// The fewest segments that lead from each state to `accept`.
     private(set) var distance: [Int] = []
+    /// Whether each state is a slot state (S3-1). A slot state's label is the
+    /// slot's printed name, for findings only; it consumes any segment but MSH.
+    private(set) var slots: [Bool] = []
 
     init(_ elements: [StructureElement]) {
         start = add(nil, group: nil)
         accept = elements.indices.reduce(start) { element(elements[$1], from: $0, group: nil, position: [$1], ancestry: []) }
         distance = distancesToAccept()
+    }
+
+    /// Whether `state` consumes a segment with ID `id`.
+    func consumes(_ state: Int, _ id: String) -> Bool {
+        slots[state] ? id != "MSH" : labels[state] == id
     }
 
     private mutating func add(_ label: String?, group: String?) -> Int {
@@ -137,6 +151,7 @@ struct ExactAutomaton: Sendable {
         entries.append(nil)
         ancestry.append([])
         edges.append([])
+        slots.append(false)
         return labels.count - 1
     }
 
@@ -199,7 +214,9 @@ struct ExactAutomaton: Sendable {
                 self.element(children[$1], from: $0, group: name, position: position + [$1], ancestry: ancestry + [id])
             }, exit)
             return exit
-        case .choice(let name, _, _, let alternatives):
+        case .choice(let name, _, _, let alternatives), .keyedChoice(let name, _, _, _, let alternatives):
+            // A keyed choice is resolved before matching (S4-1); one left
+            // unresolved is matched as its plain choice.
             let exit = add(nil, group: nil)
             var start = from, inner = ancestry
             if let name {
@@ -211,6 +228,18 @@ struct ExactAutomaton: Sendable {
                 link(self.element(alternatives[a], from: start, group: name ?? group,
                                   position: position + [a], ancestry: inner), exit)
             }
+            return exit
+        case .slot:
+            // One segment of the slot's run: any but MSH. Whether a segment
+            // stays in the slot or begins what follows is left open; the
+            // breadth-first state sets keep both parses alive. It opens no
+            // group, so its segments lie in the enclosing spans.
+            let consume = add(element.label, group: group)
+            self.ancestry[consume] = ancestry
+            slots[consume] = true
+            link(from, consume)
+            let exit = add(nil, group: nil)
+            link(consume, exit)
             return exit
         }
     }

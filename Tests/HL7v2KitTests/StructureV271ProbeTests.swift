@@ -143,15 +143,8 @@ struct StructureV271ProbeTests {
         #expect(issues.map { Self.describe($0.code) } == ["missing ARQ"], "\(issues.map(\.message))")
     }
 
-    // CH11 11.3.5 prints RQC_I05 with QRD and [QRF], which v2.7.1 withdrew and does not
-    // define: registered as not modelled, so a message declaring it is info with that reason.
-    @Test("A structure printing QRD and QRF is info on v2.7.1, naming the withdrawn segments")
-    func withdrawnQuerySegments() throws {
-        let issues = try structureIssues("RCI^I05^RCI_I05", ["MSA|AA|1", "QRD|1"])
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "RCI_I05")], "\(issues.map(\.message))")
-        #expect(issues.first?.severity == .info && issues.first?.message.contains("QRD and [QRF]") == true,
-                "\(issues.map(\.message))")
-    }
+    // The structures printing QRD and QRF (QRY_PC4, RCI_I05, RQC_I05, RCL_I06) and URD and
+    // URS (UDM_Q05) are modelled since S2-2: WithdrawnSegmentTests probes them.
 
     @Test("At least twelve probes, none a pilot structure nor one probed for v2.5.1, v2.6 or v2.8.2")
     func coverage() {

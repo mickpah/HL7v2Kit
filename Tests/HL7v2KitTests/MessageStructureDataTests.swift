@@ -46,12 +46,35 @@ struct MessageStructureDataTests {
             #expect(id.range(of: "^[A-Z][A-Z0-9]{2}$", options: .regularExpression) != nil, "\(path): segment \(id)")
             return .segment(id, min: min ?? 0, max: max)
         }
+        // S3-1/S3-3: the open order-detail slot, named or null, always cited, never ID-shaped.
+        if object.keys.contains("slot") {
+            let name = object["slot"] as? String
+            let citation = object["citation"] as? String ?? ""
+            #expect(Set(object.keys) == ["slot", "min", "max", "citation"], "\(path): keys \(object.keys.sorted())")
+            #expect(object["slot"] is NSNull || name.map { $0.range(of: "^[A-Z][A-Z0-9]{2}$", options: .regularExpression) == nil } == true,
+                    "\(path): slot name")
+            #expect(!citation.isEmpty, "\(path): slot citation")
+            return .slot(name, min: min ?? 0, max: max, citation: citation)
+        }
         // P8b-6: a choice, named (with a nameSource) or unnamed (null, no nameSource).
         if object.keys.contains("choice"), let alternatives = object["alternatives"] as? [[String: Any]] {
             let name = object["choice"] as? String
-            #expect(Set(object.keys) == Self.choiceKeys.union(name == nil ? [] : ["nameSource"]), "\(path): keys \(object.keys.sorted())")
+            let keyed = object["key"] as? [String: Any]
+            #expect(Set(object.keys) == Self.choiceKeys.union(name == nil ? [] : ["nameSource"]).union(keyed == nil ? [] : ["key"]),
+                    "\(path): keys \(object.keys.sorted())")
             #expect(alternatives.count >= 2, "\(path): alternatives")
             let options = alternatives.enumerated().compactMap { element($1, at: "\(path)/<\($0)>") }
+            // S4-1: a keyed choice, its key read from the message.
+            if let keyed {
+                #expect(Set(keyed.keys) == ["segment", "field", "component", "values", "citation"], "\(path): key keys")
+                let key = StructureChoiceKey(segmentID: keyed["segment"] as? String ?? "", field: keyed["field"] as? Int ?? 0,
+                                             component: keyed["component"] as? Int ?? 0,
+                                             alternatives: keyed["values"] as? [String: String] ?? [:],
+                                             citation: keyed["citation"] as? String ?? "")
+                #expect(!key.citation.isEmpty && Set(key.alternatives.values) == Set(options.compactMap(\.groupName)),
+                        "\(path): key")
+                return .keyedChoice(name, min: min ?? 0, max: max, key: key, alternatives: options)
+            }
             return .choice(name, min: min ?? 0, max: max, alternatives: options)
         }
         guard let name = object["group"] as? String, let children = object["elements"] as? [[String: Any]] else {
@@ -76,7 +99,25 @@ struct MessageStructureDataTests {
         for (versionName, url) in all {
             let id = url.deletingPathExtension().lastPathComponent
             let object = try #require(try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
-            #expect(Set(object.keys) == Self.topKeys, "\(id): keys \(object.keys.sorted())")
+            let aliasOf = object["aliasOf"] as? String
+            // S4-3: a query response of v2.4 to v2.8.2 carries its CH05 5.6.5 rule.
+            let rule = object["errorResponse"] as? [String: Any]
+            let errorResponse = rule.map {
+                StructureErrorResponse(acknowledgmentCodes: $0["acknowledgmentCodes"] as? [String] ?? [],
+                                       querySegments: $0["querySegments"] as? [String] ?? [],
+                                       noDataQueryStatus: $0["noDataQueryStatus"] as? [String] ?? [],
+                                       citation: $0["citation"] as? String ?? "")
+            }
+            // S5-1: a transcription of the print's prose says so, citing proseFragments.
+            let syntaxSource = object["syntaxSource"] as? String
+            if let syntaxSource {
+                #expect(syntaxSource == "prose" && (object["citation"] as? String ?? "").contains("overrides.json proseFragments"),
+                        "\(id): syntaxSource \(syntaxSource)")
+            }
+            #expect(Set(object.keys) == Self.topKeys.union(aliasOf == nil ? [] : ["aliasOf"])
+                        .union(rule == nil ? [] : ["errorResponse"])
+                        .union(syntaxSource == nil ? [] : ["syntaxSource"])
+                        .union(object["variants"] == nil ? [] : ["variants"]), "\(id): keys \(object.keys.sorted())")
             #expect(object["structure"] as? String == id)
             #expect(object["version"] as? String == versionName)
             let triggers = object["triggers"] as? [String] ?? []
@@ -88,10 +129,21 @@ struct MessageStructureDataTests {
             let raw = object["elements"] as? [[String: Any]] ?? []
             let elements = raw.enumerated().compactMap { element($1, at: "\(id)[\($0)]") }
             #expect(elements.first == .segment("MSH", min: 1, max: 1), "\(id): starts with MSH")
+            // S6-1: each per-trigger print carries its triggers, citation and elements.
+            let variants = (object["variants"] as? [[String: Any]] ?? []).enumerated().map { i, v in
+                StructureVariant(triggers: v["triggers"] as? [String] ?? [], citation: v["citation"] as? String ?? "",
+                                 elements: (v["elements"] as? [[String: Any]] ?? []).enumerated()
+                                    .compactMap { element($1, at: "\(id) variant \(i)[\($0)]") })
+            }
             let version = try #require(Version(rawValue: versionName))
             let generated = try #require(MessageStructureTable.structures(for: version)[id], "\(id) is not generated")
             #expect(generated == MessageStructure(id: id, version: versionName, triggers: triggers,
-                                                  citation: object["citation"] as? String ?? "", elements: elements))
+                                                  citation: object["citation"] as? String ?? "", aliasOf: aliasOf,
+                                                  errorResponse: errorResponse, variants: variants, elements: elements))
+            // S4-2: an alias carries its target's elements.
+            if let aliasOf {
+                #expect(MessageStructureTable.structures(for: version)[aliasOf]?.elements == elements, "\(id): alias of \(aliasOf)")
+            }
             #expect(!generated.citation.isEmpty)
             seen[version, default: []].insert(id)
         }

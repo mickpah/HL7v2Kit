@@ -30,11 +30,13 @@ enum StructureJSONDecoder {
 
     struct Element: Decodable {
         let segment: String?, group: String?, isChoice: Bool, choice: String?, nameSource: String?
+        let isSlot: Bool, slot: String?, citation: String?
         let min: Int, max: Int?
         let elements: [Element]?, alternatives: [Element]?
+        let key: Key?
 
         private enum CodingKeys: String, CodingKey, CaseIterable {
-            case segment, group, choice, nameSource, min, max, elements, alternatives
+            case segment, group, choice, slot, nameSource, min, max, elements, alternatives, citation, key
         }
 
         init(from decoder: any Decoder) throws {
@@ -44,25 +46,61 @@ enum StructureJSONDecoder {
             group = try c.decodeIfPresent(String.self, forKey: .group)
             isChoice = c.contains(.choice)
             choice = try isChoice && !c.decodeNil(forKey: .choice) ? c.decode(String.self, forKey: .choice) : nil
+            isSlot = c.contains(.slot)
+            slot = try isSlot && !c.decodeNil(forKey: .slot) ? c.decode(String.self, forKey: .slot) : nil
+            citation = try c.decodeIfPresent(String.self, forKey: .citation)
             nameSource = try c.decodeIfPresent(String.self, forKey: .nameSource)
             min = try c.decode(Int.self, forKey: .min)
             guard c.contains(.max) else { throw Rejected(description: "element: missing key \"max\"") }
             max = try c.decodeNil(forKey: .max) ? nil : c.decode(Int.self, forKey: .max)
             elements = try c.decodeIfPresent([Element].self, forKey: .elements)
             alternatives = try c.decodeIfPresent([Element].self, forKey: .alternatives)
+            key = try c.decodeIfPresent(Key.self, forKey: .key)
         }
 
         var model: StructureElement {
             if let id = segment { return .segment(id, min: min, max: max) }
             if let name = group { return .group(name, min: min, max: max, elements: (elements ?? []).map(\.model)) }
+            if isSlot { return .slot(slot, min: min, max: max, citation: citation ?? "") }
+            if let key {
+                return .keyedChoice(choice, min: min, max: max,
+                                    key: StructureChoiceKey(segmentID: key.segment, field: key.field, component: key.component,
+                                                            alternatives: key.values, citation: key.citation),
+                                    alternatives: (alternatives ?? []).map(\.model))
+            }
             return .choice(choice, min: min, max: max, alternatives: (alternatives ?? []).map(\.model))
         }
     }
 
+    /// A keyed choice's key (S4-1), as the codegen's StructureChoiceKeySchema.
+    struct Key: Decodable {
+        let segment: String, field: Int, component: Int, values: [String: String], citation: String
+
+        private enum CodingKeys: String, CodingKey, CaseIterable { case segment, field, component, values, citation }
+
+        init(from decoder: any Decoder) throws {
+            try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "key")
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            segment = try c.decode(String.self, forKey: .segment)
+            field = try c.decode(Int.self, forKey: .field)
+            component = try c.decode(Int.self, forKey: .component)
+            values = try c.decode([String: String].self, forKey: .values)
+            citation = try c.decode(String.self, forKey: .citation)
+        }
+    }
+
+    /// One structure file. `aliasOf` (S4-2) is checked against its target by the codegen's
+    /// directory walk (validateAliases), which this per-file decoder does not mirror.
     struct File: Decodable {
         let structure: String, version: String, citation: String, triggers: [String], elements: [Element]
+        let aliasOf: String?
+        let errorResponse: ErrorResponse?
+        let syntaxSource: String?
+        let variants: [Variant]?
 
-        private enum CodingKeys: String, CodingKey, CaseIterable { case structure, version, citation, triggers, elements }
+        private enum CodingKeys: String, CodingKey, CaseIterable {
+            case structure, version, citation, triggers, elements, aliasOf, errorResponse, syntaxSource, variants
+        }
 
         init(from decoder: any Decoder) throws {
             try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "structure")
@@ -72,6 +110,50 @@ enum StructureJSONDecoder {
             citation = try c.decode(String.self, forKey: .citation)
             triggers = try c.decode([String].self, forKey: .triggers)
             elements = try c.decode([Element].self, forKey: .elements)
+            aliasOf = try c.decodeIfPresent(String.self, forKey: .aliasOf)
+            errorResponse = try c.decodeIfPresent(ErrorResponse.self, forKey: .errorResponse)
+            syntaxSource = try c.decodeIfPresent(String.self, forKey: .syntaxSource)
+            variants = try c.decodeIfPresent([Variant].self, forKey: .variants)
+        }
+    }
+
+    /// A per-trigger print (S6-1).
+    struct Variant: Decodable {
+        let triggers: [String], citation: String, elements: [Element]
+
+        private enum CodingKeys: String, CodingKey, CaseIterable {
+            case triggers, citation, elements
+        }
+
+        init(from decoder: any Decoder) throws {
+            try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "variant")
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            triggers = try c.decode([String].self, forKey: .triggers)
+            citation = try c.decode(String.self, forKey: .citation)
+            elements = try c.decode([Element].self, forKey: .elements)
+        }
+    }
+
+    /// A query response's CH05 5.6.5 rule (S4-3).
+    struct ErrorResponse: Decodable {
+        let acknowledgmentCodes: [String], querySegments: [String], noDataQueryStatus: [String], citation: String
+
+        private enum CodingKeys: String, CodingKey, CaseIterable {
+            case acknowledgmentCodes, querySegments, noDataQueryStatus, citation
+        }
+
+        init(from decoder: any Decoder) throws {
+            try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "errorResponse")
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            acknowledgmentCodes = try c.decode([String].self, forKey: .acknowledgmentCodes)
+            querySegments = try c.decode([String].self, forKey: .querySegments)
+            noDataQueryStatus = try c.decode([String].self, forKey: .noDataQueryStatus)
+            citation = try c.decode(String.self, forKey: .citation)
+        }
+
+        var model: StructureErrorResponse {
+            StructureErrorResponse(acknowledgmentCodes: acknowledgmentCodes, querySegments: querySegments,
+                                   noDataQueryStatus: noDataQueryStatus, citation: citation)
         }
     }
 
@@ -93,24 +175,81 @@ enum StructureJSONDecoder {
             throw Rejected(description: "triggers must be non-empty CODE^EVT or CODE^*; bad: \(badTriggers)")
         }
         guard s.elements.first?.segment == "MSH" else { throw Rejected(description: "a structure must start with MSH") }
-        for element in s.elements { try check(element, version: s.version, citation: s.citation) }
+        try checkSequence(s.elements, version: s.version, citation: s.citation)
+        func keys(_ list: [Element]) -> [Key] {
+            list.flatMap { e in (e.key.map { [$0] } ?? []) + keys((e.elements ?? []) + (e.alternatives ?? [])) }
+        }
+        func ids(_ list: [Element]) -> Set<String> {
+            list.reduce(into: Set<String>()) { $0.formUnion($1.segment.map { [$0] } ?? ids(($1.elements ?? []) + ($1.alternatives ?? []))) }
+        }
+        if let missing = keys(s.elements).map(\.segment).first(where: { !ids(s.elements).contains($0) }) {
+            throw Rejected(description: "a keyed choice's key segment \(missing) is not in the structure")
+        }
+        if let source = s.syntaxSource {
+            guard source == "prose" else { throw Rejected(description: "syntaxSource must be \"prose\"") }
+            guard s.citation.contains("overrides.json proseFragments") else {
+                throw Rejected(description: "syntaxSource prose needs a citation naming \"overrides.json proseFragments\"")
+            }
+        }
+        let variants = try (s.variants ?? []).map { v -> StructureVariant in
+            let exact = v.triggers.allSatisfy {
+                matches($0, "^[A-Z][A-Z0-9]{2}\\^[A-Z0-9]{3}$") && (s.triggers.contains($0) || s.triggers.contains("\($0.prefix(3))^*"))
+            }
+            guard !v.triggers.isEmpty, exact else { throw Rejected(description: "variants: triggers must be exact CODE^EVT the structure accepts") }
+            guard v.citation.contains("overrides.json variantPrints") else {
+                throw Rejected(description: "variants: a citation must name \"overrides.json variantPrints\"")
+            }
+            guard v.elements.first?.segment == "MSH" else { throw Rejected(description: "variants: a print must start with MSH") }
+            try checkSequence(v.elements, version: s.version, citation: s.citation + " " + v.citation)
+            guard keys(v.elements).isEmpty else { throw Rejected(description: "variants: a keyed choice in a variant is not supported") }
+            return StructureVariant(triggers: v.triggers, citation: v.citation, elements: v.elements.map(\.model))
+        }
+        if s.variants?.isEmpty == true { throw Rejected(description: "variants: an empty list") }
+        let triggers = variants.flatMap(\.triggers)
+        guard Set(triggers).count == triggers.count else { throw Rejected(description: "variants: a trigger in two variants or named twice") }
+        let prints = [s.elements.map(\.model)] + variants.map(\.elements)
+        guard Set(prints).count == prints.count else {
+            throw Rejected(description: "variants: a print equal to the default or to another variant")
+        }
         return MessageStructure(id: s.structure, version: s.version, triggers: s.triggers, citation: s.citation,
+                                aliasOf: s.aliasOf, errorResponse: s.errorResponse?.model, variants: variants,
                                 elements: s.elements.map(\.model))
     }
 
-    private static func check(_ e: Element, version: String, citation: String) throws {
-        guard [e.segment != nil, e.group != nil, e.isChoice].filter({ $0 }).count == 1 else {
-            throw Rejected(description: "an element needs exactly one of \"segment\", \"group\" or \"choice\"")
+    /// One sequence's elements; two slots side by side are rejected (S3-1).
+    private static func checkSequence(_ list: [Element], version: String, citation: String, inChoice: Bool = false) throws {
+        for (i, e) in list.enumerated() {
+            if e.isSlot, i > 0, list[i - 1].isSlot { throw Rejected(description: "two adjacent slots") }
+            try check(e, version: version, citation: citation, inChoice: inChoice)
+        }
+    }
+
+    private static func check(_ e: Element, version: String, citation: String, inChoice: Bool) throws {
+        guard [e.segment != nil, e.group != nil, e.isChoice, e.isSlot].filter({ $0 }).count == 1 else {
+            throw Rejected(description: "an element needs exactly one of \"segment\", \"group\", \"choice\" or \"slot\"")
         }
         guard e.min >= 0, e.max.map({ $0 >= Swift.max(1, e.min) }) ?? true else {
             throw Rejected(description: "bad occurrence bounds min \(e.min) max \(String(describing: e.max))")
         }
+        guard e.isSlot || e.citation == nil else { throw Rejected(description: "only a slot has a \"citation\"") }
+        guard e.isChoice || e.key == nil else { throw Rejected(description: "only a choice has a \"key\"") }
         if let name = e.group {
             try checkName(name, kind: "group", source: e.nameSource, version: version, citation: citation)
             guard let children = e.elements, !children.isEmpty, e.alternatives == nil else {
                 throw Rejected(description: "group \(name) needs a non-empty \"elements\" and no \"alternatives\"")
             }
-            for child in children { try check(child, version: version, citation: citation) }
+            try checkSequence(children, version: version, citation: citation, inChoice: inChoice)
+        } else if e.isSlot {
+            guard !inChoice else { throw Rejected(description: "a slot cannot be inside a choice") }
+            guard let cited = e.citation, !cited.trimmingCharacters(in: .whitespaces).isEmpty else {
+                throw Rejected(description: "a slot needs a non-empty \"citation\"")
+            }
+            if let name = e.slot, name.trimmingCharacters(in: .whitespaces).isEmpty || matches(name, "^[A-Z][A-Z0-9]{2}$") {
+                throw Rejected(description: "bad slot name \"\(name)\"")
+            }
+            guard e.elements == nil, e.alternatives == nil, e.nameSource == nil else {
+                throw Rejected(description: "a slot cannot have elements, alternatives or a nameSource")
+            }
         } else if e.isChoice {
             let what = e.choice.map { "choice \($0)" } ?? "unnamed choice"
             if let name = e.choice {
@@ -121,12 +260,35 @@ enum StructureJSONDecoder {
             guard let alternatives = e.alternatives, alternatives.count >= 2, e.elements == nil else {
                 throw Rejected(description: "\(what) needs at least two \"alternatives\" and no \"elements\"")
             }
-            for alternative in alternatives { try check(alternative, version: version, citation: citation) }
+            for alternative in alternatives { try check(alternative, version: version, citation: citation, inChoice: true) }
+            if let key = e.key { try checkKey(key, alternatives: alternatives, what: what) }
         } else if let id = e.segment {
             guard matches(id, "^[A-Z][A-Z0-9]{2}$") else { throw Rejected(description: "bad segment ID \"\(id)\"") }
             guard e.elements == nil, e.alternatives == nil, e.nameSource == nil else {
                 throw Rejected(description: "segment \(id) cannot have elements, alternatives or a nameSource")
             }
+        }
+    }
+
+    /// The codegen's validateChoiceKey (S4-1).
+    private static func checkKey(_ key: Key, alternatives: [Element], what: String) throws {
+        let names = alternatives.compactMap(\.group)
+        guard names.count == alternatives.count, Set(names).count == names.count,
+              alternatives.allSatisfy({ $0.min == 1 && $0.max == 1 }) else {
+            throw Rejected(description: "keyed \(what): every alternative must be a group occurring once, with a distinct name")
+        }
+        guard matches(key.segment, "^[A-Z][A-Z0-9]{2}$"), key.field >= 1, key.component >= 1 else {
+            throw Rejected(description: "keyed \(what): bad key \(key.segment)-\(key.field).\(key.component)")
+        }
+        guard !key.values.isEmpty, key.values.keys.allSatisfy({ !$0.isEmpty }) else {
+            throw Rejected(description: "keyed \(what): the key needs non-empty values")
+        }
+        let unknown = Set(key.values.values).subtracting(names)
+        guard unknown.isEmpty else { throw Rejected(description: "keyed \(what): values map to no alternative: \(unknown.sorted())") }
+        let unselected = Set(names).subtracting(key.values.values)
+        guard unselected.isEmpty else { throw Rejected(description: "keyed \(what): no value selects \(unselected.sorted())") }
+        guard !key.citation.trimmingCharacters(in: .whitespaces).isEmpty else {
+            throw Rejected(description: "keyed \(what): the key needs a non-empty \"citation\"")
         }
     }
 

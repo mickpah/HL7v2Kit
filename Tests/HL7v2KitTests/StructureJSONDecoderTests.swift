@@ -84,6 +84,38 @@ struct StructureJSONDecoderTests {
         return d
     }
 
+    /// A slot as the codegen reads it (S3-1).
+    static var slotJSON: JSON {
+        ["slot": "Order Detail Segment", "min": 1, "max": NSNull(), "citation": "synthetic, after v2.3 CH04 4.2.1 p 4-4"]
+    }
+
+    /// ACK with a slot inserted after MSA, then `change` applied to the slot.
+    static func ackSlot(_ change: (inout JSON) -> Void = { _ in }) throws -> JSON {
+        var d = try load("ACK")
+        var elements = try #require(d["elements"] as? [JSON])
+        var slot = slotJSON
+        change(&slot)
+        elements.insert(slot, at: 3)
+        d["elements"] = elements
+        return d
+    }
+
+    /// v2.5.1 MFN_M03 with `change` applied to its keyed choice (S4-1: MF_TEST, after MFE OM1).
+    static func mfnKeyed(_ change: (inout JSON) -> Void = { _ in }) throws -> JSON {
+        try element(load("MFN_M03"), 3) { group in
+            var inner = group["elements"] as? [JSON] ?? []
+            change(&inner[2])
+            group["elements"] = inner
+        }
+    }
+
+    /// `choice`'s key with `change` applied.
+    static func rekey(_ choice: inout JSON, _ change: (inout JSON) -> Void) {
+        var key = choice["key"] as? JSON ?? [:]
+        change(&key)
+        choice["key"] = key
+    }
+
     static func element(_ d: JSON, _ index: Int, _ change: (inout JSON) -> Void) -> JSON {
         var d = d
         var elements = d["elements"] as? [JSON] ?? []
@@ -163,7 +195,7 @@ struct StructureJSONDecoderTests {
         try reject("choice with no alternatives", two, try Self.ackChoice { $0["alternatives"] = [JSON]() }, "ACK")
         try reject("choice with elements in place of alternatives", two, try Self.ackChoice { $0["elements"] = $0["alternatives"]; $0["alternatives"] = nil }, "ACK")
         try reject("choice with max 0", "bad occurrence bounds", try Self.ackChoice { $0["min"] = 0; $0["max"] = 0 }, "ACK")
-        try reject("element that is both a choice and a group", "exactly one of \"segment\", \"group\" or \"choice\"",
+        try reject("element that is both a choice and a group", "exactly one of \"segment\", \"group\", \"choice\" or \"slot\"",
                    try Self.ackChoice { $0["group"] = "X"; $0["nameSource"] = "printed" }, "ACK")
         try reject("unnamed choice with a nameSource", "unnamed choice cannot have a nameSource", try Self.ackChoice { $0["nameSource"] = "printed" }, "ACK")
         try reject("named choice without nameSource", "choice ACKNOWLEDGMENT needs nameSource", try Self.ackChoice { $0["choice"] = "ACKNOWLEDGMENT" }, "ACK")
@@ -178,7 +210,70 @@ struct StructureJSONDecoderTests {
         try reject("segment with alternatives", "cannot have elements, alternatives or a nameSource",
                    Self.element(try Self.load("ACK"), 2) { $0["alternatives"] = [JSON]() }, "ACK")
 
-        #expect(cases.count == 35)
+        // S3-1 open-slot cases.
+        try accept("slot with a printed name", try Self.ackSlot(), "ACK")
+        try accept("unnamed slot", try Self.ackSlot { $0["slot"] = NSNull() }, "ACK")
+        try reject("uncited slot", "a slot needs a non-empty \"citation\"", try Self.ackSlot { $0["citation"] = nil }, "ACK")
+        try reject("slot with an empty citation", "a slot needs a non-empty \"citation\"", try Self.ackSlot { $0["citation"] = " " }, "ACK")
+        try reject("slot named like a segment", "bad slot name \"OBR\"", try Self.ackSlot { $0["slot"] = "OBR" }, "ACK")
+        try reject("slot with elements", "a slot cannot have elements, alternatives or a nameSource",
+                   try Self.ackSlot { $0["elements"] = [Self.slotJSON] }, "ACK")
+        try reject("citation on a segment", "only a slot has a \"citation\"",
+                   Self.element(try Self.load("ACK"), 2) { $0["citation"] = "CH02" }, "ACK")
+        try reject("slot inside a choice", "a slot cannot be inside a choice", try Self.ackChoice {
+            var alternatives = $0["alternatives"] as? [JSON] ?? []
+            alternatives[1] = Self.slotJSON
+            $0["alternatives"] = alternatives
+        }, "ACK")
+        var adjacent = try Self.ackSlot()
+        var list = adjacent["elements"] as? [JSON] ?? []
+        list.insert(Self.slotJSON, at: 3)
+        adjacent["elements"] = list
+        try reject("two adjacent slots", "two adjacent slots", adjacent, "ACK")
+
+        // S4-1 keyed-choice cases (v2.5.1 MFN_M03, keyed by MFI-1).
+        let every = "every alternative must be a group occurring once, with a distinct name"
+        try accept("keyed choice as committed", try Self.mfnKeyed(), "MFN_M03")
+        try reject("key on a group", "only a choice has a \"key\"", try Self.element(Self.load("MFN_M03"), 3) {
+            $0["key"] = ["segment": "MFI", "field": 1, "component": 1, "values": ["OMA": "MF_TEST"], "citation": "CH08"] as JSON
+        }, "MFN_M03")
+        try reject("keyed value mapping to no alternative", "values map to no alternative: [\"MF_NOPE\"]",
+                   try Self.mfnKeyed { Self.rekey(&$0) { var v = $0["values"] as? [String: String] ?? [:]; v["ZZZ"] = "MF_NOPE"; $0["values"] = v } }, "MFN_M03")
+        try reject("keyed alternative no value selects", "no value selects [\"MF_OBS_ATTRIBUTES\"]",
+                   try Self.mfnKeyed { Self.rekey(&$0) { var v = $0["values"] as? [String: String] ?? [:]; v["OME"] = nil; $0["values"] = v } }, "MFN_M03")
+        try reject("keyed alternative that is a segment", every, try Self.mfnKeyed {
+            var alternatives = $0["alternatives"] as? [JSON] ?? []
+            alternatives[4] = ["segment": "OM7", "min": 1, "max": 1]
+            $0["alternatives"] = alternatives
+        }, "MFN_M03")
+        try reject("optional keyed alternative", every, try Self.mfnKeyed {
+            var alternatives = $0["alternatives"] as? [JSON] ?? []
+            alternatives[4]["min"] = 0
+            $0["alternatives"] = alternatives
+        }, "MFN_M03")
+        try reject("key with an empty citation", "the key needs a non-empty \"citation\"",
+                   try Self.mfnKeyed { Self.rekey(&$0) { $0["citation"] = " " } }, "MFN_M03")
+        try reject("key segment not in the structure", "a keyed choice's key segment PID is not in the structure",
+                   try Self.mfnKeyed { Self.rekey(&$0) { $0["segment"] = "PID" } }, "MFN_M03")
+        try reject("unknown key in a key", "key: unknown key(s) [\"name\"]",
+                   try Self.mfnKeyed { Self.rekey(&$0) { $0["name"] = "MFI-1" } }, "MFN_M03")
+
+        try accept("keyed choice whose two values select one alternative",
+                   try Self.mfnKeyed { Self.rekey(&$0) { var v = $0["values"] as? [String: String] ?? [:]; v["OMX"] = "MF_TEST_NUMERIC"; $0["values"] = v } }, "MFN_M03")
+        // The S4-2 alias cases concern the codegen's directory walk (validateAliases), not one file.
+
+        // S5-1: syntaxSource prose marks a transcription (overrides.json proseFragments).
+        var prose = try Self.load("ADT_A01")
+        prose["syntaxSource"] = "prose"
+        let plainCitation = prose["citation"] as? String ?? ""
+        try reject("a transcription whose citation does not name proseFragments",
+                   "syntaxSource prose needs a citation naming \"overrides.json proseFragments\"", prose, "ADT_A01")
+        prose["citation"] = plainCitation + " Transcribed (overrides.json proseFragments, ADR-019 S5)."
+        try accept("a transcription marked syntaxSource prose and cited", prose, "ADT_A01")
+        prose["syntaxSource"] = "table"
+        try reject("a syntaxSource other than prose", "syntaxSource must be \"prose\"", prose, "ADT_A01")
+
+        #expect(cases.count == 57)
         for c in cases {
             if let expected = c.expected {
                 #expect(c.verdict?.contains(expected) == true, "\(c.label): \(c.verdict ?? "accepted")")

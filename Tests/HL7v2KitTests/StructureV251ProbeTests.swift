@@ -121,14 +121,15 @@ struct StructureV251ProbeTests {
     }
 
     // P8b-18: registrations classed by the print. CH08 gives the staff MFR body only in prose
-    // (8.7.1, pp 8-20 to 8-21) and MFN^M03's other segments by reference to MFN^M08 to M12, each
-    // keyed by MFI-1 (blocking); CH06 6.4.4 refers P04 to the Chapter 5 QRY/DSR, but Table 0354
-    // gives QRY_P04 an ID of its own (blocking, no alias) and the DSR prints differ (permanent).
+    // (8.7.1, pp 8-20 to 8-21); MFN^M03's other segments, keyed by MFI-1, and QRY_P04, an alias
+    // of QRY_Q01, are modelled since S4-1 and S4-2 (StructureKeyedChoiceTests, StructureAliasTests);
+    // CH06 6.4.4 refers P04 to the Chapter 5 DSR, whose prints differ (permanent).
     // Table 0354 IDs that a chapter caption contradicts, or that only Appendix A lists, say so.
     @Test("Registered v2.5.1 structures are info with the reason the print supports",
-          arguments: [("MFR^M02^MFR_M01", "prose-printed replacement fragments"),
-                      ("MFN^M03^MFN_M03", "keyed by MFI-1"),
-                      ("QRY^P04^QRY_P04", "no structure alias"), ("DSR^P04^DSR_P04", "which mode P04 uses"),
+          // MFR_M01, here until S5-2, is transcribed from the print's prose fragments since
+          // (StructureProseFragmentProbeTests); the MFN template's '[Z..]' row stays unenumerable.
+          arguments: [("MFN^M01^MFN_M01", "Z-segments carrying the data"),
+                      ("DSR^P04^DSR_P04", "which mode P04 uses"),
                       ("ORU^R31^ORU_R31", "ORU^R31^ORU_R30"), ("QRY^T12^QRY_T12", "QRY^T12^QRY"),
                       ("RSP^K22^RSP_K22", "RSP^K22^RSP_K21"), ("RDE^O01^RDE_O01", "Appendix A")])
     func registeredByThePrint(_ c: (String, String)) throws {

@@ -1,7 +1,7 @@
 {
   "structure": "MFK_M01",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 8, section 8.4.2 MFN/MFK - Master File Notification - General (Event M13), p 8-6; the same structure is printed for MFK^M01 (8.4.1), MFK^M14 (8.4.3), MFK^M02 (8.7.1), MFK^M03 (8.8.2), MFK^M08 (8.8.3), MFK^M09 (8.8.4), MFK^M10 (8.8.5), MFK^M11 (8.8.6), MFK^M12 (8.8.7), MFK^M05 (8.9.1), MFK^M04 (8.10.1), MFK^M06 (8.11.1), MFK^M07 (8.11.1), MFK^M15 (8.12.1), MFK^M16 (8.12.2) and MFK^M17 (8.13.1). Two normative prints of MFK_M01 disagree: Chapter 8 section 8.4.1 (MFK^M01^MFK_M01, p 8-5) prints no UAC (as does 8.8.2 MFK^M03), fourteen others print [UAC] after SFT (8.4.2 MFK^M13, p 8-6; 8.7.1 M02; 8.8.3 to 8.8.7 M08 to M12; 8.9.1 M05; 8.10.1 M04; 8.11.1 M06 and M07; 8.12.1 M15; 8.12.2 M16; 8.13.1 M17), which accepts every message the 8.4.1 print accepts; the looser 8.4.2 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/MFK_M01.xsd has the UAC.",
+  "citation": "HL7 v2.6 Chapter 8, section 8.4.2 MFN/MFK - Master File Notification - General (Event M13), p 8-6; the same structure is printed for MFK^M01 (8.4.1), MFK^M14 (8.4.3), MFK^M02 (8.7.1), MFK^M03 (8.8.2), MFK^M08 (8.8.3), MFK^M09 (8.8.4), MFK^M10 (8.8.5), MFK^M11 (8.8.6), MFK^M12 (8.8.7), MFK^M05 (8.9.1), MFK^M04 (8.10.1), MFK^M06 (8.11.1), MFK^M07 (8.11.1), MFK^M15 (8.12.1), MFK^M16 (8.12.2) and MFK^M17 (8.13.1). Two normative prints of MFK_M01 differ by trigger: HL7 v2.6 Chapter 8 section 8.4.1 (MFK^M01^MFK_M01, p 8-5) prints no UAC, as does 8.8.2 (MFK^M03), and fourteen others print [UAC] after SFT (8.4.2 MFK^M13, p 8-6; 8.7.1 M02; 8.8.3 to 8.8.7 M08 to M12; 8.9.1 M05; 8.10.1 M04; 8.11.1 M06 and M07; 8.12.1 M15; 8.12.2 M16; 8.13.1 M17); the 8.4.2 print is the default and the 8.4.1 print governs M01 and M03. HL7-xml v2.6/MFK_M01.xsd has the UAC. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
   "triggers": ["MFK^M13", "MFK^M01", "MFK^M14", "MFK^M02", "MFK^M03", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11", "MFK^M12", "MFK^M05", "MFK^M04", "MFK^M06", "MFK^M07", "MFK^M15", "MFK^M16", "MFK^M17"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -11,5 +11,19 @@
     { "segment": "ERR", "min": 0, "max": null },
     { "segment": "MFI", "min": 1, "max": 1 },
     { "segment": "MFA", "min": 0, "max": null }
+  ],
+  "variants": [
+    {
+      "triggers": ["MFK^M01", "MFK^M03"],
+      "citation": "HL7 v2.6 Chapter 8, section 8.4.1 MFN/MFK - Master File Notification (Event M01), p 8-5; the same structure is printed for MFK^M03 (8.8.2). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of MFK_M01 differ by trigger: HL7 v2.6 Chapter 8 section 8.4.1 (MFK^M01^MFK_M01, p 8-5) prints no UAC, as does 8.8.2 (MFK^M03), and fourteen others print [UAC] after SFT (8.4.2 MFK^M13, p 8-6; 8.7.1 M02; 8.8.3 to 8.8.7 M08 to M12; 8.9.1 M05; 8.10.1 M04; 8.11.1 M06 and M07; 8.12.1 M15; 8.12.2 M16; 8.13.1 M17); the 8.4.2 print is the default and the 8.4.1 print governs M01 and M03. HL7-xml v2.6/MFK_M01.xsd has the UAC. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "SFT", "min": 0, "max": null },
+        { "segment": "MSA", "min": 1, "max": 1 },
+        { "segment": "ERR", "min": 0, "max": null },
+        { "segment": "MFI", "min": 1, "max": 1 },
+        { "segment": "MFA", "min": 0, "max": null }
+      ]
+    }
   ]
 }

@@ -1,0 +1,62 @@
+{
+  "structure": "PRR_PC5",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 12, section 12.2.6 PRR - patient problem response (event PC5), p 12-12. Structure ID PRR_PC5 synthesised as CODE_EVT from the message code PRR and PC5, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events PRR^PC5 read from the section title 12.2.6 'PRR - patient problem response (event PC5)'. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), PATIENT_VISIT (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), PROBLEM (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), PROBLEM_ROLE (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), PROBLEM_PATHWAY (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_PATHWAY.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), GOAL (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), GOAL_ROLE (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), GOAL_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), ORDER (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5), ORDER_DETAIL (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5) and ORDER_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PRR_PC5).",
+  "triggers": ["PRR^PC5"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "PROBLEM", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "PRB", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "VAR", "min": 0, "max": null },
+        { "group": "PROBLEM_ROLE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "ROL", "min": 1, "max": 1 },
+          { "segment": "VAR", "min": 0, "max": null }
+        ]},
+        { "group": "PROBLEM_PATHWAY", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "PTH", "min": 1, "max": 1 },
+          { "segment": "VAR", "min": 0, "max": null }
+        ]},
+        { "group": "PROBLEM_OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "group": "GOAL", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "GOL", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "VAR", "min": 0, "max": null },
+          { "group": "GOAL_ROLE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+            { "segment": "ROL", "min": 1, "max": 1 },
+            { "segment": "VAR", "min": 0, "max": null }
+          ]},
+          { "group": "GOAL_OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "ORC", "min": 1, "max": 1 },
+          { "group": "ORDER_DETAIL", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+            { "slot": "Order Detail Segment", "min": 1, "max": null, "citation": "HL7 v2.3 Chapter 12, section 12.2.6 PRR - patient problem response (event PC5), p 12-12: the print gives the order detail as '[OBR, etc. Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)." },
+            { "segment": "NTE", "min": 0, "max": null },
+            { "segment": "VAR", "min": 0, "max": null },
+            { "group": "ORDER_OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "NTE", "min": 0, "max": null },
+              { "segment": "VAR", "min": 0, "max": null }
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

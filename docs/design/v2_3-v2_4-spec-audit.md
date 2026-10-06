@@ -192,7 +192,10 @@ with it on, 235 messages declaring MSH-12 2.4 change: 111 now match cleanly, 75 
 new reason, 48 are example defects cited to the print (ACK_ACK, CH10 AIP before AIL, query
 events Table 0003 v2.4 does not define, the CH03 Q24/K24 example against its query profile, a
 TBR^R08 error response without RDF/RDT), and one misfire was fixed (ERP_R09, now registered on
-v2.4 and v2.5.1). 16 probes in `StructureV24ProbeTests`.
+v2.4 and v2.5.1). 16 probes in `StructureV24ProbeTests`. Correction (S4-3, 2026-10-06): the
+TBR^R08 error response was a misfire, not an example defect: CH05 5.6.5 (v2.4 p 5-62) makes MSH,
+MSA, ERR, QAK and the query defining segment the whole AE response, "The rest of the message is
+absent"; it is now matched against that head and is clean (register §E, query error responses).
 
 ## Code tables: Table 0354 and table kinds (P7-8, 2026-10-05)
 

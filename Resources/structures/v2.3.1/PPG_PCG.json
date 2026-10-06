@@ -1,0 +1,62 @@
+{
+  "structure": "PPG_PCG",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 12, section 12.2.4 PPG/ACK - patient pathway message (goal-oriented) (events PCG, PCH, PCJ), pp 12-9 to 12-10. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104), its row read through cited overrides.json errata (event PCC read as PCC, PCG). Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to PPG_PCG that no caption prints, accepted with the printed ones (P8b-11 ruling): PPG^PCC. Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATIENT_VISIT.CONTENT, generator HL7-Database), PATHWAY (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATHWAY.CONTENT, generator HL7-Database), PATHWAY_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATHWAY_ROLE.CONTENT, generator HL7-Database), GOAL (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL.CONTENT, generator HL7-Database), GOAL_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL_ROLE.CONTENT, generator HL7-Database), GOAL_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL_OBSERVATION.CONTENT, generator HL7-Database), PROBLEM (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM.CONTENT, generator HL7-Database), PROBLEM_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM_ROLE.CONTENT, generator HL7-Database), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM_OBSERVATION.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER_DETAIL.CONTENT, generator HL7-Database) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER_OBSERVATION.CONTENT, generator HL7-Database).",
+  "triggers": ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "group": "PATHWAY", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PTH", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "VAR", "min": 0, "max": null },
+      { "group": "PATHWAY_ROLE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "ROL", "min": 1, "max": 1 },
+        { "segment": "VAR", "min": 0, "max": null }
+      ]},
+      { "group": "GOAL", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "GOL", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "VAR", "min": 0, "max": null },
+        { "group": "GOAL_ROLE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+          { "segment": "ROL", "min": 1, "max": 1 },
+          { "segment": "VAR", "min": 0, "max": null }
+        ]},
+        { "group": "GOAL_OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "group": "PROBLEM", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+          { "segment": "PRB", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "VAR", "min": 0, "max": null },
+          { "group": "PROBLEM_ROLE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+            { "segment": "ROL", "min": 1, "max": 1 },
+            { "segment": "VAR", "min": 0, "max": null }
+          ]},
+          { "group": "PROBLEM_OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "ORDER", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+          { "segment": "ORC", "min": 1, "max": 1 },
+          { "group": "ORDER_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "slot": "Order Detail Segment", "min": 1, "max": null, "citation": "HL7 v2.3.1 Chapter 12, section 12.2.4 PPG/ACK - patient pathway message (goal-oriented) (events PCG, PCH, PCJ), p 12-10: the print gives the order detail as '[OBR, etc... Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)." },
+            { "segment": "NTE", "min": 0, "max": null },
+            { "segment": "VAR", "min": 0, "max": null },
+            { "group": "ORDER_OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "NTE", "min": 0, "max": null },
+              { "segment": "VAR", "min": 0, "max": null }
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

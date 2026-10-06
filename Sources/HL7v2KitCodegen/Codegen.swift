@@ -889,7 +889,16 @@ struct Codegen {
         let modelledVersions = Set(versionDirs.map {
             $0.lastPathComponent.replacingOccurrences(of: "v", with: "", options: [.anchored])
         })
-        try emitStructureTables(from: structuresRoot, to: structuresOutputRoot, modelledVersions: modelledVersions)
+        // S2-2 (guard 3): each version's segment IDs are its schema file names.
+        var segmentGrammar: [String: Set<String>] = [:]
+        for dir in versionDirs {
+            let version = dir.lastPathComponent.replacingOccurrences(of: "v", with: "", options: [.anchored])
+            segmentGrammar[version] = Set(try fm.contentsOfDirectory(atPath: dir.path)
+                .filter { $0.range(of: "^[A-Z][A-Z0-9]{2}\\.json$", options: .regularExpression) != nil }
+                .map { String($0.dropLast(5)) })
+        }
+        try emitStructureTables(from: structuresRoot, to: structuresOutputRoot, modelledVersions: modelledVersions,
+                                grammar: segmentGrammar)
 
         print("HL7v2KitCodegen: \(emitted) segment(s) emitted under \(outputRoot.path)")
     }

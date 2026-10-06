@@ -1,0 +1,19 @@
+{
+  "structure": "MFN_M11",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M11 for MFN^M11; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M11 and no caption prints MFN^M11; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M11 (MFI-1 = OMD) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M11 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'calculated observations (second component of MSH-9-message type = M11)'. Unprinted group names (ADR-019 decision 3): MF_TEST_CALCULATED (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_TEST_CALC_DETAIL (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["MFN^M11"],
+  "syntaxSource": "prose",
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_TEST_CALCULATED", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "group": "MF_TEST_CALC_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "OM6", "min": 1, "max": 1 },
+        { "segment": "OM2", "min": 1, "max": 1 }
+      ]}
+    ]}
+  ]
+}

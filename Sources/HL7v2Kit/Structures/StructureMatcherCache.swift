@@ -61,6 +61,10 @@ final class StructureMatcherCache: @unchecked Sendable {
     private struct Key: Hashable {
         let version: String
         let id: String
+        /// The keyed-choice selection (S4-1), so each is compiled once.
+        var selection: String? = nil
+        /// The per-trigger print (S6-1), so each is compiled once.
+        var variant: Int? = nil
     }
 
     private let lock = NSLock()
@@ -69,7 +73,8 @@ final class StructureMatcherCache: @unchecked Sendable {
 
     /// The compiled matcher for `structure`, built on the first request.
     func matcher(for structure: MessageStructure) -> CompiledStructureMatcher {
-        let key = Key(version: structure.version, id: structure.id)
+        let key = Key(version: structure.version, id: structure.id, selection: structure.keySelection,
+                      variant: structure.variantIndex)
         if let hit = locked({ matchers[key] }), hit.structure == structure { return hit }
         let compiled = CompiledStructureMatcher(structure)
         locked {

@@ -31,7 +31,9 @@ ext = _load("extract_message_structures", "extract-message-structures.py")
 OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
          "triggerFolds": [], "primaryPrints": [], "unionPrints": [], "unresolvedCaptions": [],
-         "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": []}
+         "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": [], "withdrawnSegments": [],
+         "keyedChoices": [], "aliases": [], "errorResponses": [], "proseFragments": [],
+         "variantPrints": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -199,9 +201,24 @@ def _structure(rows, sid="XYZ_X01", overrides=EMPTY):
     return structures.get(sid), report
 
 
+def _no_variants(version):
+    """OVERRIDES without the version's variantPrints: a golden text holds only the default print, so
+    the committed file is compared without its variants and their entries' citations (S6 fix wave)."""
+    return {**OVERRIDES, "variantPrints": [e for e in OVERRIDES["variantPrints"] if e["version"] != version]}
+
+
+def _default_only(version, structure):
+    data = json.loads(_committed(version, structure))
+    data.pop("variants", None)
+    for e in OVERRIDES["variantPrints"]:
+        if e["version"] == version and e["structure"] == structure:
+            data["citation"] = data["citation"].replace(f" {e['citation']}", "")
+    return ext.render(data)
+
+
 def check_ack_golden():
-    structures, report, _ = _extract([("CH02", ACK_CH02), ("CH03", ADT_CH03), ("CH07", ORU_CH07)])
-    assert ext.render(structures["ACK"]) == _committed("2.5.1", "ACK"), ext.render(structures["ACK"])
+    structures, report, _ = _extract([("CH02", ACK_CH02), ("CH03", ADT_CH03), ("CH07", ORU_CH07)], _no_variants("2.5.1"))
+    assert ext.render(structures["ACK"]) == _default_only("2.5.1", "ACK"), ext.render(structures["ACK"])
     assert not [r for r in report if r[0] == "ACK" and r[1] == "note"], [r for r in report if r[0] == "ACK"]
 
 
@@ -223,7 +240,7 @@ def check_oru_r01_golden():
     # The five unprinted names come from the bundle; the synthetic schema stands in for
     # HL7-xml v2.5.1/ORU_R01.xsd with the committed file's own groups (ruling D4).
     schema = _xsd_from_json(json.loads(_committed("2.5.1", "ORU_R01")))
-    structures, report, _ = ext.extract_version("2.5.1", [("CH07", ORU_CH07)], OVERRIDES,
+    structures, report, _ = ext.extract_version("2.5.1", [("CH07", ORU_CH07)], _no_variants("2.5.1"),
                                                 bundles=_bundles("2.5.1", {"ORU_R01": schema}))
     got = ext.render(structures["ORU_R01"])
     assert got == _committed("2.5.1", "ORU_R01"), got
@@ -347,13 +364,12 @@ def check_choice_separate_rows_and_placeholder():
     s, _ = _structure([("MSH", "Header"), ("<", ""), ("OBR", "Order Detail Segment"), ("|", ""),
                        ("{RXO}", "Pharmacy order"), (">", ""), ("[{NTE}]", "Notes")])
     assert s["elements"][1] == _choice([_seg("OBR"), _seg("RXO", 1, None)]), s["elements"][1]
-    # "etc." in place of the alternatives (CH12's "< OBR | etc. >") is a G6 placeholder: skipped.
+    # "etc." in place of the last alternative (CH12's "< OBR | etc. >") is the open order detail:
+    # one slot in place of the whole choice (S3-2; check_slot_choice_with_placeholder).
     s, report = _structure([("MSH", "Header"), ("<", ""), ("OBR", "Order Detail Segment"), ("|", ""),
                             ("", "etc."), (">", "")])
-    assert s is None, s
-    [line] = [r for r in report if r[1] == "skipped"]
-    assert "placeholder (G6): 'etc.' among a choice's alternatives" in line[2], line
-    assert "of which placeholder (G6) 1" in ext.summary("2.5.1", {}, report, 1), ext.summary("2.5.1", {}, report, 1)
+    assert s and "slot" in s["elements"][1], (s, report)
+    assert not [r for r in report if r[1] == "skipped"], report
     # "etc." in the description column outside a choice is ordinary description text.
     s, _ = _structure([("MSH", "Header"), ("OBR", "Order"), ("", "etc."), ("NTE", "Notes")])
     assert [e["segment"] for e in s["elements"]] == ["MSH", "OBR", "NTE"], s
@@ -1461,6 +1477,206 @@ def check_single_space_cell_and_shifted_page():
     assert s is None and any("prose inside an open group" in r[2] for r in report), report
 
 
+def check_withdrawn_segments():
+    # S2-2 (ADR-019 S2-1 amendment): a structure may name a segment its version's withdrawnSegments
+    # lists; any other segment outside the version's schemas (but ADD) is outside the grammar; a
+    # structure naming a listed segment says so in its citation; an entry is validated.
+    qry = {"citation": "HL7 v2.7.1 Chapter 12, section 12.3.5 QRY, p 15.",
+           "elements": [_seg("MSH"), _seg("QRD"), _seg("QRF", 0, 1), _seg("ADD", 0, 1)]}
+    assert ext.outside_grammar("2.7.1", qry, OVERRIDES) == [], ext.outside_grammar("2.7.1", qry, OVERRIDES)
+    assert ext.outside_grammar("2.7.1", qry, EMPTY) == ["QRD", "QRF"], ext.outside_grammar("2.7.1", qry, EMPTY)
+    assert ext.outside_grammar("2.6", qry, EMPTY) == [], "v2.6 defines QRD and QRF"
+    noted = ext.with_withdrawn_note("2.7.1", qry, OVERRIDES)["citation"]
+    assert noted.endswith(" QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 "
+                          "(overrides.json withdrawnSegments): matched by segment ID, fields not validated."), noted
+    assert ext.with_withdrawn_note("2.6", qry, OVERRIDES) == qry
+    entry = {"version": "2.7.1", "segment": "QRD", "printed": "removed", "definedThrough": "2.6", "citation": "x"}
+    for broken in ({**entry}, {**entry, "printed": "withdrawn", "segment": "QR"}):
+        try:
+            ext.validate_overrides({**EMPTY, "withdrawnSegments": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"withdrawnSegments entry {broken} must be rejected")
+    ext.validate_overrides({**EMPTY, "withdrawnSegments": [{**entry, "printed": "withdrawn"}]})
+    # A committed structure's registration leaves completeness.json, the dangling comma with it.
+    import tempfile
+    saved = (ext.COMPLETENESS, ext.STRUCTURES)
+    with tempfile.TemporaryDirectory() as root:
+        os.makedirs(os.path.join(root, "v2.7.1"))
+        open(os.path.join(root, "v2.7.1", "UDM_Q05.json"), "w").write("{}")
+        ext.STRUCTURES, ext.COMPLETENESS = root, os.path.join(root, "completeness.json")
+        lines = ['{', '  "versions": {', '    "2.7.1": { "complete": true, "citation": "x",', '      "notModelled": [',
+                 '        {"structure": "RDR_RDR", "triggers": [], "reason": "a"},',
+                 '        {"structure": "UDM_Q05", "triggers": ["UDM^Q05"], "reason": "b"}', '      ]', '    }', '  }', '}']
+        open(ext.COMPLETENESS, "w").write("\n".join(lines))
+        try:
+            assert ext.sync_modelled_registrations(["2.7.1"], False) == [
+                "v2.7.1 UDM_Q05: registered as not modelled but committed (modelled)"]
+            assert ext.sync_modelled_registrations(["2.7.1"], True)
+            after = json.load(open(ext.COMPLETENESS))["versions"]["2.7.1"]["notModelled"]
+            assert [e["structure"] for e in after] == ["RDR_RDR"], after
+            assert ext.sync_modelled_registrations(["2.7.1"], False) == []
+        finally:
+            ext.COMPLETENESS, ext.STRUCTURES = saved
+
+
+def _keyed_entry(**kw):
+    entry = {"version": "2.5.1", "structure": "MFN_M03", "caption": "MFN^M03^MFN_M03", "printed": "...",
+             "key": {"segment": "MFI", "field": 1, "component": 1},
+             "alternatives": [{"value": "OMA", "structure": "MFN_M08", "group": "MF_TEST_NUMERIC", "after": "OM1", "page": "8-24"},
+                              {"value": "OMB", "structure": "MFN_M09", "group": "MF_TEST_CATEGORICAL", "after": "OM1", "page": "8-25"}],
+             "citation": "HL7 v2.5.1 Chapter 8, section 8.8.2, p 8-23: keyed by MFI-1."}
+    entry.update(kw)
+    return entry
+
+
+def check_keyed_choices():
+    # S4-1 (ADR-019 S4 amendment): a keyedChoices placeholder is read as one element (a run of
+    # placeholder rows merged; "???" read as a whole row), the keyed choice put in its place from
+    # the named groups' segments after `after`, or an open slot where the entry has no map.
+    entry = _keyed_entry()
+    rows = ["MSH", "MFI", "{", "MFE", "OM1", "...", "...", "}"]
+    tree = ext.parse([ext.Row(left, "", i, "8-23") for i, left in enumerate(rows)], keyed=entry)
+    body = tree[2]["elements"]
+    assert [e.get("segment") for e in body[:2]] == ["MFE", "OM1"] and len(body) == 3 and "_keyed" in body[2], body
+    try:
+        ext.parse([ext.Row(left, "", i, "") for i, left in enumerate(rows)])
+        raise AssertionError("an unclaimed placeholder must stay unreadable (ruling G6)")
+    except ext.UnknownNotation as exc:
+        assert "placeholder (G6)" in str(exc), exc
+    q = ext.parse([ext.Row(left, "", i, "") for i, left in enumerate(["MSH", "MFI", "{MFE", "OM1", "???", "}"])],
+                  keyed=_keyed_entry(printed="???"))
+    assert "_keyed" in q[2]["elements"][2], q
+    m08 = {"structure": "MFN_M08", "version": "2.5.1", "triggers": ["MFN^M08"], "citation": "c8",
+           "elements": [_seg("MSH"), _seg("MFI"), {"group": "MF_TEST_NUMERIC", "nameSource": "printed", "min": 1, "max": None,
+                                                   "elements": [_seg("MFE"), _seg("OM1"), _seg("OM2", 0, 1)]}]}
+    m09 = {"structure": "MFN_M09", "version": "2.5.1", "triggers": ["MFN^M09"], "citation": "c9",
+           "elements": [_seg("MSH"), _seg("MFI"), {"group": "MF_TEST_CATEGORICAL", "nameSource": "printed", "min": 1, "max": None,
+                                                   "elements": [_seg("MFE"), _seg("OM1"), _seg("OM3", 0, 1)]}]}
+    m03 = {"structure": "MFN_M03", "version": "2.5.1", "triggers": ["MFN^M03"], "citation": "c3",
+           "elements": [_seg("MSH"), _seg("MFI"), {"group": "MF_TEST", "nameSource": "printed", "min": 1, "max": None,
+                                                   "elements": [_seg("MFE"), _seg("OM1"), dict(body[2])]}]}
+    structures = {"MFN_M03": m03, "MFN_M08": m08, "MFN_M09": m09}
+    report = ext.resolve_keyed_choices("2.5.1", structures, {"MFN_M03": entry})
+    assert report == [("MFN_M03", "keyed-choice", "MFI-1: OMA=MF_TEST_NUMERIC, OMB=MF_TEST_CATEGORICAL")], report
+    choice = m03["elements"][2]["elements"][2]
+    assert choice["key"]["values"] == {"OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL"}, choice
+    assert [a["elements"] for a in choice["alternatives"]] == [[_seg("OM2", 0, 1)], [_seg("OM3", 0, 1)]], choice
+    assert "choice keyed by MFI-1 (overrides.json keyedChoices" in m03["citation"], m03["citation"]
+    text = ext.render(m03)
+    assert '"key": { "segment": "MFI", "field": 1, "component": 1, "values": { "OMA": "MF_TEST_NUMERIC", ' in text, text
+    # A named group with nothing after `after` is an error, never an empty alternative.
+    bad = {"MFN_M03": json.loads(json.dumps({**m03, "elements": [_seg("MSH"), {**body[2]}]})), "MFN_M08": m08, "MFN_M09": m09}
+    report = ext.resolve_keyed_choices("2.5.1", bad, {"MFN_M03": _keyed_entry(alternatives=[
+        {**entry["alternatives"][0], "after": "OM2"}, entry["alternatives"][1]])})
+    assert report and report[0][1] == "error" and "no segments after OM2" in report[0][2], report
+    # No map: the placeholder is an open slot, cited, with the marker dropped.
+    erp = _keyed_entry(structure="ERP_R09", caption="ERP^R09", key={"segment": "ERQ", "field": 2, "component": 1},
+                       slot={"name": None, "min": 0, "max": None})
+    del erp["alternatives"]
+    slot = ext._keyed({"entry": erp})
+    s = {"structure": "ERP_R09", "version": "2.5.1", "triggers": ["ERP^R09"], "citation": "c",
+         "elements": [_seg("MSH"), _seg("ERQ"), slot]}
+    assert ext.resolve_keyed_choices("2.5.1", {"ERP_R09": s}, {"ERP_R09": erp}) == [("ERP_R09", "keyed-slot", "ERQ-2: open slot")]
+    assert s["elements"][2] == {"slot": None, "min": 0, "max": None, "citation": erp["citation"]}, s["elements"][2]
+    ext.validate_overrides({**EMPTY, "keyedChoices": [entry, erp]})
+    for broken in (_keyed_entry(slot={"name": None, "min": 0, "max": None}),
+                   _keyed_entry(key={"segment": "MFI", "field": 0, "component": 1}),
+                   _keyed_entry(alternatives=[entry["alternatives"][0], entry["alternatives"][0]]),
+                   {k: v for k, v in erp.items() if k != "slot"} | {"slot": {"name": None, "min": 0, "max": 1}}):
+        try:
+            ext.validate_overrides({**EMPTY, "keyedChoices": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"keyedChoices entry {broken} must be rejected")
+
+
+def check_aliases():
+    # S4-2: an aliases entry adds a structure with its own ID, triggers and citation and the
+    # target's elements, copied; rendered with "aliasOf"; never over a printed syntax, never the
+    # alias of an alias or of a structure the version does not have.
+    q01 = {"structure": "QRY_Q01", "version": "2.4", "triggers": ["QRY^Q01"], "citation": "Q01 print.",
+           "elements": [_seg("MSH"), _seg("QRD"), _seg("QRF", 0, 1), _seg("DSC", 0, 1)]}
+    entry = {"version": "2.4", "structure": "QRY_P04", "aliasOf": "QRY_Q01", "triggers": ["QRY^P04"],
+             "citation": "HL7 v2.4 Chapter 6, section 6.4.4, p 6-13: see Chapter 5."}
+    structures = {"QRY_Q01": q01}
+    assert ext.add_aliases("2.4", structures, {**EMPTY, "aliases": [entry]}, True) == [("QRY_P04", "alias", "of QRY_Q01")]
+    alias = structures["QRY_P04"]
+    assert alias["elements"] == q01["elements"] and alias["elements"] is not q01["elements"], alias
+    assert alias["triggers"] == ["QRY^P04"] and alias["aliasOf"] == "QRY_Q01", alias
+    assert alias["citation"].startswith(entry["citation"]) and alias["citation"].endswith("Q01 print."), alias["citation"]
+    assert '  "triggers": ["QRY^P04"],\n  "aliasOf": "QRY_Q01",\n  "elements": [' in ext.render(alias)
+    assert '"aliasOf"' not in ext.render(q01)
+    for structures, expected in (({"QRY_Q01": q01, "QRY_P04": q01}, "names a structure the print gives a syntax"),
+                                 ({}, "QRY_Q01 is not a structure read"),
+                                 ({"QRY_Q01": {**q01, "aliasOf": "QRY_Q02"}}, "QRY_Q01 is not a structure read")):
+        report = ext.add_aliases("2.4", dict(structures), {**EMPTY, "aliases": [entry]}, True)
+        assert report and report[0][1] == "error" and expected in report[0][2], report
+    assert ext.add_aliases("2.4", {}, {**EMPTY, "aliases": [entry]}, False) == [], "a partial read skips it"
+    ext.validate_overrides({**EMPTY, "aliases": [entry]})
+    for broken in ({**entry, "aliasOf": "QRY_P04"}, {**entry, "triggers": ["DSR^P04"]}, {**entry, "triggers": []}):
+        try:
+            ext.validate_overrides({**EMPTY, "aliases": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"aliases entry {broken} must be rejected")
+
+
+def check_error_responses():
+    # S4-3: an errorResponses entry (CH05 5.6.5, v2.4 to v2.8.2) copies its MSA-1 codes, the query
+    # defining segments each listed structure prints, and its citation into that structure, rendered
+    # as "errorResponse" after the triggers; a listed segment the structure does not print, a
+    # structure that is not a query response, a printed query defining segment left out, and (on a
+    # full read) an unread structure or an unlisted query response are errors; malformed entries
+    # are rejected; another version's structures are untouched.
+    tbr = {"structure": "TBR_R08", "version": "2.4", "triggers": ["TBR^R08"], "citation": "TBR print.",
+           "elements": [_seg("MSH"), _seg("MSA"), _seg("ERR", 0, 1), _seg("QAK"), _seg("RDF"),
+                        _seg("RDT", 1, None), _seg("DSC", 0, 1)]}
+    dsr = {"structure": "DSR_Q01", "version": "2.4", "triggers": ["DSR^Q01"], "citation": "DSR print.",
+           "elements": [_seg("MSH"), _seg("MSA"), _seg("ERR", 0, 1), _seg("QAK", 0, 1), _seg("QRD"),
+                        _seg("QRF", 0, 1), _seg("DSP", 1, None), _seg("DSC", 0, 1)]}
+    adt = {"structure": "ADT_A01", "version": "2.4", "triggers": ["ADT^A01"], "citation": "ADT print.",
+           "elements": [_seg("MSH"), _seg("EVN"), _seg("PID")]}
+    entry = {"version": "2.4", "acknowledgmentCodes": ["AE", "AR"], "noDataQueryStatus": ["NF"],
+             "structures": {"TBR_R08": [], "DSR_Q01": ["QRD", "QRF"]},
+             "citation": "HL7 v2.4 Chapter 5, section 5.6.5 Query error response, p 5-62: the rest is absent."}
+    overrides = {**EMPTY, "errorResponses": [entry]}
+    ext.validate_overrides(overrides)
+    structures = {"TBR_R08": dict(tbr), "DSR_Q01": dict(dsr), "ADT_A01": dict(adt)}
+    report = ext.add_error_responses("2.4", structures, overrides, True)
+    assert [r[1] for r in report] == ["error-response", "error-response"], report
+    assert structures["TBR_R08"]["errorResponse"] == {"acknowledgmentCodes": ["AE", "AR"], "querySegments": [],
+                                                      "noDataQueryStatus": ["NF"],
+                                                      "citation": entry["citation"]}, structures["TBR_R08"]
+    assert structures["DSR_Q01"]["errorResponse"]["querySegments"] == ["QRD", "QRF"]
+    assert "errorResponse" not in structures["ADT_A01"]
+    rendered = ext.render(structures["DSR_Q01"])
+    assert '  "triggers": ["DSR^Q01"],\n  "errorResponse": {"acknowledgmentCodes": ["AE", "AR"], "querySegments": ["QRD", "QRF"], ' in rendered
+    assert '"errorResponse"' not in ext.render(adt)
+    assert ext.add_error_responses("2.5.1", {"TBR_R08": dict(tbr)}, overrides, True) == [], "another version"
+    for listed, structures, expected in (
+            ({"TBR_R08": ["QRD"]}, {"TBR_R08": dict(tbr)}, "the structure prints []"),
+            ({"DSR_Q01": ["QRD"]}, {"DSR_Q01": dict(dsr)}, "the structure prints ['QRD', 'QRF']"),
+            ({"ADT_A01": []}, {"ADT_A01": dict(adt)}, "not a query response"),
+            ({"TBR_R08": []}, {}, "not read from the print"),
+            ({"TBR_R08": []}, {"TBR_R08": dict(tbr), "DSR_Q01": dict(dsr)}, "does not list")):
+        report = ext.add_error_responses("2.4", structures, {**EMPTY, "errorResponses": [{**entry, "structures": listed}]}, True)
+        errors = [r for r in report if r[1] == "error"]
+        assert errors and expected in errors[0][2], (listed, report)
+    partial = ext.add_error_responses("2.4", {}, {**EMPTY, "errorResponses": [{**entry, "structures": {"TBR_R08": []}}]}, False)
+    assert partial == [], "a partial read skips an unread structure"
+    for broken in ({**entry, "acknowledgmentCodes": []}, {**entry, "acknowledgmentCodes": ["AE", "AE"]},
+                   {**entry, "acknowledgmentCodes": ["ae"]}, {**entry, "structures": {}},
+                   {**entry, "structures": {"TBR_R08": ["RDF"]}}, {**entry, "structures": {"DSR_Q01": ["QRD", "QRD"]}},
+                   {**entry, "citation": ""}, {**entry, "noDataQueryStatus": ["nf"]},
+                   {**entry, "noDataQueryStatus": ["NF", "NF"]}, {k: v for k, v in entry.items() if k != "noDataQueryStatus"}):
+        try:
+            ext.validate_overrides({**EMPTY, "errorResponses": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"errorResponses entry {broken} must be rejected")
+
+
 def check_referenced_triggers():
     # P8b-15 fix round 2: a trigger the print defines only in prose that names an already printed
     # structure without ambiguity (v2.3 CH07 7.19.1: W01 "identifies ORU messages") is added to that
@@ -1683,6 +1899,199 @@ def check_primary_print_override():
                                                          "matches no print"], report
 
 
+def check_primary_print_by_section():
+    # S3-3 (v2.3 ORM^O01, four prints under one caption): a primaryPrints print may be named
+    # "CAPTION (section N)" to tell apart prints under one caption, and stricter may list several.
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    other = [("MSH", "Header"), ("PID", "Patient"), ("[QRI]", "Q"), ("[NTE]", "Notes")]
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, _table("XYZ^X01^XYZ_X01", loose), heading="9.1.2           XYZ - synthetic (Event X01)")
+            + _page(3, _table("XYZ^X01^XYZ_X01", other), heading="9.1.3           XYZ - synthetic (Event X01)"))
+    structures, _, _ = _run("2.5.1", [("syn", text)], full=True)
+    assert structures["XYZ_X01"]["elements"][1]["max"] == 1, structures
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X01^XYZ_X01 (section 9.1.2)",
+             "stricter": ["XYZ^X01^XYZ_X01 (section 9.1.1)", "XYZ^X01^XYZ_X01 (section 9.1.3)"],
+             "citation": "Looser of three prints primary (synthetic)."}
+    fix = {**EMPTY, "primaryPrints": [entry]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert (s["elements"][1]["min"], s["elements"][1]["max"]) == (0, None), s
+    assert "Looser of three prints primary (synthetic)." in s["citation"] and "9.1.2" in s["citation"], s["citation"]
+    assert not [r for r in report if r[1] == "error"], report
+    stale = {**EMPTY, "primaryPrints": [{**entry, "stricter": ["XYZ^X01^XYZ_X01 (section 9.1.9)"]}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], stale, full=True)
+    assert [r[2] for r in report if r[1] == "error"] == [
+        "primaryPrints entry 'XYZ^X01^XYZ_X01 (section 9.1.2)' / ['XYZ^X01^XYZ_X01 (section 9.1.9)'] "
+        "matches no print"], report
+    for bad in ({**entry, "stricter": []}, {**entry, "stricter": [entry["primary"]]}):
+        try:
+            ext.validate_overrides({**EMPTY, "primaryPrints": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"accepted {bad['stricter']!r}")
+
+
+def check_variant_prints():
+    # S6-1 (ADR-019 S6): two normative prints of one ID that differ by trigger; a cited
+    # variantPrints entry keeps the named primary as the default print and commits the other as a
+    # variant governing its own triggers, with every other print equal to it. Stale, equal or
+    # doubly declared entries are errors.
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", loose), heading="9.1.2           XYZ - synthetic (Event X02)")
+            + _page(3, _table("XYZ^X03^XYZ_X01", strict), heading="9.1.3           XYZ - synthetic (Event X03)")
+            + _page(4, _table("XYZ^X04^XYZ_X01", loose), heading="9.1.4           XYZ - synthetic (Event X04)"))
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01", "variant": "XYZ^X01^XYZ_X01",
+             "citation": "Per-trigger prints (synthetic)."}
+    fix = {**EMPTY, "variantPrints": [entry]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert not [r for r in report if r[1] == "error"], report
+    assert (s["elements"][1]["min"], s["elements"][1]["max"]) == (0, None), s
+    assert s["triggers"] == ["XYZ^X02", "XYZ^X01", "XYZ^X03", "XYZ^X04"], s["triggers"]
+    assert "Per-trigger prints (synthetic)." in s["citation"], s["citation"]
+    [v] = s["variants"]
+    assert v["triggers"] == ["XYZ^X01", "XYZ^X03"], v
+    assert (v["elements"][1]["min"], v["elements"][1]["max"]) == (0, 1), v
+    assert "overrides.json variantPrints" in v["citation"] and "9.1.1" in v["citation"], v["citation"]
+    assert [r[1] for r in report if r[1].startswith("variant")] == ["variant", "variant", "variant-prints"], report
+    assert not [r for r in report if r[1] == "duplicate-differs"], report
+    rendered = ext.render(s)
+    assert json.loads(rendered)["variants"] == s["variants"], rendered
+    for bad, why in (({**entry, "primary": "XYZ^X09^XYZ_X01"}, "matches no print"),
+                     ({**entry, "variant": "XYZ^X04^XYZ_X01"}, "the variant print equals the default print")):
+        _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": [bad]}, full=True)
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+    both = {**fix, "primaryPrints": [{"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01",
+                                      "stricter": "XYZ^X01^XYZ_X01", "citation": "Looser print primary (synthetic)."}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], both, full=True)
+    assert any(r[1] == "error" and "also has a primaryPrints" in r[2] for r in report), report
+    stale = {**EMPTY, "variantPrints": [{**entry, "structure": "XYZ_X09"}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], stale, full=True)
+    assert ("XYZ_X09", "error", "variantPrints entry matches no caption") in report, report
+    for bad in ({**entry, "variant": []}, {**entry, "variant": entry["primary"]}, {**entry, "variant": [entry["primary"]]}):
+        try:
+            ext.validate_overrides({**EMPTY, "variantPrints": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"accepted {bad['variant']!r}")
+
+
+def check_variant_prints_several():
+    # S6 fix wave (I1): three normative prints of one ID that differ by trigger; one variantPrints
+    # entry per variant print, all naming the same default, commit two variants. Entries naming
+    # different defaults, or variant prints equal to one another, are errors.
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    third = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("}]", "--- R end")]
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", loose), heading="9.1.2           XYZ - synthetic (Event X02)")
+            + _page(3, _table("XYZ^X03^XYZ_X01", third), heading="9.1.3           XYZ - synthetic (Event X03)")
+            + _page(4, _table("XYZ^X04^XYZ_X01", strict), heading="9.1.4           XYZ - synthetic (Event X04)"))
+    one = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01", "variant": "XYZ^X01^XYZ_X01",
+           "citation": "First per-trigger print (synthetic)."}
+    two = {**one, "variant": "XYZ^X03^XYZ_X01", "citation": "Second per-trigger print (synthetic)."}
+    fix = {**EMPTY, "variantPrints": [one, two]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert not [r for r in report if r[1] == "error"], report
+    assert (s["elements"][1]["min"], s["elements"][1]["max"]) == (0, None), s
+    assert "First per-trigger print" in s["citation"] and "Second per-trigger print" in s["citation"], s["citation"]
+    first, second = s["variants"]
+    assert first["triggers"] == ["XYZ^X01", "XYZ^X04"], first
+    assert second["triggers"] == ["XYZ^X03"], second
+    assert "First per-trigger" in first["citation"] and "Second" not in first["citation"], first["citation"]
+    assert "Second per-trigger" in second["citation"] and "9.1.3" in second["citation"], second["citation"]
+    assert (second["elements"][1]["min"], second["elements"][1]["max"]) == (0, None), second
+    assert not [r for r in report if r[1] == "duplicate-differs"], report
+    assert [r[1] for r in report if r[1] == "variant-prints"] == ["variant-prints", "variant-prints"], report
+    for bad, why in (([one, {**two, "primary": "XYZ^X01^XYZ_X01"}], "name different default prints"),
+                     ([one, {**two, "variant": "XYZ^X04^XYZ_X01"}], "name equal variant prints")):
+        _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": bad}, full=True)
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+
+
+def check_variant_prints_kept_on_default():
+    # S6 fix wave (I1, MFK_M01 v2.3.1 and v2.4): a print equal to the variant whose caption names a
+    # trigger the default print's caption also names. That trigger has two prints (the primaryPrints
+    # case) and stays on the default only when the entry lists it in keptOnDefault; the variant
+    # keeps the triggers only it prints. Unlisted or stale kept triggers are errors.
+    strict = [("MSH", "Header"), ("MSA", "Ack"), ("MFI", "Master")]
+    loose = [("MSH", "Header"), ("MSA", "Ack"), ("[ERR]", "Error"), ("MFI", "Master")]
+    text = (_page(1, _table("XYZ^X01-X03^XYZ_X01", loose), heading="9.1.1           XYZ - synthetic (Events X01-X03)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", strict), heading="9.1.2           XYZ - synthetic (Event X02)")
+            + _page(3, _table("XYZ^X04^XYZ_X01", strict), heading="9.1.3           XYZ - synthetic (Event X04)"))
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X01-X03^XYZ_X01", "variant": "XYZ^X04^XYZ_X01",
+             "keptOnDefault": ["XYZ^X02"], "citation": "Per-trigger prints, X02 printed both ways (synthetic)."}
+    fix = {**EMPTY, "variantPrints": [entry]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert not [r for r in report if r[1] == "error"], report
+    assert "XYZ^X02" in s["triggers"] and "XYZ^X04" in s["triggers"], s["triggers"]
+    [v] = s["variants"]
+    assert v["triggers"] == ["XYZ^X04"], v
+    assert [e["segment"] for e in v["elements"]] == ["MSH", "MSA", "MFI"], v
+    bare = {k: x for k, x in entry.items() if k != "keptOnDefault"}
+    for bad, why in ((bare, "must be exact and none the default print's"),
+                     ({**entry, "keptOnDefault": ["XYZ^X02", "XYZ^X03"]}, "keptOnDefault")):
+        _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": [bad]}, full=True)
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+    for bad in ({**entry, "keptOnDefault": []}, {**entry, "keptOnDefault": "XYZ^X02"}, {**entry, "keptOnDefault": ["X02"]}):
+        try:
+            ext.validate_overrides({**EMPTY, "variantPrints": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"accepted {bad['keptOnDefault']!r}")
+
+
+def check_variant_prints_one_trigger_two_variants():
+    # S7-1 (S6 re-review gap): two variant prints that differ from each other but both print one
+    # trigger leave that trigger with two governing prints; the extractor rejects the entries.
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    third = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("}]", "--- R end")]
+    text = (_page(1, _table("XYZ^X02^XYZ_X01", loose), heading="9.1.1           XYZ - synthetic (Event X02)")
+            + _page(2, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.2           XYZ - synthetic (Event X01)")
+            + _page(3, _table("XYZ^X01,X03^XYZ_X01", third), heading="9.1.3           XYZ - synthetic (Events X01, X03)"))
+    one = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01", "variant": "XYZ^X01^XYZ_X01",
+           "citation": "First per-trigger print (synthetic)."}
+    two = {**one, "variant": "XYZ^X01,X03^XYZ_X01", "citation": "Second per-trigger print, X01 again (synthetic)."}
+    fix = {**EMPTY, "variantPrints": [one, two]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    assert "XYZ_X01" not in structures, structures.get("XYZ_X01")
+    assert any(r[1] == "error" and "another variant's" in r[2] for r in report), report
+
+
+def check_variant_prints_kept_on_default_strict_subset():
+    # S7-1 (S6 re-review gap): a keptOnDefault naming only some of the triggers both the default
+    # and the variant print (here X02, not X03) would leave X03 under two prints; rejected. The
+    # exact overlap is accepted.
+    strict = [("MSH", "Header"), ("MSA", "Ack"), ("MFI", "Master")]
+    loose = [("MSH", "Header"), ("MSA", "Ack"), ("[ERR]", "Error"), ("MFI", "Master")]
+    text = (_page(1, _table("XYZ^X01-X03^XYZ_X01", loose), heading="9.1.1           XYZ - synthetic (Events X01-X03)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", strict), heading="9.1.2           XYZ - synthetic (Event X02)")
+            + _page(3, _table("XYZ^X03^XYZ_X01", strict), heading="9.1.3           XYZ - synthetic (Event X03)")
+            + _page(4, _table("XYZ^X04^XYZ_X01", strict), heading="9.1.4           XYZ - synthetic (Event X04)"))
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X01-X03^XYZ_X01", "variant": "XYZ^X04^XYZ_X01",
+             "keptOnDefault": ["XYZ^X02", "XYZ^X03"], "citation": "Per-trigger prints, X02 and X03 printed both ways (synthetic)."}
+    structures, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": [entry]}, full=True)
+    assert not [r for r in report if r[1] == "error"], report
+    [v] = structures["XYZ_X01"]["variants"]
+    assert v["triggers"] == ["XYZ^X04"], v
+    subset = {**entry, "keptOnDefault": ["XYZ^X02"]}
+    ext.validate_overrides({**EMPTY, "variantPrints": [subset]})
+    structures, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "variantPrints": [subset]}, full=True)
+    assert "XYZ_X01" not in structures, structures.get("XYZ_X01")
+    assert any(r[1] == "error" and "variantPrints entry" in r[2] for r in report), report
+
+
 def check_union_prints():
     # P8b-10 ruling (v2.6 RSP_K21): two incomparable normative prints of one ID; a cited
     # unionPrints entry aligns them by segment or group name: per element the lesser min and the
@@ -1865,6 +2274,330 @@ def check_caption_scoped_exclusion():
     assert any(r[1] == "error" and "9.1.3" in r[0] for r in report), report
 
 
+def _prose_entry(**kw):
+    """A proseFragments entry (S5-1) for the synthetic XYZ^X01^XYZ_X01 caption of section 9.1.1."""
+    alt = lambda values, group, syntax: {"values": values, "group": group, "nameSource": "override",
+                                         "nameCitation": "overrides.json proseFragments: x", "section": "9.1.2",
+                                         "page": "9-2", "quote": f"MFI-1 = {values[0]} for this file", "syntax": syntax}
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "caption": "XYZ^X01^XYZ_X01", "chapter": "9",
+             "section": "9.1.1", "page": "9-1", "quote": "the part represented by [...] is replaced by",
+             "syntax": "MSH MFI {MFE @BODY}",
+             "choices": {"BODY": {"key": {"segment": "MFI", "field": 1, "component": 1}, "section": "9.1.2",
+                                  "page": "9-2", "quote": "keyed by the master file identifier",
+                                  "alternatives": [alt(["AAA"], "XYZ_A", "STF [PRA]"),
+                                                   alt(["BBB", "CCC"], "XYZ_B", "CDM [{PRC}]")]}},
+             "citation": "HL7 v2.5.1 Chapter 9, section 9.1.1, p 9-1 (synthetic)."}
+    return {**entry, **kw}
+
+
+def check_prose_fragments():
+    # S5-1 (ADR-019 S5): a cited transcription stands in for a table the extractor cannot read; the
+    # placeholder becomes a keyed choice of the transcribed fragments; the structure is marked
+    # syntaxSource prose and its citation names the entry and the quoted sentences.
+    template = _table("XYZ^X01^XYZ_X01", [("MSH", "Header"), ("MFI", "Master File"), ("{ MFE", "Entry"),
+                                          ("[...] }", "One or more segments")])
+    text = _page(1, template, heading="9.1.1           XYZ - synthetic (Event X01)")
+    entry = _prose_entry()
+    rule = {**EMPTY, "proseFragments": [entry]}
+    ext.validate_overrides(rule)
+    structures, report, _ = _run("2.5.1", [("syn", text)], rule, full=True)
+    assert not [r for r in report if r[1] == "error"], report
+    s = structures["XYZ_X01"]
+    assert s["syntaxSource"] == "prose" and s["triggers"] == ["XYZ^X01"], s
+    group = s["elements"][2]
+    choice = group["elements"][1]
+    assert [e.get("segment") for e in s["elements"][:2]] == ["MSH", "MFI"] and group["max"] is None, s
+    assert choice["key"]["values"] == {"AAA": "XYZ_A", "BBB": "XYZ_B", "CCC": "XYZ_B"}, choice
+    assert [a["elements"] for a in choice["alternatives"]] == [[_seg("STF"), _seg("PRA", 0, 1)],
+                                                                [_seg("CDM"), _seg("PRC", 0, None)]], choice
+    assert "overrides.json proseFragments" in s["citation"] and "'the part represented by [...] is replaced by'" in s["citation"]
+    assert "XYZ_A (overrides.json proseFragments: x)" in s["citation"], s["citation"]
+    text_json = ext.render(s)
+    assert '  "syntaxSource": "prose",\n  "elements": [' in text_json, text_json
+    # The transcription never overrides a table the extractor reads.
+    readable = _page(1, _table("XYZ^X01^XYZ_X01", [("MSH", "Header"), ("MFI", "Master File"), ("{ MFE", "Entry"),
+                                                   ("STF }", "Staff")]), heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = _run("2.5.1", [("syn", readable)], rule, full=True)
+    assert "XYZ_X01" not in structures or "syntaxSource" not in structures["XYZ_X01"], structures
+    assert any(r[1] == "error" and "printed table is read" in r[2] for r in report), report
+    # An uncited transcription is rejected: no quote, a quote of 15 words, no page, an
+    # alternative without its own citation or name source.
+    for broken in ({k: v for k, v in entry.items() if k != "quote"},
+                   _prose_entry(quote=" ".join(["word"] * 15)),
+                   _prose_entry(page=""),
+                   _prose_entry(choices={"BODY": {**entry["choices"]["BODY"], "alternatives": [
+                       {k: v for k, v in entry["choices"]["BODY"]["alternatives"][0].items() if k != "quote"},
+                       entry["choices"]["BODY"]["alternatives"][1]]}}),
+                   _prose_entry(choices={"BODY": {**entry["choices"]["BODY"], "alternatives": [
+                       {**entry["choices"]["BODY"]["alternatives"][0], "nameSource": "printed"},
+                       entry["choices"]["BODY"]["alternatives"][1]]}}),
+                   _prose_entry(syntax="MSH MFI {MFE @OTHER}"),
+                   _prose_entry(caption=None)):
+        try:
+            ext.validate_overrides({**EMPTY, "proseFragments": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"proseFragments entry {broken} must be rejected")
+    # A caption the entry does not name, and a group name written as printed that the caption
+    # does not print, are errors.
+    _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "proseFragments": [_prose_entry(section="9.1.2")]})
+    assert any(r[1] == "error" and "the print is" in r[2] for r in report), report
+    _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "proseFragments": [_prose_entry(syntax="MSH MFI {MF_X: MFE @BODY}")]})
+    assert any(r[1] == "error" and "prints no such mark" in r[2] for r in report), report
+
+
+def check_prose_fragment_from_and_synthesis():
+    # S5-1: an alternative `from` another print takes that print's segments (and names); with a
+    # transcription too, the two must agree. A null caption synthesises a Table 0354 row no
+    # caption prints, its triggers the row's events.
+    m02 = {"structure": "XYZ_X02", "version": "2.5.1", "triggers": ["XYZ^X02"], "citation": "c2 INNER (HL7-xml v2.5.1/x)",
+           "elements": [_seg("MSH"), {"group": "XYZ_STAFF", "nameSource": "printed", "min": 1, "max": None,
+                                      "elements": [_seg("MFE"), _seg("STF"), {"group": "INNER", "nameSource": "v2xml", "min": 0,
+                                                                              "max": 1, "elements": [_seg("PRA"), _seg("ORG")]}]}]}
+    entry = _prose_entry(caption=None, triggers=["XYZ^X03"], structure="XYZ_X03")
+    alt0 = {**entry["choices"]["BODY"]["alternatives"][0], "syntax": "STF [PRA ORG]",
+            "from": {"structure": "XYZ_X02", "group": "XYZ_STAFF", "after": "MFE"}}
+    entry["choices"] = {"BODY": {**entry["choices"]["BODY"], "alternatives": [alt0, entry["choices"]["BODY"]["alternatives"][1]]}}
+    ext.validate_overrides({**EMPTY, "proseFragments": [entry]})
+    structures = {"XYZ_X02": m02}
+    report = ext.resolve_prose("2.5.1", structures, {"XYZ_X03": entry}, {}, EMPTY, None,
+                               ({"XYZ_X03": ["X03"]}, {}, set()))
+    assert [r for r in report if r[1] == "error"] == [], report
+    s = structures["XYZ_X03"]
+    alt = s["elements"][2]["elements"][1]["alternatives"][0]
+    assert alt["elements"][1]["group"] == "INNER" and "INNER (HL7-xml v2.5.1/x)" in s["citation"], s
+    assert s["triggers"] == ["XYZ^X03"] and "Table 0354 lists XYZ_X03" in s["citation"], s
+    for bad_alt, why in (({**alt0, "syntax": "STF [PRA]"}, "differs from XYZ_X02"),
+                         ({**alt0, "from": {**alt0["from"], "after": "ORG"}}, "has no group")):
+        bad = {**entry, "choices": {"BODY": {**entry["choices"]["BODY"], "alternatives": [
+            bad_alt, entry["choices"]["BODY"]["alternatives"][1]]}}}
+        report = ext.resolve_prose("2.5.1", {"XYZ_X02": m02}, {"XYZ_X03": bad}, {}, EMPTY, None,
+                                   ({"XYZ_X03": ["X03"]}, {}, set()))
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+    for synthesis, why in ((({"XYZ_X03": ["X04"]}, {}, set()), "are not the Table 0354"),
+                           (({}, {}, set()), "is not a Table 0354"),
+                           (({"XYZ_X03": ["X03"]}, {}, {"XYZ_X03"}), "a caption prints")):
+        report = ext.resolve_prose("2.5.1", {"XYZ_X02": m02}, {"XYZ_X03": entry}, {}, EMPTY, None, synthesis)
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+
+
+def _raw_structure(body, sid="XYZ_X01", bundles=None):
+    """A synthetic print whose rows are raw lines (columns: syntax at 4, description at 30)."""
+    caption = f"XYZ^X01^{sid}".ljust(26)
+    text = _page(1, [f"    {caption}Synthetic Message        Status    Chapter"] + body,
+                 heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = ext.extract_version("2.5.1", [("syn", text)], EMPTY, tables=[], bundles=bundles)
+    return structures.get(sid), report
+
+
+def _row(left, desc="", chapter=""):
+    return f"    {left.ljust(26)}{desc}".ljust(70) + chapter if chapter else f"    {left.ljust(26)}{desc}".rstrip()
+
+
+def _slot(name="Order Detail Segment", lo=1):
+    return {"slot": name, "min": lo, "max": None}
+
+
+def _uncited(e):
+    """An element tree with each slot's citation dropped (asserted separately)."""
+    if "slot" in e:
+        return {k: v for k, v in e.items() if k != "citation"}
+    if "elements" in e:
+        return {**e, "elements": [_uncited(x) for x in e["elements"]]}
+    if "alternatives" in e:
+        return {**e, "alternatives": [_uncited(x) for x in e["alternatives"]]}
+    return e
+
+
+def _order_group(s):
+    """The repeating ORC group's elements (index 2 after MSH and PID)."""
+    group = s["elements"][2]
+    assert (group["min"], group["max"]) in ((0, None), (1, None)), group
+    return [_uncited(e) for e in group["elements"]]
+
+
+ORDER_HEAD = [_row("MSH", "Header"), _row("PID", "Patient"), _row("{", ""), _row("ORC", "Common Order", "4")]
+
+
+def check_slot_ch04_own_line():
+    # S3-2, v2.3 CH04 4.2.1 ORM^O01 (p 4-4): "[" on its own line, then "Order Detail Segment OBR,
+    # etc." crossing the description column, then the detail's segments and "]". The slot heads
+    # the optional inner group: ORC [ slot [{NTE}] [{DG1}] ], never ORC slot [{NTE}] (a bare ORC
+    # is compliant).
+    body = ORDER_HEAD + [_row("["), "    Order Detail Segment OBR, etc.".ljust(70) + "4",
+                         _row("[{NTE}]", "Notes", "2"), _row("[{DG1}]", "Diagnosis", "6"), _row("]"), _row("}")]
+    s, report = _raw_structure(body)
+    assert s, report
+    detail = _order_group(s)
+    assert detail[0] == _seg("ORC"), detail
+    inner = detail[1]
+    assert (inner["min"], inner["max"]) == (0, 1), inner
+    assert inner["elements"] == [_slot(), _seg("NTE", 0, None), _seg("DG1", 0, None)], inner["elements"]
+    assert len(detail) == 2, detail
+    # v2.3.1 CH04 4.2.1 (p 4-4) wraps it: "Order Detail" then "Segment OBR, etc." further left.
+    body = ORDER_HEAD + [_row("["), _row("Order Detail", "", "4"), "  Segment OBR, etc.",
+                         _row("[{NTE}]", "Notes", "2"), _row("]"), _row("}")]
+    s, report = _raw_structure(body)
+    assert s, report
+    assert _order_group(s)[1]["elements"] == [_slot(), _seg("NTE", 0, None)], _order_group(s)
+
+
+def check_slot_ch04_bracketed_alone():
+    # S3-2, v2.3 CH04 4.2.2 ORR^O02 (p 4-5) and 4.2.3 OSR^Q06: "[Order Detail Segment] OBR, etc."
+    # brackets the placeholder alone: the slot is optional (min 0) and the citation says why.
+    body = ORDER_HEAD + ["    [Order Detail Segment] OBR, etc.".ljust(70) + "4", _row("[{NTE}]", "Notes", "2"),
+                         _row("}")]
+    s, report = _raw_structure(body)
+    assert s, report
+    detail = _order_group(s)
+    assert detail == [_seg("ORC"), _slot(lo=0), _seg("NTE", 0, None)], detail
+    slot = s["elements"][2]["elements"][1]
+    assert "brackets the placeholder alone" in slot["citation"], slot["citation"]
+    # Wrapped (v2.3.1 ORR^O02): "[Order Detail" then "Segment] OBR, etc.".
+    body = ORDER_HEAD + [_row("[Order Detail", "", "4"), "  Segment] OBR, etc.", _row("[{NTE}]", "Notes", "2"),
+                         _row("}")]
+    s, report = _raw_structure(body)
+    assert s and _order_group(s)[1] == _slot(lo=0), (s, report)
+    # In the description column with an empty syntax cell (v2.3.1 OSR^Q06, p 4-5).
+    body = ORDER_HEAD + [" " * 30 + "[Order Detail Segment] OBR, etc.".ljust(36) + "4", _row("[{NTE}]", "Notes", "2"),
+                         _row("}")]
+    s, report = _raw_structure(body)
+    assert s and _order_group(s)[1] == _slot(lo=0), (s, report)
+
+
+def check_slot_ch12_bracket_form():
+    # S3-2, v2.4 CH12 12.3.2 PPR^PC1 (p 12-11): [{ORC [OBR, etc [{NTE}] [{VAR}] [{OBX [{NTE}]}] ] }].
+    # "[OBR, etc" opens the inner group with the slot as its head: slot min 1 inside an optional
+    # group; the repeating ORC group keeps its brackets. Every printed spelling reads the same.
+    for cell in ("[OBR, etc", "[OBR, etc.", "[OBR, etc..."):
+        body = [_row("MSH", "Header"), _row("PID", "Patient"), _row("[{ORC", "Common Order", "4"),
+                _row(cell, "Order Detail Segment, etc.", "4"), _row("[{NTE}]", "Notes", "2"),
+                _row("[{VAR}]", "Variance", "12"), _row("[{OBX", "Observation", "7"), _row("[{NTE}]", "Notes", "2"),
+                _row("}]"), _row("]"), _row("}]")]
+        s, report = _raw_structure(body)
+        assert s, (cell, report)
+        group = s["elements"][2]
+        assert (group["min"], group["max"]) == (0, None), group
+        detail = _order_group(s)
+        assert detail[0] == _seg("ORC") and len(detail) == 2, detail
+        inner = detail[1]
+        assert (inner["min"], inner["max"]) == (0, 1), inner
+        assert inner["elements"][:3] == [_slot(), _seg("NTE", 0, None), _seg("VAR", 0, None)], inner["elements"]
+    # One space between the cell and the description (v2.3 CH12 12.3.3 PPP^PCB, p 12-11).
+    body = [_row("MSH", "Header"), _row("PID", "Patient"), _row("[{ORC", "Common Order", "4"),
+            "    [OBR, etc Order Detail Segment, etc.".ljust(70) + "4", _row("[{NTE}]", "Notes", "2"), _row("]"),
+            _row("}]")]
+    s, report = _raw_structure(body)
+    assert s, report
+    assert _order_group(s)[1]["elements"] == [_slot(), _seg("NTE", 0, None)], _order_group(s)
+
+
+def check_slot_choice_with_placeholder():
+    # S3-2, v2.5.1 to v2.8.2 CH12 "< OBR | etc. >": a choice whose last alternative is the
+    # placeholder is one slot in place of the whole choice (a slot never sits inside a choice);
+    # the listed alternatives are named in the citation. Spellings: "etc." alone in the
+    # description column, "..." with "etc." (v2.5.1 PRR^PC5), "Hxx" with "etc." (v2.8.2), and a
+    # "--- CHOICE" mark with or without begin/end (v2.7.1, v2.8.2 PGL^PC6).
+    for alt, marks in ((("", "etc."), ("", "")), (("...", "etc."), ("", "")), (("Hxx", "etc."), ("", "")),
+                       (("Hxx", "etc."), ("--- CHOICE begin", "--- CHOICE end")),
+                       (("Hxx", "etc."), ("--- CHOICE", "--- CHOICE"))):
+        body = [_row("MSH", "Header"), _row("PID", "Patient"), _row("[{", "--- ORDER begin"), _row("ORC", "Common Order"),
+                _row("[", "--- ORDER_DETAIL begin"), _row("<", marks[0]), _row("OBR", "Order Detail Segment", "4"),
+                _row("|"), _row(*alt), _row(">", marks[1]), _row("[{NTE}]", "Notes", "2"),
+                _row("]", "--- ORDER_DETAIL end"), _row("}]", "--- ORDER end")]
+        s, report = _raw_structure(body)
+        assert s, (alt, marks, report)
+        detail = s["elements"][2]["elements"][1]
+        assert detail["group"] == "ORDER_DETAIL" and detail["min"] == 0, detail
+        assert [_uncited(e) for e in detail["elements"]] == [_slot(), _seg("NTE", 0, None)], detail["elements"]
+        cite = detail["elements"][0]["citation"]
+        assert "< OBR | " in cite and "OBR" in cite.split("alternative")[-1], cite
+    # A bare "--- CHOICE" mark on a choice that is NOT a slot is still unread.
+    body = [_row("MSH", "Header"), _row("<", "--- CHOICE"), _row("OBR", "Order"), _row("|"), _row("RXO", "Pharmacy"),
+            _row(">", "--- CHOICE")]
+    s, report = _raw_structure(body)
+    assert s is None and "group mark not read" in [r for r in report if r[1] == "skipped"][0][2], report
+    # The placeholder anywhere but last, or "..." with any description but "etc.", stays unread.
+    for rows in ([_row("<"), _row("", "etc."), _row("|"), _row("OBR", "Order"), _row(">")],
+                 [_row("<"), _row("OBR", "Order"), _row("|"), _row("...", "more"), _row(">")]):
+        s, report = _raw_structure([_row("MSH", "Header")] + rows)
+        assert s is None, (rows, s)
+
+
+def check_slot_citation_and_render():
+    # S3-2: the slot's citation is built like the structure's (version, chapter, section, title)
+    # plus the page of the slot's own row, quotes the print, and renders in the S3-1 JSON form.
+    body = ORDER_HEAD + [_row("["), "    Order Detail Segment OBR, etc.".ljust(70) + "4",
+                         _row("[{NTE}]", "Notes", "2"), _row("]"), _row("}")]
+    s, _ = _raw_structure(body)
+    slot = s["elements"][2]["elements"][1]["elements"][0]
+    assert slot["citation"].startswith("HL7 v2.5.1 Chapter 9, section 9.1.1 XYZ - synthetic (Event X01), p 9-1: "), \
+        slot["citation"]
+    assert "'Order Detail Segment OBR, etc.'" in slot["citation"], slot["citation"]
+    assert "_at" not in slot, slot
+    text = ext.render(s)
+    assert ('{ "slot": "Order Detail Segment", "min": 1, "max": null, "citation": "HL7 v2.5.1 Chapter 9' in text), text
+    assert "Order Detail Segment" in ext.compact(s["elements"]), ext.compact(s["elements"])
+
+
+def check_slot_never_from_query_template_or_prose():
+    # S3-2 keeps ruling G6 for query templates and S5 for prose: an ellipsis row, "[...]", a
+    # lone "..." cell and a "see section" prose row inside a group still leave the print unread.
+    cases = [[_row("MSH", "Header"), _row("ERQ", "Query"), _row("", "..."), _row("[ DSC ]", "Continuation")],
+             [_row("MSH", "Header"), _row("[...]", "Query results")],
+             [_row("MSH", "Header"), _row("...", "Segments of the query")],
+             [_row("MSH", "Header"), _row("[", ""), _row("PID", "Patient"),
+              "    see section 4.2.1 for the order detail segments that may appear here", _row("]", "")]]
+    for body in cases:
+        s, report = _raw_structure(body)
+        assert s is None and [r for r in report if r[1] == "skipped"], (body, report)
+    # Nor does "OBR, etc." in a plain description (the CH04 choice's description column).
+    s, _ = _structure([("MSH", "Header"), ("ORC", "Order"), ("<OBR|RQD|RXO>", "Order Detail Segment OBR, etc."),
+                       ("[{NTE}]", "Notes")])
+    assert not any("slot" in e for e in s["elements"]), s["elements"]
+
+
+def check_slot_bundle_naming():
+    # S3-2: an unnamed group holding a slot takes the bundle's name when the bundle group sits at
+    # the same path, its members include every printed segment and more (the slot's fillers),
+    # and its first segment is one of those fillers when the slot is the head (v2.4 PPR^PC1's
+    # ORDER and ORDER_DETAIL against HL7-xml v2.4, where the slot's place is a CHOICE of OBR, RXO).
+    b = _bundles("2.5.1", {"XYZ_X01": _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, PID 1 1, XYZ_X01.ORDER 0 unbounded;"
+                                                      "XYZ_X01.ORDER: ORC 1 1, XYZ_X01.ORDER_DETAIL 0 1;"
+                                                      "XYZ_X01.ORDER_DETAIL: XYZ_X01.CHOICE 1 1, NTE 0 unbounded;"
+                                                      "XYZ_X01.CHOICE choice: OBR 1 1, RXO 1 1")})
+    body = [_row("MSH", "Header"), _row("PID", "Patient"), _row("[{ORC", "Common Order", "4"),
+            _row("[OBR, etc", "Order Detail Segment, etc.", "4"), _row("[{NTE}]", "Notes", "2"), _row("]"), _row("}]")]
+    s, report = _raw_structure(body, bundles=b)
+    assert s, report
+    order = s["elements"][2]
+    assert (order["group"], order["nameSource"]) == ("ORDER", "v2xml"), order
+    assert (order["elements"][1]["group"], order["elements"][1]["nameSource"]) == ("ORDER_DETAIL", "v2xml"), order
+    # A bundle group whose first segment is a printed one is not the slot's group.
+    b = _bundles("2.5.1", {"XYZ_X01": _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, PID 1 1, XYZ_X01.ORDER 0 unbounded;"
+                                                      "XYZ_X01.ORDER: ORC 1 1, XYZ_X01.ORDER_DETAIL 0 1;"
+                                                      "XYZ_X01.ORDER_DETAIL: NTE 0 unbounded, OBR 1 1")})
+    s, report = _raw_structure(body, bundles=b)
+    assert s["elements"][2]["elements"][1]["nameSource"] == "synthesised", s["elements"][2]
+    assert s["elements"][2]["elements"][1]["group"] == "NTE_GROUP", s["elements"][2]
+
+
+def check_slot_bundle_naming_path_bound():
+    # S3-4 (S3-2 review): the slot-heads rule takes any non-printed first segment, so the parent
+    # path is what bounds it. The bundle's ORDER_DETAIL would match the slot's group (OBR heads it,
+    # NTE and more are members) but sits under WRAP, not at the root where the print sets the
+    # group, so it does not name it; the root's own group WRAP is headed by a printed segment.
+    b = _bundles("2.5.1", {"XYZ_X01": _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, PID 1 1, XYZ_X01.WRAP 0 1;"
+                                                      "XYZ_X01.WRAP: NTE 1 1, XYZ_X01.ORDER_DETAIL 0 1;"
+                                                      "XYZ_X01.ORDER_DETAIL: XYZ_X01.CHOICE 1 1, NTE 0 unbounded;"
+                                                      "XYZ_X01.CHOICE choice: OBR 1 1, RXO 1 1")})
+    body = [_row("MSH", "Header"), _row("PID", "Patient"),
+            _row("[OBR, etc", "Order Detail Segment, etc.", "4"), _row("[{NTE}]", "Notes", "2"), _row("]")]
+    s, report = _raw_structure(body, bundles=b)
+    assert s, report
+    assert s["elements"][2]["nameSource"] == "synthesised", s["elements"][2]
+
+
 def check_first_row_left_of_caption():
     # P8b-10 (v2.6 ADT^A31^ADT_A05 at 3.3.31): the caption at column 7, its rows from column 3; the
     # MSH row sets the column. Any other row that far left still ends the table.
@@ -1895,9 +2628,10 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_caption_errata, check_reader_layouts,
           check_v23_synthesised_ids_no_table, check_conformance_print_never_primary, check_general_ack_fold_code_alone,
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
-          check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
+          check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override, check_primary_print_by_section,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
-          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints,
+          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints, check_variant_prints, check_variant_prints_several, check_variant_prints_kept_on_default,
+          check_variant_prints_one_trigger_two_variants, check_variant_prints_kept_on_default_strict_subset,
           check_colon_caption_with_space_ends_table, check_v282_reader_layouts, check_v271_reader_layouts,
           check_0354_triggers_merged, check_v24_reader_layouts, check_syntax_cell_erratum_occurrence,
           check_bundle_name_no_group_can_hold, check_v231_bundle_encoder_style,
@@ -1906,7 +2640,12 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_caption_erratum_occurrence, check_caption_structure_declared, check_v231_own_bundle_other_trigger,
           check_table_0354_provenance, check_table_0354_event_erratum_union, check_v23_events_from_title,
           check_v23_caption_forms, check_closing_bracket_in_description_column, check_v23_names_through_v231_then_v24,
-          check_single_space_cell_and_shifted_page, check_referenced_triggers]
+          check_single_space_cell_and_shifted_page, check_referenced_triggers, check_withdrawn_segments,
+          check_slot_ch04_own_line, check_slot_ch04_bracketed_alone, check_slot_ch12_bracket_form,
+          check_slot_choice_with_placeholder, check_slot_citation_and_render,
+          check_slot_never_from_query_template_or_prose, check_slot_bundle_naming,
+          check_slot_bundle_naming_path_bound, check_keyed_choices, check_aliases, check_error_responses,
+          check_prose_fragments, check_prose_fragment_from_and_synthesis]
 
 
 def main():

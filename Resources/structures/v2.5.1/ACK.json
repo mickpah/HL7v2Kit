@@ -1,12 +1,24 @@
 {
   "structure": "ACK",
   "version": "2.5.1",
-  "citation": "HL7 v2.5.1 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-61 (ACK^varies^ACK; MSH-9.3 is always ACK).",
+  "citation": "HL7 v2.5.1 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-61 (ACK^varies^ACK; MSH-9.3 is always ACK). Two normative prints of ACK differ by trigger: HL7 v2.5.1 Chapter 2 section 2.14.1 (ACK^varies^ACK, p 2-61), the general acknowledgment for every trigger, prints ERR optional and repeating ([{ ERR }]); Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 5-40; ACK^Q17, p 5-41; ACK^J01 and ACK^J02, p 5-42) print it optional and non-repeating ([ ERR ]); the 2.14.1 print is the default (the triggerFolds primary) and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
   "triggers": ["ACK^*"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "SFT", "min": 0, "max": null },
     { "segment": "MSA", "min": 1, "max": 1 },
     { "segment": "ERR", "min": 0, "max": null }
+  ],
+  "variants": [
+    {
+      "triggers": ["ACK^Q16", "ACK^Q17", "ACK^J01", "ACK^J02"],
+      "citation": "HL7 v2.5.1 Chapter 5, section 5.4.4 QSB - Create subscription (Event Q16), p 5-40; the same structure is printed for ACK^Q17 (5.4.5), ACK^J01 (5.4.6) and ACK^J02 (5.4.7). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ACK differ by trigger: HL7 v2.5.1 Chapter 2 section 2.14.1 (ACK^varies^ACK, p 2-61), the general acknowledgment for every trigger, prints ERR optional and repeating ([{ ERR }]); Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 5-40; ACK^Q17, p 5-41; ACK^J01 and ACK^J02, p 5-42) print it optional and non-repeating ([ ERR ]); the 2.14.1 print is the default (the triggerFolds primary) and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "SFT", "min": 0, "max": null },
+        { "segment": "MSA", "min": 1, "max": 1 },
+        { "segment": "ERR", "min": 0, "max": 1 }
+      ]
+    }
   ]
 }

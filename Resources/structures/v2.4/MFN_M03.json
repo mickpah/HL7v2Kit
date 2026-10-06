@@ -1,0 +1,42 @@
+{
+  "structure": "MFN_M03",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 8, section 8.8.2 MFN/MFK - service/test/observation master file, p 8-21. Unprinted group names (ADR-019 decision 3): MF_TEST (HL7-xml v2.4/MFN_M03.xsd, MFN_M03.MF_TEST.CONTENT). The placeholder '???' is a choice keyed by MFI-1 (overrides.json keyedChoices, ADR-019 S4-1): OMA, OMB, OMC, OMD and OME select MF_TEST_NUMERIC, MF_TEST_CATEGORICAL, MF_TEST_BATTERIES, MF_TEST_CALCULATED and MF_OBS_ATTRIBUTES. Unprinted group names of the alternatives: MF_TEST_NUMERIC (HL7-xml v2.4/MFN_M08.xsd, MFN_M08.MF_TEST_NUMERIC.CONTENT), MF_TEST_CATEGORICAL (HL7-xml v2.4/MFN_M09.xsd, MFN_M09.MF_TEST_CATEGORICAL.CONTENT), MF_TEST_CAT_DETAIL (HL7-xml v2.4/MFN_M09.xsd, MFN_M09.MF_TEST_CAT_DETAIL.CONTENT), MF_TEST_BATTERIES (HL7-xml v2.4/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT), MF_TEST_BATT_DETAIL (HL7-xml v2.4/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT), MF_TEST_CALCULATED (HL7-xml v2.4/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT), MF_TEST_CALC_DETAIL (HL7-xml v2.4/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT), MF_OBS_ATTRIBUTES (HL7-xml v2.4/MFN_M12.xsd, MFN_M12.MF_OBS_ATTRIBUTES.CONTENT).",
+  "triggers": ["MFN^M03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_TEST", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "choice": null, "min": 1, "max": 1, "key": { "segment": "MFI", "field": 1, "component": 1, "values": { "OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL", "OMC": "MF_TEST_BATTERIES", "OMD": "MF_TEST_CALCULATED", "OME": "MF_OBS_ATTRIBUTES" }, "citation": "HL7 v2.4 Chapter 8, section 8.8.2 MFN/MFK - Master File Notification - Test/Observation (Event M03), pp 8-21 to 8-22: the syntax prints '??? [other segments(s)]' after OM1 in the MFE group and says 'where other segments can be any of the following combinations', each introduced by its key ('MFI-1 - Master file identifier = OMA, for numeric observations (second component of MSH-9 - Message type = M08)', OMB for M09 on p 8-21, OMC for M10, OMD for M11 and OME for M12 on p 8-22) and printed as the segments after OM1 of the MFN^M08^MFN_M08 to MFN^M12^MFN_M12 syntax that follows it, so the other segments are those of the group MFI-1 component 1 names (ADR-019 S4-1)." }, "alternatives": [
+        { "group": "MF_TEST_NUMERIC", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "segment": "OM2", "min": 0, "max": 1 },
+          { "segment": "OM3", "min": 0, "max": 1 },
+          { "segment": "OM4", "min": 0, "max": 1 }
+        ]},
+        { "group": "MF_TEST_CATEGORICAL", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_CAT_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "OM3", "min": 1, "max": 1 },
+            { "segment": "OM4", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "MF_TEST_BATTERIES", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_BATT_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "OM5", "min": 1, "max": 1 },
+            { "segment": "OM4", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "MF_TEST_CALCULATED", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_CALC_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "OM6", "min": 1, "max": 1 },
+            { "segment": "OM2", "min": 1, "max": 1 }
+          ]}
+        ]},
+        { "group": "MF_OBS_ATTRIBUTES", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "segment": "OM7", "min": 0, "max": 1 }
+        ]}
+      ]}
+    ]}
+  ]
+}

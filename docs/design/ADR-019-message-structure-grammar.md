@@ -422,7 +422,9 @@ holds).
 7. A message whose `message.version` has a different grammar version from the wire reading of MSH-12 (for example
    one parsed with `ParserOptions.versionOverride`) is not structure-checked; it raises
    `messageStructureNotModelled`. This is the conservative choice (no misfire); honouring
-   an explicit override would need version provenance on `Message`.
+   an explicit override would need version provenance on `Message`. (S6-4, 2026-10-06:
+   Permanent, register section E; that `Message` API change waits for the v1.0 API design.
+   Ceiling 6's reassembly is Permanent too: a transport concern.)
 
 ---
 
@@ -691,7 +693,7 @@ Owner gate G2, answered 2026-09-30 (all recommended defaults).
 | 4 | Unrecognised or empty MSH-12 | Skip, `messageStructureNotModelled` (info); no fallback grammar |
 | 5 | Group spans gating | On for complete versions with a clean match, independent of severity; behind the `isComplete` probe |
 | 6 | ORC-8 OUL misfire | Interim gate `messageCode not in (...)` shipped in P4-7; removed per version by the rollout task that supplies spans |
-| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point; an exact-matched base is matched again past a dropped `unexpected` until a finding is kept; narrowed maxima stay unreported |
+| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point; an exact-matched base is matched again past a dropped `unexpected` until a finding is kept; narrowed maxima stay unreported. Amended 2026-10-06 (S6-3, owner ruling, decision 1 of the epic P11 gate): a segment occurrence beyond a maximum the profile structure narrows below the base's, which the base accepts, is reported once per occurrence as `.info` `profileMaximumExceeded(localeRule:)`, naming the profile print and the maximum; it stays dropped as a finding. |
 | 8 | AU overlay timing | Immediately after the extractor (R1) |
 | 9 | Acknowledgments | Build and validate the general ACK; no protocol logic |
 | 10 | Severity | `messageStructureSeverity = nil` default now; presets `.warning` and `.error` confirmed at close-out |
@@ -1108,7 +1110,9 @@ compiling a structure per message.
   would misfire on messages the other print allows (requirement 4); per-trigger structures would
   be a model extension and are registered as a limitation instead. v2.5.1: RSP_K21 from 3.3.57
   (K22; the K21 print 3.3.56 misfired on CH03's own K22 example) and RDE_O11 from 4.13.13 (O25,
-  OBX optional in OBSERVATION).
+  OBX optional in OBSERVATION). (Superseded by S6-1, see the amendment below: two prints under
+  different triggers are per-trigger variants, `variantPrints`; `primaryPrints` keeps only two
+  prints under one trigger, v2.3 ORM_O01 and ORR_O02.)
 
 ## Amendment 2026-10-04 — v2.6 complete (P8b-10)
 
@@ -1117,12 +1121,16 @@ compiling a structure per message.
   templates: CH08 gives the staff MFR body in prose and MFN^M03's segments by an MFI-1-keyed
   reference to MFN^M08 to M12); ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their
   looser prints. Where two prints are incomparable (v2.6 RSP_K21) the structure is registered,
-  not guessed.
+  not guessed. (Superseded: MFN_M03 is modelled since S4 and MFR_M01 since S5, see the
+  amendments below; the six looser-print structures check each trigger against its own print
+  since S6-1, see the amendment below.)
 - **Union of incomparable prints (P8b-11).** A cited `unionPrints` entry names two
   incomparable normative prints of one ID; the extractor aligns them by segment or group name
   and commits the union (per element the lesser min and the greater max; an element in one
   print only is optional), or reports an error and leaves the ID not modelled when they do not
   align. v2.6 RSP_K21 is modelled this way (register section E, both relaxations as the cost).
+  (Superseded by S6-1, see the amendment below: v2.6 RSP_K21's default is the K22 print and the
+  K21 print a variant; `unionPrints` is empty.)
 - **Extractor.** A `--- NAME begin` / `--- NAME end` pair on empty syntax cells is a required,
   non-repeating named group (CH02 2.5.2), and a named `< ... >` with no `|` is a named required
   group (the P8b-6 ruling); a `syntax-cell` erratum corrects a printed cell; an MSH row left of
@@ -1140,8 +1148,9 @@ compiling a structure per message.
 - **v2.8.2 complete.** 185 structures modelled (32 exact-matched), 58 registered (register
   section E v2.8.2 addendum: CH12 placeholders, CH05 templates, UDM_Q05, QBP_Q13, RDR_RDR and
   the 47 Table 0354 rows marked Deprecated); every Table 0354 v2.8.2 row is one or the other.
-  ACK from its looser print. A 2.8 message is checked against the v2.8.2 structures through
-  `Version.grammarVersion`.
+  ACK from its looser print (superseded by S6-1, see the amendment below: the CH02 print is the
+  default and the CH05 and CH10 prints are variants). A 2.8 message is checked against the
+  v2.8.2 structures through `Version.grammarVersion`.
 - **Extractor.** In the caret-colon era (v2.7.1, v2.8.2) a caption may carry a space before
   its colon, a title may wrap before the Segments row, the header may read `Descriptions`,
   and section headings may be indented (accepted only when the number opens with the file's
@@ -1160,7 +1169,9 @@ compiling a structure per message.
 - **v2.7.1 complete.** 164 structures modelled (20 exact-matched), 58 registered (register
   section E v2.7.1 addendum: CH12 placeholders, CH05 templates, RDR_RDR, UDM_Q05, the four
   QRD/QRF structures and the 39 Table 0354 rows marked Deprecated); every Table 0354 v2.7.1 row
-  is one or the other. ACK from its looser print. A 2.7 message is checked against the v2.7.1
+  is one or the other. ACK from its looser print (superseded by S6-1, see the amendment below:
+  the CH02 print is the default and the CH05 and CH10 prints are variants). A 2.7 message is
+  checked against the v2.7.1
   structures through `Version.grammarVersion` (resolution table above).
 - **Segments the version does not define.** A print whose segments the version's grammar does
   not define (v2.7.1: URD and URS; QRD and QRF, withdrawn as of v2.7) is registered as not
@@ -1391,6 +1402,8 @@ compiling a structure per message.
   unreported is what neither structure reports: the narrowed maxima (REF^I12 `[IN1]`, PV1 and
   `[PV2]`, which the base prints twice, CH11 pp 11-16 to 11-17), where the base accepts the
   repetition and the profile's beyond-maximum finding is dropped by decision 7, unchanged.
+  (Superseded by S6-3, see the amendment below: the beyond-maximum segment is reported at
+  information.)
 - **OSR_Q06, the fifth profile structure** (p 281, caption erratum `OSQ^Q06^OSQ_Q06` for the
   response): `MSH MSA [ERR] QRD [QRF] [ [PID] { ORC <order detail> [{OBX}] [{CTI}] } ] [DSC]`. The
   print says only "OBR Order Detail", with no prose on this message; the base v2.4 choice (OBR,
@@ -1517,7 +1530,9 @@ occurrence; a repeating group that claims its peer is a pairing boundary; an anc
 its nearest repeating enclosing occurrence). Where the print ties no single group occurrence to
 a lookup, that principle still gives an answer, and the answer below is not the print's. None of
 these lookups is read by a shipped condition; each is registered in the limitations register
-(section E, P8b-18 addendum) and none is fixed.
+(section E, P8b-18 addendum) and none is fixed. (Corrected 2026-10-06, S6-2: the AU HL7au:000008
+display-OBX rules read the `.obrObxGroup` count on every ORU and REF; the count is fixed and the
+peer lookups re-classed Permanent; see the S6 amendment.)
 
 - **Container or specimen OBX beside repeating orders.** On v2.4 ORL_O22, v2.5.1 and v2.6
   ORL_O34 and ORL_O36, and v2.6 OPR_O38 (six structure-versions), a container or specimen OBX
@@ -1565,7 +1580,8 @@ these lookups is read by a shipped condition; each is registered in the limitati
   ADT^A47 and ADT^A49 with ADT_A30 on v2.7.1 and v2.8.2) (P8b-final: both listings' IDs are now
   registered or matched and `ORU^W01^ORU_R01` is matched; the ADT_A30 pairs draw information,
   ADT_A30 being registered with no triggers there); whether the AU profile reports
-  segments beyond the ADRM's narrowed maxima (decision 7); the 00060.1 PV1 prose mandate; and the
+  segments beyond the ADRM's narrowed maxima (decision 7; superseded by S6-3, see the amendment
+  below: reported at information); the 00060.1 PV1 prose mandate; and the
   P8b-17 ruling that extended the exact matcher to produce spans (R1).
 
 ## Amendment 2026-10-05 — a printed structure ID is never a mismatch (P8b-final)
@@ -1660,3 +1676,665 @@ Owner decision 9 of 2026-10-06 (final review M9): when R4 of the P8b-17 amendmen
 a message that carries an ORC or OBR gets one `.info` `IssueCode.conditionNotEvaluated(fields:)`,
 at the first gated field of its first ORC or OBR, naming the gated fields and the structure
 finding that withheld the spans; the conditions stay unevaluated, as R4 rules.
+
+## Amendment 2026-10-06 — segments a version withdrew (S2-1, F-I2 closed by design)
+
+The six Blocking (F-I2) structures, v2.7.1 QRY_PC4, RCI_I05, RQC_I05, RCL_I06 and UDM_Q05 and
+v2.8.2 UDM_Q05, print segments the version's grammar does not define. What the print gives:
+
+1. **The structures are fully printed.** v2.7.1 CH12 12.3.5, 12.3.7, 12.3.9 and 12.3.11 (QRY_PC4,
+   pp 15 to 22), CH11 11.3.5 (RQC^I05 p 13, RCI^I05 p 14) and 11.3.6 (RQC^I06 and RCL^I06, pp 14
+   to 15), CH05 5.10.1.2 (UDM^Q05^UDM_Q05, p 106); v2.8.2 CH05 5.10.1.2 (UDM_Q05, pp 102 to 103).
+   Each is a caption and segment table like any other; the extractor has always parsed them.
+2. **No attribute table for QRD, QRF, URD or URS on either version.** No chapter or appendix of
+   either print carries an attribute table or field section for the four (every PDF of both
+   versions searched). v2.7.1 Appendix A lists each with "withdrawn" in place of a section (QRD
+   and QRF p A-8, URD and URS p A-9); v2.8.2 Appendix A lists each as "deprecated", also with no
+   section (QRD and QRF p A-10, URD and URS p A-11). CH05 5.10.2 (v2.7.1 p 107; v2.8.2 p 104):
+   "retained for backward compatibility as of V2.4 and withdrawn as of V2.7". CH02 2.8.4 (v2.7.1
+   p 24; v2.8.2 p 26) points elsewhere for the definition: "the reader will need to review the
+   appropriate earlier version of the standard", naming no version. The last version that prints
+   them is v2.6 (CH05 5.10.4.1 to 5.10.4.4).
+3. **What a receiver does with a withdrawn constituent.** CH02 2.8.4 (same pages): "By site
+   agreement senders and receivers may agree to continue to use" removed constituents. Their use
+   is a matter of site agreement, not a defect of the message.
+
+**Decision: design A, a cited withdrawn-segment list; not design B.** Carrying the v2.6 attribute
+tables onto v2.7.1 and v2.8.2 (B) would field-check a segment against text neither version prints,
+with v2.6 data types that v2.7 itself withdrew (the v2.6 QRF and URS print TQ fields; TQ is
+"withdrawn and removed from the standard as of v 2.7", v2.7.1 CH02A 2.A.77, p 84, and v2.8.2
+CH02A 2.A.78, p 82), and CH02 2.8.4 names no earlier version to read: a
+grammar is not defensible from these versions' text, and checks drawn from it could misfire on a
+message the site agreement allows. Instead `Resources/structures/overrides.json` gains
+`withdrawnSegments`: per version, each segment ID with the Appendix A status as printed
+("withdrawn" or "deprecated"), the last version that defines it ("2.6") and the citation. On
+v2.7.1 and v2.8.2 all four are listed (Appendix A treats them alike on each version).
+
+- **Structure level.** A listed ID may appear in a structure of that version (the codegen and
+  `StructureGuardTests` guard 3 accept it, and only it, beside the grammar's segments and ADD).
+  The matcher no longer passes over a listed ID as it does an undefined one: it is matched by
+  segment ID where the structure names it, and is unexpected where it does not. The six
+  structures are modelled; their registrations leave `completeness.json`; `completeVersions` is
+  unchanged.
+- **Field level: one information issue, not silence.** A listed segment draws one `.info`
+  `IssueCode.segmentWithdrawnInVersion` per occurrence, naming the printed status and the last
+  defining version, saying its fields were not validated; it replaces the `.warning`
+  `segmentNotInVersionGrammar` such a segment drew before. Silence would hide that the segment
+  carries data nothing checked; a warning would call a use the print leaves to site agreement a
+  defect. Placement remains the structure check's job: a QRD in an ADT^A01 is still a structure
+  finding at the configured severity.
+
+Before this amendment a QRD on v2.7.1 drew a `.warning` `segmentNotInVersionGrammar` and was
+transparent to the matcher, and a QRY^PC4 drew `.info` `messageStructureNotModelled`; after it,
+the QRD draws the information issue and the QRY^PC4 body is checked against CH12 12.3.5.
+
+## Amendment 2026-10-06 — the withdrawn-segment structures modelled (S2-2)
+
+Built as the S2-1 amendment decides. `overrides.json` `withdrawnSegments` lists QRD, QRF, URD and
+URS on v2.7.1 ("withdrawn") and v2.8.2 ("deprecated"), each cited to Appendix A and defined
+through v2.6. The extractor writes v2.7.1 QRY_PC4, RCI_I05, RQC_I05 (its `primaryPrints` entry
+kept: the looser 11.3.5 print is primary), RCL_I06 and UDM_Q05 and v2.8.2 UDM_Q05, appends to
+each citation the withdrawn segments it names, and removes a committed structure's
+`completeness.json` registration itself (`--check` reports one that remains). Guard 3 accepts a
+listed ID beside the version's segments and ADD in `StructureGuardTests` and in the extractor's
+`--check`/`--write`; the codegen validates each entry (Appendix A cited, not defined by the
+version, defined by `definedThrough`), renders it, and rejects a structure naming a listed ID on
+a version that neither defines nor lists it. The v2.8.2 Deprecated Table 0354 rows QRY_PC4,
+RCI_I05, RCL_I06 and RQC_I05 stay registered (no v2.8.2 print). Counts: v2.7.1 169 modelled / 53
+registered, v2.8.2 186 / 61; 1,113 modelled and 260 registered in all; `completeVersions`
+unchanged. Register section E closes the six F-I2 rows; the v2.7.1 RQC_I05 primary-print row is
+a per-trigger case, Blocking as ACK is.
+
+## Amendment 2026-10-06 — S3-1 open-slot element
+
+Owner decision 4 (epic P11 gate, 2026-10-06): the open slot closes the Blocking rows that cite
+it. This amendment adds the element to the model; the extractor (S3-2) and the 58 registrations
+(S3-3: ORM_O01, ORR_O02, OSR_Q06 on v2.3 and v2.3.1; PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1,
+PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF on v2.3 to v2.7.1, the first four on v2.8.2) follow. No
+structure file and no `completeness.json` entry changes here.
+
+**What the print gives.** v2.3 CH04 4.2.1 (p 4-4) prints the general order detail as a line of
+its own, "Order Detail Segment OBR, etc.", inside the optional detail bracket after ORC and
+before `[{NTE}]`, `[{DG1}]` and `[{OBX [{NTE}]}]`; use note b reads it as "whichever of these
+order detail segment(s) is appropriate". v2.4 CH12 12.3.2 (PPR^PC1, pp 12-10 to 12-11) prints
+`[{ORC [OBR, etc [{NTE}] [{VAR}] [{OBX [{NTE}] [{VAR}]}] ] }]`, and the CH12 note (p 12-9) reads
+"OBR etc." as "all possible combinations of pharmacy and other order detail segments" per CH04
+4.2.2.4, which names only examples ("Examples are OBR and RXO"). From v2.5.1 CH12 prints the
+same position as `< OBR | etc. >`. In every form the slot is unbracketed within its enclosing
+optional group (`[OBR, etc` opens the group with it), so it is required once that group is
+present; "segment(s)" and "combinations" admit more than one segment. A slot is therefore
+`min 1, max nil` in all 58 cases. (Corrected by the Extraction paragraph below: the CH04
+general-order slot of v2.3 and v2.3.1 is min 0.)
+
+**The element.** `StructureElement.slot(_ name: String?, min: Int, max: Int?, citation:
+String)`, public and additive (the enum is open). `min` and `max` bound the number of segments
+the slot takes. The name is the printed one ("Order Detail Segment"), or nil (then `open
+slot`); `citation` is required and names the print and the words that make the slot open. A
+slot has no `children` and no `segmentIDs` (no segment ID is part of its definition). JSON:
+`{"slot": "<name>" or null, "min", "max", "citation"}`, the `slot` key present even when null.
+The codegen and the test decoder reject an uncited slot, a `citation` on any other element, a
+slot name shaped like a segment ID (it would read as one in a finding), a slot anywhere inside a
+choice (the print never puts one there: `< OBR | etc. >` is itself the slot, OBR one of its
+fillers) and two adjacent slots (nothing printed would divide them).
+
+**Semantics (controller ruling, 2026-10-06).** A slot takes any segment except MSH, and it is
+nondeterministic: a segment that could begin what follows the slot may either end the slot or
+stay in it, both readings are kept, and a message draws a finding only when no parse accepts it.
+Z-segments, ADD and the version's unknown segments are transparent as everywhere. A first draft
+of this amendment ended the slot at the first segment of its FOLLOW set; that misfires on a
+spec-compliant message (v2.3 CH04 4.8.1, p 4-60, prints the pharmacy order under ORM^O01 as
+`ORC [RXO [{NTE}] {RXR} ...]`: the NTE would end the general print's slot and RXR would be
+reported), so it was replaced (project requirement 4). Consequences, pinned in
+`StructureSlotTests`:
+
+- (a) a required segment after the slot is still enforced: every accepting parse must reach it,
+  so a message without it draws `messageStructureSegmentMissing`;
+- (b) a misplaced optional segment after the slot may be read as slot content and is then not
+  reported: the faithful reading of an unbounded "etc.", which the print does not close;
+- (c) `MSH PID ORC RXO NTE RXR` against `MSH PID [{ORC slot [{NTE}] [{DG1}] [{OBX}]}]` is
+  clean, so the v2.3 pharmacy print fits the general print's slot;
+- (d) a defect before the slot is still found;
+- (e) when a parse dies inside or after a slot (only MSH can end it there, or the end of the
+  message), "expected here" names the slot by its printed name and the segments that can follow.
+
+So the validator checks the segments the print gives before the slot, the required segments
+after it, and the end of the message; between the slot and the next required segment it can say
+nothing that the slot's openness does not allow.
+
+**Matching.** A structure holding a slot always fails the determinism lint (the slot is reported
+as a conflict with the FIRST-set member `*`, which stands for any segment), so the codegen
+renders `requiresExactMatch: true` and the Validator uses `ExactStructureMatcher`. The one-pass
+matcher enters an element by its FIRST set and a slot's is every segment, so the current segment
+never settles whether the slot goes on or ends; it asserts it never compiles a slot. In the exact
+automaton a slot occurrence is one consuming state, labelled with the slot's name, that consumes
+any ID but MSH; `min` and `max` expand as for any element (min 1, max nil: one state, then a
+self-loop through the hub). The breadth-first state sets hold "still inside the slot" and
+"exited to the following element" together, so no lookahead is needed and the bound
+O(n x (S + E)) is unchanged. Findings: an absent required slot is
+`messageStructureSegmentMissing` with the slot's name as the segment ID at the end of the
+message, or `messageStructureSegmentUnexpected` on the next segment with the slot's name in
+"expected here" mid-message. The test reference recogniser (backtracking over end positions,
+coded apart from the automaton) gives a slot occurrence any one segment but MSH and agrees with
+the matcher on derived and mutated sequences; the structure guards accept a slot structure.
+
+**Group spans.** A slot opens no group: its segments lie in the spans of the enclosing groups,
+and no span is made for the slot. Where the parses disagree on the groups, which happens as soon
+as a segment after the slot could re-enter the slot's group or be slot content (a second ORC
+after an order's slot), the P8b-17 rule withholds the spans (`spansWithheld`) and the
+group-dependent predicates take their existing fallback. One order occurrence keeps its span.
+
+**What the validator cannot say.** Which segments fill the slot, whether they form a valid
+combination, whether a filler belongs to the version's order detail segments, whether an
+optional segment after the slot is misplaced, and, on v2.3, which of the four ORM prints under
+ORM^O01 a message follows (lookup rule 3); field-level validation of every segment, slot
+fillers included, is unaffected.
+
+**Ruling G6.** Superseded for placeholders that have an enumerable position (the `etc.` slot:
+the print gives everything around it). Query-template rows (`[...]`, `...` and the ellipsis rows
+of CH05 5.4 and CH08 8.4.1) stay Permanent as classed: their position stands for a whole message
+body chosen by a field value, not for a run of segments inside a printed structure.
+
+**Extraction (S3-2, 2026-10-06).** `scripts/extract-message-structures.py` emits the slot wherever
+the print gives the open order detail, in three forms: the CH04 row "Order Detail Segment OBR,
+etc." (v2.3 and v2.3.1 4.2.1 to 4.2.3, on its own line, wrapped as "Order Detail" / "Segment OBR,
+etc.", or in the description column); the CH12 cell `[OBR, etc`, `OBR, etc.` or `OBR, etc...`
+(v2.3 to v2.4); and a choice whose last alternative is a placeholder (`< OBR | etc. >`, with `...`
+or `Hxx` described "etc." in v2.5.1 PRR^PC5 and v2.8.2), which becomes one slot in place of the
+whole choice, since a slot never sits inside one; the listed alternatives are named in the slot's
+citation, and a mark on the choice's own rows (`--- CHOICE`, with or without begin and end) names
+nothing that remains. The slot takes the placeholder's place in the parsed sequence, so the
+brackets keep their printed meaning: v2.3 CH04 ORM^O01 reads `ORC [ slot [{NTE}] [{DG1}] [{OBX
+[{NTE}]}] ]` and v2.4 CH12 PPR^PC1 `[{ORC [ slot [{NTE}] [{VAR}] [{OBX ...}] ] }]`, the slot the
+head of an optional inner group, so a bare ORC draws no finding. The slot is min 1 there; where
+the print brackets the placeholder alone (v2.3 and v2.3.1 CH04 4.2.2 ORR^O02 and 4.2.3 OSR^Q06,
+v2.3 pp 4-5 and 4-6, v2.3.1 pp 4-4 and 4-5: "[Order Detail Segment] OBR, etc.") it is min 0, which corrects "min 1 in all 58 cases"
+above. The name is the description column's ("Order Detail Segment"), else null; the citation is
+the structure's (version, chapter, section, title) at the page of the slot's row, with the print
+quoted. An unnamed group holding a slot takes its HL7 v2.xml name when the bundle group sits at
+the same path, has every printed segment and at least one more (the slot's fillers), and starts
+with the printed first segment, or, when the slot heads the group, with one of those fillers.
+Query-template ellipses (`[...]`, `...` rows) and prose rows stay unreadable as before (ruling G6,
+S5).
+
+## Amendment 2026-10-06 — S3-3 the open-slot structures modelled
+
+The 58 structures registered for the open order detail are modelled on all seven versions
+(v2.3 11, v2.3.1 11, v2.4 8, v2.5.1 8, v2.6 8, v2.7.1 8, v2.8.2 4), written by the extractor
+and removed from `completeness.json` by its registration sync. 1,171 structures are modelled and
+202 registered (1,113 and 260 before). Each was compared row by row with its print; 54 read
+`ORC [ORDER_DETAIL: slot ...]` (the slot min 1, heading the optional inner group) and 4 are the
+min-0 slots of v2.3 and v2.3.1 ORR_O02 and OSR_Q06 (`[Order Detail Segment] OBR, etc.` after
+ORC; v2.3 pp 4-5 and 4-6, v2.3.1 pp 4-4 and 4-5).
+
+**Four prints under one trigger (ruling 1).** v2.3 prints ORM under ORM^O01 five times: the
+general print (CH04 4.2.1, p 4-4) and four specific ones, the dietary order (4.6, p 4-47), the
+stock and nonstock requisitions (4.7, pp 4-54 and 4-55) and the pharmacy/treatment order (4.8.1,
+p 4-60), all after the same MSH and patient segments; ORR^O02 likewise (4.2.2, p 4-5; 4.6, 4.7,
+4.8.1, p 4-61). MSH-9 cannot tell them apart on v2.3 (lookup rule 3). The general print's slot
+takes any run of segments after ORC, so it accepts every message the specific prints accept: it
+is the looser print and governs under the comparable-prints rule (P8b-9). `overrides.json`
+`primaryPrints` declares it, cited to all five prints; the entry form gains "CAPTION (section N)"
+to name one of several prints under one caption and a list of stricter prints. v2.3.1 needs no
+entry: its four specific prints carry their own IDs (OMD_O01, OMS_O01, OMN_O01, RDO_O01,
+modelled since P8b-14), and ORM^O01 without MSH-9.3 stays ambiguous (lookup rule 2).
+
+**Misprints (eleven syntax-cell errata).** Eleven CH12 prints are read through cited
+`overrides.json` errata, each stating the printed cell, the corrected one and the reading, the
+nesting checked against HL7-xml 2.3.1 and v2.4 (v2.3 has no bundle; its names derive through the
+2.3.1 one); the bundle differs only where its CHOICE stands for the slot:
+
+| Version | Structure | Printed | Read as | Section, page |
+|---|---|---|---|---|
+| v2.3 | PGL_PC6 | `[{VAR}]}` | `[{VAR}]` | 12.2.1, p 12-8 |
+| v2.3 | PPP_PCB | `[{NTE]}` | `[{NTE}]` | 12.2.3, p 12-10 |
+| v2.3 | PPV_PCA | `[{NTE]}` | `[{NTE}]` | 12.2.8, p 12-13 |
+| v2.3 | PTR_PCF | `{NTE}]` | `[{NTE}]` | 12.2.10, p 12-15 |
+| v2.3 | PPT_PCL | `}` (last row; the pathway group never closed) | `} }` | 12.2.12, p 12-16 |
+| v2.3.1 | PGL_PC6 | `[{VAR}]}` | `[{VAR}]` | 12.2.1, p 12-7 |
+| v2.3.1 | PPV_PCA | `[{NTE]}` | `[{NTE}]` | 12.2.8, p 12-12 |
+| v2.3.1 | PTR_PCF | `{NTE}]` | `[{NTE}]` | 12.2.10, p 12-13 |
+| v2.4 | PGL_PC6 | `[{VAR}]}` | `[{VAR}]` | 12.3.1, p 12-10 |
+| v2.4 | PPV_PCA | `[{NTE]}` | `[{NTE}]` | 12.3.8, p 12-14 |
+| v2.4 | PTR_PCF | `{NTE}]` | `[{NTE}]` | 12.3.10, p 12-15 |
+
+The crossed-bracket readings are not a choice between meanings (both nestings give the same
+cardinality). `{NTE}]` keeps the printed `]` (optional notes) and reads the missing `[`, as the
+same print's other observation groups and PPP^PCB print the row. v2.3 PPT_PCL closes the goal
+group and then one group, so the pathway group is never closed; no row follows the goal group
+inside it, every row from PTH on is set under it, and v2.3.1 12.2.12 prints the same message with
+the pathway closed after the goal group, so the last `}` is read as `} }`. That is a cited
+reading, corroborated by the v2.3.1 print, not the only balanced one: by bracket count alone the
+pathway group could also be closed at other positions (each a different structure). The owner
+may revisit it.
+
+**Matching and spans.** Every slot structure fails the lint and is exact-matched; the one-pass
+matcher is never built for one (the lint and matcher corpus harnesses route them to the exact
+matcher). With the slot inside a repeating group, as in every CH12 order and the general order,
+two or more occurrences of that group make the parses disagree on the groups, so the spans are
+withheld and the group-dependent predicates take their P8b-17 fallback (the ORC walk) for that
+message; one occurrence keeps its span.
+
+**Evidence.** `StructureSlotProbeTests` gives each version conformant messages (an OBR detail, a
+pharmacy detail fitting the general print, a bare ORC, a CH12 `ORC OBR NTE VAR OBX`, a detail
+the v2.5.1 and later choice does not list) and defects outside the slot (a required segment
+missing, an unexpected segment before the slot, a second MSH). An erratum's reading can be pinned
+only where its cell precedes the slot, since anything after the slot can be absorbed by it: the
+probes pin the PTR_PCF problem-observation `{NTE}]` (OBX then ORC, no NTE) and the v2.3 PPT_PCL
+closure (`PID PTH GOL PTH GOL` and a second patient, no order; a pathway closed before the goal
+group fails it, shown red in S3-4). PGL_PC6's `[{VAR}]}` and the `[{NTE]}` of PPP_PCB and
+PPV_PCA are order-detail cells after the slot: no message can discriminate their readings (each
+pair of balanced readings has the same cardinality anyway), so their probes pin only the
+segments the structure requires before the slot.
+The spec examples of these triggers print MSH-12 empty or the message code alone, so the digest
+does not change; with MSH-12 set to the chapter's version the 18 that resolve to a slot structure
+are body-checked clean.
+
+## Amendment 2026-10-06 — S4 field-keyed choice and structure alias
+
+Two model extensions close the section E rows that blocked on them. Before: v2.3 ERP, ERP_R09 on
+v2.3.1, v2.4 and v2.5.1, MFN_M03 on v2.4, v2.5.1 and v2.6, and QRY_P04 on v2.4 and v2.5.1 were
+registered as not modelled. After: all nine are modelled; 1,180 structures are modelled and 193
+registered (1,171 and 202 before). MFN_M03 stays registered on v2.3 and v2.3.1, where the groups
+that replace its `[other segments(s)]` row are given in prose, keyed by MSH-9.2, not printed as
+structures the key could name.
+
+**What the print gives.** v2.5.1 CH08 8.8.2 (pp 8-22 to 8-23) prints `... [other segment(s)]`
+after OM1 and says "Other segment(s) represents segments that follow the OM1 segment", the groups
+"described below in the following messages: MFN^M08, MFN^M09, MFN^M10, MFN^M11, and MFN^M12";
+8.8.3 to 8.8.7 each note the key ("MFI-1 - Master File Identifier = OMA for numeric
+observations", p 8-24; OMB to OME, pp 8-25 to 8-27). v2.6 prints the same (8.8.2, p 8-20; notes
+pp 8-21 to 8-24). v2.4 (8.8.2, pp 8-21 to 8-22) prints `??? [other segments(s)]` and "where
+other segments can be any of the following combinations", each introduced by its key ("MFI-1 -
+Master file identifier = OMA, for numeric observations") and printed as the M08 to M12 segments
+after OM1. The ERP prints (v2.3 2.20.3 p 2-77; v2.3.1 2.20.3 p 2-86; v2.4 and v2.5.1 CH05
+5.10.4.2, pp 5-116 and 5-120) fill the rows after ERQ with "the corresponding segment-oriented
+record-oriented unsolicited update message, excluding the MSH", which ERQ-2 names ("Its contents
+dictate the format of the response message"); they give no map from ERQ-2 values to bodies, only
+that rule. v2.4 CH06 6.4.4 (p 6-13) captions `QRY^P04^QRY_P04` with "see" Chapter 5, where the
+QRY prints of 5.10.2.1 (QRY^Q01) and 5.10.3.1 (QRY^Q02) give one syntax; v2.5.1 lists QRY_P04 in
+Table 0354 (p 2-104) and refers 6.4.4 (p 6-8) to the same prints.
+
+**Keyed choice (S4-1).** `StructureElement.keyedChoice(_:min:max:key:alternatives:)`, with a
+`StructureChoiceKey` (segment, field, component, the printed value-to-alternative map, citation),
+is a new case of the open enum, so the meaning of `.choice` is unchanged. Every alternative is a
+named group occurring once. Before matching, the Validator reads the key from the first
+occurrence of the key segment (field, first repetition, component) and matches the structure
+with the choice replaced by the selected alternative, as a group with the choice's bounds: the
+one-pass or exact matcher is chosen by that resolution's own lint, and the group spans follow the
+selected alternative. A value the map does not hold draws `messageStructureNotModelled` at
+information naming the key and the value, with no body match (the print's map is the only list
+it gives; the v2.5.1 MFN^M03 examples carry the local identifier `LABxxx^Lab Test Dictionary^L`
+and stay information). With no key segment, or an empty key, the choice admits any alternative
+and the structure's own rules report the missing segment. The lint does not apply the choice rule
+to a keyed choice (the key, not the current segment, selects the alternative); the codegen's
+determinism port does the same; `StructureGuardTests` guards every resolution of a keyed
+structure (each key value and no value) against the reference recogniser. MFN_M03's alternatives
+are MF_TEST_NUMERIC, MF_TEST_CATEGORICAL, MF_TEST_BATTERIES, MF_TEST_CALCULATED and
+MF_OBS_ATTRIBUTES holding the segments after OM1 of the MFN^M08 to MFN^M12 groups, named as those
+groups (an unprinted name cited as the referenced structure cites it).
+
+**ERP is a slot, not a keyed choice.** The print enumerates no ERQ-2 map, so the ellipsis rows
+are the S3-1 open slot after ERQ, `MSH MSA [ERR] QAK ERQ [slot] [DSC]` (v2.5.1 also `[{SFT}]`),
+cited to the ERQ-2 rule. The slot is optional: a query that finds no qualifying data "does not
+return any data segments (DSP, RDT, or event replay segments)" (v2.3 2.22, p 2-79; v2.4 and
+v2.5.1 5.6.5). The prefix is checked; the body is the slot's (any segment but MSH).
+
+**Alias (S4-2).** `MessageStructure.aliasOf` names the structure whose syntax a structure takes
+when its print gives it an ID and a trigger of its own and refers its syntax to another printed
+structure of the same version. QRY_P04 is the alias of QRY_Q01 (the first of the two identical
+CH05 prints, and the structure v2.3 and v2.3.1 match QRY^P04 against): it keeps its ID, triggers
+and citation, so `QRY^P04^QRY_P04` is matched, never a mismatch and never folded. The extractor
+copies the target's elements; the codegen checks that the target is another structure of the
+version, not itself an alias, with equal elements, so matching needs no new path. DSR_P04 stays
+registered (the two CH05 DSR prints differ on MSA and the print does not say which mode P04
+uses).
+
+**Extraction.** `overrides.json` gains `keyedChoices` (version, structure, caption as printed,
+the placeholder as printed, the key, and either the alternatives, each value with the structure,
+group, the segment after which its segments are taken and the page, or a slot with its bounds;
+cited) and `aliases` (version, structure, aliasOf, triggers, cited). The extractor reads the
+claimed placeholder as one element (a run of ellipsis rows merged), puts the keyed choice in its
+place once every structure of the version is read, or keeps the slot, and adds each alias from its
+read target; `--write` wrote the nine files and the registration sync removed their entries.
+Prose is never parsed: the map is the override's, cited to the print.
+
+**Evidence.** `StructureKeyedChoiceTests` (MFN^M03 on v2.4, v2.5.1 and v2.6 under several keys,
+clean and with a wrong body; an unmapped value; no MFI; ERP on all four versions, clean, no data,
+and a prefix defect; spans; lint and resolution) and `StructureAliasTests` (declared and bare
+QRY^P04 on v2.4 and v2.5.1, a defect). Digests (BASE 50368d61 against HEAD, default, strict and
+off): 16 lines removed and 4 added on default and strict, none on off; the v2.6 MFN^M03 examples
+(MFI-1 OMA) and the v2.4 ERP^R09 example are body-checked clean, and the v2.5.1 CH05 event replay
+error response (5.10.6.2.12, p 5-143), which omits the ERQ the print requires, draws the missing
+ERQ as BASE draws the missing RDF of the TBR error example beside it. (Both readings were
+misfires; corrected by the S4-3 amendment below.)
+
+## Amendment 2026-10-06 — S4-3 error responses
+
+**The print.** CH05 5.6.5 "Query error response", the same text on every version that prints it:
+v2.4 p 5-62, v2.5.1 pp 5-60 to 5-61, v2.6 p 52, v2.7.1 p 55, v2.8.2 pp 54 to 55. An error is
+returned as AE or AR in MSA-1 "of the applicable query response message". Situation 1 (malformed
+message, AR): "a negative ACK message containing the MSH, MSA and the ERR". Situation 2 (malformed
+query, AE): the response "contains the MSH, MSA, ERR, QAK and the query defining segment if
+available" and "The rest of the message is absent". The DSC "is not sent or, if it is", its
+pointer is null. v2.3 (CH02 2.22, p 2-78) and v2.3.1 (CH02 2.22, p 2-87) name AE and AR in "the
+applicable query response message (DSR, TBR or ERP)" but print no sentence that the rest is
+absent, so the rule is not applied there.
+
+**The rule.** `overrides.json` `errorResponses` names, per version, every query response the
+version prints (a structure with MSA at the top level and QAK, QRD, QPD or ERQ at any depth:
+v2.4 32, v2.5.1 35, v2.6 34, v2.7.1 16, v2.8.2 12) with the query defining segments its own print
+carries (QRD and QRF, QPD, ERQ, or none for TBR, EDR, QCK and SQR), cited to 5.6.5. The extractor
+copies it into the structure file as `errorResponse` and fails a full read that leaves a query
+response out; the codegen checks distinct two-letter codes, a top-level MSA and that each named
+segment is printed. Before matching, the Validator reads MSA-1 (first MSA, field 1, component 1);
+AE or AR selects the head: the segments 5.6.5 names (MSH, the SFT and UAC the structure prints
+after MSH, MSA, ERR, QAK, its query defining segments, DSC), each once at its first printed place
+(ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required, the rest optional, ERR and SFT with
+their printed repetition; an ERR the structure does not print goes after MSA and a QAK after ERR.
+Anything else is unexpected. Findings cite the head and 5.6.5; group spans come from the head; an
+AU profile structure is not applied to the head. AA keeps the full structure unless the first QAK's field 2 is a listed no-data value; CE and CR keep it.
+Internal model only (`StructureErrorResponse`); no public API change.
+
+**Situation 3, no data found (added in the same wave).** 5.6.5 goes on: the responder "returns
+an Application Accept (AA)", QAK-2 "is valued with NF", and "The Response message contains MSH,
+MSA, QAK, and query defining segment" with "The rest of the message is absent" (v2.4 p 5-63, v2.5.1
+p 5-61, v2.6 pp 52 to 53, v2.7.1 p 56, v2.8.2 p 55; the same text on each). ERR is not named. Each
+`errorResponses` entry carries `noDataQueryStatus: ["NF"]` (copied into the structure file); when
+MSA-1 is AA and the first QAK's field 2 is a listed value, the structure is matched against MSH,
+the SFT and UAC it prints, MSA, QAK (required: it carries the key), its query defining segments
+and DSC (the note keeps the DSC "not sent or" with a null pointer), with no ERR. The section keeps
+its name: 5.6.5 is the print's "Query error response" section and Situation 3 is part of it.
+
+**What it cannot say.** (1) An AE response without QAK is not reported: the head is the union of
+Situations 1 and 2 (AR is "MSH, MSA and the ERR", AE adds QAK), so QAK is optional under AE and AR
+alike. (2) MSA-1 CE and CR (enhanced acknowledgment) are not named by 5.6.5 and are not keyed.
+(3) v2.3 and v2.3.1 keep the full structure, because CH02 2.22 (pp 2-78 and 2-87) has no
+rest-absent sentence: the v2.5.1 CH05 5.10.6.2.12 example, which declares MSH-12 2.3, still draws
+its missing ERQ against the v2.3 ERP print, and a v2.3 no-data TBR draws its missing body.
+(4) A no-data response without QAK. The Situation 3 note reads "If the QAK segment is being used,
+the field QAK-2 ... is valued with NF" (v2.5.1 p 5-61; the same on v2.4 to v2.8.2), so a no-data AA
+response may carry no QAK. The no-data head is selected only when QAK-2 is NF, so such a response
+keeps the full structure and is flagged for its missing body; without QAK the data cannot tell a
+no-data reply from a cut-off one, so this cannot be modelled from the message. Of the 129 governed
+structures, 42 print QAK as optional and 35 do not print it. Blocking (requirement 3); see the
+permanent limitations register, section E.
+Ruling: an ERR on a no-data response is reported as unexpected, because Situation 3 names MSH, MSA,
+QAK and the query defining segment only; SFT and UAC are kept because the structure prints them as
+message-header segments. The owner may revisit.
+
+**Evidence.** `StructureErrorResponseTests` (the 5.10.6.2.12 shape on v2.5.1 clean, with a DSP or
+a replay body unexpected; the TBR^R08 error shape and an AR response clean; AA with the body
+missing draws it; ORF_R04 in printed order; RSP_K21 on v2.6 and v2.8.2; v2.3 and v2.3.1
+unchanged; the finding text; the tables; the head; spans; Situation 3: a v2.5.1 TBR^R08 with AA
+and QAK-2 NF and no RDF or RDT clean, with QAK-2 OK the missing body, with an RDF or an ERR
+unexpected, RSP_K21 on v2.5.1 and v2.8.2, v2.3 unchanged). Digests (BASE 22da5799 against HEAD):
+default and strict 8 lines removed (the TBR^R08 error example, MSH-12 2.4, formerly an "example
+defect"), 0 added; off identical; supplementary with MSH-12 set to the chapter version 12 removed
+(the same and the event replay error response), 0 added; 0 misfires (s4-fix-classes.tsv) F1 to F3). Situation 3 (BASE
+e53f1e05): default, strict and off byte-identical (the CH04 DSR^Q01 no-data examples print no
+MSH-12); supplementary with MSH-12 set to the chapter version 12 removed (v2.4, v2.5.1 and v2.6
+DSR_Q01 missing DSP), 0 added (F4).
+
+## Amendment 2026-10-06 — S5 prose fragments
+
+**Ruling (controller, S5-1).** No prose parser. Where the print gives a structure, or part of one,
+only as a prose fragment ("the part of the message represented by: {MFE [Z..]} is replaced by:
+...", "where other segments can be any of the following combinations", a key named in a sentence)
+or by cross-reference to another print, and not as an abstract-syntax table the extractor can read,
+the syntax is transcribed by hand into a cited `proseFragments` section of
+`Resources/structures/overrides.json`, in the bracket notation the tables use. A reader that guessed
+at prose would breach requirement 2; a transcription is checkable against the print by anyone with
+the chapter open.
+
+**Form.** One entry per version and structure: `version`, `structure`, `caption` (the caption as
+printed, with its `section`; `null` where the print has no caption and the structure ID is a Table
+0354 row of the version, which then also gives `triggers`), `syntax` (the whole structure, the
+placeholder row replaced by `@NAME`), `chapter`, `section`, `page`, `quote` (the sentence the
+transcription renders, under 15 words) and a one-line `citation`. `choices` maps each `@NAME` to a
+keyed choice (the S4-1 element): `key` (segment, field, component; the field the prose keys the
+body by), the key's own `page` and `quote`, and `alternatives`, each with the key `values` that
+select it, a `group` name with its `nameSource` and `nameCitation` (the print names none), `page`,
+`quote`, and the fragment as `syntax` (transcribed) or `from` (`structure`, `group`, `after`: the
+fragment's segments as another print of the version gives them, where the fragment refers to that
+print or is itself misprinted); with both, the transcription must equal that print. A printed group
+name may be written `{NAME: ...}`, and must then be printed as a group mark under the caption.
+
+**What the extractor does.** At the caption (or, for a `null` caption, from the Table 0354 row) it
+substitutes the transcription for the unreadable table: an entry for a structure whose print the
+extractor reads is an error, so a transcription never overrides a printed table. Unnamed groups are
+named as for any printed group (bundle, `groupNames`, synthesised). The structure carries
+`"syntaxSource": "prose"` and its citation names `overrides.json proseFragments` and every quoted
+sentence, so a reader knows the syntax is a transcription; `StructureCodegen` accepts
+`syntaxSource` only with that citation and renders nothing for it (no API change). The self-check
+pins the form: a cited transcription is accepted, an uncited one rejected, and one whose structure
+has a printed table rejected. A fragment that cannot be written as one syntax without choosing
+between readings the print leaves open is not transcribed: it stays registered, its reason quoting
+the print.
+
+**What the print gives (S5-2).** CH08 on v2.3 (8.3.3, p 8-5) and v2.4 (8.4.3, p 8-11) print the
+MFR template with `{MFE [Z..]}`, v2.5.1 and v2.6 (8.4.4) with `[...]` under `--- MF_QUERY`. Each
+master file section then says the part "is replaced by" a fragment: the staff and practitioner
+files ("When the STF and PRA segments are used in the MFR message"), CDM, LOC and the clinical
+trials cases 1 and 2, each naming its file by MFI-1 ("should equal "LOC"", "MFI-1 ... = CMA"); the
+test/observation section says the groupings "follow the MFI and MFE segments in those messages
+(replacing the [Z...] section" (v2.3 8.7.2 p 8-21; v2.3.1 p 8-20; v2.4 8.8.2 p 8-21; v2.5.1 8.8.2 p
+8-22), each combination introduced by "MFI-1-master file identifier code = OMA" and the second
+component of MSH-9 (M08 to M11). v2.6 8.8.2 (p 8-20) drops that sentence and only refers back to
+8.4.1 and 8.4.4. v2.3.1 Table 0354 lists MFN_M08 to MFN_M11, which no caption prints.
+
+**Readings.** (1) The key is MFI-1, the field every fragment's section names; MSH-9.2 is named only
+beside it in the test/observation prose, and Table 0003 defines the M events for MFN/MFK. So
+MFN_M03 on v2.3 and v2.3.1 is keyed as S4 keys it on v2.4 to v2.6, and MFR_M01 on v2.3 to v2.6 is
+keyed by MFI-1 at the `[Z..]` (the `{MFE ...}` group kept, the key being message-level). (2) STF
+and PRA, the Table 0175 codes of the staff and practitioner files, both select the staff fragment.
+(3) The v2.3 and v2.4 clinical-trials fragments print unbalanced brackets (`}]` moved from case 1
+to case 2) and refer to "case 1 above" and "case 2 above": their segments are taken from those MFN
+prints (MFN_M06, MFN_M07). (4) Where a fragment's segments are printed as a table of their own
+(the MFN^M08 to MFN^M12 groups on v2.4 and v2.5.1; MFR^M04 to M07 on v2.5.1 and v2.6) the
+alternative is taken `from` that print, checked equal to the transcription where both are given.
+(5) A file the print gives no fragment for (M01's, a locally extended or CLN/INV code, and on v2.6
+OMA to OME) is unmapped: `messageStructureNotModelled` at information naming MFI-1 and the value.
+No fragment needed a choice between readings the print leaves open, so none stays registered.
+
+**After.** Ten registrations closed: MFN_M03 on v2.3 and v2.3.1, MFN_M08 to MFN_M11 on v2.3.1
+(synthesised from the Table 0354 row: the MFN^M03 syntax with the combination in place of the row),
+MFR_M01 on v2.3, v2.4, v2.5.1 and v2.6 (on v2.4 to v2.6 with the 5.6.5 error response rule). 1,190
+structures are modelled and 183 registered (1,180 and 193 before).
+
+**Evidence.** `StructureProseFragmentProbeTests` (24 probes: per structure a clean message and a
+defect; unmapped files at information; every key value resolves and is linted). The self-check
+(`check_prose_fragments`, `check_prose_fragment_from_and_synthesis`) and three codegen cases pin
+the form. Digests (BASE 89d074ea against HEAD): default, strict and off identical; supplementary
+with MSH-12 set to the chapter version: 24 lines removed and 24 added, the six v2.3 and v2.3.1
+MFN^M03 examples whose MFI-1 is the local `LABxxx`, from "not modelled" to the unmapped-key
+information (s5-classes.tsv C1); 0 misfires. Residual (Blocking, register section E): v2.6 MFR_M01
+OMA to OME, which the v2.6 print gives no MFR fragment for.
+
+## Amendment 2026-10-06 — S6 per-trigger prints, scope rule residue, AU beyond-maxima, ceilings
+
+### S6-1 per-trigger structure variants (amends the P8b-9 primary-print ruling)
+
+The P8b-9 ruling committed the looser of two disagreeing normative prints of one structure ID,
+so a message under the stricter print's trigger was checked against the looser print
+(under-checked; register section E listed each as Blocking, "per-trigger structures would be a
+model extension"). The extension is built.
+
+- **Model.** `MessageStructure.variants: [StructureVariant]` (public, read-only, additive):
+  each variant carries the triggers one print governs (exact `CODE^EVT`, never `CODE^*`), its
+  citation and its elements, and an internal lint flag set by the codegen. `elements` stays the
+  default print. `MessageStructure.variant(messageCode:triggerEvent:)` (public) names the variant
+  that governs a trigger, nil when the default does. Selection is by exact trigger only; any
+  other trigger the structure accepts (a `CODE^*` one included) takes the default.
+- **Validator.** `resolveStructure` returns the structure as the print MSH-9.1^9.2 selects, on
+  the MSH-9.3 path and the bare-trigger path alike, so the check, the group spans (P8b-17) and
+  the matcher cache (one compiled matcher per print) all use that print. A finding cites the
+  variant's print.
+- **Data.** `overrides.json` `variantPrints` (version, structure, primary, variant, citation)
+  replaces `primaryPrints` for these cases. The extractor keeps the named primary as the default
+  print, reads the named variant prints (they must agree and differ from the default), and adds
+  to the variant every other print of the ID whose syntax equals it, with that print's caption
+  triggers; a print that equals neither stays reported as `duplicate-differs` and keeps the
+  default. A trigger printed by both sides, a stale or doubly declared entry, or a variant equal
+  to the default is an extractor error; the codegen rejects a variant trigger the structure does
+  not accept, a trigger in two variants, a variant equal to the default or another variant, a
+  keyed choice in a variant, variants on an alias or profile structure, and a variant whose
+  citation does not name `overrides.json variantPrints`. The structure JSON carries `variants`
+  after `elements`.
+- **Per entry.** Every former `primaryPrints` entry but the two v2.3 ones is a variant: none of
+  the differences is a misprint the ADR classes as such (searched: no erratum or misprint ruling
+  names any of them), and each print is a normative message definition for its own captions.
+
+| Version / ID | Default print | Variant print, triggers | Difference |
+|---|---|---|---|
+| v2.5.1 RSP_K21 | CH03 3.3.57 RSP^K22 (p 3-61) | 3.3.56 RSP^K21 (p 3-59): K21 | `[{QUERY_RESPONSE ... [QRI]}]` against one `[QUERY_RESPONSE ... QRI]` |
+| v2.5.1 RDE_O11 | CH04 4.13.13 RDE^O25 | 4.13.5 RDE^O11 (pp 4-115 to 4-116): O11 | OBSERVATION `[OBX]` and COMPONENTS against `OBX` and COMPONENT |
+| v2.6 ACK | CH02 2.13.1 ACK^varies (p 42) | CH10 10.4 ACK^S12-S24, S26 (p 10-17): S12 to S24, S26 | `[ UAC ]` against `[ {UAC} ]` |
+| v2.6 ADT_A30 | CH03 3.3.34 ADT^A34 (p 3-33; A36, A46, A47 alike) | 3.3.30 ADT^A30 (p 3-30): A30, A35, A48, A49 | `[{ ARV }]` after PD1 against none |
+| v2.6 ADT_A43 | 3.3.44 ADT^A44 (p 3-40) | 3.3.43 ADT^A43 (p 3-39): A43 | `[{ARV}]` in PATIENT against none |
+| v2.6 MFK_M01 | CH08 8.4.2 MFK^M13 (p 8-6; twelve others alike) | 8.4.1 MFK^M01 (p 8-5) and 8.8.2 MFK^M03: M01, M03 | `[UAC]` against none |
+| v2.6 QRY_PC4 | CH12 12.2.7 QRY^PC9 (p 12-14; PCE, PCK alike) | 12.2.5 QRY^PC4 (p 12-12): PC4 | `[{SFT}] [UAC]` against none |
+| v2.6 RDE_O11 | CH04 4.13.13 RDE^O25 (pp 4-97 to 4-98) | 4.13.5 RDE^O11 (pp 4-88 to 4-89): O11 | as v2.5.1 |
+| v2.6 RSP_K21 | CH03 3.3.57 RSP^K22 (p 3-50) | 3.3.56 RSP^K21 (pp 3-48 to 3-49): K21 | incomparable: the `unionPrints` entry (P8b-11) is withdrawn; each print governs its own trigger |
+| v2.7.1 ACK | CH02 2.13.1 ACK^varies (p 46) | CH10 10.4 ACK^S12-S24,S26,S27 (p 18): S12 to S24, S26, S27 | `[UAC]` against `[{UAC}]` |
+| v2.7.1 RQC_I05 | CH11 11.3.5 RQC^I05 (p 13) | 11.3.6 RQC^I06 (pp 14 to 15): I06 | `[{GT1}]` against `[GT1]` |
+| v2.8.2 ACK | CH02 2.13.1 ACK^varies (p 47) | CH10 10.4 ACK^S12-S24,S26,S27 (p 20): S12 to S24, S26, S27 | `[UAC]` against `[{UAC}]` |
+
+  ACK's default is the CH02 general acknowledgment, the `triggerFolds` primary for `ACK^*`
+  (P8b-3a), not the CH10 print the `primaryPrints` entry had made primary: a variant must name
+  exact triggers, and only CH02 is printed for every trigger ("varies"). The other ACK prints
+  equal to CH02 (CH03 and the rest, 119 captions on v2.6) take the default; those stricter than
+  both (v2.6 CH03 3.3.18 without UAC, CH05 5.4.4 to 5.4.7 with `[ERR]`) stayed `duplicate-differs`
+  on the default in S6-1 and are variants since the S6 fix wave (below). **Kept as `primaryPrints`:** v2.3 ORM_O01 and ORR_O02 (S3-3): the
+  general print's open slot subsumes the four specific prints under the same caption, which
+  share one trigger, so no trigger selects a stricter print.
+- **Evidence.** `StructureVariantProbeTests` (32 probes; RED at BASE 8c3d4d6c: 17 issues, every
+  stricter-trigger probe, and nothing else), `StructureVariantTests` (selection, cache, group
+  spans per print, every generated variant cited, exact, accepted and different).
+  `StructureGuardTests` guards each variant as a matched form. Digests: default, strict and off
+  identical to BASE (no spec example resolves to these triggers with its own MSH-12); a
+  supplementary run of the 71 examples of these structures with MSH-12 set to the chapter version
+  adds one finding: the v2.5.1 CH03 RSP^K21 example (3.3.56) sends a PID with no QRI, which its
+  own print requires, an example defect (`s6-classes.tsv`). Remaining print disagreements that no
+  `primaryPrints` entry named (each duplicate stricter than the reading-order primary: the CH05
+  ACK `[ERR]` prints on v2.5.1 to v2.8.2, v2.3 to v2.4 `ACK^R01` and `ACK^N02`, MFK_M01 on v2.3.1
+  and v2.4, ADT_A09 v2.4, ADT_A05 v2.5.1, ADT_A01 v2.6, RQC_I05 v2.4 to v2.6, RRE_O12 v2.5.1 and
+  v2.6, RDE_O11 v2.7.1 and v2.8.2) are the same class and convertible by one `variantPrints`
+  entry each; they are listed for the owner, not converted in S6.
+- **S6 fix wave (2026-10-06; owner ruling on S6 item 1).** Each is now a variant, read against
+  both prints. The extractor takes several `variantPrints` entries per structure (one per distinct
+  variant print, all naming the same default; equal variant prints, different defaults or a
+  trigger in two variants are errors), cites a variant's unprinted group names in the variant's
+  own citation, and takes an optional `keptOnDefault`: the triggers a variant print shares with
+  the default print's caption. Those have two prints under one trigger, the `primaryPrints` case,
+  so the looser default keeps them; the list must be exactly that overlap. No default print
+  changed, so no `elements` changed. A v2.5.1 RQI_I01 group-mark erratum (as on v2.6 to v2.8.2)
+  lets the I03 print be read; it agrees with I01.
+
+| Version / ID | Default print | Variant print, triggers | Difference |
+|---|---|---|---|
+| v2.3, v2.3.1 ACK | CH02 2.13.1 ACK (pp 2-68, 2-78) | CH07 7.2.1 ACK^R01 (pp 7-14, 7-16): R01 | `[ERR]` against none |
+| v2.4 ACK | CH02 2.14.1 ACK^varies (p 2-97) | CH07 7.3.1 ACK^R01 (p 7-19), CH14 14.3.2 ACK^N02 (p 14-4): R01, N02 | `[ERR]` against none |
+| v2.5.1 to v2.8.2 ACK | CH02 ACK^varies | CH05 5.4.4 to 5.4.7: Q16, Q17, J01, J02 | `[{ERR}]` against `[ERR]` |
+| v2.6 ACK | CH02 2.13.1 (p 42) | CH03 3.3.18 ACK^A18 (p 3-21): A18 | `[UAC]` against none |
+| v2.3.1 MFK_M01 | CH08 8.3.1 MFK^M01-M06 (p 8-3) | 8.10.1 (p 8-68): M07; M01 to M06 kept (8.6.1 and the others print them without ERR too) | `[ERR]` against none |
+| v2.4 MFK_M01 | CH08 8.4.1 MFK^M01-M06 (pp 8-9 to 8-10) | 8.11.1 (p 8-81): M07; M02, M04 to M06 kept | `[ERR]` against none |
+| v2.4 ADT_A09 | CH03 3.3.9 ADT^A09 (p 3-18; A10, A11 alike) | 3.3.12 ADT^A12 (p 3-20): A12 | `[{DG1}]` against `[DG1]` |
+| v2.5.1 ADT_A05 | CH03 3.3.5 ADT^A05 (A14, A28 alike) | 3.3.31 ADT^A31 (pp 3-37 to 3-38): A31 | PROCEDURE `PR1 [{ROL}]` against `PR1 {ROL}` |
+| v2.6 ADT_A01 | CH03 3.3.1 ADT^A01 (p 3-4; A04, A08 alike) | 3.3.13 ADT^A13 (pp 3-16 to 3-17): A13 | `[{ARV}]` after PD1 against none |
+| v2.4 to v2.6 RQC_I05 | CH11 11.3.5 RQC^I05 | 11.3.6 RQC^I06: I06 | `[{GT1}]` against `[GT1]` |
+| v2.5.1, v2.6 RRE_O12 | CH04 4.13.6 RRE^O12 | 4.13.14 RRE^O26: O26 | `RXE [{NTE}]` against `RXE` |
+| v2.7.1, v2.8.2 RDE_O11 | CH04A 4A.3.5 RDE^O11 | 4A.3.13 RDE^O25: O25 | group COMPONENT against COMPONENTS (names only) |
+
+  Left on the default: the v2.4 ADT^A31 print (3.3.31) prints `{ ROL }]` in PROCEDURE, which
+  reads neither as `[{ROL}]` nor as `{ROL}` without choosing; no erratum is taken, so A31 takes the
+  A05 print. Evidence: `StructureVariantFixProbeTests` (40 probes; RED at d063d728: the 21
+  stricter-trigger probes and the RDE^O25 name test, nothing else), `StructureVariantTests`,
+  `check_variant_prints_several` and `check_variant_prints_kept_on_default`.
+
+### S6-2 the P8b-17 scope-rule residue (2026-10-06)
+
+Each registered imprecision was read against the shipped predicates: the base schemas'
+conditions (every version; the cross-segment ones are the ORC/OBR pair, MFA and MFE to MFI, PAC
+to SHP, ROL to STF, TQ1 to TQ2 and TXA to OBX: none reads ORC or OBR from an OBX, or OBX from an
+ORC or OBR), the data-type conditions (none names these segments), the AU profile's field
+conditions (each reads its own segment) and its group-scope cardinality rules: four
+`.obrObxGroup` rules on OBR counting OBX (HL7au:000008, 000008.3.1, 000008.3.2 and the Level 1
+PDF rule; minimum one display OBX per OBR/OBX group, `messageCode in (ORU, REF)`), applied on
+every version under `.auLocalisation`.
+
+- **Read by a shipped rule, fixed:** the `.obrObxGroup` count. It counted every OBX of the
+  OBR's group occurrence: on v2.5.1 to v2.8.2 ORU_R01 the SPECIMEN `{ SPM [{OBX}] }` OBX, on
+  v2.8.2 COMMON_ORDER's ORDER_DOCUMENT OBX before the OBR, and on v2.7.1 and v2.8.2 ORU_R30
+  (OBR at message level) the PATIENT_OBSERVATION OBX before it, so a display OBX there satisfied
+  the AU rule. The count now keeps, of the counted segment, only the head's own: those after the
+  first head in the occurrence, outside nested group occurrences that do not hold the head and
+  whose definition cannot begin with the counted segment (another segment heads them).
+  OBSERVATION_REQUEST `{ OBR ... }` holds the head and OBSERVATION `{ OBX ... }` begins with it,
+  so both stay the head's. Every other segment of the occurrence is kept (the dedupe key's first
+  index is unchanged). The OBR walk, the fallback without spans, also stops at SPM. Pinned by
+  `GroupScopeCountTests` (RED at 491f80be: 5 issues, a display OBX only in the specimen, the
+  order document or the patient observation satisfied the rule; the walk test failed alike).
+  Digests (default, strict, off) identical.
+- **Read by no shipped predicate, re-classed Permanent:** the container or specimen OBX peer
+  lookups and their mirror (v2.4 ORL_O22; v2.5.1 and v2.6 ORL_O34, ORL_O36; v2.6 OPR_O38: the
+  print sets the container beside the repeating orders, `{GENERAL_ORDER: [CONTAINER: SAC [{OBX}]]
+  [{ORDER: ORC [OBSERVATION_REQUEST: OBR [{SAC}]]}]}`, v2.4 CH04 4.4.7, p 4-24, and ties it to no
+  order); v2.4 OML_O21 OBR to OBX (`OBR [{CONTAINER_2: SAC [{OBX}]}] ... [{OBSERVATION: OBX ...}]`;
+  the peer rule returns one segment per ID); ORU_R30 message-level OBR to OBX. A custom rule on
+  those lookups would need the distinction the print does not make (the container) or a lookup by
+  group rather than by segment ID (the other two).
+
+### S6-3 AU beyond-maxima at information (decision 7 amended, owner ruling 2026-10-06)
+
+Decision 7 dropped every profile `unexpected` and beyond-maximum finding, so a second IN1, PV1
+or PV2 on a v2.4 REF^I12 under `.auLocalisation` drew nothing: the ADRM-2021 prints `[IN1]`
+and one PV1 and `[PV2]` (section 7.2.1, pp 324 to 325) where the base v2.4 structure repeats
+the insurance group and prints `[ PV1 [PV2] ]` twice (CH11 pp 11-16 to 11-17), and these are
+every narrowed maximum in the five ADRM structures (P8b-4a). The owner ruled them reported at
+information.
+
+- **Code.** New `IssueCode.profileMaximumExceeded(localeRule:)` (additive; open enum), always
+  `.info`, `localeRule` `"HL7au:00060.1"`. Chosen over `profileConstraintViolation` at
+  information: that code is the violation code a consumer treats as failing at the preset's
+  severity, and 00060.1 itself is about required segments, so the narrowed maxima are a
+  different statement about the message; the new case follows the S1-4 and S2-2 precedent of an
+  information-only case.
+- **Where.** `Validator+ProfileStructure.swift`: each `.exceededMaximum` finding of the profile
+  match (the one-pass matcher reports one per occurrence past a saturated element; all five
+  profile structures are one-pass) yields one issue at that occurrence, unless the base kept a
+  finding of its own at that place (then the base already reports it). The message names the
+  profile structure, the segment, the maximum (the product of the maxima on the path to the
+  segment in the profile print) and the profile citation with its pages. Profile `unexpected`
+  findings stay dropped. Raised only when `messageStructureSeverity` is set, as every profile
+  structure finding is.
+- **Example.** REF^I12 RF1 PRD PID PV1 PV2 PV1 PV2 under `.auLocalisation`: two issues, at PV1[2]
+  and PV2[2]: "HL7au:00060.1: the REF_I12 structure of the au-adrm-2021 profile allows PV1 at
+  most once here, and this occurrence is beyond it; the base v2.4 REF_I12 structure accepts
+  it (HL7AUSD-STD-OO-ADRM-2021.1, section 7.2.1 ..., pp 324 to 325 ...). Reported at information
+  (ADR-019 decision 7, owner ruling 2026-10-06)."
+- **Evidence.** `LocaleAUMaximumTests` (RED at 8b9e17c3: 6 issues, no such issue raised; the
+  base and 00060.1 stayed silent, as now); `LocaleAUStructureTests` refDroppedThenSecondPV1, which
+  asserted silence, now expects the one information issue. Digests (default, strict, off; both
+  locales): identical, as no spec example or fixture is a v2.4 REF^I12 past the maxima; a
+  supplementary run of the 44 REF, RRI, ORU, ORM and OSR examples with MSH-12 set to 2.4 is
+  identical as well (the ADRM prints only REF^I12).
+
+### S6-4 fragment reassembly and version provenance re-classed Permanent (2026-10-06)
+
+Controller's default ruling, not objected to by the owner. Register section E's two
+cross-version rows move from Blocking to Permanent:
+
+- **Message fragments (ceiling 6).** Reassembly is a transport concern: the continuation
+  protocol (MSH-14 continuation pointer, DSC; v2.5.1 CH02 2.10.2) is carried out between the
+  applications' transport layers, and the validator is handed one message. Joining fragments is
+  not a property of one message's syntax, so it is not the validator's to model. A fragment stays
+  conservatively not structure-checked (no misfire).
+- **Version provenance (ceiling 7).** Honouring `ParserOptions.versionOverride` would need a
+  `Message` API change, recording the grammar version the message was validated under apart from
+  the wire's MSH-12; that waits for the v1.0 API design. Until then such a message
+  stays conservatively not structure-checked.
+
+After S6 section E is Blocking only for three residuals classed by earlier sprints: v2.6 MFR_M01
+with MFI-1 OMA to OME (S5-2), a no-data query response without QAK on v2.4 to v2.8.2 (S4-3), and
+the v2.3 event replay error example (#63; CH05 5.10.6.2.12 printed with MSH-12 2.3; S4-3, owner
+ruling).

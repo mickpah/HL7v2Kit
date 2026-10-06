@@ -85,12 +85,18 @@ struct PrintedStructureIDTests {
     }
 
     // Table 0354 lists PCC under PPG_PCG on every version from v2.5.1 (CH02 / CH02C), as on
-    // v2.3.1, v2.4 and v2.7.1, where PPG^PCC is registered with PPG_PCG.
-    @Test("PPG^PCC^PPG_PCG is information wherever Table 0354 lists PCC under PPG_PCG",
+    // v2.3.1, v2.4 and v2.7.1; since S3-3 PPG_PCG is modelled (open slot) and takes PCC among
+    // its triggers from the table, so PPG^PCC^PPG_PCG is matched: no mismatch, no information.
+    @Test("PPG^PCC^PPG_PCG is matched against PPG_PCG wherever Table 0354 lists PCC under it",
           arguments: ["2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func goalPathwayPCC(_ version: String) throws {
-        let issues = try structureIssues("PPG^PCC^PPG_PCG", version: version)
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "PPG_PCG")], "v\(version): \(issues.map(\.message))")
+        let grammar = try #require(Version(rawValue: version))
+        let structure = try #require(MessageStructureTable.structure("PPG_PCG", version: grammar))
+        #expect(structure.triggers.contains("PPG^PCC"), "v\(version)")
+        #expect(try structureIssues("PPG^PCC^PPG_PCG", version: version, ["PID|1", "PTH|1"]).isEmpty, "v\(version)")
+        let issues = try structureIssues("PPG^PCC^PPG_PCG", version: version, ["PID|1"])
+        #expect(issues.map(\.code) == [.messageStructureSegmentMissing(structure: "PPG_PCG", segmentID: "PTH", group: "PATHWAY")],
+                "v\(version): \(issues.map(\.message))")
     }
 
     // F-I1 (c): each version's CH07 W01 section says the waveform trigger "identifies ORU

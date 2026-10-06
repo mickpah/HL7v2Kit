@@ -187,19 +187,20 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .warning)
     }
 
-    // P8b-9: PGL_PC6 is registered as not modelled (a G6 placeholder, CH12 12.3.1).
+    // P8b-9: MFN_M01 is registered as not modelled (CH08 8.4.1 prints a master file template;
+    // PGL_PC6, the example until S3-3, and MFN_M03, until S4-1, are modelled since).
     @Test("An unmodelled structure is an info issue, never a silent pass")
     func notModelledStructure() throws {
-        let issues = try structureIssues(Self.wire("PGL^PC6^PGL_PC6", []))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "PGL_PC6")])
+        let issues = try structureIssues(Self.wire("MFN^M01^MFN_M01", []))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "MFN_M01")])
         #expect(issues.first?.severity == .info)
         #expect(issues.first?.location.pathDescription == "MSH[1]-9")
-        #expect(issues.first?.message.contains("4.2.2.4") == true)
+        #expect(issues.first?.message.contains("8.4.1") == true)
     }
 
     @Test("An unmodelled two-component MSH-9 reports the trigger")
     func notModelledTrigger() throws {
-        #expect(try structureIssues(Self.wire("PGL^PC6", [])).map(\.code) == [.messageStructureNotModelled(structure: "PGL^PC6")])
+        #expect(try structureIssues(Self.wire("MFN^M01", [])).map(\.code) == [.messageStructureNotModelled(structure: "MFN^M01")])
     }
 
     // ADR-019 lookup rule 1: v2.5.1 is complete (P8b-9), so an MSH-9.3 ID that
@@ -230,8 +231,8 @@ struct MessageStructureValidationTests {
         #expect(registered.map(\.code) == [.messageStructureNotModelled(structure: "QBP_Q13")])
         #expect(registered.first?.severity == .info)
         #expect(registered.first?.message.contains("query template") == true, "\(registered.map(\.message))")
-        let placeholder = try structureIssues(Self.wire("PGL^PC6", version: "2.6", []))
-        #expect(placeholder.map(\.code) == [.messageStructureNotModelled(structure: "PGL^PC6")])
+        let placeholder = try structureIssues(Self.wire("MFN^M01", version: "2.6", []))
+        #expect(placeholder.map(\.code) == [.messageStructureNotModelled(structure: "MFN^M01")])
         #expect(MessageStructureTable.isComplete(.v2_6))
         #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.6", [Self.evn, Self.pid, Self.pv1])).isEmpty)
         #expect(try structureIssues(Self.wire("ADT^A04", version: "2.6", [Self.evn, Self.pid, Self.pv1])).isEmpty)
@@ -242,7 +243,7 @@ struct MessageStructureValidationTests {
 
     // ADR-019 lookup rule 1 on v2.8.2 (P8b-11): complete, so an unknown MSH-9.3 ID is a
     // mismatch (the CH02 examples' ADT^A04^ADT_A04 is a genuine example defect); registered
-    // IDs (a template, a Table 0354 row marked Deprecated, UDM_Q05's undefined segments) are
+    // IDs (a template, a Table 0354 row marked Deprecated; UDM_Q05 is modelled since S2-2) are
     // info with their reason; a Z trigger declaring a printed structure is matched; ADT^A01
     // and ORU^R01 resolve and match as on v2.5.1 and v2.6.
     @Test("v2.8.2 complete (P8b-11): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A01 and ORU^R01 unchanged")
@@ -253,8 +254,7 @@ struct MessageStructureValidationTests {
         #expect(unknown.first?.severity == .error)
         #expect(unknown.first?.message.contains("whose structures are all modelled") == true, "\(unknown.map(\.message))")
         for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
-                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated"),
-                                 ("UDM^Q05^UDM_Q05", "UDM_Q05", "URD and [URS]")] {
+                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated")] {
             let issues = try structureIssues(Self.wire(msh9, version: "2.8.2", ["QPD|1", "RCP|I"]))
             #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
             #expect(issues.first?.severity == .info)
@@ -430,21 +430,22 @@ struct MessageStructureValidationTests {
         #expect(structure.citation.contains("3.3.56") && structure.citation.contains("3.3.57"))
     }
 
-    // P8b-10 ruling, applied in P8b-11: on v2.6 the two RSP_K21 prints are incomparable (3.3.56:
-    // one QUERY_RESPONSE with [{ARV}] and QRI required; 3.3.57: repeating, QRI optional, no ARV),
-    // so the structure is their union: a response with ARV in a repeating QUERY_RESPONSE and no
-    // QRI matches; the union still requires PID first in each response.
-    @Test("v2.6 RSP_K21 is the union of its two incomparable prints (unionPrints)")
-    func rspK21UnionOnV26() throws {
+    // P8b-10 ruling, applied in P8b-11 as a union; per-trigger since S6-1 (ADR-019 S6): on v2.6
+    // the two RSP_K21 prints are incomparable (3.3.56: one QUERY_RESPONSE with [{ARV}] and QRI
+    // required; 3.3.57: repeating, QRI optional, no ARV), and each governs its own trigger.
+    @Test("v2.6 RSP_K21: each of its two incomparable prints governs its own trigger (variantPrints)")
+    func rspK21PerTriggerOnV26() throws {
         let head = ["MSA|AA|8699", "QAK|7|OK", "QPD|Q22^Find Candidates^HL7nnn|7"]
         let both = head + [Self.pid, "ARV|1", "QRI|95", Self.pid, "ARV|1", Self.pid]
-        #expect(try structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", both)).isEmpty)
-        #expect(try structureIssues(Self.wire("RSP^K22^RSP_K21", version: "2.6", both)).isEmpty)
+        #expect(try !structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", both)).isEmpty)
+        #expect(try !structureIssues(Self.wire("RSP^K22^RSP_K21", version: "2.6", both)).isEmpty)
+        #expect(try structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", head + [Self.pid, "ARV|1", "QRI|95"])).isEmpty)
+        #expect(try structureIssues(Self.wire("RSP^K22^RSP_K21", version: "2.6", head + [Self.pid, Self.pid, "QRI|95"])).isEmpty)
         let noPID = head + ["ARV|1", "QRI|95"]
         #expect(try !structureIssues(Self.wire("RSP^K21^RSP_K21", version: "2.6", noPID)).isEmpty)
         let structure = try #require(MessageStructureTable.structure("RSP_K21", version: .v2_6))
         #expect(structure.citation.contains("3.3.56") && structure.citation.contains("3.3.57")
-                && structure.citation.contains("union"))
+                && structure.variants.map(\.triggers) == [["RSP^K21"]])
     }
 
     @Test("A registered not-modelled structure is info on a complete version, a mismatch only for a trigger it does not print")
@@ -575,9 +576,8 @@ struct MessageStructureValidationTests {
         // The literally printed Table 0354 misprint is registered (P8b-final ruling F-I1): info.
         #expect(misprint.map(\.code) == [.messageStructureNotModelled(structure: "PIN_107")])
         #expect(try structureIssues(Self.wire("PIN^I07^PIN_I07", version: "2.3.1", ["PRD|1", "PID|1", "IN1|1"])).isEmpty)
-        for (msh9, id, text) in [("PPR^PC1^PPR_PC1", "PPR_PC1", "OBR, etc."),
-                                 ("ORU^W01^ORU_W01", "ORU_W01", "Table 0354 only"),
-                                 ("ORM^O01^ORM_O01", "ORM_O01", "Order Detail Segment"),
+        // PPR_PC1 and ORM_O01, here until S3-3, are modelled with the open slot since.
+        for (msh9, id, text) in [("ORU^W01^ORU_W01", "ORU_W01", "Table 0354 only"),
                                  ("MFN^M02^MFN_M02", "MFN_M02", "MFN^M01-M06")] {
             let issues = try structureIssues(Self.wire(msh9, version: "2.3.1", ["MFI|1", "PID|1"]))
             #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
@@ -601,9 +601,8 @@ struct MessageStructureValidationTests {
         #expect(unknown.first?.severity == .error)
         for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
                                  ("MFN^M01^MFN_M01", "MFN_M01", "master file template"),
-                                 ("PPR^PC1^PPR_PC1", "PPR_PC1", "OBR, etc."),
                                  ("ORU^W01^ORU_W01", "ORU_W01", "Table 0354 only"),
-                                 ("QRY^P04^QRY_P04", "QRY_P04", "see Chapter 5")] {
+                                 ("DSR^P04^DSR_P04", "DSR_P04", "see Chapter 5")] {
             let issues = try structureIssues(Self.wire(msh9, version: "2.4", ["QPD|1", "RCP|I"]))
             #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
             #expect(issues.first?.message.contains(text) == true, "\(msh9): \(issues.map(\.message))")
@@ -628,8 +627,9 @@ struct MessageStructureValidationTests {
     }
 
     // ADR-019 lookup rule 1 on v2.7.1 (P8b-16): complete, so an unknown MSH-9.3 ID is a
-    // mismatch; registered IDs (a template, a Table 0354 row marked Deprecated, UDM_Q05's and
-    // RQC_I05's segments that v2.7.1 does not define) are info with their reason; a Z trigger
+    // mismatch; registered IDs (a template, a Table 0354 row marked Deprecated; UDM_Q05 and
+    // RQC_I05, which print withdrawn segments, are modelled since S2-2) are info with their
+    // reason; a Z trigger
     // declaring a printed structure is matched; ADT^A01 and ORU^R01 resolve and match as on
     // the other complete versions.
     @Test("v2.7.1 complete (P8b-16): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A01 and ORU^R01 unchanged")
@@ -640,9 +640,7 @@ struct MessageStructureValidationTests {
         #expect(unknown.first?.severity == .error)
         #expect(unknown.first?.message.contains("whose structures are all modelled") == true, "\(unknown.map(\.message))")
         for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
-                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated"),
-                                 ("UDM^Q05^UDM_Q05", "UDM_Q05", "URD and [URS]"),
-                                 ("RQC^I05^RQC_I05", "RQC_I05", "QRD and [QRF]")] {
+                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated")] {
             let issues = try structureIssues(Self.wire(msh9, version: "2.7.1", ["QPD|1", "RCP|I"]))
             #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
             #expect(issues.first?.severity == .info)

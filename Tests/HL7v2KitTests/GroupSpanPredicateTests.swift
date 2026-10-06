@@ -31,7 +31,7 @@ struct GroupSpanPredicateTests {
         let want: Set<String> = ["ORC", "OBR"]
         var out: [String] = []
         for element in elements {
-            let wanted = !element.segmentIDs.isDisjoint(with: want)
+            let wanted = !element.segmentIDs.isDisjoint(with: want) || holdsSlot(element)
             guard element.min > 0 || wanted else { continue }
             let times = wanted && element.max != 1 ? 2 : Swift.max(1, element.min)
             for _ in 0..<times {
@@ -40,13 +40,28 @@ struct GroupSpanPredicateTests {
                     out.append(id)
                 case .group(_, _, _, let children):
                     out += skeleton(children)
-                case .choice(_, _, _, let alternatives):
+                case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
                     let pick = alternatives.first { !$0.segmentIDs.isDisjoint(with: want) } ?? alternatives[0]
                     out += skeleton([pick])
+                case .slot:
+                    // The order detail the print names ("OBR, etc.", S3-3), so the order's
+                    // numbers sit in its OBR as the skeleton intends.
+                    out.append("OBR")
                 }
             }
         }
         return out
+    }
+
+    /// Whether `element` is or holds an open slot, which the skeleton fills with OBR (S3-3).
+    static func holdsSlot(_ element: StructureElement) -> Bool {
+        switch element {
+        case .slot: true
+        case .group(_, _, _, let children): children.contains(where: holdsSlot)
+        case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
+            alternatives.contains(where: holdsSlot)
+        case .segment: false
+        }
     }
 
     static func wire(_ msh9: String, _ version: String, _ ids: [String],
@@ -213,9 +228,28 @@ struct GroupSpanPredicateTests {
         #expect(Self.groupFindings(try Self.issues(wire)).isEmpty, "v\(version)")
     }
 
-    /// v2.3.1 registers ORM_O01 as not modelled (an unexpandable placeholder):
-    /// no spans, so the ORC walk, as at BASE.
-    @Test("v2.3.1 ORM_O01 (registered as not modelled) uses the ORC walk")
+    /// v2.3 ORM_O01 holds the open slot in its repeating ORDER group (CH04 4.2.1). With one
+    /// order the parses agree and the span is given; with two, the second ORC may open a second
+    /// ORDER or be slot content, so the parses disagree and the spans are withheld: the
+    /// group-dependent predicates take the P8b-17 fallback for that message (S3-4).
+    @Test("v2.3 ORM_O01: one order keeps its span; two orders withhold the spans")
+    func slotInRepeatingGroupSpans() throws {
+        let validator = Validator(options: .default)
+        let one = try Parser().parse(TestWires.wire("ORM^O01", "2.3", "PID|1", "ORC|NW|PON1", "OBR|1|PON1"))
+        let spans = validator.groupSpanOutcome(for: one)
+        #expect(spans.spans != nil)
+        #expect(spans.cause == nil)
+        let two = try Parser().parse(TestWires.wire("ORM^O01", "2.3", "PID|1", "ORC|NW|PON1", "OBR|1|PON1",
+                                                    "ORC|NW|PON2", "OBR|2|PON2"))
+        let withheld = validator.groupSpanOutcome(for: two)
+        #expect(withheld.spans == nil)
+        #expect(withheld.cause == "the accepting parses of ORM_O01 place a segment in different group occurrences")
+    }
+
+    /// v2.3.1 ORM^O01 without MSH-9.3 is ambiguous (ORM_O01 and the four specific order
+    /// structures share the trigger; ORM_O01 itself has been modelled with the open slot since
+    /// S3-3): no structure, no spans, so the ORC walk, as at BASE.
+    @Test("v2.3.1 ORM^O01 without MSH-9.3 (ambiguous) uses the ORC walk")
     func notModelledUsesWalk() throws {
         let wire = TestWires.wire("ORM^O01", "2.3.1", "PID|1", "ORC|NW", "OBR|1", "ORC|CH|PON2|FON2")
         #expect(Self.groupFindings(try Self.issues(wire))

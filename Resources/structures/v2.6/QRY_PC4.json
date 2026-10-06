@@ -1,7 +1,7 @@
 {
   "structure": "QRY_PC4",
   "version": "2.6",
-  "citation": "HL7 v2.6 Chapter 12, section 12.2.7 QRY - Patient Goal Query (Event PC9), p 12-14; the same structure is printed for QRY^PC4 (12.2.5), QRY^PCE (12.2.9) and QRY^PCK (12.2.11). Two normative prints of QRY_PC4 disagree: Chapter 12 section 12.2.5 (QRY^PC4^QRY_PC4, p 12-12) prints MSH QRD [QRF], sections 12.2.7 (QRY^PC9^QRY_PC4, p 12-14), 12.2.9 (PCE, p 12-15) and 12.2.11 (PCK, p 12-17) print [{SFT}] [UAC] after MSH, which accepts every message the 12.2.5 print accepts; the looser 12.2.7 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/QRY_PC4.xsd has SFT and UAC.",
+  "citation": "HL7 v2.6 Chapter 12, section 12.2.7 QRY - Patient Goal Query (Event PC9), p 12-14; the same structure is printed for QRY^PC4 (12.2.5), QRY^PCE (12.2.9) and QRY^PCK (12.2.11). Two normative prints of QRY_PC4 differ by trigger: HL7 v2.6 Chapter 12 section 12.2.5 (QRY^PC4^QRY_PC4, p 12-12) prints MSH QRD [QRF], sections 12.2.7 (QRY^PC9^QRY_PC4, p 12-14), 12.2.9 (PCE, p 12-15) and 12.2.11 (PCK, p 12-17) print [{SFT}] [UAC] after MSH; the 12.2.7 print is the default and the 12.2.5 print governs QRY^PC4. HL7-xml v2.6/QRY_PC4.xsd has SFT and UAC. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
   "triggers": ["QRY^PC9", "QRY^PC4", "QRY^PCE", "QRY^PCK"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -9,5 +9,16 @@
     { "segment": "UAC", "min": 0, "max": 1 },
     { "segment": "QRD", "min": 1, "max": 1 },
     { "segment": "QRF", "min": 0, "max": 1 }
+  ],
+  "variants": [
+    {
+      "triggers": ["QRY^PC4"],
+      "citation": "HL7 v2.6 Chapter 12, section 12.2.5 QRY - Patient Care Problem Query (Event PC4), p 12-12. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of QRY_PC4 differ by trigger: HL7 v2.6 Chapter 12 section 12.2.5 (QRY^PC4^QRY_PC4, p 12-12) prints MSH QRD [QRF], sections 12.2.7 (QRY^PC9^QRY_PC4, p 12-14), 12.2.9 (PCE, p 12-15) and 12.2.11 (PCK, p 12-17) print [{SFT}] [UAC] after MSH; the 12.2.7 print is the default and the 12.2.5 print governs QRY^PC4. HL7-xml v2.6/QRY_PC4.xsd has SFT and UAC. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "QRD", "min": 1, "max": 1 },
+        { "segment": "QRF", "min": 0, "max": 1 }
+      ]
+    }
   ]
 }

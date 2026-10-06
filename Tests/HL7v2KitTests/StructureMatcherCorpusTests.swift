@@ -75,7 +75,11 @@ struct StructureMatcherCorpusTests {
             if wire.chapter != nil { matched.examples += 1 } else { matched.fixtures += 1 }
             let grammar = Validator.grammarTable(for: .v2_5_1)
             let outside = Set(ids.filter { grammar[$0] == nil })
-            let result = StructureMatcher(structure: structure).match(ids, transparent: outside)
+            // S3-3 (ruling 3): an exact-matched structure (a slot structure among them) is
+            // matched as the Validator matches it; the one-pass matcher never compiles one.
+            let result = structure.requiresExactMatch
+                ? ExactStructureMatcher(structure: structure).match(ids, transparent: outside)
+                : StructureMatcher(structure: structure).match(ids, transparent: outside)
             if result.findings.isEmpty { lines.append("\(name)\t\(structure.id)\tconforms") }
             for finding in result.findings {
                 lines.append("\(name)\t\(structure.id)\t\(finding.kind)\t\(finding.segmentID)\t\(finding.group ?? "-")\t\(finding.index)")

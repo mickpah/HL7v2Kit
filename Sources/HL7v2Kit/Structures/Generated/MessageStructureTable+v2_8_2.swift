@@ -136,11 +136,15 @@ extension MessageStructureTable {
         "OUL_R23": v2_8_2_OUL_R23,
         "OUL_R24": v2_8_2_OUL_R24,
         "PEX_P07": v2_8_2_PEX_P07,
+        "PGL_PC6": v2_8_2_PGL_PC6,
         "PMU_B01": v2_8_2_PMU_B01,
         "PMU_B03": v2_8_2_PMU_B03,
         "PMU_B04": v2_8_2_PMU_B04,
         "PMU_B07": v2_8_2_PMU_B07,
         "PMU_B08": v2_8_2_PMU_B08,
+        "PPG_PCG": v2_8_2_PPG_PCG,
+        "PPP_PCB": v2_8_2_PPP_PCB,
+        "PPR_PC1": v2_8_2_PPR_PC1,
         "QBP_E03": v2_8_2_QBP_E03,
         "QBP_E22": v2_8_2_QBP_E22,
         "QBP_O33": v2_8_2_QBP_O33,
@@ -188,6 +192,7 @@ extension MessageStructureTable {
         "SSU_U03": v2_8_2_SSU_U03,
         "STC_S33": v2_8_2_STC_S33,
         "TCU_U10": v2_8_2_TCU_U10,
+        "UDM_Q05": v2_8_2_UDM_Q05,
         "VXU_V04": v2_8_2_VXU_V04,
     ]
 
@@ -195,12 +200,36 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.8.2",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.8.2 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER, p 20. Two normative prints of ACK disagree: Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47) prints UAC optional and non-repeating ([UAC]), Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 20) prints [{UAC}], which accepts every message the 2.13.1 print accepts (and every CH05 5.4.4 to 5.4.7 ACK print, which also prints [ERR] where 2.13.1 prints [{ERR}]); the looser 10.4 print is primary (P8b-9 ruling; register section E).",
+        citation: "HL7 v2.8.2 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 47. Two normative prints of ACK differ by trigger: HL7 v2.8.2 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]); Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 20) prints [{UAC}] for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24, S26 and S27. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9). A third normative print of ACK differs by trigger: HL7 v2.8.2 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47) prints [{ ERR }]; Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 38; ACK^Q17 and ACK^J01, p 39; ACK^J02, p 40) print [ ERR ], UAC as 2.13.1; the 2.13.1 print is the default and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ACK^S12", "ACK^S13", "ACK^S14", "ACK^S15", "ACK^S16", "ACK^S17", "ACK^S18", "ACK^S19", "ACK^S20", "ACK^S21", "ACK^S22", "ACK^S23", "ACK^S24", "ACK^S26", "ACK^S27"],
+                citation: "HL7 v2.8.2 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER, p 20. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ACK differ by trigger: HL7 v2.8.2 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47), the general acknowledgment for every trigger, prints UAC optional and non-repeating ([UAC]); Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 20) prints [{UAC}] for the scheduling triggers it lists; the 2.13.1 print is the default (the triggerFolds primary) and the 10.4 print governs S12 to S24, S26 and S27. ADR-019 S6: each print governs the triggers it is printed for (was primaryPrints, the looser print governing every trigger, P8b-9).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: nil),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: nil),
+                ]),
+            StructureVariant(
+                triggers: ["ACK^Q16", "ACK^Q17", "ACK^J01", "ACK^J02"],
+                citation: "HL7 v2.8.2 Chapter 5, section 5.4.4 QSB - Create subscription (Event Q16), p 38; the same structure is printed for ACK^Q17 (5.4.5), ACK^J01 (5.4.6) and ACK^J02 (5.4.7). Per-trigger print (overrides.json variantPrints, ADR-019 S6): A third normative print of ACK differs by trigger: HL7 v2.8.2 Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47) prints [{ ERR }]; Chapter 5 sections 5.4.4 to 5.4.7 (ACK^Q16, p 38; ACK^Q17 and ACK^J01, p 39; ACK^J02, p 40) print [ ERR ], UAC as 2.13.1; the 2.13.1 print is the default and the Chapter 5 prints govern Q16, Q17, J01 and J02. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("ERR", min: 0, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
-            .segment("UAC", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
             .segment("ERR", min: 0, max: nil),
         ]
@@ -5575,6 +5604,70 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_8_2_PGL_PC6: MessageStructure = MessageStructure(
+        id: "PGL_PC6",
+        version: "2.8.2",
+        triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
+        citation: "HL7 v2.8.2 Chapter 12, section 12.3.1 PGL/ACK - Patient Goal Message (Events PC6, PC7, PC8), pp 7 to 9.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("GOAL", min: 1, max: nil, elements: [
+                .segment("GOL", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PATHWAY", min: 0, max: nil, elements: [
+                    .segment("PTH", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("PRT", min: 0, max: nil),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("PROBLEM", min: 0, max: nil, elements: [
+                    .segment("PRB", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .group("ORDER", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                        .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.8.2 Chapter 12, section 12.3.1 PGL/ACK - Patient Goal Message (Events PC6, PC7, PC8), p 8: the print gives the order detail as the choice '< OBR | Hxx >', whose last alternative is a placeholder for segments it does not enumerate: one open slot in place of the choice (ADR-019 S3-1, S3-2), the listed alternative OBR among its fillers."),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
     private static let v2_8_2_PMU_B01: MessageStructure = MessageStructure(
         id: "PMU_B01",
         version: "2.8.2",
@@ -5666,6 +5759,208 @@ extension MessageStructureTable {
             .segment("STF", min: 1, max: 1),
             .segment("PRA", min: 0, max: 1),
             .segment("CER", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_8_2_PPG_PCG: MessageStructure = MessageStructure(
+        id: "PPG_PCG",
+        version: "2.8.2",
+        triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
+        citation: "HL7 v2.8.2 Chapter 12, section 12.3.4 PPG/ACK - Patient Pathway Message (Goal-Oriented) (Events PCG, PCH, PCJ), pp 14 to 15. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 152) maps to PPG_PCG that no caption prints, accepted with the printed ones (P8b-11 ruling): PPG^PCC.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PATHWAY", min: 1, max: nil, elements: [
+                .segment("PTH", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("GOAL", min: 0, max: nil, elements: [
+                    .segment("GOL", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM", min: 0, max: nil, elements: [
+                        .segment("PRB", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.8.2 Chapter 12, section 12.3.4 PPG/ACK - Patient Pathway Message (Goal-Oriented) (Events PCG, PCH, PCJ), p 15: the print gives the order detail as the choice '< OBR | Hxx >', whose last alternative is a placeholder for segments it does not enumerate: one open slot in place of the choice (ADR-019 S3-1, S3-2), the listed alternative OBR among its fillers."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("PRT", min: 0, max: nil),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_8_2_PPP_PCB: MessageStructure = MessageStructure(
+        id: "PPP_PCB",
+        version: "2.8.2",
+        triggers: ["PPP^PCB", "PPP^PCC", "PPP^PCD"],
+        citation: "HL7 v2.8.2 Chapter 12, section 12.3.3 PPP/ACK - Patient Pathway Message (Problem-Oriented) (Events PCB, PCC, PCD), pp 11 to 13.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PATHWAY", min: 1, max: nil, elements: [
+                .segment("PTH", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PROBLEM", min: 0, max: nil, elements: [
+                    .segment("PRB", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("GOAL", min: 0, max: nil, elements: [
+                        .segment("GOL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.8.2 Chapter 12, section 12.3.3 PPP/ACK - Patient Pathway Message (Problem-Oriented) (Events PCB, PCC, PCD), p 13: the print gives the order detail as the choice '< OBR | Hxx >', whose last alternative is a placeholder for segments it does not enumerate: one open slot in place of the choice (ADR-019 S3-1, S3-2), the listed alternative OBR among its fillers."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("PRT", min: 0, max: nil),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_8_2_PPR_PC1: MessageStructure = MessageStructure(
+        id: "PPR_PC1",
+        version: "2.8.2",
+        triggers: ["PPR^PC1", "PPR^PC2", "PPR^PC3"],
+        citation: "HL7 v2.8.2 Chapter 12, section 12.3.2 PPR/ACK - Patient Problem Message (Events PC1, PC2, PC3), pp 9 to 11.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PROBLEM", min: 1, max: nil, elements: [
+                .segment("PRB", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PATHWAY", min: 0, max: nil, elements: [
+                    .segment("PTH", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("PRT", min: 0, max: nil),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("GOAL", min: 0, max: nil, elements: [
+                    .segment("GOL", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .group("ORDER", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                        .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.8.2 Chapter 12, section 12.3.2 PPR/ACK - Patient Problem Message (Events PC1, PC2, PC3), p 11: the print gives the order detail as the choice '< OBR | Hxx >', whose last alternative is a placeholder for segments it does not enumerate: one open slot in place of the choice (ADR-019 S3-1, S3-2), the listed alternative OBR among its fillers."),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+            ]),
         ]
     )
 
@@ -5855,8 +6150,85 @@ extension MessageStructureTable {
         id: "RDE_O11",
         version: "2.8.2",
         triggers: ["RDE^O11", "RDE^O25"],
-        citation: "HL7 v2.8.2 Chapter 4A, section 4A.3.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 6 to 8; the same structure is printed for RDE^O25 (4A.3.13).",
+        citation: "HL7 v2.8.2 Chapter 4A, section 4A.3.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 6 to 8; the same structure is printed for RDE^O25 (4A.3.13). Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.8.2 Chapter 4A section 4A.3.5 (RDE^O11^RDE_O11, p 6) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.13 (RDE^O25^RDE_O11, p 20) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.5 print is the default and the 4A.3.13 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["RDE^O25"],
+                citation: "HL7 v2.8.2 Chapter 4A, section 4A.3.13 RDE - Pharmacy/Treatment Refill Authorization Request Message, pp 20 to 22. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.8.2 Chapter 4A section 4A.3.5 (RDE^O11^RDE_O11, p 6) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.13 (RDE^O25^RDE_O11, p 20) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.5 print is the default and the 4A.3.13 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Unprinted group names (ADR-019 decision 3): PHARMACY_TREATMENT_INFUSION_ORDER (HL7-xml v2.8.2/RDE_O11.xsd, RDE_O11.PHARMACY_TREATMENT_INFUSION_ORDER.CONTENT).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("SFT", min: 0, max: nil),
+                    .segment("UAC", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("PATIENT", min: 0, max: 1, elements: [
+                        .segment("PID", min: 1, max: 1),
+                        .segment("PD1", min: 0, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("ARV", min: 0, max: nil),
+                        .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                            .segment("PV1", min: 1, max: 1),
+                            .segment("PV2", min: 0, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("ARV", min: 0, max: nil),
+                        ]),
+                        .group("INSURANCE", min: 0, max: nil, elements: [
+                            .segment("IN1", min: 1, max: 1),
+                            .segment("IN2", min: 0, max: 1),
+                            .segment("IN3", min: 0, max: 1),
+                        ]),
+                        .segment("GT1", min: 0, max: 1),
+                        .segment("AL1", min: 0, max: nil),
+                    ]),
+                    .group("ORDER", min: 1, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .group("TIMING", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .segment("RXO", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("RXR", min: 1, max: nil),
+                            .group("COMPONENTS", min: 0, max: nil, elements: [
+                                .segment("RXC", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .segment("RXE", min: 1, max: 1),
+                        .segment("PRT", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("PHARMACY_TREATMENT_INFUSION_ORDER", min: 0, max: nil, elements: [
+                            .segment("RXV", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                            .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                                .segment("TQ1", min: 1, max: 1),
+                                .segment("TQ2", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                        .segment("CDO", min: 0, max: nil),
+                        .group("OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("PRT", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .segment("FT1", min: 0, max: nil),
+                        .segment("BLG", min: 0, max: 1),
+                        .segment("CTI", min: 0, max: nil),
+                    ]),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6009,6 +6381,11 @@ extension MessageStructureTable {
         triggers: ["RDY^K15"],
         citation: "HL7 v2.8.2 Chapter 5, section 5.4.3 QBP/RDY - query by parameter/display response (events vary), p 37.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6618,6 +6995,11 @@ extension MessageStructureTable {
         triggers: ["RSP^E03"],
         citation: "HL7 v2.8.2 Chapter 16, section 16.3.4 RSP^E03 - HealthCare Services Invoice Status Query, pp 10 to 11.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6638,6 +7020,11 @@ extension MessageStructureTable {
         triggers: ["RSP^E22"],
         citation: "HL7 v2.8.2 Chapter 16, section 16.3.13 RSP^E22 - Authorization Request Status Query Response (event E22), p 25.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6664,6 +7051,11 @@ extension MessageStructureTable {
         triggers: ["RSP^K21"],
         citation: "HL7 v2.8.2 Chapter 3, section 3.2.56 QBP/RSP - Get Person Demographics (QBP) and Response (RSP), p 46.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6689,6 +7081,11 @@ extension MessageStructureTable {
         triggers: ["RSP^K22"],
         citation: "HL7 v2.8.2 Chapter 3, section 3.2.57 QBP/RSP - Find Candidates (QBP) and Response (RSP) (Events Q22 and K22), p 48.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6713,6 +7110,11 @@ extension MessageStructureTable {
         triggers: ["RSP^K23", "RSP^K24"],
         citation: "HL7 v2.8.2 Chapter 3, section 3.2.58 QBP/RSP - Get Corresponding Identifiers (QBP) and Response (RSP), p 50; the same structure is printed for RSP^K24 (3.2.59).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6734,6 +7136,11 @@ extension MessageStructureTable {
         triggers: ["RSP^K25"],
         citation: "HL7 v2.8.2 Chapter 15, section 15.3.7 QBP/RSP - Query Information (Event Q25/K25), pp 8 to 9.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6765,6 +7172,11 @@ extension MessageStructureTable {
         triggers: ["RSP^K31"],
         citation: "HL7 v2.8.2 Chapter 4A, section 4A.3.20 Pharmacy Query/Response Message Pair, pp 25 to 27.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -6840,6 +7252,11 @@ extension MessageStructureTable {
         triggers: ["RSP^K32"],
         citation: "HL7 v2.8.2 Chapter 3, section 3.2.63 QBP/RSP - Find Candidates including Visit Information (QBP) and, p 56.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6865,6 +7282,11 @@ extension MessageStructureTable {
         triggers: ["RSP^K33", "RSP^O33"],
         citation: "HL7 v2.8.2 Chapter 4, section 4.16.7 RSP - Get Donor Record Candidates Response (K33), pp 157 to 158. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 153) maps to RSP_O33 that no caption prints, accepted with the printed ones (P8b-11 ruling): RSP^O33.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6886,6 +7308,11 @@ extension MessageStructureTable {
         triggers: ["RSP^K34", "RSP^O34"],
         citation: "HL7 v2.8.2 Chapter 4, section 4.16.9 RSP - Get Donor Record Response (K34), pp 158 to 159. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 153) maps to RSP_O34 that no caption prints, accepted with the printed ones (P8b-11 ruling): RSP^O34.",
         requiresExactMatch: true,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6920,6 +7347,11 @@ extension MessageStructureTable {
         triggers: ["RTB^K13"],
         citation: "HL7 v2.8.2 Chapter 5, section 5.4.2 QBP/RTB - query by parameter/tabular response (events vary), p 36.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            noDataQueryStatus: ["NF"],
+            citation: "HL7 v2.8.2 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 54 to 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 55): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -7185,6 +7617,23 @@ extension MessageStructureTable {
                 .segment("SPM", min: 0, max: 1),
                 .segment("TCC", min: 1, max: nil),
             ]),
+        ]
+    )
+
+    private static let v2_8_2_UDM_Q05: MessageStructure = MessageStructure(
+        id: "UDM_Q05",
+        version: "2.8.2",
+        triggers: ["UDM^Q05"],
+        citation: "HL7 v2.8.2 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), pp 102 to 103. URD and URS are listed as deprecated by v2.8.2 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("URD", min: 1, max: 1),
+            .segment("URS", min: 0, max: 1),
+            .segment("DSP", min: 1, max: nil),
+            .segment("DSC", min: 0, max: 1),
         ]
     )
 

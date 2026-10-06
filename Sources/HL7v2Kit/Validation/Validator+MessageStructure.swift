@@ -8,7 +8,21 @@ extension Validator {
     func checkMessageStructure(message: Message, severity: IssueSeverity, issues: inout [ValidationIssue]) {
         let resolution = resolveStructure(message, severity: severity)
         issues += resolution.issues
-        guard let structure = resolution.structure else { return }
+        guard let declared = resolution.structure else { return }
+        let structure: MessageStructure
+        switch declared.resolvingKeyedChoices(in: message) {
+        case .resolved(let resolved):
+            structure = resolved
+        case .unmapped(let key, let value):
+            issues.append(notModelled(declared.id, message: message, reason: Self.unmappedReason(key, value, structure: declared.id)))
+            return
+        }
+        // S4-3: a query response whose MSA-1 is AE or AR (or AA with a no-data QAK-2) is matched against its CH05 5.6.5
+        // head. A profile constrains the full structure, so it is not applied to the head.
+        if let head = structure.errorResponseHead(in: message) {
+            issues += matchStructure(head, message: message, severity: severity)
+            return
+        }
         let findings = matchStructure(structure, message: message, severity: severity)
         let governed = matchProfileStructure(over: structure, baseFindings: findings, message: message, severity: severity)
         issues += governed.base
@@ -48,6 +62,10 @@ extension Validator {
     /// ^ <trigger event>, v2.3 Chapter 2 section 2.24.1.9) and its structure
     /// IDs are synthesised, so a v2.3 message resolves from MSH-9.1^9.2 only
     /// and a populated third component is ignored for resolution.
+    /// A resolved structure whose prints differ by trigger is returned as the
+    /// print MSH-9.1^9.2 selects (S6-1, `MessageStructure.variants`), on the
+    /// MSH-9.3 path and the bare-trigger path alike, so the check and the
+    /// group spans both use that print.
     ///
     /// `structures` replaces the version's loaded table, `complete` the
     /// generated completeness set and `gaps` the registered not-modelled
@@ -105,7 +123,7 @@ extension Validator {
             guard let only = byTrigger.first, let structure = table[only] else {
                 return (nil, [notModelled(trigger, message: message)])
             }
-            return (structure, [])
+            return (structure.selectingVariant(messageCode: code, triggerEvent: event), [])
         }
         if table[declared] == nil, let entry = registered[declared] {
             // Its captions print other triggers: the print gives this event another structure.
@@ -173,7 +191,7 @@ extension Validator {
                 message: "MSH-9.3 \(declared) is not printed for \(trigger) in v\(message.version.rawValue) (\(structure.citation)); segment order and groups were not checked (ADR-019)."
             )])
         }
-        return (structure, [])
+        return (structure.selectingVariant(messageCode: code, triggerEvent: event), [])
     }
 
     /// Match the message body against `structure`: fragments are reported as
@@ -247,14 +265,16 @@ extension Validator {
     /// The matcher's result for the message body, the segments at the indices
     /// in `skipping` passed over. Segments the version grammar lacks already
     /// raise segmentNotInVersionGrammar and are transparent; Z and ADD are
-    /// skipped by the matcher. Shared with the group spans (P8b-17).
+    /// skipped by the matcher. A segment the version lists as withdrawn is
+    /// matched by ID (ADR-019 S2-1). Shared with the group spans (P8b-17).
     func structureMatch(_ structure: MessageStructure, message: Message,
                         skipping: Set<Int> = []) -> StructureMatch {
         let ids = message.segments.map(\.segmentID)
         let grammar = Self.grammarTable(for: message.version)
+        let withdrawn = MessageStructureTable.withdrawnSegments(for: message.version)
         // A skipped segment is matched as "", which no grammar defines.
         let matched = ids.indices.map { skipping.contains($0) ? "" : ids[$0] }
-        let outside = Set(matched.filter { grammar[$0] == nil })
+        let outside = Set(matched.filter { grammar[$0] == nil && withdrawn[$0] == nil })
         return StructureMatcherCache.shared.matcher(for: structure).match(matched, transparent: outside)
     }
 
@@ -291,6 +311,15 @@ extension Validator {
         if populated(last.field(1)) { return "it ends in a DSC whose DSC-1 continuation pointer is populated" }
         if case .segment("DSC", _, _) = structure.elements.last { return nil }
         return "it ends in a DSC, which \(structure.id) does not define there"
+    }
+
+    /// Why a structure whose keyed choice the message's key value does not
+    /// select is not matched (S4-1): the print's map is the only list of
+    /// values it gives, so another value is not a mismatch.
+    static func unmappedReason(_ key: StructureChoiceKey, _ value: String, structure: String) -> String {
+        let known = key.alternatives.keys.sorted().joined(separator: ", ")
+        return "\(key.fieldName) is \"\(value)\", which the print does not map to a body of \(structure) "
+            + "(it maps \(known); \(key.citation))"
     }
 
     /// The info issue for a message no structure is applied to. An empty

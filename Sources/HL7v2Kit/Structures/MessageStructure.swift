@@ -5,14 +5,16 @@
 // into MessageStructureTable by HL7v2KitCodegen; nothing is parsed at runtime.
 
 /// One element of an abstract message syntax: a segment, a segment group,
-/// or a choice between alternatives.
+/// a choice between alternatives, or an open slot.
 ///
 /// `min` is 0 for an optional element (`[ ]`) and 1 otherwise; `max` is `nil`
 /// for a repeating element (`{ }`) and 1 otherwise (v2.5.1 CH02 section 2.5.2).
 /// The print's `{[X]}` reads the same as `[{X}]`: `min` 0, `max` `nil`.
 ///
 /// - Note: This is an **open** enum per the API evolution policy (ADR-014):
-///   a later release may add cases, as P8b-6 added ``choice(_:min:max:alternatives:)``.
+///   a later release may add cases, as P8b-6 added ``choice(_:min:max:alternatives:)``
+///   and v3.15.0 ``slot(_:min:max:citation:)`` and
+///   ``keyedChoice(_:min:max:key:alternatives:)``.
 ///   Code that walks the tree must handle `@unknown default`; ``children``
 ///   and ``segmentIDs`` cover every case, so a walker that recurses through
 ///   them never skips the segments inside a case it does not know.
@@ -27,33 +29,84 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// nil; `alternatives` holds at least two elements, each with its own
     /// occurrence bounds.
     case choice(String?, min: Int, max: Int?, alternatives: [StructureElement])
+    /// An open slot (S3-1, ADR-019 amendment 2026-10-06): the print's
+    /// "Order Detail Segment OBR, etc." or `< OBR | etc. >`, whose filling
+    /// segments the standard does not enumerate (CH04 4.2.2.4 names only
+    /// examples). `min` and `max` bound the number of segments it takes. It
+    /// takes any segment except MSH, including one that could begin what
+    /// follows it: a message is reported only when no reading of it fits the
+    /// structure. The consequences:
+    ///
+    /// - A required segment after the slot is still enforced, and a defect
+    ///   before it is still found.
+    /// - A misplaced optional segment after the slot may be read as slot
+    ///   content and is then not reported: the faithful reading of an
+    ///   unbounded "etc.".
+    /// - Z-segments and ADD are skipped as everywhere, so they never fill
+    ///   the slot: a slot holding only them counts as empty.
+    /// - A finding at a point where the slot could still take a segment
+    ///   names the slot among the segments expected there, and a finding
+    ///   about an absent slot names it.
+    /// - With the slot inside a repeating group, two or more occurrences of
+    ///   that group make the readings disagree on the group boundaries, so
+    ///   the group spans are withheld for that message (one occurrence
+    ///   keeps its span).
+    ///
+    /// The name is the one the print gives ("Order Detail Segment"), or nil.
+    /// `citation` gives where the slot is printed and what says it is open.
+    /// A slot has no ``children`` and no ``segmentIDs``; a structure holding
+    /// one is matched exactly.
+    case slot(String?, min: Int, max: Int?, citation: String)
+    /// A choice whose alternative a field value of the message selects
+    /// (S4-1, ADR-019 amendment 2026-10-06): v2.4 to v2.6 CH08 8.8.2 MFN^M03
+    /// prints "other segment(s)" after OM1, which are those of the MFN^M08 to
+    /// MFN^M12 group that MFI-1 names. `key` gives the field and the printed
+    /// value-to-alternative map; every alternative is a named group. An
+    /// alternative bearing an M08 to M12 group name holds only that group's
+    /// segments after OM1 (MFE and OM1 sit in MFN_M03's own MF_TEST group), so
+    /// its group span starts at the first segment after OM1.
+    ///
+    /// Before matching, the Validator reads the key field from the first
+    /// occurrence of the key segment and matches the structure with the
+    /// choice replaced by the selected alternative (with the choice's
+    /// bounds), so the group spans follow that alternative. A value the map
+    /// does not hold is reported as
+    /// ``IssueCode/messageStructureNotModelled(structure:)`` naming the key
+    /// and the value, and the body is not matched: the print's map is the
+    /// only list it gives. With no key segment, or an empty key field, the
+    /// choice admits any alternative and the structure's own rules report
+    /// the missing segment. ``children`` are the alternatives.
+    case keyedChoice(String?, min: Int, max: Int?, key: StructureChoiceKey, alternatives: [StructureElement])
 
     /// The minimum number of occurrences: 0 for an optional element.
     public var min: Int {
         switch self {
-        case .segment(_, let min, _), .group(_, let min, _, _), .choice(_, let min, _, _): return min
+        case .segment(_, let min, _), .group(_, let min, _, _), .choice(_, let min, _, _),
+             .slot(_, let min, _, _), .keyedChoice(_, let min, _, _, _): return min
         }
     }
 
     /// The maximum number of occurrences; `nil` when unbounded.
     public var max: Int? {
         switch self {
-        case .segment(_, _, let max), .group(_, _, let max, _), .choice(_, _, let max, _): return max
+        case .segment(_, _, let max), .group(_, _, let max, _), .choice(_, _, let max, _),
+             .slot(_, _, let max, _), .keyedChoice(_, _, let max, _, _): return max
         }
     }
 
     /// The elements directly inside this one: a group's elements in order,
-    /// a choice's alternatives in order, and none for a segment.
+    /// a choice's alternatives in order, and none for a segment or a slot.
     public var children: [StructureElement] {
         switch self {
-        case .segment: return []
+        case .segment, .slot: return []
         case .group(_, _, _, let elements): return elements
-        case .choice(_, _, _, let alternatives): return alternatives
+        case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives): return alternatives
         }
     }
 
     /// Every segment ID this element can contain, at any depth and in any
-    /// alternative.
+    /// alternative. A slot names no segment, so it contributes none: the
+    /// segments that fill it are not part of the structure's definition.
     public var segmentIDs: Set<String> {
         if case .segment(let id, _, _) = self { return [id] }
         return children.reduce(into: Set<String>()) { $0.formUnion($1.segmentIDs) }
@@ -62,31 +115,51 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// The group or choice name, or nil for a segment and an unnamed choice.
     var groupName: String? {
         switch self {
-        case .segment: return nil
+        case .segment, .slot: return nil
         case .group(let name, _, _, _): return name
-        case .choice(let name, _, _, _): return name
+        case .choice(let name, _, _, _), .keyedChoice(let name, _, _, _, _): return name
         }
     }
 
+    /// A keyed choice as the plain choice of the same alternatives (what
+    /// the print's row admits when no key selects one); every other element
+    /// unchanged at this level.
+    var unkeyed: StructureElement {
+        if case .keyedChoice(let name, let min, let max, _, let alternatives) = self {
+            return .choice(name, min: min, max: max, alternatives: alternatives)
+        }
+        return self
+    }
+
     /// How the lint names this element in a path: the segment ID, the group
-    /// or choice name, or `<A|B>` (the alternatives' labels) for an unnamed choice.
+    /// or choice name, or `<A|B>` (the alternatives' labels) for an unnamed
+    /// choice; a slot's printed name, or `open slot`. Findings about an
+    /// absent slot name it by this label.
     var label: String {
         switch self {
         case .segment(let id, _, _): return id
         case .group(let name, _, _, _): return name
         case .choice(let name, _, _, let alternatives):
             return name ?? "<" + alternatives.map(\.label).joined(separator: "|") + ">"
+        case .slot(let name, _, _, _): return name ?? "open slot"
+        case .keyedChoice: return unkeyed.label
         }
     }
 
+    /// The FIRST-set member that stands for a slot: any segment. No segment
+    /// ID is `*`, so it meets another element's FIRST set only at a slot.
+    static let anySegment = "*"
+
     /// The segment IDs that can begin one occurrence of this element; for a
-    /// choice, the union over its alternatives.
+    /// choice, the union over its alternatives; for a slot, ``anySegment``.
     var firstSet: Set<String> {
         switch self {
         case .segment(let id, _, _): return [id]
         case .group(_, _, _, let elements): return StructureElement.firstSet(of: elements[...])
         case .choice(_, _, _, let alternatives):
             return alternatives.reduce(into: Set<String>()) { $0.formUnion($1.firstSet) }
+        case .slot: return [StructureElement.anySegment]
+        case .keyedChoice: return unkeyed.firstSet
         }
     }
 
@@ -95,26 +168,30 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// whose alternatives is nullable.
     var isNullable: Bool {
         switch self {
-        case .segment(_, let min, _):
+        case .segment(_, let min, _), .slot(_, let min, _, _):
             return min == 0
         case .group(_, let min, _, let elements):
             return min == 0 || elements.allSatisfy(\.isNullable)
         case .choice(_, let min, _, let alternatives):
             return min == 0 || alternatives.contains(where: \.isNullable)
+        case .keyedChoice:
+            return unkeyed.isNullable
         }
     }
 
     /// The segment reported when this element is required and absent: the
     /// first non-nullable segment it contains, or its first segment; for a
-    /// choice, its first alternative's.
+    /// choice, its first alternative's; for a slot, its label.
     var headSegmentID: String {
         switch self {
         case .segment(let id, _, _):
             return id
+        case .slot:
+            return label
         case .group(_, _, _, let elements):
             let head = elements.first { !$0.isNullable } ?? elements.first
             return head?.headSegmentID ?? ""
-        case .choice(_, _, _, let alternatives):
+        case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
             return alternatives.first?.headSegmentID ?? ""
         }
     }
@@ -164,6 +241,36 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// The conformance point a profile structure enforces
     /// (`"HL7au:00060.1"`); nil for a base structure.
     let rule: String?
+    /// The structure whose syntax this one takes, when the print gives this
+    /// ID a trigger of its own and refers its syntax to another printed
+    /// structure of the same version (S4-2, ADR-019 amendment 2026-10-06):
+    /// v2.4 CH06 6.4.4 captions `QRY^P04^QRY_P04` and refers it to "the
+    /// QRY/DSR transaction, as defined in Chapter 5", so `QRY_P04` is an
+    /// alias of `"QRY_Q01"`. The alias keeps its own ID, triggers and
+    /// citation, and its ``elements`` are the target's, copied when the
+    /// table is generated. Nil for every other structure.
+    public let aliasOf: String?
+    /// The keyed-choice selection this structure was resolved with (S4-1),
+    /// e.g. `"MFI-1=OMA"`; nil for a structure as the table holds it. It
+    /// keeps the compiled matchers of the selections apart.
+    let keySelection: String?
+    /// The query error response rule of a query response structure (S4-3,
+    /// CH05 5.6.5 on v2.4 to v2.8.2): the MSA-1 values that make the message
+    /// an error response, matched against its head; nil for every other
+    /// structure and for every v2.3 and v2.3.1 structure.
+    let errorResponse: StructureErrorResponse?
+    /// The prints of this ID that govern some of its triggers with a syntax
+    /// of their own (S6-1, ADR-019 amendment 2026-10-06): where two
+    /// normative prints of one structure ID differ by trigger, ``elements``
+    /// is the default print's syntax and each variant carries another
+    /// print's syntax and the triggers it is printed for. Empty for every
+    /// structure whose prints agree. ``variant(messageCode:triggerEvent:)``
+    /// names the print that governs a trigger.
+    public let variants: [StructureVariant]
+    /// The index in the table structure's ``variants`` of the print this
+    /// structure was selected as (S6-1); nil for a structure as the table
+    /// holds it. It keeps the compiled matchers of the prints apart.
+    let variantIndex: Int?
 
     // Internal (P8 final review): there is no public matcher, so a structure
     // built outside the package has no use. The generated tables and the
@@ -173,7 +280,9 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     // profile tables (P8b-4).
     init(id: String, version: String, triggers: [String], citation: String,
          profile: String? = nil, baseVersion: String? = nil, rule: String? = nil,
-         requiresExactMatch: Bool? = nil, elements: [StructureElement]) {
+         requiresExactMatch: Bool? = nil, aliasOf: String? = nil, keySelection: String? = nil,
+         errorResponse: StructureErrorResponse? = nil, variants: [StructureVariant] = [], variantIndex: Int? = nil,
+         elements: [StructureElement]) {
         self.id = id
         self.version = version
         self.triggers = triggers
@@ -182,6 +291,11 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
         self.baseVersion = baseVersion
         self.rule = rule
         self.elements = elements
+        self.aliasOf = aliasOf
+        self.keySelection = keySelection
+        self.errorResponse = errorResponse
+        self.variants = variants
+        self.variantIndex = variantIndex
         self.requiresExactMatch = requiresExactMatch ?? !StructureMatcher.lint(elements).isDeterministic
     }
 
@@ -250,6 +364,17 @@ public enum MessageStructureTable {
         generatedPrintedPairs(for: version.grammarVersion)["\(trigger) \(structure)"]
     }
 
+    /// The segments `version`'s grammar version lists in Appendix A as
+    /// withdrawn or deprecated, with no definition, that its structures may
+    /// still name (ADR-019 S2-1 amendment), keyed by segment ID.
+    static func withdrawnSegments(for version: Version) -> [String: WithdrawnSegment] {
+        withdrawnIndex[version.grammarVersion] ?? [:]
+    }
+
+    // Built once: the Validator reads it for every message.
+    private static let withdrawnIndex: [Version: [String: WithdrawnSegment]] = Dictionary(
+        uniqueKeysWithValues: Set(Version.allCases.map(\.grammarVersion)).map { ($0, generatedWithdrawnSegments(for: $0)) })
+
     /// The modelled and the registered structure IDs whose triggers accept
     /// `messageCode`^`triggerEvent` on `version`'s grammar version, each
     /// sorted: the same sets as filtering ``structures(for:)`` and
@@ -305,4 +430,15 @@ struct NotModelledStructure: Sendable, Equatable {
     func accepts(messageCode: String, triggerEvent: String) -> Bool {
         triggers.contains("\(messageCode)^\(triggerEvent)") || triggers.contains("\(messageCode)^*")
     }
+}
+
+/// A segment a version lists in Appendix A as withdrawn or deprecated with no
+/// definition (`Resources/structures/overrides.json` withdrawnSegments): the
+/// status as printed, the last version that defines it and the citation. A
+/// structure of the version may name it; it is matched by segment ID and its
+/// fields are not validated (ADR-019 S2-1 amendment).
+struct WithdrawnSegment: Sendable, Equatable {
+    let printed: String
+    let definedThrough: String
+    let citation: String
 }

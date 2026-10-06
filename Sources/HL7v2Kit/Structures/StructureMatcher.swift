@@ -95,6 +95,10 @@ struct StructureMatch: Sendable, Equatable {
 /// alternative present is reported `.missing` with its first alternative's
 /// head segment; a second alternative where the choice's maximum is reached
 /// is a stray like any other (`.exceededMaximum`).
+///
+/// An open slot (S3-1) is not matched here: the lint fails every structure
+/// holding one, so it is matched by ``ExactStructureMatcher``; compiling a
+/// slot is an assertion failure in a debug build.
 struct StructureMatcher: Sendable {
     let structure: MessageStructure
     /// The structure with every FIRST set and suffix FIRST union computed
@@ -195,7 +199,9 @@ struct StructureMatcher: Sendable {
                     } else {
                         state.spans[span].end = state.lastConsumed
                     }
-                case .choice(let name, _, _, _):
+                case .choice(let name, _, _, _), .keyedChoice(let name, _, _, _, _):
+                    // A keyed choice is resolved before matching (S4-1); one
+                    // left unresolved is matched as its plain choice.
                     // The lint guarantees the alternatives' FIRST sets are
                     // disjoint, so at most one can begin with `id`.
                     guard let alternative = item.bodies.first(where: { $0.items[0].first.contains(id) }) else { break }
@@ -214,6 +220,10 @@ struct StructureMatcher: Sendable {
                     } else {
                         matchSequence(alternative, path: path, parent: parent, follow: inner, &state)
                     }
+                case .slot:
+                    // Unreachable: no segment ID is in a slot's FIRST set, and
+                    // a slot's structure is exact-matched (CompiledElement).
+                    break
                 }
                 if state.cursor == before { break }
                 count += 1
@@ -257,9 +267,14 @@ private struct CompiledElement: Sendable {
         nullable = element.isNullable
         switch element {
         case .segment: bodies = []
+        case .slot:
+            // The lint fails every slot, so the codegen and the lint-now init
+            // route its structure to ExactStructureMatcher (S3-1). A precondition,
+            // not an assertion: a release build must not silently ignore a slot.
+            preconditionFailure("a structure with an open slot is matched by ExactStructureMatcher")
         case .group(_, _, _, let children):
             bodies = [CompiledSequence(children, positions: children.indices.map { position + [$0] })]
-        case .choice(_, _, _, let choices):
+        case .choice(_, _, _, let choices), .keyedChoice(_, _, _, _, let choices):
             bodies = choices.indices.map { CompiledSequence([choices[$0]], positions: [position + [$0]]) }
         }
     }

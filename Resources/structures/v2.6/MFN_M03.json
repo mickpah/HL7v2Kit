@@ -1,0 +1,43 @@
+{
+  "structure": "MFN_M03",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 8, section 8.8.2 MFN/MFK - Master File Notification - Test/Observation (Event M03), p 8-20. The placeholder '...' is a choice keyed by MFI-1 (overrides.json keyedChoices, ADR-019 S4-1): OMA, OMB, OMC, OMD and OME select MF_TEST_NUMERIC, MF_TEST_CATEGORICAL, MF_TEST_BATTERIES, MF_TEST_CALCULATED and MF_OBS_ATTRIBUTES.",
+  "triggers": ["MFN^M03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_TEST", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "choice": null, "min": 1, "max": 1, "key": { "segment": "MFI", "field": 1, "component": 1, "values": { "OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL", "OMC": "MF_TEST_BATTERIES", "OMD": "MF_TEST_CALCULATED", "OME": "MF_OBS_ATTRIBUTES" }, "citation": "HL7 v2.6 Chapter 8, section 8.8.2 MFN/MFK - Master File Notification - Test/Observation (Event M03), p 8-20: the syntax prints '... [other segment(s)]' after OM1 in MF_TEST and says 'Other segment(s) represents segments that follows the OM1 segment. The available segment groups are described below in the following messages: MFN^M08, MFN^M09, MFN^M10, MFN^M11, and MFN^M12'; sections 8.8.3 to 8.8.7 each note the key ('Note: MFI-1 - Master File Identifier = OMA for numeric observations', p 8-21; OMB p 8-22; OMC p 8-22; OMD p 8-23; OME p 8-24), so the other segments are those after OM1 of the group MFI-1 component 1 names (ADR-019 S4-1)." }, "alternatives": [
+        { "group": "MF_TEST_NUMERIC", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+          { "segment": "OM2", "min": 0, "max": 1 },
+          { "segment": "OM3", "min": 0, "max": 1 },
+          { "segment": "OM4", "min": 0, "max": 1 }
+        ]},
+        { "group": "MF_TEST_CATEGORICAL", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_CAT_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+            { "segment": "OM3", "min": 1, "max": 1 },
+            { "segment": "OM4", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "MF_TEST_BATTERIES", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_BATT_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+            { "segment": "OM5", "min": 1, "max": 1 },
+            { "segment": "OM4", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "MF_TEST_CALCULATED", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_CALC_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+            { "segment": "OM6", "min": 1, "max": 1 },
+            { "segment": "OM2", "min": 1, "max": 1 }
+          ]}
+        ]},
+        { "group": "MF_OBS_ATTRIBUTES", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+          { "segment": "OM7", "min": 0, "max": 1 }
+        ]}
+      ]}
+    ]}
+  ]
+}

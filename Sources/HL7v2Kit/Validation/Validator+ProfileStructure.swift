@@ -109,7 +109,28 @@ extension Validator {
         let lastMatched = ids.indices.last { !StructureMatcher.isTransparent(ids[$0]) && !passedOver.contains(ids[$0]) }
         let endPlace = lastMatched.flatMap { $0 < ids.count - 1 ? "after \(location($0).pathDescription)" : nil }
             ?? "at the end of the message"
-        return (kept, match.findings.indices.compactMap { n in
+        // S6-3 (owner ruling 2026-10-06, decision 7 as amended): an occurrence beyond a
+        // maximum the profile narrows is information, once per occurrence, where the
+        // base kept no finding of its own at that place (the base accepts it).
+        let keptPlaces = Set(kept.map(\.location.pathDescription))
+        let beyond = match.findings.compactMap { finding -> ValidationIssue? in
+            guard finding.kind == .exceededMaximum, finding.index < ids.count else { return nil }
+            let anchor = location(finding.index)
+            guard !keptPlaces.contains(anchor.pathDescription) else { return nil }
+            let clause = Self.beyondMaximumClause(
+                segmentID: finding.segmentID,
+                maximum: Self.profileMaximum(of: finding.segmentID, in: profile.elements),
+                structure: "the \(profile.id) structure of the \(profile.profile ?? "profile") profile")
+            return ValidationIssue(
+                severity: .info,
+                code: .profileMaximumExceeded(localeRule: rule),
+                location: anchor,
+                message: "\(rule): \(clause); the base v\(base.version) "
+                    + "\(base.id) structure accepts it (\(profile.citation)). Reported at information (ADR-019 decision 7, "
+                    + "owner ruling 2026-10-06)."
+            )
+        }
+        return (kept, beyond + match.findings.indices.compactMap { n in
             let finding = match.findings[n]
             guard finding.kind == .missing else { return nil }
             let index = expectedAt[n]
@@ -151,6 +172,28 @@ extension Validator {
             guard let start = runStart, here == runLast + 1 else { return finding.index }
             return start
         }
+    }
+
+    /// How many times `segmentID` may occur at its first place in `elements`: the
+    /// product of the maxima on the path to that segment element, nil when one
+    /// of them is unbounded or the segment is not named.
+    /// The first clause of a beyond-maximum finding: the profile's maximum where one product of
+    /// the printed cardinalities gives it, else that the occurrence is more than the profile allows
+    /// (S6 fix wave M4: no vague "bounded number of times").
+    static func beyondMaximumClause(segmentID: String, maximum: Int?, structure: String) -> String {
+        guard let maximum else { return "\(segmentID) occurs here more times than \(structure) allows" }
+        let most = maximum == 1 ? "at most once" : "at most \(maximum) times"
+        return "\(structure) allows \(segmentID) \(most) here, and this occurrence is beyond it"
+    }
+
+    static func profileMaximum(of segmentID: String, in elements: [StructureElement]) -> Int? {
+        for element in elements {
+            if case .segment(segmentID, _, let max) = element { return max }
+            guard element.segmentIDs.contains(segmentID), case .group = element else { continue }
+            guard let outer = element.max, let inner = profileMaximum(of: segmentID, in: element.children) else { return nil }
+            return outer * inner
+        }
+        return nil
     }
 
     /// The location of each segment of `ids`, by index: its ID and its 1-based

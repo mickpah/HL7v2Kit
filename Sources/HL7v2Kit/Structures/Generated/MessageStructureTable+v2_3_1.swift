@@ -36,25 +36,42 @@ extension MessageStructureTable {
         "DSR_Q03": v2_3_1_DSR_Q03,
         "EDR_R07": v2_3_1_EDR_R07,
         "EQQ_Q04": v2_3_1_EQQ_Q04,
+        "ERP_R09": v2_3_1_ERP_R09,
         "MCF": v2_3_1_MCF,
         "MDM_T01": v2_3_1_MDM_T01,
         "MDM_T02": v2_3_1_MDM_T02,
         "MFD_MFA": v2_3_1_MFD_MFA,
         "MFK_M01": v2_3_1_MFK_M01,
+        "MFN_M03": v2_3_1_MFN_M03,
         "MFN_M05": v2_3_1_MFN_M05,
         "MFN_M06": v2_3_1_MFN_M06,
         "MFN_M07": v2_3_1_MFN_M07,
+        "MFN_M08": v2_3_1_MFN_M08,
+        "MFN_M09": v2_3_1_MFN_M09,
+        "MFN_M10": v2_3_1_MFN_M10,
+        "MFN_M11": v2_3_1_MFN_M11,
         "OMD_O01": v2_3_1_OMD_O01,
         "OMN_O01": v2_3_1_OMN_O01,
         "OMS_O01": v2_3_1_OMS_O01,
         "ORD_O02": v2_3_1_ORD_O02,
         "ORF_R02": v2_3_1_ORF_R02,
+        "ORM_O01": v2_3_1_ORM_O01,
         "ORN_O02": v2_3_1_ORN_O02,
+        "ORR_O02": v2_3_1_ORR_O02,
         "ORS_O02": v2_3_1_ORS_O02,
         "ORU_R01": v2_3_1_ORU_R01,
         "OSQ_Q06": v2_3_1_OSQ_Q06,
+        "OSR_Q06": v2_3_1_OSR_Q06,
         "PEX_P07": v2_3_1_PEX_P07,
+        "PGL_PC6": v2_3_1_PGL_PC6,
         "PIN_I07": v2_3_1_PIN_I07,
+        "PPG_PCG": v2_3_1_PPG_PCG,
+        "PPP_PCB": v2_3_1_PPP_PCB,
+        "PPR_PC1": v2_3_1_PPR_PC1,
+        "PPT_PCL": v2_3_1_PPT_PCL,
+        "PPV_PCA": v2_3_1_PPV_PCA,
+        "PRR_PC5": v2_3_1_PRR_PC5,
+        "PTR_PCF": v2_3_1_PTR_PCF,
         "QCK_Q02": v2_3_1_QCK_Q02,
         "QRY_A19": v2_3_1_QRY_A19,
         "QRY_PC4": v2_3_1_QRY_PC4,
@@ -110,8 +127,18 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.3.1",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-78. Structure ID ACK is the message code alone (overrides.json triggerFolds): the caption prints the code alone and Table 0354 has no ACK row.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-78. Two normative prints of ACK differ by trigger: HL7 v2.3.1 Chapter 2 section 2.13.1 (ACK, p 2-78), the general acknowledgment, prints MSH MSA [ERR]; Chapter 7 section 7.2.1 (ACK^R01, p 7-16) prints MSH MSA, no ERR; the 2.13.1 print is the default (the triggerFolds primary) and the 7.2.1 print governs ACK^R01. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default). Structure ID ACK is the message code alone (overrides.json triggerFolds): the caption prints the code alone and Table 0354 has no ACK row.",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["ACK^R01"],
+                citation: "HL7 v2.3.1 Chapter 7, section 7.2.1 ORU/ACK - unsolicited transmission of an observation message (event R01), p 7-16. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ACK differ by trigger: HL7 v2.3.1 Chapter 2 section 2.13.1 (ACK, p 2-78), the general acknowledgment, prints MSH MSA [ERR]; Chapter 7 section 7.2.1 (ACK^R01, p 7-16) prints MSH MSA, no ERR; the 2.13.1 print is the default (the triggerFolds primary) and the 7.2.1 print governs ACK^R01. ADR-019 S6: each print governs the triggers it is printed for (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -814,6 +841,23 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_3_1_ERP_R09: MessageStructure = MessageStructure(
+        id: "ERP_R09",
+        version: "2.3.1",
+        triggers: ["ERP^R09"],
+        citation: "HL7 v2.3.1 Chapter 2, section 2.20.3 ERP - event replay response (event R09), p 2-86. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). The placeholder '...' is an open slot (overrides.json keyedChoices, ADR-019 S4-1): the print fills it with the message ERQ-2 names and enumerates no map.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("ERQ", min: 1, max: 1),
+            .slot(nil, min: 0, max: nil, citation: "HL7 v2.3.1 Chapter 2, section 2.20.3 ERP - event replay response (event R09), p 2-86: the description column prints ellipsis rows after ERQ and the note says 'The remainder of this message is defined by the contents of the corresponding segment-oriented record-oriented unsolicited update message, excluding the MSH' and 'the segment group after the ERQ segment may repeat'; ERQ-2 (section 2.24.21.2, p 2-132) names that message. The print gives no map from ERQ-2 values to message bodies, only that rule, so the rows are an open slot (no segment but MSH is out of place in it), keyed by ERQ-2 in this citation only; optional, since section 2.22 (p 2-87) says a query that finds no qualifying data 'does not return any data segments (DSP, RDT, or event replay segments)' (ADR-019 S4-1)."),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
     private static let v2_3_1_MCF: MessageStructure = MessageStructure(
         id: "MCF",
         version: "2.3.1",
@@ -875,14 +919,72 @@ extension MessageStructureTable {
         id: "MFK_M01",
         version: "2.3.1",
         triggers: ["MFK^M01", "MFK^M02", "MFK^M03", "MFK^M04", "MFK^M05", "MFK^M06", "MFK^M07", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11"],
-        citation: "HL7 v2.3.1 Chapter 8, section 8.3.1 MFN/MFK - master files notification, p 8-3; the same structure is printed for MFK^M07 (8.10.1). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the general acknowledgment MFK^M01-M06 (Chapter 8 section 8.3.1, p 8-3) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the staff/practitioner acknowledgment MFK^M01-M06 (Chapter 8 section 8.6.1, p 8-11) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the charge description acknowledgment MFK^M04 (Chapter 8 section 8.9.1, p 8-60) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104); the row named for MFK^M01-M06 and MFK^M04 by overrides.json captionStructures. Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
+        citation: "HL7 v2.3.1 Chapter 8, section 8.3.1 MFN/MFK - master files notification, p 8-3; the same structure is printed for MFK^M07 (8.10.1). Two normative prints of MFK_M01 differ: HL7 v2.3.1 Chapter 8 section 8.3.1 (MFK^M01-M06, p 8-3) prints MSH MSA [ERR] MFI { [MFA] }; sections 8.6.1 (MFK^M01-M06, p 8-11), 8.8.1 (MFK^M05, p 8-48), 8.9.1 (MFK^M04, p 8-60) and 8.10.1 (MFK^M06, p 8-67; MFK^M07, p 8-68, the caption erratum) print no ERR. M01 to M06 are printed both ways (two prints under one trigger, the primaryPrints case: the looser 8.3.1 print governs them, keptOnDefault); M07 is printed only without ERR, so the 8.10.1 print governs MFK^M07. ADR-019 S6 (S6 fix wave; was duplicate-differs on the default). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the general acknowledgment MFK^M01-M06 (Chapter 8 section 8.3.1, p 8-3) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the staff/practitioner acknowledgment MFK^M01-M06 (Chapter 8 section 8.6.1, p 8-11) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the charge description acknowledgment MFK^M04 (Chapter 8 section 8.9.1, p 8-60) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104); the row named for MFK^M01-M06 and MFK^M04 by overrides.json captionStructures. Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["MFK^M07"],
+                citation: "HL7 v2.3.1 Chapter 8, section 8.6.1 MFN/MFK - staff/practitioner master file message, p 8-11; the same structure is printed for MFK^M05 (8.8.1), MFK^M04 (8.9.1), MFK^M06 (8.10.1) and MFK^M07 (8.10.1). Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of MFK_M01 differ: HL7 v2.3.1 Chapter 8 section 8.3.1 (MFK^M01-M06, p 8-3) prints MSH MSA [ERR] MFI { [MFA] }; sections 8.6.1 (MFK^M01-M06, p 8-11), 8.8.1 (MFK^M05, p 8-48), 8.9.1 (MFK^M04, p 8-60) and 8.10.1 (MFK^M06, p 8-67; MFK^M07, p 8-68, the caption erratum) print no ERR. M01 to M06 are printed both ways (two prints under one trigger, the primaryPrints case: the looser 8.3.1 print governs them, keptOnDefault); M07 is printed only without ERR, so the 8.10.1 print governs MFK^M07. ADR-019 S6 (S6 fix wave; was duplicate-differs on the default).",
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("MSA", min: 1, max: 1),
+                    .segment("MFI", min: 1, max: 1),
+                    .segment("MFA", min: 0, max: nil),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
             .segment("ERR", min: 0, max: 1),
             .segment("MFI", min: 1, max: 1),
             .segment("MFA", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M03: MessageStructure = MessageStructure(
+        id: "MFN_M03",
+        version: "2.3.1",
+        triggers: ["MFN^M03"],
+        citation: "HL7 v2.3.1 Chapter 8, section 8.7.2 MFN/MFR - test/observation master file, p 8-20. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Chapter 8, section 8.7.2 (p 8-20) prints MFN^M03 with '???' and '[other segments(s)]' after OM1 and gives the four combinations that replace it in prose, each introduced by 'MFI-1-master file identifier = OMA' (OMB, OMC, OMD) and the second component of MSH-9 (M08 to M11); the choice is keyed by MFI-1, as v2.4 to v2.6 key MFN_M03 (ADR-019 S4-1). HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'the segment groupings described below follow the MFI and MFE segments'. The placeholder @OTHER is a choice keyed by MFI-1 (section 8.7.2, p 8-20: 'where other segments can be any of the following combinations'): OMA select MF_TEST_NUMERIC (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMA, for numeric observations'); OMB select MF_TEST_CATEGORICAL (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMB, for categorical observations'); OMC select MF_TEST_BATTERIES (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMC, for observation batteries'); OMD select MF_TEST_CALCULATED (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMD, calculated observations'). Group names of the alternatives (the print names none): MF_TEST_NUMERIC (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_TEST_NUMERIC.CONTENT), MF_TEST_CATEGORICAL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CATEGORICAL.CONTENT), MF_TEST_BATTERIES (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT), MF_TEST_CALCULATED (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT). Unprinted group names (ADR-019 decision 3): MF_TEST (overrides.json: HL7 v2.3.1 Chapter 8, section 8.7.2, transcribed from prose (overrides.json proseFragments), prints the group {MFE OM1 [other segments(s)]} unnamed; HL7-xml v2.4/MFN_M03.xsd names it MF_TEST (MFN_M03.MF_TEST.CONTENT), the name v2.4 to v2.6 give the same group; the v2.4 bundle's members include OME's OM7, so its group does not match by members and the name is cited here (S5-2, ADR-019 S5).), MF_NUMERIC_OBSERVATION (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_NUMERIC_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M08 only by trigger), MF_TEST_CAT_DETAIL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CAT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M09 only by trigger), MF_TEST_BATT_DETAIL (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M10 only by trigger) and MF_TEST_CALC_DETAIL (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M11 only by trigger).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .keyedChoice(nil, min: 1, max: 1, key: StructureChoiceKey(
+                    segmentID: "MFI", field: 1, component: 1,
+                    alternatives: ["OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL", "OMC": "MF_TEST_BATTERIES", "OMD": "MF_TEST_CALCULATED"],
+                    citation: "HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'where other segments can be any of the following combinations' (overrides.json proseFragments, ADR-019 S5)."), alternatives: [
+                    .group("MF_TEST_NUMERIC", min: 1, max: 1, elements: [
+                        .group("MF_NUMERIC_OBSERVATION", min: 0, max: 1, elements: [
+                            .segment("OM2", min: 0, max: 1),
+                            .segment("OM3", min: 0, max: 1),
+                            .segment("OM4", min: 0, max: 1),
+                        ]),
+                    ]),
+                    .group("MF_TEST_CATEGORICAL", min: 1, max: 1, elements: [
+                        .group("MF_TEST_CAT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM3", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_BATTERIES", min: 1, max: 1, elements: [
+                        .group("MF_TEST_BATT_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM5", min: 1, max: 1),
+                            .segment("OM4", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("MF_TEST_CALCULATED", min: 1, max: 1, elements: [
+                        .group("MF_TEST_CALC_DETAIL", min: 0, max: 1, elements: [
+                            .segment("OM6", min: 1, max: 1),
+                            .segment("OM2", min: 1, max: 1),
+                        ]),
+                    ]),
+                ]),
+            ]),
         ]
     )
 
@@ -942,6 +1044,87 @@ extension MessageStructureTable {
                 .segment("MFE", min: 1, max: 1),
                 .segment("CM0", min: 1, max: 1),
                 .segment("CM2", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M08: MessageStructure = MessageStructure(
+        id: "MFN_M08",
+        version: "2.3.1",
+        triggers: ["MFN^M08"],
+        citation: "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M08 for MFN^M08; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M08 and no caption prints MFN^M08; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M08 (MFI-1 = OMA) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M08 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'for numeric observations (second component of MSH-9-message type = M08)'. Unprinted group names (ADR-019 decision 3): MF_TEST_NUMERIC (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_TEST_NUMERIC.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_NUMERIC_OBSERVATION (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_NUMERIC_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_NUMERIC", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_NUMERIC_OBSERVATION", min: 0, max: 1, elements: [
+                    .segment("OM2", min: 0, max: 1),
+                    .segment("OM3", min: 0, max: 1),
+                    .segment("OM4", min: 0, max: 1),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M09: MessageStructure = MessageStructure(
+        id: "MFN_M09",
+        version: "2.3.1",
+        triggers: ["MFN^M09"],
+        citation: "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M09 for MFN^M09; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M09 and no caption prints MFN^M09; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M09 (MFI-1 = OMB) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M09 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'for categorical observations (second component of MSH-9-message type = M09)'. Unprinted group names (ADR-019 decision 3): MF_TEST_CATEGORICAL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CATEGORICAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_TEST_CAT_DETAIL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CAT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_CATEGORICAL", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_CAT_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM3", min: 1, max: 1),
+                    .segment("OM4", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M10: MessageStructure = MessageStructure(
+        id: "MFN_M10",
+        version: "2.3.1",
+        triggers: ["MFN^M10"],
+        citation: "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M10 for MFN^M10; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M10 and no caption prints MFN^M10; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M10 (MFI-1 = OMC) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M10 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'for observation batteries (second component of MSH-9-message type = M10)'. Unprinted group names (ADR-019 decision 3): MF_TEST_BATTERIES (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_TEST_BATT_DETAIL (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_BATTERIES", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_BATT_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM5", min: 1, max: 1),
+                    .segment("OM4", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_MFN_M11: MessageStructure = MessageStructure(
+        id: "MFN_M11",
+        version: "2.3.1",
+        triggers: ["MFN^M11"],
+        citation: "HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) lists MFN_M11 for MFN^M11; no caption prints it. The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Table 0354 (p 2-104) lists MFN_M11 and no caption prints MFN^M11; Chapter 8 section 8.7.2 (p 8-20) gives its segments as the combination keyed by MSH-9 component 2 = M11 (MFI-1 = OMD) that replaces '[other segments(s)]' after OM1 in the MFN^M03 syntax printed there, so the structure is that syntax with the M11 combination in place of the row. HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'calculated observations (second component of MSH-9-message type = M11)'. Unprinted group names (ADR-019 decision 3): MF_TEST_CALCULATED (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and MF_TEST_CALC_DETAIL (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_CALCULATED", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_CALC_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM6", min: 1, max: 1),
+                    .segment("OM2", min: 1, max: 1),
+                ]),
             ]),
         ]
     )
@@ -1134,6 +1317,48 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_3_1_ORM_O01: MessageStructure = MessageStructure(
+        id: "ORM_O01",
+        version: "2.3.1",
+        triggers: ["ORM^O01"],
+        citation: "HL7 v2.3.1 Chapter 4, section 4.2.1 ORM - general order message (O01), p 4-3. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.PATIENT.CONTENT, generator HL7-Database), PATIENT_VISIT (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.PATIENT_VISIT.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.INSURANCE.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.ORDER_DETAIL.CONTENT, generator HL7-Database) and OBSERVATION (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                    .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 4, section 4.2.1 ORM - general order message (O01), p 4-3: the print gives the order detail as 'Order Detail Segment OBR, etc.', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("DG1", min: 0, max: nil),
+                    .group("OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .segment("CTI", min: 0, max: nil),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
     private static let v2_3_1_ORN_O02: MessageStructure = MessageStructure(
         id: "ORN_O02",
         version: "2.3.1",
@@ -1155,6 +1380,32 @@ extension MessageStructureTable {
                     .segment("RQD", min: 1, max: 1),
                     .segment("RQ1", min: 0, max: 1),
                     .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_ORR_O02: MessageStructure = MessageStructure(
+        id: "ORR_O02",
+        version: "2.3.1",
+        triggers: ["ORR^O02"],
+        citation: "HL7 v2.3.1 Chapter 4, section 4.2.2 ORR - general order response message response to any ORM (O02), p 4-4. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/ORR_O02.xsd, ORR_O02.RESPONSE.CONTENT, generator HL7-Database), PATIENT (HL7-xml 2.3.1/ORR_O02.xsd, ORR_O02.PATIENT.CONTENT, generator HL7-Database) and ORDER (HL7-xml 2.3.1/ORR_O02.xsd, ORR_O02.ORDER.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .slot("Order Detail Segment", min: 0, max: nil, citation: "HL7 v2.3.1 Chapter 4, section 4.2.2 ORR - general order response message response to any ORM (O02), p 4-4: the print gives the order detail as '[Order Detail Segment] OBR, etc.', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2); the print brackets the placeholder alone, so the slot is optional."),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
                 ]),
             ]),
         ]
@@ -1233,6 +1484,35 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_3_1_OSR_Q06: MessageStructure = MessageStructure(
+        id: "OSR_Q06",
+        version: "2.3.1",
+        triggers: ["OSR^Q06"],
+        citation: "HL7 v2.3.1 Chapter 4, section 4.2.3 OSQ/OSR- query response for order status (Q06), p 4-5. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/OSR_Q06.xsd, OSR_Q06.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/OSR_Q06.xsd, OSR_Q06.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/OSR_Q06.xsd, OSR_Q06.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .slot("Order Detail Segment", min: 0, max: nil, citation: "HL7 v2.3.1 Chapter 4, section 4.2.3 OSQ/OSR- query response for order status (Q06), p 4-5: the print gives the order detail as '[Order Detail Segment] OBR, etc.', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2); the print brackets the placeholder alone, so the slot is optional."),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
     private static let v2_3_1_PEX_P07: MessageStructure = MessageStructure(
         id: "PEX_P07",
         version: "2.3.1",
@@ -1289,6 +1569,65 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_3_1_PGL_PC6: MessageStructure = MessageStructure(
+        id: "PGL_PC6",
+        version: "2.3.1",
+        triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.1 PGL/ACK - patient goal message (events PC6, PC7, PC8), p 12-7. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.PATIENT_VISIT.CONTENT, generator HL7-Database), GOAL (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.GOAL.CONTENT, generator HL7-Database), GOAL_ROLE (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.GOAL_ROLE.CONTENT, generator HL7-Database), PATHWAY (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.PATHWAY.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.OBSERVATION.CONTENT, generator HL7-Database), PROBLEM (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.PROBLEM.CONTENT, generator HL7-Database), PROBLEM_ROLE (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.PROBLEM_ROLE.CONTENT, generator HL7-Database), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.PROBLEM_OBSERVATION.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.ORDER_DETAIL.CONTENT, generator HL7-Database) and ORDER_OBSERVATION (HL7-xml 2.3.1/PGL_PC6.xsd, PGL_PC6.ORDER_OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("GOAL", min: 1, max: nil, elements: [
+                .segment("GOL", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PATHWAY", min: 0, max: nil, elements: [
+                    .segment("PTH", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("PROBLEM", min: 0, max: nil, elements: [
+                    .segment("PRB", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .group("ORDER", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                        .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.1 PGL/ACK - patient goal message (events PC6, PC7, PC8), p 12-7: the print gives the order detail as '[OBR, etc... Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
     private static let v2_3_1_PIN_I07: MessageStructure = MessageStructure(
         id: "PIN_I07",
         version: "2.3.1",
@@ -1312,6 +1651,463 @@ extension MessageStructureTable {
                 ]),
             ]),
             .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_3_1_PPG_PCG: MessageStructure = MessageStructure(
+        id: "PPG_PCG",
+        version: "2.3.1",
+        triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.4 PPG/ACK - patient pathway message (goal-oriented) (events PCG, PCH, PCJ), pp 12-9 to 12-10. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104), its row read through cited overrides.json errata (event PCC read as PCC, PCG). Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to PPG_PCG that no caption prints, accepted with the printed ones (P8b-11 ruling): PPG^PCC. Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATIENT_VISIT.CONTENT, generator HL7-Database), PATHWAY (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATHWAY.CONTENT, generator HL7-Database), PATHWAY_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PATHWAY_ROLE.CONTENT, generator HL7-Database), GOAL (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL.CONTENT, generator HL7-Database), GOAL_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL_ROLE.CONTENT, generator HL7-Database), GOAL_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.GOAL_OBSERVATION.CONTENT, generator HL7-Database), PROBLEM (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM.CONTENT, generator HL7-Database), PROBLEM_ROLE (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM_ROLE.CONTENT, generator HL7-Database), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.PROBLEM_OBSERVATION.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER_DETAIL.CONTENT, generator HL7-Database) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPG_PCG.xsd, PPG_PCG.ORDER_OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PATHWAY", min: 1, max: nil, elements: [
+                .segment("PTH", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("GOAL", min: 0, max: nil, elements: [
+                    .segment("GOL", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM", min: 0, max: nil, elements: [
+                        .segment("PRB", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.4 PPG/ACK - patient pathway message (goal-oriented) (events PCG, PCH, PCJ), p 12-10: the print gives the order detail as '[OBR, etc... Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PPP_PCB: MessageStructure = MessageStructure(
+        id: "PPP_PCB",
+        version: "2.3.1",
+        triggers: ["PPP^PCB", "PPP^PCC", "PPP^PCD"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.3 PPP/ACK - patient pathway message (problem-oriented) (events PCB, PCC, PCD), p 12-9. HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one PPP row, PPP_PCB (PCB, PCD), which omits PCC, the PPP problem-oriented update of Table 0003 (p 2-101); the Chapter 12 section 12.2.3 print PPP^PCB, PCC, PCD (p 12-9) is therefore read as PPP_PCB (overrides.json captionStructures, P8b-14). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104); the row named for PPP^PCB, PCC, PCD by overrides.json captionStructures. Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PATIENT_VISIT.CONTENT, generator HL7-Database), PATHWAY (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PATHWAY.CONTENT, generator HL7-Database), PATHWAY_ROLE (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PATHWAY_ROLE.CONTENT, generator HL7-Database), PROBLEM (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PROBLEM.CONTENT, generator HL7-Database), PROBLEM_ROLE (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PROBLEM_ROLE.CONTENT, generator HL7-Database), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.PROBLEM_OBSERVATION.CONTENT, generator HL7-Database), GOAL (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.GOAL.CONTENT, generator HL7-Database), GOAL_ROLE (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.GOAL_ROLE.CONTENT, generator HL7-Database), GOAL_OBSERVATION (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.GOAL_OBSERVATION.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.ORDER_DETAIL.CONTENT, generator HL7-Database) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPP_PCB.xsd, PPP_PCB.ORDER_OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PATHWAY", min: 1, max: nil, elements: [
+                .segment("PTH", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PROBLEM", min: 0, max: nil, elements: [
+                    .segment("PRB", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("GOAL", min: 0, max: nil, elements: [
+                        .segment("GOL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.3 PPP/ACK - patient pathway message (problem-oriented) (events PCB, PCC, PCD), p 12-9: the print gives the order detail as '[OBR, etc Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PPR_PC1: MessageStructure = MessageStructure(
+        id: "PPR_PC1",
+        version: "2.3.1",
+        triggers: ["PPR^PC1", "PPR^PC2", "PPR^PC3"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.2 PPR/ACK - patient problem message (events PC1, PC2, PC3), p 12-8. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PATIENT_VISIT.CONTENT, generator HL7-Database), PROBLEM (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PROBLEM.CONTENT, generator HL7-Database), PROBLEM_ROLE (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PROBLEM_ROLE.CONTENT, generator HL7-Database), PATHWAY (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PATHWAY.CONTENT, generator HL7-Database), PATHWAY_OBSERVATION (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.PATHWAY_OBSERVATION.CONTENT, generator HL7-Database), GOAL (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.GOAL.CONTENT, generator HL7-Database), GOAL_ROLE (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.GOAL_ROLE.CONTENT, generator HL7-Database), GOAL_OBSERVATION (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.GOAL_OBSERVATION.CONTENT, generator HL7-Database), ORDER (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.ORDER.CONTENT, generator HL7-Database), ORDER_DETAIL (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.ORDER_DETAIL.CONTENT, generator HL7-Database) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPR_PC1.xsd, PPR_PC1.ORDER_OBSERVATION.CONTENT, generator HL7-Database).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("PROBLEM", min: 1, max: nil, elements: [
+                .segment("PRB", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("VAR", min: 0, max: nil),
+                .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                    .segment("ROL", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PATHWAY", min: 0, max: nil, elements: [
+                    .segment("PTH", min: 1, max: 1),
+                    .segment("VAR", min: 0, max: nil),
+                ]),
+                .group("PATHWAY_OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("GOAL", min: 0, max: nil, elements: [
+                    .segment("GOL", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .group("ORDER", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                        .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.2 PPR/ACK - patient problem message (events PC1, PC2, PC3), p 12-8: the print gives the order detail as '[OBR, etc Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PPT_PCL: MessageStructure = MessageStructure(
+        id: "PPT_PCL",
+        version: "2.3.1",
+        triggers: ["PPT^PCL"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.12 PPT - patient pathway (goal-oriented) response (event PCL), pp 12-13 to 12-14. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATHWAY (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATHWAY.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATHWAY_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATHWAY_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("PATHWAY", min: 1, max: nil, elements: [
+                    .segment("PTH", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL", min: 0, max: nil, elements: [
+                        .segment("GOL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .group("PROBLEM", min: 0, max: nil, elements: [
+                            .segment("PRB", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                                .segment("ROL", min: 1, max: 1),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                            .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .group("ORDER", min: 0, max: nil, elements: [
+                            .segment("ORC", min: 1, max: 1),
+                            .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                                .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.12 PPT - patient pathway (goal-oriented) response (event PCL), p 12-14: the print gives the order detail as '[OBR, etc. Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                                .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                    .segment("OBX", min: 1, max: 1),
+                                    .segment("NTE", min: 0, max: nil),
+                                    .segment("VAR", min: 0, max: nil),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PPV_PCA: MessageStructure = MessageStructure(
+        id: "PPV_PCA",
+        version: "2.3.1",
+        triggers: ["PPV^PCA"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.8 PPV - patient goal response (event PCA), pp 12-11 to 12-12. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.GOAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_ROLE (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.GOAL_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_PATHWAY (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.GOAL_PATHWAY.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_OBSERVATION (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.GOAL_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.PROBLEM.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_ROLE (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.PROBLEM_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.PROBLEM_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPV_PCA.xsd, PPV_PCA.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("GOAL", min: 1, max: nil, elements: [
+                    .segment("GOL", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL_PATHWAY", min: 0, max: nil, elements: [
+                        .segment("PTH", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM", min: 0, max: nil, elements: [
+                        .segment("PRB", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.8 PPV - patient goal response (event PCA), p 12-12: the print gives the order detail as '[OBR, etc. Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PRR_PC5: MessageStructure = MessageStructure(
+        id: "PRR_PC5",
+        version: "2.3.1",
+        triggers: ["PRR^PC5"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.6 PRR - patient problem response (event PC5), pp 12-10 to 12-11. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_ROLE (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_PATHWAY (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_PATHWAY.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.PROBLEM_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_ROLE (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.GOAL_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER_OBSERVATION (HL7-xml 2.3.1/PRR_PC5.xsd, PRR_PC5.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("PROBLEM", min: 1, max: nil, elements: [
+                    .segment("PRB", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_PATHWAY", min: 0, max: nil, elements: [
+                        .segment("PTH", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("GOAL", min: 0, max: nil, elements: [
+                        .segment("GOL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                            .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.6 PRR - patient problem response (event PC5), p 12-11: the print gives the order detail as '[OBR, etc. Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_3_1_PTR_PCF: MessageStructure = MessageStructure(
+        id: "PTR_PCF",
+        version: "2.3.1",
+        triggers: ["PTR^PCF"],
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.10 PTR - patient pathway (problem-oriented) response (event PCF), pp 12-12 to 12-13. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATHWAY (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.PATHWAY.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATHWAY_ROLE (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.PATHWAY_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.PROBLEM.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_ROLE (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.PROBLEM_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.PROBLEM_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.GOAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_ROLE (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.GOAL_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GOAL_OBSERVATION (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.GOAL_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER_OBSERVATION (HL7-xml 2.3.1/PTR_PCF.xsd, PTR_PCF.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("PATHWAY", min: 1, max: nil, elements: [
+                    .segment("PTH", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("VAR", min: 0, max: nil),
+                    .group("PATHWAY_ROLE", min: 0, max: nil, elements: [
+                        .segment("ROL", min: 1, max: 1),
+                        .segment("VAR", min: 0, max: nil),
+                    ]),
+                    .group("PROBLEM", min: 0, max: nil, elements: [
+                        .segment("PRB", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("VAR", min: 0, max: nil),
+                        .group("PROBLEM_ROLE", min: 0, max: nil, elements: [
+                            .segment("ROL", min: 1, max: 1),
+                            .segment("VAR", min: 0, max: nil),
+                        ]),
+                        .group("PROBLEM_OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .group("GOAL", min: 0, max: nil, elements: [
+                            .segment("GOL", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("VAR", min: 0, max: nil),
+                            .group("GOAL_ROLE", min: 0, max: nil, elements: [
+                                .segment("ROL", min: 1, max: 1),
+                                .segment("VAR", min: 0, max: nil),
+                            ]),
+                            .group("GOAL_OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                        ]),
+                        .group("ORDER", min: 0, max: nil, elements: [
+                            .segment("ORC", min: 1, max: 1),
+                            .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                                .slot("Order Detail Segment", min: 1, max: nil, citation: "HL7 v2.3.1 Chapter 12, section 12.2.10 PTR - patient pathway (problem-oriented) response (event PCF), p 12-13: the print gives the order detail as '[OBR, etc. Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)."),
+                                .segment("NTE", min: 0, max: nil),
+                                .segment("VAR", min: 0, max: nil),
+                                .group("ORDER_OBSERVATION", min: 0, max: nil, elements: [
+                                    .segment("OBX", min: 1, max: 1),
+                                    .segment("NTE", min: 0, max: nil),
+                                    .segment("VAR", min: 0, max: nil),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
         ]
     )
 

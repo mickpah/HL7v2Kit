@@ -339,7 +339,7 @@ d = ack_choice(); c = d['elements'][2]; c['elements'] = c.pop('alternatives'); s
 reject "choice with max 0" 'bad occurrence bounds' "$PRE$CH
 ack_choice(min=0, max=0)"
 
-reject "element that is both a choice and a group" 'exactly one of "segment", "group" or "choice"' "$PRE$CH
+reject "element that is both a choice and a group" 'exactly one of "segment", "group", "choice" or "slot"' "$PRE$CH
 ack_choice(group='X', nameSource='printed')"
 
 reject "unnamed choice with a nameSource" 'unnamed choice cannot have a nameSource' "$PRE$CH
@@ -410,6 +410,52 @@ ack_shape(alt(0, 1, [seg('AAA', 1, 1), seg('BBB', 1, 1)]), seg('AAA', 0, None))"
 
 flagged "deterministic repeating choice is not flagged" 0 "$PRE$SH
 ack_shape(alt(0, None, [seg('AAA', 1, 1), seg('BBB', 1, None)]), seg('CCC', 1, 1))"
+
+# S3-1: the open slot (ADR-019 amendment 2026-10-06). A slot with its keys renders as .slot and
+# its structure is flagged for exact matching; an uncited slot, a slot inside a choice and two
+# adjacent slots are rejected.
+SL='
+def slot(**fields):
+    s = {"slot": "Order Detail Segment", "min": 1, "max": None, "citation": "synthetic, after v2.3 CH04 4.2.1 p 4-4"}
+    s.update(fields)
+    for k in [k for k, v in fields.items() if v == "DROP"]: del s[k]
+    return s
+def ack_slot(*extra, **fields):
+    d = load("v2.5.1/ACK.json"); d["elements"].insert(3, slot(**fields))
+    for e in extra: d["elements"].insert(3, e)
+    save("v2.5.1/ACK.json", d)
+    return d
+'
+
+accept_rendering "slot with the keys renders as .slot" '.slot("Order Detail Segment", min: 1, max: nil, citation: "synthetic, after v2.3 CH04 4.2.1 p 4-4"),' "$PRE$SL
+ack_slot()"
+
+accept_rendering "unnamed optional slot renders as .slot(nil, ...)" '.slot(nil, min: 0, max: nil, citation: ' "$PRE$SL
+ack_slot(slot=None, min=0)"
+
+flagged "a structure with a slot is flagged for exact matching" 1 "$PRE$SL
+ack_slot()"
+
+reject "uncited slot" 'a slot needs a non-empty "citation"' "$PRE$SL
+ack_slot(citation='DROP')"
+
+reject "slot with an empty citation" 'a slot needs a non-empty "citation"' "$PRE$SL
+ack_slot(citation=' ')"
+
+reject "slot named like a segment" 'bad slot name "OBR"' "$PRE$SL
+ack_slot(slot='OBR')"
+
+reject "slot with elements" 'a slot cannot have elements, alternatives or a nameSource' "$PRE$SL
+ack_slot(elements=[slot()])"
+
+reject "citation on a segment" 'only a slot has a "citation"' "$PRE
+d = load('v2.5.1/ACK.json'); d['elements'][2]['citation'] = 'CH02'; save('v2.5.1/ACK.json', d)"
+
+reject "slot inside a choice" 'a slot cannot be inside a choice' "$PRE$CH$SL
+d = ack_choice(); d['elements'][2]['alternatives'][1] = slot(); save('v2.5.1/ACK.json', d)"
+
+reject "two adjacent slots" 'two adjacent slots' "$PRE$SL
+ack_slot(slot())"
 
 # P8b-9: a trigger under two structures (loaded, or registered as not modelled in
 # completeness.json) must be a declared sharedTriggers entry (ADR-019 lookup rule 2); the
@@ -487,6 +533,219 @@ if ! grep -qF '"ACK^Z01 ADT_A01": "synthetic",' "$SCRATCH/case$((cases - 1))/out
   echo "FAIL a printedPairs entry renders: the generated versions file lacks it"
   failures=$((failures + 1))
 fi
+
+# S2-2: a segment some version lists in overrides.json withdrawnSegments may stand in a structure
+# only where the structure's version defines it or lists it, cited (ADR-019 S2-1 amendment); each
+# entry cites Appendix A, names a segment the version does not define and an earlier version that
+# does, and renders into the generated versions file.
+WITHDRAWN='
+def entries(version, segment):
+    return [e for e in load("overrides.json")["withdrawnSegments"] if (e["version"], e["segment"]) == (version, segment)]
+def drop(version, segment):
+    o = load("overrides.json")
+    o["withdrawnSegments"] = [e for e in o["withdrawnSegments"] if (e["version"], e["segment"]) != (version, segment)]
+    save("overrides.json", o)
+def edit(version, segment, **fields):
+    o = load("overrides.json")
+    for e in o["withdrawnSegments"]:
+        if (e["version"], e["segment"]) == (version, segment): e.update(fields)
+    save("overrides.json", o)
+def query(version):
+    d = load("v2.7.1/QRY_PC4.json"); d["structure"] = "QRY_Z99"; d["version"] = version; d["triggers"] = ["QRY^Z99"]
+    save("v" + version + "/QRY_Z99.json", d)
+'
+
+reject "a structure naming a withdrawn segment its version does not list" 'withdrawn segments ["QRD"] that v2.7.1 neither defines nor lists' "$PRE$WITHDRAWN
+drop('2.7.1', 'QRD')"
+
+accept "a structure naming a cited withdrawn segment of its version" "$PRE$WITHDRAWN
+assert entries('2.8.2', 'QRD')
+query('2.8.2')"
+if ! grep -qF '"QRD": WithdrawnSegment(' "$SCRATCH/case$((cases - 1))/out/Structures/Generated/MessageStructureTable+Versions.swift"; then
+  echo "FAIL a withdrawnSegments entry renders: the generated versions file lacks it"
+  failures=$((failures + 1))
+fi
+
+accept "a structure naming a withdrawn segment its version defines (v2.6)" "$PRE$WITHDRAWN
+query('2.6')"
+
+reject "a withdrawnSegments entry that does not cite Appendix A" 'withdrawnSegments 2.7.1 QRD: the citation must be one line citing Appendix A' "$PRE$WITHDRAWN
+edit('2.7.1', 'QRD', citation='CH05 section 5.10.2')"
+
+reject "a withdrawnSegments entry for a segment the version defines" 'withdrawnSegments 2.7.1 PID: the version is not modelled or its grammar defines the segment' "$PRE$WITHDRAWN
+o = load('overrides.json'); e = dict(entries('2.7.1', 'QRD')[0]); e['segment'] = 'PID'
+o['withdrawnSegments'].append(e); save('overrides.json', o)"
+
+reject "a withdrawnSegments entry whose definedThrough does not define it" 'withdrawnSegments 2.8.2 URD: definedThrough 2.7.1 must be an earlier version' "$PRE$WITHDRAWN
+edit('2.8.2', 'URD', definedThrough='2.7.1')"
+
+reject "a withdrawnSegments entry with an unknown printed status" 'bad segment ID or printed status "removed"' "$PRE$WITHDRAWN
+edit('2.7.1', 'URS', printed='removed')"
+
+# S4-1: the keyed choice (v2.5.1 MFN_M03, MF_TEST's third element, keyed by MFI-1).
+KEYED='
+def keyed(change):
+    d = load("v2.5.1/MFN_M03.json")
+    change(d["elements"][3]["elements"][2])
+    save("v2.5.1/MFN_M03.json", d)
+'
+EVERY="every alternative must be a group occurring once, with a distinct name"
+
+reject "a key on a group" 'only a choice has a "key"' "$PRE$KEYED
+d = load('v2.5.1/MFN_M03.json'); d['elements'][3]['key'] = {'segment': 'MFI', 'field': 1, 'component': 1, 'values': {'OMA': 'MF_TEST'}, 'citation': 'CH08'}
+save('v2.5.1/MFN_M03.json', d)"
+
+reject "a keyed value mapping to no alternative" 'values map to no alternative: ["MF_NOPE"]' "$PRE$KEYED
+keyed(lambda c: c['key']['values'].update(ZZZ='MF_NOPE'))"
+
+reject "a keyed alternative no value selects" 'no value selects ["MF_OBS_ATTRIBUTES"]' "$PRE$KEYED
+keyed(lambda c: c['key']['values'].pop('OME'))"
+
+reject "a keyed alternative that is a segment" "$EVERY" "$PRE$KEYED
+keyed(lambda c: c['alternatives'].__setitem__(4, {'segment': 'OM7', 'min': 1, 'max': 1}))"
+
+reject "an optional keyed alternative" "$EVERY" "$PRE$KEYED
+keyed(lambda c: c['alternatives'][4].update(min=0))"
+
+reject "a key with an empty citation" 'the key needs a non-empty "citation"' "$PRE$KEYED
+keyed(lambda c: c['key'].update(citation=' '))"
+
+reject "a key segment not in the structure" "a keyed choice's key segment PID is not in the structure" "$PRE$KEYED
+keyed(lambda c: c['key'].update(segment='PID'))"
+
+reject "an unknown key in a key" 'key: unknown key(s) ["name"]' "$PRE$KEYED
+keyed(lambda c: c['key'].update(name='MFI-1'))"
+
+accept "a keyed choice whose two values select one alternative" "$PRE$KEYED
+keyed(lambda c: c['key']['values'].update(OMX='MF_TEST_NUMERIC'))"
+
+# S4-2: the alias (v2.5.1 QRY_P04, aliasOf QRY_Q01).
+ALIAS='
+def alias(**kw):
+    d = load("v2.5.1/QRY_P04.json"); d.update(kw); save("v2.5.1/QRY_P04.json", d)
+'
+
+reject "an alias of a structure the version does not have" 'QRY_P04: aliasOf QRY_Q99 is not another structure of v2.5.1' "$PRE$ALIAS
+alias(aliasOf='QRY_Q99')"
+
+reject "an alias of itself" 'QRY_P04: aliasOf QRY_P04 is not another structure of v2.5.1' "$PRE$ALIAS
+alias(aliasOf='QRY_P04')"
+
+reject "an alias whose elements differ from its target's" 'QRY_P04: its elements differ from those of QRY_Q01, which it aliases' "$PRE$ALIAS
+d = load('v2.5.1/QRY_P04.json'); d['elements'][3]['min'] = 1; save('v2.5.1/QRY_P04.json', d)"
+
+reject "an alias of an alias" 'QRY_X04: aliasOf QRY_P04, which is itself an alias' "$PRE$ALIAS
+d = load('v2.5.1/QRY_P04.json'); d.update(structure='QRY_X04', aliasOf='QRY_P04', triggers=['QRY^X04'])
+save('v2.5.1/QRY_X04.json', d)"
+
+accept "the alias as a plain structure (no aliasOf)" "$PRE$ALIAS
+d = load('v2.5.1/QRY_P04.json'); del d['aliasOf']; save('v2.5.1/QRY_P04.json', d)"
+
+# S4-3: the query error response rule (v2.5.1 DSR_Q01, CH05 5.6.5).
+ERRRESP='
+def rule(**kw):
+    d = load("v2.5.1/DSR_Q01.json"); d["errorResponse"].update(kw); save("v2.5.1/DSR_Q01.json", d)
+'
+
+reject "an error response naming a segment the structure does not print" 'querySegments must be distinct query defining segments the structure prints' "$PRE$ERRRESP
+rule(querySegments=['QPD'])"
+
+reject "an error response naming a segment that is not a query defining one" 'querySegments must be distinct query defining segments the structure prints' "$PRE$ERRRESP
+rule(querySegments=['DSP'])"
+
+reject "an error response with no codes" 'acknowledgmentCodes must be distinct two-letter codes' "$PRE$ERRRESP
+rule(acknowledgmentCodes=[])"
+
+reject "an error response with a repeated code" 'acknowledgmentCodes must be distinct two-letter codes' "$PRE$ERRRESP
+rule(acknowledgmentCodes=['AE', 'AE'])"
+
+reject "an error response without a citation" 'errorResponse: empty citation' "$PRE$ERRRESP
+rule(citation='')"
+
+reject "an error response with an unknown key" 'unknown key(s) ["head"]' "$PRE$ERRRESP
+rule(head=['MSH'])"
+
+reject "an error response on a structure with no top-level MSA" 'errorResponse: the structure has no top-level MSA' "$PRE
+d = load('v2.5.1/ADT_A01.json'); d['errorResponse'] = load('v2.5.1/DSR_Q01.json')['errorResponse']
+d['errorResponse']['querySegments'] = []; save('v2.5.1/ADT_A01.json', d)"
+
+reject "an error response with a repeated no-data status" 'noDataQueryStatus must be distinct two-letter values' "$PRE$ERRRESP
+rule(noDataQueryStatus=['NF', 'NF'])"
+
+reject "an error response with a malformed no-data status" 'noDataQueryStatus must be distinct two-letter values' "$PRE$ERRRESP
+rule(noDataQueryStatus=['nf'])"
+
+accept "an error response with no no-data status" "$PRE$ERRRESP
+rule(noDataQueryStatus=[])"
+
+accept "an error response with no query defining segment (TBR)" "$PRE$ERRRESP
+rule(querySegments=[])"
+
+accept "a query response without the rule" "$PRE
+d = load('v2.5.1/DSR_Q01.json'); del d['errorResponse']; save('v2.5.1/DSR_Q01.json', d)"
+
+# S5-1: syntaxSource prose marks a transcription (overrides.json proseFragments, ADR-019 S5).
+PROSE='
+def prose(**kw):
+    d = load("v2.5.1/ADT_A01.json"); d.update(kw); save("v2.5.1/ADT_A01.json", d)
+'
+
+accept "a transcription marked syntaxSource prose and cited" "$PRE$PROSE
+prose(syntaxSource='prose', citation=load('v2.5.1/ADT_A01.json')['citation'] + ' Transcribed (overrides.json proseFragments, ADR-019 S5).')"
+
+reject "a syntaxSource other than prose" 'syntaxSource must be "prose"' "$PRE$PROSE
+prose(syntaxSource='table', citation=load('v2.5.1/ADT_A01.json')['citation'] + ' overrides.json proseFragments')"
+
+reject "a transcription whose citation does not name proseFragments" 'syntaxSource prose needs a citation naming "overrides.json proseFragments"' "$PRE$PROSE
+prose(syntaxSource='prose')"
+
+# S6-1: per-trigger prints (overrides.json variantPrints, ADR-019 S6). v2.5.1 RSP_K21 carries one.
+VARIANT='
+def variant(**kw):
+    d = load("v2.5.1/RSP_K21.json"); v = d["variants"][0]
+    for k, x in kw.items():
+        if x == "DROP": del v[k]
+        else: v[k] = x
+    save("v2.5.1/RSP_K21.json", d)
+    return d
+'
+
+accept_rendering "a variant renders as a StructureVariant with its own lint result" 'StructureVariant(' "$PRE$VARIANT
+variant()"
+
+reject "a variant trigger the structure does not accept" 'variants: triggers must be exact CODE^EVT the structure accepts' "$PRE$VARIANT
+variant(triggers=['RSP^K23'])"
+
+reject "a variant trigger with a wildcard event" 'variants: triggers must be exact CODE^EVT the structure accepts' "$PRE$VARIANT
+variant(triggers=['RSP^*'])"
+
+reject "a variant with no triggers" 'variants: triggers must be exact CODE^EVT the structure accepts' "$PRE$VARIANT
+variant(triggers=[])"
+
+reject "a trigger in two variants" 'variants: trigger RSP^K21 is in two variants or named twice' "$PRE$VARIANT
+d = variant(); w = dict(d['variants'][0]); w['elements'] = w['elements'][:-1]; d['variants'].append(w)
+save('v2.5.1/RSP_K21.json', d)"
+
+reject "a variant equal to the default print" 'variants: a print equal to the default or to another variant' "$PRE$VARIANT
+variant(elements=load('v2.5.1/RSP_K21.json')['elements'])"
+
+reject "a variant whose citation does not name variantPrints" 'variants: a citation must name "overrides.json variantPrints"' "$PRE$VARIANT
+variant(citation='HL7 v2.5.1 Chapter 3, section 3.3.56.')"
+
+reject "a variant not starting with MSH" 'variants: a print must start with MSH' "$PRE$VARIANT
+d = load('v2.5.1/RSP_K21.json'); variant(elements=d['variants'][0]['elements'][1:])"
+
+reject "a variant with an unknown key" 'unknown key(s) ["structure"]' "$PRE$VARIANT
+variant(structure='RSP_K21')"
+
+reject "an empty variants list" 'variants: an empty list' "$PRE
+d = load('v2.5.1/RSP_K21.json'); d['variants'] = []; save('v2.5.1/RSP_K21.json', d)"
+
+reject "variants on an alias" 'variants: a profile structure or an alias has no variants' "$PRE
+d = load('v2.5.1/QRY_P04.json'); d['variants'] = load('v2.5.1/RSP_K21.json')['variants']; save('v2.5.1/QRY_P04.json', d)"
+
+accept "a structure without its variants" "$PRE
+d = load('v2.5.1/RSP_K21.json'); del d['variants']; save('v2.5.1/RSP_K21.json', d)"
 
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))

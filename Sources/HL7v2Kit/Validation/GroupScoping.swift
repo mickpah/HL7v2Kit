@@ -117,15 +117,46 @@ struct GroupSpanIndex: Sendable {
     /// anchor's scope (the same lifting as a peer lookup, for (`counted`,
     /// `head`)), the first group outward whose extended own level holds `head`
     /// is the group, and its occurrence without nested pairing boundaries is
-    /// returned. Nil when no enclosing group holds `head`.
+    /// returned, less the `counted` segments that are not the head's own
+    /// (S6-2, below). Nil when no enclosing group holds `head`.
     func group(around anchor: Int, holding head: String, counting counted: String) -> [Int]? {
         let lookup = ScopeLookup(anchor: counted, peer: head)
         var level = scope(of: anchor, lookup)
         while true {
-            if lookup.extended(children(level)).contains(head) { return insideRegion(level, anchor: anchor, lookup) }
+            if lookup.extended(children(level)).contains(head) {
+                return owned(insideRegion(level, anchor: anchor, lookup), level: level, head: head, counted: counted)
+            }
             guard let at = level else { return nil }
             level = spans[at].parent
         }
+    }
+
+    /// `region` (the occurrence of `level`) without the `counted` segments that
+    /// are not the head's own (S6-2, ADR-019 S6 amendment): those before the
+    /// first `head` of the region (v2.8.2 COMMON_ORDER's ORDER_DOCUMENT OBX before
+    /// the OBR; the patient OBX before a message-level OBR on ORU_R30), and
+    /// those inside a nested group occurrence that does not hold that head and
+    /// whose definition cannot begin with `counted`, so another segment heads it
+    /// (SPECIMEN { SPM [{OBX}] } on v2.5.1 to v2.8.2 ORU_R01). A nested group
+    /// holding the head (OML_O21's OBSERVATION_REQUEST { OBR ... }) or one that
+    /// can begin with `counted` (OBSERVATION { OBX ... }, v2.4 `{ [OBX] {NTE} }`)
+    /// is the head's, and its own nested groups are read by the same rule. Every
+    /// other segment of the region is kept, so the group's first index is
+    /// unchanged unless it is such a segment.
+    private func owned(_ region: [Int], level: Int?, head: String, counted: String) -> [Int] {
+        guard let first = region.first(where: { ids[$0] == head }) else { return region }
+        var foreign = Set(region.filter { $0 < first && ids[$0] == counted })
+        var s = (level ?? -1) + 1
+        while s < spans.count, isDescendant(s, of: level) {
+            let starts = element(at: spans[s].position).firstSet
+            guard !spans[s].indices.contains(first), !starts.contains(counted),
+                  !starts.contains(StructureElement.anySegment) else { s += 1; continue }
+            foreign.formUnion(spans[s].indices.filter { ids[$0] == counted })
+            let root = s
+            s += 1
+            while s < spans.count, isDescendant(s, of: root) { s += 1 }
+        }
+        return region.filter { !foreign.contains($0) }
     }
 
     /// The anchor's scope: the group occurrence an anchor is treated as sitting
@@ -209,7 +240,7 @@ struct ScopeLookup {
     /// unnamed choices among them).
     static func ownLevel(_ children: [StructureElement]) -> Set<String> {
         children.reduce(into: Set<String>()) { result, child in
-            switch child {
+            switch child.unkeyed {
             case .segment(let id, _, _): result.insert(id)
             case .choice(.none, _, _, let alternatives): result.formUnion(ownLevel(alternatives))
             default: break
@@ -232,7 +263,7 @@ struct ScopeLookup {
         // extended level first; a non-repeating group in between is transparent.
         func unclaimed(_ children: [StructureElement]) -> Bool {
             children.contains { child in
-                switch child {
+                switch child.unkeyed {
                 case .segment(let id, _, _): return id == anchor
                 case .choice(.none, _, _, let alternatives): return unclaimed(alternatives)
                 default:
@@ -253,7 +284,7 @@ struct ScopeLookup {
     /// The segment IDs of the extended own level of a group with `children`.
     func extended(_ children: [StructureElement]) -> Set<String> {
         children.reduce(into: Set<String>()) { result, child in
-            switch child {
+            switch child.unkeyed {
             case .segment(let id, _, _): result.insert(id)
             case .choice(.none, _, _, let alternatives): result.formUnion(extended(alternatives))
             default: if transparent(child) { result.formUnion(extended(child.children)) }
@@ -264,7 +295,7 @@ struct ScopeLookup {
     /// The segment IDs defined anywhere in `children` outside pairing boundaries.
     func inside(_ children: [StructureElement]) -> Set<String> {
         children.reduce(into: Set<String>()) { result, child in
-            switch child {
+            switch child.unkeyed {
             case .segment(let id, _, _): result.insert(id)
             case .choice(.none, _, _, let alternatives): result.formUnion(inside(alternatives))
             default: if !pairing(child) { result.formUnion(inside(child.children)) }

@@ -33,10 +33,16 @@ struct StructureMatcherPropertyTests {
                 frontier = Set(frontier.filter { $0 < ids.count && ids[$0] == id }.map { $0 + 1 })
             case .group(_, _, _, let children):
                 frontier = ends(children[...], ids, from: frontier)
-            case .choice(_, _, _, let alternatives):
-                // One occurrence takes exactly one alternative, any of them.
+            case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
+                // One occurrence takes exactly one alternative, any of them (a keyed
+                // choice unresolved: no key value selects one, S4-1).
                 let current = frontier
                 frontier = alternatives.reduce(into: Set<Int>()) { $0.formUnion(ends(of: $1, ids, from: current)) }
+            case .slot:
+                // One segment per occurrence, any but MSH (S3-1 ruling): every
+                // end is kept, so a segment that could follow the slot may
+                // also stay in it.
+                frontier = Set(frontier.filter { $0 < ids.count && ids[$0] != "MSH" }.map { $0 + 1 })
             }
             count += 1
             if count >= element.min { result.formUnion(frontier) }
@@ -63,20 +69,34 @@ struct StructureMatcherPropertyTests {
         }
     }
 
+    /// The segments a derivation puts in a slot (S3-1): order detail segments
+    /// the structure does not name (mutations bring in the structure's own).
+    static func slotFillers(_ elements: [StructureElement]) -> [String] {
+        let named = elements.reduce(into: Set<String>()) { $0.formUnion($1.segmentIDs) }
+        return ["OBR", "RXO", "RXR", "ODS", "RQD"].filter { !named.contains($0) }
+    }
+
     static func alphabet(_ elements: [StructureElement]) -> [String] {
         var ids: Set<String> = []
+        var slot = false
         func walk(_ element: StructureElement) {
             switch element {
             case .segment(let id, _, _): ids.insert(id)
             case .group(_, _, _, let children): children.forEach(walk)
-            case .choice(_, _, _, let alternatives): alternatives.forEach(walk)
+            case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives): alternatives.forEach(walk)
+            case .slot: slot = true
             }
         }
         elements.forEach(walk)
+        if slot { ids.formUnion(slotFillers(elements).prefix(2)) }
         return ids.sorted()
     }
 
     static func derive(_ elements: [StructureElement], _ rng: inout Seeded) -> [String] {
+        derive(elements, &rng, fillers: Array(slotFillers(elements).prefix(2)))
+    }
+
+    private static func derive(_ elements: [StructureElement], _ rng: inout Seeded, fillers: [String]) -> [String] {
         elements.flatMap { element -> [String] in
             // An optional element is present one time in four, so derivations
             // of the larger structures stay short.
@@ -87,9 +107,10 @@ struct StructureMatcherPropertyTests {
             return (0..<count).flatMap { _ -> [String] in
                 switch element {
                 case .segment(let id, _, _): return [id]
-                case .group(_, _, _, let children): return derive(children, &rng)
-                case .choice(_, _, _, let alternatives):
-                    return derive([alternatives.randomElement(using: &rng)!], &rng)
+                case .group(_, _, _, let children): return derive(children, &rng, fillers: fillers)
+                case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
+                    return derive([alternatives.randomElement(using: &rng)!], &rng, fillers: fillers)
+                case .slot: return [fillers.randomElement(using: &rng)!]
                 }
             }
         }
@@ -110,9 +131,10 @@ struct StructureMatcherPropertyTests {
         elements.reduce(0) { total, element in
             guard element.min > 0 else { return total }
             switch element {
-            case .segment: return total + 1
+            case .segment, .slot: return total + 1
             case .group(_, _, _, let children): return total + shortest(children)
-            case .choice(_, _, _, let alternatives): return total + (alternatives.map { shortest([$0]) }.min() ?? 0)
+            case .choice(_, _, _, let alternatives), .keyedChoice(_, _, _, _, let alternatives):
+                return total + (alternatives.map { shortest([$0]) }.min() ?? 0)
             }
         }
     }

@@ -99,12 +99,14 @@ struct StructureLintCorpusTests {
             let minimum = letters.count <= 4 ? StructureMatcherPropertyTests.exhaustive(letters, upTo: 8).count : 1_000
             #expect(sequences.count >= minimum, "\(version) \(id): \(sequences.count) sequences checked, minimum \(minimum)")
             let structure = decoded
-            let matcher = StructureMatcher(structure: structure)
+            // S3-3 (ruling 3): the one-pass matcher never compiles an exact-matched structure (a
+            // slot structure would trip its guard); the Validator never uses it there either.
+            let matcher = structure.requiresExactMatch ? nil : StructureMatcher(structure: structure)
             let exact = ExactStructureMatcher(structure: structure)
             var disagree = 0, exactDisagree = 0
             for sequence in sequences {
                 let accepted = StructureMatcherPropertyTests.referenceAccepts(elements, sequence)
-                if matcher.match(sequence).findings.isEmpty != accepted { disagree += 1 }
+                if let matcher, matcher.match(sequence).findings.isEmpty != accepted { disagree += 1 }
                 if exact.match(sequence).findings.isEmpty != accepted { exactDisagree += 1 }
             }
             // P8b-12: the exact matcher (the Validator's choice when the lint fails) must never disagree.
@@ -115,7 +117,8 @@ struct StructureLintCorpusTests {
                 guarded = StructureGuardTests.guardStructure(structure, version: grammarVersion, derivations: StructureGuardTests.defaultDerivations)
             }
             if !guarded.problems.isEmpty { guardFailures += 1 }
-            rows.append([version, id, result, shapes, "\(sequences.count) checked, \(disagree) disagree",
+            let onePass = matcher == nil ? "one-pass not built (exact-matched)" : "\(disagree) disagree"
+            rows.append([version, id, result, shapes, "\(sequences.count) checked, \(onePass)",
                          Self.dsc(elements), "exact: \(exactDisagree) disagree",
                          guarded.problems.isEmpty ? "guards: ok" : "guards: " + guarded.problems.joined(separator: "; ")].joined(separator: "\t"))
             print("lint-progress \(version) \(id) \(rows.count)/\(files.count)")

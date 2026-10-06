@@ -1,0 +1,71 @@
+{
+  "structure": "PPT_PCL",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 12, section 12.3.12 PPT - Patient Pathway (Goal-Oriented) Response (Event PCL), pp 22 to 24. QRD is listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+  "triggers": ["PPT^PCL"],
+  "errorResponse": {"acknowledgmentCodes": ["AE", "AR"], "querySegments": ["QRD"], "noDataQueryStatus": ["NF"], "citation": "HL7 v2.7.1 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), p 55: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 56): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."},
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "QAK", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "PATHWAY", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PTH", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "VAR", "min": 0, "max": null },
+        { "group": "PATHWAY_ROLE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "ROL", "min": 1, "max": 1 },
+          { "segment": "VAR", "min": 0, "max": null }
+        ]},
+        { "group": "GOAL", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "GOL", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "VAR", "min": 0, "max": null },
+          { "group": "GOAL_ROLE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "ROL", "min": 1, "max": 1 },
+            { "segment": "VAR", "min": 0, "max": null }
+          ]},
+          { "group": "GOAL_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]},
+          { "group": "PROBLEM", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "PRB", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null },
+            { "segment": "VAR", "min": 0, "max": null },
+            { "group": "PROBLEM_ROLE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "ROL", "min": 1, "max": 1 },
+              { "segment": "VAR", "min": 0, "max": null }
+            ]},
+            { "group": "PROBLEM_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "NTE", "min": 0, "max": null }
+            ]}
+          ]},
+          { "group": "ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "ORC", "min": 1, "max": 1 },
+            { "group": "ORDER_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+              { "slot": "Order Detail Segment", "min": 1, "max": null, "citation": "HL7 v2.7.1 Chapter 12, section 12.3.12 PPT - Patient Pathway (Goal-Oriented) Response (Event PCL), p 24: the print gives the order detail as the choice '< OBR | etc. >', whose last alternative is a placeholder for segments it does not enumerate: one open slot in place of the choice (ADR-019 S3-1, S3-2), the listed alternative OBR among its fillers." },
+              { "segment": "NTE", "min": 0, "max": null },
+              { "segment": "VAR", "min": 0, "max": null },
+              { "group": "ORDER_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+                { "segment": "OBX", "min": 1, "max": 1 },
+                { "segment": "NTE", "min": 0, "max": null },
+                { "segment": "VAR", "min": 0, "max": null }
+              ]}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

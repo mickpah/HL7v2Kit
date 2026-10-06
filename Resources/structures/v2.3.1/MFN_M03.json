@@ -1,0 +1,42 @@
+{
+  "structure": "MFN_M03",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 8, section 8.7.2 MFN/MFR - test/observation master file, p 8-20. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). The print gives this syntax in prose, not as a table: it is transcribed by hand (overrides.json proseFragments, ADR-019 S5; syntaxSource prose). HL7 v2.3.1 Chapter 8, section 8.7.2 (p 8-20) prints MFN^M03 with '???' and '[other segments(s)]' after OM1 and gives the four combinations that replace it in prose, each introduced by 'MFI-1-master file identifier = OMA' (OMB, OMC, OMD) and the second component of MSH-9 (M08 to M11); the choice is keyed by MFI-1, as v2.4 to v2.6 key MFN_M03 (ADR-019 S4-1). HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'the segment groupings described below follow the MFI and MFE segments'. The placeholder @OTHER is a choice keyed by MFI-1 (section 8.7.2, p 8-20: 'where other segments can be any of the following combinations'): OMA select MF_TEST_NUMERIC (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMA, for numeric observations'); OMB select MF_TEST_CATEGORICAL (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMB, for categorical observations'); OMC select MF_TEST_BATTERIES (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMC, for observation batteries'); OMD select MF_TEST_CALCULATED (section 8.7.2, p 8-20: 'MFI-1-master file identifier = OMD, calculated observations'). Group names of the alternatives (the print names none): MF_TEST_NUMERIC (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_TEST_NUMERIC.CONTENT), MF_TEST_CATEGORICAL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CATEGORICAL.CONTENT), MF_TEST_BATTERIES (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATTERIES.CONTENT), MF_TEST_CALCULATED (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALCULATED.CONTENT). Unprinted group names (ADR-019 decision 3): MF_TEST (overrides.json: HL7 v2.3.1 Chapter 8, section 8.7.2, transcribed from prose (overrides.json proseFragments), prints the group {MFE OM1 [other segments(s)]} unnamed; HL7-xml v2.4/MFN_M03.xsd names it MF_TEST (MFN_M03.MF_TEST.CONTENT), the name v2.4 to v2.6 give the same group; the v2.4 bundle's members include OME's OM7, so its group does not match by members and the name is cited here (S5-2, ADR-019 S5).), MF_NUMERIC_OBSERVATION (HL7-xml 2.3.1/MFN_M08.xsd, MFN_M08.MF_NUMERIC_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M08 only by trigger), MF_TEST_CAT_DETAIL (HL7-xml 2.3.1/MFN_M09.xsd, MFN_M09.MF_TEST_CAT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M09 only by trigger), MF_TEST_BATT_DETAIL (HL7-xml 2.3.1/MFN_M10.xsd, MFN_M10.MF_TEST_BATT_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M10 only by trigger) and MF_TEST_CALC_DETAIL (HL7-xml 2.3.1/MFN_M11.xsd, MFN_M11.MF_TEST_CALC_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 MFN_M03, which differs from MFN_M11 only by trigger).",
+  "triggers": ["MFN^M03"],
+  "syntaxSource": "prose",
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_TEST", "nameSource": "override", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "choice": null, "min": 1, "max": 1, "key": { "segment": "MFI", "field": 1, "component": 1, "values": { "OMA": "MF_TEST_NUMERIC", "OMB": "MF_TEST_CATEGORICAL", "OMC": "MF_TEST_BATTERIES", "OMD": "MF_TEST_CALCULATED" }, "citation": "HL7 v2.3.1 Chapter 8, section 8.7.2, p 8-20: 'where other segments can be any of the following combinations' (overrides.json proseFragments, ADR-019 S5)." }, "alternatives": [
+        { "group": "MF_TEST_NUMERIC", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "group": "MF_NUMERIC_OBSERVATION", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "OM2", "min": 0, "max": 1 },
+            { "segment": "OM3", "min": 0, "max": 1 },
+            { "segment": "OM4", "min": 0, "max": 1 }
+          ]}
+        ]},
+        { "group": "MF_TEST_CATEGORICAL", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_CAT_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "OM3", "min": 1, "max": 1 },
+            { "segment": "OM4", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "MF_TEST_BATTERIES", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_BATT_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "OM5", "min": 1, "max": 1 },
+            { "segment": "OM4", "min": 0, "max": null }
+          ]}
+        ]},
+        { "group": "MF_TEST_CALCULATED", "nameSource": "v2xml", "min": 1, "max": 1, "elements": [
+          { "group": "MF_TEST_CALC_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "OM6", "min": 1, "max": 1 },
+            { "segment": "OM2", "min": 1, "max": 1 }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

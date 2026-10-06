@@ -1,0 +1,40 @@
+{
+  "structure": "ORM_O01",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.2.1 ORM - general order message (event O01), p 4-4. Five normative prints of ORM under ORM^O01 disagree in the order detail only: HL7 v2.3 Chapter 4 section 4.2.1 (general order message, p 4-4) prints 'Order Detail Segment OBR, etc.' after ORC, which use note b reads as 'whichever of these order detail segment(s) is appropriate', and the four specific prints give it as section 4.6 (dietary order, p 4-47: ORC [{ODS} [{NTE}] {OBX [{NTE}]}], then {[ORC {ODT} [{NTE}]]}), section 4.7 (stock requisition, p 4-54: ORC [RQD [{NTE}] [{OBX [{NTE}]}]] [BLG]; nonstock requisition, p 4-55: RQD followed by RQ1) and section 4.8.1 (pharmacy/treatment order, p 4-60: ORC [RXO [{NTE}] {RXR} [{RXC} [{NTE}]] [{OBX [{NTE}]}]] [BLG]), all after the same MSH and patient segments; MSH-9 cannot tell them apart on v2.3 (lookup rule 3), and the 4.2.1 print, whose open slot takes any run of segments after ORC, accepts every message the four accept, so the looser 4.2.1 print is primary (P8b-9 ruling; S3-3 ruling 1; register section E). Structure ID ORM_O01 synthesised as CODE_EVT from the message code ORM and O01, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events ORM^O01 read from the section title 4.2.1 'ORM - general order message (event O01)'. Events ORM^O01 from overrides.json eventsFromTitle (section 4.6 'DIET ORDERS' names no event): HL7 v2.3 Chapter 4, section 4.6 DIET ORDERS, p 4-47 prints the dietary order under the code ORM (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-94), p 2-92: 'O01 ORM - Order message'.. Events ORM^O01 from overrides.json eventsFromTitle (section 4.7 'SUPPLY ORDERS' names no event): HL7 v2.3 Chapter 4, section 4.7 SUPPLY ORDERS, p 4-53: 'Stock requisition orders use the ORM. RQD replaces the Order Detail Segment of the ORM message as follows' (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-94), p 2-92: 'O01 ORM - Order message'.. Events ORM^O01 from overrides.json eventsFromTitle (section 4.7 'SUPPLY ORDERS' names no event): HL7 v2.3 Chapter 4, section 4.7 SUPPLY ORDERS, p 4-54: 'Nonstock requisitions use the ORM. RQD followed by RQ1 replaces the Order Detail Segment of the ORM message' (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-94), p 2-92: 'O01 ORM - Order message'.. Events ORM^O01 from overrides.json eventsFromTitle (section 4.8.1 'ORM - pharmacy/treatment order message' names no event): HL7 v2.3 Chapter 4, section 4.8.1 ORM - pharmacy/treatment order message, p 4-60 (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-94), p 2-92: 'O01 ORM - Order message'.. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.PATIENT.CONTENT, generator HL7-Database, derived for v2.3 ORM_O01), PATIENT_VISIT (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.PATIENT_VISIT.CONTENT, generator HL7-Database, derived for v2.3 ORM_O01), INSURANCE (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.INSURANCE.CONTENT, generator HL7-Database, derived for v2.3 ORM_O01), ORDER (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.ORDER.CONTENT, generator HL7-Database, derived for v2.3 ORM_O01), ORDER_DETAIL (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.ORDER_DETAIL.CONTENT, generator HL7-Database, derived for v2.3 ORM_O01) and OBSERVATION (HL7-xml 2.3.1/ORM_O01.xsd, ORM_O01.OBSERVATION.CONTENT, generator HL7-Database, derived for v2.3 ORM_O01).",
+  "triggers": ["ORM^O01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "INSURANCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "GT1", "min": 0, "max": 1 },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "ORDER_DETAIL", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "slot": "Order Detail Segment", "min": 1, "max": null, "citation": "HL7 v2.3 Chapter 4, section 4.2.1 ORM - general order message (event O01), p 4-4: the print gives the order detail as 'Order Detail Segment OBR, etc.', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)." },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "DG1", "min": 0, "max": null },
+        { "group": "OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]},
+      { "segment": "CTI", "min": 0, "max": null },
+      { "segment": "BLG", "min": 0, "max": 1 }
+    ]}
+  ]
+}

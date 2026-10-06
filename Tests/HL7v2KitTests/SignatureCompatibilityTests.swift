@@ -75,6 +75,21 @@ struct SignatureCompatibilityTests {
         #expect(make([]) != .conditionalFieldMissing)
     }
 
+    @Test("S6-3 IssueCode.profileMaximumExceeded(localeRule:) is additive and distinct from the violation code")
+    func profileMaximumExceededIssueCode() {
+        let make: (String) -> IssueCode = IssueCode.profileMaximumExceeded(localeRule:)
+        let code = make("HL7au:00060.1")
+        #expect(code == .profileMaximumExceeded(localeRule: "HL7au:00060.1"))
+        #expect(code != .profileConstraintViolation(localeRule: "HL7au:00060.1"))
+    }
+
+    @Test("S2-2 IssueCode.segmentWithdrawnInVersion is additive and payload-less")
+    func segmentWithdrawnIssueCode() {
+        let code: IssueCode = .segmentWithdrawnInVersion
+        #expect(code == .segmentWithdrawnInVersion)
+        #expect(code != .segmentNotInVersionGrammar)
+    }
+
     @Test("P6-13 extra-component setting and issue code are additive")
     func extraComponents() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.extraComponentsSeverity
@@ -294,6 +309,60 @@ struct SignatureCompatibilityTests {
         #expect(element.min == 0 && element.max == nil)
     }
 
+    // Deliberate pin of new, unreleased API (S3-1, ADR-019 amendment 2026-10-06):
+    // the open-slot case of the open StructureElement enum.
+    @Test("StructureElement.slot keeps its signature")
+    func structureSlot() {
+        let slot: (String?, Int, Int?, String) -> StructureElement = StructureElement.slot(_:min:max:citation:)
+        let element = slot("Order Detail Segment", 1, nil, "CH04 4.2.1")
+        #expect(element.children.isEmpty && element.segmentIDs.isEmpty)
+        #expect(element.min == 1 && element.max == nil)
+    }
+
+    // Deliberate pin of new, unreleased API (S4-1, ADR-019 amendment 2026-10-06):
+    // the keyed-choice case of the open StructureElement enum and its key.
+    @Test("StructureElement.keyedChoice and StructureChoiceKey keep their signatures")
+    func structureKeyedChoice() throws {
+        let make: (String, Int, Int, [String: String], String) -> StructureChoiceKey =
+            StructureChoiceKey.init(segmentID:field:component:alternatives:citation:)
+        let _: KeyPath<StructureChoiceKey, String> = \.segmentID
+        let _: KeyPath<StructureChoiceKey, Int> = \.field
+        let _: KeyPath<StructureChoiceKey, Int> = \.component
+        let _: KeyPath<StructureChoiceKey, [String: String]> = \.alternatives
+        let _: KeyPath<StructureChoiceKey, String> = \.citation
+        let keyed: (String?, Int, Int?, StructureChoiceKey, [StructureElement]) -> StructureElement =
+            StructureElement.keyedChoice(_:min:max:key:alternatives:)
+        let a = StructureElement.group("A", min: 1, max: 1, elements: [.segment("OM2", min: 0, max: 1)])
+        let b = StructureElement.group("B", min: 1, max: 1, elements: [.segment("OM3", min: 0, max: 1)])
+        let element = keyed(nil, 1, 1, make("MFI", 1, 1, ["OMA": "A", "OMB": "B"], "CH08 8.8.2"), [a, b])
+        #expect(element.children == [a, b] && element.segmentIDs == ["OM2", "OM3"])
+        #expect(element.min == 1 && element.max == 1)
+    }
+
+    // Deliberate pin of new, unreleased API (S4-2, ADR-019 amendment 2026-10-06):
+    // the alias target of a structure whose print refers its syntax to another.
+    @Test("MessageStructure.aliasOf keeps its signature")
+    func structureAliasOf() throws {
+        let _: KeyPath<MessageStructure, String?> = \.aliasOf
+        #expect(try #require(MessageStructureTable.structure("QRY_P04", version: .v2_4)).aliasOf == "QRY_Q01")
+        #expect(try #require(MessageStructureTable.structure("QRY_Q01", version: .v2_4)).aliasOf == nil)
+    }
+
+    // Deliberate pin of new, unreleased API (S6-1, ADR-019 amendment 2026-10-06):
+    // the per-trigger prints of a structure and the lookup naming the one that governs a trigger.
+    @Test("StructureVariant, MessageStructure.variants and variant(messageCode:triggerEvent:) keep their signatures")
+    func structureVariants() throws {
+        let _: KeyPath<MessageStructure, [StructureVariant]> = \.variants
+        let _: KeyPath<StructureVariant, [String]> = \.triggers
+        let _: KeyPath<StructureVariant, String> = \.citation
+        let _: KeyPath<StructureVariant, [StructureElement]> = \.elements
+        let lookup: (MessageStructure) -> (String, String) -> StructureVariant? = MessageStructure.variant(messageCode:triggerEvent:)
+        let ack = try #require(MessageStructureTable.structure("ACK", version: .v2_8_2))
+        #expect(lookup(ack)("ACK", "S27")?.triggers.contains("ACK^S27") == true)
+        #expect(lookup(ack)("ACK", "A01") == nil)
+        #expect(try #require(MessageStructureTable.structure("ADT_A01", version: .v2_5_1)).variants.isEmpty)
+    }
+
     // Deliberate pin of new, unreleased API (S1-3, owner decision 8, ADR-019
     // amendment 2026-10-06): the public registration lookup that tells a
     // registered-not-modelled structure from an unknown ID.
@@ -305,8 +374,8 @@ struct SignatureCompatibilityTests {
         let _: KeyPath<StructureRegistration, Version> = \.version
         let _: KeyPath<StructureRegistration, [String]> = \.triggers
         let _: KeyPath<StructureRegistration, String> = \.reason
-        let registration = try #require(byID("UDM_Q05", .v2_8_2))
-        #expect(registration.triggers == ["UDM^Q05"])
+        let registration = try #require(byID("QRY_PC4", .v2_8_2))
+        #expect(registration.triggers == ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"])
         #expect(byID("ADT_A01", .v2_5_1) == nil)
         #expect(byID("ZZZ_Z01", .v2_5_1) == nil)
         #expect(all(.v2_8_2).contains(registration))

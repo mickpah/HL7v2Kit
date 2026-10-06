@@ -68,7 +68,7 @@ extension Validator {
                                                completeVersions: complete ?? MessageStructureTable.completeVersions)
         else { return (nil, "the v\(message.version.rawValue) structures are not complete") }
         let resolution = resolveStructure(message, severity: .info)
-        guard let structure = resolution.structure else {
+        guard let declared = resolution.structure else {
             switch resolution.issues.first?.code {
             case .messageStructureMismatch(let declared, let trigger)?:
                 return (nil, "MSH-9.3 \(declared) is not printed for \(trigger)")
@@ -79,6 +79,14 @@ extension Validator {
             default:
                 return (nil, "no message structure was resolved")
             }
+        }
+        let structure: MessageStructure
+        switch declared.resolvingKeyedChoices(in: message) {
+        case .resolved(let resolved):
+            // S4-3: a query error response's (or no-data response's) spans come from its CH05 5.6.5 head.
+            structure = resolved.errorResponseHead(in: message) ?? resolved
+        case .unmapped(let key, let value):
+            return (nil, Self.unmappedReason(key, value, structure: declared.id))
         }
         if let reason = fragmentReason(message, structure: structure) {
             return (nil, "the message is a fragment (\(reason)), so \(structure.id) is not matched")
