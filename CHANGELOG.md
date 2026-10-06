@@ -34,6 +34,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the value (`ACK ` in MSH-9.3, ` MFK` in MSH-9.1, `UP `, `USA `), counted as the field
   check counts it; the same values already draw a table or structure finding.
 
+### Added — S1-2: populated backward-compatible and withdrawn components (register section G)
+
+- **`IssueCode.componentNotSupported(optionality:)`** (additive; open enum per ADR-014). A
+  populated component that its datatype's component table prints `B` ("left in for
+  backward compatibility with previous versions of HL7") or `W` ("withdrawn") is reported
+  at `.warning` at the component (the repetition is named in the message), under the
+  existing `ValidationOptions.warnDeprecatedFields` (on by default and in `.strict`, off in
+  `.lenient`), as a populated `B`, `X` or `W` field already draws `fieldNotSupported`.
+  Basis: "For version 2.5 and higher, the optionality, table references, and lengths of
+  data type components are supplied in component tables" (v2.5.1 CH02 section 2.5.3.4,
+  p. 2-9; v2.6 section 2.5.3.4, pp. 8-9; v2.7.1 section 2.5.3.5, p. 9; v2.8.2 section
+  2.5.3.5, pp. 9-10); a withdrawn constituent is used only "By site agreement" (section
+  2.8.4; v2.8.2 p. 26), and a deprecated one "is retained for backward compatibility"
+  (section 2.8.3; v2.8.2 p. 25).
+- Applies on v2.5.1 (12 `B`), v2.6 (10 `B`, 9 `W`), v2.7.1 (2 `B`, 11 `W`) and v2.8.2
+  (2 `B`, 13 `W`); no table prints a component `X`, and v2.3 to v2.4 print no component
+  optionality. Components of a field already reported as `fieldNotSupported` are not
+  reported again. Subcomponents are not checked (v2.5.1 TS.2 inside a TS component is the
+  only case; residual recorded in register section G). A component is populated as a field
+  is: the HL7 null `""` counts.
+- `fieldNotSupported` DocC now names `W` beside `B` and `X`.
+- Default output: on the printed spec examples and the wire fixtures, 545 new findings
+  (2180 digest lines across the two profiles), none removed. 240 are a `W` component the
+  example populates (XTN.1 Telephone Number, v2.8.2 2.A.91 p. 101; XCN.7 Degree, 2.A.88
+  p. 89; XPN.6 Degree, 2.A.90 p. 96; their own v2.6 and v2.7.1 tables likewise), the
+  example's own defect; 305 are a `B` component populated (263 in the examples, 42 in the
+  synthetic fixtures), mostly v2.5.1 XTN.1 (2.A.89 p. 2-245), a true deprecation notice of
+  the kind the field check already gives.
+
 ## [3.14.0] — 2026-10-06
 
 ### Summary — release 3.14.0: the review remediation

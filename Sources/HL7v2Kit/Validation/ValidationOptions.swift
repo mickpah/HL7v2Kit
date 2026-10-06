@@ -52,8 +52,11 @@ public struct ValidationOptions: Sendable {
     /// (section 4.3.6) separates repeated priorities with a space instead.
     public var checkCardinality: Bool
 
-    /// If true (default), emit a `.warning` when a deprecated (`B`) or
-    /// not-supported (`X`) field is populated.
+    /// If true (default), emit a `.warning` when a deprecated (`B`),
+    /// not-supported (`X`) or withdrawn (`W`) field is populated
+    /// (``IssueCode/fieldNotSupported``), and, from v2.5, when a `B` or `W`
+    /// component of any other field is populated
+    /// (``IssueCode/componentNotSupported(optionality:)``, since v3.15.0).
     public var warnDeprecatedFields: Bool
 
     /// If true (default), check populated `ID`-typed fields against the

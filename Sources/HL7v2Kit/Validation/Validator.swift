@@ -615,6 +615,17 @@ public struct Validator: Sendable {
                 location: location,
                 issues: &issues
             )
+            // S1-2: a B or W component, unless the field itself is already reported.
+            switch fieldGrammar.optionality {
+            case .backwardCompat, .notSupported, .withdrawn:
+                break
+            default:
+                if let field {
+                    checkComponentDeprecation(field: field, version: message.version,
+                                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                              location: location, issues: &issues)
+                }
+            }
         }
 
         if options.checkCardinality, let field, isPopulated {

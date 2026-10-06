@@ -20,6 +20,8 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// `RE` (required but may be empty, v2.7+). Kept as printed because `RE`
     /// has no `FieldOptionality` equivalent and mapping it would misstate it.
     /// `""` on v2.3 to v2.4, whose prose definitions print no optionality.
+    /// A populated `B` or `W` component of a field is reported as
+    /// ``IssueCode/componentNotSupported(optionality:)`` since v3.15.0 (S1-2).
     public let optionalityCode: String
     /// The HL7 table numbers the component's TBL# cell binds. `9999` is the
     /// spec's "no table assigned" sentinel (v2.7+), not a table.

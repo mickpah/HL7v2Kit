@@ -79,7 +79,8 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// printed `R` in the component table of the message's own HL7 version.
     /// Set on issues emitted by the component-grammar check. v0.2-V2.
     case requiredComponentMissing
-    /// A deprecated (`B`) or unsupported (`X`) field was populated.
+    /// A deprecated (`B`), unsupported (`X`) or withdrawn (`W`) field was populated.
+    /// A populated `B` or `W` component is ``componentNotSupported(optionality:)``.
     case fieldNotSupported
     /// A field exceeded its declared cardinality: a `1` field carries more
     /// than one repetition (`.error`), or a bounded field
@@ -205,6 +206,27 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Follows ``ValidationOptions/normativeLengthSeverity``. Additive case
     /// introduced in S1-1 (v3.15.0); the enum is open per ADR-014.
     case componentLengthOutOfRange(length: String, actual: Int)
+
+    /// A component of a composite field is populated although its datatype's
+    /// component table prints it `B` ("left in for backward compatibility with
+    /// previous versions of HL7") or `W` ("withdrawn"). `optionality` is the printed
+    /// code. Located at the component; the repetition is named in the message.
+    /// Emitted at `.warning` while ``ValidationOptions/warnDeprecatedFields`` is
+    /// true, as ``fieldNotSupported`` is for a field.
+    ///
+    /// The legend applies to components from v2.5: "For version 2.5 and higher, the
+    /// optionality, table references, and lengths of data type components are
+    /// supplied in component tables" (v2.5.1 CH02 section 2.5.3.4, p. 2-9; v2.6
+    /// section 2.5.3.4, pp. 8-9; v2.7.1 section 2.5.3.5, p. 9; v2.8.2 section
+    /// 2.5.3.5, pp. 9-10). A withdrawn constituent is used only "By site agreement"
+    /// (section 2.8.4: v2.5.1 p. 2-23, v2.6 p. 21, v2.7.1 p. 24, v2.8.2 p. 26); a
+    /// deprecated one is "retained for backward compatibility" and implementers
+    /// "MAY agree to not support" it (section 2.8.3). v2.3 to v2.4 print no
+    /// component optionality, and no table prints a component `X`. Components inside
+    /// a field already reported as ``fieldNotSupported`` are not reported again, and
+    /// a subcomponent is not checked. Additive case introduced in S1-2 (v3.15.0);
+    /// the enum is open per ADR-014.
+    case componentNotSupported(optionality: String)
 
     /// A primitive-typed field repetition carries content after its value (any
     /// primitive since P6-14, ID and IS before), or a primitive component of a

@@ -59,6 +59,14 @@ struct SignatureCompatibilityTests {
         #expect(make("1..6", 7) != .fieldLengthOutOfRange(length: "1..6", actual: 7))
     }
 
+    @Test("S1-2 IssueCode.componentNotSupported is additive with an (optionality:) payload")
+    func componentNotSupportedIssueCode() {
+        let make: (String) -> IssueCode = IssueCode.componentNotSupported(optionality:)
+        #expect(make("W") == .componentNotSupported(optionality: "W"))
+        #expect(make("W") != .componentNotSupported(optionality: "B"))
+        #expect(make("B") != .fieldNotSupported)
+    }
+
     @Test("P6-13 extra-component setting and issue code are additive")
     func extraComponents() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.extraComponentsSeverity
