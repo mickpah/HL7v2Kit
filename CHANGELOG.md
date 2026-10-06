@@ -64,8 +64,7 @@ the derived limit of 293 ms.
   of an empty MSH-9.1; it says the gate applies to the message code and the order-number
   conditions are not evaluated. The DocC lists the fields in the order the code gives
   (OBR before ORC).
-- **Docs.** Register section G restated as closed with its residuals (closed outright by
-  S1-fix); ADR-017 note that
+- **Docs.** Register section G closed outright (S1-5 restated it with residuals; S1-fix removed them); ADR-017 note that
   component length and optionality are enforced; the register's performance row
   re-measured.
 
