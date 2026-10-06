@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P12 S0: owner rulings recorded; ADRM conformance register reconciled (epic P12 sprint 0)
+
+Documents only; no code, schema or behaviour change.
+
+- **Owner rulings of 2026-10-07 recorded** in `STATUS.md`, the permanent-limitations register (where each item is discussed) and ADR-019 (amendment "2026-10-07 — owner rulings (P12 gate)"). Eleven of the twelve open items stand as shipped in v3.15.0. Ruling 6 changes: an optional ERR is allowed in the CH05 5.6.5 no-data head. It is scheduled as P12 S1-4 and not built yet. AU gate answers: G-AU1, the AU profile governs a message of every version (documented in register section B: its field rules apply, its profile structures only on v2.4); G-AU2, ORR^O02 by a cited erratum taking the base v2.4 reading; G-AU3, Appendix 8 as a profile structure selected by the declared profile.
+- **The ORU^R01 PV1 prose mandate** no longer appears in the register as not enforced: the owner's ruling of 2026-10-06 closed it (the print governs).
+- **ADRM conformance register reconciled** (`docs/design/m6-adrm-2021-conformance-register.md`, regenerated with `scripts/extract-adrm-conformance.py`, whose classification data holds the verdicts): the HL7au:00060.1 note names its closed parts and its three leftovers (Appendix 8, ORR^O02, the OSR^Q06 order detail). Counts are unchanged: SHIPPED 74, PARTIAL 18, BASE 9, REGISTERED 8, WITHDRAWN 3, RECEIVER 74, OUT 77, GROUPER 39.
+- **Limitations register section D corrected:** HL7au:00104.7.2.1 is registered, not shipped (its Table 0363 membership rule was withdrawn at M6-B-8). The general per-version code-table registry it listed as remaining shipped with ADR-016.
+
 ## [3.15.0] — 2026-10-06
 
 ### Summary — release 3.15.0: spec completeness (epic P11)
