@@ -75,6 +75,13 @@ struct SignatureCompatibilityTests {
         #expect(make([]) != .conditionalFieldMissing)
     }
 
+    @Test("S2-2 IssueCode.segmentWithdrawnInVersion is additive and payload-less")
+    func segmentWithdrawnIssueCode() {
+        let code: IssueCode = .segmentWithdrawnInVersion
+        #expect(code == .segmentWithdrawnInVersion)
+        #expect(code != .segmentNotInVersionGrammar)
+    }
+
     @Test("P6-13 extra-component setting and issue code are additive")
     func extraComponents() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.extraComponentsSeverity

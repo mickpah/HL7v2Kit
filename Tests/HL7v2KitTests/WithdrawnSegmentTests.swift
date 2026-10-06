@@ -53,6 +53,33 @@ struct WithdrawnSegmentTests {
     func qryPC4Conformant() throws {
         #expect(try structureFindings("QRY^PC4^QRY_PC4", ["QRD|20240101|R|I|Q1", "QRF|ICU"]) == [])
         #expect(try structureFindings("QRY^PC4^QRY_PC4", ["QRD|20240101|R|I|Q1"]) == [])
+        // The withdrawn-segment information is the only issue the message draws, unfiltered.
+        let all = try issues("QRY^PC4^QRY_PC4", ["QRD|20240101|R|I|Q1", "QRF|ICU"])
+        #expect(all.count == 2 && all.allSatisfy { $0.code == .segmentWithdrawnInVersion && $0.severity == .info },
+                "\(all.map(\.message))")
+    }
+
+    @Test("A conformant QRY^PC4 under .lenient draws exactly the withdrawn information")
+    func qryPC4Lenient() throws {
+        let wire = ["MSH|^~\\&|SND|SFAC|RCV|RFAC|20240101120000||QRY^PC4^QRY_PC4|MSG00001|P|2.7.1", "QRD|20240101|R|I|Q1"].joined(separator: "\r")
+        let all = Validator(options: .lenient).validate(try Parser().parse(wire)).issues
+        #expect(all.count == 1 && all.first?.code == .segmentWithdrawnInVersion && all.first?.severity == .info,
+                "\(all.map(\.message))")
+    }
+
+    @Test("A QRD inside an ADT^A01 on v2.7.1 draws both the structure finding and the information")
+    func qrdInAdtBoth() throws {
+        let all = try issues("ADT^A01^ADT_A01", ["EVN|A01", "PID|1", "QRD|20240101|R|I|Q1", "PV1|1"])
+        #expect(all.contains { if case .messageStructureSegmentUnexpected(_, "QRD") = $0.code { true } else { false } }, "\(all.map(\.message))")
+        #expect(all.contains { $0.code == .segmentWithdrawnInVersion && $0.severity == .info }, "\(all.map(\.message))")
+    }
+
+    @Test("An unknown non-Z segment still draws the segmentNotInVersionGrammar warning", arguments: ["2.7.1", "2.8.2"])
+    func unknownSegmentControl(_ version: String) throws {
+        let all = try issues("QRY^PC4^QRY_PC4", ["XYZ|1"], version: version)
+        let hits = all.filter { $0.code == .segmentNotInVersionGrammar }
+        #expect(hits.count == 1 && hits.first?.severity == .warning && hits.first?.location.segmentID == "XYZ", "\(all.map(\.message))")
+        #expect(!all.contains { $0.code == .segmentWithdrawnInVersion })
     }
 
     @Test("A QRY^PC4 missing QRD draws messageStructureSegmentMissing")
