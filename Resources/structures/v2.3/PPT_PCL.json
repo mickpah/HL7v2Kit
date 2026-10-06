@@ -1,0 +1,67 @@
+{
+  "structure": "PPT_PCL",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 12, section 12.2.12 PPT - patient pathway (goal-oriented) response (event PCL), p 12-16. Structure ID PPT_PCL synthesised as CODE_EVT from the message code PPT and PCL, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events PPT^PCL read from the section title 12.2.12 'PPT - patient pathway (goal-oriented) response (event PCL)'. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), PATIENT_VISIT (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), PATHWAY (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATHWAY.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), PATHWAY_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PATHWAY_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), GOAL (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), GOAL_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), GOAL_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.GOAL_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), PROBLEM (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), PROBLEM_ROLE (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM_ROLE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), PROBLEM_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.PROBLEM_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), ORDER (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL), ORDER_DETAIL (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL) and ORDER_OBSERVATION (HL7-xml 2.3.1/PPT_PCL.xsd, PPT_PCL.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 PPT_PCL).",
+  "triggers": ["PPT^PCL"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "PATHWAY", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "PTH", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "VAR", "min": 0, "max": null },
+        { "group": "PATHWAY_ROLE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "ROL", "min": 1, "max": 1 },
+          { "segment": "VAR", "min": 0, "max": null }
+        ]},
+        { "group": "GOAL", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "GOL", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "VAR", "min": 0, "max": null },
+          { "group": "GOAL_ROLE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+            { "segment": "ROL", "min": 1, "max": 1 },
+            { "segment": "VAR", "min": 0, "max": null }
+          ]},
+          { "group": "GOAL_OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]},
+          { "group": "PROBLEM", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+            { "segment": "PRB", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null },
+            { "segment": "VAR", "min": 0, "max": null },
+            { "group": "PROBLEM_ROLE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+              { "segment": "ROL", "min": 1, "max": 1 },
+              { "segment": "VAR", "min": 0, "max": null }
+            ]},
+            { "group": "PROBLEM_OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "NTE", "min": 0, "max": null }
+            ]}
+          ]},
+          { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+            { "segment": "ORC", "min": 1, "max": 1 },
+            { "group": "ORDER_DETAIL", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+              { "slot": "Order Detail Segment", "min": 1, "max": null, "citation": "HL7 v2.3 Chapter 12, section 12.2.12 PPT - patient pathway (goal-oriented) response (event PCL), p 12-16: the print gives the order detail as '[OBR, etc. Order Detail Segment, etc. 4', segments it names by example and does not enumerate: an open slot (ADR-019 S3-1, S3-2)." },
+              { "segment": "NTE", "min": 0, "max": null },
+              { "segment": "VAR", "min": 0, "max": null },
+              { "group": "ORDER_OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+                { "segment": "OBX", "min": 1, "max": 1 },
+                { "segment": "NTE", "min": 0, "max": null },
+                { "segment": "VAR", "min": 0, "max": null }
+              ]}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

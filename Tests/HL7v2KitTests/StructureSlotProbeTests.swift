@@ -92,7 +92,56 @@ struct StructureSlotProbeTests {
         Probe(version: "2.4", msh9: "PRR^PC5^PRR_PC5", structure: "PRR_PC5",
               body: ["MSA|AA|1", "PID|1", "PRB|1", "ORC|NW", "OBR|1"], findings: ["unexpected PID at PID[1]"],
               note: "no QRD"),
-    ] + laterVersions
+    ] + laterVersions + misprinted
+
+    // The eleven prints read through cited syntax-cell errata (overrides.json, S3-3): v2.3 CH12
+    // 12.2.1 PGL '[{VAR}]}', 12.2.3 PPP and 12.2.8 PPV '[{NTE]}', 12.2.10 PTR '{NTE}]', 12.2.12 PPT
+    // a pathway group never closed; v2.3.1 12.2.x and v2.4 12.3.x PGL, PPV and PTR likewise. Each
+    // probe pins the reading: the observation NTE optional, the order inside the problem (PPP,
+    // PTR) or the goal (PGL, PPV, PPT), the pathway closed at the end (PPT).
+    static let misprinted: [Probe] = [
+        Probe(version: "2.3", msh9: "PGL^PC6", structure: "PGL_PC6",
+              body: ["PID|1", "GOL|1", "ORC|NW", "OBR|1", "OBX|1", "NTE|1", "VAR|1", "OBX|2"], findings: [],
+              note: "order observations with variance"),
+        Probe(version: "2.3", msh9: "PGL^PC6", structure: "PGL_PC6",
+              body: ["PID|1", "ORC|NW", "OBR|1"], findings: ["unexpected ORC at ORC[1]"], note: "no goal"),
+        Probe(version: "2.3", msh9: "PPP^PCB", structure: "PPP_PCB",
+              body: ["PID|1", "PTH|1", "PRB|1", "GOL|1", "ORC|NW", "OBR|1", "NTE|1", "VAR|1"], findings: [],
+              note: "order under the problem"),
+        Probe(version: "2.3", msh9: "PPP^PCB", structure: "PPP_PCB",
+              body: ["PID|1", "PTH|1", "ORC|NW", "OBR|1"], findings: ["unexpected ORC at ORC[1]"],
+              note: "order with no problem"),
+        Probe(version: "2.3", msh9: "PPV^PCA", structure: "PPV_PCA",
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "GOL|1", "ORC|NW", "OBR|1", "NTE|1"], findings: [],
+              note: "goal response with an order"),
+        Probe(version: "2.3", msh9: "PPV^PCA", structure: "PPV_PCA",
+              body: ["MSA|AA|1", "PID|1", "GOL|1"], findings: ["unexpected PID at PID[1]"], note: "no QRD"),
+        Probe(version: "2.3", msh9: "PTR^PCF", structure: "PTR_PCF",
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "PTH|1", "PRB|1", "OBX|1", "ORC|NW", "OBR|1"], findings: [],
+              note: "problem observation without notes"),
+        Probe(version: "2.3", msh9: "PTR^PCF", structure: "PTR_PCF",
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "PTH|1", "ORC|NW"], findings: ["unexpected ORC at ORC[1]"],
+              note: "order with no problem"),
+        Probe(version: "2.3", msh9: "PPT^PCL", structure: "PPT_PCL",
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "PTH|1", "GOL|1", "PRB|1", "ORC|NW", "OBR|1", "PTH|2", "PID|2", "PTH|3"],
+              findings: [], note: "two pathways, two patients"),
+        Probe(version: "2.3", msh9: "PPT^PCL", structure: "PPT_PCL",
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "GOL|1"], findings: ["unexpected GOL at GOL[1]"],
+              note: "goal with no pathway"),
+    ] + ["2.3.1", "2.4"].flatMap { v in [
+        Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
+              body: ["PID|1", "GOL|1", "ORC|NW", "RXO|1", "OBX|1", "VAR|1", "OBX|2"], findings: [],
+              note: "order observations with variance"),
+        Probe(version: v, msh9: "PPV^PCA^PPV_PCA", structure: "PPV_PCA",
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "GOL|1", "ORC|NW", "OBR|1", "NTE|1"], findings: [],
+              note: "goal response with an order"),
+        Probe(version: v, msh9: "PTR^PCF^PTR_PCF", structure: "PTR_PCF",
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "PTH|1", "PRB|1", "OBX|1", "ORC|NW", "OBR|1"], findings: [],
+              note: "problem observation without notes"),
+        Probe(version: v, msh9: "PTR^PCF^PTR_PCF", structure: "PTR_PCF",
+              body: ["MSA|AA|1", "QRD|1", "PID|1", "PTH|1", "ORC|NW", "OBR|1"], findings: ["unexpected ORC at ORC[1]"],
+              note: "order with no problem"),
+    ] }
 
     // v2.5.1 to v2.8.2 CH12 print the detail as the choice < OBR | etc. > (the slot); a detail
     // the choice does not list (RXO) is accepted.

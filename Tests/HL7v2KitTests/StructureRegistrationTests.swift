@@ -42,7 +42,7 @@ struct StructureRegistrationTests {
         // The counts move with the register (Resources/structures/completeness.json,
         // register section E); they are pinned so a change is seen.
         let expected: [(Version, Int)] = [
-            (.v2_3, 16), (.v2_3_1, 30), (.v2_4, 29), (.v2_5_1, 24),
+            (.v2_3, 11), (.v2_3_1, 27), (.v2_4, 26), (.v2_5_1, 24),
             (.v2_6, 12), (.v2_7_1, 45), (.v2_8_2, 57),
         ]
         for (version, count) in expected {
