@@ -156,6 +156,33 @@ extension MessageStructureTable {
         baseVersion: "2.4",
         rule: "HL7au:00060.1",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["REF^I12"],
+                citation: "HL7AUSD-STD-OO-ADRM-2021.1, Appendix 8 Simplified REF profile (Normative), A8.5 Simplified REF profile message structure, pp 484 to 485 (owner ruling G-AU3 of 2026-10-07, P12 S1-1): 'the REF_I12 structure of chapter 7 is replaced with the following message structure', 'Constrained REF_I12 message structure': MSH, RF1, {PRD}, PID, [{AL1}], { OBR {OBX} }, PV1, [PV2], [{ ORC RXO {RXR} [{RXC}] [{OBX}] }]. Selected by the declared profile, A8.3 Sender Conformance, p 483: 'Senders must signal conformance with these profile levels by populating MSH-12', Referral Level 2 '2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706&&L' and Referral Level 1 '2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706-L1&&L'; MSH-12.3.1 is matched exactly, since p 42 says of the internal version IDs 'These are identifiers and they are not intended to be parsed'. Both levels share the A8.5 structure. Segments and groups of the chapter 7 print (pp 324 to 325) that A8.5 omits (PD1, NK1, IN1, DG1, IAM, the RXE, RXD and RXA groups, and the problem, goal and pathway groups) are not findings (ADR-019 decision 7). RRI^I12 keeps its chapter 7 structure (A8.5: 'This profile uses the same RRI_I12 message structure as specified in Chapter 7 Patient Referral'). Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.4/REF_I12.xsd, REF_I12.OBSERVATION.CONTENT), the base group with the same head segment; ORC_GROUP (synthesised), the name the chapter 7 profile gives its ORC group.",
+                profileIdentifiers: ["HL7AU-OO-REF-SIMPLIFIED-201706", "HL7AU-OO-REF-SIMPLIFIED-201706-L1"],
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("RF1", min: 1, max: 1),
+                    .segment("PRD", min: 1, max: nil),
+                    .segment("PID", min: 1, max: 1),
+                    .segment("AL1", min: 0, max: nil),
+                    .group("OBSERVATION", min: 1, max: nil, elements: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("OBX", min: 1, max: nil),
+                    ]),
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                    .group("ORC_GROUP", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                        .segment("OBX", min: 0, max: nil),
+                    ]),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("RF1", min: 1, max: 1),

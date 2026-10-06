@@ -415,12 +415,14 @@ struct LocaleAUStructureTests {
         #expect(object.removeValue(forKey: "profile") as? String == "au-adrm-2021")
         #expect(object.removeValue(forKey: "baseVersion") as? String == "2.4")
         #expect(object.removeValue(forKey: "rule") as? String == Self.rule)
-        let decoded = try StructureJSONDecoder.decode(try JSONSerialization.data(withJSONObject: object), id: id, version: "2.4")
+        let decoded = try StructureJSONDecoder.decode(try JSONSerialization.data(withJSONObject: object), id: id, version: "2.4",
+                                                      profile: true)
         let generated = try #require(MessageStructureTable.auADRM2021[id])
         #expect(decoded.id == generated.id)
         #expect(decoded.version == generated.version)
         #expect(decoded.triggers == generated.triggers)
         #expect(decoded.citation == generated.citation)
         #expect(decoded.elements == generated.elements)
+        #expect(decoded.variants == generated.variants)
     }
 }

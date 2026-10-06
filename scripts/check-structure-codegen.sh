@@ -741,11 +741,56 @@ variant(structure='RSP_K21')"
 reject "an empty variants list" 'variants: an empty list' "$PRE
 d = load('v2.5.1/RSP_K21.json'); d['variants'] = []; save('v2.5.1/RSP_K21.json', d)"
 
-reject "variants on an alias" 'variants: a profile structure or an alias has no variants' "$PRE
+reject "variants on an alias" 'variants: an alias has no variants' "$PRE
 d = load('v2.5.1/QRY_P04.json'); d['variants'] = load('v2.5.1/RSP_K21.json')['variants']; save('v2.5.1/QRY_P04.json', d)"
 
 accept "a structure without its variants" "$PRE
 d = load('v2.5.1/RSP_K21.json'); del d['variants']; save('v2.5.1/RSP_K21.json', d)"
+
+# P12 S1-1: a profile structure's variant is selected by a declared profile (ADRM-2021 Appendix 8,
+# MSH-12.3.1): profileIdentifiers is admitted in a profile file only, required there, each
+# identifier well formed, quoted in the variant's citation and named once.
+REFV='
+def refv(**kw):
+    d = load("profiles/au-adrm-2021/REF_I12.json"); v = d["variants"][0]
+    for k, x in kw.items():
+        if x == "DROP": del v[k]
+        else: v[k] = x
+    save("profiles/au-adrm-2021/REF_I12.json", d)
+    return d
+'
+
+accept "a profile variant renders its profileIdentifiers" "$PRE$REFV
+refv()"
+if ! grep -qF 'profileIdentifiers: ["HL7AU-OO-REF-SIMPLIFIED-201706", "HL7AU-OO-REF-SIMPLIFIED-201706-L1"],' \
+    "$SCRATCH/case$((cases - 1))/out/Structures/Generated/MessageStructureTable+AUADRM2021.swift" 2>/dev/null; then
+  echo "FAIL a profile variant renders its profileIdentifiers: the generated AU table lacks them"
+  failures=$((failures + 1))
+fi
+
+reject "profileIdentifiers on a version file's variant" 'unknown key(s) ["profileIdentifiers"]' "$PRE$VARIANT
+variant(profileIdentifiers=['HL7AU-OO-REF-SIMPLIFIED-201706'])"
+
+reject "a profile variant without profileIdentifiers" "variants: a profile structure's variant names its profileIdentifiers" "$PRE$REFV
+refv(profileIdentifiers='DROP')"
+
+reject "a profile variant with empty profileIdentifiers" "variants: a profile structure's variant names its profileIdentifiers" "$PRE$REFV
+refv(profileIdentifiers=[])"
+
+reject "a profile identifier with a component separator" 'variants: bad profile identifier' "$PRE$REFV
+refv(profileIdentifiers=['HL7AU-OO-REF-SIMPLIFIED-201706^L'])"
+
+reject "a profile identifier the citation does not quote" 'variants: the citation must quote the declaration HL7AU-OO-REF-SIMPLIFIED-209901' "$PRE$REFV
+refv(profileIdentifiers=['HL7AU-OO-REF-SIMPLIFIED-209901'])"
+
+reject "a profile identifier named twice" 'variants: profile identifier HL7AU-OO-REF-SIMPLIFIED-201706 is named twice' "$PRE$REFV
+refv(profileIdentifiers=['HL7AU-OO-REF-SIMPLIFIED-201706', 'HL7AU-OO-REF-SIMPLIFIED-201706'])"
+
+reject "a profile variant trigger the structure does not accept" 'variants: triggers must be exact CODE^EVT the structure accepts' "$PRE$REFV
+refv(triggers=['REF^I13'])"
+
+reject "a profile variant equal to the default print" 'variants: a print equal to the default or to another variant' "$PRE$REFV
+refv(elements=load('profiles/au-adrm-2021/REF_I12.json')['elements'])"
 
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))

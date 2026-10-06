@@ -6,6 +6,39 @@
   "rule": "HL7au:00060.1",
   "citation": "HL7AUSD-STD-OO-ADRM-2021.1, section 7.2.1 Patient Referral Message Structure (REF_I12), pp 324 to 325. Caption erratum: the caption prints 'REF^I12^REF_I2'; the section title and section 7.3.1.9 (p 326: MSH-9 'must be valued as: REF^I12^REF_I12') give REF_I12. 'Australian localisation of the REF_I12 message structure is at variance from HL7 International V2.4 REF_I12 definition' (p 325). Constrains HL7 v2.4 Chapter 11, section 11.5.1, pp 11-16 to 11-17: RF1 and PV1 are required, both optional in the base; base segments the print omits are not findings (ADR-019 decision 7). The segments and groups it adds (IAM, and the pharmacy, problem, goal and pathway groups) are matched here only. Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.4/REF_I12.xsd, REF_I12.OBSERVATION.CONTENT), the base group with the same head segment; ORC_GROUP (synthesised), RXO_GROUP (synthesised), RXE_GROUP (synthesised), RXD_GROUP (synthesised), RXA_GROUP (synthesised), PRB_GROUP (synthesised), ROL_GROUP (synthesised), GOL_GROUP (synthesised) and PTH_GROUP (synthesised), groups the base REF_I12 does not have.",
   "triggers": ["REF^I12"],
+  "variants": [
+    {
+      "triggers": ["REF^I12"],
+      "citation": "HL7AUSD-STD-OO-ADRM-2021.1, Appendix 8 Simplified REF profile (Normative), A8.5 Simplified REF profile message structure, pp 484 to 485 (owner ruling G-AU3 of 2026-10-07, P12 S1-1): 'the REF_I12 structure of chapter 7 is replaced with the following message structure', 'Constrained REF_I12 message structure': MSH, RF1, {PRD}, PID, [{AL1}], { OBR {OBX} }, PV1, [PV2], [{ ORC RXO {RXR} [{RXC}] [{OBX}] }]. Selected by the declared profile, A8.3 Sender Conformance, p 483: 'Senders must signal conformance with these profile levels by populating MSH-12', Referral Level 2 '2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706&&L' and Referral Level 1 '2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706-L1&&L'; MSH-12.3.1 is matched exactly, since p 42 says of the internal version IDs 'These are identifiers and they are not intended to be parsed'. Both levels share the A8.5 structure. Segments and groups of the chapter 7 print (pp 324 to 325) that A8.5 omits (PD1, NK1, IN1, DG1, IAM, the RXE, RXD and RXA groups, and the problem, goal and pathway groups) are not findings (ADR-019 decision 7). RRI^I12 keeps its chapter 7 structure (A8.5: 'This profile uses the same RRI_I12 message structure as specified in Chapter 7 Patient Referral'). Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.4/REF_I12.xsd, REF_I12.OBSERVATION.CONTENT), the base group with the same head segment; ORC_GROUP (synthesised), the name the chapter 7 profile gives its ORC group.",
+      "profileIdentifiers": ["HL7AU-OO-REF-SIMPLIFIED-201706", "HL7AU-OO-REF-SIMPLIFIED-201706-L1"],
+      "elements": [
+        { "segment": "MSH", "min": 1, "max": 1 },
+        { "segment": "RF1", "min": 1, "max": 1 },
+        { "segment": "PRD", "min": 1, "max": null },
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "AL1", "min": 0, "max": null },
+        {
+          "group": "OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null,
+          "elements": [
+            { "segment": "OBR", "min": 1, "max": 1 },
+            { "segment": "OBX", "min": 1, "max": null }
+          ]
+        },
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 },
+        {
+          "group": "ORC_GROUP", "nameSource": "synthesised", "min": 0, "max": null,
+          "elements": [
+            { "segment": "ORC", "min": 1, "max": 1 },
+            { "segment": "RXO", "min": 1, "max": 1 },
+            { "segment": "RXR", "min": 1, "max": null },
+            { "segment": "RXC", "min": 0, "max": null },
+            { "segment": "OBX", "min": 0, "max": null }
+          ]
+        }
+      ]
+    }
+  ],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "RF1", "min": 1, "max": 1 },
