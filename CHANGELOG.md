@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Summary — epic P11 sprint 2: finding F-I2 closed
+
+- **F-I2 closed.** v2.7.1 and v2.8.2 print structures naming QRD, QRF, URD and URS, which their Appendix A lists as withdrawn (v2.7.1) or deprecated (v2.8.2). Design A (cited `withdrawnSegments`, no segment tables printed) was adopted, with the new information-severity `IssueCode.segmentWithdrawnInVersion`; the six structures are modelled (QRY_PC4, RCI_I05, RQC_I05, RCL_I06 and UDM_Q05 on v2.7.1, UDM_Q05 on v2.8.2). Counts: v2.7.1 169 modelled / 53 registered, v2.8.2 186 / 61; totals 1,113 modelled and 260 registered (verified from `Resources/structures/` and `completeness.json`).
+- **Behaviour change (C3).** On v2.8.2 a QRD or QRF segment now draws the information issue rather than the `segmentNotInVersionGrammar` warning; the information is shown under `.lenient` as well.
+- **Codegen guard.** The codegen guard is narrowed to the withdrawn list; the full guard 3 lives in `StructureGuardTests` and the extractor.
+- **Fix wave.** Review pins: the signature pin for the new code, an unknown non-Z segment control, a sole-issue assertion for a conformant QRY^PC4, the `.lenient` case, and a QRD inside an ADT^A01 drawing both findings; `Validation.md` notes that the text read is that of the grammar version (v2.7.1 or v2.8.2) for MSH-12 `2.7` or `2.8`.
+
 ### Added — S2-1 and S2-2: structures that print segments a version withdrew (F-I2 closed)
 
 - **Design (S2-1, ADR-019 amendment).** v2.7.1 and v2.8.2 print QRY_PC4, RCI_I05, RQC_I05,
