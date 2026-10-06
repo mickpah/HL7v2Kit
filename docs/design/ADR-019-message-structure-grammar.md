@@ -1885,7 +1885,10 @@ cardinality). `{NTE}]` keeps the printed `]` (optional notes) and reads the miss
 same print's other observation groups and PPP^PCB print the row. v2.3 PPT_PCL closes the goal
 group and then one group, so the pathway group is never closed; no row follows the goal group
 inside it, every row from PTH on is set under it, and v2.3.1 12.2.12 prints the same message with
-the pathway closed after the goal group, so the last `}` is read as `} }`.
+the pathway closed after the goal group, so the last `}` is read as `} }`. That is a cited
+reading, corroborated by the v2.3.1 print, not the only balanced one: by bracket count alone the
+pathway group could also be closed at other positions (each a different structure). The owner
+may revisit it.
 
 **Matching and spans.** Every slot structure fails the lint and is exact-matched; the one-pass
 matcher is never built for one (the lint and matcher corpus harnesses route them to the exact
