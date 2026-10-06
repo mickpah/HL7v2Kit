@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — S6-4: fragment reassembly and version provenance re-classed Permanent (epic P11 sprint 6)
+
+- Register section E: message fragments are not reassembled because reassembly is a transport
+  concern (the continuation protocol joins fragments before the validator sees one message);
+  version provenance needs a `Message` API change (the grammar version a message was validated
+  under) that waits for the v1.0 API design (ADR-019 known ceiling 7). Both were Blocking; no
+  behaviour change (such messages stay not structure-checked, at information). After sprint 6
+  section E is Blocking only for v2.6 MFR_M01 with MFI-1 OMA to OME, a no-data query response
+  without QAK (v2.4 to v2.8.2) and the v2.3 event replay error example (owner ruling).
+
 ### Added — S6-3: AU beyond-maxima reported at information (epic P11 sprint 6)
 
 - New `IssueCode.profileMaximumExceeded(localeRule:)` (additive; open enum; pinned; Migration

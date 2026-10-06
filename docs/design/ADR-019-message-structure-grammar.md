@@ -422,7 +422,9 @@ holds).
 7. A message whose `message.version` has a different grammar version from the wire reading of MSH-12 (for example
    one parsed with `ParserOptions.versionOverride`) is not structure-checked; it raises
    `messageStructureNotModelled`. This is the conservative choice (no misfire); honouring
-   an explicit override would need version provenance on `Message`.
+   an explicit override would need version provenance on `Message`. (S6-4, 2026-10-06:
+   Permanent, register section E; that `Message` API change waits for the v1.0 API design.
+   Ceiling 6's reassembly is Permanent too: a transport concern.)
 
 ---
 
@@ -2273,3 +2275,23 @@ information.
   locales): identical, as no spec example or fixture is a v2.4 REF^I12 past the maxima; a
   supplementary run of the 44 REF, RRI, ORU, ORM and OSR examples with MSH-12 set to 2.4 is
   identical as well (the ADRM prints only REF^I12).
+
+### S6-4 fragment reassembly and version provenance re-classed Permanent (2026-10-06)
+
+Controller's default ruling, not objected to by the owner. Register section E's two
+cross-version rows move from Blocking to Permanent:
+
+- **Message fragments (ceiling 6).** Reassembly is a transport concern: the continuation
+  protocol (MSH-14 continuation pointer, DSC; v2.5.1 CH02 2.10.2) is carried out between the
+  applications' transport layers, and the validator is handed one message. Joining fragments is
+  not a property of one message's syntax, so it is not the validator's to model. A fragment stays
+  conservatively not structure-checked (no misfire).
+- **Version provenance (ceiling 7).** Honouring `ParserOptions.versionOverride` would need a
+  `Message` API change, recording the grammar version the message was validated under apart from
+  the wire's MSH-12; that waits for the v1.0 API design. Until then such a message
+  stays conservatively not structure-checked.
+
+After S6 section E is Blocking only for three residuals classed by earlier sprints: v2.6 MFR_M01
+with MFI-1 OMA to OME (S5-2), a no-data query response without QAK on v2.4 to v2.8.2 (S4-3), and
+the v2.3 event replay error example (#63; CH05 5.10.6.2.12 printed with MSH-12 2.3; S4-3, owner
+ruling).
