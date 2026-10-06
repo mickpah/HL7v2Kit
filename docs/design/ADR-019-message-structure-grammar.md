@@ -2338,3 +2338,29 @@ After S6 section E is Blocking only for three residuals classed by earlier sprin
 with MFI-1 OMA to OME (S5-2), a no-data query response without QAK on v2.4 to v2.8.2 (S4-3), and
 the v2.3 event replay error example (#63; CH05 5.10.6.2.12 printed with MSH-12 2.3; S4-3, owner
 ruling).
+
+## Amendment 2026-10-07 — owner rulings (P12 gate)
+
+The owner ruled on 2026-10-07 on the twelve items the P11 close-out left open (`STATUS.md`,
+"Owner rulings of 2026-10-07"). Eleven stand as they shipped in v3.15.0: trailing blanks count
+toward length in all four checks; one policy for populated `B` components; an empty MSH-9.1 keeps
+the fallback gate; the v2.3 PPT_PCL pathway closure stays a cited reading (S3-3); ERP's slot stays
+min 0 (S4-1); the v2.3 example #63 residual stays as printed (S4-3); v2.6 MFR_M01 with MFI-1 OMA
+to OME stays Blocking (S5-2); the v2.4 ADT^A31 print stays unread; MFK_M01 triggers printed both
+ways keep the looser print (`keptOnDefault`); the `MessageStructure.elements` default changes of
+S6-1 are confirmed; v2.3.1 MFR^M01-M06 stays Permanent (S7-1).
+
+**Ruling 6 changes:** an optional ERR is allowed in the CH05 5.6.5 no-data head (S4-3 amendment),
+since an AA reply may carry an informational ERR and reporting it would misfire (requirement 4).
+It is scheduled as P12 S1-4 and is not built: until it lands, an ERR in a no-data response is
+still reported.
+
+**AU gate answers:** (G-AU1) the AU profile governs a message of every version, and this is
+documented (limitations register section B): its field rules run on the message's own version,
+while the profile structures of decision 7 apply only where the base structure resolved has the
+profile structure's ID and base version (v2.4; `Validator+ProfileStructure.swift`). (G-AU2) ADRM
+ORR^O02 is modelled by a cited erratum taking the base v2.4 reading (PID optional), since the
+localisation narrows and does not widen (P12 S1-2). (G-AU3) ADRM Appendix 8, the simplified REF
+structure, is modelled as a profile structure selected by the message's declared profile (P12
+S1-1). Both are scheduled; HL7au:00060.1 stays PARTIAL until they and the OSR^Q06 order detail
+(S1-3) land.
