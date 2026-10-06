@@ -9,10 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Summary — epic P11 sprint 1: register section G closed, owner decisions 8 and 9
 
-Register section G is closed: component normative length (v2.7.1, v2.8.2) and populated
-`B`, `X` and `W` components are checked. Its residuals sit one level down, at the
-subcomponent (HD.3 inside CX.4; v2.5.1 TS.2), where the print is silent; they are recorded
-as "print silent, not checked", not as blocking. Four public additions, all additive (ADR-014):
+Register section G is closed with no residual: component normative length (v2.7.1, v2.8.2)
+and populated `B`, `X` and `W` components are checked, at the component and, because a
+component table binds wherever its type is used (v2.8.2 CH02 2.5.5.4; v2.5.1 2.5.3.4), at the
+subcomponent of a composite component too (HD.3 inside CX.4; v2.5.1 TS.2 inside DR.1). Four
+public additions, all additive (ADR-014):
 `IssueCode.componentLengthOutOfRange(length:actual:)`,
 `IssueCode.componentNotSupported(optionality:)`, the structure registration lookup
 (`StructureRegistration` with `registration(_:version:)` and `registrations(for:)`), and
@@ -20,9 +21,34 @@ as "print silent, not checked", not as blocking. Four public additions, all addi
 spec examples and the fixtures, both locales, against v3.14.0 (47777f9a): 3,188 lines added
 and 0 removed under `.default`, `.strict` and the structure check off (384
 `componentLengthOutOfRange`, 2,180 `componentNotSupported`, 624 `conditionNotEvaluated`);
-624 under `.lenient`, which turns the two component checks off. A 5,002-segment ORU^R01
-validates in 223 ms (v2.5.1) and 282 ms (v2.8.2) at `.warning`, inside the derived limit of
-293 ms.
+624 under `.lenient`, which turns the two component checks off; the subcomponent passes add
+0 lines (the examples' 33 populated checkable subcomponents all lie within range). A
+5,002-segment ORU^R01 validates in 159 ms (v2.5.1) and 207 ms (v2.8.2) at `.warning`, inside
+the derived limit of 293 ms.
+
+### Changed — S1-fix: sprint 1 final review fixes
+
+- **Subcomponents checked (I1).** `componentLengthOutOfRange` and `componentNotSupported`
+  reach one level down: a primitive subcomponent of a composite component is checked against
+  the component table of the component's own type on the same version ("If not specified,
+  then the information specified on the data type itself, if present, applies where the data
+  type is used", v2.8.2 CH02 2.5.5.4; "the optionality, table references, and lengths of
+  data type components are supplied in component tables of the data type definition", v2.5.1
+  2.5.3.4). HD.3 `1..6` inside CX.4 is reported at `CX.4.3`; v2.5.1 TS.2 `B` inside DR.1 at
+  `DR.1.2`. The location carries the existing `subcomponentIndex`; the message names the
+  repetition, the component and the subcomponent. A component reported `B` is not walked; no
+  table prints a normative length on a composite component, so nothing is reported twice.
+  Reachable pairs: 185 (v2.7.1) and 181 (v2.8.2) for length, 20 (v2.5.1) for `B`. Register
+  section G, ADR-017, Validation.md and the Migration rows updated. No API change.
+- **Performance (I2).** `Validator.primitiveTypes(_:)` built a fresh set on every call; the
+  sets are built once. The 5,002-segment v2.8.2 ORU^R01 at `.warning` went from 277 ms to
+  199 ms, 207 ms with the subcomponent passes in (limit 293 ms); no check dropped.
+- **Version lists derived (M2).** The component indexes iterate
+  `Version.allCases.map(\.grammarVersion)` (`Validator.indexedGrammarVersions`), so a new
+  grammar version is indexed rather than skipped.
+- **Tests (M3).** OBX-5 typed by OBX-2: v2.7.1 XAD.6 of two characters and v2.8.2 XTN.1
+  populated are pinned.
+- **STATUS (M1).** The HEAD line no longer names an S1-4 commit as HEAD.
 
 ### Changed — S1-5: sprint 1 close-out
 
@@ -38,7 +64,8 @@ validates in 223 ms (v2.5.1) and 282 ms (v2.8.2) at `.warning`, inside the deriv
   of an empty MSH-9.1; it says the gate applies to the message code and the order-number
   conditions are not evaluated. The DocC lists the fields in the order the code gives
   (OBR before ORC).
-- **Docs.** Register section G restated as closed with its residuals; ADR-017 note that
+- **Docs.** Register section G restated as closed with its residuals (closed outright by
+  S1-fix); ADR-017 note that
   component length and optionality are enforced; the register's performance row
   re-measured.
 
@@ -56,8 +83,7 @@ validates in 223 ms (v2.5.1) and 282 ms (v2.8.2) at `.warning`, inside the deriv
   2.5.5.4, p. 12; v2.8.2 section 2.5.5.4, p. 13).
 - Applies on v2.7.1 (81 components) and v2.8.2 (78); no earlier version prints a normative
   component length. Bare, `n=` and `n#` cells are conformance lengths (section 2.5.5.3) and
-  are not checked. Subcomponents are not checked: section 2.5.5.4 speaks of components and
-  fields only (residual recorded in register section G).
+  are not checked. Subcomponents were not checked in S1-1; S1-fix checks them (see above).
 - Length is measured as the field length check measures a field: escape sequences count
   the characters between their delimiters (`\F\` is 1; v2.8.2 section 2.7), the HL7 null
   `""` has no length, and content after a primitive component's value is set aside while
@@ -86,8 +112,8 @@ validates in 223 ms (v2.5.1) and 282 ms (v2.8.2) at `.warning`, inside the deriv
 - Applies on v2.5.1 (12 `B`), v2.6 (10 `B`, 9 `W`), v2.7.1 (2 `B`, 11 `W`) and v2.8.2
   (2 `B`, 13 `W`); no table prints a component `X`, and v2.3 to v2.4 print no component
   optionality. Components of a field already reported as `fieldNotSupported` are not
-  reported again. Subcomponents are not checked (v2.5.1 TS.2 inside a TS component is the
-  only case; residual recorded in register section G). A component is populated as a field
+  reported again. Subcomponents were not checked in S1-2 (v2.5.1 TS.2 inside a TS component
+  is the only case); S1-fix checks them (see above). A component is populated as a field
   is: the HL7 null `""` counts.
 - `fieldNotSupported` DocC now names `W` beside `B` and `X`.
 - Default output: on the printed spec examples and the wire fixtures, 545 new findings
