@@ -50,6 +50,7 @@ For each segment whose ID is **not** in the loaded grammar table:
 
 - **Z-segment policy.** Applies only when the ID begins with `Z` (ADR-018). ``ZSegmentPolicy/ignore`` produces no issue. ``ZSegmentPolicy/warnPresence`` produces a `.info`-severity ``IssueCode/zSegmentPresent`` issue per occurrence. ``ZSegmentPolicy/reject`` produces a `.error`-severity issue per occurrence (making the report invalid).
 - **Segment not in version grammar.** Any other ID — one that does not begin with `Z` — always produces a `.warning`-severity ``IssueCode/segmentNotInVersionGrammar`` issue per occurrence, whatever ``ValidationOptions/zSegmentPolicy`` is set to: it is a standard segment the message's version does not define, not a Z-segment.
+- **Withdrawn segment.** A segment the version's Appendix A lists as withdrawn (v2.7.1) or deprecated (v2.8.2) with no definition, which a structure of that version still prints (QRD, QRF, URD and URS, last defined in v2.6), produces one `.info`-severity ``IssueCode/segmentWithdrawnInVersion`` issue per occurrence in place of the warning: its fields are not validated, and CH02 2.8.4 leaves its use to site agreement. The message structure check matches it by ID, so it is a structure finding wherever the structure does not name it (ADR-019 S2-1 amendment).
 
 ## Presets
 

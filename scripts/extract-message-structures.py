@@ -941,6 +941,11 @@ _OVERRIDE_KEYS = {
     # without ambiguity (v2.3 CH07 7.19.1: W01 "identifies ORU messages"; P8b-15 fix round 2):
     # added to that structure's triggers, cited. An entry naming no read structure fails a full read.
     "referencedTriggers": {"version", "structure", "triggers", "citation"},
+    # A segment the version's Appendix A lists as withdrawn or deprecated with no definition, which
+    # a structure of the version still prints (v2.7.1, v2.8.2: QRD, QRF, URD, URS; S2-1). A
+    # structure may name it beside the version's segments; it is matched by ID and not field-checked.
+    # printed is the Appendix A status as printed; definedThrough the last version that defines it.
+    "withdrawnSegments": {"version", "segment", "printed", "definedThrough", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
@@ -971,6 +976,10 @@ def validate_overrides(data):
                     isinstance(v, str) and re.fullmatch(r"[A-Z0-9]{3}", v) for v in entry["events"])):
                 raise OverridesError(f"eventsFromTitle entry for {entry.get('caption')} in section "
                                      f"{entry.get('section')}: events must be a non-empty list of three-character events")
+            if kind == "withdrawnSegments" and not (re.fullmatch(r"[A-Z][A-Z0-9]{2}", entry.get("segment", ""))
+                                                    and entry.get("printed") in ("withdrawn", "deprecated")):
+                raise OverridesError(f"withdrawnSegments entry {entry.get('segment')!r}: needs a segment ID and "
+                                     "printed 'withdrawn' or 'deprecated'")
             if kind == "captionStructures" and not re.fullmatch(_SID, entry.get("structure", "")):
                 raise OverridesError(f"captionStructures entry for {entry.get('caption')}: bad structure ID "
                                      f"{entry.get('structure')!r}")
@@ -1619,6 +1628,64 @@ def sync_deprecated_triggers(versions, overrides, write):
     return diffs
 
 
+def withdrawn_segments(ver, overrides):
+    """{segment: overrides.json withdrawnSegments entry} for `ver` (S2-1)."""
+    return {e["segment"]: e for e in overrides["withdrawnSegments"] if e["version"] == ver}
+
+
+def grammar_segments(ver):
+    """The segment IDs the version's grammar defines: its Resources/schemas file names."""
+    folder = os.path.join(REPO, "Resources", "schemas", f"v{ver}")
+    return {f[:-5] for f in os.listdir(folder) if f.endswith(".json")} if os.path.isdir(folder) else set()
+
+
+def outside_grammar(ver, structure, overrides):
+    """The segments `structure` names that the version's grammar does not define, that are not
+    ADD and that no withdrawnSegments entry of the version lists (codegen guard 3)."""
+    named = set().union(*(_segments(e) for e in structure["elements"]))
+    return sorted(named - grammar_segments(ver) - {"ADD"} - set(withdrawn_segments(ver, overrides)))
+
+
+def with_withdrawn_note(ver, structure, overrides):
+    """The structure with its citation naming the withdrawn segments it prints (S2-1)."""
+    withdrawn = withdrawn_segments(ver, overrides)
+    named = set().union(*(_segments(e) for e in structure["elements"]))
+    hits = [s for s in sorted(named) if s in withdrawn]
+    if not hits:
+        return structure
+    status = _join(sorted({withdrawn[s]["printed"] for s in hits}))
+    through = _join(sorted({withdrawn[s]["definedThrough"] for s in hits}))
+    verb = "is" if len(hits) == 1 else "are"
+    note = (f" {_join(hits)} {verb} listed as {status} by v{ver} Appendix A and defined through v{through} "
+            "(overrides.json withdrawnSegments): matched by segment ID, fields not validated.")
+    return {**structure, "citation": structure["citation"] + note}
+
+
+def sync_modelled_registrations(versions, write):
+    """A structure committed under Resources/structures/v<ver> is modelled, so a completeness.json
+    notModelled entry for it is stale: compare (or, with write, remove) such entries. Removes only
+    the entry's own line (and the comma it leaves dangling), so the hand-curated reasons and layout
+    of the others are untouched. Returns the entries that differ (before any write)."""
+    with open(COMPLETENESS, encoding="utf-8") as f:
+        lines = f.read().split("\n")
+    diffs, ver, keep = [], None, []
+    for line in lines:
+        head = re.match(r'^\s*"(\d+(?:\.\d+)+)": \{', line)
+        if head:
+            ver = head.group(1)
+        m = re.match(r'^\s*\{"structure": "([^"]+)", "triggers": ', line)
+        if m and ver in versions and os.path.exists(os.path.join(STRUCTURES, f"v{ver}", f"{m.group(1)}.json")):
+            diffs.append(f"v{ver} {m.group(1)}: registered as not modelled but committed (modelled)")
+            if not line.rstrip().endswith(",") and keep and keep[-1].rstrip().endswith(","):
+                keep[-1] = keep[-1].rstrip()[:-1]
+            continue
+        keep.append(line)
+    if write and diffs:
+        with open(COMPLETENESS, "w", encoding="utf-8") as f:
+            f.write("\n".join(keep))
+    return diffs
+
+
 def summary(version, structures, report, count):
     """One line per version: captions, structures, parsed, skipped by reason and the P8b-3a
     report classes."""
@@ -1700,6 +1767,7 @@ def main(argv=None):
         only = (set(args.only.split(",")) if args.only else None if not (args.check or args.write) else
                 {f[:-5] for f in os.listdir(target) if f.endswith(".json")} if os.path.isdir(target) else set())
         structures, report, count = extract_version(version, texts, overrides, only, bundles, full=True)
+        structures = {sid: with_withdrawn_note(version[1:], s, overrides) for sid, s in structures.items()}
         print(summary(version, structures, report, count))
         print(name_summary(version, report))
         tsv += [(version[1:],) + r for r in report]
@@ -1722,6 +1790,11 @@ def main(argv=None):
                 print(f"  {sid}: not extracted: {why}")
                 failed = True
                 continue
+            outside = outside_grammar(version[1:], structures[sid], overrides)
+            if outside:
+                print(f"  {sid}: names segments outside the {version} grammar and not withdrawnSegments: {outside}")
+                failed = True
+                continue
             path = os.path.join(target, f"{sid}.json")
             text = render(structures[sid])
             old = open(path, encoding="utf-8").read() if os.path.exists(path) else ""
@@ -1742,6 +1815,10 @@ def main(argv=None):
         # M4 (P8b-final): a Deprecated Table 0354 row's registration carries the row's events.
         for line in sync_deprecated_triggers([v[1:] for v in versions], overrides, args.write):
             print(f"  {line}" + (": written" if args.write else ""))
+            failed |= bool(args.check)
+        # S2-2: a committed structure's registration as not modelled is removed.
+        for line in sync_modelled_registrations([v[1:] for v in versions], args.write):
+            print(f"  {line}" + (": removed" if args.write else ""))
             failed |= bool(args.check)
     if args.report:
         with open(args.report, "w", encoding="utf-8") as f:

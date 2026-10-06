@@ -10,7 +10,8 @@
 //      a seeded, bounded set of derived and mutated sequences, and the set is
 //      not vacuous (both accepted and rejected sequences occur);
 //   3. the first element is a required, non-repeating MSH, and every segment
-//      ID is in the version's segment grammar, or is ADD;
+//      ID is in the version's segment grammar, is ADD, or is a segment the
+//      version lists as withdrawn (overrides.json withdrawnSegments, S2-2);
 //   4. DSC, if present anywhere, is the last top-level element (the fragment
 //      rule in Validator+MessageStructure assumes it).
 // Budget (2): 40 derivations per structure, each with four single-edit
@@ -86,6 +87,7 @@ struct StructureGuardTests {
         var problems: [String] = []
         func check(_ ok: Bool, _ text: @autoclosure () -> String) { if !ok { problems.append(text()) } }
         let grammar = Set(Validator.grammarTable(for: version).keys).union(["ADD"])
+            .union(MessageStructureTable.withdrawnSegments(for: version).keys)
         let name = "v\(version.rawValue) \(structure.id)"
         let elements = structure.elements
         let all = elements.reduce(into: Set<String>()) { $0.formUnion($1.segmentIDs) }

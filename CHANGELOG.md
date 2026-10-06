@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — S2-1 and S2-2: structures that print segments a version withdrew (F-I2 closed)
+
+- **Design (S2-1, ADR-019 amendment).** v2.7.1 and v2.8.2 print QRY_PC4, RCI_I05, RQC_I05,
+  RCL_I06 and UDM_Q05 (v2.8.2: UDM_Q05 only) in full, but name QRD, QRF, URD and URS, for
+  which neither version prints an attribute table: Appendix A lists each as "withdrawn"
+  (v2.7.1, pp A-8, A-9) or "deprecated" (v2.8.2, pp A-10, A-11) with no section, and CH02
+  2.8.4 leaves the use of a removed constituent to site agreement. A cited withdrawn-segment
+  list was chosen over carrying the v2.6 grammars forward, which would field-check against
+  text these versions do not print (and TQ fields v2.7 withdrew).
+- **Model (S2-2).** `Resources/structures/overrides.json` gains `withdrawnSegments` (version,
+  segment, printed status, `definedThrough` 2.6, citation). The six structures are extracted
+  and modelled (v2.7.1 169 modelled / 53 registered, v2.8.2 186 / 61; `completeVersions`
+  unchanged); the extractor removes a committed structure's registration and appends the
+  withdrawn segments to its citation; guard 3 (`StructureGuardTests`, the extractor) accepts a
+  listed ID; the codegen validates each entry and rejects a listed ID on a version that
+  neither defines nor lists it (`scripts/check-structure-codegen.sh`, seven new cases).
+- **Field level.** `IssueCode.segmentWithdrawnInVersion` (additive; open enum), always
+  `.info`, replaces the `.warning` `segmentNotInVersionGrammar` for a listed segment: its
+  fields are not validated. The structure matcher matches a listed segment by ID instead of
+  passing over it, so a QRD outside a structure that names it is a structure finding.
+- **Output.** Validation digest over the 1,455 spec examples and the fixtures, both locales,
+  `.default`, against 22f08a61: 36 lines removed and 32 added, all in four CH11 examples:
+  32 QRD and QRF warnings become information (v2.7.1 and v2.8.2), and the v2.7.1 RQC^I05
+  example, formerly information (not modelled), is body-checked and clean. Register section E
+  closes the six F-I2 rows; the v2.7.1 RQC_I05 primary-print row is now a per-trigger case.
+
 ### Summary — epic P11 sprint 1: register section G closed, owner decisions 8 and 9
 
 Register section G is closed with no residual: component normative length (v2.7.1, v2.8.2)

@@ -488,6 +488,54 @@ if ! grep -qF '"ACK^Z01 ADT_A01": "synthetic",' "$SCRATCH/case$((cases - 1))/out
   failures=$((failures + 1))
 fi
 
+# S2-2: a segment some version lists in overrides.json withdrawnSegments may stand in a structure
+# only where the structure's version defines it or lists it, cited (ADR-019 S2-1 amendment); each
+# entry cites Appendix A, names a segment the version does not define and an earlier version that
+# does, and renders into the generated versions file.
+WITHDRAWN='
+def entries(version, segment):
+    return [e for e in load("overrides.json")["withdrawnSegments"] if (e["version"], e["segment"]) == (version, segment)]
+def drop(version, segment):
+    o = load("overrides.json")
+    o["withdrawnSegments"] = [e for e in o["withdrawnSegments"] if (e["version"], e["segment"]) != (version, segment)]
+    save("overrides.json", o)
+def edit(version, segment, **fields):
+    o = load("overrides.json")
+    for e in o["withdrawnSegments"]:
+        if (e["version"], e["segment"]) == (version, segment): e.update(fields)
+    save("overrides.json", o)
+def query(version):
+    d = load("v2.7.1/QRY_PC4.json"); d["structure"] = "QRY_Z99"; d["version"] = version; d["triggers"] = ["QRY^Z99"]
+    save("v" + version + "/QRY_Z99.json", d)
+'
+
+reject "a structure naming a withdrawn segment its version does not list" 'withdrawn segments ["QRD"] that v2.7.1 neither defines nor lists' "$PRE$WITHDRAWN
+drop('2.7.1', 'QRD')"
+
+accept "a structure naming a cited withdrawn segment of its version" "$PRE$WITHDRAWN
+assert entries('2.8.2', 'QRD')
+query('2.8.2')"
+if ! grep -qF '"QRD": WithdrawnSegment(' "$SCRATCH/case$((cases - 1))/out/Structures/Generated/MessageStructureTable+Versions.swift"; then
+  echo "FAIL a withdrawnSegments entry renders: the generated versions file lacks it"
+  failures=$((failures + 1))
+fi
+
+accept "a structure naming a withdrawn segment its version defines (v2.6)" "$PRE$WITHDRAWN
+query('2.6')"
+
+reject "a withdrawnSegments entry that does not cite Appendix A" 'withdrawnSegments 2.7.1 QRD: the citation must be one line citing Appendix A' "$PRE$WITHDRAWN
+edit('2.7.1', 'QRD', citation='CH05 section 5.10.2')"
+
+reject "a withdrawnSegments entry for a segment the version defines" 'withdrawnSegments 2.7.1 PID: the version is not modelled or its grammar defines the segment' "$PRE$WITHDRAWN
+o = load('overrides.json'); e = dict(entries('2.7.1', 'QRD')[0]); e['segment'] = 'PID'
+o['withdrawnSegments'].append(e); save('overrides.json', o)"
+
+reject "a withdrawnSegments entry whose definedThrough does not define it" 'withdrawnSegments 2.8.2 URD: definedThrough 2.7.1 must be an earlier version' "$PRE$WITHDRAWN
+edit('2.8.2', 'URD', definedThrough='2.7.1')"
+
+reject "a withdrawnSegments entry with an unknown printed status" 'bad segment ID or printed status "removed"' "$PRE$WITHDRAWN
+edit('2.7.1', 'URS', printed='removed')"
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

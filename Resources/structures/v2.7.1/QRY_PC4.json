@@ -1,0 +1,13 @@
+{
+  "structure": "QRY_PC4",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 12, section 12.3.5 QRY - Patient Care Problem Query (Event PC4), p 15; the same structure is printed for QRY^PC9 (12.3.7), QRY^PCE (12.3.9) and QRY^PCK (12.3.11). QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+  "triggers": ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 }
+  ]
+}

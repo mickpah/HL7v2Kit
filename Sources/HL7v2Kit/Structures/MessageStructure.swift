@@ -250,6 +250,17 @@ public enum MessageStructureTable {
         generatedPrintedPairs(for: version.grammarVersion)["\(trigger) \(structure)"]
     }
 
+    /// The segments `version`'s grammar version lists in Appendix A as
+    /// withdrawn or deprecated, with no definition, that its structures may
+    /// still name (ADR-019 S2-1 amendment), keyed by segment ID.
+    static func withdrawnSegments(for version: Version) -> [String: WithdrawnSegment] {
+        withdrawnIndex[version.grammarVersion] ?? [:]
+    }
+
+    // Built once: the Validator reads it for every message.
+    private static let withdrawnIndex: [Version: [String: WithdrawnSegment]] = Dictionary(
+        uniqueKeysWithValues: Set(Version.allCases.map(\.grammarVersion)).map { ($0, generatedWithdrawnSegments(for: $0)) })
+
     /// The modelled and the registered structure IDs whose triggers accept
     /// `messageCode`^`triggerEvent` on `version`'s grammar version, each
     /// sorted: the same sets as filtering ``structures(for:)`` and
@@ -305,4 +316,15 @@ struct NotModelledStructure: Sendable, Equatable {
     func accepts(messageCode: String, triggerEvent: String) -> Bool {
         triggers.contains("\(messageCode)^\(triggerEvent)") || triggers.contains("\(messageCode)^*")
     }
+}
+
+/// A segment a version lists in Appendix A as withdrawn or deprecated with no
+/// definition (`Resources/structures/overrides.json` withdrawnSegments): the
+/// status as printed, the last version that defines it and the citation. A
+/// structure of the version may name it; it is matched by segment ID and its
+/// fields are not validated (ADR-019 S2-1 amendment).
+struct WithdrawnSegment: Sendable, Equatable {
+    let printed: String
+    let definedThrough: String
+    let citation: String
 }

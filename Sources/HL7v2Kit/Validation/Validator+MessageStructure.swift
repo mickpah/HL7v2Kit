@@ -247,14 +247,16 @@ extension Validator {
     /// The matcher's result for the message body, the segments at the indices
     /// in `skipping` passed over. Segments the version grammar lacks already
     /// raise segmentNotInVersionGrammar and are transparent; Z and ADD are
-    /// skipped by the matcher. Shared with the group spans (P8b-17).
+    /// skipped by the matcher. A segment the version lists as withdrawn is
+    /// matched by ID (ADR-019 S2-1). Shared with the group spans (P8b-17).
     func structureMatch(_ structure: MessageStructure, message: Message,
                         skipping: Set<Int> = []) -> StructureMatch {
         let ids = message.segments.map(\.segmentID)
         let grammar = Self.grammarTable(for: message.version)
+        let withdrawn = MessageStructureTable.withdrawnSegments(for: message.version)
         // A skipped segment is matched as "", which no grammar defines.
         let matched = ids.indices.map { skipping.contains($0) ? "" : ids[$0] }
-        let outside = Set(matched.filter { grammar[$0] == nil })
+        let outside = Set(matched.filter { grammar[$0] == nil && withdrawn[$0] == nil })
         return StructureMatcherCache.shared.matcher(for: structure).match(matched, transparent: outside)
     }
 

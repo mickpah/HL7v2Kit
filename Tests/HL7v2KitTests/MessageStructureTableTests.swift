@@ -183,11 +183,11 @@ struct MessageStructureTableTests {
         #expect(MessageStructureTable.completeVersions == [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2])
     }
 
-    @Test("The generated switch: 147 structures on v2.3 (P8b-15), 100 on v2.3.1 (P8b-14; MCF P8b-15), 148 on v2.4 (P8b-13), 173 on v2.5.1 (P8b-9; ERP_R09 registered P8b-13), 190 on v2.6 (P8b-10; RSP_K21 P8b-11), with QRY_Q02 and QCK_Q02 on all three (P8b-13 fix round 1), 164 on v2.7.1 (P8b-16), 185 on v2.8.2 (P8b-11), none on any other version",
+    @Test("The generated switch: 147 structures on v2.3 (P8b-15), 100 on v2.3.1 (P8b-14; MCF P8b-15), 148 on v2.4 (P8b-13), 173 on v2.5.1 (P8b-9; ERP_R09 registered P8b-13), 190 on v2.6 (P8b-10; RSP_K21 P8b-11), with QRY_Q02 and QCK_Q02 on all three (P8b-13 fix round 1), 169 on v2.7.1 (P8b-16; the five naming withdrawn segments S2-2), 186 on v2.8.2 (P8b-11; UDM_Q05 S2-2), none on any other version",
           arguments: Version.allCases)
     func generatedSwitch(version: Version) {
         let ids = MessageStructureTable.structures(for: version).keys.sorted()
-        #expect(ids.count == (version == .v2_3 ? 147 : version == .v2_3_1 ? 100 : version == .v2_4 ? 148 : version == .v2_5_1 ? 173 : version.grammarVersion == .v2_6 ? 190 : version.grammarVersion == .v2_7_1 ? 164 : version.grammarVersion == .v2_8_2 ? 185 : 0))
+        #expect(ids.count == (version == .v2_3 ? 147 : version == .v2_3_1 ? 100 : version == .v2_4 ? 148 : version == .v2_5_1 ? 173 : version.grammarVersion == .v2_6 ? 190 : version.grammarVersion == .v2_7_1 ? 169 : version.grammarVersion == .v2_8_2 ? 186 : 0))
         #expect(![Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2].contains(version.grammarVersion) || Set(["ACK", "ADT_A01", "ORU_R01"]).isSubset(of: ids))
         #expect(MessageStructureTable.structures(for: version) == MessageStructureTable.structures(for: version.grammarVersion))
     }

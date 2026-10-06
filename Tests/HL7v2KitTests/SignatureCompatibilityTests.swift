@@ -305,8 +305,8 @@ struct SignatureCompatibilityTests {
         let _: KeyPath<StructureRegistration, Version> = \.version
         let _: KeyPath<StructureRegistration, [String]> = \.triggers
         let _: KeyPath<StructureRegistration, String> = \.reason
-        let registration = try #require(byID("UDM_Q05", .v2_8_2))
-        #expect(registration.triggers == ["UDM^Q05"])
+        let registration = try #require(byID("QRY_PC4", .v2_8_2))
+        #expect(registration.triggers == ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"])
         #expect(byID("ADT_A01", .v2_5_1) == nil)
         #expect(byID("ZZZ_Z01", .v2_5_1) == nil)
         #expect(all(.v2_8_2).contains(registration))

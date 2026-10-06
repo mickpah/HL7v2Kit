@@ -155,6 +155,17 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// ADR-018). Additive case; the enum is open per ADR-014.
     case segmentNotInVersionGrammar
 
+    /// A segment the version's print lists in Appendix A as withdrawn (or,
+    /// on v2.8.2, deprecated) with no definition, which a structure of that
+    /// version still names (v2.7.1 and v2.8.2: QRD, QRF, URD and URS, last
+    /// defined in v2.6). The version prints no field definitions, so none of
+    /// its fields was validated; CH02 2.8.4 leaves the use of a removed
+    /// constituent to site agreement, so it is information. Raised in place
+    /// of ``segmentNotInVersionGrammar``; where the segment may stand is the
+    /// message structure check's job (ADR-019 S2-1 amendment). Additive
+    /// case; the enum is open per ADR-014.
+    case segmentWithdrawnInVersion
+
     /// The message declares `declared` in MSH-12, which HL7v2Kit validates
     /// against the grammar of `validatedAs` (``Version/grammarVersion``).
     /// Info severity: the differences between the two releases are not

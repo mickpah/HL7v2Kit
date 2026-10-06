@@ -188,6 +188,7 @@ extension MessageStructureTable {
         "SSU_U03": v2_8_2_SSU_U03,
         "STC_S33": v2_8_2_STC_S33,
         "TCU_U10": v2_8_2_TCU_U10,
+        "UDM_Q05": v2_8_2_UDM_Q05,
         "VXU_V04": v2_8_2_VXU_V04,
     ]
 
@@ -7185,6 +7186,23 @@ extension MessageStructureTable {
                 .segment("SPM", min: 0, max: 1),
                 .segment("TCC", min: 1, max: nil),
             ]),
+        ]
+    )
+
+    private static let v2_8_2_UDM_Q05: MessageStructure = MessageStructure(
+        id: "UDM_Q05",
+        version: "2.8.2",
+        triggers: ["UDM^Q05"],
+        citation: "HL7 v2.8.2 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), pp 102 to 103. URD and URS are listed as deprecated by v2.8.2 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("URD", min: 1, max: 1),
+            .segment("URS", min: 0, max: 1),
+            .segment("DSP", min: 1, max: nil),
+            .segment("DSC", min: 0, max: 1),
         ]
     )
 

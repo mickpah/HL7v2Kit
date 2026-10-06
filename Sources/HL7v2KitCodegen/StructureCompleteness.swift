@@ -221,6 +221,57 @@ func misprintedTableIDs(in root: URL) throws -> [String: Set<String>] {
     return out
 }
 
+/// One overrides.json `withdrawnSegments` entry (ADR-019 S2-1 amendment): a
+/// segment the version's Appendix A lists as withdrawn or deprecated with no
+/// definition, which a structure of the version may name.
+struct WithdrawnSegmentEntry {
+    let printed: String
+    let definedThrough: String
+    let citation: String
+}
+
+/// The overrides.json `withdrawnSegments` entries as version to segment ID to
+/// entry, checked against `grammar` (version to the segment IDs its schemas
+/// define): the keys are exactly version, segment, printed, definedThrough
+/// and citation; printed is "withdrawn" or "deprecated"; the citation is one
+/// line naming Appendix A; the version's grammar does not define the segment
+/// and an earlier version's (`definedThrough`) does; no segment is listed
+/// twice for a version. An absent file or key lists none.
+func withdrawnSegments(in root: URL, grammar: [String: Set<String>]) throws -> [String: [String: WithdrawnSegmentEntry]] {
+    let url = root.appendingPathComponent(structureOverridesFileName)
+    guard FileManager.default.fileExists(atPath: url.path) else { return [:] }
+    let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
+    guard let entries = (object as? [String: Any])?["withdrawnSegments"] as? [[String: Any]] else { return [:] }
+    let keys: Set<String> = ["version", "segment", "printed", "definedThrough", "citation"]
+    var out: [String: [String: WithdrawnSegmentEntry]] = [:]
+    for entry in entries {
+        guard Set(entry.keys) == keys, let version = entry["version"] as? String, let segment = entry["segment"] as? String,
+              let printed = entry["printed"] as? String, let through = entry["definedThrough"] as? String,
+              let citation = entry["citation"] as? String else {
+            throw StructureSchemaError(description: "a withdrawnSegments entry needs exactly \(keys.sorted()) as strings")
+        }
+        let label = "withdrawnSegments \(version) \(segment)"
+        guard segment.range(of: "^[A-Z][A-Z0-9]{2}$", options: .regularExpression) != nil,
+              ["withdrawn", "deprecated"].contains(printed) else {
+            throw StructureSchemaError(description: "\(label): bad segment ID or printed status \"\(printed)\"")
+        }
+        guard citation.contains("Appendix A"), !citation.contains(where: \.isNewline) else {
+            throw StructureSchemaError(description: "\(label): the citation must be one line citing Appendix A")
+        }
+        guard let own = grammar[version], !own.contains(segment) else {
+            throw StructureSchemaError(description: "\(label): the version is not modelled or its grammar defines the segment")
+        }
+        guard versionPrecedes(through, version), grammar[through]?.contains(segment) == true else {
+            throw StructureSchemaError(description: "\(label): definedThrough \(through) must be an earlier version whose grammar defines it")
+        }
+        guard out[version]?[segment] == nil else {
+            throw StructureSchemaError(description: "\(label): listed twice")
+        }
+        out[version, default: [:]][segment] = WithdrawnSegmentEntry(printed: printed, definedThrough: through, citation: citation)
+    }
+    return out
+}
+
 /// Numeric version order: 2.3 < 2.3.1 < 2.4 < ... < 2.8.2.
 func versionPrecedes(_ a: String, _ b: String) -> Bool {
     let x = a.split(separator: ".").map { Int($0) ?? 0 }
@@ -232,7 +283,8 @@ func versionPrecedes(_ a: String, _ b: String) -> Bool {
 /// gets an explicit case; a substituted version (`Version.v2_8`) is resolved
 /// through `grammarVersion` before the switch, so its table is never
 /// duplicated.
-func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [String: Int]) -> String {
+func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [String: Int],
+                             withdrawn: [String: [String: WithdrawnSegmentEntry]] = [:]) -> String {
     let versions = data.versions.keys.sorted(by: versionPrecedes)
     let width = versions.map { versionDirName($0).count }.max() ?? 0
     let cases = versions.map { version -> String in
@@ -255,6 +307,16 @@ func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [St
         guard let pairs = data.versions[version]?.printedPairs, !pairs.isEmpty else { return nil }
         let rows = pairs.sorted { ($0.trigger, $0.structure) < ($1.trigger, $1.structure) }.map { pair -> String in
             "                \(escapeStringLiteral("\(pair.trigger) \(pair.structure)")): \(escapeStringLiteral(pair.reason)),"
+        }.joined(separator: "\n")
+        return "        case .\(versionDirName(version)):\n            return [\n\(rows)\n            ]"
+    }.joined(separator: "\n")
+    let withdrawnCases = versions.compactMap { version -> String? in
+        guard let segments = withdrawn[version], !segments.isEmpty else { return nil }
+        let rows = segments.sorted { $0.key < $1.key }.map { id, entry -> String in
+            "                \(escapeStringLiteral(id)): WithdrawnSegment(\n"
+                + "                    printed: \(escapeStringLiteral(entry.printed)), "
+                + "definedThrough: \(escapeStringLiteral(entry.definedThrough)),\n"
+                + "                    citation: \(escapeStringLiteral(entry.citation))),"
         }.joined(separator: "\n")
         return "        case .\(versionDirName(version)):\n            return [\n\(rows)\n            ]"
     }.joined(separator: "\n")
@@ -303,6 +365,15 @@ func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [St
         static func generatedPrintedPairs(for version: Version) -> [String: String] {
             switch version.grammarVersion {
     \(pairCases.isEmpty ? "" : pairCases + "\n")        default: return [:]
+            }
+        }
+
+        /// The segments `version`'s grammar version lists in Appendix A as
+        /// withdrawn or deprecated with no definition, that its structures may
+        /// name (overrides.json withdrawnSegments, ADR-019 S2-1), keyed by ID.
+        static func generatedWithdrawnSegments(for version: Version) -> [String: WithdrawnSegment] {
+            switch version.grammarVersion {
+    \(withdrawnCases.isEmpty ? "" : withdrawnCases + "\n")        default: return [:]
             }
         }
     }

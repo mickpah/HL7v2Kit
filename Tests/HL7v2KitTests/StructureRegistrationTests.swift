@@ -12,12 +12,14 @@ struct StructureRegistrationTests {
 
     @Test("A registered structure returns its triggers and reason")
     func registeredStructure() throws {
-        let registration = try #require(MessageStructureTable.registration("UDM_Q05", version: .v2_8_2))
-        #expect(registration.id == "UDM_Q05")
+        // v2.8.2 QRY_PC4: a Table 0354 row marked Deprecated with no printed syntax (UDM_Q05,
+        // the example before S2-2, is modelled since).
+        let registration = try #require(MessageStructureTable.registration("QRY_PC4", version: .v2_8_2))
+        #expect(registration.id == "QRY_PC4")
         #expect(registration.version == .v2_8_2)
-        #expect(registration.triggers == ["UDM^Q05"])
-        #expect(registration.reason.hasPrefix("CH05 section 5.10.1.2"))
-        #expect(registration.reason == MessageStructureTable.notModelled(for: .v2_8_2)["UDM_Q05"]?.reason)
+        #expect(registration.triggers == ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"])
+        #expect(registration.reason.hasPrefix("Table 0354 v2.8.2 (CH02C section 2.C.2.279"))
+        #expect(registration.reason == MessageStructureTable.notModelled(for: .v2_8_2)["QRY_PC4"]?.reason)
     }
 
     @Test("A modelled structure and an unknown ID return nil")
@@ -30,7 +32,7 @@ struct StructureRegistrationTests {
 
     @Test("MSH-12 2.8 reads the v2.8.2 register and reports the grammar version")
     func grammarVersionResolution() throws {
-        let registration = try #require(MessageStructureTable.registration("UDM_Q05", version: .v2_8))
+        let registration = try #require(MessageStructureTable.registration("QRY_PC4", version: .v2_8))
         #expect(registration.version == .v2_8_2)
         #expect(MessageStructureTable.registrations(for: .v2_8) == MessageStructureTable.registrations(for: .v2_8_2))
     }
@@ -41,7 +43,7 @@ struct StructureRegistrationTests {
         // register section E); they are pinned so a change is seen.
         let expected: [(Version, Int)] = [
             (.v2_3, 22), (.v2_3_1, 38), (.v2_4, 34), (.v2_5_1, 32),
-            (.v2_6, 20), (.v2_7_1, 58), (.v2_8_2, 62),
+            (.v2_6, 20), (.v2_7_1, 53), (.v2_8_2, 61),
         ]
         for (version, count) in expected {
             let list = MessageStructureTable.registrations(for: version)

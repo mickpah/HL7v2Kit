@@ -1711,3 +1711,20 @@ v2.7.1 and v2.8.2 all four are listed (Appendix A treats them alike on each vers
 Before this amendment a QRD on v2.7.1 drew a `.warning` `segmentNotInVersionGrammar` and was
 transparent to the matcher, and a QRY^PC4 drew `.info` `messageStructureNotModelled`; after it,
 the QRD draws the information issue and the QRY^PC4 body is checked against CH12 12.3.5.
+
+## Amendment 2026-10-06 — the withdrawn-segment structures modelled (S2-2)
+
+Built as the S2-1 amendment decides. `overrides.json` `withdrawnSegments` lists QRD, QRF, URD and
+URS on v2.7.1 ("withdrawn") and v2.8.2 ("deprecated"), each cited to Appendix A and defined
+through v2.6. The extractor writes v2.7.1 QRY_PC4, RCI_I05, RQC_I05 (its `primaryPrints` entry
+kept: the looser 11.3.5 print is primary), RCL_I06 and UDM_Q05 and v2.8.2 UDM_Q05, appends to
+each citation the withdrawn segments it names, and removes a committed structure's
+`completeness.json` registration itself (`--check` reports one that remains). Guard 3 accepts a
+listed ID beside the version's segments and ADD in `StructureGuardTests` and in the extractor's
+`--check`/`--write`; the codegen validates each entry (Appendix A cited, not defined by the
+version, defined by `definedThrough`), renders it, and rejects a structure naming a listed ID on
+a version that neither defines nor lists it. The v2.8.2 Deprecated Table 0354 rows QRY_PC4,
+RCI_I05, RCL_I06 and RQC_I05 stay registered (no v2.8.2 print). Counts: v2.7.1 169 modelled / 53
+registered, v2.8.2 186 / 61; 1,113 modelled and 260 registered in all; `completeVersions`
+unchanged. Register section E closes the six F-I2 rows; the v2.7.1 RQC_I05 primary-print row is
+a per-trigger case, Blocking as ACK is.

@@ -57,6 +57,7 @@ public struct Validator: Sendable {
         var firedCardinalityKeys: Set<String> = []
 
         let grammar = Self.grammarTable(for: message.version)
+        let withdrawnSegments = MessageStructureTable.withdrawnSegments(for: message.version)
         // v0.4-S5-A / v0.5-S5-B: load the profile once per `validate(_:)`
         // call. nil for `.international`; for `.auLocalisation` returns
         // the AU ADRM-2021 profile with field-override narrowings layered
@@ -80,6 +81,16 @@ public struct Validator: Sendable {
                 // (ADR-018), reported whatever the Z-segment policy.
                 if id.hasPrefix("Z") {
                     appendZSegmentIssue(id: id, occurrence: occurrence, issues: &issues)
+                } else if let withdrawn = withdrawnSegments[id] {
+                    // ADR-019 S2-1: the version lists it as withdrawn and prints
+                    // no definition; CH02 2.8.4 leaves its use to site agreement.
+                    issues.append(ValidationIssue(
+                        severity: .info,
+                        code: .segmentWithdrawnInVersion,
+                        location: IssueLocation(segmentID: id, segmentIndex: occurrence),
+                        message: "Segment '\(id)' is listed as \(withdrawn.printed) by HL7 v\(message.version.grammarVersion.rawValue) "
+                            + "Appendix A and defined through v\(withdrawn.definedThrough); its fields were not validated"
+                    ))
                 } else {
                     issues.append(ValidationIssue(
                         severity: .warning,

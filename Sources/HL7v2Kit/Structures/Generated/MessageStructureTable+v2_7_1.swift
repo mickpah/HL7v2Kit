@@ -128,8 +128,11 @@ extension MessageStructureTable {
         "QBP_E22": v2_7_1_QBP_E22,
         "QBP_Q21": v2_7_1_QBP_Q21,
         "QCN_J01": v2_7_1_QCN_J01,
+        "QRY_PC4": v2_7_1_QRY_PC4,
         "QSB_Q16": v2_7_1_QSB_Q16,
         "RAS_O17": v2_7_1_RAS_O17,
+        "RCI_I05": v2_7_1_RCI_I05,
+        "RCL_I06": v2_7_1_RCL_I06,
         "RDE_O11": v2_7_1_RDE_O11,
         "RDS_O13": v2_7_1_RDS_O13,
         "RDY_K15": v2_7_1_RDY_K15,
@@ -141,6 +144,7 @@ extension MessageStructureTable {
         "RPL_I02": v2_7_1_RPL_I02,
         "RPR_I03": v2_7_1_RPR_I03,
         "RQA_I08": v2_7_1_RQA_I08,
+        "RQC_I05": v2_7_1_RQC_I05,
         "RQI_I01": v2_7_1_RQI_I01,
         "RQP_I04": v2_7_1_RQP_I04,
         "RRA_O18": v2_7_1_RRA_O18,
@@ -167,6 +171,7 @@ extension MessageStructureTable {
         "SSU_U03": v2_7_1_SSU_U03,
         "STC_S33": v2_7_1_STC_S33,
         "TCU_U10": v2_7_1_TCU_U10,
+        "UDM_Q05": v2_7_1_UDM_Q05,
         "VXU_V04": v2_7_1_VXU_V04,
     ]
 
@@ -4850,6 +4855,21 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let v2_7_1_QRY_PC4: MessageStructure = MessageStructure(
+        id: "QRY_PC4",
+        version: "2.7.1",
+        triggers: ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"],
+        citation: "HL7 v2.7.1 Chapter 12, section 12.3.5 QRY - Patient Care Problem Query (Event PC4), p 15; the same structure is printed for QRY^PC9 (12.3.7), QRY^PCE (12.3.9) and QRY^PCK (12.3.11). QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+        ]
+    )
+
     private static let v2_7_1_QSB_Q16: MessageStructure = MessageStructure(
         id: "QSB_Q16",
         version: "2.7.1",
@@ -4932,6 +4952,66 @@ extension MessageStructureTable {
                 ]),
                 .segment("CTI", min: 0, max: nil),
             ]),
+        ]
+    )
+
+    private static let v2_7_1_RCI_I05: MessageStructure = MessageStructure(
+        id: "RCI_I05",
+        version: "2.7.1",
+        triggers: ["RCI^I05"],
+        citation: "HL7 v2.7.1 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), p 14. QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .group("OBSERVATION", min: 0, max: 1, elements: [
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("RESULTS", min: 0, max: 1, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_7_1_RCL_I06: MessageStructure = MessageStructure(
+        id: "RCL_I06",
+        version: "2.7.1",
+        triggers: ["RCL^I06"],
+        citation: "HL7 v2.7.1 Chapter 11, section 11.3.6 RQC/RCL - Request/Receipt of Clinical Data Listing (Event I06), p 15. QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .segment("DSP", min: 0, max: nil),
+            .segment("DSC", min: 0, max: 1),
         ]
     )
 
@@ -5417,6 +5497,29 @@ extension MessageStructureTable {
                 .segment("PV1", min: 1, max: 1),
                 .segment("PV2", min: 0, max: 1),
             ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_7_1_RQC_I05: MessageStructure = MessageStructure(
+        id: "RQC_I05",
+        version: "2.7.1",
+        triggers: ["RQC^I05", "RQC^I06"],
+        citation: "HL7 v2.7.1 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), p 13; the same structure is printed for RQC^I06 (11.3.6). Two normative prints of RQC_I05 disagree: Chapter 11 section 11.3.6 (RQC^I06^RQC_I05, pp 14 to 15) prints GT1 optional and non-repeating ([GT1]), section 11.3.5 (RQC^I05^RQC_I05, p 13) prints [{GT1}], which accepts every message the 11.3.6 print accepts; the looser 11.3.5 print is primary (P8b-9 ruling; register section E, P8b-16). QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .segment("GT1", min: 0, max: nil),
             .segment("NTE", min: 0, max: nil),
         ]
     )
@@ -6183,6 +6286,23 @@ extension MessageStructureTable {
                 .segment("TCC", min: 1, max: nil),
             ]),
             .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_7_1_UDM_Q05: MessageStructure = MessageStructure(
+        id: "UDM_Q05",
+        version: "2.7.1",
+        triggers: ["UDM^Q05"],
+        citation: "HL7 v2.7.1 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 106. URD and URS are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 (overrides.json withdrawnSegments): matched by segment ID, fields not validated.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("URD", min: 1, max: 1),
+            .segment("URS", min: 0, max: 1),
+            .segment("DSP", min: 1, max: nil),
+            .segment("DSC", min: 0, max: 1),
         ]
     )
 

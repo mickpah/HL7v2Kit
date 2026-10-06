@@ -242,7 +242,7 @@ struct MessageStructureValidationTests {
 
     // ADR-019 lookup rule 1 on v2.8.2 (P8b-11): complete, so an unknown MSH-9.3 ID is a
     // mismatch (the CH02 examples' ADT^A04^ADT_A04 is a genuine example defect); registered
-    // IDs (a template, a Table 0354 row marked Deprecated, UDM_Q05's undefined segments) are
+    // IDs (a template, a Table 0354 row marked Deprecated; UDM_Q05 is modelled since S2-2) are
     // info with their reason; a Z trigger declaring a printed structure is matched; ADT^A01
     // and ORU^R01 resolve and match as on v2.5.1 and v2.6.
     @Test("v2.8.2 complete (P8b-11): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A01 and ORU^R01 unchanged")
@@ -253,8 +253,7 @@ struct MessageStructureValidationTests {
         #expect(unknown.first?.severity == .error)
         #expect(unknown.first?.message.contains("whose structures are all modelled") == true, "\(unknown.map(\.message))")
         for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
-                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated"),
-                                 ("UDM^Q05^UDM_Q05", "UDM_Q05", "URD and [URS]")] {
+                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated")] {
             let issues = try structureIssues(Self.wire(msh9, version: "2.8.2", ["QPD|1", "RCP|I"]))
             #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
             #expect(issues.first?.severity == .info)
@@ -628,8 +627,9 @@ struct MessageStructureValidationTests {
     }
 
     // ADR-019 lookup rule 1 on v2.7.1 (P8b-16): complete, so an unknown MSH-9.3 ID is a
-    // mismatch; registered IDs (a template, a Table 0354 row marked Deprecated, UDM_Q05's and
-    // RQC_I05's segments that v2.7.1 does not define) are info with their reason; a Z trigger
+    // mismatch; registered IDs (a template, a Table 0354 row marked Deprecated; UDM_Q05 and
+    // RQC_I05, which print withdrawn segments, are modelled since S2-2) are info with their
+    // reason; a Z trigger
     // declaring a printed structure is matched; ADT^A01 and ORU^R01 resolve and match as on
     // the other complete versions.
     @Test("v2.7.1 complete (P8b-16): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A01 and ORU^R01 unchanged")
@@ -640,9 +640,7 @@ struct MessageStructureValidationTests {
         #expect(unknown.first?.severity == .error)
         #expect(unknown.first?.message.contains("whose structures are all modelled") == true, "\(unknown.map(\.message))")
         for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
-                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated"),
-                                 ("UDM^Q05^UDM_Q05", "UDM_Q05", "URD and [URS]"),
-                                 ("RQC^I05^RQC_I05", "RQC_I05", "QRD and [QRF]")] {
+                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated")] {
             let issues = try structureIssues(Self.wire(msh9, version: "2.7.1", ["QPD|1", "RCP|I"]))
             #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
             #expect(issues.first?.severity == .info)

@@ -31,7 +31,7 @@ ext = _load("extract_message_structures", "extract-message-structures.py")
 OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
          "triggerFolds": [], "primaryPrints": [], "unionPrints": [], "unresolvedCaptions": [],
-         "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": []}
+         "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": [], "withdrawnSegments": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -1461,6 +1461,49 @@ def check_single_space_cell_and_shifted_page():
     assert s is None and any("prose inside an open group" in r[2] for r in report), report
 
 
+def check_withdrawn_segments():
+    # S2-2 (ADR-019 S2-1 amendment): a structure may name a segment its version's withdrawnSegments
+    # lists; any other segment outside the version's schemas (but ADD) is outside the grammar; a
+    # structure naming a listed segment says so in its citation; an entry is validated.
+    qry = {"citation": "HL7 v2.7.1 Chapter 12, section 12.3.5 QRY, p 15.",
+           "elements": [_seg("MSH"), _seg("QRD"), _seg("QRF", 0, 1), _seg("ADD", 0, 1)]}
+    assert ext.outside_grammar("2.7.1", qry, OVERRIDES) == [], ext.outside_grammar("2.7.1", qry, OVERRIDES)
+    assert ext.outside_grammar("2.7.1", qry, EMPTY) == ["QRD", "QRF"], ext.outside_grammar("2.7.1", qry, EMPTY)
+    assert ext.outside_grammar("2.6", qry, EMPTY) == [], "v2.6 defines QRD and QRF"
+    noted = ext.with_withdrawn_note("2.7.1", qry, OVERRIDES)["citation"]
+    assert noted.endswith(" QRD and QRF are listed as withdrawn by v2.7.1 Appendix A and defined through v2.6 "
+                          "(overrides.json withdrawnSegments): matched by segment ID, fields not validated."), noted
+    assert ext.with_withdrawn_note("2.6", qry, OVERRIDES) == qry
+    entry = {"version": "2.7.1", "segment": "QRD", "printed": "removed", "definedThrough": "2.6", "citation": "x"}
+    for broken in ({**entry}, {**entry, "printed": "withdrawn", "segment": "QR"}):
+        try:
+            ext.validate_overrides({**EMPTY, "withdrawnSegments": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"withdrawnSegments entry {broken} must be rejected")
+    ext.validate_overrides({**EMPTY, "withdrawnSegments": [{**entry, "printed": "withdrawn"}]})
+    # A committed structure's registration leaves completeness.json, the dangling comma with it.
+    import tempfile
+    saved = (ext.COMPLETENESS, ext.STRUCTURES)
+    with tempfile.TemporaryDirectory() as root:
+        os.makedirs(os.path.join(root, "v2.7.1"))
+        open(os.path.join(root, "v2.7.1", "UDM_Q05.json"), "w").write("{}")
+        ext.STRUCTURES, ext.COMPLETENESS = root, os.path.join(root, "completeness.json")
+        lines = ['{', '  "versions": {', '    "2.7.1": { "complete": true, "citation": "x",', '      "notModelled": [',
+                 '        {"structure": "RDR_RDR", "triggers": [], "reason": "a"},',
+                 '        {"structure": "UDM_Q05", "triggers": ["UDM^Q05"], "reason": "b"}', '      ]', '    }', '  }', '}']
+        open(ext.COMPLETENESS, "w").write("\n".join(lines))
+        try:
+            assert ext.sync_modelled_registrations(["2.7.1"], False) == [
+                "v2.7.1 UDM_Q05: registered as not modelled but committed (modelled)"]
+            assert ext.sync_modelled_registrations(["2.7.1"], True)
+            after = json.load(open(ext.COMPLETENESS))["versions"]["2.7.1"]["notModelled"]
+            assert [e["structure"] for e in after] == ["RDR_RDR"], after
+            assert ext.sync_modelled_registrations(["2.7.1"], False) == []
+        finally:
+            ext.COMPLETENESS, ext.STRUCTURES = saved
+
+
 def check_referenced_triggers():
     # P8b-15 fix round 2: a trigger the print defines only in prose that names an already printed
     # structure without ambiguity (v2.3 CH07 7.19.1: W01 "identifies ORU messages") is added to that
@@ -1906,7 +1949,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_caption_erratum_occurrence, check_caption_structure_declared, check_v231_own_bundle_other_trigger,
           check_table_0354_provenance, check_table_0354_event_erratum_union, check_v23_events_from_title,
           check_v23_caption_forms, check_closing_bracket_in_description_column, check_v23_names_through_v231_then_v24,
-          check_single_space_cell_and_shifted_page, check_referenced_triggers]
+          check_single_space_cell_and_shifted_page, check_referenced_triggers, check_withdrawn_segments]
 
 
 def main():

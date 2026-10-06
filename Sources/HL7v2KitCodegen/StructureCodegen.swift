@@ -284,7 +284,13 @@ private func structureFailure(_ path: String, _ message: Any) -> ExitCode {
 /// entries aside); anything else fails the run (pre-flight B5).
 /// `modelledVersions` is the schema version set, which completeness.json
 /// must list exactly. Everything is rendered before anything is written.
-func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: Set<String>) throws {
+/// `grammar` maps each modelled version to the segment IDs its schemas define.
+/// A segment some version lists in overrides.json withdrawnSegments may stand in
+/// a structure only where the structure's version defines it or lists it, cited
+/// (S2-2: the relaxation of guard 3 never leaks to an uncited version; guard 3
+/// in full is StructureGuardTests' and the extractor's).
+func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: Set<String>,
+                         grammar: [String: Set<String>]) throws {
     let fm = FileManager.default
     guard fm.fileExists(atPath: root.path) else {
         FileHandle.standardError.write(Data("HL7v2KitCodegen: \(root.path) is missing; it is required (ADR-019 message structures)\n".utf8))
@@ -307,6 +313,13 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
         dirs.append(entry)
     }
     dirs.sort { $0.lastPathComponent < $1.lastPathComponent }
+    let withdrawn: [String: [String: WithdrawnSegmentEntry]]
+    do {
+        withdrawn = try withdrawnSegments(in: root, grammar: grammar)
+    } catch {
+        throw structureFailure(root.appendingPathComponent(structureOverridesFileName).path, error)
+    }
+    let withdrawnIDs = Set(withdrawn.values.flatMap(\.keys))
     var rendered: [(file: URL, source: String)] = []
     var structureCounts: [String: Int] = [:]
     var structureIDs: [String: Set<String>] = [:]
@@ -322,6 +335,12 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
             do {
                 let s = try JSONDecoder().decode(MessageStructureSchema.self, from: Data(contentsOf: fileURL))
                 try validateStructure(s, file: fileURL, version: version)
+                let uncited = schemaSegmentIDs(s.elements).intersection(withdrawnIDs)
+                    .subtracting(grammar[version] ?? []).subtracting((withdrawn[version] ?? [:]).keys)
+                guard uncited.isEmpty else {
+                    throw StructureSchemaError(description: "withdrawn segments \(uncited.sorted()) that v\(version) "
+                        + "neither defines nor lists in overrides.json withdrawnSegments")
+                }
                 structures.append(s)
             } catch {
                 FileHandle.standardError.write(Data("HL7v2KitCodegen: \(fileURL.path): \(error)\n".utf8))
@@ -370,6 +389,14 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
     }
     rendered += try renderProfileStructureTables(from: root, to: outputRoot, base: loaded)
     rendered.append((outputRoot.appendingPathComponent("MessageStructureTable+Versions.swift"),
-                     renderStructureVersions(completeness, structureCounts: structureCounts)))
+                     renderStructureVersions(completeness, structureCounts: structureCounts, withdrawn: withdrawn)))
     try writeGeneratedDirectory(rendered, into: outputRoot)
+}
+
+/// Every segment ID named in `elements`, through groups and choices.
+func schemaSegmentIDs(_ elements: [StructureElementSchema]) -> Set<String> {
+    elements.reduce(into: Set<String>()) { ids, element in
+        if let id = element.segment { ids.insert(id) }
+        ids.formUnion(schemaSegmentIDs((element.elements ?? []) + (element.alternatives ?? [])))
+    }
 }
