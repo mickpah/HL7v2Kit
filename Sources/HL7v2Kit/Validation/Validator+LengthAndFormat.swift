@@ -92,15 +92,23 @@ extension Validator {
     }
 
     /// For each grammar version, the keys of its grammars (the datatype name, or `SEG-n`
-    /// for a field-local grammar) with at least one component `relevant` selects. A
-    /// component pass checks ``mayResolve(into:segment:field:dataType:version:)`` first,
-    /// so a field whose grammar has nothing to check costs one set lookup (S1-5).
+    /// for a field-local grammar) with at least one component `relevant` selects, or one
+    /// composite component whose own type's grammar has a component it selects (a
+    /// subcomponent, S1-fix I1). A component pass checks
+    /// ``mayResolve(into:segment:field:dataType:version:)`` first, so a field whose
+    /// grammar has nothing to check costs one set lookup (S1-5).
     static func grammarKeys(_ relevant: (ComponentGrammar, Version) -> Bool) -> [Version: Set<String>] {
         var table: [Version: Set<String>] = [:]
         for version in indexedGrammarVersions {
             let grammars = DataTypeGrammarTable.grammars(for: version).merging(
                 DataTypeGrammarTable.fieldGrammars(for: version)) { own, _ in own }
-            let keys = grammars.filter { $0.value.components.contains { relevant($0, version) } }.keys
+            let keys = grammars.filter {
+                $0.value.components.contains { entry in
+                    relevant(entry, version)
+                        || componentGrammar(entry.dataType, version: version)?.components
+                            .contains { relevant($0, version) } == true
+                }
+            }.keys
             if !keys.isEmpty { table[version] = Set(keys) }
         }
         return table
@@ -119,17 +127,25 @@ extension Validator {
     }
 
     /// Normative length of each primitive component of a composite field (S1-1,
-    /// register section G). v2.7.1 and v2.8.2 print `m..n` or `x,y,z` on components
-    /// as well as fields ("they may also be specified on the components and/or fields
-    /// where the data type is used", section 2.5.5.4) and conformant messages lie
-    /// within them (section 2.5.5.0). Only those two forms are read, through
+    /// register section G), and of each primitive subcomponent of a composite component
+    /// (S1-fix I1). v2.7.1 and v2.8.2 print `m..n` or `x,y,z` on components as well as
+    /// fields ("they may also be specified on the components and/or fields where the
+    /// data type is used ... If not specified, then the information specified on the
+    /// data type itself, if present, applies where the data type is used", section
+    /// 2.5.5.4) and conformant messages lie within them (section 2.5.5.0). A component
+    /// table therefore binds wherever its type is used, as a subcomponent too: HD.3
+    /// (`1..6`) inside CX.4 is checked at `CX.4.3`, resolved through the component's
+    /// datatype on the same version. Only those two forms are read, through
     /// ``FieldLengthRule/parse(_:version:)``; a pre-v2.7 component cell is a maximum
     /// no component table enforces, and conformance lengths are not limits. A
     /// component is measured as ``checkFieldLength`` measures a field
     /// (``occupiedLength(_:encoding:)``), reduced to the subcomponents its datatype
-    /// admits while the extra-content report is at least as severe. Subcomponents
-    /// are not checked: section 2.5.5.4 names fields and components only.
-    /// The printed cells are parsed once, in ``componentLengthRules``.
+    /// admits while the extra-content report is at least as severe; a subcomponent is
+    /// one value, measured the same way. Every printed normative length sits on a
+    /// primitive (2.5.5.4: "Minimum and maximum lengths are not assigned for composite
+    /// data types"), so a composite component is never measured whole and an item is
+    /// reported at one level only. The printed cells are parsed once, in
+    /// ``componentLengthRules``.
     func checkComponentLength(
         field: Field,
         version: Version,
@@ -138,38 +154,63 @@ extension Validator {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
+        let grammarVersion = version.grammarVersion
         guard let severity = options.normativeLengthSeverity,
-              let rules = Self.componentLengthRules[version.grammarVersion],
-              let keys = Self.componentLengthKeys[version.grammarVersion],
+              let rules = Self.componentLengthRules[grammarVersion],
+              let keys = Self.componentLengthKeys[grammarVersion],
               Self.mayResolve(into: keys, segment: location.segmentID, field: location.fieldIndex,
-                              dataType: dataType, version: version.grammarVersion),
+                              dataType: dataType, version: grammarVersion),
               let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
-                                                dataType: dataType, version: version.grammarVersion) else { return }
+                                                dataType: dataType, version: grammarVersion) else { return }
         let reduce = Self.rank(options.extraComponentsSeverity) >= Self.rank(severity)
+        func report(_ printed: String, _ length: Int, component: Int, subcomponent: Int?, _ text: String) {
+            let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
+                                   fieldIndex: location.fieldIndex, componentIndex: component,
+                                   subcomponentIndex: subcomponent)
+            issues.append(ValidationIssue(
+                severity: severity,
+                code: .componentLengthOutOfRange(length: printed, actual: length),
+                location: at,
+                message: (subcomponent == nil ? "Component " : "Subcomponent ") + "\(at.pathDescription) " + text
+            ))
+        }
         for entry in composite.components {
-            guard let printed = entry.length, let rule = rules[printed] else { continue }
             guard let subcomponentLimit = Self.subcomponentLimit(
                 componentType: entry.dataType, component: entry.index, fieldType: dataType,
-                segmentID: location.segmentID, fieldIndex: location.fieldIndex, version: version.grammarVersion
-            ) else { continue }
+                segmentID: location.segmentID, fieldIndex: location.fieldIndex, version: grammarVersion
+            ) else {
+                // A composite component: its own type's table binds its subcomponents.
+                guard let inner = Self.componentGrammar(entry.dataType, version: grammarVersion) else { continue }
+                for sub in inner.components {
+                    guard let printed = sub.length, let rule = rules[printed],
+                          Self.primitiveComponentLimit(sub.dataType, version: grammarVersion) != nil else { continue }
+                    for (offset, repetition) in field.repetitions.enumerated()
+                    where repetition.components.count >= entry.index {
+                        let parts = repetition.components[entry.index - 1].subcomponents
+                        guard parts.count >= sub.index,
+                              let length = Self.occupiedLength(parts[(sub.index - 1)..<sub.index], encoding: encoding),
+                              !rule.admits(length) else { continue }
+                        report(printed, length, component: entry.index, subcomponent: sub.index,
+                               "('\(sub.name)') of component \(entry.index) ('\(entry.name)') repetition \(offset + 1) "
+                                   + "has length \(length); the v\(grammarVersion.rawValue) \(inner.dataType) "
+                                   + "component table prints LEN \(printed)")
+                    }
+                }
+                continue
+            }
+            guard let printed = entry.length, let rule = rules[printed] else { continue }
             for (offset, repetition) in field.repetitions.enumerated()
             where repetition.components.count >= entry.index {
-                var component = repetition.components[entry.index - 1]
+                var parts = repetition.components[entry.index - 1].subcomponents[...]
                 // As checkFieldLength: set aside only content the extra-content check reports.
-                if reduce, component.subcomponents.dropFirst(subcomponentLimit).contains(where: { !$0.value.isEmpty }) {
-                    component = Component(subcomponents: Array(component.subcomponents.prefix(subcomponentLimit)))
+                if reduce, parts.dropFirst(subcomponentLimit).contains(where: { !$0.value.isEmpty }) {
+                    parts = parts.prefix(subcomponentLimit)
                 }
-                guard let length = Self.occupiedLength(Repetition(components: [component]), encoding: encoding),
+                guard let length = Self.occupiedLength(parts, encoding: encoding),
                       !rule.admits(length) else { continue }
-                let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
-                                       fieldIndex: location.fieldIndex, componentIndex: entry.index,
-                                       subcomponentIndex: nil)
-                issues.append(ValidationIssue(
-                    severity: severity,
-                    code: .componentLengthOutOfRange(length: printed, actual: length),
-                    location: at,
-                    message: "Component \(at.pathDescription) ('\(entry.name)') repetition \(offset + 1) has length \(length); the v\(version.grammarVersion.rawValue) \(composite.dataType) component table prints LEN \(printed)"
-                ))
+                report(printed, length, component: entry.index, subcomponent: nil,
+                       "('\(entry.name)') repetition \(offset + 1) has length \(length); the "
+                           + "v\(grammarVersion.rawValue) \(composite.dataType) component table prints LEN \(printed)")
             }
         }
     }
@@ -198,20 +239,30 @@ extension Validator {
     /// repetition or the HL7 null `""`, which has no length (v2.8.2 section
     /// 2.5.5.0 note); a `""` subcomponent inside a composite counts as empty.
     static func occupiedLength(_ repetition: Repetition, encoding: EncodingCharacters) -> Int? {
-        let null = "\"\""
-        let escape = encoding.escapeCharacter
-        func measure(_ value: String) -> Int {
-            if value == null { return 0 }
-            let encoded = EscapeSequences.encode(value, encoding: encoding)
-            return encoded.reduce(0) { $1 == escape ? $0 : $0 + 1 }
-        }
         let characters = repetition.components.reduce(0) { total, component in
-            total + component.subcomponents.reduce(0) { $0 + measure($1.value) }
+            total + component.subcomponents.reduce(0) { $0 + encodedLength($1.value, encoding: encoding) }
         }
         guard characters > 0 else { return nil }
         let separators = max(repetition.components.count - 1, 0)
             + repetition.components.reduce(0) { $0 + max($1.subcomponents.count - 1, 0) }
         return characters + separators
+    }
+
+    /// ``occupiedLength(_:encoding:)`` of one component holding `subcomponents` (a whole
+    /// component, its admitted prefix, or a single subcomponent), without building a
+    /// repetition: their characters plus the subcomponent separators between them.
+    static func occupiedLength(_ subcomponents: ArraySlice<Subcomponent>, encoding: EncodingCharacters) -> Int? {
+        let characters = subcomponents.reduce(0) { $0 + encodedLength($1.value, encoding: encoding) }
+        guard characters > 0 else { return nil }
+        return characters + max(subcomponents.count - 1, 0)
+    }
+
+    /// Characters one value occupies in its encoded form, escape characters not counted;
+    /// 0 for the HL7 null `""`.
+    static func encodedLength(_ value: String, encoding: EncodingCharacters) -> Int {
+        if value.isEmpty || value == "\"\"" { return 0 }
+        let escape = encoding.escapeCharacter
+        return EscapeSequences.encode(value, encoding: encoding).reduce(0) { $1 == escape ? $0 : $0 + 1 }
     }
 
     /// Lexical format of populated primitive values (V251-C10, PrimitiveFormat).

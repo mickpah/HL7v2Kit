@@ -80,7 +80,7 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Set on issues emitted by the component-grammar check. v0.2-V2.
     case requiredComponentMissing
     /// A deprecated (`B`), unsupported (`X`) or withdrawn (`W`) field was populated.
-    /// A populated `B` or `W` component is ``componentNotSupported(optionality:)``.
+    /// A populated `B`, `X` or `W` component or subcomponent is ``componentNotSupported(optionality:)``.
     case fieldNotSupported
     /// A field exceeded its declared cardinality: a `1` field carries more
     /// than one repetition (`.error`), or a bounded field
@@ -187,13 +187,14 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Additive case introduced in P6-6; the enum is open per ADR-014.
     case fieldLengthOutOfRange(length: String, actual: Int)
 
-    /// A populated primitive component of a composite field has a length outside
-    /// the normative length its datatype's component table prints. `length` is the
+    /// A populated primitive component of a composite field, or primitive
+    /// subcomponent of a composite component, has a length outside the normative
+    /// length its datatype's component table prints. `length` is the
     /// printed cell (`"1..6"`, `"3,7"`); `actual` is the measured length of that
-    /// component in one repetition, counted as for
+    /// component or subcomponent in one repetition, counted as for
     /// ``fieldLengthOutOfRange(length:actual:)`` (an escape sequence counts the
     /// characters between its escape delimiters; the HL7 null `""` has no length).
-    /// Located at the component; the repetition is named in the message.
+    /// Located at the component or subcomponent; the repetition is named in the message.
     ///
     /// Only v2.7.1 and v2.8.2 print normative component lengths. "When a normative
     /// length is asserted, conformant messages must have a length that lies within
@@ -201,9 +202,12 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// 2.5.5.0, p. 12, prints "SHALL"), and lengths "may also be specified on the
     /// components and/or fields where the data type is used" (v2.7.1 section
     /// 2.5.5.4, p. 12; v2.8.2 section 2.5.5.4, p. 13). Bare, `n=` and `n#` cells
-    /// are conformance lengths (section 2.5.5.3) and are not checked. A
-    /// subcomponent is not checked: the print names fields and components only.
-    /// Follows ``ValidationOptions/normativeLengthSeverity``. Additive case
+    /// are conformance lengths (section 2.5.5.3) and are not checked. "If not
+    /// specified, then the information specified on the data type itself, if
+    /// present, applies where the data type is used" (section 2.5.5.4), so a
+    /// primitive subcomponent of a composite component is checked against the
+    /// component table of the component's own type (HD.3 `1..6` inside CX.4) and
+    /// located at the subcomponent (S1-fix). Follows ``ValidationOptions/normativeLengthSeverity``. Additive case
     /// introduced in S1-1 (v3.15.0); the enum is open per ADR-014.
     case componentLengthOutOfRange(length: String, actual: Int)
 
@@ -225,8 +229,10 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// "MAY agree to not support" it (section 2.8.3). v2.3 to v2.4 print no
     /// component optionality; no extracted component table prints `X` today, but the
     /// check reports it if one does (S1-5). Components inside
-    /// a field already reported as ``fieldNotSupported`` are not reported again, and
-    /// a subcomponent is not checked. Additive case introduced in S1-2 (v3.15.0);
+    /// a field already reported as ``fieldNotSupported`` are not reported again. A
+    /// populated subcomponent of a composite component is read against the component
+    /// table of the component's own type (v2.5.1 TS.2 `B` inside DR.1) and located at
+    /// the subcomponent, unless the component itself is reported (S1-fix). Additive case introduced in S1-2 (v3.15.0);
     /// the enum is open per ADR-014.
     case componentNotSupported(optionality: String)
 

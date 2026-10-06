@@ -20,18 +20,23 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// `RE` (required but may be empty, v2.7+). Kept as printed because `RE`
     /// has no `FieldOptionality` equivalent and mapping it would misstate it.
     /// `""` on v2.3 to v2.4, whose prose definitions print no optionality.
-    /// A populated `B` or `W` component of a field is reported as
-    /// ``IssueCode/componentNotSupported(optionality:)`` since v3.15.0 (S1-2).
+    /// A populated `B`, `X` or `W` component of a field, or subcomponent of a
+    /// composite component, is reported as
+    /// ``IssueCode/componentNotSupported(optionality:)`` since v3.15.0 (S1-2, S1-fix).
+    /// The table binds wherever the datatype is used, as a subcomponent too (v2.5.1
+    /// CH02 section 2.5.3.4).
     public let optionalityCode: String
     /// The HL7 table numbers the component's TBL# cell binds. `9999` is the
     /// spec's "no table assigned" sentinel (v2.7+), not a table.
     public let tables: [String]
     /// The LEN cell the component table prints, verbatim, or `nil` (the prose
     /// definitions of v2.3 to v2.4 print none). A v2.7.1 or v2.8.2 normative
-    /// length (`m..n`, `x,y,z`) is checked on a component of a field since
-    /// v3.15.0 (``IssueCode/componentLengthOutOfRange(length:actual:)``); a
-    /// bare, `n=` or `n#` cell is a conformance length and is not, nor is any
-    /// cell on a subcomponent or before v2.7 (M25, S1-1).
+    /// length (`m..n`, `x,y,z`) is checked on a component of a field, and on a
+    /// subcomponent of a composite component (the table "applies where the data
+    /// type is used", v2.8.2 CH02 section 2.5.5.4), since v3.15.0
+    /// (``IssueCode/componentLengthOutOfRange(length:actual:)``); a bare, `n=` or
+    /// `n#` cell is a conformance length and is not, nor is any cell before v2.7
+    /// (M25, S1-1, S1-fix).
     public let length: String?
     /// For a component the table prints `C`: the condition under which it is
     /// required, as the spec's prose states it, in a small predicate language

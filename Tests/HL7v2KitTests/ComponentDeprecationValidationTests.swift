@@ -6,7 +6,8 @@
 // components from v2.5 (v2.8.2 CH02 section 2.5.3.5: "For version 2.5 and higher, the
 // optionality ... of data type components are supplied in component tables"); v2.3 to
 // v2.4 print no component optionality. A field already flagged is not re-flagged per
-// component, and subcomponents are not checked.
+// component. S1-fix I1: a subcomponent is checked against the component table of its
+// component's type (v2.5.1 TS.2 is B), unless the component itself is reported.
 
 import Testing
 import Foundation
@@ -116,10 +117,49 @@ struct ComponentDeprecationValidationTests {
         #expect(try componentIssues(wire, .strict).count == 1)
     }
 
-    @Test("A B subcomponent is not checked (v2.5.1 TS.2 inside XAD.13)")
-    func subcomponentNotChecked() throws {
+    // S1-fix I1: the component table of a component's type binds its subcomponents
+    // ("the optionality, table references, and lengths of data type components are
+    // supplied in component tables of the data type definition", v2.5.1 CH02 section
+    // 2.5.3.4). TS.2 is printed B on v2.5.1.
+    @Test("v2.5.1 TS.2 (B) populated inside DR.1 of FT1-4 is reported at the subcomponent")
+    func backwardCompatibleSubcomponent() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||DFT^P03^DFT_P03|M1|P|2.5.1\r"
+            + "EVN||20240101120000\rPID|1||123^^^H^MR||Doe^John\rFT1|1|||20240101&Y^20240102\r"
+        let found = try componentIssues(wire)
+        try #require(found.count == 1)
+        #expect(found[0].code == .componentNotSupported(optionality: "B"))
+        #expect(found[0].severity == .warning)
+        #expect(found[0].location == IssueLocation(segmentID: "FT1", segmentIndex: 1, fieldIndex: 4,
+                                                   componentIndex: 1, subcomponentIndex: 2))
+        #expect(found[0].message.contains("Subcomponent FT1[1]-4.1.2"))
+        #expect(found[0].message.contains("component 1 ('"))
+        #expect(found[0].message.contains("repetition 1"))
+    }
+
+    @Test("v2.5.1 TS.2 (B) inside XAD.13 is reported; empty subcomponents draw nothing")
+    func subcomponentInsideAddress() throws {
         let wire = adt("2.5.1", pid: "Doe^John||||||1 Main St^^City^^^^^^^^^^20200101&Y")
-        #expect(try componentIssues(wire).isEmpty)
+        let found = try componentIssues(wire)
+        try #require(found.count == 1)
+        #expect(found[0].location == IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 11,
+                                                   componentIndex: 13, subcomponentIndex: 2))
+        for address in ["1 Main St^^City^^^^^^^^^^20200101", "1 Main St^^City^^^^^^^^^^20200101&"] {
+            #expect(try componentIssues(adt("2.5.1", pid: "Doe^John||||||\(address)")).isEmpty, "\(address)")
+        }
+    }
+
+    @Test("A field already flagged B is not walked to its subcomponents (v2.5.1 PID-9 XPN, TS.2 in XPN.12)")
+    func flaggedFieldNotWalkedToSubcomponents() throws {
+        let all = try issues(adt("2.5.1", pid: "Doe^John||||Alias^A^^^^^^^^^^20200101&Y"))
+        #expect(all.contains { $0.code == .fieldNotSupported && $0.location.fieldIndex == 9 })
+        #expect(!all.contains { if case .componentNotSupported = $0.code { true } else { false } })
+    }
+
+    @Test("A populated B component draws one issue, not one per subcomponent (v2.5.1 XPN.10 DR)")
+    func flaggedComponentNotWalked() throws {
+        let found = try componentIssues(adt("2.5.1", pid: "Doe^John^^^^^^^^20200101&Y^"))
+        try #require(found.count == 1)
+        #expect(found[0].location == at("PID", 5, 10))
     }
 
     // S1-5: the optionality legend (v2.8.2 CH02 section 2.5.3.5, pp. 9-10) defines `X`

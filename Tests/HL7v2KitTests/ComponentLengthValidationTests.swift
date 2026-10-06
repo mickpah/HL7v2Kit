@@ -156,36 +156,89 @@ struct ComponentLengthValidationTests {
         #expect(try componentLengthIssues(wire).isEmpty)
     }
 
-    @Test("Subcomponents are not checked: HD.3 (1..6 on v2.8.2) inside CX.4")
-    func subcomponentsNotChecked() throws {
-        let wire = msh("2.8.2", profile: "") + "PID|||123^^^AUTH&1.2.3&ISOXXXXX||DOE^JOHN\r"
+    // S1-fix I1: a component table binds wherever its type is used ("If not specified, then
+    // the information specified on the data type itself, if present, applies where the
+    // data type is used", v2.8.2 CH02 section 2.5.5.4), a subcomponent included: HD.3
+    // (1..6) inside CX.4.
+    @Test("v2.8.2 HD.3 (1..6) inside CX.4 with seven characters is reported at the subcomponent")
+    func subcomponentOverRange() throws {
+        let wire = msh("2.8.2", profile: "") + "PID|||123^^^AUTH&1.2.3&ISOXXXX||DOE^JOHN\r"
+        let issues = try componentLengthIssues(wire)
+        try #require(issues.count == 1)
+        #expect(issues[0].code == .componentLengthOutOfRange(length: "1..6", actual: 7))
+        #expect(issues[0].severity == .warning)
+        #expect(issues[0].location == IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3,
+                                                    componentIndex: 4, subcomponentIndex: 3))
+        #expect(issues[0].message.contains("Subcomponent PID[1]-3.4.3 ('Universal ID Type')"))
+        #expect(issues[0].message.contains("component 4 ('Assigning Authority')"))
+        #expect(issues[0].message.contains("repetition 1"))
+        #expect(issues[0].message.contains("HD component table prints LEN 1..6"))
+    }
+
+    @Test("The subcomponent check reads v2.7.1 too, and names the repetition")
+    func subcomponentSecondRepetitionV271() throws {
+        let wire = msh("2.7.1", profile: "") + "PID|||1^^^A&1.2&ISO~2^^^A&1.2&ISOXXXX||DOE^JOHN\r"
+        let issues = try componentLengthIssues(wire)
+        try #require(issues.count == 1)
+        #expect(issues[0].location.subcomponentIndex == 3)
+        #expect(issues[0].message.contains("repetition 2"))
+    }
+
+    @Test("Empty subcomponents, the HL7 null and values within range draw nothing")
+    func subcomponentSilent() throws {
+        for cx in ["123^^^AUTH&1.2.3&ISO", "123^^^AUTH&1.2.3&", "123^^^AUTH", "123^^^&&\"\""] {
+            let wire = msh("2.8.2", profile: "") + "PID|||\(cx)||DOE^JOHN\r"
+            #expect(try componentLengthIssues(wire).isEmpty, "\(cx)")
+        }
+    }
+
+    @Test("No subcomponent length is checked before v2.7", arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6"])
+    func subcomponentPreV27(version: String) throws {
+        let wire = msh(version, profile: "") + "PID|||123^^^AUTH&1.2.3&ISOXXXX||DOE^JOHN\r"
         #expect(try componentLengthIssues(wire).isEmpty)
+    }
+
+    @Test("normativeLengthSeverity governs the subcomponent check too")
+    func subcomponentSeverity() throws {
+        let wire = msh("2.8.2", profile: "") + "PID|||123^^^AUTH&1.2.3&ISOXXXX||DOE^JOHN\r"
+        var options = ValidationOptions.default
+        options.normativeLengthSeverity = nil
+        #expect(try componentLengthIssues(wire, options).isEmpty)
+        options.normativeLengthSeverity = .error
+        #expect(try componentLengthIssues(wire, options).map(\.severity) == [.error])
     }
 
     // S1-5 (performance): the printed cells are parsed once and a field whose grammar has
     // nothing to check is skipped by key. The index must select exactly the components the
-    // per-call parse selected: a range or list, never a maximum, on every grammar.
+    // per-call parse selected: a range or list, never a maximum, on every grammar. S1-fix
+    // I1: a grammar is also keyed when a composite component's own type has a checkable
+    // component, which the pass reads at the subcomponent.
     @Test("The parsed-once index selects exactly the components a per-call parse would")
     func indexMatchesParse() {
         let versions = Set(Version.allCases.map(\.grammarVersion))
         #expect(Set(Validator.componentLengthRules.keys) == [.v2_7_1, .v2_8_2])
+        func parsed(_ entry: ComponentGrammar, _ version: Version) -> FieldLengthRule? {
+            guard let printed = entry.length, let rule = FieldLengthRule.parse(printed, version: version) else { return nil }
+            if case .maximum = rule { return nil }
+            return rule
+        }
+        func deprecated(_ entry: ComponentGrammar) -> Bool { ["B", "X", "W"].contains(entry.optionalityCode) }
         for version in versions {
             let grammars = DataTypeGrammarTable.grammars(for: version).merging(
                 DataTypeGrammarTable.fieldGrammars(for: version)) { own, _ in own }
             for (key, grammar) in grammars {
                 var anyCheckable = false
+                var anyDeprecated = false
                 for entry in grammar.components {
-                    var parsed: FieldLengthRule?
-                    if let printed = entry.length, let rule = FieldLengthRule.parse(printed, version: version) {
-                        if case .maximum = rule {} else { parsed = rule }
-                    }
                     let indexed = entry.length.flatMap { Validator.componentLengthRules[version]?[$0] }
-                    #expect(indexed == parsed, "\(version) \(key).\(entry.index)")
-                    anyCheckable = anyCheckable || parsed != nil
+                    #expect(indexed == parsed(entry, version), "\(version) \(key).\(entry.index)")
+                    let inner = Validator.componentGrammar(entry.dataType, version: version)?.components ?? []
+                    anyCheckable = anyCheckable || parsed(entry, version) != nil
+                        || inner.contains { parsed($0, version) != nil }
+                    anyDeprecated = anyDeprecated || deprecated(entry) || inner.contains(where: deprecated)
                 }
                 #expect((Validator.componentLengthKeys[version]?.contains(key) ?? false) == anyCheckable,
                         "\(version) \(key)")
-                let anyDeprecated = grammar.components.contains { ["B", "X", "W"].contains($0.optionalityCode) }
                 #expect((Validator.componentDeprecationKeys[version]?.contains(key) ?? false) == anyDeprecated,
                         "\(version) \(key)")
             }
