@@ -115,6 +115,47 @@ struct ComponentLengthValidationTests {
         #expect(issues.map(\.code) == [.componentLengthOutOfRange(length: "1..6", actual: 10)])
     }
 
+    @Test("A value below the minimum is reported: v2.8.2 XAD.6 Country (3..3) with two characters")
+    func belowMinimum() throws {
+        let wire = msh("2.8.2", profile: "") + "PID|||123^^^H^MR||DOE^JOHN||||||1 Main St^^City^^^AU\r"
+        let issues = try componentLengthIssues(wire)
+        try #require(issues.count == 1)
+        #expect(issues[0].code == .componentLengthOutOfRange(length: "3..3", actual: 2))
+        #expect(issues[0].location.segmentID == "PID")
+        #expect(issues[0].location.fieldIndex == 11)
+        #expect(issues[0].location.componentIndex == 6)
+        #expect(issues[0].location.subcomponentIndex == nil)
+    }
+
+    @Test("A present but empty component, and the HL7 null, draw nothing against a range with a minimum")
+    func emptyAgainstMinimum() throws {
+        let empty = msh("2.8.2", profile: "") + "PID|||123^^^H^MR||DOE^JOHN||||||1 Main St^^City^^^^H\r"
+        #expect(try componentLengthIssues(empty).isEmpty)
+        let null = msh("2.8.2", profile: "") + "PID|||123^^^H^MR||DOE^JOHN||||||1 Main St^^City^^^\"\"\r"
+        #expect(try componentLengthIssues(null).isEmpty)
+    }
+
+    @Test("A composite field printing a range (v2.8.2 PRT-1 EI, 1..4) is not reported twice")
+    func compositeFieldRange() throws {
+        // Section 2.5.5.4: lengths "are not assigned for composite data types", so the
+        // field's own 1..4 is not checked; EI.4 (1..6) is checked once, at the component.
+        let wire = msh("2.8.2", profile: "") + "PRT|PROF^^1.2.3^ISOXXXX|UC\r"
+        let all = try Validator().validate(Parser().parse(wire)).issues.filter { $0.location.segmentID == "PRT" }
+        #expect(!all.contains { if case .fieldLengthOutOfRange = $0.code { true } else { false } })
+        let components = all.filter { if case .componentLengthOutOfRange = $0.code { true } else { false } }
+        try #require(components.count == 1)
+        #expect(components[0].code == .componentLengthOutOfRange(length: "1..6", actual: 7))
+        #expect(components[0].location.fieldIndex == 1)
+        #expect(components[0].location.componentIndex == 4)
+    }
+
+    @Test("An n# conformance length (v2.8.2 XCN.3 Given Name, 30#) is ignored however long the value")
+    func conformanceHashIgnored() throws {
+        let long = String(repeating: "A", count: 500)
+        let wire = msh("2.8.2", profile: "") + "PID|||123^^^H^MR||DOE^JOHN\rPV1|1|I|||||123^SMITH^\(long)\r"
+        #expect(try componentLengthIssues(wire).isEmpty)
+    }
+
     @Test("Subcomponents are not checked: HD.3 (1..6 on v2.8.2) inside CX.4")
     func subcomponentsNotChecked() throws {
         let wire = msh("2.8.2", profile: "") + "PID|||123^^^AUTH&1.2.3&ISOXXXXX||DOE^JOHN\r"
