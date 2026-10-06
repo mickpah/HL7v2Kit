@@ -52,8 +52,11 @@ public struct ValidationOptions: Sendable {
     /// (section 4.3.6) separates repeated priorities with a space instead.
     public var checkCardinality: Bool
 
-    /// If true (default), emit a `.warning` when a deprecated (`B`) or
-    /// not-supported (`X`) field is populated.
+    /// If true (default), emit a `.warning` when a deprecated (`B`),
+    /// not-supported (`X`) or withdrawn (`W`) field is populated
+    /// (``IssueCode/fieldNotSupported``), and, from v2.5, when a `B` or `W`
+    /// component of any other field is populated
+    /// (``IssueCode/componentNotSupported(optionality:)``, since v3.15.0).
     public var warnDeprecatedFields: Bool
 
     /// If true (default), check populated `ID`-typed fields against the
@@ -148,8 +151,10 @@ public struct ValidationOptions: Sendable {
     /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
     /// v2.7+ normative length (`m..n`, `m..`, `x,y,z`) on a primitive-typed field:
     /// "conformant messages SHALL have a length that lies within the boundaries
-    /// specified" (v2.8.2 section 2.5.5.0). `.warning` by default; `nil` turns it
-    /// off. Conformance lengths (`40=`, `250#`, a bare integer) bound what a
+    /// specified" (v2.8.2 section 2.5.5.0), and for
+    /// ``IssueCode/componentLengthOutOfRange(length:actual:)`` against the same
+    /// forms printed on a primitive component (section 2.5.5.4; S1-1, v3.15.0).
+    /// `.warning` by default; `nil` turns both off. Conformance lengths (`40=`, `250#`, a bare integer) bound what a
     /// receiver stores, not what a message carries (section 2.5.5.3), and are
     /// never checked. Not an init parameter. P6-6.
     public var normativeLengthSeverity: IssueSeverity? = .warning

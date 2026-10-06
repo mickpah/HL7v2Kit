@@ -79,7 +79,8 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// printed `R` in the component table of the message's own HL7 version.
     /// Set on issues emitted by the component-grammar check. v0.2-V2.
     case requiredComponentMissing
-    /// A deprecated (`B`) or unsupported (`X`) field was populated.
+    /// A deprecated (`B`), unsupported (`X`) or withdrawn (`W`) field was populated.
+    /// A populated `B`, `X` or `W` component or subcomponent is ``componentNotSupported(optionality:)``.
     case fieldNotSupported
     /// A field exceeded its declared cardinality: a `1` field carries more
     /// than one repetition (`.error`), or a bounded field
@@ -186,6 +187,55 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Additive case introduced in P6-6; the enum is open per ADR-014.
     case fieldLengthOutOfRange(length: String, actual: Int)
 
+    /// A populated primitive component of a composite field, or primitive
+    /// subcomponent of a composite component, has a length outside the normative
+    /// length its datatype's component table prints. `length` is the
+    /// printed cell (`"1..6"`, `"3,7"`); `actual` is the measured length of that
+    /// component or subcomponent in one repetition, counted as for
+    /// ``fieldLengthOutOfRange(length:actual:)`` (an escape sequence counts the
+    /// characters between its escape delimiters; the HL7 null `""` has no length).
+    /// Located at the component or subcomponent; the repetition is named in the message.
+    ///
+    /// Only v2.7.1 and v2.8.2 print normative component lengths. "When a normative
+    /// length is asserted, conformant messages must have a length that lies within
+    /// the boundaries specified" (v2.7.1 CH02 section 2.5.5.0, p. 11; v2.8.2 section
+    /// 2.5.5.0, p. 12, prints "SHALL"), and lengths "may also be specified on the
+    /// components and/or fields where the data type is used" (v2.7.1 section
+    /// 2.5.5.4, p. 12; v2.8.2 section 2.5.5.4, p. 13). Bare, `n=` and `n#` cells
+    /// are conformance lengths (section 2.5.5.3) and are not checked. "If not
+    /// specified, then the information specified on the data type itself, if
+    /// present, applies where the data type is used" (section 2.5.5.4), so a
+    /// primitive subcomponent of a composite component is checked against the
+    /// component table of the component's own type (HD.3 `1..6` inside CX.4) and
+    /// located at the subcomponent (S1-fix). Follows ``ValidationOptions/normativeLengthSeverity``. Additive case
+    /// introduced in S1-1 (v3.15.0); the enum is open per ADR-014.
+    case componentLengthOutOfRange(length: String, actual: Int)
+
+    /// A component of a composite field is populated although its datatype's
+    /// component table prints it `B` ("left in for backward compatibility with
+    /// previous versions of HL7"), `X` ("not used with this trigger event") or `W`
+    /// ("withdrawn"), the codes of the same legend. `optionality` is the printed
+    /// code. Located at the component; the repetition is named in the message.
+    /// Emitted at `.warning` while ``ValidationOptions/warnDeprecatedFields`` is
+    /// true, as ``fieldNotSupported`` is for a field.
+    ///
+    /// The legend applies to components from v2.5: "For version 2.5 and higher, the
+    /// optionality, table references, and lengths of data type components are
+    /// supplied in component tables" (v2.5.1 CH02 section 2.5.3.4, p. 2-9; v2.6
+    /// section 2.5.3.4, pp. 8-9; v2.7.1 section 2.5.3.5, p. 9; v2.8.2 section
+    /// 2.5.3.5, pp. 9-10). A withdrawn constituent is used only "By site agreement"
+    /// (section 2.8.4: v2.5.1 p. 2-23, v2.6 p. 21, v2.7.1 p. 24, v2.8.2 p. 26); a
+    /// deprecated one is "retained for backward compatibility" and implementers
+    /// "MAY agree to not support" it (section 2.8.3). v2.3 to v2.4 print no
+    /// component optionality; no extracted component table prints `X` today, but the
+    /// check reports it if one does (S1-5). Components inside
+    /// a field already reported as ``fieldNotSupported`` are not reported again. A
+    /// populated subcomponent of a composite component is read against the component
+    /// table of the component's own type (v2.5.1 TS.2 `B` inside DR.1) and located at
+    /// the subcomponent, unless the component itself is reported (S1-fix). Additive case introduced in S1-2 (v3.15.0);
+    /// the enum is open per ADR-014.
+    case componentNotSupported(optionality: String)
+
     /// A primitive-typed field repetition carries content after its value (any
     /// primitive since P6-14, ID and IS before), or a primitive component of a
     /// composite carries a subcomponent after its value: an unescaped component or
@@ -288,6 +338,27 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// when ``ValidationOptions/messageStructureSeverity`` is set. Located at
     /// MSH-9. ADR-019; additive case introduced in P8-5.
     case messageStructureNotModelled(structure: String)
+
+    /// The conditions of `fields` (`SEG-n`, for example `ORC-2`) were not
+    /// evaluated on this message, so a missing order number in those fields
+    /// is not reported. Their predicates read the ORC and OBR of one order
+    /// group. They are scoped by the matched structure's group spans
+    /// (the P8b-17 scope rule, ADR-019 amendment "group spans scope the
+    /// group-dependent predicates"); under its fallback rule R4 an OUL (v2.5.1), or an OUL, OPU or OPL (v2.6,
+    /// v2.7.1, v2.8.2), whose structure match yields no spans keeps the
+    /// former message-code gate (as does an empty MSH-9.1), because several
+    /// of these structures (OUL_R22 to OUL_R24, OPL_O37) print OBR before
+    /// ORC inside one group and the ORC-anchored fallback would read the
+    /// next group's OBR. `fields` lists the gated fields of the segments
+    /// the message carries, sorted by segment name then field number:
+    /// OBR-2, OBR-3, ORC-2 and ORC-3, with OBR-29 and ORC-8 added on v2.5.1
+    /// and v2.6.
+    /// The message text names the structure finding that withheld the
+    /// spans. Always `.info`; raised once per message, at the first
+    /// gated field of the first ORC or OBR, whatever
+    /// ``ValidationOptions/messageStructureSeverity`` is. Owner decision 9
+    /// (2026-10-06); additive case introduced in S1-4.
+    case conditionNotEvaluated(fields: [String])
 }
 
 /// One observation from validation. Always non-fatal: collected into a

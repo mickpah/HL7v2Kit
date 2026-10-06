@@ -7,6 +7,151 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Summary — epic P11 sprint 1: register section G closed, owner decisions 8 and 9
+
+Register section G is closed with no residual: component normative length (v2.7.1, v2.8.2)
+and populated `B`, `X` and `W` components are checked, at the component and, because a
+component table binds wherever its type is used (v2.8.2 CH02 2.5.5.4; v2.5.1 2.5.3.4), at the
+subcomponent of a composite component too (HD.3 inside CX.4; v2.5.1 TS.2 inside DR.1). Four
+public additions, all additive (ADR-014):
+`IssueCode.componentLengthOutOfRange(length:actual:)`,
+`IssueCode.componentNotSupported(optionality:)`, the structure registration lookup
+(`StructureRegistration` with `registration(_:version:)` and `registrations(for:)`), and
+`IssueCode.conditionNotEvaluated(fields:)`. Whole-sprint validation digest over the 1,455
+spec examples and the fixtures, both locales, against v3.14.0 (47777f9a): 3,188 lines added
+and 0 removed under `.default`, `.strict` and the structure check off (384
+`componentLengthOutOfRange`, 2,180 `componentNotSupported`, 624 `conditionNotEvaluated`);
+624 under `.lenient`, which turns the two component checks off; the subcomponent passes add
+0 lines (the examples' 33 populated checkable subcomponents all lie within range). A
+5,002-segment ORU^R01 validates in 159 ms (v2.5.1) and 207 ms (v2.8.2) at `.warning`, inside
+the derived limit of 293 ms.
+
+### Changed — S1-fix: sprint 1 final review fixes
+
+- **Subcomponents checked (I1).** `componentLengthOutOfRange` and `componentNotSupported`
+  reach one level down: a primitive subcomponent of a composite component is checked against
+  the component table of the component's own type on the same version ("If not specified,
+  then the information specified on the data type itself, if present, applies where the data
+  type is used", v2.8.2 CH02 2.5.5.4; "the optionality, table references, and lengths of
+  data type components are supplied in component tables of the data type definition", v2.5.1
+  2.5.3.4). HD.3 `1..6` inside CX.4 is reported at `CX.4.3`; v2.5.1 TS.2 `B` inside DR.1 at
+  `DR.1.2`. The location carries the existing `subcomponentIndex`; the message names the
+  repetition, the component and the subcomponent. A component reported `B` is not walked; no
+  table prints a normative length on a composite component, so nothing is reported twice.
+  Reachable pairs: 185 (v2.7.1) and 181 (v2.8.2) for length, 20 (v2.5.1) for `B`. Register
+  section G, ADR-017, Validation.md and the Migration rows updated. No API change.
+- **Performance (I2).** `Validator.primitiveTypes(_:)` built a fresh set on every call; the
+  sets are built once. The 5,002-segment v2.8.2 ORU^R01 at `.warning` went from 277 ms to
+  199 ms, 207 ms with the subcomponent passes in (limit 293 ms); no check dropped.
+- **Version lists derived (M2).** The component indexes iterate
+  `Version.allCases.map(\.grammarVersion)` (`Validator.indexedGrammarVersions`), so a new
+  grammar version is indexed rather than skipped.
+- **Tests (M3).** OBX-5 typed by OBX-2: v2.7.1 XAD.6 of two characters and v2.8.2 XTN.1
+  populated are pinned.
+- **STATUS (M1).** The HEAD line no longer names an S1-4 commit as HEAD.
+
+### Changed — S1-5: sprint 1 close-out
+
+- **`X` components.** The component deprecation check also reports a populated component
+  printed `X` ("not used with this trigger event"), which the same legend defines (v2.8.2
+  CH02 section 2.5.3.5). No extracted component table prints `X`, so no output changes.
+- **Performance.** The component length pass parsed each printed length cell per component
+  per field, which put the 5,002-segment v2.8.2 ORU^R01 at 373 to 385 ms (limit 293 ms).
+  The cells are now parsed once per version, and a field whose grammar has nothing to check
+  skips both component passes on one set lookup. Digests byte-identical before and after.
+- **`conditionNotEvaluated` wording (S1-4 review).** The message no longer says the ORC walk
+  "cannot pair an OBR printed before its ORC", which is untrue of OUL_R21 (`[ORC] OBR`) and
+  of an empty MSH-9.1; it says the gate applies to the message code and the order-number
+  conditions are not evaluated. The DocC lists the fields in the order the code gives
+  (OBR before ORC).
+- **Docs.** Register section G closed outright (S1-5 restated it with residuals; S1-fix removed them); ADR-017 note that
+  component length and optionality are enforced; the register's performance row
+  re-measured.
+
+### Added — S1-1: component normative length (register section G)
+
+- **`IssueCode.componentLengthOutOfRange(length:actual:)`** (additive; open enum per
+  ADR-014). A primitive component of a composite field whose value lies outside the
+  normative length its datatype's component table prints (`m..n` or `x,y,z`) is reported
+  at the component (segment, field, component; the repetition is named in the message),
+  under the existing `ValidationOptions.normativeLengthSeverity` (`.warning` by default and
+  in `.strict`, off in `.lenient`). Basis: "When a normative length is asserted, conformant
+  messages must have a length that lies within the boundaries specified" (v2.7.1 CH02
+  section 2.5.5.0, p. 11; v2.8.2 section 2.5.5.0, p. 12, "SHALL"), and lengths "may also be
+  specified on the components and/or fields where the data type is used" (v2.7.1 section
+  2.5.5.4, p. 12; v2.8.2 section 2.5.5.4, p. 13).
+- Applies on v2.7.1 (81 components) and v2.8.2 (78); no earlier version prints a normative
+  component length. Bare, `n=` and `n#` cells are conformance lengths (section 2.5.5.3) and
+  are not checked. Subcomponents were not checked in S1-1; S1-fix checks them (see above).
+- Length is measured as the field length check measures a field: escape sequences count
+  the characters between their delimiters (`\F\` is 1; v2.8.2 section 2.7), the HL7 null
+  `""` has no length, and content after a primitive component's value is set aside while
+  `extraComponentsInPrimitiveField` is at least as severe.
+- Default output: on the printed spec examples, 96 new findings (384 digest lines across
+  the two profiles), every one an example's own defect against the printed cell (for
+  example RDF-2.1 `MedicationDispensed` against RCD.1 `6..12`, v2.8.2 2.A.62 p. 69; XAD.6
+  `US` against `3..3`, 2.A.87 p. 86). Twelve of them are a blank the print sets inside
+  the value (`ACK ` in MSH-9.3, ` MFK` in MSH-9.1, `UP `, `USA `), counted as the field
+  check counts it; the same values already draw a table or structure finding.
+
+### Added — S1-2: populated backward-compatible and withdrawn components (register section G)
+
+- **`IssueCode.componentNotSupported(optionality:)`** (additive; open enum per ADR-014). A
+  populated component that its datatype's component table prints `B` ("left in for
+  backward compatibility with previous versions of HL7") or `W` ("withdrawn") is reported
+  at `.warning` at the component (the repetition is named in the message), under the
+  existing `ValidationOptions.warnDeprecatedFields` (on by default and in `.strict`, off in
+  `.lenient`), as a populated `B`, `X` or `W` field already draws `fieldNotSupported`.
+  Basis: "For version 2.5 and higher, the optionality, table references, and lengths of
+  data type components are supplied in component tables" (v2.5.1 CH02 section 2.5.3.4,
+  p. 2-9; v2.6 section 2.5.3.4, pp. 8-9; v2.7.1 section 2.5.3.5, p. 9; v2.8.2 section
+  2.5.3.5, pp. 9-10); a withdrawn constituent is used only "By site agreement" (section
+  2.8.4; v2.8.2 p. 26), and a deprecated one "is retained for backward compatibility"
+  (section 2.8.3; v2.8.2 p. 25).
+- Applies on v2.5.1 (12 `B`), v2.6 (10 `B`, 9 `W`), v2.7.1 (2 `B`, 11 `W`) and v2.8.2
+  (2 `B`, 13 `W`); no table prints a component `X`, and v2.3 to v2.4 print no component
+  optionality. Components of a field already reported as `fieldNotSupported` are not
+  reported again. Subcomponents were not checked in S1-2 (v2.5.1 TS.2 inside a TS component
+  is the only case); S1-fix checks them (see above). A component is populated as a field
+  is: the HL7 null `""` counts.
+- `fieldNotSupported` DocC now names `W` beside `B` and `X`.
+- Default output: on the printed spec examples and the wire fixtures, 545 new findings
+  (2180 digest lines across the two profiles), none removed. 240 are a `W` component the
+  example populates (XTN.1 Telephone Number, v2.8.2 2.A.91 p. 101; XCN.7 Degree, 2.A.88
+  p. 89; XPN.6 Degree, 2.A.90 p. 96; their own v2.6 and v2.7.1 tables likewise), the
+  example's own defect; 305 are a `B` component populated (263 in the examples, 42 in the
+  synthetic fixtures), mostly v2.5.1 XTN.1 (2.A.89 p. 2-245), a true deprecation notice of
+  the kind the field check already gives.
+
+### Added — S1-3: the not-modelled register is public (owner decision 8)
+
+- **`StructureRegistration`** (new public struct: `id`, `version`, `triggers`, `reason`),
+  **`MessageStructureTable.registration(_:version:)`** and
+  **`MessageStructureTable.registrations(for:)`** (sorted by ID). A consumer can now tell a
+  structure the version prints (or its Table 0354 lists) but registers as not modelled
+  (permanent-limitations register section E) from an ID the version does not print, and read
+  the registration's triggers and cited reason. Both return nil / omit a modelled structure;
+  lookups resolve `Version.grammarVersion` (`2.8` reads the v2.8.2 register). Registers: v2.3
+  22, v2.3.1 38, v2.4 34, v2.5.1 32, v2.6 20, v2.7.1 58, v2.8.2 62 structures. ADR-019
+  amendment 2026-10-06.
+- No validation output changes (default-preset digest over the spec examples: 0 lines).
+
+### Added — S1-4: the fallback gate says so (owner decision 9)
+
+- **`IssueCode.conditionNotEvaluated(fields:)`** (additive; open enum per ADR-014), always
+  `.info`. When the P8b-17 fallback (ADR-019 rule R4) keeps the former message-code gate (a
+  v2.5.1 OUL, or a v2.6, v2.7.1 or v2.8.2 OUL, OPU or OPL, or an empty MSH-9.1, with no group
+  spans), the conditions of ORC-2, ORC-3, OBR-2 and OBR-3 (plus ORC-8 and OBR-29 on v2.5.1 and
+  v2.6) are not evaluated; the message now carries one information issue saying so, at the first
+  gated field of its first ORC or OBR, naming the gated fields of the segments it carries and the
+  structure finding that withheld the spans. Not raised when the message carries neither ORC nor
+  OBR, nor for any other message code. Raised whatever `messageStructureSeverity` is; the
+  predicates themselves are unchanged. Closes final review M9 (permanent-limitations register).
+- Default output: on the printed spec examples, 624 added digest lines (156 examples x 4
+  profile/preset rows), all this issue, none removed: 155 examples whose print abbreviates the
+  header (`MSH|^~\&|`, so MSH-9 is empty and the gate holds as it always has), and one v2.5.1
+  OUL^R21 whose accepting parses disagree on the groups.
+
 ## [3.14.0] — 2026-10-06
 
 ### Summary — release 3.14.0: the review remediation

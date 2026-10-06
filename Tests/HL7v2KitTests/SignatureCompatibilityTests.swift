@@ -52,6 +52,29 @@ struct SignatureCompatibilityTests {
         #expect(make("20", 21) == .fieldLengthOutOfRange(length: "20", actual: 21))
     }
 
+    @Test("S1-1 IssueCode.componentLengthOutOfRange is additive with a (length:actual:) payload")
+    func componentLengthIssueCode() {
+        let make: (String, Int) -> IssueCode = IssueCode.componentLengthOutOfRange(length:actual:)
+        #expect(make("1..6", 7) == .componentLengthOutOfRange(length: "1..6", actual: 7))
+        #expect(make("1..6", 7) != .fieldLengthOutOfRange(length: "1..6", actual: 7))
+    }
+
+    @Test("S1-2 IssueCode.componentNotSupported is additive with an (optionality:) payload")
+    func componentNotSupportedIssueCode() {
+        let make: (String) -> IssueCode = IssueCode.componentNotSupported(optionality:)
+        #expect(make("W") == .componentNotSupported(optionality: "W"))
+        #expect(make("W") != .componentNotSupported(optionality: "B"))
+        #expect(make("B") != .fieldNotSupported)
+    }
+
+    @Test("S1-4 IssueCode.conditionNotEvaluated is additive with a (fields:) payload")
+    func conditionNotEvaluatedIssueCode() {
+        let make: ([String]) -> IssueCode = IssueCode.conditionNotEvaluated(fields:)
+        #expect(make(["OBR-2", "ORC-2"]) == .conditionNotEvaluated(fields: ["OBR-2", "ORC-2"]))
+        #expect(make(["OBR-2"]) != .conditionNotEvaluated(fields: ["ORC-2"]))
+        #expect(make([]) != .conditionalFieldMissing)
+    }
+
     @Test("P6-13 extra-component setting and issue code are additive")
     func extraComponents() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.extraComponentsSeverity
@@ -269,5 +292,23 @@ struct SignatureCompatibilityTests {
         #expect(element[keyPath: children].count == 2)
         #expect(element[keyPath: segmentIDs] == ["AIS", "AIG"])
         #expect(element.min == 0 && element.max == nil)
+    }
+
+    // Deliberate pin of new, unreleased API (S1-3, owner decision 8, ADR-019
+    // amendment 2026-10-06): the public registration lookup that tells a
+    // registered-not-modelled structure from an unknown ID.
+    @Test("StructureRegistration and the registration lookups keep their signatures")
+    func structureRegistrationLookup() throws {
+        let byID: (String, Version) -> StructureRegistration? = MessageStructureTable.registration(_:version:)
+        let all: (Version) -> [StructureRegistration] = MessageStructureTable.registrations(for:)
+        let _: KeyPath<StructureRegistration, String> = \.id
+        let _: KeyPath<StructureRegistration, Version> = \.version
+        let _: KeyPath<StructureRegistration, [String]> = \.triggers
+        let _: KeyPath<StructureRegistration, String> = \.reason
+        let registration = try #require(byID("UDM_Q05", .v2_8_2))
+        #expect(registration.triggers == ["UDM^Q05"])
+        #expect(byID("ADT_A01", .v2_5_1) == nil)
+        #expect(byID("ZZZ_Z01", .v2_5_1) == nil)
+        #expect(all(.v2_8_2).contains(registration))
     }
 }

@@ -136,6 +136,14 @@ v2.7.1 Chapter 2A prints "HL7 Component Table" figures like v2.5.1, v2.6 and v2.
 - **Conditions.** The 72 `C` positions are v2.8.2's, and their definitions match it apart from cross-references. The `"2.7.1"` blocks of `conditions.json` carry the same 23 conditions and 30 conformance conditions, each cited to the v2.7.1 sentence. The 19 bare positions are rows in the register's section D addendum.
 - **Reach.** The grammar is generated as `DataTypeGrammarTable.v2_7_1`. The `Version` case that routes a message to it arrives in P10-6.
 
+## Note 2026-10-06 — P11 sprint 1: component length and optionality enforced
+
+The M11 and M13 notes above ("component optionality and length, recorded and not enforced"; "Still deferred after M13: component length") are superseded for components. Since v3.15.0 the validator checks both from this grammar:
+
+- **Length (S1-1).** A component whose v2.7.1 or v2.8.2 table prints a normative length (`m..n` or a list such as MSG.3 `3,7`) draws `IssueCode.componentLengthOutOfRange(length:actual:)` under `ValidationOptions.normativeLengthSeverity` (v2.8.2 CH02 sections 2.5.5.0 and 2.5.5.4).
+- **Optionality (S1-2, S1-5).** A populated component printed `B`, `X` or `W` draws `IssueCode.componentNotSupported(optionality:)` under `warnDeprecatedFields` (legend: v2.8.2 CH02 section 2.5.3.5, which applies to component tables from v2.5; no extracted table prints `X`). Required components (`R`) were already enforced (M14).
+- **Subcomponents (S1-fix, same date, final review I1).** S1-5 had first recorded these as not enforced. The same rules apply one level down: a component table binds wherever its type is used ("If not specified, then the information specified on the data type itself, if present, applies where the data type is used", v2.8.2 CH02 section 2.5.5.4; "the optionality, table references, and lengths of data type components are supplied in component tables of the data type definition", v2.5.1 section 2.5.3.4). A composite component's own type is resolved through `componentGrammar` on the same version and each primitive subcomponent is checked against it (HD.3 `1..6` inside CX.4 at `CX.4.3`; v2.5.1 TS.2 `B` inside DR.1 at `DR.1.2`). No table prints a normative length on a composite component, so no item is measured at two levels; a component reported `B` is not walked to its subcomponents. Register section G is closed with no residual.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).

@@ -147,6 +147,10 @@ public struct Validator: Sendable {
             checkMessageStructure(message: message, severity: severity, issues: &issues)
         }
 
+        // S1-4 (owner decision 9): say so when the P8b-17 fallback gate
+        // skipped the order-number predicates.
+        checkGatedConditions(message: message, issues: &issues)
+
         return ValidationReport(issues: issues, locale: locale)
     }
 
@@ -615,6 +619,17 @@ public struct Validator: Sendable {
                 location: location,
                 issues: &issues
             )
+            // S1-2: a B or W component, unless the field itself is already reported.
+            switch fieldGrammar.optionality {
+            case .backwardCompat, .notSupported, .withdrawn:
+                break
+            default:
+                if let field {
+                    checkComponentDeprecation(field: field, version: message.version,
+                                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                              location: location, issues: &issues)
+                }
+            }
         }
 
         if options.checkCardinality, let field, isPopulated {
@@ -633,6 +648,11 @@ public struct Validator: Sendable {
                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
                              encoding: message.encodingCharacters,
                              location: location, issues: &issues)
+            // S1-1: v2.7+ normative length on each primitive component.
+            checkComponentLength(field: field, version: message.version,
+                                 dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                 encoding: message.encodingCharacters,
+                                 location: location, issues: &issues)
             // P6-13 / P6-14: content after the value of a primitive field or component.
             checkExtraPrimitiveComponents(fieldGrammar, field: field,
                                           dataType: effectiveDataType(of: fieldGrammar, in: segment),
