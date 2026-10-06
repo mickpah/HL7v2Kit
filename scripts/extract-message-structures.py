@@ -1185,6 +1185,8 @@ def resolve_prose(ver, structures, prose, pending, overrides, bundles, synthesis
                     values.update({v: alt["group"] for v in alt["values"]})
                     said.append(f"{_join(alt['values'])} select {alt['group']} (section {alt['section']}, p "
                                 f"{alt['page']}: '{alt['quote']}'"
+                                + (f"; placed into this message by section {alt['bridge']['section']}, p {alt['bridge']['page']}: "
+                                   f"'{alt['bridge']['quote']}'" if "bridge" in alt else "")
                                 + (f"; the segments as {alt['from']['structure']} prints them" if "from" in alt else "")
                                 + ")")
                     cites.append(f"{alt['group']} ({alt['nameCitation']})")
@@ -1701,11 +1703,13 @@ def validate_prose_entry(entry):
             raise OverridesError(f"proseFragments {at}: two or more alternatives")
         values = []
         for alt in alts:
-            if not (isinstance(alt, dict) and PROSE_ALTERNATIVE_KEYS <= set(alt) <= PROSE_ALTERNATIVE_KEYS | {"syntax", "from"}
+            if not (isinstance(alt, dict) and PROSE_ALTERNATIVE_KEYS <= set(alt) <= PROSE_ALTERNATIVE_KEYS | {"syntax", "from", "bridge"}
                     and ({"syntax", "from"} & set(alt))):
                 raise OverridesError(f"proseFragments {at}: each alternative has {sorted(PROSE_ALTERNATIVE_KEYS)} "
                                      "and syntax, from or both")
             _quoted(f"{at} alternative {alt.get('group')}", alt)
+            if "bridge" in alt:  # optional second print: the sentence placing the group into this message
+                _quoted(f"{at} alternative {alt.get('group')} bridge", alt.get("bridge") if isinstance(alt.get("bridge"), dict) else {})
             if not (isinstance(alt["values"], list) and alt["values"] and all(isinstance(v, str) and v for v in alt["values"])):
                 raise OverridesError(f"proseFragments {at}: each alternative selects non-empty values")
             values += alt["values"]
