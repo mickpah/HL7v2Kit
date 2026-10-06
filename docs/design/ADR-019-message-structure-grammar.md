@@ -1660,3 +1660,54 @@ Owner decision 9 of 2026-10-06 (final review M9): when R4 of the P8b-17 amendmen
 a message that carries an ORC or OBR gets one `.info` `IssueCode.conditionNotEvaluated(fields:)`,
 at the first gated field of its first ORC or OBR, naming the gated fields and the structure
 finding that withheld the spans; the conditions stay unevaluated, as R4 rules.
+
+## Amendment 2026-10-06 — segments a version withdrew (S2-1, F-I2 closed by design)
+
+The six Blocking (F-I2) structures, v2.7.1 QRY_PC4, RCI_I05, RQC_I05, RCL_I06 and UDM_Q05 and
+v2.8.2 UDM_Q05, print segments the version's grammar does not define. What the print gives:
+
+1. **The structures are fully printed.** v2.7.1 CH12 12.3.5, 12.3.7, 12.3.9 and 12.3.11 (QRY_PC4,
+   pp 15 to 22), CH11 11.3.5 (RQC^I05 p 13, RCI^I05 p 14) and 11.3.6 (RQC^I06 and RCL^I06, pp 14
+   to 15), CH05 5.10.1.2 (UDM^Q05^UDM_Q05, p 106); v2.8.2 CH05 5.10.1.2 (UDM_Q05, pp 102 to 103).
+   Each is a caption and segment table like any other; the extractor has always parsed them.
+2. **No attribute table for QRD, QRF, URD or URS on either version.** No chapter or appendix of
+   either print carries an attribute table or field section for the four (every PDF of both
+   versions searched). v2.7.1 Appendix A lists each with "withdrawn" in place of a section (QRD
+   and QRF p A-8, URD and URS p A-9); v2.8.2 Appendix A lists each as "deprecated", also with no
+   section (QRD and QRF p A-10, URD and URS p A-11). CH05 5.10.2 (v2.7.1 p 107; v2.8.2 p 104):
+   "retained for backward compatibility as of V2.4 and withdrawn as of V2.7". CH02 2.8.4 (v2.7.1
+   p 24; v2.8.2 p 26) points elsewhere for the definition: "the reader will need to review the
+   appropriate earlier version of the standard", naming no version. The last version that prints
+   them is v2.6 (CH05 5.10.4.1 to 5.10.4.4).
+3. **What a receiver does with a withdrawn constituent.** CH02 2.8.4 (same pages): "By site
+   agreement senders and receivers may agree to continue to use" removed constituents. Their use
+   is a matter of site agreement, not a defect of the message.
+
+**Decision: design A, a cited withdrawn-segment list; not design B.** Carrying the v2.6 attribute
+tables onto v2.7.1 and v2.8.2 (B) would field-check a segment against text neither version prints,
+with v2.6 data types that v2.7 itself withdrew (the v2.6 QRF and URS print TQ fields; TQ is
+"withdrawn and removed from the standard as of v 2.7", v2.7.1 CH02A 2.A.77, p 84, and v2.8.2
+CH02A 2.A.78, p 82), and CH02 2.8.4 names no earlier version to read: a
+grammar is not defensible from these versions' text, and checks drawn from it could misfire on a
+message the site agreement allows. Instead `Resources/structures/overrides.json` gains
+`withdrawnSegments`: per version, each segment ID with the Appendix A status as printed
+("withdrawn" or "deprecated"), the last version that defines it ("2.6") and the citation. On
+v2.7.1 and v2.8.2 all four are listed (Appendix A treats them alike on each version).
+
+- **Structure level.** A listed ID may appear in a structure of that version (the codegen and
+  `StructureGuardTests` guard 3 accept it, and only it, beside the grammar's segments and ADD).
+  The matcher no longer passes over a listed ID as it does an undefined one: it is matched by
+  segment ID where the structure names it, and is unexpected where it does not. The six
+  structures are modelled; their registrations leave `completeness.json`; `completeVersions` is
+  unchanged.
+- **Field level: one information issue, not silence.** A listed segment draws one `.info`
+  `IssueCode.segmentWithdrawnInVersion` per occurrence, naming the printed status and the last
+  defining version, saying its fields were not validated; it replaces the `.warning`
+  `segmentNotInVersionGrammar` such a segment drew before. Silence would hide that the segment
+  carries data nothing checked; a warning would call a use the print leaves to site agreement a
+  defect. Placement remains the structure check's job: a QRD in an ADT^A01 is still a structure
+  finding at the configured severity.
+
+Before this amendment a QRD on v2.7.1 drew a `.warning` `segmentNotInVersionGrammar` and was
+transparent to the matcher, and a QRY^PC4 drew `.info` `messageStructureNotModelled`; after it,
+the QRD draws the information issue and the QRY^PC4 body is checked against CH12 12.3.5.
