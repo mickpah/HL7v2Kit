@@ -209,7 +209,8 @@ public enum IssueCode: Sendable, Equatable, Hashable {
 
     /// A component of a composite field is populated although its datatype's
     /// component table prints it `B` ("left in for backward compatibility with
-    /// previous versions of HL7") or `W` ("withdrawn"). `optionality` is the printed
+    /// previous versions of HL7"), `X` ("not used with this trigger event") or `W`
+    /// ("withdrawn"), the codes of the same legend. `optionality` is the printed
     /// code. Located at the component; the repetition is named in the message.
     /// Emitted at `.warning` while ``ValidationOptions/warnDeprecatedFields`` is
     /// true, as ``fieldNotSupported`` is for a field.
@@ -222,7 +223,8 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// (section 2.8.4: v2.5.1 p. 2-23, v2.6 p. 21, v2.7.1 p. 24, v2.8.2 p. 26); a
     /// deprecated one is "retained for backward compatibility" and implementers
     /// "MAY agree to not support" it (section 2.8.3). v2.3 to v2.4 print no
-    /// component optionality, and no table prints a component `X`. Components inside
+    /// component optionality; no extracted component table prints `X` today, but the
+    /// check reports it if one does (S1-5). Components inside
     /// a field already reported as ``fieldNotSupported`` are not reported again, and
     /// a subcomponent is not checked. Additive case introduced in S1-2 (v3.15.0);
     /// the enum is open per ADR-014.

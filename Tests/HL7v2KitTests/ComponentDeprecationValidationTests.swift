@@ -1,6 +1,6 @@
 // ComponentDeprecationValidationTests.swift
 // S1-2 (register section G): a populated component that its version's component table
-// prints `B` ("left in for backward compatibility") or `W` ("withdrawn") draws
+// prints `B` ("left in for backward compatibility"), `X` (S1-5) or `W` ("withdrawn") draws
 // `componentNotSupported` at `.warning` under `warnDeprecatedFields`, as a populated
 // `B`, `X` or `W` field draws `fieldNotSupported`. The optionality legend applies to
 // components from v2.5 (v2.8.2 CH02 section 2.5.3.5: "For version 2.5 and higher, the
@@ -120,5 +120,19 @@ struct ComponentDeprecationValidationTests {
     func subcomponentNotChecked() throws {
         let wire = adt("2.5.1", pid: "Doe^John||||||1 Main St^^City^^^^^^^^^^20200101&Y")
         #expect(try componentIssues(wire).isEmpty)
+    }
+
+    // S1-5: the optionality legend (v2.8.2 CH02 section 2.5.3.5, pp. 9-10) defines `X`
+    // ("not used with this trigger event") beside `B` and `W`, and the same legend governs
+    // component tables from v2.5. No extracted component table prints `X` today, so the
+    // guard is pinned here directly: a component printed `X` is reported as the field is.
+    @Test("The guard reports B, W and X and nothing else")
+    func guardCodes() {
+        #expect(Validator.componentDeprecationState(optionality: "B") == "kept for backward compatibility only (B)")
+        #expect(Validator.componentDeprecationState(optionality: "W") == "withdrawn from the standard (W)")
+        #expect(Validator.componentDeprecationState(optionality: "X") == "not supported (X)")
+        for code in ["", "R", "RE", "O", "C"] {
+            #expect(Validator.componentDeprecationState(optionality: code) == nil)
+        }
     }
 }
