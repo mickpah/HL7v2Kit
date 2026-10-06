@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — S3-3: the 58 open-slot structures are modelled
+
+- **Structures**: ORM_O01, ORR_O02 and OSR_Q06 (v2.3, v2.3.1) and the CH12 structures PGL_PC6,
+  PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5 and PTR_PCF (v2.3 to v2.7.1; the first four
+  on v2.8.2) are modelled with the open order-detail slot, on all seven versions: 1,171 structures
+  modelled and 202 registered (1,113 and 260 before). Messages of these triggers, information
+  before, are body-checked: the segments the print gives around the order detail, the required
+  segments after it and the end of the message.
+- **`overrides.json`**: v2.3 ORM_O01 and ORR_O02 take the general print (CH04 4.2.1, 4.2.2) as
+  primary over the four specific prints under the same trigger, whose messages its slot accepts
+  (`primaryPrints`, which may now name a print "CAPTION (section N)" and list several stricter
+  prints); eleven cited syntax-cell errata read the CH12 bracket misprints (v2.3 PGL, PPP, PPT,
+  PPV, PTR; v2.3.1 and v2.4 PGL, PPV, PTR).
+- **Group spans**: where the slot sits in a repeating group (every CH12 order, the general
+  order), a message with two or more such groups withholds the spans and the group-dependent
+  predicates take the P8b-17 fallback.
+- **Tests**: `StructureSlotProbeTests` (conformant and defect probes per version, the errata's
+  readings); the lint and matcher corpus harnesses never build the one-pass matcher for an
+  exact-matched structure. Register section E: the open-slot rows closed. ADR-019: S3-3
+  amendment.
+
 ### Added — S3-2: the extractor emits the open slot
 
 - **`scripts/extract-message-structures.py`** reads the open order detail into a slot element in

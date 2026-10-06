@@ -1838,3 +1838,66 @@ the same path, has every printed segment and at least one more (the slot's fille
 with the printed first segment, or, when the slot heads the group, with one of those fillers.
 Query-template ellipses (`[...]`, `...` rows) and prose rows stay unreadable as before (ruling G6,
 S5).
+
+## Amendment 2026-10-06 — S3-3 the open-slot structures modelled
+
+The 58 structures registered for the open order detail are modelled on all seven versions
+(v2.3 11, v2.3.1 11, v2.4 8, v2.5.1 8, v2.6 8, v2.7.1 8, v2.8.2 4), written by the extractor
+and removed from `completeness.json` by its registration sync. 1,171 structures are modelled and
+202 registered (1,113 and 260 before). Each was compared row by row with its print; 54 read
+`ORC [ORDER_DETAIL: slot ...]` (the slot min 1, heading the optional inner group) and 4 are the
+min-0 slots of v2.3 and v2.3.1 ORR_O02 and OSR_Q06 (`[Order Detail Segment] OBR, etc.` after
+ORC; v2.3 pp 4-5 and 4-6, v2.3.1 pp 4-4 and 4-5).
+
+**Four prints under one trigger (ruling 1).** v2.3 prints ORM under ORM^O01 five times: the
+general print (CH04 4.2.1, p 4-4) and four specific ones, the dietary order (4.6, p 4-47), the
+stock and nonstock requisitions (4.7, pp 4-54 and 4-55) and the pharmacy/treatment order (4.8.1,
+p 4-60), all after the same MSH and patient segments; ORR^O02 likewise (4.2.2, p 4-5; 4.6, 4.7,
+4.8.1, p 4-61). MSH-9 cannot tell them apart on v2.3 (lookup rule 3). The general print's slot
+takes any run of segments after ORC, so it accepts every message the specific prints accept: it
+is the looser print and governs under the comparable-prints rule (P8b-9). `overrides.json`
+`primaryPrints` declares it, cited to all five prints; the entry form gains "CAPTION (section N)"
+to name one of several prints under one caption and a list of stricter prints. v2.3.1 needs no
+entry: its four specific prints carry their own IDs (OMD_O01, OMS_O01, OMN_O01, RDO_O01,
+modelled since P8b-14), and ORM^O01 without MSH-9.3 stays ambiguous (lookup rule 2).
+
+**Misprints (eleven syntax-cell errata).** Eleven CH12 prints are read through cited
+`overrides.json` errata, each stating the printed cell, the corrected one and the reading, the
+nesting checked against HL7-xml 2.3.1 and v2.4 (v2.3 has no bundle; its names derive through the
+2.3.1 one); the bundle differs only where its CHOICE stands for the slot:
+
+| Version | Structure | Printed | Read as | Section, page |
+|---|---|---|---|---|
+| v2.3 | PGL_PC6 | `[{VAR}]}` | `[{VAR}]` | 12.2.1, p 12-8 |
+| v2.3 | PPP_PCB | `[{NTE]}` | `[{NTE}]` | 12.2.3, p 12-10 |
+| v2.3 | PPV_PCA | `[{NTE]}` | `[{NTE}]` | 12.2.8, p 12-13 |
+| v2.3 | PTR_PCF | `{NTE}]` | `[{NTE}]` | 12.2.10, p 12-15 |
+| v2.3 | PPT_PCL | `}` (last row; the pathway group never closed) | `} }` | 12.2.12, p 12-16 |
+| v2.3.1 | PGL_PC6 | `[{VAR}]}` | `[{VAR}]` | 12.2.1, p 12-7 |
+| v2.3.1 | PPV_PCA | `[{NTE]}` | `[{NTE}]` | 12.2.8, p 12-12 |
+| v2.3.1 | PTR_PCF | `{NTE}]` | `[{NTE}]` | 12.2.10, p 12-13 |
+| v2.4 | PGL_PC6 | `[{VAR}]}` | `[{VAR}]` | 12.3.1, p 12-10 |
+| v2.4 | PPV_PCA | `[{NTE]}` | `[{NTE}]` | 12.3.8, p 12-14 |
+| v2.4 | PTR_PCF | `{NTE}]` | `[{NTE}]` | 12.3.10, p 12-15 |
+
+The crossed-bracket readings are not a choice between meanings (both nestings give the same
+cardinality). `{NTE}]` keeps the printed `]` (optional notes) and reads the missing `[`, as the
+same print's other observation groups and PPP^PCB print the row. v2.3 PPT_PCL closes the goal
+group and then one group, so the pathway group is never closed; no row follows the goal group
+inside it, every row from PTH on is set under it, and v2.3.1 12.2.12 prints the same message with
+the pathway closed after the goal group, so the last `}` is read as `} }`.
+
+**Matching and spans.** Every slot structure fails the lint and is exact-matched; the one-pass
+matcher is never built for one (the lint and matcher corpus harnesses route them to the exact
+matcher). With the slot inside a repeating group, as in every CH12 order and the general order,
+two or more occurrences of that group make the parses disagree on the groups, so the spans are
+withheld and the group-dependent predicates take their P8b-17 fallback (the ORC walk) for that
+message; one occurrence keeps its span.
+
+**Evidence.** `StructureSlotProbeTests` gives each version conformant messages (an OBR detail, a
+pharmacy detail fitting the general print, a bare ORC, a CH12 `ORC OBR NTE VAR OBX`, a detail
+the v2.5.1 and later choice does not list) and defects outside the slot (a required segment
+missing, an unexpected segment before the slot, a second MSH), and pins each erratum's reading.
+The spec examples of these triggers print MSH-12 empty or the message code alone, so the digest
+does not change; with MSH-12 set to the chapter's version the 18 that resolve to a slot structure
+are body-checked clean.
