@@ -1988,4 +1988,49 @@ QRY^P04 on v2.4 and v2.5.1, a defect). Digests (BASE 50368d61 against HEAD, defa
 off): 16 lines removed and 4 added on default and strict, none on off; the v2.6 MFN^M03 examples
 (MFI-1 OMA) and the v2.4 ERP^R09 example are body-checked clean, and the v2.5.1 CH05 event replay
 error response (5.10.6.2.12, p 5-143), which omits the ERQ the print requires, draws the missing
-ERQ as BASE draws the missing RDF of the TBR error example beside it.
+ERQ as BASE draws the missing RDF of the TBR error example beside it. (Both readings were
+misfires; corrected by the S4-3 amendment below.)
+
+## Amendment 2026-10-06 — S4-3 error responses
+
+**The print.** CH05 5.6.5 "Query error response", the same text on every version that prints it:
+v2.4 p 5-62, v2.5.1 pp 5-60 to 5-61, v2.6 p 52, v2.7.1 p 55, v2.8.2 pp 54 to 55. An error is
+returned as AE or AR in MSA-1 "of the applicable query response message". Situation 1 (malformed
+message, AR): "a negative ACK message containing the MSH, MSA and the ERR". Situation 2 (malformed
+query, AE): the response "contains the MSH, MSA, ERR, QAK and the query defining segment if
+available" and "The rest of the message is absent". The DSC "is not sent or, if it is", its
+pointer is null. v2.3 (CH02 2.22, p 2-78) and v2.3.1 (CH02 2.22, p 2-87) name AE and AR in "the
+applicable query response message (DSR, TBR or ERP)" but print no sentence that the rest is
+absent, so the rule is not applied there.
+
+**The rule.** `overrides.json` `errorResponses` names, per version, every query response the
+version prints (a structure with MSA at the top level and QAK, QRD, QPD or ERQ at any depth:
+v2.4 32, v2.5.1 35, v2.6 34, v2.7.1 16, v2.8.2 12) with the query defining segments its own print
+carries (QRD and QRF, QPD, ERQ, or none for TBR, EDR, QCK and SQR), cited to 5.6.5. The extractor
+copies it into the structure file as `errorResponse` and fails a full read that leaves a query
+response out; the codegen checks distinct two-letter codes, a top-level MSA and that each named
+segment is printed. Before matching, the Validator reads MSA-1 (first MSA, field 1, component 1);
+AE or AR selects the head: the segments 5.6.5 names (MSH, the SFT and UAC the structure prints
+after MSH, MSA, ERR, QAK, its query defining segments, DSC), each once at its first printed place
+(ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required, the rest optional, ERR and SFT with
+their printed repetition; an ERR the structure does not print goes after MSA and a QAK after ERR.
+Anything else is unexpected. Findings cite the head and 5.6.5; group spans come from the head; an
+AU profile structure is not applied to the head. AA (and any other value) keeps the full structure.
+Internal model only (`StructureErrorResponse`); no public API change.
+
+**What it cannot say.** (1) Situation 3 (no data found, AA, QAK-2 NF): the response is "MSH,
+MSA, QAK, and query defining segment" with the rest absent; it is not keyed (MSA-1 AA), so a
+no-data response of a structure whose body is required (TBR's RDF and RDT) still draws the missing
+body. This blocks spec-completeness until QAK-2 is read as a second key. (2) The head is the union
+of Situations 1 and 2 (QAK optional under AR and AE alike); it does not report an AE response
+without QAK. (3) MSA-1 CE and CR (enhanced acknowledgment) are not named by 5.6.5 and are not
+keyed. (4) v2.3 and v2.3.1 keep the full structure: the v2.5.1 CH05 5.10.6.2.12 example, which
+declares MSH-12 2.3, still draws its missing ERQ against the v2.3 ERP print.
+
+**Evidence.** `StructureErrorResponseTests` (the 5.10.6.2.12 shape on v2.5.1 clean, with a DSP or
+a replay body unexpected; the TBR^R08 error shape and an AR response clean; AA with the body
+missing draws it; ORF_R04 in printed order; RSP_K21 on v2.6 and v2.8.2; v2.3 and v2.3.1
+unchanged; the finding text; the tables; the head; spans). Digests (BASE 22da5799 against HEAD):
+default and strict 8 lines removed (the TBR^R08 error example, MSH-12 2.4, formerly an "example
+defect"), 0 added; off identical; supplementary with MSH-12 set to the chapter version 12 removed
+(the same and the event replay error response), 0 added; 0 misfires (s4-fix-classes.tsv).

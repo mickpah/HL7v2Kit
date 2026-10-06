@@ -3,6 +3,7 @@
   "version": "2.5.1",
   "citation": "HL7 v2.5.1 Chapter 12, section 12.3.8 PPV - Patient Goal Response (Event PCA), pp 12-18 to 12-20.",
   "triggers": ["PPV^PCA"],
+  "errorResponse": {"acknowledgmentCodes": ["AE", "AR"], "querySegments": ["QRD"], "citation": "HL7 v2.5.1 Chapter 5, section 5.6.5 Query error response, pp 5-60 to 5-61: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."},
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "SFT", "min": 0, "max": null },

@@ -32,7 +32,7 @@ OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
          "triggerFolds": [], "primaryPrints": [], "unionPrints": [], "unresolvedCaptions": [],
          "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": [], "withdrawnSegments": [],
-         "keyedChoices": [], "aliases": []}
+         "keyedChoices": [], "aliases": [], "errorResponses": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -1606,6 +1606,58 @@ def check_aliases():
         raise AssertionError(f"aliases entry {broken} must be rejected")
 
 
+def check_error_responses():
+    # S4-3: an errorResponses entry (CH05 5.6.5, v2.4 to v2.8.2) copies its MSA-1 codes, the query
+    # defining segments each listed structure prints, and its citation into that structure, rendered
+    # as "errorResponse" after the triggers; a listed segment the structure does not print, a
+    # structure that is not a query response, a printed query defining segment left out, and (on a
+    # full read) an unread structure or an unlisted query response are errors; malformed entries
+    # are rejected; another version's structures are untouched.
+    tbr = {"structure": "TBR_R08", "version": "2.4", "triggers": ["TBR^R08"], "citation": "TBR print.",
+           "elements": [_seg("MSH"), _seg("MSA"), _seg("ERR", 0, 1), _seg("QAK"), _seg("RDF"),
+                        _seg("RDT", 1, None), _seg("DSC", 0, 1)]}
+    dsr = {"structure": "DSR_Q01", "version": "2.4", "triggers": ["DSR^Q01"], "citation": "DSR print.",
+           "elements": [_seg("MSH"), _seg("MSA"), _seg("ERR", 0, 1), _seg("QAK", 0, 1), _seg("QRD"),
+                        _seg("QRF", 0, 1), _seg("DSP", 1, None), _seg("DSC", 0, 1)]}
+    adt = {"structure": "ADT_A01", "version": "2.4", "triggers": ["ADT^A01"], "citation": "ADT print.",
+           "elements": [_seg("MSH"), _seg("EVN"), _seg("PID")]}
+    entry = {"version": "2.4", "acknowledgmentCodes": ["AE", "AR"], "structures": {"TBR_R08": [], "DSR_Q01": ["QRD", "QRF"]},
+             "citation": "HL7 v2.4 Chapter 5, section 5.6.5 Query error response, p 5-62: the rest is absent."}
+    overrides = {**EMPTY, "errorResponses": [entry]}
+    ext.validate_overrides(overrides)
+    structures = {"TBR_R08": dict(tbr), "DSR_Q01": dict(dsr), "ADT_A01": dict(adt)}
+    report = ext.add_error_responses("2.4", structures, overrides, True)
+    assert [r[1] for r in report] == ["error-response", "error-response"], report
+    assert structures["TBR_R08"]["errorResponse"] == {"acknowledgmentCodes": ["AE", "AR"], "querySegments": [],
+                                                      "citation": entry["citation"]}, structures["TBR_R08"]
+    assert structures["DSR_Q01"]["errorResponse"]["querySegments"] == ["QRD", "QRF"]
+    assert "errorResponse" not in structures["ADT_A01"]
+    rendered = ext.render(structures["DSR_Q01"])
+    assert '  "triggers": ["DSR^Q01"],\n  "errorResponse": {"acknowledgmentCodes": ["AE", "AR"], "querySegments": ["QRD", "QRF"], ' in rendered
+    assert '"errorResponse"' not in ext.render(adt)
+    assert ext.add_error_responses("2.5.1", {"TBR_R08": dict(tbr)}, overrides, True) == [], "another version"
+    for listed, structures, expected in (
+            ({"TBR_R08": ["QRD"]}, {"TBR_R08": dict(tbr)}, "the structure prints []"),
+            ({"DSR_Q01": ["QRD"]}, {"DSR_Q01": dict(dsr)}, "the structure prints ['QRD', 'QRF']"),
+            ({"ADT_A01": []}, {"ADT_A01": dict(adt)}, "not a query response"),
+            ({"TBR_R08": []}, {}, "not read from the print"),
+            ({"TBR_R08": []}, {"TBR_R08": dict(tbr), "DSR_Q01": dict(dsr)}, "does not list")):
+        report = ext.add_error_responses("2.4", structures, {**EMPTY, "errorResponses": [{**entry, "structures": listed}]}, True)
+        errors = [r for r in report if r[1] == "error"]
+        assert errors and expected in errors[0][2], (listed, report)
+    partial = ext.add_error_responses("2.4", {}, {**EMPTY, "errorResponses": [{**entry, "structures": {"TBR_R08": []}}]}, False)
+    assert partial == [], "a partial read skips an unread structure"
+    for broken in ({**entry, "acknowledgmentCodes": []}, {**entry, "acknowledgmentCodes": ["AE", "AE"]},
+                   {**entry, "acknowledgmentCodes": ["ae"]}, {**entry, "structures": {}},
+                   {**entry, "structures": {"TBR_R08": ["RDF"]}}, {**entry, "structures": {"DSR_Q01": ["QRD", "QRD"]}},
+                   {**entry, "citation": ""}):
+        try:
+            ext.validate_overrides({**EMPTY, "errorResponses": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"errorResponses entry {broken} must be rejected")
+
+
 def check_referenced_triggers():
     # P8b-15 fix round 2: a trigger the print defines only in prose that names an already printed
     # structure without ambiguity (v2.3 CH07 7.19.1: W01 "identifies ORU messages") is added to that
@@ -2306,7 +2358,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_slot_ch04_own_line, check_slot_ch04_bracketed_alone, check_slot_ch12_bracket_form,
           check_slot_choice_with_placeholder, check_slot_citation_and_render,
           check_slot_never_from_query_template_or_prose, check_slot_bundle_naming,
-          check_slot_bundle_naming_path_bound, check_keyed_choices, check_aliases]
+          check_slot_bundle_naming_path_bound, check_keyed_choices, check_aliases, check_error_responses]
 
 
 def main():

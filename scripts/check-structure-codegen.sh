@@ -641,6 +641,40 @@ save('v2.5.1/QRY_X04.json', d)"
 accept "the alias as a plain structure (no aliasOf)" "$PRE$ALIAS
 d = load('v2.5.1/QRY_P04.json'); del d['aliasOf']; save('v2.5.1/QRY_P04.json', d)"
 
+# S4-3: the query error response rule (v2.5.1 DSR_Q01, CH05 5.6.5).
+ERRRESP='
+def rule(**kw):
+    d = load("v2.5.1/DSR_Q01.json"); d["errorResponse"].update(kw); save("v2.5.1/DSR_Q01.json", d)
+'
+
+reject "an error response naming a segment the structure does not print" 'querySegments must be distinct query defining segments the structure prints' "$PRE$ERRRESP
+rule(querySegments=['QPD'])"
+
+reject "an error response naming a segment that is not a query defining one" 'querySegments must be distinct query defining segments the structure prints' "$PRE$ERRRESP
+rule(querySegments=['DSP'])"
+
+reject "an error response with no codes" 'acknowledgmentCodes must be distinct two-letter codes' "$PRE$ERRRESP
+rule(acknowledgmentCodes=[])"
+
+reject "an error response with a repeated code" 'acknowledgmentCodes must be distinct two-letter codes' "$PRE$ERRRESP
+rule(acknowledgmentCodes=['AE', 'AE'])"
+
+reject "an error response without a citation" 'errorResponse: empty citation' "$PRE$ERRRESP
+rule(citation='')"
+
+reject "an error response with an unknown key" 'unknown key(s) ["head"]' "$PRE$ERRRESP
+rule(head=['MSH'])"
+
+reject "an error response on a structure with no top-level MSA" 'errorResponse: the structure has no top-level MSA' "$PRE
+d = load('v2.5.1/ADT_A01.json'); d['errorResponse'] = load('v2.5.1/DSR_Q01.json')['errorResponse']
+d['errorResponse']['querySegments'] = []; save('v2.5.1/ADT_A01.json', d)"
+
+accept "an error response with no query defining segment (TBR)" "$PRE$ERRRESP
+rule(querySegments=[])"
+
+accept "a query response without the rule" "$PRE
+d = load('v2.5.1/DSR_Q01.json'); del d['errorResponse']; save('v2.5.1/DSR_Q01.json', d)"
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

@@ -226,6 +226,10 @@ extension MessageStructureTable {
         triggers: ["ADR^A19"],
         citation: "HL7 v2.6 Chapter 3, section 3.3.19 QRY/ADR - Patient Query (Event A19), pp 3-22 to 3-23.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -1405,6 +1409,10 @@ extension MessageStructureTable {
         triggers: ["DOC^T12"],
         citation: "HL7 v2.6 Chapter 9, section 9.8.1 QRY/DOC - Document Query (Event T12), p 9-23. Unprinted group names (ADR-019 decision 3): RESULT (HL7-xml v2.6/DOC_T12.xsd, DOC_T12.RESULT.CONTENT).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -1428,6 +1436,10 @@ extension MessageStructureTable {
         triggers: ["DSR^Q01"],
         citation: "HL7 v2.6 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 95. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 84).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -1448,6 +1460,10 @@ extension MessageStructureTable {
         triggers: ["DSR^Q03"],
         citation: "HL7 v2.6 Chapter 5, section 5.10.3.2 DSR/ACK - deferred response to a query (event Q03), p 96. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 84).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -2373,6 +2389,10 @@ extension MessageStructureTable {
         triggers: ["MFR^M04"],
         citation: "HL7 v2.6 Chapter 8, section 8.10.1 MFN/MFK - Charge Description Master File Message (Event M04), pp 8-64 to 8-65.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -2398,6 +2418,10 @@ extension MessageStructureTable {
         triggers: ["MFR^M05"],
         citation: "HL7 v2.6 Chapter 8, section 8.9.1 MFN/MFK - Patient Location Master File Message (event M05), p 8-52. Unprinted group names (ADR-019 decision 3): MF_LOC_DEPT (HL7-xml v2.6/MFR_M05.xsd, MFR_M05.MF_LOC_DEPT.CONTENT).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -2429,6 +2453,10 @@ extension MessageStructureTable {
         triggers: ["MFR^M06"],
         citation: "HL7 v2.6 Chapter 8, section 8.11.1 MFN/MFK - Clinical Trials Master File Message (Event M06-M07), p 8-72. Unprinted group names (ADR-019 decision 3): MF_PHASE_SCHED_DETAIL (HL7-xml v2.6/MFR_M06.xsd, MFR_M06.MF_PHASE_SCHED_DETAIL.CONTENT).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -2456,6 +2484,10 @@ extension MessageStructureTable {
         triggers: ["MFR^M07"],
         citation: "HL7 v2.6 Chapter 8, section 8.11.1 MFN/MFK - Clinical Trials Master File Message (Event M06-M07), p 8-73.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -2529,6 +2561,10 @@ extension MessageStructureTable {
         triggers: ["NMR^N01"],
         citation: "HL7 v2.6 Chapter 14, section 14.3.1 NMQ - Application Management Query Message (Event N01), p 14-2.",
         requiresExactMatch: true,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -3418,6 +3454,10 @@ extension MessageStructureTable {
         triggers: ["ORF^R04"],
         citation: "HL7 v2.6 Chapter 7, section 7.3.3 QRY/ORF - Query for Results of Observation (Events R02, R04), pp 7-14 to 7-15.",
         requiresExactMatch: true,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -3921,6 +3961,10 @@ extension MessageStructureTable {
         triggers: ["OSR^Q06"],
         citation: "HL7 v2.6 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), pp 4-8 to 4-9.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -4569,6 +4613,10 @@ extension MessageStructureTable {
         triggers: ["PPT^PCL"],
         citation: "HL7 v2.6 Chapter 12, section 12.2.12 PPT - Patient Pathway (Goal-Oriented) Response (Event PCL), pp 12-17 to 12-19.",
         requiresExactMatch: true,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -4641,6 +4689,10 @@ extension MessageStructureTable {
         triggers: ["PPV^PCA"],
         citation: "HL7 v2.6 Chapter 12, section 12.2.8 PPV - Patient Goal Response (Event PCA), pp 12-14 to 12-15.",
         requiresExactMatch: true,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -4708,6 +4760,10 @@ extension MessageStructureTable {
         triggers: ["PRR^PC5"],
         citation: "HL7 v2.6 Chapter 12, section 12.2.6 PRR - Patient Problem Response (Event PC5), pp 12-12 to 12-14.",
         requiresExactMatch: true,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -4775,6 +4831,10 @@ extension MessageStructureTable {
         triggers: ["PTR^PCF"],
         citation: "HL7 v2.6 Chapter 12, section 12.2.10 PTR - Patient Pathway (Problem-Oriented) Response (Event PCF), pp 12-16 to 12-17.",
         requiresExactMatch: true,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -4897,6 +4957,10 @@ extension MessageStructureTable {
         triggers: ["QCK^Q02"],
         citation: "HL7 v2.6 Chapter 5, section 5.10.3.1 QRY/QCK - deferred query (event Q02), p 96. Structure ID from Table 0354 v2.6 (Chapter 2, section 2.16.3, p 86).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: [],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -5033,6 +5097,10 @@ extension MessageStructureTable {
         triggers: ["RAR^RAR"],
         citation: "HL7 v2.6 Chapter 4, section 4.13.16 RAR - Pharmacy/Treatment Administration Information (Event Q27), p 4-100.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -5127,6 +5195,10 @@ extension MessageStructureTable {
         triggers: ["RCI^I05"],
         citation: "HL7 v2.6 Chapter 11, section 11.3.5 RQC/RCI - Request for Patient Clinical Information (Event I05), pp 11-11 to 11-12.",
         requiresExactMatch: true,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -5160,6 +5232,10 @@ extension MessageStructureTable {
         triggers: ["RCL^I06"],
         citation: "HL7 v2.6 Chapter 11, section 11.3.6 RQC/RCL - Request/Receipt of Clinical Data Listing (Event I06), pp 11-12 to 11-13.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -5248,6 +5324,10 @@ extension MessageStructureTable {
         triggers: ["RDR^RDR"],
         citation: "HL7 v2.6 Chapter 4, section 4.13.17 RDR - Pharmacy/Treatment Dispense Information (Event Q28), pp 4-100 to 4-101.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -5346,6 +5426,10 @@ extension MessageStructureTable {
         triggers: ["RDY^K15"],
         citation: "HL7 v2.6 Chapter 5, section 5.4.3 QBP/RDY - query by parameter/display response (events vary), p 33.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -5419,6 +5503,10 @@ extension MessageStructureTable {
         triggers: ["RER^RER"],
         citation: "HL7 v2.6 Chapter 4, section 4.13.18 RER - Pharmacy/Treatment Encoded Order Information (Event Q29), p 4-101.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -5449,6 +5537,10 @@ extension MessageStructureTable {
         triggers: ["RGR^RGR"],
         citation: "HL7 v2.6 Chapter 4, section 4.13.19 RGR - Pharmacy/Treatment Dose Information (Event Q30), p 4-102.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -5547,6 +5639,10 @@ extension MessageStructureTable {
         triggers: ["ROR^ROR"],
         citation: "HL7 v2.6 Chapter 4, section 4.13.15 ROR - Pharmacy/Treatment Order Response (Event Q26), p 4-99.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -6052,6 +6148,10 @@ extension MessageStructureTable {
         triggers: ["RSP^E03"],
         citation: "HL7 v2.6 Chapter 16, section 16.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 9.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6074,6 +6174,10 @@ extension MessageStructureTable {
         triggers: ["RSP^E22"],
         citation: "HL7 v2.6 Chapter 16, section 16.3.13 RSP^E22 - Authorization Request Status Query Response (event E22), p 20.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6100,6 +6204,10 @@ extension MessageStructureTable {
         triggers: ["RSP^K21", "RSP^K22"],
         citation: "HL7 v2.6 Chapter 3, section 3.3.56 QBP/RSP - Get Person Demographics (QBP) and Response (RSP), pp 3-48 to 3-49; the same structure is printed for RSP^K22 (3.3.57). Two normative prints of RSP_K21 are incomparable: Chapter 3 section 3.3.56 (RSP^K21^RSP_K21, pp 3-48 to 3-49) prints one optional QUERY_RESPONSE with [{ARV}] and QRI required, section 3.3.57 (RSP^K22^RSP_K21, p 3-50) prints a repeating QUERY_RESPONSE with QRI optional and no ARV; neither accepts every message the other accepts, so the structure is their union aligned by name (QUERY_RESPONSE repeating, ARV optional repeating, QRI optional; P8b-10 ruling; register section E).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6125,6 +6233,10 @@ extension MessageStructureTable {
         triggers: ["RSP^K23", "RSP^K24"],
         citation: "HL7 v2.6 Chapter 3, section 3.3.58 QBP/RSP - Get Corresponding Identifiers (QBP) and Response (RSP), p 3-52; the same structure is printed for RSP^K24 (3.3.59).",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6146,6 +6258,10 @@ extension MessageStructureTable {
         triggers: ["RSP^K25"],
         citation: "HL7 v2.6 Chapter 15, section 15.3.7 QBP/RSP - Query Information (Event Q25/K25), p 15-6.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6174,6 +6290,10 @@ extension MessageStructureTable {
         triggers: ["RSP^K31"],
         citation: "HL7 v2.6 Chapter 4, section 4.13.20 Pharmacy Query/Response Message Pair, pp 4-103 to 4-104.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -6237,6 +6357,10 @@ extension MessageStructureTable {
         triggers: ["RTB^K13"],
         citation: "HL7 v2.6 Chapter 5, section 5.4.2 QBP/RTB - query by parameter/tabular response (events vary), p 32.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QPD"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -6386,6 +6510,10 @@ extension MessageStructureTable {
         triggers: ["SQR^S25"],
         citation: "HL7 v2.6 Chapter 10, section 10.5.3 SQM/SQR - Schedule Query Message and Response (Event S25), p 10-22.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: [],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -6625,6 +6753,10 @@ extension MessageStructureTable {
         triggers: ["VXR^V03"],
         citation: "HL7 v2.6 Chapter 4, section 4.17.5 VXR - Vaccination Record Response (Event V03), pp 4-158 to 4-159.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -6706,6 +6838,10 @@ extension MessageStructureTable {
         triggers: ["VXX^V02"],
         citation: "HL7 v2.6 Chapter 4, section 4.17.4 VXX - RESPONSE TO VACCINATION QUERY RETURNING MULTIPLE PID, p 4-158.",
         requiresExactMatch: false,
+        errorResponse: StructureErrorResponse(
+            acknowledgmentCodes: ["AE", "AR"],
+            querySegments: ["QRD", "QRF"],
+            citation: "HL7 v2.6 Chapter 5, section 5.6.5 Query error response, p 52: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),

@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — S4-3: query error responses (CH05 5.6.5; epic P11 sprint 4 close-out)
+
+- **Rule.** CH05 5.6.5 on v2.4 to v2.8.2 returns a query error as AE or AR in MSA-1 "of the
+  applicable query response message"; the response "contains the MSH, MSA, ERR, QAK and the query
+  defining segment if available" and "The rest of the message is absent" (v2.5.1 p 5-61). A query
+  response whose MSA-1 is AE or AR is now matched against that head, in its printed order (MSH,
+  the SFT and UAC it prints, MSA, ERR, QAK, its query defining segments, DSC; all but MSH and MSA
+  optional), not its full structure; an AA response keeps the full structure. v2.3 and v2.3.1
+  (CH02 2.22) print no such sentence and are unchanged.
+- **Data.** New `overrides.json` section `errorResponses`, cited per version: 129 query
+  responses (v2.4 32, v2.5.1 35, v2.6 34, v2.7.1 16, v2.8.2 12), each with the query defining
+  segments of its own print (QRD and QRF, QPD, ERQ, or none). The extractor copies the rule into
+  each structure file as `errorResponse` and fails a full read that leaves a query response out;
+  the codegen checks the codes, a top-level MSA and that each named segment is printed. No public
+  API change.
+- **Evidence.** Digests against the sprint's base: default and strict 8 lines removed (the TBR^R08
+  error example, MSH-12 2.4, formerly classed an example defect: a misfire); off unchanged;
+  supplementary run with MSH-12 set to the chapter version: 12 removed (the TBR example and the
+  event replay error response), 0 added. The event replay example as printed declares MSH-12 2.3,
+  whose print has no such rule, so it keeps its missing ERQ.
+
 ### Added — S4-1 and S4-2: field-keyed choice and structure alias (epic P11 sprint 4)
 
 - **Model.** New public `StructureElement.keyedChoice(_:min:max:key:alternatives:)` and
@@ -28,9 +49,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   version, not an alias, equal elements); the lint does not apply the choice rule to a keyed
   choice, and each resolution is routed by its own lint and guarded.
 - **Evidence.** Digests against the sprint's base: default and strict 16 lines removed, 4 added;
-  off unchanged. The v2.6 MFN^M03 examples and the v2.4 ERP^R09 example are body-checked clean;
-  the v2.5.1 event replay error response example (CH05 5.10.6.2.12), which omits the ERQ the
-  print requires, draws it as the TBR error example beside it already did.
+  off unchanged. The v2.6 MFN^M03 examples and the v2.4 ERP^R09 example are body-checked clean.
+  The v2.5.1 event replay error response example (CH05 5.10.6.2.12) drew a missing ERQ here; that
+  was a misfire, corrected in S4-3 below.
 
 ### Summary — epic P11 sprint 3: the open-slot element (owner decision 4)
 

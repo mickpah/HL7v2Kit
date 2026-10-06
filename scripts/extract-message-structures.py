@@ -1023,6 +1023,53 @@ def add_aliases(ver, structures, overrides, full):
     return report
 
 
+ERROR_RESPONSE_QUERY_SEGMENTS = ("QRD", "QRF", "QPD", "ERQ")
+
+
+def _printed(structure):
+    """The segment IDs a structure prints, at any depth (a slot names none)."""
+    return set().union(*(_segments(e) for e in structure["elements"] if "slot" not in e))
+
+
+def is_query_response(structure):
+    """S4-3: a query response, as the errorResponses entries list them: MSA at the top level and
+    QAK or a query defining segment (QRD, QPD, ERQ) at any depth."""
+    top = {e.get("segment") for e in structure["elements"]}
+    return "MSA" in top and bool(_printed(structure) & {"QAK", "QRD", "QPD", "ERQ"})
+
+
+def add_error_responses(ver, structures, overrides, full):
+    """S4-3: each errorResponses entry of the version (CH05 5.6.5, v2.4 to v2.8.2) copies its rule
+    into every structure it lists: the MSA-1 codes, the query defining segments that structure
+    prints (exactly those of QRD, QRF, QPD and ERQ it prints), and the citation. A listed structure
+    that is not a query response, or whose segments differ, is an error; on a full read so are a
+    listed structure not read and a query response the entry leaves out."""
+    report = []
+    for e in overrides["errorResponses"]:
+        if e["version"] != ver:
+            continue
+        for sid, segments in sorted(e["structures"].items()):
+            if sid not in structures:
+                if full:
+                    report.append((sid, "error", "errorResponses entry names a structure not read from the print"))
+                continue
+            structure = structures[sid]
+            printed = _printed(structure)
+            if not is_query_response(structure):
+                report.append((sid, "error", "errorResponses entry names a structure that is not a query response"))
+            elif set(segments) != {s for s in ERROR_RESPONSE_QUERY_SEGMENTS if s in printed}:
+                report.append((sid, "error", f"errorResponses entry lists {segments}; the structure prints "
+                                             f"{sorted(s for s in ERROR_RESPONSE_QUERY_SEGMENTS if s in printed)}"))
+            else:
+                structure["errorResponse"] = {"acknowledgmentCodes": list(e["acknowledgmentCodes"]),
+                                              "querySegments": list(segments), "citation": e["citation"]}
+                report.append((sid, "error-response", f"{_join(e['acknowledgmentCodes'])}: {' '.join(segments)}"))
+        if full:
+            report += [(sid, "error", "a query response the errorResponses entry does not list")
+                       for sid in sorted(structures) if is_query_response(structures[sid]) and sid not in e["structures"]]
+    return report
+
+
 def table_citation(ver, sid, triggers, where, withdrawn):
     """The sentence citing the triggers Table 0354 adds to a structure (P8b-11 fix round), and any
     section that marks one of their events withdrawn."""
@@ -1208,6 +1255,8 @@ def render(structure):
             f'  "citation": {json.dumps(structure["citation"], ensure_ascii=False)},\n'
             f'  "triggers": [{triggers}],\n'
             + (f'  "aliasOf": "{structure["aliasOf"]}",\n' if "aliasOf" in structure else "")
+            + (f'  "errorResponse": {json.dumps(structure["errorResponse"], ensure_ascii=False)},\n'
+               if "errorResponse" in structure else "")
             + f'  "elements": [\n{body}\n  ]\n'
             "}\n")
 
@@ -1271,6 +1320,11 @@ _OVERRIDE_KEYS = {
     # whose syntax it refers to another printed structure of the version: the alias keeps its ID,
     # triggers and citation and takes aliasOf's elements.
     "aliases": {"version", "structure", "aliasOf", "triggers", "citation"},
+    # S4-3: the query error response (CH05 5.6.5, v2.4 to v2.8.2): the MSA-1 codes that make a
+    # query response an error response, matched as MSH MSA [ERR] [QAK] [query defining segment]
+    # [DSC] with the rest absent; structures maps each query response of the version to the query
+    # defining segments its print carries.
+    "errorResponses": {"version", "acknowledgmentCodes", "structures", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
@@ -1317,6 +1371,17 @@ def validate_overrides(data):
                                      f"{entry.get('structure')!r}")
             if kind == "keyedChoices":
                 validate_keyed_entry(entry)
+            if kind == "errorResponses" and not (
+                    isinstance(entry.get("acknowledgmentCodes"), list) and entry["acknowledgmentCodes"]
+                    and all(isinstance(c, str) and re.fullmatch(r"[A-Z]{2}", c) for c in entry["acknowledgmentCodes"])
+                    and len(set(entry["acknowledgmentCodes"])) == len(entry["acknowledgmentCodes"])
+                    and isinstance(entry.get("structures"), dict) and entry["structures"]
+                    and all(re.fullmatch(_SID, sid) and isinstance(segs, list) and len(set(segs)) == len(segs)
+                            and all(s in ERROR_RESPONSE_QUERY_SEGMENTS for s in segs)
+                            for sid, segs in entry["structures"].items())):
+                raise OverridesError(f"errorResponses entry for v{entry.get('version')}: needs distinct two-letter "
+                                     "acknowledgmentCodes and a non-empty structures map of structure ID to distinct "
+                                     f"query defining segments among {ERROR_RESPONSE_QUERY_SEGMENTS}")
             if kind == "aliases" and not (re.fullmatch(_SID, entry.get("structure", "")) and re.fullmatch(
                     _SID, entry.get("aliasOf", "")) and entry["structure"] != entry["aliasOf"]
                     and isinstance(entry.get("triggers"), list) and entry["triggers"]
@@ -1882,6 +1947,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         report.append((sid, "parsed", f"{len(entries)} caption(s)"))
     report += resolve_keyed_choices(ver, structures, keyed)
     report += add_aliases(ver, structures, overrides, full)
+    report += add_error_responses(ver, structures, overrides, full)
     referenced_by = {}
     for e in overrides.get("referencedTriggers", []):
         if e["version"] == ver:

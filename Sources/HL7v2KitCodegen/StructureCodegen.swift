@@ -119,9 +119,11 @@ struct MessageStructureSchema: Decodable {
     /// The structure of the same version whose syntax this one takes (S4-2); its elements
     /// must equal the target's.
     let aliasOf: String?
+    /// The CH05 5.6.5 query error response rule of a query response (S4-3).
+    let errorResponse: ErrorResponseSchema?
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case structure, version, citation, triggers, elements, profile, baseVersion, rule, aliasOf
+        case structure, version, citation, triggers, elements, profile, baseVersion, rule, aliasOf, errorResponse
     }
 
     private static let profileKeys: Set<CodingKeys> = [.profile, .baseVersion, .rule]
@@ -140,7 +142,47 @@ struct MessageStructureSchema: Decodable {
         baseVersion = try c.decodeIfPresent(String.self, forKey: .baseVersion)
         rule = try c.decodeIfPresent(String.self, forKey: .rule)
         aliasOf = try c.decodeIfPresent(String.self, forKey: .aliasOf)
+        errorResponse = try c.decodeIfPresent(ErrorResponseSchema.self, forKey: .errorResponse)
     }
+}
+
+/// A structure's `errorResponse` (S4-3, CH05 5.6.5): the MSA-1 codes that make the message an
+/// error response, the query defining segments the structure prints, and the citation.
+struct ErrorResponseSchema: Decodable, Equatable {
+    let acknowledgmentCodes: [String]
+    let querySegments: [String]
+    let citation: String
+
+    private enum CodingKeys: String, CodingKey, CaseIterable { case acknowledgmentCodes, querySegments, citation }
+
+    init(from decoder: any Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "errorResponse")
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        acknowledgmentCodes = try c.decode([String].self, forKey: .acknowledgmentCodes)
+        querySegments = try c.decode([String].self, forKey: .querySegments)
+        citation = try c.decode(String.self, forKey: .citation)
+    }
+}
+
+/// The query defining segments an `errorResponse` may name (S4-3).
+let errorResponseQuerySegments: Set<String> = ["QRD", "QRF", "QPD", "ERQ"]
+
+/// Check an `errorResponse` against its structure (S4-3): distinct two-letter MSA-1 codes, a
+/// top-level MSA, distinct query defining segments the structure prints, and a citation.
+func validateErrorResponse(_ rule: ErrorResponseSchema, elements: [StructureElementSchema]) throws {
+    guard !rule.acknowledgmentCodes.isEmpty, Set(rule.acknowledgmentCodes).count == rule.acknowledgmentCodes.count,
+          rule.acknowledgmentCodes.allSatisfy({ matches($0, "^[A-Z]{2}$") }) else {
+        throw StructureSchemaError(description: "errorResponse: acknowledgmentCodes must be distinct two-letter codes")
+    }
+    guard elements.contains(where: { $0.segment == "MSA" }) else {
+        throw StructureSchemaError(description: "errorResponse: the structure has no top-level MSA")
+    }
+    let printed = elements.reduce(into: Set<String>()) { $0.formUnion(schemaSegmentIDs([$1])) }
+    guard Set(rule.querySegments).count == rule.querySegments.count,
+          rule.querySegments.allSatisfy({ errorResponseQuerySegments.contains($0) && printed.contains($0) }) else {
+        throw StructureSchemaError(description: "errorResponse: querySegments must be distinct query defining segments the structure prints")
+    }
+    guard !rule.citation.isEmpty else { throw StructureSchemaError(description: "errorResponse: empty citation") }
 }
 
 /// The `JSONDecoder.userInfo` key that admits the profile keys; see `MessageStructureSchema`.
@@ -321,6 +363,7 @@ func validateStructure(_ s: MessageStructureSchema, file: URL, version: String) 
     if let missing = keySegments.first(where: { !named.contains($0) }) {
         throw StructureSchemaError(description: "a keyed choice's key segment \(missing) is not in the structure")
     }
+    if let rule = s.errorResponse { try validateErrorResponse(rule, elements: s.elements) }
 }
 
 /// The aliases of one version (S4-2): each names another structure of the same version that is
@@ -407,6 +450,15 @@ func renderStructureTable(versionSwiftName: String, sourceDir: String, structure
         ]
         // S4-2: an alias names its target; its elements are the target's (checked equal).
         if let target = s.aliasOf { lines.append("        aliasOf: \(escapeStringLiteral(target)),") }
+        // S4-3: a query response carries its CH05 5.6.5 error response rule.
+        if let rule = s.errorResponse {
+            lines += [
+                "        errorResponse: StructureErrorResponse(",
+                "            acknowledgmentCodes: [\(rule.acknowledgmentCodes.map(escapeStringLiteral).joined(separator: ", "))],",
+                "            querySegments: [\(rule.querySegments.map(escapeStringLiteral).joined(separator: ", "))],",
+                "            citation: \(escapeStringLiteral(rule.citation))),",
+            ]
+        }
         lines += [
             "        elements: [",
         ]

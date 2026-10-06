@@ -17,6 +17,12 @@ extension Validator {
             issues.append(notModelled(declared.id, message: message, reason: Self.unmappedReason(key, value, structure: declared.id)))
             return
         }
+        // S4-3: a query response whose MSA-1 is AE or AR is matched against its CH05 5.6.5
+        // head. A profile constrains the full structure, so it is not applied to the head.
+        if let head = structure.errorResponseHead(in: message) {
+            issues += matchStructure(head, message: message, severity: severity)
+            return
+        }
         let findings = matchStructure(structure, message: message, severity: severity)
         let governed = matchProfileStructure(over: structure, baseFindings: findings, message: message, severity: severity)
         issues += governed.base

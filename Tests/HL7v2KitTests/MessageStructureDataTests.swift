@@ -100,7 +100,15 @@ struct MessageStructureDataTests {
             let id = url.deletingPathExtension().lastPathComponent
             let object = try #require(try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
             let aliasOf = object["aliasOf"] as? String
-            #expect(Set(object.keys) == Self.topKeys.union(aliasOf == nil ? [] : ["aliasOf"]), "\(id): keys \(object.keys.sorted())")
+            // S4-3: a query response of v2.4 to v2.8.2 carries its CH05 5.6.5 rule.
+            let rule = object["errorResponse"] as? [String: Any]
+            let errorResponse = rule.map {
+                StructureErrorResponse(acknowledgmentCodes: $0["acknowledgmentCodes"] as? [String] ?? [],
+                                       querySegments: $0["querySegments"] as? [String] ?? [],
+                                       citation: $0["citation"] as? String ?? "")
+            }
+            #expect(Set(object.keys) == Self.topKeys.union(aliasOf == nil ? [] : ["aliasOf"])
+                        .union(rule == nil ? [] : ["errorResponse"]), "\(id): keys \(object.keys.sorted())")
             #expect(object["structure"] as? String == id)
             #expect(object["version"] as? String == versionName)
             let triggers = object["triggers"] as? [String] ?? []
@@ -116,7 +124,7 @@ struct MessageStructureDataTests {
             let generated = try #require(MessageStructureTable.structures(for: version)[id], "\(id) is not generated")
             #expect(generated == MessageStructure(id: id, version: versionName, triggers: triggers,
                                                   citation: object["citation"] as? String ?? "", aliasOf: aliasOf,
-                                                  elements: elements))
+                                                  errorResponse: errorResponse, elements: elements))
             // S4-2: an alias carries its target's elements.
             if let aliasOf {
                 #expect(MessageStructureTable.structures(for: version)[aliasOf]?.elements == elements, "\(id): alias of \(aliasOf)")

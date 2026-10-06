@@ -3,6 +3,7 @@
   "version": "2.4",
   "citation": "HL7 v2.4 Chapter 4, section 4.13.15 RDR - pharmacy/treatment dispense information (event Q28), p 4-87. Structure ID from Table 0354 v2.4 (Chapter 2, section 2.17.3, p 2-140). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.DEFINITION.CONTENT), PATIENT (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.PATIENT.CONTENT), ORDER (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.ORDER.CONTENT), ENCODING (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.ENCODING.CONTENT) and DISPENSE (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.DISPENSE.CONTENT).",
   "triggers": ["RDR^RDR"],
+  "errorResponse": {"acknowledgmentCodes": ["AE", "AR"], "querySegments": ["QRD", "QRF"], "citation": "HL7 v2.4 Chapter 5, section 5.6.5 Query error response, p 5-62: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."},
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "MSA", "min": 1, "max": 1 },

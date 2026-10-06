@@ -911,6 +911,25 @@ registered there with no triggers (its row lists none on v2.7.1, "Deprecated and
 V2.7"; on v2.8.2 it is marked Deprecated with none), so the body is not checked, although CH03
 prints A47 under ADT_A44.
 
+### Addendum to §E — query error responses (S4-3, 2026-10-06)
+
+CH05 5.6.5 "Query error response" prints one text on every version from v2.4: v2.4 p 5-62, v2.5.1
+pp 5-60 to 5-61, v2.6 p 52, v2.7.1 p 55, v2.8.2 pp 54 to 55. An error is AE or AR in MSA-1 "of
+the applicable query response message"; the AR response is "a negative ACK message containing the
+MSH, MSA and the ERR"; the AE response "contains the MSH, MSA, ERR, QAK and the query defining
+segment if available" and "The rest of the message is absent". v2.3 and v2.3.1 (CH02 2.22, pp
+2-78 and 2-87) name AE and AR in "the applicable query response message (DSR, TBR or ERP)" but
+print no such sentence. Since S4-3 (ADR-019 S4-3 amendment) a query response of v2.4 to v2.8.2
+whose MSA-1 is AE or AR is matched against that head in its printed order (`overrides.json`
+errorResponses: 129 structures, each with the query defining segments of its own print).
+
+| Item | Was | Now |
+|---|---|---|
+| TBR^R08 error example (v2.5.1 CH05 5.10.6.2.11, MSH-12 2.4: MSH MSA ERR QAK) | Classed an example defect at P8b-13 (missing RDF and RDT) | **Misfire, corrected**: the 5.6.5 head; clean |
+| ERP^R09 event replay error example (5.10.6.2.12, p 5-143) | Classed an example defect at S4 (missing ERQ) | **Misfire, corrected** under v2.4 to v2.8.2 (clean with MSH-12 2.5.1); as printed it declares MSH-12 2.3, whose print has no such rule, so the missing ERQ stays (owner ruling) |
+| No-data response (5.6.5 Situation 3: AA, QAK-2 NF, "MSH, MSA, QAK, and query defining segment", the rest absent) | Full structure | **Blocking**: not keyed (MSA-1 AA); a structure with a required body (TBR's RDF and RDT, RSP's PID group) draws the missing body on a no-data response |
+| MSA-1 CE and CR; an AE response without QAK | n/a | Not named by 5.6.5 and not keyed; the head takes QAK as optional under AE and AR alike, so a missing QAK under AE is not reported |
+
 ## F. Excluded HL7 v2.x versions (ADR-018)
 
 A message declaring one of these parses, falls back to the v2.5.1 grammar, and carries

@@ -251,6 +251,11 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// e.g. `"MFI-1=OMA"`; nil for a structure as the table holds it. It
     /// keeps the compiled matchers of the selections apart.
     let keySelection: String?
+    /// The query error response rule of a query response structure (S4-3,
+    /// CH05 5.6.5 on v2.4 to v2.8.2): the MSA-1 values that make the message
+    /// an error response, matched against its head; nil for every other
+    /// structure and for every v2.3 and v2.3.1 structure.
+    let errorResponse: StructureErrorResponse?
 
     // Internal (P8 final review): there is no public matcher, so a structure
     // built outside the package has no use. The generated tables and the
@@ -261,7 +266,7 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     init(id: String, version: String, triggers: [String], citation: String,
          profile: String? = nil, baseVersion: String? = nil, rule: String? = nil,
          requiresExactMatch: Bool? = nil, aliasOf: String? = nil, keySelection: String? = nil,
-         elements: [StructureElement]) {
+         errorResponse: StructureErrorResponse? = nil, elements: [StructureElement]) {
         self.id = id
         self.version = version
         self.triggers = triggers
@@ -272,6 +277,7 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
         self.elements = elements
         self.aliasOf = aliasOf
         self.keySelection = keySelection
+        self.errorResponse = errorResponse
         self.requiresExactMatch = requiresExactMatch ?? !StructureMatcher.lint(elements).isDeterministic
     }
 

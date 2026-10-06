@@ -94,8 +94,11 @@ enum StructureJSONDecoder {
     struct File: Decodable {
         let structure: String, version: String, citation: String, triggers: [String], elements: [Element]
         let aliasOf: String?
+        let errorResponse: ErrorResponse?
 
-        private enum CodingKeys: String, CodingKey, CaseIterable { case structure, version, citation, triggers, elements, aliasOf }
+        private enum CodingKeys: String, CodingKey, CaseIterable {
+            case structure, version, citation, triggers, elements, aliasOf, errorResponse
+        }
 
         init(from decoder: any Decoder) throws {
             try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "structure")
@@ -106,6 +109,26 @@ enum StructureJSONDecoder {
             triggers = try c.decode([String].self, forKey: .triggers)
             elements = try c.decode([Element].self, forKey: .elements)
             aliasOf = try c.decodeIfPresent(String.self, forKey: .aliasOf)
+            errorResponse = try c.decodeIfPresent(ErrorResponse.self, forKey: .errorResponse)
+        }
+    }
+
+    /// A query response's CH05 5.6.5 rule (S4-3).
+    struct ErrorResponse: Decodable {
+        let acknowledgmentCodes: [String], querySegments: [String], citation: String
+
+        private enum CodingKeys: String, CodingKey, CaseIterable { case acknowledgmentCodes, querySegments, citation }
+
+        init(from decoder: any Decoder) throws {
+            try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "errorResponse")
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            acknowledgmentCodes = try c.decode([String].self, forKey: .acknowledgmentCodes)
+            querySegments = try c.decode([String].self, forKey: .querySegments)
+            citation = try c.decode(String.self, forKey: .citation)
+        }
+
+        var model: StructureErrorResponse {
+            StructureErrorResponse(acknowledgmentCodes: acknowledgmentCodes, querySegments: querySegments, citation: citation)
         }
     }
 
@@ -138,7 +161,8 @@ enum StructureJSONDecoder {
             throw Rejected(description: "a keyed choice's key segment \(missing) is not in the structure")
         }
         return MessageStructure(id: s.structure, version: s.version, triggers: s.triggers, citation: s.citation,
-                                aliasOf: s.aliasOf, elements: s.elements.map(\.model))
+                                aliasOf: s.aliasOf, errorResponse: s.errorResponse?.model,
+                                elements: s.elements.map(\.model))
     }
 
     /// One sequence's elements; two slots side by side are rejected (S3-1).

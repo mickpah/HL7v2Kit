@@ -83,7 +83,8 @@ extension Validator {
         let structure: MessageStructure
         switch declared.resolvingKeyedChoices(in: message) {
         case .resolved(let resolved):
-            structure = resolved
+            // S4-3: a query error response's spans come from its CH05 5.6.5 head.
+            structure = resolved.errorResponseHead(in: message) ?? resolved
         case .unmapped(let key, let value):
             return (nil, Self.unmappedReason(key, value, structure: declared.id))
         }
