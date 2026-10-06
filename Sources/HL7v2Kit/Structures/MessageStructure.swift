@@ -61,7 +61,10 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// (S4-1, ADR-019 amendment 2026-10-06): v2.4 to v2.6 CH08 8.8.2 MFN^M03
     /// prints "other segment(s)" after OM1, which are those of the MFN^M08 to
     /// MFN^M12 group that MFI-1 names. `key` gives the field and the printed
-    /// value-to-alternative map; every alternative is a named group.
+    /// value-to-alternative map; every alternative is a named group. An
+    /// alternative bearing an M08 to M12 group name holds only that group's
+    /// segments after OM1 (MFE and OM1 sit in MFN_M03's own MF_TEST group), so
+    /// its group span starts at the first segment after OM1.
     ///
     /// Before matching, the Validator reads the key field from the first
     /// occurrence of the key segment and matches the structure with the

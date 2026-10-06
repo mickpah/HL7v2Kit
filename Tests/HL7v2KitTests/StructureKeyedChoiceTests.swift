@@ -97,6 +97,28 @@ struct StructureKeyedChoiceTests {
                 "\(issues.map(\.message))")
     }
 
+    @Test("Two MFI segments: the first one's key selects the alternative, the second is reported")
+    func twoKeySegments() throws {
+        // OMA selects MF_TEST_NUMERIC ([OM2] after OM1); were the second MFI's OMB read, OM2
+        // would be out of place in MF_TEST_CATEGORICAL.
+        let issues = try StructureSlotProbeTests.structureIssues(
+            "MFN^M03^MFN_M03", "2.5.1", ["MFI|OMA|1|UPD", "MFI|OMB|1|UPD", "MFE|MAD|1||1", "OM1|1", "OM2|1"])
+        #expect(issues.map(Self.describe) == ["unexpected MFI at MFI[2]"], "\(issues.map(\.message))")
+    }
+
+    @Test("An empty MFI-1 leaves the plain choice; the required-field rule reports MFI-1")
+    func emptyKey() throws {
+        var options = ValidationOptions.default
+        options.messageStructureSeverity = .error
+        let wire = ["MSH|^~\\&|SND|SFAC|RCV|RFAC|20240101120000||MFN^M03^MFN_M03|MSG00001|P|2.5.1",
+                    "MFI||1|UPD", "MFE|MAD|1||1", "OM1|1", "OM3|1"].joined(separator: "\r")
+        let issues = Validator(options: options).validate(try Parser().parse(wire)).issues
+        let structure = issues.filter { "\($0.code)".hasPrefix("messageStructure") }
+        #expect(structure.isEmpty, "a body some alternative accepts: \(structure.map(\.message))")
+        #expect(issues.contains { $0.code == .requiredFieldMissing && $0.location.pathDescription.hasPrefix("MFI[1]-1") },
+                "\(issues.map { "\($0.code) \($0.location.pathDescription)" })")
+    }
+
     @Test("Group spans follow the selected alternative")
     func spans() throws {
         let wire = (["MSH|^~\\&|SND|SFAC|RCV|RFAC|20240101120000||MFN^M03^MFN_M03|MSG00001|P|2.5.1",
