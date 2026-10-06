@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Summary — epic P11 sprint 3: the open-slot element (owner decision 4)
+
+- **Model.** New public `StructureElement.slot(_:min:max:citation:)` (additive; the enum is open per ADR-014) for the order detail the print gives as "Order Detail Segment OBR, etc.", `[OBR, etc` or `< OBR | etc. >`. The slot takes any segment but MSH and is nondeterministic: a message draws a finding only when no reading fits. Every required segment after the slot is enforced and a defect before it is found; nothing optional after it can be found misplaced, since the slot may absorb it. A structure holding a slot is always exact-matched; the one-pass matcher refuses one with a precondition.
+- **Extractor.** `scripts/extract-message-structures.py` emits the slot in its three printed forms, inside the print's own brackets (the head of an optional inner group after ORC). Four slots are min 0, where the print brackets the placeholder alone (v2.3 and v2.3.1 ORR^O02 and OSR^Q06); the rest are min 1.
+- **Structures.** The 58 structures registered for the open slot are modelled (v2.3 and v2.3.1 ORM_O01, ORR_O02, OSR_Q06; the CH12 PGL, PPG, PPP, PPR, PPT, PPV, PRR and PTR structures on v2.3 to v2.7.1, the first four on v2.8.2): 1,171 structures modelled and 202 registered (1,113 and 260 before). Eleven cited syntax-cell errata read the CH12 bracket misprints. v2.3 ORM^O01 and ORR^O02 each have five prints under one trigger (the general one and four specific ones, CH04 4.2, 4.6, 4.7 and 4.8.1): the general print, whose slot accepts every message the specific prints accept, governs as the looser print (`primaryPrints`, all five cited).
+- **PPT_PCL (v2.3) is a cited reading.** Its pathway group is never closed in the print; the closure at the end follows the indentation and the v2.3.1 print of the same message, but other closing positions also balance. The owner may revisit it.
+- **Group spans.** With the slot inside a repeating group, two or more occurrences of that group make the parses disagree, so the spans are withheld and the group-dependent predicates take the P8b-17 fallback for that message; one occurrence keeps its span.
+- **Evidence.** Validation digests (default, strict, off) over the 1,455 spec examples and the fixtures are byte-identical to the sprint's base: no spec example resolves to a slot structure (MSH-12 empty or the message code alone). Release performance: ORU 5,002 segments v2.5.1 156 ms, v2.8.2 208 ms at `.warning` (limit 293 ms).
+
+### Changed — S3-4: sprint 3 close-out
+
+- **Honesty.** The v2.3 PPT_PCL erratum, the register row and the ADR-019 S3-3 amendment state the closure as a cited reading, corroborated by the v2.3.1 print, with other balanced closings possible.
+- **Probes.** The v2.3 PPT_PCL probe now discriminates (`PID PTH GOL PTH GOL`, a second patient, no order; it fails under a pathway closed before the goal group). The PGL_PC6 `[{VAR}]}`, PPP_PCB and PPV_PCA `[{NTE]}` cells lie after the slot, where no message can tell readings apart; their probes pin what the structure requires before the slot, and ADR-019 says which readings are pinned.
+- **Review minors.** `StructureMatcher` refuses a slot with `preconditionFailure` (an exit test pins it); the slot DocC lists all five consequences; pins for a second MSH after `ORC OBR` and a slot holding only Z-segments and ADD; a self-check pins the bundle reader's path bound for the slot-heads rule, whose residual risk is stated; ADR-019 page references for the min-0 slots corrected.
+- **Docs.** `GroupSpanPredicateTests` pins the span consequence on v2.3 ORM_O01; register section E, the P8b-17 fallback bullet and `Validation.md` record it; `Validation.md` per-version counts brought up to date.
+
 ### Changed — S3-3: the 58 open-slot structures are modelled
 
 - **Structures**: ORM_O01, ORR_O02 and OSR_Q06 (v2.3, v2.3.1) and the CH12 structures PGL_PC6,
