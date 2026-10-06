@@ -32,11 +32,12 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// "Order Detail Segment OBR, etc." or `< OBR | etc. >`, whose filling
     /// segments the standard does not enumerate (CH04 4.2.2.4 names only
     /// examples). `min` and `max` bound the number of segments it takes. It
-    /// takes any segment except MSH and the segments of its FOLLOW set (those
-    /// that can come next in the structure): a FOLLOW-set segment ends the
-    /// slot, so the structure after the slot is still checked, and a filler
-    /// that shares an ID with a following segment is read as that segment.
-    /// The name is the one the print gives ("Order Detail Segment"), or nil;
+    /// takes any segment except MSH, including one that could begin what
+    /// follows it: a message is reported only when no reading of it fits the
+    /// structure. So a required segment after the slot is still enforced and
+    /// a defect before it is still found, but a misplaced optional segment
+    /// after it may be read as slot content and is then not reported, the
+    /// faithful reading of an unbounded "etc.". The name is the one the print gives ("Order Detail Segment"), or nil;
     /// findings about an absent slot name it. `citation` gives where the slot
     /// is printed and what says it is open. A slot has no ``children`` and no
     /// ``segmentIDs``; a structure holding one is matched exactly.
@@ -100,7 +101,7 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
     }
 
     /// The FIRST-set member that stands for a slot: any segment. No segment
-    /// ID is `*`, so it meets a FOLLOW set only at another slot.
+    /// ID is `*`, so it meets another element's FIRST set only at a slot.
     static let anySegment = "*"
 
     /// The segment IDs that can begin one occurrence of this element; for a

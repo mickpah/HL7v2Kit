@@ -44,10 +44,11 @@
 /// enclosing group or named choice. `.exceededMaximum` is never reported,
 /// and there is no recovery after the first divergence.
 ///
-/// An open slot (S3-1) compiles like a segment whose state consumes any
-/// segment except MSH and the slot's FOLLOW set, its occurrences bounded by
-/// the slot's `min` and `max`; a finding that names the slot uses its printed
-/// name. A FOLLOW-set segment therefore always ends the slot.
+/// An open slot (S3-1, controller ruling) compiles like a segment whose state
+/// consumes any segment except MSH, its occurrences bounded by the slot's
+/// `min` and `max`. It is nondeterministic: a segment that could begin what
+/// follows the slot may also stay in it, and a sequence is rejected only when
+/// no parse accepts. A finding that names the slot uses its printed name.
 ///
 /// Group spans (P8b-17, amending P8b-12): an exact match can be ambiguous,
 /// several parses accepting the same sequence. An accepted sequence has spans
@@ -129,24 +130,19 @@ struct ExactAutomaton: Sendable {
     private(set) var accept = 0
     /// The fewest segments that lead from each state to `accept`.
     private(set) var distance: [Int] = []
-    /// For a slot state (S3-1), the segment IDs it does not consume: MSH and
-    /// the slot's FOLLOW set; nil for every other state. A slot state's label
-    /// is the slot's printed name, for findings only; it consumes by this set.
-    private(set) var slotExclusions: [Set<String>?] = []
-    /// The slot states of each slot, by structure position (one per copy).
-    private var slotCopies: [[Int]: [Int]] = [:]
+    /// Whether each state is a slot state (S3-1). A slot state's label is the
+    /// slot's printed name, for findings only; it consumes any segment but MSH.
+    private(set) var slots: [Bool] = []
 
     init(_ elements: [StructureElement]) {
         start = add(nil, group: nil)
         accept = elements.indices.reduce(start) { element(elements[$1], from: $0, group: nil, position: [$1], ancestry: []) }
         distance = distancesToAccept()
-        boundSlots()
     }
 
     /// Whether `state` consumes a segment with ID `id`.
     func consumes(_ state: Int, _ id: String) -> Bool {
-        if let excluded = slotExclusions[state] { return !excluded.contains(id) }
-        return labels[state] == id
+        slots[state] ? id != "MSH" : labels[state] == id
     }
 
     private mutating func add(_ label: String?, group: String?) -> Int {
@@ -155,32 +151,8 @@ struct ExactAutomaton: Sendable {
         entries.append(nil)
         ancestry.append([])
         edges.append([])
-        slotExclusions.append(nil)
+        slots.append(false)
         return labels.count - 1
-    }
-
-    /// Sets each slot's FOLLOW set (S3-1): the IDs of the segment states some
-    /// parse can reach from any copy of the slot through unlabelled states
-    /// alone, that is what can begin the rest of the structure after one of
-    /// the slot's segments (the enclosing groups' re-entries and exits
-    /// included). Other slot states are not segments and add nothing; the
-    /// union over the copies makes the set the grammar's FOLLOW set whatever
-    /// the copy. MSH is excluded as well: it never fills a slot.
-    private mutating func boundSlots() {
-        for copies in slotCopies.values {
-            var excluded: Set<String> = ["MSH"]
-            var seen: Set<Int> = []
-            var stack = copies.flatMap { edges[$0] }
-            while let state = stack.popLast() {
-                guard seen.insert(state).inserted else { continue }
-                if let label = labels[state] {
-                    if slotExclusions[state] == nil { excluded.insert(label) }
-                } else {
-                    stack += edges[state]
-                }
-            }
-            for copy in copies { slotExclusions[copy] = excluded }
-        }
     }
 
     private mutating func link(_ from: Int, _ to: Int) { edges[from].append(to) }
@@ -256,12 +228,13 @@ struct ExactAutomaton: Sendable {
             }
             return exit
         case .slot:
-            // One segment of the slot's run; `boundSlots` sets what it takes.
-            // It opens no group, so its segments lie in the enclosing spans.
+            // One segment of the slot's run: any but MSH. Whether a segment
+            // stays in the slot or begins what follows is left open; the
+            // breadth-first state sets keep both parses alive. It opens no
+            // group, so its segments lie in the enclosing spans.
             let consume = add(element.label, group: group)
             self.ancestry[consume] = ancestry
-            slotExclusions[consume] = []
-            slotCopies[position, default: []].append(consume)
+            slots[consume] = true
             link(from, consume)
             let exit = add(nil, group: nil)
             link(consume, exit)

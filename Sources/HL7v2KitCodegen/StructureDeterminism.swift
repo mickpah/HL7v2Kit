@@ -12,10 +12,10 @@
 /// Whether greedy one-pass matching is exact for `elements`: no conflict
 /// under the library's lint rule (exempt overlaps allowed). A structure
 /// holding an open slot (S3-1) never is: the one-pass matcher enters an
-/// element by its FIRST set, and a slot's is every segment, so where the slot
-/// ends depends on the segments that may follow it, not on the current one.
-/// The library's lint reports every slot as a conflict; the exact matcher
-/// bounds the slot by its FOLLOW set.
+/// element by its FIRST set, and a slot's is every segment (MSH aside), so
+/// the current segment never settles whether the slot goes on or ends. The
+/// library's lint reports every slot as a conflict; the exact matcher keeps
+/// both readings alive and rejects a message only when no parse accepts it.
 func structureIsDeterministic(_ elements: [StructureElementSchema]) -> Bool {
     guard !containsSlot(elements) else { return false }
     var deterministic = true

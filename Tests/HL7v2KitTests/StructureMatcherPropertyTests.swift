@@ -18,66 +18,30 @@ struct StructureMatcherPropertyTests {
 
     // MARK: - Reference recogniser
 
-    /// Every end position reachable by matching `elements` from any of `starts`;
-    /// `follow` is the FOLLOW set of the sequence as a whole (S3-1: it bounds a slot).
-    private static func ends(_ elements: ArraySlice<StructureElement>, _ ids: [String], from starts: Set<Int>,
-                             follow: Set<String> = []) -> Set<Int> {
-        var current = starts
-        for i in elements.indices {
-            current = ends(of: elements[i], ids, from: current, follow: followOf(elements[(i + 1)...], then: follow))
-        }
-        return current
+    /// Every end position reachable by matching `elements` from any of `starts`.
+    private static func ends(_ elements: ArraySlice<StructureElement>, _ ids: [String], from starts: Set<Int>) -> Set<Int> {
+        elements.reduce(starts) { ends(of: $1, ids, from: $0) }
     }
 
-    // The slot's FOLLOW set, computed from the grammar here (the matcher reads it
-    // off its automaton): what can begin the rest of the sequence, then, when all
-    // of the rest can be empty, what follows the sequence.
-    private static func refFirst(_ element: StructureElement) -> Set<String> {
-        switch element {
-        case .segment(let id, _, _): return [id]
-        case .group(_, _, _, let children): return followOf(children[...], then: [])
-        case .choice(_, _, _, let alternatives): return alternatives.reduce(into: Set<String>()) { $0.formUnion(refFirst($1)) }
-        case .slot: return []
-        }
-    }
-
-    private static func refNullable(_ element: StructureElement) -> Bool {
-        switch element {
-        case .segment(_, let min, _), .slot(_, let min, _, _): return min == 0
-        case .group(_, let min, _, let children): return min == 0 || children.allSatisfy(refNullable)
-        case .choice(_, let min, _, let alternatives): return min == 0 || alternatives.contains(where: refNullable)
-        }
-    }
-
-    private static func followOf(_ rest: ArraySlice<StructureElement>, then after: Set<String>) -> Set<String> {
-        var result: Set<String> = []
-        for element in rest {
-            result.formUnion(refFirst(element))
-            if !refNullable(element) { return result }
-        }
-        return result.union(after)
-    }
-
-    private static func ends(of element: StructureElement, _ ids: [String], from starts: Set<Int>,
-                             follow: Set<String>) -> Set<Int> {
+    private static func ends(of element: StructureElement, _ ids: [String], from starts: Set<Int>) -> Set<Int> {
         var result: Set<Int> = element.min == 0 ? starts : []
         var frontier = starts
         var count = 0
-        // Inside a repeating element, its own re-entry follows each occurrence.
-        let inner = element.max == 1 ? follow : follow.union(refFirst(element))
         while !frontier.isEmpty, element.max.map({ count < $0 }) ?? true, count <= ids.count {
             switch element {
             case .segment(let id, _, _):
                 frontier = Set(frontier.filter { $0 < ids.count && ids[$0] == id }.map { $0 + 1 })
             case .group(_, _, _, let children):
-                frontier = ends(children[...], ids, from: frontier, follow: inner)
+                frontier = ends(children[...], ids, from: frontier)
             case .choice(_, _, _, let alternatives):
                 // One occurrence takes exactly one alternative, any of them.
                 let current = frontier
-                frontier = alternatives.reduce(into: Set<Int>()) { $0.formUnion(ends(of: $1, ids, from: current, follow: inner)) }
+                frontier = alternatives.reduce(into: Set<Int>()) { $0.formUnion(ends(of: $1, ids, from: current)) }
             case .slot:
-                // One segment per occurrence: any but MSH and the FOLLOW set.
-                frontier = Set(frontier.filter { $0 < ids.count && ids[$0] != "MSH" && !follow.contains(ids[$0]) }.map { $0 + 1 })
+                // One segment per occurrence, any but MSH (S3-1 ruling): every
+                // end is kept, so a segment that could follow the slot may
+                // also stay in it.
+                frontier = Set(frontier.filter { $0 < ids.count && ids[$0] != "MSH" }.map { $0 + 1 })
             }
             count += 1
             if count >= element.min { result.formUnion(frontier) }
@@ -105,7 +69,7 @@ struct StructureMatcherPropertyTests {
     }
 
     /// The segments a derivation puts in a slot (S3-1): order detail segments
-    /// the structure does not name, so none is in a slot's FOLLOW set.
+    /// the structure does not name (mutations bring in the structure's own).
     static func slotFillers(_ elements: [StructureElement]) -> [String] {
         let named = elements.reduce(into: Set<String>()) { $0.formUnion($1.segmentIDs) }
         return ["OBR", "RXO", "RXR", "ODS", "RQD"].filter { !named.contains($0) }

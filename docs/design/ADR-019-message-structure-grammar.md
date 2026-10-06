@@ -1760,47 +1760,57 @@ slot name shaped like a segment ID (it would read as one in a finding), a slot a
 choice (the print never puts one there: `< OBR | etc. >` is itself the slot, OBR one of its
 fillers) and two adjacent slots (nothing printed would divide them).
 
-**Semantics: the FOLLOW-set rule.** A slot takes any segment except MSH and the slot's FOLLOW
-set: the segment IDs that can begin what comes after it (its later siblings up to the first
-required one, and, when those can all be absent, what follows the enclosing group, including
-that group's re-entry when it repeats, and so on outward). A FOLLOW-set segment always ends the
-slot. Z-segments, ADD and the version's unknown segments are transparent as everywhere. So the
-validator checks everything the print gives before and after the slot (required segments,
-order, cardinality, group re-entry, the end of the message) and nothing about what fills it.
-The trade-off: a filler that shares an ID with a segment that can follow the slot is read as
-that segment, not as part of the slot. Under the print this is sound: the slot holds order
-detail segments (CH04 4.2.2.4), and none of the segments that follow it in the two
-representatives read for this amendment (NTE, DG1, OBX, CTI, BLG and ORC in v2.3 ORM; NTE, VAR,
-OBX, ORC and PRB in v2.4 PPR) is an order detail segment. S3-3 checks each structure's FOLLOW
-set against the order detail segments before modelling it. One case is not settled by the rule
-and stays with S3-3: v2.3 CH04 4.8.1 (p 4-60) prints a pharmacy ORM under the same trigger as
-`ORC [RXO [{NTE}] {RXR} ...]`, whose NTE between RXO and RXR would end the general print's slot
-and leave RXR unexpected; on v2.3 the four ORM prints cannot be told apart (lookup rule 3). A segment that precedes the slot and is not in its FOLLOW set (for example a
-second ORC where ORC is not repeated) is taken by the slot rather than reported.
+**Semantics (controller ruling, 2026-10-06).** A slot takes any segment except MSH, and it is
+nondeterministic: a segment that could begin what follows the slot may either end the slot or
+stay in it, both readings are kept, and a message draws a finding only when no parse accepts it.
+Z-segments, ADD and the version's unknown segments are transparent as everywhere. A first draft
+of this amendment ended the slot at the first segment of its FOLLOW set; that misfires on a
+spec-compliant message (v2.3 CH04 4.8.1, p 4-60, prints the pharmacy order under ORM^O01 as
+`ORC [RXO [{NTE}] {RXR} ...]`: the NTE would end the general print's slot and RXR would be
+reported), so it was replaced (project requirement 4). Consequences, pinned in
+`StructureSlotTests`:
+
+- (a) a required segment after the slot is still enforced: every accepting parse must reach it,
+  so a message without it draws `messageStructureSegmentMissing`;
+- (b) a misplaced optional segment after the slot may be read as slot content and is then not
+  reported: the faithful reading of an unbounded "etc.", which the print does not close;
+- (c) `MSH PID ORC RXO NTE RXR` against `MSH PID [{ORC slot [{NTE}] [{DG1}] [{OBX}]}]` is
+  clean, so the v2.3 pharmacy print fits the general print's slot;
+- (d) a defect before the slot is still found;
+- (e) when a parse dies inside or after a slot (only MSH can end it there, or the end of the
+  message), "expected here" names the slot by its printed name and the segments that can follow.
+
+So the validator checks the segments the print gives before the slot, the required segments
+after it, and the end of the message; between the slot and the next required segment it can say
+nothing that the slot's openness does not allow.
 
 **Matching.** A structure holding a slot always fails the determinism lint (the slot is reported
 as a conflict with the FIRST-set member `*`, which stands for any segment), so the codegen
 renders `requiresExactMatch: true` and the Validator uses `ExactStructureMatcher`. The one-pass
-matcher enters an element by its FIRST set and a slot's is every segment; where the slot ends
-depends on what may follow it, which the automaton knows and the greedy descent does not. The
-one-pass matcher asserts it never compiles a slot. In the exact automaton a slot occurrence is
-one consuming state whose label is the slot's name; after the automaton is built, each slot's
-excluded set is MSH plus the labels of the segment states reachable from any copy of that slot
-through unlabelled states (other slot states add nothing), the union over copies making it the
-grammar's FOLLOW set whatever the copy. `min` and `max` expand as for any element. Findings:
-an absent required slot is `messageStructureSegmentMissing` with the slot's name as the
-segment ID (at the end of the message) or, mid-message, `messageStructureSegmentUnexpected` on
-the next segment with the slot's name in "expected here". The test reference recogniser computes
-the FOLLOW set from the grammar instead and agrees with the matcher on derived and mutated
-sequences; the structure guards accept a slot structure.
+matcher enters an element by its FIRST set and a slot's is every segment, so the current segment
+never settles whether the slot goes on or ends; it asserts it never compiles a slot. In the exact
+automaton a slot occurrence is one consuming state, labelled with the slot's name, that consumes
+any ID but MSH; `min` and `max` expand as for any element (min 1, max nil: one state, then a
+self-loop through the hub). The breadth-first state sets hold "still inside the slot" and
+"exited to the following element" together, so no lookahead is needed and the bound
+O(n x (S + E)) is unchanged. Findings: an absent required slot is
+`messageStructureSegmentMissing` with the slot's name as the segment ID at the end of the
+message, or `messageStructureSegmentUnexpected` on the next segment with the slot's name in
+"expected here" mid-message. The test reference recogniser (backtracking over end positions,
+coded apart from the automaton) gives a slot occurrence any one segment but MSH and agrees with
+the matcher on derived and mutated sequences; the structure guards accept a slot structure.
 
 **Group spans.** A slot opens no group: its segments lie in the spans of the enclosing groups,
-and no span is made for the slot. Spans around it are unchanged.
+and no span is made for the slot. Where the parses disagree on the groups, which happens as soon
+as a segment after the slot could re-enter the slot's group or be slot content (a second ORC
+after an order's slot), the P8b-17 rule withholds the spans (`spansWithheld`) and the
+group-dependent predicates take their existing fallback. One order occurrence keeps its span.
 
 **What the validator cannot say.** Which segments fill the slot, whether they form a valid
-combination (for example a pharmacy order's RXO then RXR), whether a filler belongs to the
-version's order detail segments, and, on v2.3, which of the four ORM prints under ORM^O01 a
-message follows (lookup rule 3); field-level validation of the filling segments is unaffected.
+combination, whether a filler belongs to the version's order detail segments, whether an
+optional segment after the slot is misplaced, and, on v2.3, which of the four ORM prints under
+ORM^O01 a message follows (lookup rule 3); field-level validation of every segment, slot
+fillers included, is unaffected.
 
 **Ruling G6.** Superseded for placeholders that have an enumerable position (the `etc.` slot:
 the print gives everything around it). Query-template rows (`[...]`, `...` and the ellipsis rows

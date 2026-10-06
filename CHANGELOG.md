@@ -12,18 +12,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`StructureElement.slot(_:min:max:citation:)`** (additive; the enum is open per ADR-014).
   Models the print's "Order Detail Segment OBR, etc." (v2.3 CH04 4.2.1) and `[OBR, etc` /
   `< OBR | etc. >` (CH12), whose filling segments CH04 4.2.2.4 does not enumerate. A slot takes
-  any segment except MSH and its FOLLOW set (what can come next), so the validator checks
-  everything the print gives around the slot and nothing about what fills it; a filler sharing
-  an ID with a following segment is read as that segment. A slot has no `children` and no
+  any segment except MSH and is nondeterministic (controller ruling): a segment that could
+  follow the slot may also stay in it, and a message draws a finding only when no parse accepts
+  it. Required segments after the slot and defects before it are still found; a misplaced
+  optional segment after it may be read as slot content and is not reported. The v2.3 pharmacy
+  order (`ORC RXO NTE RXR`) fits the general print's slot. A slot has no `children` and no
   `segmentIDs`; an absent required slot is reported by its printed name.
 - **Matching.** A structure holding a slot always fails the determinism lint and is matched by
-  the exact matcher, whose automaton bounds each slot by its FOLLOW set; group spans are
-  unchanged (a slot opens none).
+  the exact matcher, whose state sets keep the slot open and closed together; a slot opens no
+  group span, and spans are withheld where the parses disagree on the groups.
 - **Structure JSON.** `{"slot": "<name>" or null, "min", "max", "citation"}`. The codegen and the
   test decoder reject an uncited slot, a slot inside a choice, two adjacent slots and a slot
   name shaped like a segment ID; `check-structure-codegen.sh` has 10 new cases (100 in all).
-- **ADR-019 amendment 2026-10-06 (S3-1).** Semantics, the FOLLOW-set rule and its trade-off,
-  exact-matcher routing; ruling G6 superseded for the `etc.` slot, query templates stay
+- **ADR-019 amendment 2026-10-06 (S3-1).** Semantics (nondeterministic slot, consequences a to
+  e), exact-matcher routing, group spans; ruling G6 superseded for the `etc.` slot, query templates stay
   Permanent. No structure file or `completeness.json` entry changes: the extractor (S3-2) and
   the 58 registrations Blocking on the slot (S3-3) follow.
 

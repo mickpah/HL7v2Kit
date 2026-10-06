@@ -110,9 +110,10 @@ extension StructureMatcher {
             }
             if case .slot = element {
                 // S3-1: the one-pass matcher enters an element by its FIRST
-                // set, and a slot's is every segment, FOLLOW set included. A
-                // slot is always a conflict, so its structure is matched
-                // exactly, where the automaton bounds it by its FOLLOW set.
+                // set, and a slot's is every segment, so where it ends is
+                // never settled by the current segment. A slot is always a
+                // conflict, so its structure is matched exactly, where every
+                // way of ending the slot is kept until the message decides.
                 conflicts.append(.init(path: path + [name], segmentIDs: [StructureElement.anySegment], exemptVia: nil))
                 continue
             }
