@@ -262,7 +262,18 @@ struct StructureJSONDecoderTests {
                    try Self.mfnKeyed { Self.rekey(&$0) { var v = $0["values"] as? [String: String] ?? [:]; v["OMX"] = "MF_TEST_NUMERIC"; $0["values"] = v } }, "MFN_M03")
         // The S4-2 alias cases concern the codegen's directory walk (validateAliases), not one file.
 
-        #expect(cases.count == 54)
+        // S5-1: syntaxSource prose marks a transcription (overrides.json proseFragments).
+        var prose = try Self.load("ADT_A01")
+        prose["syntaxSource"] = "prose"
+        let plainCitation = prose["citation"] as? String ?? ""
+        try reject("a transcription whose citation does not name proseFragments",
+                   "syntaxSource prose needs a citation naming \"overrides.json proseFragments\"", prose, "ADT_A01")
+        prose["citation"] = plainCitation + " Transcribed (overrides.json proseFragments, ADR-019 S5)."
+        try accept("a transcription marked syntaxSource prose and cited", prose, "ADT_A01")
+        prose["syntaxSource"] = "table"
+        try reject("a syntaxSource other than prose", "syntaxSource must be \"prose\"", prose, "ADT_A01")
+
+        #expect(cases.count == 57)
         for c in cases {
             if let expected = c.expected {
                 #expect(c.verdict?.contains(expected) == true, "\(c.label): \(c.verdict ?? "accepted")")

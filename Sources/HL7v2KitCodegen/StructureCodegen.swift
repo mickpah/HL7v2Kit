@@ -121,9 +121,13 @@ struct MessageStructureSchema: Decodable {
     let aliasOf: String?
     /// The CH05 5.6.5 query error response rule of a query response (S4-3).
     let errorResponse: ErrorResponseSchema?
+    /// `"prose"` when the syntax is a hand transcription of the print's prose (S5-1,
+    /// `overrides.json` proseFragments); checked, never rendered.
+    let syntaxSource: String?
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case structure, version, citation, triggers, elements, profile, baseVersion, rule, aliasOf, errorResponse
+        case structure, version, citation, triggers, elements, profile, baseVersion, rule, aliasOf, errorResponse,
+             syntaxSource
     }
 
     private static let profileKeys: Set<CodingKeys> = [.profile, .baseVersion, .rule]
@@ -143,6 +147,7 @@ struct MessageStructureSchema: Decodable {
         rule = try c.decodeIfPresent(String.self, forKey: .rule)
         aliasOf = try c.decodeIfPresent(String.self, forKey: .aliasOf)
         errorResponse = try c.decodeIfPresent(ErrorResponseSchema.self, forKey: .errorResponse)
+        syntaxSource = try c.decodeIfPresent(String.self, forKey: .syntaxSource)
     }
 }
 
@@ -375,6 +380,13 @@ func validateStructure(_ s: MessageStructureSchema, file: URL, version: String) 
         throw StructureSchemaError(description: "a keyed choice's key segment \(missing) is not in the structure")
     }
     if let rule = s.errorResponse { try validateErrorResponse(rule, elements: s.elements) }
+    if let source = s.syntaxSource {
+        // S5-1 (ADR-019 S5): a transcription says so, and its citation names the cited entry.
+        guard source == "prose" else { throw StructureSchemaError(description: "syntaxSource must be \"prose\"") }
+        guard s.citation.contains("overrides.json proseFragments") else {
+            throw StructureSchemaError(description: "syntaxSource prose needs a citation naming \"overrides.json proseFragments\"")
+        }
+    }
 }
 
 /// The aliases of one version (S4-2): each names another structure of the same version that is

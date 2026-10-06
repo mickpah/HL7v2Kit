@@ -684,6 +684,21 @@ rule(querySegments=[])"
 accept "a query response without the rule" "$PRE
 d = load('v2.5.1/DSR_Q01.json'); del d['errorResponse']; save('v2.5.1/DSR_Q01.json', d)"
 
+# S5-1: syntaxSource prose marks a transcription (overrides.json proseFragments, ADR-019 S5).
+PROSE='
+def prose(**kw):
+    d = load("v2.5.1/ADT_A01.json"); d.update(kw); save("v2.5.1/ADT_A01.json", d)
+'
+
+accept "a transcription marked syntaxSource prose and cited" "$PRE$PROSE
+prose(syntaxSource='prose', citation=load('v2.5.1/ADT_A01.json')['citation'] + ' Transcribed (overrides.json proseFragments, ADR-019 S5).')"
+
+reject "a syntaxSource other than prose" 'syntaxSource must be "prose"' "$PRE$PROSE
+prose(syntaxSource='table', citation=load('v2.5.1/ADT_A01.json')['citation'] + ' overrides.json proseFragments')"
+
+reject "a transcription whose citation does not name proseFragments" 'syntaxSource prose needs a citation naming "overrides.json proseFragments"' "$PRE$PROSE
+prose(syntaxSource='prose')"
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

@@ -769,6 +769,8 @@ def _element(node):
         return _slot(node)
     if node["kind"] == "keyed":
         return _keyed(node)
+    if node["kind"] == "prose":     # S5-1: a transcription's @NAME, filled by resolve_prose
+        return {"_prose": node["name"]}
     if node["kind"] == "etc":
         raise UnknownNotation(f"placeholder (G6): {node['tok']!r} among a choice's alternatives, not the last")
     if node["kind"] == "<":
@@ -784,7 +786,7 @@ def _element(node):
         # Two printed names are two groups, nested: never merge them; nor a named group into
         # the choice it holds (the group, not the choice, carries the name).
         # A bracketless named group ("=", P8b-10) is required: never merged into the brackets it holds.
-        if (only is not None and only["kind"] not in ("seg", "slot", "keyed") and node["kind"] != "="
+        if (only is not None and only["kind"] not in ("seg", "slot", "keyed", "prose") and node["kind"] != "="
                 and not (names and (only["name"] or only["kind"] == "<"))):
             node = only
             continue
@@ -1023,6 +1025,206 @@ def add_aliases(ver, structures, overrides, full):
     return report
 
 
+PROSE_TOKEN = re.compile(r"\s+|[\[\]{}<>|]|@[A-Z][A-Z0-9_]*|[A-Z][A-Z0-9_]*:|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_:])|\S+")
+
+
+def transcription(syntax):
+    """Elements from a proseFragments transcription (S5-1): the tables' bracket notation ([ ] { }
+    and < | >, nested brackets around one child merged as for a print), "NAME:" after an opening
+    bracket for a group name the print gives, and @NAME for a keyed placeholder."""
+    root = {"kind": "root", "children": [], "name": None}
+    stack, prev = [root], None
+    for tok in (m.group(0) for m in PROSE_TOKEN.finditer(syntax)):
+        if tok.isspace():
+            continue
+        if tok in "[{<":
+            node = {"kind": tok, "children": [], "name": None}
+            if tok == "<":
+                node.update(alts=[], page="")
+            stack[-1]["children"].append(node)
+            stack.append(node)
+        elif tok in "]}":
+            if len(stack) == 1 or stack[-1]["kind"] != {"]": "[", "}": "{"}[tok]:
+                raise UnknownNotation(f"unbalanced {tok!r} in the transcription {syntax!r}")
+            closed = stack.pop()
+            if len(closed["children"]) == 1 and closed["children"][0]["kind"] == "prose":
+                raise UnknownNotation(f"brackets around the placeholder alone in {syntax!r}: bound the choice instead")
+        elif tok in "|>":
+            if stack[-1]["kind"] != "<":
+                raise UnknownNotation(f"{tok!r} outside a choice in the transcription {syntax!r}")
+            stack[-1]["alts"].append(stack[-1]["children"])
+            stack[-1]["children"] = []
+            if tok == ">":
+                stack.pop()
+        elif tok.endswith(":"):
+            if prev not in ("[", "{") or stack[-1]["name"]:
+                raise UnknownNotation(f"group name {tok!r} not right after an opening bracket in {syntax!r}")
+            stack[-1]["name"] = tok[:-1]
+        elif tok.startswith("@"):
+            stack[-1]["children"].append({"kind": "prose", "name": tok[1:]})
+        elif re.fullmatch(r"[A-Z][A-Z0-9]{2}", tok):
+            stack[-1]["children"].append({"kind": "seg", "id": tok, "desc": ""})
+        else:
+            raise UnknownNotation(f"not notation in the transcription: {tok!r}")
+        prev = tok
+    if len(stack) != 1:
+        raise UnknownNotation(f"unbalanced brackets in the transcription {syntax!r}")
+    if not root["children"]:
+        raise UnknownNotation("an empty transcription")
+    return [_element(child) for child in root["children"]]
+
+
+def _shape(elements):
+    """Elements without names or citations: what a transcription must share with the print it
+    names in `from`."""
+    out = []
+    for e in elements:
+        if "segment" in e:
+            out.append((e["segment"], e["min"], e["max"]))
+        elif "alternatives" in e:
+            key = e.get("key")
+            out.append(("<", e["min"], e["max"], key and tuple(sorted(key["values"])), _shape(e["alternatives"])))
+        elif "slot" in e:
+            out.append(("slot", e["min"], e["max"]))
+        else:
+            out.append(("group", e["min"], e["max"], _shape(e["elements"])))
+    return tuple(out)
+
+
+def _prose_placeholders(elements):
+    for e in elements:
+        if "_prose" in e:
+            yield elements, e
+        for inner in (e.get("elements"), e.get("alternatives")):
+            if inner:
+                yield from _prose_placeholders(inner)
+
+
+def _printed_names(elements):
+    return [g["group"] for _, g in _v2xml.groups(elements) if g.get("nameSource") == "printed"]
+
+
+def _cite_at(ver, chapter, node):
+    return f"HL7 v{ver} Chapter {chapter}, section {node['section']}, p {node['page']}: '{node['quote']}'"
+
+
+def resolve_prose(ver, structures, prose, pending, overrides, bundles, synthesis, used=None):
+    """S5-1 (ADR-019 S5): each proseFragments entry's transcription becomes its structure. pending
+    maps a structure whose caption was read (its table unreadable) to {"base": the structure with
+    its caption citation and triggers, "rows": the caption's rows}; an entry with a null caption
+    is synthesised from synthesis = (Table 0354 rows {ID: events}, their locations, the IDs some
+    caption prints). @NAME placeholders become keyed choices (S4-1) whose alternatives are the
+    transcribed fragments or the segments another print of the version gives (`from`, checked
+    equal to the transcription when both are given). Returns report rows."""
+    report = []
+    rows_0354, where_0354, printed_ids = synthesis
+    # An alternative `from` another proseFragments structure is resolved after it.
+    order = sorted(prose, key=lambda sid: (any(a.get("from", {}).get("structure") in prose
+                                                for c in prose[sid].get("choices", {}).values()
+                                                for a in c["alternatives"]), sid))
+    for sid in order:
+        entry = prose[sid]
+        if entry["caption"] is None:
+            if sid in printed_ids:
+                report.append((sid, "error", "proseFragments entry with a null caption for a structure a caption prints"))
+                continue
+            if sid not in rows_0354:
+                report.append((sid, "error", f"proseFragments entry with a null caption: {sid} is not a Table 0354 "
+                                             f"v{ver} row"))
+                continue
+            events = [f"{sid.split('_')[0]}^{v}" for v in rows_0354[sid]]
+            if events != entry["triggers"]:
+                report.append((sid, "error", f"proseFragments triggers {entry['triggers']} are not the Table 0354 "
+                                             f"row's {events}"))
+                continue
+            loc = where_0354.get(sid)
+            at = f" (Chapter {loc[0] or loc[1].split('.')[0]}, section {loc[1]}, p {loc[2]})" if loc else ""
+            base = {"structure": sid, "version": ver, "triggers": list(events),
+                    "citation": f"HL7 v{ver} Table 0354{at} lists {sid} for {_join(events)}; no caption prints it."}
+            rows = []
+        elif sid not in pending:
+            continue     # a partial read, or the caption is not read (a full read reports it)
+        else:
+            base, rows = pending[sid]["base"], pending[sid]["rows"] or []
+        try:
+            elements = transcription(entry["syntax"])
+            marks = {m.group(1) for r in rows for m in [GROUP_MARK.match(r.desc)] if m}
+            stray = [n for n in _printed_names(elements) if n not in marks]
+            if stray:
+                raise UnknownNotation(f"group name(s) {stray} written as printed, but the caption prints no such mark")
+            notes, cites = [], []
+            for parent, holder in list(_prose_placeholders(elements)):
+                name = holder["_prose"]
+                choice = entry["choices"][name]
+                alternatives, values, said = [], {}, []
+                for alt in choice["alternatives"]:
+                    elems = transcription(alt["syntax"]) if "syntax" in alt else None
+                    if elems is not None and _printed_names(elems):
+                        raise UnknownNotation(f"alternative {alt['group']}: a fragment prints no group name")
+                    if "from" in alt:
+                        src = alt["from"]
+                        ref = structures.get(src["structure"])
+                        group = ref and _find_group(ref["elements"], src["group"])
+                        ids = [e.get("segment") for e in group["elements"]] if group else []
+                        if not group or src["after"] not in ids or ids.index(src["after"]) == len(ids) - 1:
+                            raise UnknownNotation(f"alternative {alt['group']}: {src['structure']} has no group "
+                                                  f"{src['group']} with segments after {src['after']}")
+                        copied = json.loads(json.dumps(group["elements"][ids.index(src["after"]) + 1:]))
+                        if elems is not None and _shape(elems) != _shape(copied):
+                            raise UnknownNotation(f"alternative {alt['group']}: the transcription {alt['syntax']!r} "
+                                                  f"differs from {src['structure']} {src['group']}")
+                        for _, inner in _v2xml.groups(copied):
+                            if inner["nameSource"] != "printed":
+                                m = re.search(re.escape(inner["group"]) + r" \([^()]*\)", ref["citation"])
+                                if not m:
+                                    raise UnknownNotation(f"{src['structure']} does not cite the name {inner['group']}")
+                                cites.append(m.group(0))
+                        elems = copied
+                    alternatives.append({"group": alt["group"], "nameSource": alt["nameSource"], "min": 1, "max": 1,
+                                         "elements": elems})
+                    values.update({v: alt["group"] for v in alt["values"]})
+                    said.append(f"{_join(alt['values'])} select {alt['group']} (section {alt['section']}, p "
+                                f"{alt['page']}: '{alt['quote']}'"
+                                + (f"; the segments as {alt['from']['structure']} prints them" if "from" in alt else "")
+                                + ")")
+                    cites.append(f"{alt['group']} ({alt['nameCitation']})")
+                key = choice["key"]
+                parent[parent.index(holder)] = {
+                    "choice": None, "min": 1, "max": 1,
+                    "key": {"segment": key["segment"], "field": key["field"], "component": key["component"],
+                            "values": values,
+                            "citation": f"{_cite_at(ver, entry['chapter'], choice)} (overrides.json proseFragments, ADR-019 S5)."},
+                    "alternatives": alternatives}
+                notes.append(f" The placeholder @{name} is a choice keyed by {key['segment']}-{key['field']}"
+                             + (f".{key['component']}" if key["component"] != 1 else "")
+                             + f" (section {choice['section']}, p {choice['page']}: '{choice['quote']}'): {'; '.join(said)}.")
+            log = []
+            name_groups(elements, ver, sid, overrides, used, bundles=bundles, log=log)
+        except UnknownNotation as exc:
+            report.append((sid, "error", f"proseFragments: {exc}"))
+            continue
+        structure = {**base, "syntaxSource": "prose", "elements": elements}
+        structure["citation"] = (base["citation"]
+                                 + f" The print gives this syntax in prose, not as a table: it is transcribed by hand "
+                                   f"(overrides.json proseFragments, ADR-019 S5; syntaxSource prose). {entry['citation']} "
+                                   f"{_cite_at(ver, entry['chapter'], entry)}."
+                                 + "".join(notes)
+                                 + (f" Group names of the alternatives (the print names none): "
+                                    f"{', '.join(dict.fromkeys(cites))}." if cites else "")
+                                 + name_citation(log))
+        try:
+            structures[sid] = validate_names(structure)
+        except NameSourceError as exc:
+            report.append((sid, "error", f"proseFragments: {exc}"))
+            continue
+        for e in log:
+            report.append((sid, "no-bundle-name" if e["source"] == "synthesised" else "name",
+                           f"{e['name']} at [{', '.join(str(p) for p in e['path'])}]: {e['cite']}"))
+        report.append((sid, "prose", f"{'synthesised' if entry['caption'] is None else entry['caption']}: "
+                                     f"{compact(elements)[:160]}"))
+    return report
+
+
 ERROR_RESPONSE_QUERY_SEGMENTS = ("QRD", "QRF", "QPD", "ERQ")
 
 
@@ -1258,6 +1460,7 @@ def render(structure):
             f'  "citation": {json.dumps(structure["citation"], ensure_ascii=False)},\n'
             f'  "triggers": [{triggers}],\n'
             + (f'  "aliasOf": "{structure["aliasOf"]}",\n' if "aliasOf" in structure else "")
+            + (f'  "syntaxSource": "{structure["syntaxSource"]}",\n' if "syntaxSource" in structure else "")
             + (f'  "errorResponse": {json.dumps(structure["errorResponse"], ensure_ascii=False)},\n'
                if "errorResponse" in structure else "")
             + f'  "elements": [\n{body}\n  ]\n'
@@ -1330,7 +1533,17 @@ _OVERRIDE_KEYS = {
     # noDataQueryStatus: the QAK-2 values that, with MSA-1 AA, make it a no-data response (5.6.5
     # Situation 3), matched as MSH MSA QAK [query defining segment] [DSC] with no ERR.
     "errorResponses": {"version", "acknowledgmentCodes", "noDataQueryStatus", "structures", "citation"},
+    # S5-1 (ADR-019 S5): a structure the print gives only in prose (a fragment that replaces a
+    # placeholder, a key named in a sentence) or by cross-reference: the syntax transcribed by hand
+    # in the tables' bracket notation, the placeholder written @NAME and keyed by "choices"; the
+    # caption as printed and its section (null caption: a Table 0354 row no caption prints, with
+    # "triggers"); chapter, section, page and the quoted sentence (under 15 words). Substituted
+    # only where the extractor cannot read the printed table.
+    "proseFragments": {"version", "structure", "caption", "chapter", "section", "page", "quote", "syntax",
+                       "citation"},
 }
+PROSE_ALTERNATIVE_KEYS = {"values", "group", "nameSource", "nameCitation", "section", "page", "quote"}
+PROSE_CHOICE_KEYS = {"key", "section", "page", "quote", "alternatives"}
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
 
@@ -1376,6 +1589,8 @@ def validate_overrides(data):
                                      f"{entry.get('structure')!r}")
             if kind == "keyedChoices":
                 validate_keyed_entry(entry)
+            if kind == "proseFragments":
+                validate_prose_entry(entry)
             if kind == "errorResponses" and not (
                     isinstance(entry.get("acknowledgmentCodes"), list) and entry["acknowledgmentCodes"]
                     and all(isinstance(c, str) and re.fullmatch(r"[A-Z]{2}", c) for c in entry["acknowledgmentCodes"])
@@ -1398,7 +1613,8 @@ def validate_overrides(data):
                 raise OverridesError(f"aliases entry for {entry.get('structure')}: needs two distinct structure IDs and "
                                      "a non-empty list of CODE^EVT triggers with the alias's message code")
             optional = {"exclusions": {"caption"}, "errata": {"occurrence"}, "eventsFromTitle": {"occurrence"},
-                        "keyedChoices": {"alternatives", "slot"}}.get(kind, set())
+                        "keyedChoices": {"alternatives", "slot"},
+                        "proseFragments": {"triggers", "choices"}}.get(kind, set())
             if not keys <= set(entry) <= keys | optional:
                 raise OverridesError(f"{kind} entry keys {sorted(entry)}, expected {sorted(keys)}")
             text = entry.get("citation", entry.get("note", ""))
@@ -1435,6 +1651,75 @@ def validate_keyed_entry(entry):
     for k in ("value", "group"):
         if len({a[k] for a in alts}) != len(alts):
             raise OverridesError(f"keyedChoices entry for {sid}: alternatives repeat a {k}")
+
+
+def _quoted(where, node, keys=("section", "page", "quote")):
+    """A proseFragments node's print citation: a section number, a page as printed (8-21, or
+    8-20 to 8-21) and a quoted sentence of 1 to 14 words (under 15, one line)."""
+    if not (re.fullmatch(r"\d+(\.\d+)+", str(node.get("section", "")))
+            and re.fullmatch(r"\w+-\w+( to \w+-\w+)?", str(node.get("page", "")))
+            and isinstance(node.get("quote"), str) and node["quote"].strip() and "\n" not in node["quote"]
+            and len(node["quote"].split()) < 15):
+        raise OverridesError(f"proseFragments {where}: needs a section, a page and a quoted sentence under 15 words")
+
+
+def validate_prose_entry(entry):
+    """A proseFragments entry (S5-1): the cited print (chapter, section, page, quote), a caption
+    as printed or null with triggers, a syntax, and for each @NAME placeholder a keyed choice whose
+    alternatives each give distinct key values, a cited group name and the fragment as syntax,
+    from (another print of the version), or both."""
+    sid = entry.get("structure", "")
+    where = f"entry for v{entry.get('version')} {sid}"
+    if not re.fullmatch(_SID, sid) or not re.fullmatch(r"\d+[A-Z]?", str(entry.get("chapter", ""))):
+        raise OverridesError(f"proseFragments {where}: needs a structure ID and a chapter")
+    _quoted(where, entry)
+    if (entry["caption"] is None) != ("triggers" in entry):
+        raise OverridesError(f"proseFragments {where}: triggers are given exactly when the caption is null")
+    if entry["caption"] is not None and not (isinstance(entry["caption"], str) and entry["caption"].strip()):
+        raise OverridesError(f"proseFragments {where}: the caption is the caption as printed, or null")
+    if "triggers" in entry and not (isinstance(entry["triggers"], list) and entry["triggers"] and all(
+            isinstance(t, str) and TRIGGER.match(t) and t.split("^")[0] == sid.split("_")[0] for t in entry["triggers"])):
+        raise OverridesError(f"proseFragments {where}: triggers must be CODE^EVT of the structure's message code")
+    if not (isinstance(entry["syntax"], str) and entry["syntax"].strip()):
+        raise OverridesError(f"proseFragments {where}: needs a syntax")
+    placeholders = re.findall(r"@([A-Z][A-Z0-9_]*)", entry["syntax"])
+    choices = entry.get("choices", {})
+    if not isinstance(choices, dict) or sorted(placeholders) != sorted(choices) or len(set(placeholders)) != len(placeholders):
+        raise OverridesError(f"proseFragments {where}: every @NAME in the syntax once, each with one choices entry")
+    for name, choice in choices.items():
+        at = f"{where} choice @{name}"
+        if not (isinstance(choice, dict) and set(choice) == PROSE_CHOICE_KEYS):
+            raise OverridesError(f"proseFragments {at}: keys {sorted(PROSE_CHOICE_KEYS)}")
+        _quoted(at, choice)
+        key = choice["key"]
+        if not (isinstance(key, dict) and set(key) == {"segment", "field", "component"}
+                and re.fullmatch(r"[A-Z][A-Z0-9]{2}", str(key["segment"]))
+                and all(isinstance(key[k], int) and key[k] >= 1 for k in ("field", "component"))):
+            raise OverridesError(f"proseFragments {at}: key is {{segment, field, component}}")
+        alts = choice["alternatives"]
+        if not (isinstance(alts, list) and len(alts) >= 2):
+            raise OverridesError(f"proseFragments {at}: two or more alternatives")
+        values = []
+        for alt in alts:
+            if not (isinstance(alt, dict) and PROSE_ALTERNATIVE_KEYS <= set(alt) <= PROSE_ALTERNATIVE_KEYS | {"syntax", "from"}
+                    and ({"syntax", "from"} & set(alt))):
+                raise OverridesError(f"proseFragments {at}: each alternative has {sorted(PROSE_ALTERNATIVE_KEYS)} "
+                                     "and syntax, from or both")
+            _quoted(f"{at} alternative {alt.get('group')}", alt)
+            if not (isinstance(alt["values"], list) and alt["values"] and all(isinstance(v, str) and v for v in alt["values"])):
+                raise OverridesError(f"proseFragments {at}: each alternative selects non-empty values")
+            values += alt["values"]
+            if not (re.fullmatch(r"[A-Z][A-Z0-9_]*", str(alt["group"])) and alt["nameSource"] in NAME_SOURCES
+                    and alt["nameSource"] != "printed" and isinstance(alt["nameCitation"], str) and alt["nameCitation"].strip()):
+                raise OverridesError(f"proseFragments {at}: each alternative names its group, with a non-printed "
+                                     "nameSource and a nameCitation (the print names none)")
+            if "syntax" in alt and "@" in alt["syntax"]:
+                raise OverridesError(f"proseFragments {at}: an alternative's syntax holds no placeholder")
+            if "from" in alt and not (isinstance(alt["from"], dict) and set(alt["from"]) == {"structure", "group", "after"}
+                                      and re.fullmatch(_SID, str(alt["from"]["structure"]))):
+                raise OverridesError(f"proseFragments {at}: from is {{structure, group, after}}")
+        if len(set(values)) != len(values) or len({a["group"] for a in alts}) != len(alts):
+            raise OverridesError(f"proseFragments {at}: alternatives repeat a value or a group")
 
 
 def load_overrides(path=OVERRIDES):
@@ -1685,6 +1970,8 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     keyed = {e["structure"]: e for e in overrides["keyedChoices"] if e["version"] == ver}     # S4-1
     keyed_captions = {e["caption"] for e in keyed.values()}
     used_keyed = set()
+    prose = {e["structure"]: e for e in overrides["proseFragments"] if e["version"] == ver}     # S5-1
+    pending_prose = {}
     assigned = {(u["section"], u["caption"]): u for u in overrides["captionStructures"] if u["version"] == ver}
     # Table 0354 row: its message code, the code the row prints before "_" (the ACK row: ACK itself).
     rows_of_table = {row: row.split("_")[0] for row, _, _ in table}
@@ -1882,7 +2169,23 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             if not (cap.page and cap.end_page and cap.section):
                 raise UnknownNotation("no page footer or section heading found for the caption")
             log = []
-            elements = read(sid, rows, error, log, used)
+            if sid in prose:
+                # S5-1: a transcription stands in only for a table the extractor cannot read.
+                entry = prose[sid]
+                if (entry["caption"], entry["section"]) != (cap.printed, cap.section):
+                    report.append((sid, "error", f"proseFragments entry names the caption {entry['caption']!r} in section "
+                                                 f"{entry['section']}; the print is {cap.printed!r} in section {cap.section}"))
+                    continue
+                try:
+                    read(sid, rows, error)
+                except UnknownNotation as exc:
+                    elements, unreadable = [], str(exc)
+                else:
+                    report.append((sid, "error", "proseFragments entry for a structure whose printed table is read: "
+                                                 "a transcription never overrides a printed table"))
+                    continue
+            else:
+                elements = read(sid, rows, error, log, used)
         except UnknownNotation as exc:
             report.append((sid, "skipped", f"unreadable: {cap.source} line {cap.line + 1}: {exc}"))
             continue
@@ -1905,7 +2208,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             if c is not cap and not fold and not set(trigs) <= set(triggers):
                 others.append(c)
             triggers += [t for t in trigs if t not in triggers]
-            if c is cap or (partner and c is partner[0]):
+            if c is cap or (partner and c is partner[0]) or sid in prose:
                 continue
             try:
                 theirs = read(sid, r, e)
@@ -1948,12 +2251,18 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 report.append((sid, "name", f"{entry['source']} {entry['name']} at {where}: {entry['cite']}"))
             if entry["shadowed"]:
                 report.append((sid, "error", f"groupNames entry at path {where} shadows the bundle name {entry['name']}"))
+        if sid in prose:     # S5-1: resolve_prose builds it from the transcription
+            pending_prose[sid] = {"base": structures.pop(sid), "rows": rows}
+            report.append((sid, "prose-caption", f"{cap.printed} (section {cap.section}): {unreadable[:120]}"))
+            continue
         tree = bundles.tree(ver, sid) if bundles.available(ver) else None
         report += [(sid, "bundle-differs", d) for d in (_v2xml.differences(elements, tree) if tree else [])]
         if (ver, sid) in bundles.defects:
             report.append((sid, "bundle-differs", f"{_v2xml.folder(ver)}/{sid}.xsd is unreadable: {bundles.defects[(ver, sid)]}"))
         report.append((sid, "parsed", f"{len(entries)} caption(s)"))
     report += resolve_keyed_choices(ver, structures, keyed)
+    report += resolve_prose(ver, structures, prose, pending_prose, overrides, bundles,
+                            (rows_0354, where_0354, set(prints)), used)
     report += add_aliases(ver, structures, overrides, full)
     report += add_error_responses(ver, structures, overrides, full)
     referenced_by = {}
@@ -1993,6 +2302,8 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         report += [(sid, "error", "primaryPrints entry matches no caption") for sid in sorted(primaries) if sid not in prints]
         report += [(sid, "error", "unionPrints entry matches no caption") for sid in sorted(unions) if sid not in prints]
         report += [(sid, "error", "keyedChoices entry matches no read print") for sid in sorted(keyed) if sid not in used_keyed]
+        report += [(sid, "error", "proseFragments entry matches no caption") for sid in sorted(prose)
+                   if prose[sid]["caption"] is not None and sid not in prints]
         report += [(key[1], "error", f"unresolvedCaptions entry for section {key[0]} matches no unresolved caption")
                    for key in sorted(set(unresolved) - used_unresolved)]
         report += [(key[1], "error", f"captionStructures entry for section {key[0]} matches no unresolved caption")

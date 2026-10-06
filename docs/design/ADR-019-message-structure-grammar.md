@@ -2057,3 +2057,39 @@ defect"), 0 added; off identical; supplementary with MSH-12 set to the chapter v
 e53f1e05): default, strict and off byte-identical (the CH04 DSR^Q01 no-data examples print no
 MSH-12); supplementary with MSH-12 set to the chapter version 12 removed (v2.4, v2.5.1 and v2.6
 DSR_Q01 missing DSP), 0 added (F4).
+
+## Amendment 2026-10-06 — S5 prose fragments
+
+**Ruling (controller, S5-1).** No prose parser. Where the print gives a structure, or part of one,
+only as a prose fragment ("the part of the message represented by: {MFE [Z..]} is replaced by:
+...", "where other segments can be any of the following combinations", a key named in a sentence)
+or by cross-reference to another print, and not as an abstract-syntax table the extractor can read,
+the syntax is transcribed by hand into a cited `proseFragments` section of
+`Resources/structures/overrides.json`, in the bracket notation the tables use. A reader that guessed
+at prose would breach requirement 2; a transcription is checkable against the print by anyone with
+the chapter open.
+
+**Form.** One entry per version and structure: `version`, `structure`, `caption` (the caption as
+printed, with its `section`; `null` where the print has no caption and the structure ID is a Table
+0354 row of the version, which then also gives `triggers`), `syntax` (the whole structure, the
+placeholder row replaced by `@NAME`), `chapter`, `section`, `page`, `quote` (the sentence the
+transcription renders, under 15 words) and a one-line `citation`. `choices` maps each `@NAME` to a
+keyed choice (the S4-1 element): `key` (segment, field, component; the field the prose keys the
+body by), the key's own `page` and `quote`, and `alternatives`, each with the key `values` that
+select it, a `group` name with its `nameSource` and `nameCitation` (the print names none), `page`,
+`quote`, and the fragment as `syntax` (transcribed) or `from` (`structure`, `group`, `after`: the
+fragment's segments as another print of the version gives them, where the fragment refers to that
+print or is itself misprinted); with both, the transcription must equal that print. A printed group
+name may be written `{NAME: ...}`, and must then be printed as a group mark under the caption.
+
+**What the extractor does.** At the caption (or, for a `null` caption, from the Table 0354 row) it
+substitutes the transcription for the unreadable table: an entry for a structure whose print the
+extractor reads is an error, so a transcription never overrides a printed table. Unnamed groups are
+named as for any printed group (bundle, `groupNames`, synthesised). The structure carries
+`"syntaxSource": "prose"` and its citation names `overrides.json proseFragments` and every quoted
+sentence, so a reader knows the syntax is a transcription; `StructureCodegen` accepts
+`syntaxSource` only with that citation and renders nothing for it (no API change). The self-check
+pins the form: a cited transcription is accepted, an uncited one rejected, and one whose structure
+has a printed table rejected. A fragment that cannot be written as one syntax without choosing
+between readings the print leaves open is not transcribed: it stays registered, its reason quoting
+the print.

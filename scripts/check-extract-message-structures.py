@@ -32,7 +32,7 @@ OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
          "triggerFolds": [], "primaryPrints": [], "unionPrints": [], "unresolvedCaptions": [],
          "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": [], "withdrawnSegments": [],
-         "keyedChoices": [], "aliases": [], "errorResponses": []}
+         "keyedChoices": [], "aliases": [], "errorResponses": [], "proseFragments": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -2099,6 +2099,113 @@ def check_caption_scoped_exclusion():
     assert any(r[1] == "error" and "9.1.3" in r[0] for r in report), report
 
 
+def _prose_entry(**kw):
+    """A proseFragments entry (S5-1) for the synthetic XYZ^X01^XYZ_X01 caption of section 9.1.1."""
+    alt = lambda values, group, syntax: {"values": values, "group": group, "nameSource": "override",
+                                         "nameCitation": "overrides.json proseFragments: x", "section": "9.1.2",
+                                         "page": "9-2", "quote": f"MFI-1 = {values[0]} for this file", "syntax": syntax}
+    entry = {"version": "2.5.1", "structure": "XYZ_X01", "caption": "XYZ^X01^XYZ_X01", "chapter": "9",
+             "section": "9.1.1", "page": "9-1", "quote": "the part represented by [...] is replaced by",
+             "syntax": "MSH MFI {MFE @BODY}",
+             "choices": {"BODY": {"key": {"segment": "MFI", "field": 1, "component": 1}, "section": "9.1.2",
+                                  "page": "9-2", "quote": "keyed by the master file identifier",
+                                  "alternatives": [alt(["AAA"], "XYZ_A", "STF [PRA]"),
+                                                   alt(["BBB", "CCC"], "XYZ_B", "CDM [{PRC}]")]}},
+             "citation": "HL7 v2.5.1 Chapter 9, section 9.1.1, p 9-1 (synthetic)."}
+    return {**entry, **kw}
+
+
+def check_prose_fragments():
+    # S5-1 (ADR-019 S5): a cited transcription stands in for a table the extractor cannot read; the
+    # placeholder becomes a keyed choice of the transcribed fragments; the structure is marked
+    # syntaxSource prose and its citation names the entry and the quoted sentences.
+    template = _table("XYZ^X01^XYZ_X01", [("MSH", "Header"), ("MFI", "Master File"), ("{ MFE", "Entry"),
+                                          ("[...] }", "One or more segments")])
+    text = _page(1, template, heading="9.1.1           XYZ - synthetic (Event X01)")
+    entry = _prose_entry()
+    rule = {**EMPTY, "proseFragments": [entry]}
+    ext.validate_overrides(rule)
+    structures, report, _ = _run("2.5.1", [("syn", text)], rule, full=True)
+    assert not [r for r in report if r[1] == "error"], report
+    s = structures["XYZ_X01"]
+    assert s["syntaxSource"] == "prose" and s["triggers"] == ["XYZ^X01"], s
+    group = s["elements"][2]
+    choice = group["elements"][1]
+    assert [e.get("segment") for e in s["elements"][:2]] == ["MSH", "MFI"] and group["max"] is None, s
+    assert choice["key"]["values"] == {"AAA": "XYZ_A", "BBB": "XYZ_B", "CCC": "XYZ_B"}, choice
+    assert [a["elements"] for a in choice["alternatives"]] == [[_seg("STF"), _seg("PRA", 0, 1)],
+                                                                [_seg("CDM"), _seg("PRC", 0, None)]], choice
+    assert "overrides.json proseFragments" in s["citation"] and "'the part represented by [...] is replaced by'" in s["citation"]
+    assert "XYZ_A (overrides.json proseFragments: x)" in s["citation"], s["citation"]
+    text_json = ext.render(s)
+    assert '  "syntaxSource": "prose",\n  "elements": [' in text_json, text_json
+    # The transcription never overrides a table the extractor reads.
+    readable = _page(1, _table("XYZ^X01^XYZ_X01", [("MSH", "Header"), ("MFI", "Master File"), ("{ MFE", "Entry"),
+                                                   ("STF }", "Staff")]), heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = _run("2.5.1", [("syn", readable)], rule, full=True)
+    assert "XYZ_X01" not in structures or "syntaxSource" not in structures["XYZ_X01"], structures
+    assert any(r[1] == "error" and "printed table is read" in r[2] for r in report), report
+    # An uncited transcription is rejected: no quote, a quote of 15 words, no page, an
+    # alternative without its own citation or name source.
+    for broken in ({k: v for k, v in entry.items() if k != "quote"},
+                   _prose_entry(quote=" ".join(["word"] * 15)),
+                   _prose_entry(page=""),
+                   _prose_entry(choices={"BODY": {**entry["choices"]["BODY"], "alternatives": [
+                       {k: v for k, v in entry["choices"]["BODY"]["alternatives"][0].items() if k != "quote"},
+                       entry["choices"]["BODY"]["alternatives"][1]]}}),
+                   _prose_entry(choices={"BODY": {**entry["choices"]["BODY"], "alternatives": [
+                       {**entry["choices"]["BODY"]["alternatives"][0], "nameSource": "printed"},
+                       entry["choices"]["BODY"]["alternatives"][1]]}}),
+                   _prose_entry(syntax="MSH MFI {MFE @OTHER}"),
+                   _prose_entry(caption=None)):
+        try:
+            ext.validate_overrides({**EMPTY, "proseFragments": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"proseFragments entry {broken} must be rejected")
+    # A caption the entry does not name, and a group name written as printed that the caption
+    # does not print, are errors.
+    _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "proseFragments": [_prose_entry(section="9.1.2")]})
+    assert any(r[1] == "error" and "the print is" in r[2] for r in report), report
+    _, report, _ = _run("2.5.1", [("syn", text)], {**EMPTY, "proseFragments": [_prose_entry(syntax="MSH MFI {MF_X: MFE @BODY}")]})
+    assert any(r[1] == "error" and "prints no such mark" in r[2] for r in report), report
+
+
+def check_prose_fragment_from_and_synthesis():
+    # S5-1: an alternative `from` another print takes that print's segments (and names); with a
+    # transcription too, the two must agree. A null caption synthesises a Table 0354 row no
+    # caption prints, its triggers the row's events.
+    m02 = {"structure": "XYZ_X02", "version": "2.5.1", "triggers": ["XYZ^X02"], "citation": "c2 INNER (HL7-xml v2.5.1/x)",
+           "elements": [_seg("MSH"), {"group": "XYZ_STAFF", "nameSource": "printed", "min": 1, "max": None,
+                                      "elements": [_seg("MFE"), _seg("STF"), {"group": "INNER", "nameSource": "v2xml", "min": 0,
+                                                                              "max": 1, "elements": [_seg("PRA"), _seg("ORG")]}]}]}
+    entry = _prose_entry(caption=None, triggers=["XYZ^X03"], structure="XYZ_X03")
+    alt0 = {**entry["choices"]["BODY"]["alternatives"][0], "syntax": "STF [PRA ORG]",
+            "from": {"structure": "XYZ_X02", "group": "XYZ_STAFF", "after": "MFE"}}
+    entry["choices"] = {"BODY": {**entry["choices"]["BODY"], "alternatives": [alt0, entry["choices"]["BODY"]["alternatives"][1]]}}
+    ext.validate_overrides({**EMPTY, "proseFragments": [entry]})
+    structures = {"XYZ_X02": m02}
+    report = ext.resolve_prose("2.5.1", structures, {"XYZ_X03": entry}, {}, EMPTY, None,
+                               ({"XYZ_X03": ["X03"]}, {}, set()))
+    assert [r for r in report if r[1] == "error"] == [], report
+    s = structures["XYZ_X03"]
+    alt = s["elements"][2]["elements"][1]["alternatives"][0]
+    assert alt["elements"][1]["group"] == "INNER" and "INNER (HL7-xml v2.5.1/x)" in s["citation"], s
+    assert s["triggers"] == ["XYZ^X03"] and "Table 0354 lists XYZ_X03" in s["citation"], s
+    for bad_alt, why in (({**alt0, "syntax": "STF [PRA]"}, "differs from XYZ_X02"),
+                         ({**alt0, "from": {**alt0["from"], "after": "ORG"}}, "has no group")):
+        bad = {**entry, "choices": {"BODY": {**entry["choices"]["BODY"], "alternatives": [
+            bad_alt, entry["choices"]["BODY"]["alternatives"][1]]}}}
+        report = ext.resolve_prose("2.5.1", {"XYZ_X02": m02}, {"XYZ_X03": bad}, {}, EMPTY, None,
+                                   ({"XYZ_X03": ["X03"]}, {}, set()))
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+    for synthesis, why in ((({"XYZ_X03": ["X04"]}, {}, set()), "are not the Table 0354"),
+                           (({}, {}, set()), "is not a Table 0354"),
+                           (({"XYZ_X03": ["X03"]}, {}, {"XYZ_X03"}), "a caption prints")):
+        report = ext.resolve_prose("2.5.1", {"XYZ_X02": m02}, {"XYZ_X03": entry}, {}, EMPTY, None, synthesis)
+        assert any(r[1] == "error" and why in r[2] for r in report), (why, report)
+
+
 def _raw_structure(body, sid="XYZ_X01", bundles=None):
     """A synthetic print whose rows are raw lines (columns: syntax at 4, description at 30)."""
     caption = f"XYZ^X01^{sid}".ljust(26)
@@ -2361,7 +2468,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_slot_ch04_own_line, check_slot_ch04_bracketed_alone, check_slot_ch12_bracket_form,
           check_slot_choice_with_placeholder, check_slot_citation_and_render,
           check_slot_never_from_query_template_or_prose, check_slot_bundle_naming,
-          check_slot_bundle_naming_path_bound, check_keyed_choices, check_aliases, check_error_responses]
+          check_slot_bundle_naming_path_bound, check_keyed_choices, check_aliases, check_error_responses,
+          check_prose_fragments, check_prose_fragment_from_and_synthesis]
 
 
 def main():

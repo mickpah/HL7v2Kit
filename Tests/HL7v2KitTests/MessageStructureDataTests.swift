@@ -108,8 +108,15 @@ struct MessageStructureDataTests {
                                        noDataQueryStatus: $0["noDataQueryStatus"] as? [String] ?? [],
                                        citation: $0["citation"] as? String ?? "")
             }
+            // S5-1: a transcription of the print's prose says so, citing proseFragments.
+            let syntaxSource = object["syntaxSource"] as? String
+            if let syntaxSource {
+                #expect(syntaxSource == "prose" && (object["citation"] as? String ?? "").contains("overrides.json proseFragments"),
+                        "\(id): syntaxSource \(syntaxSource)")
+            }
             #expect(Set(object.keys) == Self.topKeys.union(aliasOf == nil ? [] : ["aliasOf"])
-                        .union(rule == nil ? [] : ["errorResponse"]), "\(id): keys \(object.keys.sorted())")
+                        .union(rule == nil ? [] : ["errorResponse"])
+                        .union(syntaxSource == nil ? [] : ["syntaxSource"]), "\(id): keys \(object.keys.sorted())")
             #expect(object["structure"] as? String == id)
             #expect(object["version"] as? String == versionName)
             let triggers = object["triggers"] as? [String] ?? []

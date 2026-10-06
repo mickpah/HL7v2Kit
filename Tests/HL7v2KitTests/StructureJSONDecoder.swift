@@ -95,9 +95,10 @@ enum StructureJSONDecoder {
         let structure: String, version: String, citation: String, triggers: [String], elements: [Element]
         let aliasOf: String?
         let errorResponse: ErrorResponse?
+        let syntaxSource: String?
 
         private enum CodingKeys: String, CodingKey, CaseIterable {
-            case structure, version, citation, triggers, elements, aliasOf, errorResponse
+            case structure, version, citation, triggers, elements, aliasOf, errorResponse, syntaxSource
         }
 
         init(from decoder: any Decoder) throws {
@@ -110,6 +111,7 @@ enum StructureJSONDecoder {
             elements = try c.decode([Element].self, forKey: .elements)
             aliasOf = try c.decodeIfPresent(String.self, forKey: .aliasOf)
             errorResponse = try c.decodeIfPresent(ErrorResponse.self, forKey: .errorResponse)
+            syntaxSource = try c.decodeIfPresent(String.self, forKey: .syntaxSource)
         }
     }
 
@@ -163,6 +165,12 @@ enum StructureJSONDecoder {
         }
         if let missing = keys(s.elements).map(\.segment).first(where: { !ids(s.elements).contains($0) }) {
             throw Rejected(description: "a keyed choice's key segment \(missing) is not in the structure")
+        }
+        if let source = s.syntaxSource {
+            guard source == "prose" else { throw Rejected(description: "syntaxSource must be \"prose\"") }
+            guard s.citation.contains("overrides.json proseFragments") else {
+                throw Rejected(description: "syntaxSource prose needs a citation naming \"overrides.json proseFragments\"")
+            }
         }
         return MessageStructure(id: s.structure, version: s.version, triggers: s.triggers, citation: s.citation,
                                 aliasOf: s.aliasOf, errorResponse: s.errorResponse?.model,
