@@ -19,7 +19,10 @@ extension Validator {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
+        guard let keys = Self.componentDeprecationKeys[version.grammarVersion],
+              Self.mayResolve(into: keys, segment: location.segmentID, field: location.fieldIndex,
+                              dataType: dataType, version: version.grammarVersion),
+              let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
                                                 dataType: dataType, version: version.grammarVersion) else { return }
         for entry in composite.components {
             let code = entry.optionalityCode
@@ -39,6 +42,11 @@ extension Validator {
                 ))
             }
         }
+    }
+
+    /// The grammar keys of each grammar version with a component printed `B`, `X` or `W`.
+    static let componentDeprecationKeys: [Version: Set<String>] = grammarKeys { entry, _ in
+        componentDeprecationState(optionality: entry.optionalityCode) != nil
     }
 
     /// The message wording for a component optionality code the check reports, or nil

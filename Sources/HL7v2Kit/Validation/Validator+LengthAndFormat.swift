@@ -57,6 +57,60 @@ extension Validator {
         }
     }
 
+    /// The normative component lengths each grammar version prints (a range or a list),
+    /// keyed by the printed cell and parsed once (S1-5: parsing each cell per component
+    /// per field put the 5,000-segment ORU past its derived scaling limit). A version that
+    /// prints maxima has no entry, since no component table enforces a maximum, so the
+    /// check returns there before resolving a grammar.
+    static let componentLengthRules: [Version: [String: FieldLengthRule]] = {
+        var table: [Version: [String: FieldLengthRule]] = [:]
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
+            var rules: [String: FieldLengthRule] = [:]
+            let grammars = Array(DataTypeGrammarTable.grammars(for: version).values)
+                + Array(DataTypeGrammarTable.fieldGrammars(for: version).values)
+            for entry in grammars.flatMap(\.components) {
+                guard let printed = entry.length, rules[printed] == nil,
+                      let rule = FieldLengthRule.parse(printed, version: version) else { continue }
+                if case .maximum = rule { continue }
+                rules[printed] = rule
+            }
+            if !rules.isEmpty { table[version] = rules }
+        }
+        return table
+    }()
+
+    /// The grammar keys of each grammar version that print a checkable component length.
+    static let componentLengthKeys: [Version: Set<String>] = grammarKeys { entry, version in
+        entry.length.flatMap { componentLengthRules[version]?[$0] } != nil
+    }
+
+    /// For each grammar version, the keys of its grammars (the datatype name, or `SEG-n`
+    /// for a field-local grammar) with at least one component `relevant` selects. A
+    /// component pass checks ``mayResolve(into:segment:field:dataType:version:)`` first,
+    /// so a field whose grammar has nothing to check costs one set lookup (S1-5).
+    static func grammarKeys(_ relevant: (ComponentGrammar, Version) -> Bool) -> [Version: Set<String>] {
+        var table: [Version: Set<String>] = [:]
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
+            let grammars = DataTypeGrammarTable.grammars(for: version).merging(
+                DataTypeGrammarTable.fieldGrammars(for: version)) { own, _ in own }
+            let keys = grammars.filter { $0.value.components.contains { relevant($0, version) } }.keys
+            if !keys.isEmpty { table[version] = Set(keys) }
+        }
+        return table
+    }
+
+    /// Whether field `field` of `segment`, typed `dataType`, can resolve through
+    /// ``fieldGrammar(segment:field:dataType:version:)`` to a grammar whose key is in
+    /// `keys`: its field-local grammar where one is printed, else its datatype's.
+    static func mayResolve(into keys: Set<String>, segment: String, field: Int?, dataType: String,
+                           version: Version) -> Bool {
+        let locals = DataTypeGrammarTable.fieldGrammars(for: version)
+        if !locals.isEmpty, let field, locals["\(segment)-\(field)"] != nil {
+            return keys.contains("\(segment)-\(field)")
+        }
+        return keys.contains(dataType)
+    }
+
     /// Normative length of each primitive component of a composite field (S1-1,
     /// register section G). v2.7.1 and v2.8.2 print `m..n` or `x,y,z` on components
     /// as well as fields ("they may also be specified on the components and/or fields
@@ -68,6 +122,7 @@ extension Validator {
     /// (``occupiedLength(_:encoding:)``), reduced to the subcomponents its datatype
     /// admits while the extra-content report is at least as severe. Subcomponents
     /// are not checked: section 2.5.5.4 names fields and components only.
+    /// The printed cells are parsed once, in ``componentLengthRules``.
     func checkComponentLength(
         field: Field,
         version: Version,
@@ -77,13 +132,15 @@ extension Validator {
         issues: inout [ValidationIssue]
     ) {
         guard let severity = options.normativeLengthSeverity,
+              let rules = Self.componentLengthRules[version.grammarVersion],
+              let keys = Self.componentLengthKeys[version.grammarVersion],
+              Self.mayResolve(into: keys, segment: location.segmentID, field: location.fieldIndex,
+                              dataType: dataType, version: version.grammarVersion),
               let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
                                                 dataType: dataType, version: version.grammarVersion) else { return }
         let reduce = Self.rank(options.extraComponentsSeverity) >= Self.rank(severity)
         for entry in composite.components {
-            guard let printed = entry.length,
-                  let rule = FieldLengthRule.parse(printed, version: version) else { continue }
-            if case .maximum = rule { continue }
+            guard let printed = entry.length, let rule = rules[printed] else { continue }
             guard let subcomponentLimit = Self.subcomponentLimit(
                 componentType: entry.dataType, component: entry.index, fieldType: dataType,
                 segmentID: location.segmentID, fieldIndex: location.fieldIndex, version: version.grammarVersion

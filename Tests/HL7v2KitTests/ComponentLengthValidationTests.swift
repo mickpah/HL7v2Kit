@@ -161,4 +161,34 @@ struct ComponentLengthValidationTests {
         let wire = msh("2.8.2", profile: "") + "PID|||123^^^AUTH&1.2.3&ISOXXXXX||DOE^JOHN\r"
         #expect(try componentLengthIssues(wire).isEmpty)
     }
+
+    // S1-5 (performance): the printed cells are parsed once and a field whose grammar has
+    // nothing to check is skipped by key. The index must select exactly the components the
+    // per-call parse selected: a range or list, never a maximum, on every grammar.
+    @Test("The parsed-once index selects exactly the components a per-call parse would")
+    func indexMatchesParse() {
+        let versions: [Version] = [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2]
+        #expect(Set(Validator.componentLengthRules.keys) == [.v2_7_1, .v2_8_2])
+        for version in versions {
+            let grammars = DataTypeGrammarTable.grammars(for: version).merging(
+                DataTypeGrammarTable.fieldGrammars(for: version)) { own, _ in own }
+            for (key, grammar) in grammars {
+                var anyCheckable = false
+                for entry in grammar.components {
+                    var parsed: FieldLengthRule?
+                    if let printed = entry.length, let rule = FieldLengthRule.parse(printed, version: version) {
+                        if case .maximum = rule {} else { parsed = rule }
+                    }
+                    let indexed = entry.length.flatMap { Validator.componentLengthRules[version]?[$0] }
+                    #expect(indexed == parsed, "\(version) \(key).\(entry.index)")
+                    anyCheckable = anyCheckable || parsed != nil
+                }
+                #expect((Validator.componentLengthKeys[version]?.contains(key) ?? false) == anyCheckable,
+                        "\(version) \(key)")
+                let anyDeprecated = grammar.components.contains { ["B", "X", "W"].contains($0.optionalityCode) }
+                #expect((Validator.componentDeprecationKeys[version]?.contains(key) ?? false) == anyDeprecated,
+                        "\(version) \(key)")
+            }
+        }
+    }
 }

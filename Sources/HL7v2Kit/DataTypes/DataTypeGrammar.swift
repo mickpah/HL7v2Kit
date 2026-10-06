@@ -145,7 +145,10 @@ public enum DataTypeGrammarTable {
     /// `Validator.fieldGrammar(segment:field:dataType:version:)` (P5-6), the one
     /// resolution point its composite-aware checks share.
     public static func grammar(segment: String, field: Int, version: Version) -> DataTypeGrammar? {
-        fieldGrammars(for: version.grammarVersion)["\(segment)-\(field)"]
+        // v2.5.1 to v2.8.2 print no field-local grammar: skip building the key there,
+        // since every composite-aware check resolves through here once per field (S1-5).
+        let table = fieldGrammars(for: version.grammarVersion)
+        return table.isEmpty ? nil : table["\(segment)-\(field)"]
     }
 
     /// Every field-local composite grammar printed by `version`, keyed `SEG-N`.
