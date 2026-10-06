@@ -1728,3 +1728,81 @@ RCI_I05, RCL_I06 and RQC_I05 stay registered (no v2.8.2 print). Counts: v2.7.1 1
 registered, v2.8.2 186 / 61; 1,113 modelled and 260 registered in all; `completeVersions`
 unchanged. Register section E closes the six F-I2 rows; the v2.7.1 RQC_I05 primary-print row is
 a per-trigger case, Blocking as ACK is.
+
+## Amendment 2026-10-06 — S3-1 open-slot element
+
+Owner decision 4 (epic P11 gate, 2026-10-06): the open slot closes the Blocking rows that cite
+it. This amendment adds the element to the model; the extractor (S3-2) and the 58 registrations
+(S3-3: ORM_O01, ORR_O02, OSR_Q06 on v2.3 and v2.3.1; PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1,
+PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF on v2.3 to v2.7.1, the first four on v2.8.2) follow. No
+structure file and no `completeness.json` entry changes here.
+
+**What the print gives.** v2.3 CH04 4.2.1 (p 4-4) prints the general order detail as a line of
+its own, "Order Detail Segment OBR, etc.", inside the optional detail bracket after ORC and
+before `[{NTE}]`, `[{DG1}]` and `[{OBX [{NTE}]}]`; use note b reads it as "whichever of these
+order detail segment(s) is appropriate". v2.4 CH12 12.3.2 (PPR^PC1, pp 12-10 to 12-11) prints
+`[{ORC [OBR, etc [{NTE}] [{VAR}] [{OBX [{NTE}] [{VAR}]}] ] }]`, and the CH12 note (p 12-9) reads
+"OBR etc." as "all possible combinations of pharmacy and other order detail segments" per CH04
+4.2.2.4, which names only examples ("Examples are OBR and RXO"). From v2.5.1 CH12 prints the
+same position as `< OBR | etc. >`. In every form the slot is unbracketed within its enclosing
+optional group (`[OBR, etc` opens the group with it), so it is required once that group is
+present; "segment(s)" and "combinations" admit more than one segment. A slot is therefore
+`min 1, max nil` in all 58 cases.
+
+**The element.** `StructureElement.slot(_ name: String?, min: Int, max: Int?, citation:
+String)`, public and additive (the enum is open). `min` and `max` bound the number of segments
+the slot takes. The name is the printed one ("Order Detail Segment"), or nil (then `open
+slot`); `citation` is required and names the print and the words that make the slot open. A
+slot has no `children` and no `segmentIDs` (no segment ID is part of its definition). JSON:
+`{"slot": "<name>" or null, "min", "max", "citation"}`, the `slot` key present even when null.
+The codegen and the test decoder reject an uncited slot, a `citation` on any other element, a
+slot name shaped like a segment ID (it would read as one in a finding), a slot anywhere inside a
+choice (the print never puts one there: `< OBR | etc. >` is itself the slot, OBR one of its
+fillers) and two adjacent slots (nothing printed would divide them).
+
+**Semantics: the FOLLOW-set rule.** A slot takes any segment except MSH and the slot's FOLLOW
+set: the segment IDs that can begin what comes after it (its later siblings up to the first
+required one, and, when those can all be absent, what follows the enclosing group, including
+that group's re-entry when it repeats, and so on outward). A FOLLOW-set segment always ends the
+slot. Z-segments, ADD and the version's unknown segments are transparent as everywhere. So the
+validator checks everything the print gives before and after the slot (required segments,
+order, cardinality, group re-entry, the end of the message) and nothing about what fills it.
+The trade-off: a filler that shares an ID with a segment that can follow the slot is read as
+that segment, not as part of the slot. Under the print this is sound: the slot holds order
+detail segments (CH04 4.2.2.4), and none of the segments that follow it in the two
+representatives read for this amendment (NTE, DG1, OBX, CTI, BLG and ORC in v2.3 ORM; NTE, VAR,
+OBX, ORC and PRB in v2.4 PPR) is an order detail segment. S3-3 checks each structure's FOLLOW
+set against the order detail segments before modelling it. One case is not settled by the rule
+and stays with S3-3: v2.3 CH04 4.8.1 (p 4-60) prints a pharmacy ORM under the same trigger as
+`ORC [RXO [{NTE}] {RXR} ...]`, whose NTE between RXO and RXR would end the general print's slot
+and leave RXR unexpected; on v2.3 the four ORM prints cannot be told apart (lookup rule 3). A segment that precedes the slot and is not in its FOLLOW set (for example a
+second ORC where ORC is not repeated) is taken by the slot rather than reported.
+
+**Matching.** A structure holding a slot always fails the determinism lint (the slot is reported
+as a conflict with the FIRST-set member `*`, which stands for any segment), so the codegen
+renders `requiresExactMatch: true` and the Validator uses `ExactStructureMatcher`. The one-pass
+matcher enters an element by its FIRST set and a slot's is every segment; where the slot ends
+depends on what may follow it, which the automaton knows and the greedy descent does not. The
+one-pass matcher asserts it never compiles a slot. In the exact automaton a slot occurrence is
+one consuming state whose label is the slot's name; after the automaton is built, each slot's
+excluded set is MSH plus the labels of the segment states reachable from any copy of that slot
+through unlabelled states (other slot states add nothing), the union over copies making it the
+grammar's FOLLOW set whatever the copy. `min` and `max` expand as for any element. Findings:
+an absent required slot is `messageStructureSegmentMissing` with the slot's name as the
+segment ID (at the end of the message) or, mid-message, `messageStructureSegmentUnexpected` on
+the next segment with the slot's name in "expected here". The test reference recogniser computes
+the FOLLOW set from the grammar instead and agrees with the matcher on derived and mutated
+sequences; the structure guards accept a slot structure.
+
+**Group spans.** A slot opens no group: its segments lie in the spans of the enclosing groups,
+and no span is made for the slot. Spans around it are unchanged.
+
+**What the validator cannot say.** Which segments fill the slot, whether they form a valid
+combination (for example a pharmacy order's RXO then RXR), whether a filler belongs to the
+version's order detail segments, and, on v2.3, which of the four ORM prints under ORM^O01 a
+message follows (lookup rule 3); field-level validation of the filling segments is unaffected.
+
+**Ruling G6.** Superseded for placeholders that have an enumerable position (the `etc.` slot:
+the print gives everything around it). Query-template rows (`[...]`, `...` and the ellipsis rows
+of CH05 5.4 and CH08 8.4.1) stay Permanent as classed: their position stands for a whole message
+body chosen by a field value, not for a run of segments inside a printed structure.
