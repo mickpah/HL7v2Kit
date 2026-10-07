@@ -1691,7 +1691,27 @@ extension Profile {
             scope: "messageCode in (ORM, ORU, REF)",
             severity: .error,
             specCitation: "HL7au:00060.4 — a C (conditional) element must not be valued when its predicate is not satisfied; AU ADRM-2021 Appendix 5 p. 466, §1 p. 11"
-        )
+        ),
+        // P12 S2-2 — HL7au:000008.1.5 (p 422, Senders, Results, Referrals):
+        // "The OBX display segment(s) must be the last in a set of OBX
+        // segments in each OBR/OBX group, with the exception of digital
+        // signature OBX(s) which may be after the display segments OBXs.
+        // (Display segments can be identified by having AUSPDI OBX-3 <name
+        // of coding system>)". The signature OBX is the ADRM's own (p 438,
+        // the HL7au:000010 comment): "OBX-3 (CE) identifier component
+        // starting with "AUSETAV", and OBX-3 name of code system component
+        // "L"". The group is the one the HL7au:000008 count rule reads.
+        groupOrderingRules: [
+            GroupOrderingRule(
+                scope: .obrObxGroup,
+                anchorSegmentID: "OBR",
+                orderedSegmentID: "OBX",
+                startPredicate: "OBX-3.3 = AUSPDI",
+                allowedAfterPredicate: "OBX-3.3 = AUSPDI OR OBX-3.1 startsWith AUSETAV AND OBX-3.3 = L",
+                applicableWhen: "messageCode in (ORU, REF)",
+                specCitation: "HL7au:000008.1.5 — display OBX segments must be the last OBX in each OBR/OBX group, digital signature OBX (OBX-3.1 starting AUSETAV, OBX-3.3 = L) excepted, on Senders Results/Referrals; AU ADRM-2021 Appendix 5 pp. 422, 438"
+            ),
+        ]
     )
 
     /// Shared pair-rule set for CE / CNE / CWE. All three composites

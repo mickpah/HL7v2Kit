@@ -82,6 +82,10 @@ struct Profile: Sendable, Equatable, Hashable {
     /// a full predicate. P4-31.
     let fullPredicateRule: FullPredicateRule?
 
+    /// In-group ordering rules (P12 S2-2). Used for HL7au:000008.1.5 —
+    /// display OBX segments last in each OBR/OBX group, signatures aside.
+    let groupOrderingRules: [GroupOrderingRule]
+
     init(
         locale: HL7Locale,
         fieldOverrides: [FieldOverride] = [],
@@ -91,7 +95,8 @@ struct Profile: Sendable, Equatable, Hashable {
         uniquenessRules: [FieldUniquenessRule] = [],
         escapeProhibitions: [EscapeProhibition] = [],
         subIDTrees: [SubIDTreeRule] = [],
-        fullPredicateRule: FullPredicateRule? = nil
+        fullPredicateRule: FullPredicateRule? = nil,
+        groupOrderingRules: [GroupOrderingRule] = []
     ) {
         self.locale = locale
         self.fieldOverrides = fieldOverrides
@@ -102,6 +107,7 @@ struct Profile: Sendable, Equatable, Hashable {
         self.escapeProhibitions = escapeProhibitions
         self.subIDTrees = subIDTrees
         self.fullPredicateRule = fullPredicateRule
+        self.groupOrderingRules = groupOrderingRules
     }
 
     /// Look up the profile for a given locale.

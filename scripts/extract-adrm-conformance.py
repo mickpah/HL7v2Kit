@@ -164,6 +164,8 @@ SHIPPED = {
     'HL7au:000024.2',
     # P12 S2-2 — every v2.4 Table 0291 subtype is mapped (register correction).
     'HL7au:00044.10.1.6', 'HL7au:00044.11.1.6',
+    # P12 S2-2 — display OBX last in its OBR/OBX group (GroupOrderingRule).
+    'HL7au:000008.1.5',
     'HL7au:00047.1', 'HL7au:00047.2',
     'HL7au:00048.3.1', 'HL7au:00049.2', 'HL7au:00049.3',
     # M6-A stage 2 — XCN required components (2026-09-04).
@@ -350,9 +352,8 @@ BASE = {
 # M6-B-9 registrations (each cited in permanent-limitations-register §D):
 # 00100.1 — REF-4 SNOMED CT hierarchy subsumption needs a terminology
 #   server; no closed value set exists in the ADRM.
-# 000008.1.5 — signature-format identifiers live in HB 308-2011, an
-#   external Standards Australia handbook not reproduced in the ADRM;
-#   no closed list to check against (req #2).
+# 000008.1.5 — SHIPPED by P12 S2-2: the HB 308 reason is superseded by the
+#   ADRM's own signature identifier (p 438, the HL7au:000010 comment).
 # 000034.3 / 00044.6.7 — "the alternate must encode the SAME CONCEPT as
 #   the primary" is a terminology-service equivalence judgement, not a
 #   structural check.
@@ -360,7 +361,7 @@ BASE = {
 #   shipped; .3 is SHIPPED, .1 is PARTIAL (see their entries above).
 REGISTERED = {'HL7au:00044.2', 'HL7au:00104.7.2.1',
               'HL7au:00044.4.7', 'HL7au:00044.5.7',
-              'HL7au:00100.1', 'HL7au:000008.1.5', 'HL7au:000034.3',
+              'HL7au:00100.1', 'HL7au:000034.3',
               'HL7au:00044.6.7'}
 
 # Withdrawn by the r2 revision — must never be cited.

@@ -17,17 +17,17 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 77 | enforced by the `.auLocalisation` overlay today |
+| SHIPPED | 78 | enforced by the `.auLocalisation` overlay today |
 | PARTIAL | 17 | partly enforced — see each row's note for what is not |
 | BASE | 9 | already enforced by the base model; overlay deliberately silent |
-| REGISTERED | 7 | known limitation, already registered |
+| REGISTERED | 6 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
 | OUT | 76 | out of scope by nature (transport, payload, cross-message) |
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## SHIPPED (77)
+## SHIPPED (78)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -39,6 +39,7 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:000008` |  | Senders | Results, Referrals | The message must contain at least one OBX display segment per OBR/OBX group. |  |
 | `HL7au:000008.1` | r2 | Senders | Results, Referrals | Display segments must use the appropriate valid values within the AUSPDI coding system in OBX-3 for the content that is represented in it: • OBX\|\|ED\|HTML^Display format in HTML^AUSPDI\|\|^text^HTML^A^<?xml version=... |  |
 | `HL7au:000008.1.3` |  | Senders and Receivers | Results | In an OBX display segment, the OBX-2 Value Type field must match its corresponding display format specified in OBX-3 Identifier (ST) component as per table Display Format codes (see page 247) in Section 4.5 Display Se... |  |
+| `HL7au:000008.1.5` |  | Senders | Results, Referrals | The OBX display segment(s) must be the last in a set of OBX segments in each OBR/OBX group, with the exception of digital signature OBX(s) which may be after the display segments OBXs. (Display segments can be identif... |  |
 | `HL7au:000008.3.1` |  | Senders | Referrals | For Referrals Level 1: The single OBR/OBX group of the message must contain an OBX display segment in PDF format. For other profiles: Each OBR/OBX group of the message must contain at least one of the following OBX di... | Level 1 is served by the same simplified variant as Level 2 with no cap on the OBR group (a reading, P12 S1-5; owner item open; see ADR-019 P12 S1, "Level 1 and the single OBR group"). |
 | `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. |  |
 | `HL7au:000022.3` |  | Senders | Referrals | Senders must generate batches containing no more than 1 message. |  |
@@ -145,11 +146,10 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00046.3` |  | Senders | Orders, Results, Referrals | All fields required by HL7 segments table must be validly valued. | R-optionality enforcement is the Validator core |
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 
-## REGISTERED (7)
+## REGISTERED (6)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
-| `HL7au:000008.1.5` |  | Senders | Results, Referrals | The OBX display segment(s) must be the last in a set of OBX segments in each OBR/OBX group, with the exception of digital signature OBX(s) which may be after the display segments OBXs. (Display segments can be identif... | known limitation, registered with citation |
 | `HL7au:000034.3` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, In either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both a public (e.g. LOINC) and a local terminology, then concepts from... | known limitation, registered with citation |
 | `HL7au:00044.4.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |
 | `HL7au:00044.5.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |

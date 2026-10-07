@@ -145,6 +145,8 @@ public struct Validator: Sendable {
             checkEscapeProhibitions(profile: profile, message: message, issues: &issues)
             // M12: OBX-4 sub-ID trees (ADRM-prose:P-8..P-10, the HL7v2 VMR).
             checkSubIDTrees(profile: profile, message: message, issues: &issues)
+            // P12 S2-2: in-group ordering (HL7au:000008.1.5).
+            checkGroupOrderingRules(profile: profile, message: message, issues: &issues)
         }
 
         // M8-B1: base-spec ORC/OBR paired-field equality (items
@@ -370,7 +372,7 @@ public struct Validator: Sendable {
     /// in document order (contiguous under the walk; with spans, the
     /// anchor's own occurrence without nested pairing groups, P8b-17);
     /// `headIndex` is the first; `segments` are the segments at `indices`.
-    private struct ResolvedGroup {
+    struct ResolvedGroup {
         let indices: [Int]
         let segments: [Segment]
         var headIndex: Int { indices.first ?? 0 }
@@ -381,7 +383,7 @@ public struct Validator: Sendable {
         }
     }
 
-    private func resolveGroup(
+    func resolveGroup(
         scope: GroupScope,
         anchorIndex: Int,
         counted: String,
@@ -765,7 +767,7 @@ public struct Validator: Sendable {
     /// code / location plumbing cannot drift between tracks; the message
     /// is fully formatted at the call site (pinned exactly by the
     /// LocaleAUProfileTests R4-C2 characterization rows).
-    private func appendProfileIssue(
+    func appendProfileIssue(
         citation: String,
         location: IssueLocation,
         message: String,

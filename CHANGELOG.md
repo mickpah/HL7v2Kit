@@ -42,6 +42,12 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 - HL7au:000001 (Appendix 5 p 417, Orders: "Senders and receivers must ensure an order message is addressed using MSH-6 Receiving facility") was REGISTERED as receiver behaviour or "should" guidance throughout; its sender half is wire-checkable. Under `.auLocalisation` an ORM with MSH-6 empty now draws a `profileConstraintViolation` at MSH-6 citing HL7au:000001; other message types are untouched.
 - The point moves REGISTERED to PARTIAL: 000001.1 (reject a foreign MSH-6) is receiver behaviour, and 000001.2 / .2.1 are "should" guidance naming the NATA number and NATA name. Tests: `AUOrderAddressingTests`. Conformance register regenerated; limitations register section B row corrected.
 
+### Added — P12 S2-2: HL7au:000008.1.5 display OBX last in its OBR/OBX group
+
+- HL7au:000008.1.5 (Appendix 5 p 422, Senders, Results, Referrals: "The OBX display segment(s) must be the last in a set of OBX segments in each OBR/OBX group, with the exception of digital signature OBX(s) which may be after the display segments OBXs. (Display segments can be identified by having AUSPDI OBX-3 <name of coding system>)") now ships. On an ORU or REF under `.auLocalisation`, after the first display OBX of an OBR/OBX group every later OBX of that group must be a display OBX or a digital signature OBX, which the ADRM identifies on p 438 (the HL7au:000010 comment): "OBX-3 (CE) identifier component starting with "AUSETAV", and OBX-3 name of code system component "L"". Each other OBX draws a `profileConstraintViolation` at that OBX.
+- The group is the one the HL7au:000008 display count reads (`.obrObxGroup`: the structure's spans, or the walk where they are withheld). Internal: a new `GroupOrderingRule` on the profile. No public API change.
+- REGISTERED to SHIPPED: the registered reason (signature identifiers in HB 308-2011) is superseded by p 438. Before shipping, the rule was run over every test message (only the new tests' three intended messages fire) and over the full ADRM example messages (39 OBR groups, 15 display OBX: none out of order). Tests: `AUDisplayOrderingTests`. Conformance register regenerated; limitations register section D row corrected.
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).
