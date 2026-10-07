@@ -86,12 +86,17 @@ public struct Message: Sendable, Equatable, Hashable {
 
     /// Read a value by parsed `Path`.
     public subscript(path: Path) -> String? {
-        // Find the matching segment.
+        // Find the matching segment: the scan stops at the requested
+        // occurrence (P12 S3-2: it filtered the whole message, so every
+        // `MSH-9.1` read cost one pass over the segments).
         let segmentIndex = path.segmentIndex ?? 1
-        let matching = segments.enumerated()
-            .filter { _, seg in seg.segmentID == path.segmentID }
-        guard segmentIndex >= 1, segmentIndex <= matching.count else { return nil }
-        let segment = matching[segmentIndex - 1].element
+        guard segmentIndex >= 1 else { return nil }
+        var seen = 0
+        guard let segment = segments.first(where: { seg in
+            guard seg.segmentID == path.segmentID else { return false }
+            seen += 1
+            return seen == segmentIndex
+        }) else { return nil }
 
         // Access the field.
         guard let field = segment.field(path.field) else { return nil }

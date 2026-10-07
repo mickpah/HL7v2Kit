@@ -2391,6 +2391,7 @@ public struct Validator: Sendable {
     /// OR of AND clauses (``ConditionLanguage/clauses(_:)``), combined by
     /// Kleene's connectives. Short-circuits like the DNF it is: a clause
     /// stops at its first false atom, the whole at its first true clause.
+    /// The clauses come parsed from `ConditionParseCache` (P12 S3-2).
     private func evaluateOrExpression(
         _ expression: String,
         in segment: Segment,
@@ -2399,7 +2400,7 @@ public struct Validator: Sendable {
         currentSegmentID: String
     ) -> ConditionTruth {
         var result = ConditionTruth.false
-        for atoms in ConditionLanguage.clauses(expression) {
+        for atoms in ConditionParseCache.shared.clauses(expression) {
             var clause = ConditionTruth.true
             for atom in atoms {
                 clause = .and(clause, evaluateAtom(
@@ -2427,7 +2428,7 @@ public struct Validator: Sendable {
         let isPopulated: Bool
     }
 
-    /// Single atomic predicate, classified by
+    /// Single atomic predicate, as classified by
     /// ``ConditionLanguage/parseAtom(_:)`` (the same parse
     /// `Validator.conditionParseErrors(_:)` checks, P4-25). The forms:
     ///
@@ -2455,13 +2456,13 @@ public struct Validator: Sendable {
     /// `conditionTriggers` reads that as "does not fire", the v0.2-V1
     /// fail-safe.
     private func evaluateAtom(
-        _ atom: String,
+        _ atom: ConditionAtom?,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
     ) -> ConditionTruth {
-        guard case .success(let parsed) = ConditionLanguage.parseAtom(atom) else { return .unknown }
+        guard let parsed = atom else { return .unknown }
         switch parsed {
         case .segmentPresence(let id, let present):
             // True iff a segment of that ID exists in the current
