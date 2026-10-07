@@ -126,6 +126,11 @@ ORC-3, ORC-4, RF1-6 and RF1-11. Under the profile the length check reads the ADR
 added (pp 169 to 170), and says MIME types "are imported from" IANA (p 168).
 Both AU tables are therefore open: any registered type or subtype is admitted, where the
 international locale reports ``IssueCode/valueNotInTable(table:)`` for a value v2.4 does not list.
+Because the profile governs every version (G-AU1), the open AU Table 0191 also admits a value
+the message's own version rejects: a TXA-3 of `PDF` on a v2.7.1 or v2.8.2 message is clean under
+the AU locale though the base Table 0191 of those versions does not list it (four rows of the
+validation digest over the v2.7.1 and v2.8.2 Chapter 9 examples). That is the ruling's effect,
+recorded as an open owner item below.
 
 ## Coverage
 
@@ -156,6 +161,15 @@ for 263 points, reconciled with the shipped state on 2026-10-07) classes every p
 - **Other halves.** OBR-24 "appropriate for the content" (000032.2), RTF "same content" as its
   sibling (000008.3.2), the Z message code leg of 000020, and uniqueness across messages
   (00044.3.1) are judgements or state no single message carries.
+- **Halves the wire does not carry.** HL7au:000001 requires MSH-6 on an order (checked); the NATA
+  number and name of 000001.2 need the NATA register. HL7au:000022.1's individual acknowledgement
+  is checked on every batched message; "no information from the file header/footer or batch
+  segments must be used" is what a receiver does.
+- **MIME subtype to type.** HL7au:00044.10.1.5 and 00044.11.1.5 check the ED and RP subtype
+  against its type for the pairs the ADRM states; any other IANA subtype is not checked.
+
+Every PARTIAL point, with what is not enforced, is a row of register section B
+(`docs/design/permanent-limitations-register.md`) and of the generated conformance register.
 
 ### What is permanent, and why
 
@@ -178,14 +192,18 @@ for 263 points, reconciled with the shipped state on 2026-10-07) classes every p
   receiving capability of a single OBR observation group". The `-L1` identifier selects the same
   structure as Level 2, with no cap on the OBR group; whether to cap it is open.
 - **HL7au:000040.4 on a Chapter 7 REF.** The point requires every Referral to declare an Appendix 8
-  identifier in MSH-12.3, and Table 0104x (p 42) gives none for a referral that follows the
+  identifier in MSH-12.3, and Table 0104x (p 43) gives none for a referral that follows the
   Chapter 7 structure, so such a REF^I12 draws 000040.4. That is the print's rule; whether it
   should reach a Chapter 7 REF is open.
+- **Tables 0191 and 0291 open on every version.** The AU locale's open MIME tables admit a
+  value the base table of a later version rejects (a TXA-3 `PDF` on v2.7.1 and v2.8.2); whether
+  the AU tables should narrow to the base table off v2.4 is open.
 
 ## Worked examples
 
-The synthetic fixtures under `Tests/Fixtures/` are clean under ``ValidationOptions/strict`` with
-the AU locale, with and without the four assertions (`AUFixtureTests`); each also pins one rule
+The synthetic fixtures under `Tests/Fixtures/` are clean except where noted under
+``ValidationOptions/strict`` with the AU locale, with and without the four assertions
+(`AUFixtureTests`): `au_ref_i12.hl7` draws HL7au:000040.4 by the print. Each also pins one rule
 family by changing one field.
 
 | Fixture | What it shows |

@@ -922,7 +922,7 @@ extension Profile {
             // stable value. Scoped Results per Appendix 5.
             // M29 — HL7au:00050.1.5: OBX-6.3 (Units coding system) must be
             // UCUM, scoped "Senders (Pathology only)", Results (Appendix 5
-            // p. 465). The sender's discipline is not on the wire; the
+            // p. 466). The sender's discipline is not on the wire; the
             // caller asserts it through ValidationOptions.auPathologySender,
             // and the gate reads that assertion as a message-context noun.
             // Populated-only, like every component value set: an OBX with
@@ -935,7 +935,7 @@ extension Profile {
                         component: 3,
                         allowedValues: ["UCUM"],
                         condition: "messageCode = ORU AND auPathologySender populated",
-                        specCitation: "HL7au:00050.1.5 — the OBX-6 (Units) name of coding system component must be UCUM; Senders (Pathology only), Results; AU ADRM-2021 Appendix 5 p. 465. Applied on the caller's pathology-sender assertion."
+                        specCitation: "HL7au:00050.1.5 — the OBX-6 (Units) name of coding system component must be UCUM; Senders (Pathology only), Results; AU ADRM-2021 Appendix 5 p. 466. Applied on the caller's pathology-sender assertion."
                     ),
                 ],
                 specCitation: "HL7au:00050.1.5 — OBX-6 units coding system on pathology Results (caller-asserted)"
@@ -1795,7 +1795,7 @@ extension Profile {
             ),
         ],
         // HL7au:00060.4 route C (P4-31, ADR-021). ADRM-2021 Appendix 5
-        // (p. 466): "HL7 message elements with a usage of C (conditional)
+        // (p. 467): "HL7 message elements with a usage of C (conditional)
         // must not be valued when the associated predicate is not
         // satisfied" (Senders; Orders, Results, Referrals). ADRM §1 (p. 11):
         // "If the predicate is NOT satisfied: A conformant sending
@@ -1807,7 +1807,7 @@ extension Profile {
         fullPredicateRule: FullPredicateRule(
             scope: "messageCode in (ORM, ORU, REF)",
             severity: .error,
-            specCitation: "HL7au:00060.4 — a C (conditional) element must not be valued when its predicate is not satisfied; AU ADRM-2021 Appendix 5 p. 466, §1 p. 11"
+            specCitation: "HL7au:00060.4 — a C (conditional) element must not be valued when its predicate is not satisfied; AU ADRM-2021 Appendix 5 p. 467, §1 p. 11"
         ),
         // P12 S2-2 — HL7au:000008.1.5 (p 422, Senders, Results, Referrals):
         // "The OBX display segment(s) must be the last in a set of OBX
