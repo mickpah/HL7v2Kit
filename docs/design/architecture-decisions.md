@@ -543,7 +543,7 @@ ADR-017.
 
 **Context.** Full segment coverage on every supported version means roughly 150 segments per
 version, and the schemas must be a faithful rendering of the standard's attribute tables, not a
-best guess. Reading the PDFs by hand does not scale. A gotcha worth recording: PDFKit's text
+best guess. Reading the PDFs by hand does not scale. One gotcha, for the record: PDFKit's text
 output reads the attribute tables column-major, so the `OPT` and `RP/#` columns that matter
 most come out as a bunched run that cannot be zipped back onto the rows (the tables, like the
 Norwegian Blue, look perfectly fine until one examines them closely), and geometric
@@ -588,7 +588,7 @@ Tables change between versions, so one merged set would be wrong.
   name, `permitsLocalExtensions`, citation, entries, optional `patterns`), written only by the
   extractor from Appendix A (v2.3 to v2.7.1) or Chapter 2C (v2.8.2), and generated into
   `HL7TableRegistry`; `HL7TableRegistry.table(_:version:)` is the lookup.
-- Rows are kept as Appendix A prints them, misprints included. A Table 0354 misprint is
+- Rows are kept as the source prints them (Appendix A; Chapter 2C on v2.8.2), misprints included. A Table 0354 misprint is
   corrected only on the message-structure side, by a cited erratum (ADR-019).
 - Corrections are never hand edits: they go in `Resources/tables/overrides.json`, version-scoped
   and cited, and the table is re-extracted. Print-versus-prose binding conflicts are resolved in
@@ -609,7 +609,7 @@ Tables change between versions, so one merged set would be wrong.
   v2.8.2 (owner gate G5).
 - Pattern rows naming a family of codes (0203 `NNxxx`) are declared as `patterns` and matched in
   full.
-- Locale axis: `Resources/tables/locale/<locale-id>/` holds a localisation's own rendering;
+- Locale axis: `Resources/tables/locale/<locale-id>/` holds a localisation's own rendering, curated by hand from the localisation's print with the page cited (the locale axis has no extractor);
   `HL7TableRegistry.table(_:locale:)`. It is consulted only after the version's table has
   rejected a value, so a locale can widen but never reject, and a locale rendering that is open
   admits every value. Narrowing a value set is a profile rule, not a table.
