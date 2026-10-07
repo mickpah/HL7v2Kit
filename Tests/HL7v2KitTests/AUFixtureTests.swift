@@ -29,6 +29,7 @@ struct AUFixtureTests {
     /// Every AU fixture, one per message the ADRM localises.
     static let fixtures = [
         "au_oru_r01_pathology.hl7",
+        "au_oru_r01_pathology_pdf.hl7",
         "au_oru_r01_radiology.hl7",
         "au_orm_o01.hl7",
         "au_osr_q06.hl7",
@@ -118,11 +119,26 @@ struct AUFixtureTests {
         Self.checkAU(name, try Self.issues(Self.wire(name), options: .strict))
     }
 
-    @Test("Under the international locale each AU fixture draws only the v2.4 length findings the ADRM varies",
+    /// The v2.4 table findings an AU fixture draws by design under the international
+    /// locale: the ADRM's PDF display form is in the ADRM's Tables 0191 and 0291
+    /// (pp 167 to 170), not in v2.4's.
+    static let internationalTableFindings: [String: [String]] = [
+        "au_oru_r01_pathology_pdf.hl7": ["error OBX[3]-5.2 0191", "error OBX[3]-5.3 0291"],
+    ]
+
+    @Test("Under the international locale each AU fixture draws only the v2.4 findings the ADRM varies",
           arguments: fixtures)
     func cleanInternational(name: String) throws {
         let found = try Self.issues(Self.wire(name), locale: .international, options: .strict)
-        let rest = found.filter { !Self.isADRMLengthVariance($0) || $0.severity != .warning }
+        let tables = found.compactMap { issue -> String? in
+            guard case .valueNotInTable(let table) = issue.code else { return nil }
+            return "\(issue.severity) \(issue.location.pathDescription) \(table)"
+        }
+        #expect(tables == Self.internationalTableFindings[name] ?? [], "\(name)")
+        let rest = found.filter {
+            if case .valueNotInTable = $0.code { return false }
+            return !Self.isADRMLengthVariance($0) || $0.severity != .warning
+        }
         #expect(rest.isEmpty, "\(name):\n\(Self.describe(rest))")
     }
 

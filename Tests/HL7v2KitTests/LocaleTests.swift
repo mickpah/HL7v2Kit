@@ -132,8 +132,21 @@ struct LocaleTests {
                 default:                                     return false
                 }
             }
+            // The one exception the A6a note below foresaw: a locale's own rendering of a
+            // table widens valueNotInTable. `au_oru_r01_pathology_pdf.hl7` carries the ADRM's
+            // PDF display form, in the ADRM's Tables 0191 and 0291 and not in v2.4's (P12
+            // S3-2), so those two errors are international only. Excluded per issue: a
+            // valueNotInTable on a table the AU locale renders, with no AU error there.
+            let widenedByLocale: (ValidationIssue) -> Bool = { issue in
+                guard case .valueNotInTable(let table) = issue.code,
+                      HL7TableRegistry.table(table, locale: .auLocalisation) != nil else { return false }
+                return !auReport.errors.contains { $0.code == issue.code && $0.location == issue.location }
+            }
+            let widened = intlReport.errors.filter(widenedByLocale)
+            #expect(widened.isEmpty || url.lastPathComponent == "au_oru_r01_pathology_pdf.hl7",
+                    "\(url.lastPathComponent): an international table error the AU locale widens away")
             let intlNonProfileErrors = intlReport.errors.filter {
-                !isLocaleAttributable($0.code)
+                !isLocaleAttributable($0.code) && !widenedByLocale($0)
             }
             let auNonProfileErrors = auReport.errors.filter {
                 !isLocaleAttributable($0.code)
@@ -143,9 +156,9 @@ struct LocaleTests {
             // Known exception (A6a): a locale's own rendering of a table can WIDEN the
             // valueNotInTable check (AU ADRM-2021 back-ports UNICODE UTF-8 into v2.4 Table
             // 0211), so a base-v2.4 message declaring it errors internationally and not under
-            // AU. No valid fixture does that (oru_r01_v24 declares ASCII); if one ever must,
-            // exclude that issue here rather than weakening the invariant for every table.
-            #expect(auReport.errors.count >= intlReport.errors.count,
+            // AU. Only the AU PDF fixture does that (see `widenedByLocale` above); each such
+            // issue is excluded rather than weakening the invariant for every table.
+            #expect(auReport.errors.count >= intlReport.errors.count - widened.count,
                     "\(url.lastPathComponent): AU locale must never remove an error")
         }
     }

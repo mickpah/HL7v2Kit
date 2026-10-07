@@ -8,7 +8,8 @@
 //   - Fixtures whose filename starts with "malformed_" must throw a
 //     ParseError on Parser().parse(_:).
 //   - Every other .hl7 fixture must parse, round-trip byte-perfect, and
-//     produce a non-error ValidationReport (warnings/infos are allowed).
+//     produce a non-error ValidationReport (warnings/infos are allowed),
+//     except the AU fixtures (`au_*`), which `AUFixtureTests` validates.
 //
 // Adding a fixture: drop a new `.hl7` file under Tests/Fixtures/. The
 // harness auto-picks it up — no test code change required.
@@ -39,9 +40,13 @@ struct FixtureRoundTripTests {
         }
     }
 
+    /// An AU fixture (`au_*.hl7`) claims conformance to the AU ADRM-2021 profile, not
+    /// to international v2.4: `AUFixtureTests` validates each under both locales with
+    /// its expected findings named (the ADRM's PDF display form is a v2.4 Table 0191
+    /// and 0291 error internationally, P12 S3-2). Here it is round-tripped only.
     @Test("All valid fixtures produce a non-error ValidationReport")
     func validFixturesValidate() throws {
-        let fixtures = try FixtureCorpus.validFixtureURLs()
+        let fixtures = try FixtureCorpus.validFixtureURLs().filter { !$0.lastPathComponent.hasPrefix("au_") }
         for fixture in fixtures {
             let data = try Data(contentsOf: fixture)
             guard let message = try? Parser().parse(data) else { continue }
