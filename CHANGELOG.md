@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P12 S3-3: AU Table 0191 is open to IANA types, as Table 0291 is
+
+- The AU rendering of Table 0191 was closed, so a registered IANA type the 2016 import list lacks (`font`, as in `^font^woff`) drew a `valueNotInTable` error under `.auLocalisation`. The print does not support that: p 168 introduces 0191 as it does 0291, "MIME types are imported from: http://www.iana.org/assignments/media-types/media-types.xhtml". `Resources/tables/locale/au-adrm-2021/0191.json` now has `permitsLocalExtensions` true (registry regenerated); the international rendering still reports the v2.4 finding.
+- Tests: `AUMIMETableTests` (`font` clean under AU and a finding internationally; the 0191 rendering is open), `AUFieldLengthTests` (a message declaring 2.5.1 gets the ADRM MSH-12 length under AU and the v2.5.1 length of 60 internationally), `PathTests` (`OBX[0]-5` is nil).
+
 ### Fixed — P12 S3-2: AU REF^I12 validation time inside its derived scaling limit
 
 - A long AU message validated in super-linear time: `Message.subscript(path:)` filtered every segment to find the requested occurrence, so each `MSH-9.1` read (the `messageCode` gate of each AU composite override, once per populated field) cost a pass over the message; and the evaluator split and parsed each condition string again on every evaluation. The subscript now stops at the requested occurrence, and an internal `ConditionParseCache` parses each condition once per process. No output change: the validation digests (default and strict presets, both locales) are byte-identical.

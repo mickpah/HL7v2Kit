@@ -49,7 +49,7 @@ struct AUMIMETableTests {
         let table = try #require(HL7TableRegistry.table("0191", locale: .auLocalisation))
         #expect(table.codes == ["AP", "AU", "FT", "IM", "multipart", "NS", "SD", "SI", "TEXT", "TX",
                                 "application", "audio", "example", "image", "message", "model", "text", "video"])
-        #expect(table.isClosed)
+        #expect(!table.isClosed)
     }
 
     @Test("The AU Table 0291 carries every printed row and is open to IANA subtypes")
@@ -69,10 +69,11 @@ struct AUMIMETableTests {
                     == [.valueNotInTable(table: "0191"), .valueNotInTable(table: "0291")])
     }
 
-    @Test("A type of data outside the printed Table 0191 still fires under AU")
-    func unknownTypeFires() throws {
-        let found = try tableFindings(wire("^font^woff^Base64^AAAA"), locale: .auLocalisation)
-        #expect(found.map(\.code) == [.valueNotInTable(table: "0191")])
+    @Test("A registered IANA type the print does not list (font) is not a table finding under AU (0191 is open, p 168), and still is internationally")
+    func unlistedIANATypeOpen() throws {
+        let font = wire("^font^woff^Base64^AAAA")
+        #expect(try tableFindings(font, locale: .auLocalisation).isEmpty)
+        #expect(try tableFindings(font, locale: .international).map(\.code).contains(.valueNotInTable(table: "0191")))
     }
 
     @Test("Every MIME row of the AU Table 0291 has the type the ADRM pairs it with in the subtype map")

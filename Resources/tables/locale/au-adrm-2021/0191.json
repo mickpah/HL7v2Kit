@@ -3,8 +3,8 @@
   "version": "au-adrm-2021",
   "name": "Type of referenced data",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7au ADRM-2021.1 sec 3.20.3 (pp. 167-168), HL7 Table 0191 - Type of referenced data, as printed by the localisation, with the IANA MIME type rows (\"MIME types are imported from: http://www.iana.org/assignments/media-types/media-types.xhtml\", p. 168)",
+  "permitsLocalExtensions": true,
+  "citation": "HL7au ADRM-2021.1 sec 3.20.3 (pp. 167-168), HL7 Table 0191 - Type of referenced data, as printed by the localisation, with the IANA MIME type rows (\"MIME types are imported from: http://www.iana.org/assignments/media-types/media-types.xhtml\", p. 168); open for the same reason as Table 0291, so a type IANA registered after the print's 2016-09-27 import (font) is admitted",
   "entries": [
     {
       "code": "AP",

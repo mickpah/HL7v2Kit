@@ -107,7 +107,7 @@ extension HL7TableRegistry {
         number: "0191",
         name: "Type of referenced data",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "AP", description: "Other application data, typically uninterpreted binary data (HL7 V2.3 and later)"),
             HL7Table.Entry(code: "AU", description: "Audio data (HL7 V2.3 and later)"),
