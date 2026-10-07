@@ -12,9 +12,11 @@ Usage:
     python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
         > docs/design/m6-adrm-2021-conformance-register.md
 
-Exit status is 0 always; this is a register generator, not a gate.
+Exit status is 0 once the text is there; this is a register generator, not a gate.
+Without the rendered text it stops with a one-line setup failure (status 1).
 """
 import json
+import os
 import re
 import sys
 
@@ -498,7 +500,11 @@ ORDER = ['CANDIDATE', 'EXTEND', 'SHIPPED', 'PARTIAL', 'BASE', 'REGISTERED',
 
 
 def main():
-    rows = parse_appendix5(sys.argv[1] if len(sys.argv) > 1 else '/tmp/adrm2021.txt')
+    path = sys.argv[1] if len(sys.argv) > 1 else '/tmp/adrm2021.txt'
+    if not os.path.isfile(path):
+        sys.exit(f'setup failure: {path} is absent; render the ADRM-2021 PDF under '
+                 'docs/standards with pdftotext -layout first (local guard only)')
+    rows = parse_appendix5(path)
     for r in rows:
         if r['id'] in ROW_REPAIRS:
             r.update(ROW_REPAIRS[r['id']])

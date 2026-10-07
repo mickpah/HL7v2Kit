@@ -48,10 +48,27 @@ to the schemas, the structures or the AU profile.
   trigger and structure ID pair validates without a message-structure mismatch.
 - `python3 scripts/audit-schemas.py` with its PDF-backed modes (depth and `--examples`), and
   `python3 scripts/extract-example-messages.py --check-registry`.
-- `python3 scripts/sweep-adrm-prose.py`: the ADRM prose sweep, which looks for normative
-  sentences outside the numbered conformance points.
+- `python3 scripts/sweep-adrm-prose.py [text]` and `python3 scripts/extract-adrm-conformance.py
+  [text]`: the ADRM prose sweep, which looks for normative sentences outside the numbered
+  conformance points, and the Appendix 5 conformance-register generator. Both read the
+  `pdftotext -layout` rendering of the ADRM-2021 PDF (default `/tmp/adrm2021.txt`).
+
+Without their input each guard stops with one line and status 1, never a traceback:
+`check-printed-structure-ids.py` prints `setup failure: the licensed PDFs are not under
+docs/standards (local guard only)`; the two ADRM scripts print `setup failure: <path> is absent;
+render the ADRM-2021 PDF under docs/standards with pdftotext -layout first (local guard only)`.
+`audit-schemas.py` skips its PDF-backed passes with a message and runs the rest.
 - `bash scripts/anonymise-fixture.sh` for any new real-world-derived fixture, followed by the
   PHI scan.
+
+Nothing a hosted job runs needs `docs/standards/`, `docs/XML-schemas/`, `/tmp/extractbin` or
+`/tmp/tablesbin`. A grep of `ci.yml` and every script it reaches (21 files, following each
+script name a script mentions) finds those paths only in three kinds of place: comments and
+usage text; PDF-backed functions of the modules the self-checks import (`audit-schemas.py`,
+`extract-example-messages.py`, `extract-message-structures.py`, `extract-datatype-prose.py`,
+`extract-datatype-components.py`, `extract-vmr-table.py`, `read-v2xml-bundles.py`), which the
+self-checks never call; and the PHI scanner's licensed-path patterns, which flag those paths
+rather than read them. P13 S2-1 ran every step on a clean clone with none of them present.
 
 The history scan (`scan-fixtures-for-phi.sh --history`) does run in CI, but only because the
 `fixture-safety` checkout fetches the full history; a shallow clone would scan one commit.

@@ -2,16 +2,20 @@
 # M7-P1 pass 2: candidates = normative body sentences NOT inside a
 # "Conformance point" neighbourhood AND not textually matching any
 # Appendix 5 point (the appendix quotes body wording).
-import re, json, subprocess, sys
+import os, re, json, subprocess, sys
 from pathlib import Path
 
 WINDOW = 10
-text = open('/tmp/adrm2021.txt').read()
+SOURCE = sys.argv[1] if len(sys.argv) > 1 else '/tmp/adrm2021.txt'
+if not os.path.isfile(SOURCE):
+    sys.exit(f'setup failure: {SOURCE} is absent; render the ADRM-2021 PDF under '
+             'docs/standards with pdftotext -layout first (local guard only)')
+text = open(SOURCE).read()
 pages = text.split('\f')
 BODY_START, APPENDIX_START = 3, 372  # 0-based, from pass 1
 
 rows = json.loads(subprocess.run(
-    ['python3', 'scripts/extract-adrm-conformance.py', '/tmp/adrm2021.txt', '--json'],
+    ['python3', 'scripts/extract-adrm-conformance.py', os.path.abspath(SOURCE), '--json'],
     capture_output=True, text=True, cwd=Path(__file__).resolve().parents[1]).stdout)
 
 def tokens(s):
