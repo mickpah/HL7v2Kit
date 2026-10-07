@@ -87,6 +87,19 @@ struct AUCodingSystemPrecedenceTests {
         #expect(try findings("OBX|1|NM|14749-6^Glucose^LN^GLU4^Glucose^L||5.4|mmol/L^mmol/L^UCUM|||||F").isEmpty)
     }
 
+    @Test("An alternate outside the ADRM's Table 0396 (XYZ) is silent")
+    func alternateOutsideTableIsSilent() throws {
+        #expect(try findings("OBX|1|NM|GLU4^Glucose^L^X1^Glucose^XYZ||5.4|mmol/L^mmol/L^UCUM|||||F").isEmpty)
+    }
+
+    @Test("The local primary is matched as printed: lower-case l is not the printed L (S2-3)")
+    func localPrimaryMatchedExactly() throws {
+        // p 144 prints "99ZZZ or L"; a lower-case l is not that spelling and skips (PARTIAL).
+        #expect(try findings("OBX|1|NM|GLU4^Glucose^l^14749-6^Glucose^LN||5.4|mmol/L^mmol/L^UCUM|||||F").isEmpty)
+        #expect(try findings("OBX|1|NM|GLU4^Glucose^L^14749-6^Glucose^LN||5.4|mmol/L^mmol/L^UCUM|||||F").count == 1)
+        #expect(try findings("OBX|1|NM|GLU4^Glucose^99LAB^14749-6^Glucose^LN||5.4|mmol/L^mmol/L^UCUM|||||F").count == 1)
+    }
+
     @Test("A non-coded OBX-5 (XPN) is outside the point")
     func nonCodedValueIsOutsideThePoint() throws {
         #expect(try findings("OBX|1|XPN|14749-6^Glucose^LN||Citizen^Jane^L^^^AMT||||||F").isEmpty)

@@ -69,6 +69,12 @@ struct AULocalTableExtensionTests {
         #expect(try findings(prdWire, extensions: other, point: "HL7au:00104.7.3.1").count == 1)
     }
 
+    @Test("PRD-7.3 accepts the printed NNxxx family (NNAUS) with no declaration")
+    func prdNNFamilySilent() throws {
+        let wire = prdWire.replacingOccurrences(of: "049960CT^AUSHICPR^ZZ", with: "049960CT^AUSHICPR^NNAUS")
+        #expect(try findings(wire, extensions: [:], point: "HL7au:00104.7.3.1").isEmpty)
+    }
+
     @Test("Extension matching is exact: a declared ZZ does not admit zz")
     func extensionMatchIsExact() throws {
         let declared: [String: Set<String>] = ["0203": ["ZZ"]]

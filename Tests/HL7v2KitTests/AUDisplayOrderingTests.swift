@@ -45,6 +45,13 @@ struct AUDisplayOrderingTests {
         #expect(try findings(groups: [Self.atomic + Self.display + Self.signature]).isEmpty)
     }
 
+    @Test("Display, signature, then an atomic OBX fires on the atomic (S2-3 pin)")
+    func atomicAfterSignatureFires() throws {
+        let issues = try findings(groups: [Self.display + Self.signature + Self.atomic])
+        #expect(issues.count == 1, "got \(issues.map(\.message))")
+        #expect(issues.first?.location == IssueLocation(segmentID: "OBX", segmentIndex: 3))
+    }
+
     @Test("A group with no display OBX is silent (HL7au:000008 reports the missing display)")
     func groupWithoutDisplaySilent() throws {
         #expect(try findings(groups: [Self.atomic + Self.atomic]).isEmpty)

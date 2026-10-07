@@ -834,7 +834,8 @@ struct ComponentCorrespondence: Sendable, Equatable, Hashable {
 ///   mapped values and must not begin with any of `prefixes`. Expresses
 ///   HL7au:000034.1/.2, where the ADRM prints the local side as a value
 ///   and a form ("99ZZZ or L", Table 0396 p 144) rather than a list of
-///   public systems the primary must come from. P12 S2-2.
+///   public systems the primary must come from. P12 S2-2. Matched exactly,
+///   as printed (P12 S2-3); `allowed` stays case-insensitive.
 enum CorrespondenceValueRule: Sendable, Equatable, Hashable {
     case allowed
     case forbidden(prefixes: [String])

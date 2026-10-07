@@ -1448,8 +1448,9 @@ public struct Validator: Sendable {
                 guard !listed else { continue }
                 expectation = "in [\(mapped.joined(separator: ", "))]"
             case .forbidden(let prefixes):
-                let lowered = value.lowercased()
-                guard listed || prefixes.contains(where: { lowered.hasPrefix($0.lowercased()) })
+                // Exact, as printed (P12 S2-3): "99ZZZ or L" (Table 0396 p 144);
+                // only the key lookup above is case-folded (the `mims-codes` row).
+                guard mapped.contains(value) || prefixes.contains(where: { value.hasPrefix($0) })
                 else { continue }
                 expectation = "not in [\(mapped.joined(separator: ", "))] and not beginning with [\(prefixes.joined(separator: ", "))]"
             }
