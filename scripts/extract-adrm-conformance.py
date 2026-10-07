@@ -297,8 +297,10 @@ PARTIAL = {
                        'identifier scheme" needs identifier-scheme '
                        'recognition and is not checked',
     'HL7au:00044.3.1': 'the presence half is enforced on Orders/Results/'
-                       'Referrals (EI-1 valued); the uniqueness half is '
-                       'cross-message and out of scope',
+                       'Referrals (EI-1 valued); within one message a '
+                       'duplicate OBR-3 already fires under HL7au:000028 '
+                       '(noted by P12 S2-2); uniqueness across the sender\'s '
+                       'messages is cross-message and out of scope',
     'HL7au:00044.7.1': 'the presence half is enforced on Orders/Results/'
                        'Referrals (XCN-1 valued); "valid according to the '
                        'identifier scheme" needs identifier-scheme '
@@ -355,8 +357,10 @@ BASE = {
 # misfires on the spec's own examples (req #4). Withdrawn from the
 # profile; registered. SHIPPED caller-asserted by P12 S2-2 (see above).
 # M6-B-9 registrations (each cited in permanent-limitations-register §D):
-# 00100.1 — REF-4 SNOMED CT hierarchy subsumption needs a terminology
-#   server; no closed value set exists in the ADRM.
+# 00100.1 — the referral summary group is the one whose OBR-4 is a SNOMED
+#   CT-AU child of 373942005 or 3457005 (p 212; corrected from "REF-4" by
+#   P12 S2-2): subsumption needs a terminology server; no closed value set
+#   exists in the ADRM.
 # 000008.1.5 — SHIPPED by P12 S2-2: the HB 308 reason is superseded by the
 #   ADRM's own signature identifier (p 438, the HL7au:000010 comment).
 # 000034.3 / 00044.6.7 — "the alternate must encode the SAME CONCEPT as
