@@ -12,7 +12,7 @@ declaration, requires identifier and coding-system components, defines display s
 constrains the message structures. Appendix 5 lists its 263 conformance points, each with an
 `HL7au:` identifier; every finding the profile raises names one.
 
-The profile governs a message of every version, by owner ruling (G-AU1). AU senders
+The profile governs a message of every version, by design. AU senders
 also declare v2.3.1 and v2.5.1 and later, and the ADRM's rules are field-level, so:
 
 - **Field rules apply on every version.** Each field, component, value-set, prohibition and
@@ -103,9 +103,9 @@ ORU^R01, ORM^O01, ORR^O02, REF^I12, RRI^I12 or OSR^Q06 is matched against the AD
 well as the base one, and a segment the ADRM structure requires and the message lacks is
 reported with `localeRule` `"HL7au:00060.1"`, at that severity. A REF^I12 that declares
 `HL7AU-OO-REF-SIMPLIFIED-201706` or `HL7AU-OO-REF-SIMPLIFIED-201706-L1` in MSH-12.3.1 is matched
-against the Appendix 8 simplified structure (A8.5, pp 484 to 485) instead (owner ruling G-AU3;
+against the Appendix 8 simplified structure (A8.5, pp 484 to 485) instead (by design;
 see ``StructureVariant/profileIdentifiers``); RRI^I12 is unchanged by A8.5. ORR^O02 follows its print (pp 280 to 281) with PID
-optional, as the base v2.4 reading has it (owner ruling G-AU2). An occurrence beyond a maximum the
+optional, as the base v2.4 reading has it (a cited erratum). An occurrence beyond a maximum the
 ADRM narrows (a second IN1, PV1 or PV2 on REF^I12, p 324) is reported as
 ``IssueCode/profileMaximumExceeded(localeRule:)`` at `.info`.
 

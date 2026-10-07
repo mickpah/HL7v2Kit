@@ -17,7 +17,7 @@ The code below is quoted from it. For deeper dives, see <doc:TypedSegments>, <do
 Add HL7v2Kit to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/mickpah/HL7v2Kit.git", from: "3.16.0")
+.package(url: "https://github.com/mickpah/HL7v2Kit", from: "3.17.0")
 ```
 
 Then add `"HL7v2Kit"` to your target's `dependencies`. HL7v2Kit has no transitive dependencies; Foundation only.

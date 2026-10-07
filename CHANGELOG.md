@@ -35,9 +35,9 @@ Full detail for every release, with dates, is in `docs/archive/CHANGELOG-full.md
 ### Changed
 
 - The library builds with Swift 6.0: `Package.swift` no longer sets the `StrictConcurrency`
-  upcoming feature, which Swift 6 language mode turns on anyway and which Swift 6.0 refused for
-  being already on. Nobody expects the compiler to reject a setting for agreeing with it (nor,
-  for that matter, the Spanish Inquisition). Checking is unchanged.
+  upcoming feature, which Swift 6 language mode turns on anyway. Swift 6.0 refused the flag for
+  being already on, a Holly-grade announcement of what everyone already knew. Checking is
+  unchanged.
 - The PHI scan checks IHI, HPI-I and HPI-O prefixes, Medicare numbers by check digit, DVA file
   numbers and AU mobile numbers, plus licensed-content signatures; `--history` scans every
   commit, and CI runs it.

@@ -75,9 +75,9 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 - ``BatchParser`` (and ``StreamingBatchParser``) split an `FHS`/`BHS` ... `BTS`/`FTS` file into messages, and ``BatchValidator`` gives one ``ValidationReport`` per message, each checked as above. A batch trailer left on a message passed to the plain ``Parser`` is an unexpected segment when the structure check is on.
 - Under ``HL7Locale/auLocalisation`` the batch-scope rules apply: one batch per file, a REF batched with any other message, and the FHS and BHS delimiters, each as ``IssueCode/profileConstraintViolation(localeRule:)``.
 
-### Acknowledgment building
+### Acknowledgement building
 
-``MessageBuilder/acknowledgment(to:code:messageControlID:dateTime:)`` builds the general acknowledgment: MSA-2 echoes MSH-10, sender and receiver swap, MSH-9 becomes `ACK^<event>^ACK`, MSH-11 and MSH-12 are echoed, and a populated MSH-18 is echoed so the ACK declares the character set it is serialised in. The built ACK validates like any other message. The caller chooses the ``AcknowledgmentCode`` and adds any ERR detail.
+``MessageBuilder/acknowledgment(to:code:messageControlID:dateTime:)`` builds the general acknowledgement: MSA-2 echoes MSH-10, sender and receiver swap, MSH-9 becomes `ACK^<event>^ACK`, MSH-11 and MSH-12 are echoed, and a populated MSH-18 is echoed so the ACK declares the character set it is serialised in. The built ACK validates like any other message. The caller chooses the ``AcknowledgmentCode`` and adds any ERR detail.
 
 ### The locale layer
 
@@ -158,7 +158,7 @@ Each line gives the reason and the register section that records it: the [perman
 - **Timezones** (sections B and C): a `+/-ZZZZ` offset is checked for shape and, under the AU profile, presence; whether it is right for the sender's location needs a timezone database.
 - **Certificates and directories** (sections B and C): NASH certificates, vendor X.509 certificates and whether an organisation name is the one the HI service registers.
 - **Cross-message state** (section C): duplicates across messages (OBR-48 "duplicate procedure", HL7au:00044.3.1 uniqueness beyond one message).
-- **Receiver behaviour** (sections B and E): what a receiver must do, not what a message contains. The MSH-15 and MSH-16 acknowledgment protocol, enhanced mode, sequence numbers, and whether, when and with which code to acknowledge are the receiving application's (v2.5.1 CH02 sections 2.9.2 to 2.9.3); so are the ADRM's 74 receiver points.
+- **Receiver behaviour** (sections B and E): what a receiver must do, not what a message contains. The MSH-15 and MSH-16 acknowledgement protocol, enhanced mode, sequence numbers, and whether, when and with which code to acknowledge are the receiving application's (v2.5.1 CH02 sections 2.9.2 to 2.9.3); so are the ADRM's 74 receiver points.
 - **Fragment reassembly** (section E): a fragment (MSH-14 populated, or a trailing DSC with a continuation pointer or one its structure does not define) is not structure-checked, and fragments are not joined; that is the transport's job. A complete message carrying a continuation pointer is not structure-checked either.
 - **Version provenance** (section E): a message whose ``Message/version`` differs from its MSH-12, for example under a parser version override, is not structure-checked, because `Message` does not record which grammar it was validated under.
 - **Structures with no checkable syntax** (section E): 183 registered structures (templates, placeholders, Table 0354 rows nothing prints) report ``IssueCode/messageStructureNotModelled(structure:)`` instead of a body check. Where two prints share one trigger (v2.3 ORM_O01 and ORR_O02; MFK_M01 on v2.3.1 and v2.4) the looser governs; the v2.4 ADT^A31 print is unreadable and A31 takes the A05 print.
