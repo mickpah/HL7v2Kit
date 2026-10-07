@@ -55,6 +55,9 @@ public struct Validator: Sendable {
         // that would be re-evaluated for each candidate segment in the
         // group only fires once per distinct group.
         var firedCardinalityKeys: Set<String> = []
+        // P12 S3-2: the cardinality and ordering rules over one scope
+        // (HL7au:000008 and 000008.1.5) resolve each group once.
+        var groupCache = GroupResolutionCache()
 
         let grammar = Self.grammarTable(for: message.version)
         let withdrawnSegments = MessageStructureTable.withdrawnSegments(for: message.version)
@@ -134,6 +137,7 @@ public struct Validator: Sendable {
                 anchorOccurrence: occurrence,
                 message: message,
                 firedKeys: &firedCardinalityKeys,
+                groupCache: &groupCache,
                 issues: &issues
             )
         }
@@ -146,7 +150,7 @@ public struct Validator: Sendable {
             // M12: OBX-4 sub-ID trees (ADRM-prose:P-8..P-10, the HL7v2 VMR).
             checkSubIDTrees(profile: profile, message: message, issues: &issues)
             // P12 S2-2: in-group ordering (HL7au:000008.1.5).
-            checkGroupOrderingRules(profile: profile, message: message, issues: &issues)
+            checkGroupOrderingRules(profile: profile, message: message, groupCache: &groupCache, issues: &issues)
         }
 
         // M8-B1: base-spec ORC/OBR paired-field equality (items
@@ -240,6 +244,7 @@ public struct Validator: Sendable {
         anchorOccurrence: Int,
         message: Message,
         firedKeys: inout Set<String>,
+        groupCache: inout GroupResolutionCache,
         issues: inout [ValidationIssue]
     ) {
         for rule in grammar.segmentCardinalityRules {
@@ -260,7 +265,8 @@ public struct Validator: Sendable {
                 scope: rule.scope,
                 anchorIndex: anchorIndex,
                 counted: rule.countedSegmentID,
-                message: message
+                message: message,
+                cache: &groupCache
             ) else { continue }
 
             let key = "\(rule.scope.rawValue)|\(group.headIndex)|\(rule.countedSegmentID)|\(rule.predicate)|\(rule.minCount)|\(rule.maxCount.map(String.init) ?? "-")|\(rule.activationPredicate ?? "-")"
@@ -380,6 +386,43 @@ public struct Validator: Sendable {
         init(indices: [Int], in all: [Segment]) {
             self.indices = indices
             self.segments = indices.map { all[$0] }
+        }
+    }
+
+    /// P12 S3-2: the groups resolved during one `validate(_:)` call, keyed by
+    /// scope, anchor and counted segment ID (the inputs of `resolveGroup` for
+    /// one message), so the cardinality and ordering rules over one scope
+    /// resolve each group once. A local value per call: no shared state.
+    struct GroupResolutionCache {
+        private struct Key: Hashable {
+            let scope: GroupScope
+            let anchorIndex: Int
+            let counted: String
+        }
+        private var resolved: [Key: ResolvedGroup?] = [:]
+
+        mutating func group(
+            scope: GroupScope, anchorIndex: Int, counted: String,
+            resolve: () -> ResolvedGroup?
+        ) -> ResolvedGroup? {
+            let key = Key(scope: scope, anchorIndex: anchorIndex, counted: counted)
+            if let hit = resolved[key] { return hit }
+            let group = resolve()
+            resolved[key] = .some(group)
+            return group
+        }
+    }
+
+    /// `resolveGroup` through the call's cache.
+    func resolveGroup(
+        scope: GroupScope,
+        anchorIndex: Int,
+        counted: String,
+        message: Message,
+        cache: inout GroupResolutionCache
+    ) -> ResolvedGroup? {
+        cache.group(scope: scope, anchorIndex: anchorIndex, counted: counted) {
+            resolveGroup(scope: scope, anchorIndex: anchorIndex, counted: counted, message: message)
         }
     }
 
@@ -664,7 +707,7 @@ public struct Validator: Sendable {
                              version: message.version,
                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
                              encoding: message.encodingCharacters,
-                             location: location, issues: &issues)
+                             location: location, profile: profile, issues: &issues)
             // S1-1: v2.7+ normative length on each primitive component.
             checkComponentLength(field: field, version: message.version,
                                  dataType: effectiveDataType(of: fieldGrammar, in: segment),
@@ -1842,7 +1885,7 @@ public struct Validator: Sendable {
         }
         func report(_ value: String?, table: HL7Table, name: String, component: Int, subcomponent: Int?, repetition: Int) {
             guard let value, !value.isEmpty, value != "\"\"", !table.contains(value),
-                  HL7TableRegistry.table(table.number, locale: locale)?.contains(value) != true,
+                  !Self.localeAdmits(value, table: table.number, locale: locale),
                   options.localTableExtensions[table.number]?.contains(value) != true else { return }
             let where_ = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                        fieldIndex: location.fieldIndex, componentIndex: component,
@@ -1894,6 +1937,15 @@ public struct Validator: Sendable {
         }
     }
 
+    /// Whether a locale's own rendering of `table` admits `value`: the value is one of
+    /// its rows, or the rendering is open (it permits local extensions). The AU ADRM-2021
+    /// Table 0291 is open: "Other MIME subtypes types can be imported from" the IANA
+    /// registry (p. 170, P12 S3-2). A rendering only ever widens the base check.
+    static func localeAdmits(_ value: String, table: String, locale: HL7Locale) -> Bool {
+        guard let rendering = HL7TableRegistry.table(table, locale: locale) else { return false }
+        return !rendering.isClosed || rendering.contains(value)
+    }
+
     private func checkCodeTable(
         _ grammar: FieldGrammar,
         tableNumber: String,
@@ -1917,7 +1969,7 @@ public struct Validator: Sendable {
             // UNICODE UTF-8 into v2.4 Table 0211). It WIDENS the check as a union with the base
             // version's rows, so it can never reject what the message's own version prints;
             // narrowing is the profile's job, not this rule's.
-            if HL7TableRegistry.table(tableNumber, locale: locale)?.contains(value) == true { continue }
+            if Self.localeAdmits(value, table: tableNumber, locale: locale) { continue }
             // A caller-declared local extension (ValidationOptions.localTableExtensions) also
             // widens the check, same as a locale rendering: every supported version allows an
             // HL7 table to be extended locally (v2.3 / v2.3.1 CH2 sec 2.6.6, v2.4 CH02 sec 2.7.6,
@@ -2339,6 +2391,7 @@ public struct Validator: Sendable {
     /// OR of AND clauses (``ConditionLanguage/clauses(_:)``), combined by
     /// Kleene's connectives. Short-circuits like the DNF it is: a clause
     /// stops at its first false atom, the whole at its first true clause.
+    /// The clauses come parsed from `ConditionParseCache` (P12 S3-2).
     private func evaluateOrExpression(
         _ expression: String,
         in segment: Segment,
@@ -2347,7 +2400,7 @@ public struct Validator: Sendable {
         currentSegmentID: String
     ) -> ConditionTruth {
         var result = ConditionTruth.false
-        for atoms in ConditionLanguage.clauses(expression) {
+        for atoms in ConditionParseCache.shared.clauses(expression) {
             var clause = ConditionTruth.true
             for atom in atoms {
                 clause = .and(clause, evaluateAtom(
@@ -2375,7 +2428,7 @@ public struct Validator: Sendable {
         let isPopulated: Bool
     }
 
-    /// Single atomic predicate, classified by
+    /// Single atomic predicate, as classified by
     /// ``ConditionLanguage/parseAtom(_:)`` (the same parse
     /// `Validator.conditionParseErrors(_:)` checks, P4-25). The forms:
     ///
@@ -2403,13 +2456,13 @@ public struct Validator: Sendable {
     /// `conditionTriggers` reads that as "does not fire", the v0.2-V1
     /// fail-safe.
     private func evaluateAtom(
-        _ atom: String,
+        _ atom: ConditionAtom?,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
     ) -> ConditionTruth {
-        guard case .success(let parsed) = ConditionLanguage.parseAtom(atom) else { return .unknown }
+        guard let parsed = atom else { return .unknown }
         switch parsed {
         case .segmentPresence(let id, let present):
             // True iff a segment of that ID exists in the current

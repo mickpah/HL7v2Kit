@@ -158,16 +158,13 @@ struct PerformanceStructureTests {
         let bytes = wire.utf8.count
         let count = message.segments.count
         Self.report("au-ref-i12-\(orders * 3 + problems)added", seconds: total, bytes: bytes, segments: count)
-        // Known issue, registered: docs/design/permanent-limitations-register.md,
-        // section E close-out addendum, row "AU REF^I12 validation time". Measured
-        // (release, best of three): 7.9 to 40.3 ms for 200 to 800 added segments,
-        // 2.59 to 3.35 ms per KB against the derived 2 ms per KB, and 6.9 to 36.8 ms
-        // at 542f5cd, before the rollout. The time is in the AU profile's field-level
-        // checks. When it is fixed this known issue stops matching and the test fails.
-        withKnownIssue("AU REF^I12 over its derived scaling limit (register section E, AU REF^I12 validation time)") {
-            #expect(total < Self.derivedLimit(bytes: bytes),
-                    "\(count) segments (\(bytes) bytes) took \(total) s; derived limit \(Self.derivedLimit(bytes: bytes)) s")
-        }
+        // Register section E close-out addendum, row "AU REF^I12 validation time":
+        // met since P12 S3-2 (release, three runs: 2.7 to 10.5 ms for 200 to 800
+        // added segments, 0.83 to 0.91 ms per KB). It was 7.7 to 39.3 ms, 2.51 to
+        // 3.27 ms per KB, super-linear: every `MSH-9.1` read filtered the whole
+        // message, and every condition was re-parsed on each evaluation.
+        #expect(total < Self.derivedLimit(bytes: bytes),
+                "\(count) segments (\(bytes) bytes) took \(total) s; derived limit \(Self.derivedLimit(bytes: bytes)) s")
     }
 
     /// An ORU^R01 of `orders` ORDER_OBSERVATION groups, each ORC, OBR and

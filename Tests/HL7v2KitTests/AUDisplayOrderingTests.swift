@@ -86,6 +86,25 @@ struct AUDisplayOrderingTests {
         #expect(issues.count == 1, "got \(issues.map(\.message))")
     }
 
+    @Test("P12 S3-2: the count and ordering rules share one resolution per group, a miss included")
+    func groupResolvedOnce() throws {
+        let wire = "MSH|^~\\&|LAB|ACME|GP|GP|20240101120000+1000||ORU^R01^ORU_R01|M1|P|2.4\r"
+            + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+            + "OBR|1||F1^ACME|FBC^Full blood count^L\r" + Self.atomic + Self.display
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let validator = Validator(locale: .auLocalisation)
+        var cache = Validator.GroupResolutionCache()
+        var resolutions = 0
+        for anchor in [2, 2, 1, 1] {
+            let cached = validator.resolveGroup(scope: .obrObxGroup, anchorIndex: anchor, counted: "OBX",
+                                                message: message, cache: &cache)
+            _ = cache.group(scope: .obrObxGroup, anchorIndex: anchor, counted: "OBX") { resolutions += 1; return nil }
+            let direct = validator.resolveGroup(scope: .obrObxGroup, anchorIndex: anchor, counted: "OBX", message: message)
+            #expect(cached?.indices == direct?.indices)
+        }
+        #expect(resolutions == 0, "every lookup after the first per key is a cache hit")
+    }
+
     @Test("An ORM is out of scope (the point names Results and Referrals)")
     func orderSilent() throws {
         #expect(try findings(messageType: "ORM^O01^ORM_O01", groups: [Self.display + Self.atomic]).isEmpty)

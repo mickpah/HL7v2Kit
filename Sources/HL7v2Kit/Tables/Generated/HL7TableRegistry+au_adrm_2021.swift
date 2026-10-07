@@ -6,9 +6,11 @@ extension HL7TableRegistry {
     public static let au_adrm_2021: [String: HL7Table] = [
         "0074": t0074_au_adrm_2021,
         "0125": t0125_au_adrm_2021,
+        "0191": t0191_au_adrm_2021,
         "0200": t0200_au_adrm_2021,
         "0203": t0203_au_adrm_2021,
         "0211": t0211_au_adrm_2021,
+        "0291": t0291_au_adrm_2021,
         "0301": t0301_au_adrm_2021,
         "0363": t0363_au_adrm_2021,
         "0396": t0396_au_adrm_2021,
@@ -98,6 +100,33 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "XON", description: "Extended Composite Name And Number For Organizations"),
             HL7Table.Entry(code: "XPN", description: "Extended Person Name"),
             HL7Table.Entry(code: "XTN", description: "Extended Telecommunications Number"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0191_au_adrm_2021 = HL7Table(
+        number: "0191",
+        name: "Type of referenced data",
+        kind: .hl7,
+        permitsLocalExtensions: true,
+        entries: [
+            HL7Table.Entry(code: "AP", description: "Other application data, typically uninterpreted binary data (HL7 V2.3 and later)"),
+            HL7Table.Entry(code: "AU", description: "Audio data (HL7 V2.3 and later)"),
+            HL7Table.Entry(code: "FT", description: "Formatted text (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "IM", description: "Image data (HL7 V2.3 and later)"),
+            HL7Table.Entry(code: "multipart", description: "MIME multipart package"),
+            HL7Table.Entry(code: "NS", description: "Non-scanned image (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "SD", description: "Scanned document (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "SI", description: "Scanned image (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "TEXT", description: "Machine readable text document (HL7 V2.3.1 and later)"),
+            HL7Table.Entry(code: "TX", description: "Machine readable text document (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "application", description: "Imported from IANA MIME Types updated 2016-09-27"),
+            HL7Table.Entry(code: "audio", description: "Imported from IANA MIME Types updated 2016-09-27"),
+            HL7Table.Entry(code: "example", description: "Imported from IANA MIME Types updated 2016-09-27"),
+            HL7Table.Entry(code: "image", description: "Imported from IANA MIME Types updated 2016-09-27"),
+            HL7Table.Entry(code: "message", description: "Imported from IANA MIME Types updated 2016-09-27"),
+            HL7Table.Entry(code: "model", description: "Imported from IANA MIME Types updated 2016-09-27"),
+            HL7Table.Entry(code: "text", description: "Imported from IANA MIME Types updated 2016-09-27"),
+            HL7Table.Entry(code: "video", description: "Imported from IANA MIME Types updated 2016-09-27"),
         ] as [HL7Table.Entry]
     )
 
@@ -271,6 +300,34 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "ISO IR159", description: "Code of the supplementary Japanese Graphic Character set for information interchange (JIS X 0212-1990). Note that the code contains a space, i.e. \"ISO IR159\"."),
             HL7Table.Entry(code: "UNICODE", description: "The world wide character standard from ISO/IEC 10646- 1-19931"),
             HL7Table.Entry(code: "UNICODE UTF-8", description: "UCS Transformation Format, 8-bit form. Introduced in HL7 v2.6 and back-ported into this v2.4 localisation."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0291_au_adrm_2021 = HL7Table(
+        number: "0291",
+        name: "Subtype of referenced data",
+        kind: .hl7,
+        permitsLocalExtensions: true,
+        entries: [
+            HL7Table.Entry(code: "BASIC", description: "ISDN PCM audio data"),
+            HL7Table.Entry(code: "DICOM", description: "Digital Imaging and Communications in Medicine"),
+            HL7Table.Entry(code: "FAX", description: "Facsimile data"),
+            HL7Table.Entry(code: "GIF", description: "Graphics Interchange Format"),
+            HL7Table.Entry(code: "HTML", description: "Hypertext Markup Language"),
+            HL7Table.Entry(code: "JOT", description: "Electronic ink data (Jot 1.0 standard)"),
+            HL7Table.Entry(code: "JPEG", description: "Joint Photographic Experts Group"),
+            HL7Table.Entry(code: "Octet-stream", description: "Uninterpreted binary data"),
+            HL7Table.Entry(code: "PICT", description: "PICT format image data"),
+            HL7Table.Entry(code: "PostScript", description: "PostScript program"),
+            HL7Table.Entry(code: "RTF", description: "Rich Text Format"),
+            HL7Table.Entry(code: "SGML", description: "Standard Generalized Markup Language (HL7 V2.3.1 and later)"),
+            HL7Table.Entry(code: "TIFF", description: "TIFF image data"),
+            HL7Table.Entry(code: "x-hl7-cda-level-one", description: "HL7 Clinical Document Architecture Level One document"),
+            HL7Table.Entry(code: "XML", description: "Extensible Markup Language (HL7 V2.3.1 and later)"),
+            HL7Table.Entry(code: "pdf", description: "Portable Document Format MIME type: application/pdf"),
+            HL7Table.Entry(code: "png", description: "Portable Network Graphics MIME type: image/png"),
+            HL7Table.Entry(code: "xml", description: "text/xml or application/xml"),
+            HL7Table.Entry(code: "emf", description: "image/emf"),
         ] as [HL7Table.Entry]
     )
 

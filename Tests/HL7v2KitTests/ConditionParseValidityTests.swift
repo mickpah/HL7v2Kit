@@ -183,6 +183,25 @@ struct ConditionParseValidityTests {
         #expect(Validator.conditionParseErrors(condition).isEmpty)
     }
 
+    @Test("P12 S3-2: the parse cache gives the evaluator's own parse, an unreadable atom as nil", arguments: [
+        "messageCode in (ORU, REF)",
+        "OBX-3.3 = AUSPDI OR OBX-3.1 startsWith AUSETAV AND OBX-3.3 = L",
+        "PID-3 populated AND ",
+        "PID-3 populatd OR PV1 present",
+        "",
+    ])
+    func parseCacheMatchesParse(condition: String) {
+        let expected = ConditionLanguage.clauses(condition).map { atoms in
+            atoms.map { atom -> ConditionAtom? in
+                if case .success(let parsed) = ConditionLanguage.parseAtom(atom) { return parsed }
+                return nil
+            }
+        }
+        let cache = ConditionParseCache()
+        #expect(cache.clauses(condition) == expected, "first parse")
+        #expect(cache.clauses(condition) == expected, "cached")
+    }
+
     @Test("An empty condition is not checked")
     func emptyConditionNotChecked() {
         #expect(Validator.conditionParseErrors("").isEmpty)

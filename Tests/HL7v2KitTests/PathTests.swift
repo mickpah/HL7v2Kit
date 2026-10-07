@@ -97,4 +97,18 @@ struct PathTests {
         #expect(m["XYZ-1"] == nil)
         #expect(m["nonsense"] == nil)
     }
+
+    @Test("P12 S3-2: the subscript reads the requested occurrence of a repeated segment")
+    func subscriptOccurrence() throws {
+        let wire = "MSH|^~\\&|APP|FAC|||||ORU^R01|MSG1|P|2.5.1\rPID|1\rOBR|1\r"
+            + "OBX|1|NM|A||1\rOBX|2|NM|B||2\rNTE|1\rOBX|3|NM|C||3\r"
+        let m = try Parser().parse(wire)
+        #expect(m["MSH-9.1"] == "ORU")
+        #expect(m["OBX-5"] == "1")
+        #expect(m["OBX[1]-5"] == "1")
+        #expect(m["OBX[2]-5"] == "2")
+        #expect(m["OBX[3]-5"] == "3")
+        #expect(m["OBX[4]-5"] == nil)
+        #expect(m["OBX[0]-5"] == nil)
+    }
 }

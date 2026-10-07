@@ -451,6 +451,19 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// identifier.
     let specCitation: String?
 
+    /// The field's maximum length as the profile's own attribute table prints
+    /// it, where that differs from the base grammar (P12 S3-2). Under this
+    /// locale the field-length check reads it in place of the version
+    /// grammar's LEN, with ``ValidationOptions/fieldLengthSeverity``: the
+    /// ADRM prints maxima of one occurrence (p. 10, "Maximum length of the
+    /// element"). Not gated by `condition`: an attribute table's LEN holds
+    /// wherever the segment is used. `nil` (default): the grammar's LEN.
+    let length: String?
+
+    /// Citation for `length`: the attribute table's page and the printed
+    /// variation note. Surfaced in the length finding's message.
+    let lengthCitation: String?
+
     init(
         segmentID: String,
         fieldIndex: Int,
@@ -461,7 +474,9 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         componentPatterns: [ComponentPattern] = [],
         componentCorrespondences: [ComponentCorrespondence] = [],
         prohibitions: [ProfileFieldProhibition] = [],
-        specCitation: String? = nil
+        specCitation: String? = nil,
+        length: String? = nil,
+        lengthCitation: String? = nil
     ) {
         self.segmentID = segmentID
         self.fieldIndex = fieldIndex
@@ -473,6 +488,8 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         self.componentCorrespondences = componentCorrespondences
         self.prohibitions = prohibitions
         self.specCitation = specCitation
+        self.length = length
+        self.lengthCitation = lengthCitation
     }
 }
 
@@ -582,7 +599,10 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// is allowed too (P12 S2-2): the ADRM lets Table 0363 "be extended to
     /// allow for secure messaging vendor assigning authorities" (p. 334).
     /// Table 0203 value sets carry `"0203"` (P12 S2-3): every supported
-    /// version lets a site extend an HL7 table locally. Read by the field
+    /// version lets a site extend an HL7 table locally. The Table 0074
+    /// (OBR-24) and Table 0200 (XCN-10) value sets carry theirs too (P12
+    /// S3-2): every value set built from a table's codes names that table;
+    /// a narrowing to a fixed list (MSH-16, MSH-18) names none. Read by the field
     /// and composite value-set tracks alike; matching is exact.
     /// `nil` (default): the caller's extensions do not apply.
     let localTableExtension: String?

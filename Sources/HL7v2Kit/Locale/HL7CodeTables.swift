@@ -34,9 +34,8 @@ enum HL7CodeTables {
     static let table0074: [String] = auCodes("0074")
 
     /// HL7 Table 0200 — Name Type, as printed in AU ADRM-2021 (p. 62).
-    /// Not yet consumed by a shipped rule: XCN-10's HL7au:00044.7.3
-    /// stays PARTIAL until the composite-override track grows a
-    /// value-set rule (§D).
+    /// Consumed by HL7au:00044.7.3 (XCN-10 membership, M6-B-5), with
+    /// the caller's `localTableExtensions["0200"]` (P12 S3-2).
     static let table0200: [String] = auCodes("0200")
 
     /// HL7 Table 0203 — Identifier Type, as printed in AU ADRM-2021
@@ -75,7 +74,8 @@ enum HL7CodeTables {
     /// (image: TIFF/PICT/DICOM/FAX/Jot; audio: basic; application:
     /// octet-stream/PostScript), the 0291 extension rows' own MIME
     /// annotations (pdf ⇒ application/pdf, png ⇒ image/png, xml ⇒
-    /// text/xml and application/xml), and the §4.5/§4.26 examples.
+    /// text/xml and application/xml, emf ⇒ image/emf; pp. 169-170, the
+    /// rows the AU Table 0291 rendering carries), and the §4.5/§4.26 examples.
     /// Unstated subtypes skip (the IANA registry is unbounded).
     static let subtypeToTypeMap: [String: [String]] = [
         // §3.20.5.1 Image subtypes → 0191 IM (MIME "image" also allowed).
@@ -87,6 +87,8 @@ enum HL7CodeTables {
         "gif": ["IM", "image"],
         "jpeg": ["IM", "image"],
         "png": ["image", "IM"],
+        // The 0291 MIME row "emf   image/emf" (p. 170, P12 S3-2).
+        "emf": ["image"],
         // §3.20.5.2 Audio subtypes → 0191 AU (MIME "audio").
         "basic": ["AU", "audio"],
         // §3.20.5.3 Application subtypes → 0191 AP (MIME "application").

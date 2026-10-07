@@ -287,7 +287,9 @@ extension Profile {
                         specCitation: "ADRM-prose:P-5a — on ACK messages MSH-12.3.1 must be HL7AU-OO-ACK-201701 (general, §8.5) or HL7AU-OO-ACK-READ-2020006 (user read, §8.4); AU ADRM-2021 p. 372"
                     ),
                 ],
-                specCitation: "HL7au:000040 (r2) — MSH-12 Version ID Field Conformance Points"
+                specCitation: "HL7au:000040 (r2) — MSH-12 Version ID Field Conformance Points",
+                length: "250",
+                lengthCitation: "AU ADRM-2021 MSH attribute table p. 37, LEN 250††††; p. 38: \"Australian variation to HL7 V2.4 with the length changed from 60 to 250 characters.\""
             ),
             // HL7au:000041 (r2) — MSH-17 country code must be "AUS"
             // for Australian originators. The spec says MSH-17 must
@@ -550,14 +552,18 @@ extension Profile {
                 fieldIndex: 2,
                 profileUsage: nil,
                 requiredComponents: [1, 2, 3, 4],
-                specCitation: "HL7au:000003 (r2) — OBR-2 EI completeness"
+                specCitation: "HL7au:000003 (r2) — OBR-2 EI completeness",
+                length: "250",
+                lengthCitation: "AU ADRM-2021 OBR attribute table p. 207, LEN 250**; p. 209: \"The field length of OBR-2 and OBR-3 of 250 characters for Australian usage is a variance to the HL7 V 2.4 field length of 22 characters.\""
             ),
             FieldOverride(
                 segmentID: "OBR",
                 fieldIndex: 3,
                 profileUsage: nil,
                 requiredComponents: [1, 2, 3, 4],
-                specCitation: "HL7au:000004.1 (r3) — OBR-3 EI completeness"
+                specCitation: "HL7au:000004.1 (r3) — OBR-3 EI completeness",
+                length: "250",
+                lengthCitation: "AU ADRM-2021 OBR attribute table p. 207, LEN 250**; p. 209: \"The field length of OBR-2 and OBR-3 of 250 characters for Australian usage is a variance to the HL7 V 2.4 field length of 22 characters.\""
             ),
             // ADRM-prose:P-11 (P4-27, fix round 1) — ADRM-2021 §4.4.1.26,
             // p. 228: "Not used in Australian messages. Use observation
@@ -634,21 +640,27 @@ extension Profile {
                 fieldIndex: 2,
                 profileUsage: nil,
                 requiredComponents: [1, 2, 3, 4],
-                specCitation: "HL7au:000005 (r2) — ORC-2 EI completeness"
+                specCitation: "HL7au:000005 (r2) — ORC-2 EI completeness",
+                length: "250",
+                lengthCitation: "AU ADRM-2021 ORC attribute table p. 282, LEN 250**; p. 283: \"The field length of ORC-2, ORC-3 and ORC-4 of 250 characters for Australian usage is a variance to the HL7 V 2.4 field length of 22 characters.\""
             ),
             FieldOverride(
                 segmentID: "ORC",
                 fieldIndex: 3,
                 profileUsage: nil,
                 requiredComponents: [1, 2, 3, 4],
-                specCitation: "HL7au:000006 (r3) — ORC-3 EI completeness"
+                specCitation: "HL7au:000006 (r3) — ORC-3 EI completeness",
+                length: "250",
+                lengthCitation: "AU ADRM-2021 ORC attribute table p. 282, LEN 250**; p. 283: \"The field length of ORC-2, ORC-3 and ORC-4 of 250 characters for Australian usage is a variance to the HL7 V 2.4 field length of 22 characters.\""
             ),
             FieldOverride(
                 segmentID: "ORC",
                 fieldIndex: 4,
                 profileUsage: nil,
                 requiredComponents: [1, 2, 3, 4],
-                specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness"
+                specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness",
+                length: "250",
+                lengthCitation: "AU ADRM-2021 ORC attribute table p. 282, LEN 250**; p. 283: \"The field length of ORC-2, ORC-3 and ORC-4 of 250 characters for Australian usage is a variance to the HL7 V 2.4 field length of 22 characters.\""
             ),
             // ADRM-prose:P-12 (P4-27) — ADRM-2021 §7.3.11.24, p. 343:
             // "This field should not be used. Use ORC-22 for the address
@@ -889,12 +901,14 @@ extension Profile {
                     ComponentValueSet(
                         component: 1,
                         allowedValues: HL7CodeTables.table0074,
+                        localTableExtension: "0074",
                         condition: "messageCode = ORU",
                         specCitation: "HL7au:000032 — OBR-24 must be valued from HL7 Table 0074 (Diagnostic Service Section) on Senders Results; AU ADRM-2021 Appendix 5 p. 444, table pp. 225-226"
                     ),
                     ComponentValueSet(
                         component: 1,
                         allowedValues: HL7CodeTables.table0074,
+                        localTableExtension: "0074",
                         condition: "messageCode = REF",
                         specCitation: "HL7au:000032.2 — OBR-24 must be valued from HL7 Table 0074 on Senders Referrals (content-appropriateness half not machine-checkable); AU ADRM-2021 Appendix 5 p. 444"
                     ),
@@ -979,6 +993,68 @@ extension Profile {
                 // base text (HL7 v2.4 §7.4.2.11), so since P4-26 the base
                 // OBX-2 grammar enforces it on every locale; no AU duplicate.
                 specCitation: "HL7au:000008.1.3 — OBX-2 must match the OBX-3.1 display format per the Display Format codes table; AU ADRM-2021 p. 247"
+            ),
+            // P12 S3-2 (defect D1 of S3-1): the ADRM attribute tables' LEN
+            // cells that differ from the v2.4 grammar, for fields carrying
+            // no other AU rule (MSH-12, OBR-2/3 and ORC-2/3/4 carry theirs on
+            // the overrides above). Swept over every attribute table the ADRM
+            // prints; the full list is in the permanent-limitations register,
+            // section B. OBX-5 ("16 MB", p. 235) is not listed: the v2.4 cell
+            // `*` asserts no maximum, and the ADRM lets trading partners agree
+            // other sizes. MSH-27 (LEN 250, p. 38) has no v2.4 grammar field.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 10,
+                length: "199",
+                lengthCitation: "AU ADRM-2021 MSH attribute table p. 37, LEN 199††; p. 38: \"Australian variation to HL7 V2.4 with the length changed from 20 to 199 characters to accommodate a globally unique identifier.\" (the MSH-10 definition note, p. 41, prints 36; the attribute table's LEN is applied)"
+            ),
+            FieldOverride(
+                segmentID: "PV1",
+                fieldIndex: 10,
+                length: "10",
+                lengthCitation: "AU ADRM-2021 PV1 attribute table p. 73, LEN 10†; p. 75: \"Australian variation to HL7 V2.4 with the length changed from 3 to 10 characters.\""
+            ),
+            FieldOverride(
+                segmentID: "PV1",
+                fieldIndex: 21,
+                length: "13",
+                lengthCitation: "AU ADRM-2021 PV1 attribute table p. 74, LEN 13††; p. 76: \"Australian variation to HL7 V2.4 with the length changed from 2 to 13 characters\""
+            ),
+            FieldOverride(
+                segmentID: "AL1",
+                fieldIndex: 1,
+                length: "4",
+                lengthCitation: "AU ADRM-2021 AL1 attribute table p. 107, LEN 4†; p. 108: \"Typographical error in HL7 V2.4 where the CE data type is incorrect and should be a SI data type of length 4.\""
+            ),
+            FieldOverride(
+                segmentID: "AL1",
+                fieldIndex: 5,
+                length: "250",
+                lengthCitation: "AU ADRM-2021 AL1 attribute table p. 108, LEN 250 (printed without a variation note; v2.4 prints 15)"
+            ),
+            FieldOverride(
+                segmentID: "OBR",
+                fieldIndex: 9,
+                length: "250",
+                lengthCitation: "AU ADRM-2021 OBR attribute table p. 207, LEN 250***; p. 209: \"The field length of OBR-9 of 250 characters for Australian usage is a variance to the HL7 V 2.4 field length of 20 characters.\""
+            ),
+            FieldOverride(
+                segmentID: "OBX",
+                fieldIndex: 18,
+                length: "250",
+                lengthCitation: "AU ADRM-2021 OBX attribute table p. 236, LEN 250***; p. 236: \"The field length of OBX-18 of 250 characters for Australian usage is a variance to the HL7 V 2.4 field length of 22 characters.\""
+            ),
+            FieldOverride(
+                segmentID: "RF1",
+                fieldIndex: 6,
+                length: "250",
+                lengthCitation: "AU ADRM-2021 RF1 attribute table p. 326, LEN 250††; p. 327: \"RF1-6, RF1-11 have been increased length to 250 characters. Australian variation to HL7V2.4.\""
+            ),
+            FieldOverride(
+                segmentID: "RF1",
+                fieldIndex: 11,
+                length: "250",
+                lengthCitation: "AU ADRM-2021 RF1 attribute table p. 327, LEN 250††; p. 327: \"RF1-6, RF1-11 have been increased length to 250 characters. Australian variation to HL7V2.4.\""
             ),
         ],
         // v0.5-S5-D used to pre-adopt v2.5+ PID fields 35..38 (Species Code,
@@ -1147,6 +1223,7 @@ extension Profile {
                     ComponentValueSet(
                         component: 10,
                         allowedValues: HL7CodeTables.table0200,
+                        localTableExtension: "0200",
                         specCitation: "HL7au:00044.7.3 — XCN-10 (name type code) must be a valid value from HL7 Table 0200 (Name Type); AU ADRM-2021 table p. 62"
                     ),
                     ComponentValueSet(

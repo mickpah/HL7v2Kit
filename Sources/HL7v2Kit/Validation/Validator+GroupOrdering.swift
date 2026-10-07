@@ -5,11 +5,13 @@ extension Validator {
     /// For each group a rule's anchor heads, report every ordered segment after the
     /// first one matching `startPredicate` that does not match `allowedAfterPredicate`.
     /// Groups resolve through `resolveGroup`, as the cardinality rules over the same
-    /// scope do (HL7au:000008's display-OBX count), so both read one group; an anchor
-    /// with no resolvable group is not checked.
+    /// scope do (HL7au:000008's display-OBX count), so both read one group, resolved
+    /// once per call through `groupCache` (P12 S3-2); an anchor with no resolvable
+    /// group is not checked.
     func checkGroupOrderingRules(
         profile: Profile,
         message: Message,
+        groupCache: inout GroupResolutionCache,
         issues: inout [ValidationIssue]
     ) {
         guard !profile.groupOrderingRules.isEmpty, let first = message.segments.first else { return }
@@ -26,7 +28,8 @@ extension Validator {
             for (anchorIndex, anchor) in segments.enumerated() where anchor.segmentID == rule.anchorSegmentID {
                 guard let group = resolveGroup(
                     scope: rule.scope, anchorIndex: anchorIndex,
-                    counted: rule.orderedSegmentID, message: message
+                    counted: rule.orderedSegmentID, message: message,
+                    cache: &groupCache
                 ), checkedHeads.insert(group.headIndex).inserted else { continue }
                 var started = false
                 for index in group.indices where segments[index].segmentID == rule.orderedSegmentID {

@@ -121,6 +121,15 @@ but transparently fake). No real-world data sources.
 | `adt_a01_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 ADT^A01 with PID-40 XTN (XTN.1 empty, withdrawn); fictional-range phone number (02) 5550 1234; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
 | `oru_r01_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 ORU^R01 with PRT, TQ1, SPM and OBX-26..30 populated together; PRT one-of / PRT-7 prohibition pairs; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
 | `oml_o21_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 OML^O21 lab order (ORC `NW`) with TQ1 and SPM; pins the registered OBR-7 request-leg gap; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
+| `au_oru_r01_pathology.hl7` | AU ADRM-2021 (v2.4) | ORU^R01 pathology result: NASH-shaped HD and EI addressing, LOINC-coded NM OBX with UCUM units, an HTML display OBX (AUSPDI) last in its group; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); HPI-O digits all zero-filled (`0000000000001001`), not a real identifier; licence Apache 2.0, as the package |
+| `au_oru_r01_pathology_pdf.hl7` | AU ADRM-2021 (v2.4) | ORU^R01 pathology result as `au_oru_r01_pathology.hl7`, with the ADRM's PDF display form (`PDF^Display format in PDF^AUSPDI`, OBX-5 `^application^pdf^Base64^...`, pp 248-249) last in its group; the base64 content decodes to the two lines `%PDF-1.4` and `%Synthetic`, not a document. Validated by `AUFixtureTests` only: under the international locale it draws the v2.4 Table 0191 and 0291 findings by design, so `FixtureRoundTripTests` round-trips it but does not validate it | N/A — synthetic, written from scratch (P12 S3-2); HPI-O digits all zero-filled, not a real identifier; licence Apache 2.0, as the package |
+| `au_oru_r01_radiology.hl7` | AU ADRM-2021 (v2.4) | ORU^R01 radiology report with a TXT (FT) display OBX; OBR-24 `RAD`; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_orm_o01.hl7` | AU ADRM-2021 (v2.4) | ORM^O01 new order (ORC `NW`) addressed by MSH-6; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_osr_q06.hl7` | AU ADRM-2021 (v2.4) | OSR^Q06 order status response (QRD, ORC `SR`, OBR); `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_orr_o02.hl7` | AU ADRM-2021 (v2.4) | ORR^O02 order acknowledgement (ORC `OK`) with PID; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_ref_i12.hl7` | AU ADRM-2021 (v2.4) | REF^I12 in the Chapter 7 structure (DG1, AL1, two OBR/OBX groups) declaring no Appendix 8 profile, so it draws HL7au:000040.4 by construction; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); PRD-7 provider numbers `SYN-PRV-nnnn`, not real; licence Apache 2.0, as the package |
+| `au_ref_i12_simplified.hl7` | AU ADRM-2021 (v2.4) | REF^I12 declaring the Appendix 8 simplified profile, Level 2 (MSH-12.3 `HL7AU-OO-REF-SIMPLIFIED-201706`); PRD `AP` and `IR`, one OBR group with an HTML display OBX; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_rri_i12.hl7` | AU ADRM-2021 (v2.4) | RRI^I12 referral response echoing the simplified referral's RF1, PRD and PID; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
 
 ### Batch fixtures (`Batches/` subdirectory)
 
@@ -131,6 +140,7 @@ These fixtures use the HL7 v2 batch grammar (FHS / BHS / BTS / FTS framing marke
 | `Batches/batch_bhs_minimal.hl7` | Batch (BHS-only) | BHS + 1 MSH + BTS — smallest valid batch wrapper | N/A — synthetic from scratch (v0.3-Z2) |
 | `Batches/batch_file_full.hl7` | Batch (fully wrapped) | FHS + BHS + 2 MSH + BTS + FTS — exercises all four framing markers in one file | N/A — synthetic from scratch (v0.3-Z2) |
 | `Batches/batch_multi_groups.hl7` | Batch (multi-group) | FHS + 2 BHS/BTS pairs + FTS — one ADT batch followed by one ORU batch | N/A — synthetic from scratch (v0.3-Z2) |
+| `Batches/au_batch_oru_r01.hl7` | Batch (AU ADRM-2021) | FHS + BHS + the two AU ORU^R01 fixtures (pathology, radiology) + BTS + FTS; clean through `BatchValidator` under the AU locale, FHS separator fire pair; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
 
 ### API-surface snapshots (`APISurface/` subdirectory)
 
