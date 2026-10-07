@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   toolchain floor is now stated: the library needs Swift 6.0, the test suite Swift 6.2 (it uses
   exit tests). The regenerate and structure-codegen scripts now keep a `DEVELOPER_DIR` the caller
   has set. What each job proves: `docs/design/ci.md`.
+- **macOS CI on the newest Xcode, and a DocC job (P13 S2-2).** `test-macos` runs on `macos-15`
+  only, selects the newest Xcode on the image, and fails by name when its Swift is below 6.2
+  (`scripts/check-swift-version.sh`); `macos-14` is dropped. `codegen-drift` selects the same
+  Xcode. A new `docc` job builds the catalogue and fails on any warning, since
+  `xcodebuild docbuild` itself shrugs warnings off with a zero exit status.
 
 ### Removed (breaking)
 

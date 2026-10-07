@@ -7,10 +7,11 @@ job proves one thing; what it cannot prove is listed at the end.
 
 | Job | Runner | What it proves |
 |---|---|---|
-| `test-macos` | `macos-14`, `macos-15` | The package builds and the full suite passes with the runner's Xcode. |
+| `test-macos` | `macos-15`, newest Xcode | The package builds and the full suite passes with the newest Xcode on the image, which must carry Swift 6.2 or later. |
 | `test-linux` | `ubuntu-latest`, container `swift:6.2-jammy` | The package builds and the full suite passes on Linux with swift-corelibs Foundation. No Apple-only API is reachable from any target. |
 | `fixture-safety` | `ubuntu-latest` | No fixture carries an AU identifier pattern; no blob in the whole history (the job checks out with `fetch-depth: 0`) carries PHI patterns or licensed content; the extractor and audit self-checks pass on their committed inputs; no tracked file carries an emoji or icon character. |
 | `codegen-drift` | `macos-15` | Everything under `Sources/HL7v2Kit/*/Generated/` is exactly what `scripts/regenerate-typed-segments.sh` emits from the committed JSON; the pinned struct bases and the message-structure codegen self-checks pass; the code-table extractor's self-check passes (built into `$RUNNER_TEMP`). |
+| `docc` | `macos-15`, newest Xcode | The DocC catalogue builds (`xcodebuild docbuild` of the package's `HL7v2Kit` scheme) with no `warning:` line in the log: every symbol link resolves. |
 
 ## Toolchain floor
 
@@ -19,8 +20,16 @@ job proves one thing; what it cannot prove is listed at the end.
   mode as already enabled; the flag was redundant and is gone. Proved in `swift:6.0-jammy`.)
 - The test suite needs Swift 6.2 (Xcode 26), because it uses exit tests
   (`#expect(processExitsWith:)`).
-- The `test-macos` matrix runs on each image's default Xcode. That Xcode must be 26 or later
-  for the job to pass; on an older default the job fails at the test step, not the build.
+- Every macOS job (`test-macos`, `codegen-drift`, `docc`) first selects the newest Xcode on the
+  image (`sudo xcode-select -s` on the highest-sorting `/Applications/Xcode*.app`) and prints
+  `xcodebuild -version` and `swift --version`. One selection step serves all three, although
+  `codegen-drift` would pass on the image's default Xcode 16.4 (Swift 6.1).
+- `test-macos` then runs `scripts/check-swift-version.sh 6.2`, which fails the job by name when
+  the selected Swift is older, instead of leaving a compile error in the test target to explain
+  it. `macos-14` is dropped: its newest Xcode is a 16.x with Swift 6.0, too old for the suite.
+- `docc` builds from a copy without `HL7v2Kit.xcworkspace`: that workspace has no scheme, and
+  `xcodebuild` in the repository root picks it over the package. `xcodebuild docbuild` exits 0
+  on documentation warnings, so the job greps the log for `warning:`.
 
 ## Line endings
 
