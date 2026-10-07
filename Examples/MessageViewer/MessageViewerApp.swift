@@ -249,5 +249,6 @@ struct ContentView: View {
             .padding(12)
         }
         .frame(height: 120)
+        .background(Color(nsColor: .windowBackgroundColor))
     }
 }

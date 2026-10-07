@@ -27,7 +27,7 @@ Then add `"HL7v2Kit"` to your target's `dependencies`.
 
 ## Quickstart
 
-`Examples/QuickStart/main.swift` takes one synthetic ORU^R01 through the package; `swift run QuickStart` from the repository root prints what each step finds. A second example, `Examples/MessageViewer` (`swift run MessageViewer`, macOS only), is a window that shows a pasted message as a grid, one row per segment and one cell per field, each cell tinted by the worst validation issue on it, with the field's name and issues in a pane below. The key lines, quoted from QuickStart:
+`Examples/QuickStart/main.swift` takes one synthetic ORU^R01 through the package; `swift run QuickStart` from the repository root prints what each step finds. A second example, `Examples/MessageViewer` (`swift run MessageViewer`, macOS only), is a window that shows a pasted message as a grid, one row per segment and one cell per field, each cell tinted by the worst validation issue on it, with the field's name and issues in a pane below ([Examples/README.md](Examples/README.md) has a screenshot). The key lines, quoted from QuickStart:
 
 ```swift
 import HL7v2Kit
