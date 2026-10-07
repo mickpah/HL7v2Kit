@@ -30,31 +30,12 @@ maintainer's local working notes, which are not in the repository; this section 
 |---|---|
 | `HL7v2Kit-Spec.md` | **Point-in-time** (v0.1, pre-implementation). Retained as-written with inline `> As-built` annotations at the spots that diverged (package tree, §4 API sketches, §8 dictionaries). Current API truth: `public-api-surface.md` + `Migration.md`. |
 
-## ADRs (all point-in-time; corrections land as dated addenda)
+## Architecture decisions
 
-| ADR | Decision | Current status |
-|---|---|---|
-| 001 — AST model | Field/Repetition/Component/Subcomponent hierarchy | Implemented, unchanged |
-| 002 — error strategy | Enums with associated values, location-carrying | Implemented; addendum: `malformedField` (never raised) removed at 2.0 |
-| 003 — Z-segment policy | Tolerant parse, validator-policy surfacing | Implemented; ADR-018 amendment: only `Z`-prefixed IDs enter the Z-segment branch; other IDs with no grammar entry are `segmentNotInVersionGrammar` (warning) |
-| 004 — codegen over macros | Generation instead of Swift macros | Implemented, unchanged (drift CI enforces) |
-| 005 — dictionaries strategy | Path C: codegen-emitted grammar tables | Implemented; addendum: the placeholder `HL7v2KitDictionaries` target retired at 2.0 |
-| 006 — portable core boundary | Foundation-free kernel files, marked | In force (header marker; one-shot script retired R6) |
-| 007 — AU profile architecture | Swift-source profile, JSON codegen deferred | Implemented; v0.14 note (JSON files retired) + addendum: `ProfileLoader` folded into `Profile.load(for:)` (R4) |
-| 008 — cross-segment DSL | Peer refs, fail-safe semantics | Implemented, semantics unchanged (referent parsing shares `Path` since R4 — see ADR-010 addendum) |
-| 009 — componentValueSet extensions | Conditional value-sets, subcomponent reads | Implemented, unchanged |
-| 010 — DSL extensions (peer-absent / quantification / content-gated) | + Ext 2 group cardinality, Ext 3 fieldref suffix | Implemented; addendum: Ext 2's empty schema-side encoding axis removed (R2), Ext 3 parsing routed through `Path` (R4) |
-| 011 — composite inequality + value-conditional rules | 44.4.8 / 44.4.4 rule types | Implemented, unchanged |
-| 012 — v2.6 grammar version | S1 control/notes scope | Implemented; segment coverage beyond S1 deferred at the time, completed in M5 (v3.1.0; backlog register closed) |
-| 013 — v2.8.2 grammar version | `.v2_8_2` distinct from `.v2_8` | Implemented; addendum (ADR-018): a `.v2_8` message is validated against the v2.8.2 grammar (the public registries stay version-literal) |
-| 014 — API evolution policy | Additive-only 1.x; breaking waits for 2.0 | In force; addendum: the 2.0 lane was exercised at R10 (2026-08-27) — additive-only resumes for 2.x |
-| 015 — segment-coverage extraction pipeline | pdftotext-based authoring/audit pipeline | In force (method doc: `segment-coverage-extraction.md`) |
-| 016 — code-table registry | per-version generated HL7 tables, closed-set enforcement for ID fields, locale axis | In force |
-| 017 — datatype component grammar | per-version component tables (printed on v2.5.1 and later; read from the prose on v2.3 to v2.4, M13 addendum), code-table check on ID components | In force |
-| 018 — supported version set | Seven modelled versions (v2.7.1 added by the P10-6 amendment); `2.8` validated as v2.8.2 and `2.7` as v2.7.1 (info); VID.1 names the version; any populated MSH-12 with no resolvable version warns (throws under `rejectUnknownVersion`); excluded versions in the permanent-limitations register §F | In force (P3; amended P10-6) |
-| 019 — message structures | Abstract message syntax per version: hybrid source (extracted prints plus cited overrides), greedy matcher with a determinism lint, HL7 v2.xml group names; `messageStructureSeverity` | In force (gate G2; P8 pilot, P8b rollout complete on all seven versions; dated amendments, exact matcher for lint-failing structures under G15); residual rows in the permanent-limitations register section E |
-| 020 — composite views and version-union accessors | Composite views generated to full spec depth on every version; typed segment accessors over the union of versions | In force (gate G3, Option B; P10-3 amendment: a released struct's union base never changes); residual in register section H |
-| 021 — full-predicate conditions | Three-state condition evaluator (Kleene AND/OR; two-state = "true"); per-field `conditionIsPredicate` marking; AU HL7au:00060.4 route C on definitely-false marked conditions | In force (P4-31); 00060.4 SHIPPED (owner rulings G6, G9): OBX-2 the one marked field, the other 51 candidates carry no derivable prohibition |
+| Record | Status |
+|---|---|
+| `architecture-decisions.md` | **Living.** ADR-001 to ADR-021 in one document, each decision stated as it stands, with condensed **Amended** / **Superseded** notes naming the task tag. Each section keeps its number as a stable heading and anchor (`#adr-019-message-structure-grammar`). |
+| `../archive/adr/` | **Archive.** The 21 original ADR files with their dated amendments, evidence and run logs, moved unchanged. A citation of a dated ADR amendment (for example "ADR-019 amendment 2026-10-06") resolves there. |
 
 ## Conformance registers (point-in-time; guard-tested where noted)
 
@@ -86,7 +67,7 @@ maintainer's local working notes, which are not in the repository; this section 
 
 ## Conventions
 
-- Point-in-time records are never rewritten: corrections are dated addenda (ADRs), inline
+- Point-in-time records are never rewritten: corrections are dated addenda (the archived ADRs), inline
   `> As-built` annotations (the Spec), or header delta notes (registers).
 - Living docs carry their own update triggers (per-batch audits, per-stage status lines).
 - Historical STATUS/NEXT_STEPS snapshots live in `docs/archive/`, not here.
