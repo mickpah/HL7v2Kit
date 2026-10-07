@@ -79,7 +79,9 @@ Then add `"HL7v2Kit"` to your target's `dependencies`.
 | Platform | Minimum |
 |---|---|
 | macOS | 12 |
-| Linux | Swift 6.0+; expected, CI pending |
+| Linux | Ubuntu 22.04 (CI job in place; first hosted run pending) |
+
+The library builds with Swift 6.1 or later (Xcode 16.3 or later on macOS). The test suite needs Swift 6.2 (Xcode 26), because it uses exit tests.
 
 ## Adding a typed segment
 
