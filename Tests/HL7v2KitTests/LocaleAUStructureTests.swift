@@ -388,10 +388,10 @@ struct LocaleAUStructureTests {
 
     // MARK: - Data
 
-    @Test("The ADRM-2021 structures are ORM_O01, ORU_R01, OSR_Q06, REF_I12 and RRI_I12, each tagged with the profile, base version and rule")
+    @Test("The ADRM-2021 structures are ORM_O01, ORR_O02, ORU_R01, OSR_Q06, REF_I12 and RRI_I12, each tagged with the profile, base version and rule")
     func dataTags() throws {
         let table = MessageStructureTable.auADRM2021
-        #expect(Set(table.keys) == ["ORM_O01", "ORU_R01", "OSR_Q06", "REF_I12", "RRI_I12"])
+        #expect(Set(table.keys) == ["ORM_O01", "ORR_O02", "ORU_R01", "OSR_Q06", "REF_I12", "RRI_I12"])
         for (id, structure) in table {
             #expect(structure.id == id)
             #expect(structure.profile == "au-adrm-2021", "\(id)")
@@ -408,19 +408,21 @@ struct LocaleAUStructureTests {
         #expect(MessageStructureTable.structure("ORU_R01", version: .v2_4)?.profile == nil)
     }
 
-    @Test("Each profile file decodes to exactly the generated structure", arguments: ["ORM_O01", "ORU_R01", "OSR_Q06", "REF_I12", "RRI_I12"])
+    @Test("Each profile file decodes to exactly the generated structure", arguments: ["ORM_O01", "ORR_O02", "ORU_R01", "OSR_Q06", "REF_I12", "RRI_I12"])
     func fileParity(_ id: String) throws {
         var object = try #require(try JSONSerialization.jsonObject(
             with: Data(contentsOf: Self.root.appendingPathComponent("\(id).json"))) as? [String: Any])
         #expect(object.removeValue(forKey: "profile") as? String == "au-adrm-2021")
         #expect(object.removeValue(forKey: "baseVersion") as? String == "2.4")
         #expect(object.removeValue(forKey: "rule") as? String == Self.rule)
-        let decoded = try StructureJSONDecoder.decode(try JSONSerialization.data(withJSONObject: object), id: id, version: "2.4")
+        let decoded = try StructureJSONDecoder.decode(try JSONSerialization.data(withJSONObject: object), id: id, version: "2.4",
+                                                      profile: true)
         let generated = try #require(MessageStructureTable.auADRM2021[id])
         #expect(decoded.id == generated.id)
         #expect(decoded.version == generated.version)
         #expect(decoded.triggers == generated.triggers)
         #expect(decoded.citation == generated.citation)
         #expect(decoded.elements == generated.elements)
+        #expect(decoded.variants == generated.variants)
     }
 }

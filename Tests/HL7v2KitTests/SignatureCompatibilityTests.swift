@@ -35,6 +35,15 @@ struct SignatureCompatibilityTests {
         #expect(options.localTableExtensions.isEmpty, "set by mutation, not an init parameter")
     }
 
+    @Test("P12 S2-2 auAssigningAuthorityTable is a mutable Bool defaulting to false, not an init parameter")
+    func assigningAuthorityTableAssertion() {
+        let assertion: WritableKeyPath<ValidationOptions, Bool> = \.auAssigningAuthorityTable
+        #expect(ValidationOptions()[keyPath: assertion] == false)
+        #expect(ValidationOptions.default.auAssigningAuthorityTable == false)
+        #expect(ValidationOptions.strict.auAssigningAuthorityTable == false)
+        #expect(ValidationOptions.lenient.auAssigningAuthorityTable == false)
+    }
+
     @Test("P6-6 length settings are mutable IssueSeverity? properties defaulting to .warning")
     func lengthSeverities() {
         let maximum: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.fieldLengthSeverity
@@ -361,6 +370,15 @@ struct SignatureCompatibilityTests {
         #expect(lookup(ack)("ACK", "S27")?.triggers.contains("ACK^S27") == true)
         #expect(lookup(ack)("ACK", "A01") == nil)
         #expect(try #require(MessageStructureTable.structure("ADT_A01", version: .v2_5_1)).variants.isEmpty)
+    }
+
+    // Deliberate pin of new, unreleased API (P12 S1-1, owner ruling G-AU3, ADR-019 amendment
+    // "P12 S1"): the declared-profile identifiers that select a profile structure's variant.
+    @Test("StructureVariant.profileIdentifiers keeps its signature")
+    func structureVariantProfileIdentifiers() throws {
+        let _: KeyPath<StructureVariant, [String]> = \.profileIdentifiers
+        let ack = try #require(MessageStructureTable.structure("ACK", version: .v2_8_2))
+        #expect(ack.variants.allSatisfy { $0.profileIdentifiers.isEmpty })
     }
 
     // Deliberate pin of new, unreleased API (S1-3, owner decision 8, ADR-019

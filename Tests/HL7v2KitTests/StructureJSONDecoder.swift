@@ -117,22 +117,29 @@ enum StructureJSONDecoder {
         }
     }
 
-    /// A per-trigger print (S6-1).
+    /// A per-trigger print (S6-1); in a profile file, one selected by a declared
+    /// profile (`profileIdentifiers`, P12 S1-1).
     struct Variant: Decodable {
-        let triggers: [String], citation: String, elements: [Element]
+        let triggers: [String], citation: String, profileIdentifiers: [String]?, elements: [Element]
 
         private enum CodingKeys: String, CodingKey, CaseIterable {
-            case triggers, citation, elements
+            case triggers, citation, profileIdentifiers, elements
         }
 
         init(from decoder: any Decoder) throws {
-            try rejectUnknownKeys(decoder, Set(CodingKeys.allCases.map(\.rawValue)), "variant")
+            let profileFile = decoder.userInfo[StructureJSONDecoder.profileFile] as? Bool == true
+            let allowed = CodingKeys.allCases.filter { profileFile || $0 != .profileIdentifiers }
+            try rejectUnknownKeys(decoder, Set(allowed.map(\.rawValue)), "variant")
             let c = try decoder.container(keyedBy: CodingKeys.self)
             triggers = try c.decode([String].self, forKey: .triggers)
             citation = try c.decode(String.self, forKey: .citation)
+            profileIdentifiers = try c.decodeIfPresent([String].self, forKey: .profileIdentifiers)
             elements = try c.decode([Element].self, forKey: .elements)
         }
     }
+
+    /// The `userInfo` key that admits a variant's `profileIdentifiers` (a profile file).
+    static let profileFile = CodingUserInfoKey(rawValue: "profileFile")!
 
     /// A query response's CH05 5.6.5 rule (S4-3).
     struct ErrorResponse: Decodable {
@@ -164,9 +171,13 @@ enum StructureJSONDecoder {
     }
 
     /// Decode and check `data`, the file `id`.json under the `version`
-    /// directory; returns the structure as the codegen would emit it.
-    static func decode(_ data: Data, id: String, version: String) throws -> MessageStructure {
-        let s = try JSONDecoder().decode(File.self, from: data)
+    /// directory; returns the structure as the codegen would emit it. `profile`
+    /// decodes a profile file with its profile keys removed (P12 S1-1): its
+    /// variants are selected by declared profiles instead of by trigger.
+    static func decode(_ data: Data, id: String, version: String, profile: Bool = false) throws -> MessageStructure {
+        let decoder = JSONDecoder()
+        decoder.userInfo[profileFile] = profile
+        let s = try decoder.decode(File.self, from: data)
         guard s.structure == id, s.version == version else { throw Rejected(description: "structure / version do not match the path") }
         guard matches(s.structure, "^[A-Z][A-Z0-9]{2}(_[A-Z0-9]{3})?$") else { throw Rejected(description: "bad structure ID \"\(s.structure)\"") }
         guard !s.citation.isEmpty else { throw Rejected(description: "empty citation") }
@@ -196,16 +207,26 @@ enum StructureJSONDecoder {
                 matches($0, "^[A-Z][A-Z0-9]{2}\\^[A-Z0-9]{3}$") && (s.triggers.contains($0) || s.triggers.contains("\($0.prefix(3))^*"))
             }
             guard !v.triggers.isEmpty, exact else { throw Rejected(description: "variants: triggers must be exact CODE^EVT the structure accepts") }
-            guard v.citation.contains("overrides.json variantPrints") else {
+            if profile {
+                guard let identifiers = v.profileIdentifiers, !identifiers.isEmpty else {
+                    throw Rejected(description: "variants: a profile structure's variant names its profileIdentifiers")
+                }
+                guard identifiers.allSatisfy({ matches($0, "^[A-Za-z0-9][A-Za-z0-9._-]*$") && v.citation.contains($0) }) else {
+                    throw Rejected(description: "variants: the citation must quote each well-formed declaration")
+                }
+            } else if !v.citation.contains("overrides.json variantPrints") {
                 throw Rejected(description: "variants: a citation must name \"overrides.json variantPrints\"")
             }
             guard v.elements.first?.segment == "MSH" else { throw Rejected(description: "variants: a print must start with MSH") }
             try checkSequence(v.elements, version: s.version, citation: s.citation + " " + v.citation)
             guard keys(v.elements).isEmpty else { throw Rejected(description: "variants: a keyed choice in a variant is not supported") }
-            return StructureVariant(triggers: v.triggers, citation: v.citation, elements: v.elements.map(\.model))
+            return StructureVariant(triggers: v.triggers, citation: v.citation, profileIdentifiers: v.profileIdentifiers ?? [],
+                                    elements: v.elements.map(\.model))
         }
         if s.variants?.isEmpty == true { throw Rejected(description: "variants: an empty list") }
-        let triggers = variants.flatMap(\.triggers)
+        let triggers = variants.flatMap { v in v.triggers.map { $0 + "@" + v.profileIdentifiers.joined(separator: ",") } }
+        let declared = variants.flatMap(\.profileIdentifiers)
+        guard Set(declared).count == declared.count else { throw Rejected(description: "variants: a profile identifier named twice") }
         guard Set(triggers).count == triggers.count else { throw Rejected(description: "variants: a trigger in two variants or named twice") }
         let prints = [s.elements.map(\.model)] + variants.map(\.elements)
         guard Set(prints).count == prints.count else {

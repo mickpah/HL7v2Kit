@@ -5,6 +5,7 @@
 extension MessageStructureTable {
     static let auADRM2021: [String: MessageStructure] = [
         "ORM_O01": auADRM2021_ORM_O01,
+        "ORR_O02": auADRM2021_ORR_O02,
         "ORU_R01": auADRM2021_ORU_R01,
         "OSR_Q06": auADRM2021_OSR_Q06,
         "REF_I12": auADRM2021_REF_I12,
@@ -55,6 +56,34 @@ extension MessageStructureTable {
         ]
     )
 
+    private static let auADRM2021_ORR_O02: MessageStructure = MessageStructure(
+        id: "ORR_O02",
+        version: "2.4",
+        triggers: ["ORR^O02"],
+        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.2 ORM - general order message (event O01), Order Response Message, ORR^O02^ORR_O02 General Order Acknowledgment, pp 280 to 281: MSH, MSA, [ERR], [ [PID { ORC OBR } ]. Print erratum (P12 S1-2, owner ruling G-AU2 of 2026-10-07): the cell '[PID' (p 280) opens a bracket that is never closed, so the print alone leaves PID's optionality undecided; it is read as [PID], the base v2.4 reading (HL7 v2.4 Chapter 4, section 4.4.2, p 4-20, prints the patient group optional), since the localisation narrows the base and does not widen it; p 280 also says 'The ORC/OBR segments are optional however', which the optional outer group carries. Constrains HL7 v2.4 Chapter 4, section 4.4.2: NTE and CTI segments are omitted, which is not a finding (ADR-019 decision 7). Order detail: the print gives OBR, as the ORM^O01 print does (p 279); the only ADRM text that lets another segment replace OBR is p 280, 'The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (RXO, ODS, ODT), and no ADRM print or prose names RQD or RQ1, so the place is the choice of OBR, RXO, ODS or ODT, the same as ORM_O01, and the requisition detail the base admits is excluded. Whether the p 280 replacement carries over to the response the print does not settle; RXO, ODS and ODT are accepted, a residual of 00060.1 (permanent-limitations register, section E addendum). Unprinted group names (ADR-019 decision 3), the base v2.4 ORR_O02 groups with the same head segment: RESPONSE (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.RESPONSE.CONTENT) and ORDER (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.ORDER.CONTENT). PID is printed as a bare segment, not the base PATIENT group.",
+        profile: "au-adrm-2021",
+        baseVersion: "2.4",
+        rule: "HL7au:00060.1",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .segment("PID", min: 0, max: 1),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .choice(nil, min: 1, max: 1, alternatives: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("ODS", min: 1, max: 1),
+                        .segment("ODT", min: 1, max: 1),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
     private static let auADRM2021_ORU_R01: MessageStructure = MessageStructure(
         id: "ORU_R01",
         version: "2.4",
@@ -89,7 +118,7 @@ extension MessageStructureTable {
         id: "OSR_Q06",
         version: "2.4",
         triggers: ["OSR^Q06"],
-        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.3 OSQ/OSR- query response for order status (event Q06), Query Response, p 281: MSH, MSA, [ERR], QRD, [QRF], [ [PID] { ORC OBR [{OBX}] [{CTI}] } ], [DSC]. Caption erratum: the response's caption prints 'OSQ^Q06^OSQ_Q06 Order Status Response', the same as the query's; the section title ('OSQ/OSR- query response') and base v2.4 section 4.4.3 give the response as OSR^Q06^OSR_Q06. Constrains HL7 v2.4 Chapter 4, section 4.4.3, p 4-21: OBX, which the base order does not have, is matched here only; NTE segments are omitted, which is not a finding (ADR-019 decision 7). Order detail: the p 281 print says only 'OBR Order Detail', with no prose on this message; the base v2.4 choice (OBR, RQD, RQ1, RXO, ODS or ODT) is kept because the print does not settle whether the p 280 narrowing for ORM^O01 (OBR replaced only for medication and diet orders) applies to the response, so a status response carrying RQD or RQ1 is not flagged. Unprinted group names (ADR-019 decision 3), the base v2.4 OSR_Q06 groups with the same head segment, whose names the base takes through overrides.json from HL7-xml v2.5.1/OSR_Q06.xsd (P8b-13 ruling 1): RESPONSE (overrides.json, the base OSR_Q06 RESPONSE) and ORDER (overrides.json, the base OSR_Q06 ORDER). PID is printed as a bare optional segment, not the base PATIENT group.",
+        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.3 OSQ/OSR- query response for order status (event Q06), Query Response, p 281: MSH, MSA, [ERR], QRD, [QRF], [ [PID] { ORC OBR [{OBX}] [{CTI}] } ], [DSC]. Caption erratum: the response's caption prints 'OSQ^Q06^OSQ_Q06 Order Status Response', the same as the query's; the section title ('OSQ/OSR- query response') and base v2.4 section 4.4.3 give the response as OSR^Q06^OSR_Q06. Constrains HL7 v2.4 Chapter 4, section 4.4.3, p 4-21: OBX, which the base order does not have, is matched here only; NTE segments are omitted, which is not a finding (ADR-019 decision 7). Order detail (P12 S1-3): the p 281 print says only 'OBR Order Detail', with no prose on this message. The only ADRM text that lets another segment stand in OBR's place is p 280, for ORM^O01: 'The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (RXO, ODS, ODT); no print or prose of the ADRM names RQD or RQ1, so under every reading of p 281 the requisition detail is excluded and the place is the choice of OBR, RXO, ODS or ODT, the same as ORM_O01. Whether the p 280 replacement carries over to the response, so that RXO, ODS or ODT (and an OBX after one, p 287: 'An order detail segment (e.g., OBR) can be followed by one or more observation segments (OBX)') may stand there, the print does not settle; they are accepted, a residual of 00060.1 (permanent-limitations register, section E addendum). Unprinted group names (ADR-019 decision 3), the base v2.4 OSR_Q06 groups with the same head segment, whose names the base takes through overrides.json from HL7-xml v2.5.1/OSR_Q06.xsd (P8b-13 ruling 1): RESPONSE (overrides.json, the base OSR_Q06 RESPONSE) and ORDER (overrides.json, the base OSR_Q06 ORDER). PID is printed as a bare optional segment, not the base PATIENT group.",
         profile: "au-adrm-2021",
         baseVersion: "2.4",
         rule: "HL7au:00060.1",
@@ -106,8 +135,6 @@ extension MessageStructureTable {
                     .segment("ORC", min: 1, max: 1),
                     .choice(nil, min: 1, max: 1, alternatives: [
                         .segment("OBR", min: 1, max: 1),
-                        .segment("RQD", min: 1, max: 1),
-                        .segment("RQ1", min: 1, max: 1),
                         .segment("RXO", min: 1, max: 1),
                         .segment("ODS", min: 1, max: 1),
                         .segment("ODT", min: 1, max: 1),
@@ -129,6 +156,33 @@ extension MessageStructureTable {
         baseVersion: "2.4",
         rule: "HL7au:00060.1",
         requiresExactMatch: false,
+        variants: [
+            StructureVariant(
+                triggers: ["REF^I12"],
+                citation: "HL7AUSD-STD-OO-ADRM-2021.1, Appendix 8 Simplified REF profile (Normative), A8.5 Simplified REF profile message structure, pp 484 to 485 (owner ruling G-AU3 of 2026-10-07, P12 S1-1): 'the REF_I12 structure of chapter 7 is replaced with the following message structure', 'Constrained REF_I12 message structure': MSH, RF1, {PRD}, PID, [{AL1}], { OBR {OBX} }, PV1, [PV2], [{ ORC RXO {RXR} [{RXC}] [{OBX}] }]. Selected by the declared profile, A8.3 Sender Conformance, p 483: 'Senders must signal conformance with these profile levels by populating MSH-12', Referral Level 2 '2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706&&L' and Referral Level 1 '2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706-L1&&L'; MSH-12.3.1 is matched exactly, since p 43 says of the internal version IDs 'These are identifiers and they are not intended to be parsed'. Both levels share the A8.5 structure. Segments and groups of the chapter 7 print (pp 324 to 325) that A8.5 omits (PD1, NK1, IN1, DG1, IAM, the RXE, RXD and RXA groups, and the problem, goal and pathway groups) are not findings (ADR-019 decision 7). RRI^I12 keeps its chapter 7 structure (A8.5: 'This profile uses the same RRI_I12 message structure as specified in Chapter 7 Patient Referral'). Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.4/REF_I12.xsd, REF_I12.OBSERVATION.CONTENT), the base group with the same head segment; ORC_GROUP (synthesised), the name the chapter 7 profile gives its ORC group.",
+                profileIdentifiers: ["HL7AU-OO-REF-SIMPLIFIED-201706", "HL7AU-OO-REF-SIMPLIFIED-201706-L1"],
+                requiresExactMatch: false,
+                elements: [
+                    .segment("MSH", min: 1, max: 1),
+                    .segment("RF1", min: 1, max: 1),
+                    .segment("PRD", min: 1, max: nil),
+                    .segment("PID", min: 1, max: 1),
+                    .segment("AL1", min: 0, max: nil),
+                    .group("OBSERVATION", min: 1, max: nil, elements: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("OBX", min: 1, max: nil),
+                    ]),
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                    .group("ORC_GROUP", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                        .segment("OBX", min: 0, max: nil),
+                    ]),
+                ]),
+        ],
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("RF1", min: 1, max: 1),

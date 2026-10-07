@@ -145,6 +145,8 @@ public struct Validator: Sendable {
             checkEscapeProhibitions(profile: profile, message: message, issues: &issues)
             // M12: OBX-4 sub-ID trees (ADRM-prose:P-8..P-10, the HL7v2 VMR).
             checkSubIDTrees(profile: profile, message: message, issues: &issues)
+            // P12 S2-2: in-group ordering (HL7au:000008.1.5).
+            checkGroupOrderingRules(profile: profile, message: message, issues: &issues)
         }
 
         // M8-B1: base-spec ORC/OBR paired-field equality (items
@@ -370,7 +372,7 @@ public struct Validator: Sendable {
     /// in document order (contiguous under the walk; with spans, the
     /// anchor's own occurrence without nested pairing groups, P8b-17);
     /// `headIndex` is the first; `segments` are the segments at `indices`.
-    private struct ResolvedGroup {
+    struct ResolvedGroup {
         let indices: [Int]
         let segments: [Segment]
         var headIndex: Int { indices.first ?? 0 }
@@ -381,7 +383,7 @@ public struct Validator: Sendable {
         }
     }
 
-    private func resolveGroup(
+    func resolveGroup(
         scope: GroupScope,
         anchorIndex: Int,
         counted: String,
@@ -765,7 +767,7 @@ public struct Validator: Sendable {
     /// code / location plumbing cannot drift between tracks; the message
     /// is fully formatted at the call site (pinned exactly by the
     /// LocaleAUProfileTests R4-C2 characterization rows).
-    private func appendProfileIssue(
+    func appendProfileIssue(
         citation: String,
         location: IssueLocation,
         message: String,
@@ -1004,7 +1006,11 @@ public struct Validator: Sendable {
                     component: valueSet.component,
                     subcomponent: valueSet.subcomponent
                 )
-                guard !value.isEmpty, !valueSet.allowedValues.contains(value) else { continue }
+                guard !value.isEmpty, !valueSet.allows(value) else { continue }
+                // P12 S2-3: a caller-declared local extension of the source
+                // table (0203 on CX-5 / XCN-13) is a valid value; exact match.
+                if let table = valueSet.localTableExtension,
+                   options.localTableExtensions[table]?.contains(value) == true { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,
@@ -1391,7 +1397,8 @@ public struct Validator: Sendable {
 
     /// M6-B-8: evaluate key⇒value correspondence rules against one
     /// repetition. Keys the map does not state SKIP (fail-safe — the
-    /// source tables enumerate correspondences for named keys only);
+    /// source tables enumerate correspondences for named keys only),
+    /// unless the rule gives `unlistedKeyValues` (P12 S2-2);
     /// an EMPTY value component skips too (presence belongs to the
     /// required-component / membership rules, and firing here as well
     /// would double-report). Case-insensitive on both sides: the
@@ -1421,12 +1428,32 @@ public struct Validator: Sendable {
             }
             let key = valueSetScalarValue(
                 in: repetition, component: rule.keyComponent, subcomponent: nil)
-            guard !key.isEmpty, let allowed = rule.map[key.lowercased()] else { continue }
+            guard !key.isEmpty else { continue }
+            let lowerKey = key.lowercased()
+            let mapped: [String]
+            if let listed = rule.map[lowerKey] {
+                mapped = listed
+            } else if let unlisted = rule.unlistedKeyValues, !rule.exemptKeys.contains(lowerKey) {
+                mapped = unlisted
+            } else {
+                continue
+            }
             let value = valueSetScalarValue(
                 in: repetition, component: rule.valueComponent, subcomponent: nil)
             guard !value.isEmpty else { continue }
-            guard !allowed.contains(where: { $0.caseInsensitiveCompare(value) == .orderedSame })
-            else { continue }
+            let listed = mapped.contains(where: { $0.caseInsensitiveCompare(value) == .orderedSame })
+            let expectation: String
+            switch rule.valueRule {
+            case .allowed:
+                guard !listed else { continue }
+                expectation = "in [\(mapped.joined(separator: ", "))]"
+            case .forbidden(let prefixes):
+                // Exact, as printed (P12 S2-3): "99ZZZ or L" (Table 0396 p 144);
+                // only the key lookup above is case-folded (the `mims-codes` row).
+                guard mapped.contains(value) || prefixes.contains(where: { value.hasPrefix($0) })
+                else { continue }
+                expectation = "not in [\(mapped.joined(separator: ", "))] and not beginning with [\(prefixes.joined(separator: ", "))]"
+            }
             let location = IssueLocation(
                 segmentID: segmentID,
                 segmentIndex: occurrence,
@@ -1438,7 +1465,7 @@ public struct Validator: Sendable {
             appendProfileIssue(
                 citation: citation,
                 location: location,
-                message: "AU profile correspondence rule violated at \(location.pathDescription): \(dataTypeLabel)-\(rule.keyComponent) \"\(key)\" requires \(dataTypeLabel)-\(rule.valueComponent) in [\(allowed.joined(separator: ", "))] but got \"\(value)\" (\(citation))",
+                message: "AU profile correspondence rule violated at \(location.pathDescription): \(dataTypeLabel)-\(rule.keyComponent) \"\(key)\" requires \(dataTypeLabel)-\(rule.valueComponent) \(expectation) but got \"\(value)\" (\(citation))",
                 into: &issues
             )
         }
@@ -1530,7 +1557,11 @@ public struct Validator: Sendable {
                     component: valueSet.component,
                     subcomponent: valueSet.subcomponent
                 )
-                if valueSet.allowedValues.contains(actual) { continue }
+                if valueSet.allows(actual) { continue }
+                // P12 S2-2: a table the caller extends locally (0363 vendors).
+                let extended = valueSet.localTableExtension
+                    .flatMap { options.localTableExtensions[$0] }?.sorted() ?? []
+                if extended.contains(actual) { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: occurrence,
@@ -1539,7 +1570,7 @@ public struct Validator: Sendable {
                 )
                 let citation = valueSet.specCitation
                     ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(valueSet.component)"
-                let allowedList = valueSet.allowedValues.map { "\"\($0)\"" }.joined(separator: ", ")
+                let allowedList = (valueSet.allowedValues + extended).map { "\"\($0)\"" }.joined(separator: ", ")
                 let pathSuffix = valueSet.subcomponent.map { ".\($0)" } ?? ""
                 appendProfileIssue(
                     citation: citation,
@@ -2462,6 +2493,7 @@ public struct Validator: Sendable {
         case .auPathologySender: return flag(options.auPathologySender)
         case .auDisplayIntended: return flag(options.auDisplayIntended)
         case .auNASHTransport: return flag(options.auNASHTransport)
+        case .auAssigningAuthorityTable: return flag(options.auAssigningAuthorityTable)
 
         case .nextSegmentID(let skip):
             // P4 lookahead: the ID of the first segment after the current

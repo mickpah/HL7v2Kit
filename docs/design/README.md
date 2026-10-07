@@ -60,6 +60,7 @@ A path under `planning/` in any record here names the local planning folder, whi
 | `deferred-coverage-backlog.md` | **Open register** — the deferred v2.6/v2.8.2 scope, enumerated with re-measure commands |
 | `m6-adrm-2021-localisation-audit.md` | **Active runway (M6)** — findings from the ADRM-2021 Appendix 5 diff: 1 defect (M6-D1), 31 shippable points (M6-A), 23 needing a model extension (M6-B) |
 | `m6-adrm-2021-conformance-register.md` | **Generated** by `scripts/extract-adrm-conformance.py` — every ADRM-2021 conformance point classified against the shipped overlay. Do not hand-edit; regenerate |
+| `p12-adrm-partial-points-audit.md` | **Audit (P12 S2-1, 2026-10-07)** — the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B; verdict per point and the proposed S2-2 order |
 
 ## Remediation programme
 

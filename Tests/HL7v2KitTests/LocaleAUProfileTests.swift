@@ -635,11 +635,12 @@ struct LocaleAUProfileTests {
                 "ORU with '#' sub-component separator must fire; got \(rules)")
     }
 
-    @Test("HL7au:000024.3/.4/.5 — REF is outside their scope, so MSH-2 is unpinned there")
+    @Test("HL7au:000024.3/.4/.5 — REF is outside their scope, so only the component separator is checked there")
     func encodingCharactersUnpinnedOnReferrals() throws {
-        // Documented gap: .2 (component separator) DOES apply to
-        // Referrals, but pinning the whole MSH-2 literal there would
-        // enforce .3/.4/.5 where the spec does not. See M6-B.
+        // .2 (component separator) applies to Referrals and is checked
+        // there as a first-character rule (P12 S2-2, AUDelimiterTests);
+        // pinning the whole MSH-2 literal would enforce .3/.4/.5 where
+        // the spec does not.
         let rules = try mshViolations(
             "MSH|^~\\#|GP|CLINIC|SPEC|HOSP|20240101||REF^I12|MSG|P|2.4|||AL|AL|AUS||en^English^ISO639\r")
         #expect(!rules.contains { $0.contains("HL7au:000024") },

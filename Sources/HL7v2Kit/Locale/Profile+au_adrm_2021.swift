@@ -73,6 +73,14 @@ extension Profile {
             // and MSH-6". Every point in the family is gated "when using
             // SMD with NASH certificates", a transport fact absent from
             // the wire, so ValidationOptions.auNASHTransport carries it.
+            // Each point's scope column reads "Orders, Results, Referrals"
+            // (000043.1 p 447; 00044.2.1 to .2.3 p 449), so every rule
+            // below is gated `messageCode in (ORM, ORU, REF)` as well
+            // (P12 S2-2; before, an asserted ADT was checked too). The
+            // column's values are defined on p 416: "Orders = ORM
+            // messages", "Results = ORU messages", "Referrals = All REF
+            // messages", with "Acknowledgement = ACK messages" a value of
+            // its own, so ACK is outside "Orders, Results, Referrals".
             //
             //   .2.2 — "the HD Universal ID component must contain the
             //          HPI-O formatted as "1.2.36.1.2001.1003.0."
@@ -82,8 +90,13 @@ extension Profile {
             //          where <hpio> is a 16-digit number.
             //   .2.3 — "the HD Universal ID Type component must be ISO".
             //
-            // Siblings deliberately NOT shipped: .2.1 and 00044.3.2 name
-            // the organisation name "as registered in the Medicare
+            //   .2.1 / 000043.1 — HD-1 presence only (P12 S2-2): the
+            //          organisation name must be there; whether it is the
+            //          one "registered by in the Medicare Australia HPOS/HI
+            //          service" needs the directory.
+            //
+            // Siblings deliberately NOT shipped: 00044.3.2 names the
+            // organisation name "as registered in the Medicare
             // Australia HPOS/HI service" (needs the directory); .2.4 and
             // the second .3.4 compare against a vendor X.509 certificate;
             // 00043.2 is an anti-spoofing check the ADRM marks "applies
@@ -99,42 +112,71 @@ extension Profile {
                     ComponentValueSet(
                         component: 3,
                         allowedValues: ["ISO"],
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.3 (r2) — when using SMD with NASH certificates the HD Universal ID Type component must be \"ISO\". Applied on the caller's NASH-transport assertion."
                     ),
                 ],
                 componentPatterns: [
+                    // P12 S2-2 — the presence half of HL7au:000043.1 (p 447:
+                    // "The format must be "registered organisation name in
+                    // HI service^1.2.36.1.2001.1003.0.<hpio>^ISO"") and of
+                    // 00044.2.1 (p 449: "the HD Namespace ID component must
+                    // contain the registered organisation name"). A pattern
+                    // with no prefix and no digit count, empty not allowed,
+                    // is a presence check. Whether the name is the one the
+                    // HPOS/HI service holds needs the directory: not checked.
+                    ComponentPattern(
+                        component: 1,
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
+                        specCitation: "HL7au:000043.1 / 00044.2.1 (r2) — when using SMD with NASH certificates MSH-4 HD Namespace ID must carry the registered organisation name; AU ADRM-2021 Appendix 5 pp. 447, 449. Applied on the caller's NASH-transport assertion."
+                    ),
                     ComponentPattern(
                         component: 2,
                         prefix: "1.2.36.1.2001.1003.0.",
                         digitsAfterPrefix: 16,
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.2 (r2) — when using SMD with NASH certificates the HD Universal ID component must contain the HPI-O formatted as \"1.2.36.1.2001.1003.0.\" concatenated with the HPI-O; the HPI-O is a 16-digit number (HL7au:000043.1). Applied on the caller's NASH-transport assertion."
                     ),
                 ],
                 specCitation: "HL7au:00044.2 — HD datatype conformance points for MSH-4 and MSH-6 (caller-asserted NASH transport)"
             ),
+            // P12 S2-2 — the sender half of HL7au:000001 (p 417, Orders):
+            // "Senders and receivers must ensure an order message is
+            // addressed using MSH-6 Receiving facility". An ORM with MSH-6
+            // empty is not so addressed: MSH-6 is R on ORM. 000001.1 (the
+            // receiver rejects a foreign MSH-6) is receiver behaviour.
+            // The override-level citation is what the usage check reports.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 6,
+                profileUsage: .required,
+                condition: "messageCode = ORM",
                 componentValueSets: [
                     ComponentValueSet(
                         component: 3,
                         allowedValues: ["ISO"],
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.3 (r2) — when using SMD with NASH certificates the HD Universal ID Type component must be \"ISO\". Applied on the caller's NASH-transport assertion."
                     ),
                 ],
                 componentPatterns: [
+                    // P12 S2-2 — 00044.2.1's presence half on MSH-6, as on
+                    // MSH-4 above (the 00044.2 grouper names "MSH-4, and
+                    // MSH-6"; 000043.1 is MSH-4 only).
+                    ComponentPattern(
+                        component: 1,
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
+                        specCitation: "HL7au:00044.2.1 (r2) — when using SMD with NASH certificates MSH-6 HD Namespace ID must carry the registered organisation name; AU ADRM-2021 Appendix 5 p. 449. Applied on the caller's NASH-transport assertion."
+                    ),
                     ComponentPattern(
                         component: 2,
                         prefix: "1.2.36.1.2001.1003.0.",
                         digitsAfterPrefix: 16,
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.2 (r2) — when using SMD with NASH certificates the HD Universal ID component must contain the HPI-O formatted as \"1.2.36.1.2001.1003.0.\" concatenated with the HPI-O; the HPI-O is a 16-digit number (HL7au:000043.1). Applied on the caller's NASH-transport assertion."
                     ),
                 ],
-                specCitation: "HL7au:00044.2 — HD datatype conformance points for MSH-4 and MSH-6 (caller-asserted NASH transport)"
+                specCitation: "HL7au:000001 — an order message must be addressed using MSH-6 Receiving facility; AU ADRM-2021 Appendix 5 p. 417. MSH-6 HD components: HL7au:00044.2 (caller-asserted NASH transport)"
             ),
             FieldOverride(
                 segmentID: "MSH",
@@ -336,14 +378,14 @@ extension Profile {
             // so the conjunction of the four points is a single pin:
             // MSH-2 == "^~\&".
             //
-            // KNOWN GAP, registered: .2 (component separator) is scoped
-            // to Orders, Results AND Referrals, while .3/.4/.5 are
-            // Orders/Results only. Pinning the whole literal on REF
-            // would enforce .3/.4/.5 where the spec does not, so the
-            // gate is the (ORM, ORU) intersection and .2-on-Referrals
-            // goes unenforced. Expressing it needs character-position
-            // addressing inside a component — see M6-B in
-            // `docs/design/m6-adrm-2021-localisation-audit.md`.
+            // .2 (component separator) is scoped to Orders, Results AND
+            // Referrals, while .3/.4/.5 are Orders/Results only, so the
+            // whole-literal pin is gated (ORM, ORU) and the Referrals leg
+            // of .2 is a first-character check (P12 S2-2; the M6-B gap
+            // closed): MSH-2 must begin with "^" on REF. 000024.2, p 441:
+            // "FHS, BHS, and MSH segments must specify the Components
+            // separator character as '^'". The FHS and BHS legs of
+            // 000024.1 to .5 are in BatchValidator.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 2,
@@ -353,6 +395,15 @@ extension Profile {
                         allowedValues: ["^~\\&"],
                         condition: "messageCode in (ORM, ORU)",
                         specCitation: "HL7au:000024.2/.3/.4/.5 — MSH-2 encoding characters must be \"^~\\&\" (component, repeat, escape, sub-component)"
+                    )
+                ],
+                componentPatterns: [
+                    ComponentPattern(
+                        component: 1,
+                        prefix: "^",
+                        condition: "messageCode = REF",
+                        allowEmpty: true,
+                        specCitation: "HL7au:000024.2 — MSH-2 must specify the component separator as \"^\" on Referrals; AU ADRM-2021 Appendix 5 p. 441"
                     )
                 ],
                 specCitation: "HL7au:000024.2/.3/.4/.5 — encoding characters narrowed to the AU literal"
@@ -651,21 +702,27 @@ extension Profile {
                         specCitation: "HL7au:000008.1 (r2) — OBX-3.1 (Identifier) must be HTML / PDF / RTF / TXT (deprecated PIT permitted) on display segments (AUSPDI); AU ADRM-2021 pp. 420-421, table p. 247"
                     )
                 ],
-                // M6-B-9 — HL7au:000034.1/.2: on OBX-3, when both a
-                // public and a local terminology are transmitted, the
-                // public code must be the PRIMARY triplet (1-3) and the
-                // local the alternate (4-6). Encoded as: a public
-                // coding system in the ALTERNATE slot (key CE-6)
-                // requires the primary slot (CE-3) to be public too.
-                // Public set = the systems the ADRM names (LN,
-                // SNOMED CT-AU as SCT, UCUM); others skip — PARTIAL.
+                // HL7au:000034.1/.2 (p 444: "if the system transmits both
+                // the public (e.g. LOINC) and local terminology, then the
+                // public (e.g. LOINC) code must appear in the identifier";
+                // p 445: "the local terminology must be transmitted in the
+                // second CE triplet i.e. the alternate identifier"). The
+                // point constrains a public/local PAIR only. P12 S2-2
+                // replaces the M6-B-9 encoding (a LN/SCT/UCUM alternate
+                // required a LN/SCT/UCUM primary), which fired on two
+                // public systems such as I10 with SCT (requirement 4).
+                // Now: a non-local ADRM Table 0396 row in the alternate
+                // (CE-6) forbids a local primary (CE-3), local being the
+                // printed "99ZZZ or L" (p 144). Public systems outside the
+                // printed table, and other local spellings, skip: PARTIAL.
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 6,
                         valueComponent: 3,
-                        map: HL7CodeTables.publicInAlternateMap,
+                        map: HL7CodeTables.localPrimaryForbiddenMap,
+                        valueRule: .forbidden(prefixes: HL7CodeTables.localCodingSystemPrefixes),
                         condition: "messageCode in (ORU, REF)",
-                        specCitation: "HL7au:000034.1/.2 — when both public and local terminology are transmitted in OBX-3, the public code must be primary and the local the alternate; AU ADRM-2021 Appendix 5 pp. 441-442"
+                        specCitation: "HL7au:000034.1/.2 — when both public and local terminology are transmitted in OBX-3, the public code must be primary and the local (\"99ZZZ or L\", Table 0396 p. 144) the alternate; AU ADRM-2021 Appendix 5 pp. 444-445"
                     ),
                 ],
                 specCitation: "HL7au:000008.1 (r2) — OBX-3 display-format identifier value set on AUSPDI display segments"
@@ -723,13 +780,18 @@ extension Profile {
                         specCitation: "ADRM-prose:P-6 — VMR header OBX-5.4 (data subtype) must be \"Octet-stream\"; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                 ],
+                // HL7au:000034.1's Observation Value leg, as on OBX-3
+                // above. The point opens "When using CE, CWE, CNE data
+                // types" (p 444), so the leg is gated on OBX-2: a
+                // non-coded OBX-5 (XPN, XAD, ...) is outside it.
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 6,
                         valueComponent: 3,
-                        map: HL7CodeTables.publicInAlternateMap,
-                        condition: "messageCode in (ORU, REF)",
-                        specCitation: "HL7au:000034.1 — when both public and local terminology are transmitted in a coded Observation Value, the public code must be primary; AU ADRM-2021 Appendix 5 p. 441"
+                        map: HL7CodeTables.localPrimaryForbiddenMap,
+                        valueRule: .forbidden(prefixes: HL7CodeTables.localCodingSystemPrefixes),
+                        condition: "messageCode in (ORU, REF) AND OBX-2 in (CE, CWE, CNE)",
+                        specCitation: "HL7au:000034.1 — when both public and local terminology are transmitted in a coded Observation Value, the public code must be primary and the local (\"99ZZZ or L\", Table 0396 p. 144) the alternate; AU ADRM-2021 Appendix 5 p. 444"
                     ),
                 ],
                 // HL7au:00060.4 route B (P4-24): OBX-5 must not be valued
@@ -754,14 +816,31 @@ extension Profile {
                 componentValueSets: [
                     // M6-B-4 — HL7au:00104.7.3.1: "<other qualifying
                     // info (ST)> must be a valued from HL7 Table 0203 -
-                    // Identifier Type." (00104.7.2.1's 0363 membership
-                    // was withdrawn at M6-B-8: table 0363 is
-                    // user-defined and the ADRM's own PRD-7 matches
-                    // table uses vendor authorities outside it —
-                    // registered, see permanent-limitations-register.)
+                    // Identifier Type."
+                    //
+                    // P12 S2-2 — HL7au:00104.7.2.1 (p. 473): "PRD-7 <type of
+                    // ID number (IS)> must be valued from User-defined
+                    // Table 0363 - Assigning Authority (see page 310)",
+                    // which "may be extended to allow for secure messaging
+                    // vendor assigning authorities" (p. 334). The vendors a
+                    // site has agreed are not on the wire, so the check runs
+                    // on the caller's assertion only, over the printed rows
+                    // plus `localTableExtensions["0363"]`. Unasserted it is
+                    // silent: the ADRM's own Medical-Objects and Argus rows
+                    // lie outside the printed table (M6-B-8 withdrew the
+                    // unconditional check for that reason).
+                    ComponentValueSet(
+                        component: 2,
+                        allowedValues: HL7CodeTables.table0363,
+                        localTableExtension: "0363",
+                        condition: "messageCode = REF AND auAssigningAuthorityTable populated",
+                        specCitation: "HL7au:00104.7.2.1 — PRD-7.2 (type of ID number) must be valued from User-defined Table 0363 (Assigning Authority) as printed, plus the caller's declared vendor authorities, on Senders Referrals; AU ADRM-2021 Appendix 5 p. 473, table p. 310, extension p. 334. Applied on the caller's assertion."
+                    ),
                     ComponentValueSet(
                         component: 3,
                         allowedValues: HL7CodeTables.table0203,
+                        allowedPatterns: HL7CodeTables.table0203Patterns,
+                        localTableExtension: "0203",
                         condition: "messageCode = REF",
                         specCitation: "HL7au:00104.7.3.1 — PRD-7.3 (other qualifying info) must be valued from HL7 Table 0203 (Identifier Type) on Senders Referrals; AU ADRM-2021 Appendix 5 p. 472, table p. 301"
                     ),
@@ -769,8 +848,15 @@ extension Profile {
                 // M6-B-8 — HL7au:00104.7.1.4: "the correct matching
                 // <type of ID number> and <other qualifying info> must
                 // be used as per Table 7.3.3.7.1" (p. 334). The table
-                // states pairs for the closed AU authorities; vendor
-                // authorities are open-ended examples and skip.
+                // states pairs for two of the printed AU authorities.
+                // P12 S2-2: every other authority is a vendor one, since
+                // "Table 0363 values may be extended to allow for secure
+                // messaging vendor assigning authorities" and "Secure
+                // messaging vendor allocated identifiers must use "VDI" as
+                // the value for <other qualifying info (ST)>" (p. 334): a
+                // PRD-7.2 outside the printed Table 0363 (p. 310) requires
+                // VDI. The printed authorities without a printed pair
+                // (AUSDVA, AUSNATA, AUSLINK, IHI) still skip.
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 2,
@@ -779,8 +865,10 @@ extension Profile {
                             "aushicpr": ["UPIN"],
                             "aushic": ["NPIO", "NOI"],
                         ],
+                        unlistedKeyValues: ["VDI"],
+                        exemptKeys: Set(HL7CodeTables.table0363.map { $0.lowercased() }),
                         condition: "messageCode = REF",
-                        specCitation: "HL7au:00104.7.1.4 — PRD-7 authority => qualifying-info pairs per Table 7.3.3.7.1 (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); AU ADRM-2021 p. 334 (vendor authorities are open-ended and skip)"
+                        specCitation: "HL7au:00104.7.1.4 — PRD-7 authority => qualifying-info pairs per Table 7.3.3.7.1 (AUSHICPR => UPIN, AUSHIC => NPIO/NOI) and, for a secure messaging vendor authority outside the printed Table 0363, VDI; AU ADRM-2021 pp. 310, 334, 473"
                     ),
                 ],
                 specCitation: "HL7au:00104.7.0 (r3) — PRD-7 must have at least 1 repeat on the Intended Recipient (PRD-1 = IR) PRD in the REF message; AU ADRM-2021 Appendix 5 p. 472"
@@ -966,7 +1054,24 @@ extension Profile {
                         specCitation: "HL7au:00044.1.3 — CX-5 identifier type code must be valued"
                     ),
                 ],
-                pairRules: []
+                pairRules: [],
+                // P12 S2-2 — HL7au:00044.1.3's membership half, p 449: "CX
+                // <identifier type code (ID)> component must be valued with
+                // a valid value from HL7 Table 0203 - Identifier type (see
+                // page 301)". The value set XCN-13 uses (00044.7.4), with
+                // the printed NNxxx pattern row (p 306). Populated-only:
+                // presence is the requirement above. A caller's local 0203
+                // extension is a valid value too (S2-3; v2.5.1 CH02
+                // 2.5.3.6), on CX-5, XCN-13 and PRD-7.3 alike.
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 5,
+                        allowedValues: HL7CodeTables.table0203,
+                        allowedPatterns: HL7CodeTables.table0203Patterns,
+                        localTableExtension: "0203",
+                        specCitation: "HL7au:00044.1.3 — CX-5 (identifier type code) must be a valid value from HL7 Table 0203 (Identifier Type); AU ADRM-2021 Appendix 5 p. 449, table pp. 301-309"
+                    ),
+                ]
             ),
             // CE datatype — HL7au:00044.4 series.
             // - 44.4.1/.2/.5/.6: identifier ⇔ coding-system pairs (pairRules).
@@ -1047,6 +1152,8 @@ extension Profile {
                     ComponentValueSet(
                         component: 13,
                         allowedValues: HL7CodeTables.table0203,
+                        allowedPatterns: HL7CodeTables.table0203Patterns,
+                        localTableExtension: "0203",
                         specCitation: "HL7au:00044.7.4 — XCN-13 (identifier type code) must be a valid value from HL7 Table 0203 (Identifier Type); AU ADRM-2021 table pp. 301-309"
                     ),
                 ]
@@ -1621,7 +1728,29 @@ extension Profile {
             scope: "messageCode in (ORM, ORU, REF)",
             severity: .error,
             specCitation: "HL7au:00060.4 — a C (conditional) element must not be valued when its predicate is not satisfied; AU ADRM-2021 Appendix 5 p. 466, §1 p. 11"
-        )
+        ),
+        // P12 S2-2 — HL7au:000008.1.5 (p 422, Senders, Results, Referrals):
+        // "The OBX display segment(s) must be the last in a set of OBX
+        // segments in each OBR/OBX group, with the exception of digital
+        // signature OBX(s) which may be after the display segments OBXs.
+        // (Display segments can be identified by having AUSPDI OBX-3 <name
+        // of coding system>)". The signature OBX is the ADRM's own (p 438,
+        // the HL7au:000010 comment): "OBX-3 (CE) identifier component
+        // starting with "AUSETAV", and OBX-3 name of code system component
+        // "L"". The group is the one the HL7au:000008 count rule reads.
+        // Gated ORU / REF: p 416 defines "Results = ORU messages" and
+        // "Referrals = All REF messages".
+        groupOrderingRules: [
+            GroupOrderingRule(
+                scope: .obrObxGroup,
+                anchorSegmentID: "OBR",
+                orderedSegmentID: "OBX",
+                startPredicate: "OBX-3.3 = AUSPDI",
+                allowedAfterPredicate: "OBX-3.3 = AUSPDI OR OBX-3.1 startsWith AUSETAV AND OBX-3.3 = L",
+                applicableWhen: "messageCode in (ORU, REF)",
+                specCitation: "HL7au:000008.1.5 — display OBX segments must be the last OBX in each OBR/OBX group, digital signature OBX (OBX-3.1 starting AUSETAV, OBX-3.3 = L) excepted, on Senders Results/Referrals; AU ADRM-2021 Appendix 5 pp. 422, 438"
+            ),
+        ]
     )
 
     /// Shared pair-rule set for CE / CNE / CWE. All three composites

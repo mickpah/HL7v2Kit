@@ -13,7 +13,9 @@ extension Validator {
     /// version, lookup and mismatch rule of the base resolution has already passed;
     /// a fragment is not matched (the base match reported it). Only `missing`
     /// findings are reported, as `profileConstraintViolation(localeRule:)` with the
-    /// structure's rule, at `severity`. A base segment the profile removed is not a
+    /// structure's rule, at `severity`. Where a variant of the profile structure is
+    /// selected by the profile the message declares in MSH-12.3.1 (P12 S1-1), that
+    /// print is matched in place of the structure's own. A base segment the profile removed is not a
     /// finding (decision 7): every segment the profile structure does not name is
     /// passed over, as a segment outside the version grammar is, and `unexpected`
     /// findings are dropped. A segment the base match already reports missing at the
@@ -31,9 +33,13 @@ extension Validator {
     func matchProfileStructure(over base: MessageStructure, baseFindings: [ValidationIssue], message: Message,
                                severity: IssueSeverity) -> (base: [ValidationIssue], profile: [ValidationIssue]) {
         let table = MessageStructureTable.profileStructures(for: locale)
-        guard let profile = table[base.id], let rule = profile.rule, profile.baseVersion == base.version,
-              profile.accepts(messageCode: message.messageCode ?? "", triggerEvent: message.triggerEvent ?? ""),
+        let code = message.messageCode ?? "", event = message.triggerEvent ?? ""
+        guard let structure = table[base.id], let rule = structure.rule, structure.baseVersion == base.version,
+              structure.accepts(messageCode: code, triggerEvent: event),
               fragmentReason(message, structure: base) == nil else { return (baseFindings, []) }
+        // P12 S1-1 (owner ruling G-AU3): a print the message's declared profile selects
+        // (MSH-12.3.1, the ADRM-2021 Appendix 8 simplified REF profile) replaces the structure.
+        let profile = structure.selectingVariant(messageCode: code, triggerEvent: event, declaredProfile: message["MSH-12.3.1"])
 
         let ids = message.segments.map(\.segmentID)
         guard !ids.isEmpty else { return (baseFindings, []) }

@@ -237,21 +237,26 @@ func requiredNameCitation(name: String, source: String, version: String) -> Stri
 }
 
 /// One per-trigger print of a structure (S6-1, `overrides.json` variantPrints): the triggers it
-/// governs, its citation and its elements.
+/// governs, its citation and its elements. In a profile file only (P12 S1-1), `profileIdentifiers`
+/// names the MSH-12.3.1 declarations that select the print (the ADRM-2021 Appendix 8 profile).
 struct StructureVariantSchema: Decodable, Equatable {
     let triggers: [String]
     let citation: String
+    let profileIdentifiers: [String]?
     let elements: [StructureElementSchema]
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case triggers, citation, elements
+        case triggers, citation, profileIdentifiers, elements
     }
 
     init(from decoder: any Decoder) throws {
-        try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "variant")
+        let profileFile = decoder.userInfo[structureProfileKeysAllowed] as? Bool == true
+        let allowed = CodingKeys.allCases.filter { profileFile || $0 != .profileIdentifiers }
+        try rejectUnknownKeys(decoder, allowed: Set(allowed.map(\.rawValue)), in: "variant")
         let c = try decoder.container(keyedBy: CodingKeys.self)
         triggers = try c.decode([String].self, forKey: .triggers)
         citation = try c.decode(String.self, forKey: .citation)
+        profileIdentifiers = try c.decodeIfPresent([String].self, forKey: .profileIdentifiers)
         elements = try c.decode([StructureElementSchema].self, forKey: .elements)
     }
 }
@@ -259,11 +264,31 @@ struct StructureVariantSchema: Decodable, Equatable {
 /// Check a structure's variants (S6-1): each names exact triggers the structure accepts, none
 /// named twice; its print starts with MSH, passes the element rules, has no keyed choice,
 /// differs from the default print and every other variant, and cites its variantPrints entry.
+/// A profile structure's variant (P12 S1-1) is selected by a declared profile instead: it names
+/// non-empty profile identifiers, each quoted in its citation, and no other variant's; its
+/// citation need not name variantPrints (the profile file is hand-curated, not extracted).
 func validateVariants(_ s: MessageStructureSchema) throws {
     guard let variants = s.variants else { return }
     guard !variants.isEmpty else { throw StructureSchemaError(description: "variants: an empty list") }
-    guard s.profile == nil, s.aliasOf == nil else {
-        throw StructureSchemaError(description: "variants: a profile structure or an alias has no variants")
+    guard s.aliasOf == nil else { throw StructureSchemaError(description: "variants: an alias has no variants") }
+    if s.profile != nil {
+        var declared: Set<String> = []
+        for variant in variants {
+            guard let identifiers = variant.profileIdentifiers, !identifiers.isEmpty else {
+                throw StructureSchemaError(description: "variants: a profile structure's variant names its profileIdentifiers")
+            }
+            for identifier in identifiers {
+                guard matches(identifier, "^[A-Za-z0-9][A-Za-z0-9._-]*$") else {
+                    throw StructureSchemaError(description: "variants: bad profile identifier \"\(identifier)\"")
+                }
+                guard declared.insert(identifier).inserted else {
+                    throw StructureSchemaError(description: "variants: profile identifier \(identifier) is named twice")
+                }
+                guard variant.citation.contains(identifier) else {
+                    throw StructureSchemaError(description: "variants: the citation must quote the declaration \(identifier)")
+                }
+            }
+        }
     }
     var seen: Set<String> = []
     var prints = [s.elements]
@@ -276,10 +301,11 @@ func validateVariants(_ s: MessageStructureSchema) throws {
             throw StructureSchemaError(description: "variants: triggers must be exact CODE^EVT the structure accepts; "
                                        + "got \(variant.triggers)")
         }
-        if let twice = variant.triggers.first(where: { !seen.insert($0).inserted }) {
+        let selector = variant.profileIdentifiers.map { "@" + $0.joined(separator: ",") } ?? ""
+        if let twice = variant.triggers.first(where: { !seen.insert($0 + selector).inserted }) {
             throw StructureSchemaError(description: "variants: trigger \(twice) is in two variants or named twice")
         }
-        guard variant.citation.contains("overrides.json variantPrints") else {
+        guard s.profile != nil || variant.citation.contains("overrides.json variantPrints") else {
             throw StructureSchemaError(description: "variants: a citation must name \"overrides.json variantPrints\"")
         }
         guard variant.elements.first?.segment == "MSH" else {
@@ -555,6 +581,11 @@ func renderStructureTable(versionSwiftName: String, sourceDir: String, structure
                     "            StructureVariant(",
                     "                triggers: [\(variant.triggers.map(escapeStringLiteral).joined(separator: ", "))],",
                     "                citation: \(escapeStringLiteral(variant.citation)),",
+                ]
+                if let identifiers = variant.profileIdentifiers {
+                    lines.append("                profileIdentifiers: [\(identifiers.map(escapeStringLiteral).joined(separator: ", "))],")
+                }
+                lines += [
                     "                requiresExactMatch: \(!structureIsDeterministic(variant.elements)),",
                     "                elements: [",
                 ]

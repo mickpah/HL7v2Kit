@@ -49,13 +49,22 @@ enum HL7CodeTables {
     /// footnote markers had hidden them from that transcription.
     static let table0203: [String] = auCodes("0203")
 
+    /// The pattern rows of the same table: `NNxxx`, "National Person
+    /// Identifier where the xxx is the ISO table 3166 3-character
+    /// (alphabetic) country code" (p. 306). A value set over 0203 passes
+    /// these with `table0203` (P12 S2-2), or a conformant `NNAUS` fires.
+    static let table0203Patterns: [HL7Table.CodePattern] =
+        HL7TableRegistry.table("0203", locale: .auLocalisation)?.patterns ?? []
+
     /// User-defined Table 0363 — Assigning Authority, the AU-defined
-    /// value set printed in AU ADRM-2021 (p. 310). NOT consumed by a
+    /// value set printed in AU ADRM-2021 (p. 310). No unconditional
     /// membership rule: the table is user-defined and the ADRM's own
     /// PRD-7 matches table (p. 334) uses vendor authorities outside it
     /// (`Medical-Objects`, `Argus`), so a closed-set check would
-    /// misfire (req #4) — HL7au:00104.7.2.1 is registered instead.
-    /// Kept for reference and for the correspondence map's AU keys.
+    /// misfire (req #4). HL7au:00104.7.2.1 checks it only under
+    /// `ValidationOptions.auAssigningAuthorityTable`, with the caller's
+    /// vendor authorities from `localTableExtensions["0363"]` (P12 S2-2);
+    /// HL7au:00104.7.1.4 reads it to tell vendor authorities apart.
     static let table0363: [String] = auCodes("0363")
 
     /// ED/RP subtype ⇒ allowed type-of-data values (M6-B-8, for
@@ -95,20 +104,30 @@ enum HL7CodeTables {
         "x-hl7-cda-xdm-zip": ["application"],
     ]
 
-    /// Public coding systems the ADRM names (M6-B-9, HL7au:000034.1/.2):
-    /// LN (LOINC — named throughout), SCT (SNOMED CT-AU — the referral
-    /// OBR-4 codes §4.4.1.4.1), UCUM (units §4.4.2.6). Used as a
-    /// correspondence map: a public system in the ALTERNATE coding-system
-    /// slot requires the PRIMARY slot to also be public — i.e. the
-    /// public code was not relegated behind a local one. Systems the
-    /// ADRM does not name skip (PARTIAL).
-    static let publicCodingSystems: [String] = ["LN", "SCT", "UCUM"]
+    /// User defined Table 0396 — Coding System, as printed in AU
+    /// ADRM-2021 §3.3.3 (pp. 142–145). Consumed by HL7au:000034.1/.2.
+    static let table0396: [String] = auCodes("0396")
 
-    /// key = a public system appearing in CE/CWE/CNE-6 (alternate);
-    /// allowed values for CE-3 (primary) = the public set.
-    static let publicInAlternateMap: [String: [String]] = [
-        "ln": publicCodingSystems,
-        "sct": publicCodingSystems,
-        "ucum": publicCodingSystems,
-    ]
+    /// The local coding-system forms Table 0396 prints in its "99ZZZ or L"
+    /// row (p. 144): "L", and "99zzz, where z is an alphanumeric
+    /// character" (the same row: "The 'zzz' SHALL be any printable ASCII
+    /// string"), read as the prefix `99`.
+    static let localCodingSystemValues: [String] = ["L"]
+    static let localCodingSystemPrefixes: [String] = ["99"]
+
+    /// HL7au:000034.1/.2 (P12 S2-2, replacing the M6-B-9 three-system
+    /// map, which fired on two public systems): key = a non-local row of
+    /// the ADRM's Table 0396 in the ALTERNATE coding-system slot (CE-6);
+    /// the PRIMARY slot (CE-3) must then not be local. Read with
+    /// `CorrespondenceValueRule.forbidden(prefixes: localCodingSystemPrefixes)`.
+    /// A public system outside the printed table, and a local system
+    /// spelt other than `L` or `99zzz`, skip (PARTIAL).
+    static let localPrimaryForbiddenMap: [String: [String]] = Dictionary(
+        uniqueKeysWithValues: table0396
+            .filter { code in
+                !localCodingSystemValues.contains(code)
+                    && !localCodingSystemPrefixes.contains(where: { code.hasPrefix($0) })
+            }
+            .map { ($0.lowercased(), localCodingSystemValues) }
+    )
 }

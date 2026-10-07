@@ -82,6 +82,10 @@ struct Profile: Sendable, Equatable, Hashable {
     /// a full predicate. P4-31.
     let fullPredicateRule: FullPredicateRule?
 
+    /// In-group ordering rules (P12 S2-2). Used for HL7au:000008.1.5 —
+    /// display OBX segments last in each OBR/OBX group, signatures aside.
+    let groupOrderingRules: [GroupOrderingRule]
+
     init(
         locale: HL7Locale,
         fieldOverrides: [FieldOverride] = [],
@@ -91,7 +95,8 @@ struct Profile: Sendable, Equatable, Hashable {
         uniquenessRules: [FieldUniquenessRule] = [],
         escapeProhibitions: [EscapeProhibition] = [],
         subIDTrees: [SubIDTreeRule] = [],
-        fullPredicateRule: FullPredicateRule? = nil
+        fullPredicateRule: FullPredicateRule? = nil,
+        groupOrderingRules: [GroupOrderingRule] = []
     ) {
         self.locale = locale
         self.fieldOverrides = fieldOverrides
@@ -102,6 +107,7 @@ struct Profile: Sendable, Equatable, Hashable {
         self.escapeProhibitions = escapeProhibitions
         self.subIDTrees = subIDTrees
         self.fullPredicateRule = fullPredicateRule
+        self.groupOrderingRules = groupOrderingRules
     }
 
     /// Look up the profile for a given locale.
@@ -567,18 +573,42 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
     let specCitation: String?
 
+    /// Printed pattern rows of the source table (P12 S2-2): a value that
+    /// fully matches one is allowed too. The ADRM's Table 0203 prints
+    /// `NNxxx` (p. 306), a family no list of values can hold.
+    let allowedPatterns: [HL7Table.CodePattern]
+
+    /// A table number whose `ValidationOptions.localTableExtensions` entry
+    /// is allowed too (P12 S2-2): the ADRM lets Table 0363 "be extended to
+    /// allow for secure messaging vendor assigning authorities" (p. 334).
+    /// Table 0203 value sets carry `"0203"` (P12 S2-3): every supported
+    /// version lets a site extend an HL7 table locally. Read by the field
+    /// and composite value-set tracks alike; matching is exact.
+    /// `nil` (default): the caller's extensions do not apply.
+    let localTableExtension: String?
+
     init(
         component: Int,
         subcomponent: Int? = nil,
         allowedValues: [String],
+        allowedPatterns: [HL7Table.CodePattern] = [],
+        localTableExtension: String? = nil,
         condition: String? = nil,
         specCitation: String? = nil
     ) {
         self.component = component
         self.subcomponent = subcomponent
         self.allowedValues = allowedValues
+        self.allowedPatterns = allowedPatterns
+        self.localTableExtension = localTableExtension
         self.condition = condition
         self.specCitation = specCitation
+    }
+
+    /// `true` when `value` is one of `allowedValues` or fully matches one
+    /// of `allowedPatterns`.
+    func allows(_ value: String) -> Bool {
+        allowedValues.contains(value) || allowedPatterns.contains { $0.matches(value) }
     }
 }
 
@@ -746,7 +776,8 @@ struct SubIDTreeRule: Sendable, Equatable, Hashable {
 /// - Keys the map does not know SKIP (fail-safe): the spec tables that
 ///   feed these maps state correspondences for enumerated keys only
 ///   (ADRM §3.20.5 type-subtype combinations; the PRD-7 matches table),
-///   and an unstated key is not a violation.
+///   and an unstated key is not a violation. A rule whose source states
+///   what every other key needs sets `unlistedKeyValues` (P12 S2-2).
 /// - Comparison is CASE-INSENSITIVE on both key and value: the ADRM's
 ///   own sanctioned examples mix case (`TEXT^RTF` in §4.5.2,
 ///   `text^html` in §4.5.3).
@@ -764,20 +795,50 @@ struct ComponentCorrespondence: Sendable, Equatable, Hashable {
     let condition: String?
     /// Spec citation surfaced in the violation.
     let specCitation: String?
+    /// What the mapped values mean: allowed (the M6-B-8 default) or
+    /// forbidden (P12 S2-2).
+    let valueRule: CorrespondenceValueRule
+    /// The values a key the `map` does not list maps to, unless it is one
+    /// of `exemptKeys`; `nil` (the M6-B-8 default) lets unlisted keys skip.
+    /// P12 S2-2, HL7au:00104.7.1.4: a PRD-7.2 outside the printed Table
+    /// 0363 is a vendor authority, whose qualifier must be `VDI` (p 334).
+    let unlistedKeyValues: [String]?
+    /// Lowercased keys that skip although the `map` does not list them.
+    let exemptKeys: Set<String>
 
     init(
         keyComponent: Int,
         valueComponent: Int,
         map: [String: [String]],
+        valueRule: CorrespondenceValueRule = .allowed,
+        unlistedKeyValues: [String]? = nil,
+        exemptKeys: Set<String> = [],
         condition: String? = nil,
         specCitation: String? = nil
     ) {
         self.keyComponent = keyComponent
         self.valueComponent = valueComponent
         self.map = map
+        self.valueRule = valueRule
+        self.unlistedKeyValues = unlistedKeyValues
+        self.exemptKeys = exemptKeys
         self.condition = condition
         self.specCitation = specCitation
     }
+}
+
+/// How a `ComponentCorrespondence` reads its mapped values.
+///
+/// - `allowed`: the value component must carry one of the mapped values.
+/// - `forbidden(prefixes:)`: the value component must carry none of the
+///   mapped values and must not begin with any of `prefixes`. Expresses
+///   HL7au:000034.1/.2, where the ADRM prints the local side as a value
+///   and a form ("99ZZZ or L", Table 0396 p 144) rather than a list of
+///   public systems the primary must come from. P12 S2-2. Matched exactly,
+///   as printed (P12 S2-3); `allowed` stays case-insensitive.
+enum CorrespondenceValueRule: Sendable, Equatable, Hashable {
+    case allowed
+    case forbidden(prefixes: [String])
 }
 
 /// Profile usage codes from the AU ADRM spec. The base HL7 v2 set is

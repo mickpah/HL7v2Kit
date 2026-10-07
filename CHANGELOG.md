@@ -7,6 +7,97 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Sprint 2 of epic P12 (AU profile completion) is complete on branch `v3.16-au-profile`. An audit of the ADRM's partial points (`docs/design/p12-adrm-partial-points-audit.md`) found ten closable points, and all ten are built. Three defects in shipped rules are fixed: the HL7au:000034.1/.2 coding-system precedence (two public systems misfired), the AU Table 0203 missing its printed NNxxx row (XCN-13 and PRD-7.3 misfired on `NNAUS`), and the profile's value sets ignoring `ValidationOptions.localTableExtensions` (a declared Table 0203 extension now passes on CX-5, XCN-13 and PRD-7.3). The NASH HD rules keep to Orders, Results and Referrals, the scope column Appendix 5 p 416 defines. `ValidationOptions.auAssigningAuthorityTable` is the one additive public API. Conformance register: 79 shipped, 17 partial, 5 registered.
+
+### Fixed — P12 S2-3: the AU profile's Table 0203 value sets honour `localTableExtensions`
+
+- A caller's `ValidationOptions.localTableExtensions["0203"]` values were accepted by the base code-table check but still drew a `profileConstraintViolation` from the AU overlay on PID-3.5 / CX-5 (HL7au:00044.1.3), XCN-13 (00044.7.4) and PRD-7.3 (00104.7.3.1). Each point names HL7 Table 0203, which every supported version lets a site extend locally (v2.5.1 CH02 2.5.3.6, "the table itself may be extended to accommodate locally defined values"), so a declared value is now a valid value on all three, matched exactly; a declaration for another table does not reach them. Tests: `AULocalTableExtensionTests`. The `localTableExtensions` DocC and the Validation article say which profile rules the setting reaches.
+- HL7au:000034.1/.2 now matches the local primary system exactly as Table 0396 prints it (`L`, or `99` followed by the local name, p 144); a lower-case `l` is another spelling and skips, as the PARTIAL row says. Pins: an alternate outside Table 0396 is silent; PRD-7.3 `NNAUS` is silent; a display, a signature and then an atomic OBX fires on the atomic (000008.1.5).
+- Documentation: the p 416 scope column cited for the NASH gate and the display-ordering rule; IHI as PRD-7.2 recorded as an under-report (an accommodation row of the AU 0363 table, not printed on p 310; kept by owner ruling so a sender using it is not misreported); ADR-007 entries for `GroupOrderingRule`, `ComponentCorrespondence.unlistedKeyValues` / `exemptKeys` and `ComponentValueSet.localTableExtension`. Digests unchanged (0 lines, default and strict).
+
+Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-profile`: HL7au:00060.1 now has the simplified REF profile (Appendix 8) selected by the declared profile, ORR^O02 with its cited print erratum, and OSR^Q06 narrowed with one documented residual; ruling 6 (an optional ERR in the 5.6.5 no-data head) is built; `StructureVariant.profileIdentifiers` is the one additive public API. Review pins, the p 43 citation and the recorded Level 1 reading (an owner item) close the sprint.
+
+### Fixed — P12 S2-2: HL7au:000034.1/.2 coding-system precedence (a requirement 4 defect)
+
+- The M6-B-9 rule read "an alternate system in LN, SCT or UCUM requires a primary in LN, SCT or UCUM", so a conformant OBX-3 or coded OBX-5 carrying two public systems (for example `E11.9^...^I10^44054006^...^SCT`, both rows of the ADRM's own Table 0396) drew a `profileConstraintViolation`. The point constrains a public and local pair only (AU ADRM-2021.1 Appendix 5 p 444: "if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.g. LOINC) code must appear in the identifier"; p 445: "the local terminology must be transmitted in the second CE triplet i.e. the alternate identifier").
+- The rule now fires when the primary coding system is local, as the ADRM prints it ("99ZZZ or L", Table 0396 p 144: `L`, or `99` followed by the local name), and the alternate is a non-local row of the ADRM's Table 0396 (pp 142 to 145). A local primary with a `PBS`, `I10` or any other printed public alternate now fires; two local systems, and a public primary with a local alternate, are silent. The OBX-5 leg is gated on OBX-2 CE, CWE or CNE ("When using CE, CWE, CNE data types", p 444).
+- New AU locale table `Resources/tables/locale/au-adrm-2021/0396.json` (27 rows, kind User, open; ADR-016 note). Internal: `ComponentCorrespondence` gains a `forbidden(prefixes:)` value rule. No public API change.
+- The point stays PARTIAL: a public system outside the printed table and a local system spelt otherwise skip; the equivalence half (000034.3) is terminology. Conformance register regenerated (the 000008.3.1 S1-5 note now comes from the script); limitations register row updated.
+
+### Added — P12 S2-2: HL7au:000024 on Referrals and on FHS and BHS
+
+- HL7au:000024.2 (Appendix 5 p 441, Orders, Results, Referrals: "FHS, BHS, and MSH segments must specify the Components separator character as '^'") now holds on Referrals: MSH-2 must begin with `^` on a REF (a first-character `ComponentPattern`; .3, .4 and .5 do not apply to Referrals, so the whole literal stays pinned on ORM and ORU only). The point moves PARTIAL to SHIPPED.
+- `BatchValidator` (`.auLocalisation`) checks the FHS and BHS legs that every 000024 point names (.1 p 440, .2 to .5 p 441) on the raw header, scoped by the messages the header carries: FHS-1/BHS-1 `|` and the component separator `^` on Orders, Results and Referrals, the full `^~\&` on Orders and Results. Before, the SHIPPED rows 000024.1, .3, .4 and .5 claimed FHS and BHS but only MSH was checked.
+- Tests: `AUDelimiterTests`. Conformance register regenerated; the M6-O3 gap note in `m6-adrm-2021-localisation-audit.md` is closed.
+
+### Changed — P12 S2-2: HL7au:00044.10.1.6 and 00044.11.1.6 read SHIPPED (register correction)
+
+- No rule change. The points (Appendix 5 pp 456 and 457: "When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used", and the same for RP) were PARTIAL on the belief that some 0291 subtypes skip; all 15 v2.4 Table 0291 values are keys of the subtype map. `AUSubtypeCorrespondenceTests` walks the v2.4 registry table and pins an RP fire/silent pair (RP had only a dispatch pin). Conformance and limitations registers updated.
+
+### Added — P12 S2-2: HL7au:00044.1.3 CX-5 membership in Table 0203; the NNxxx row accepted
+
+- HL7au:00044.1.3 (Appendix 5 p 449: "CX <identifier type code (ID)> component must be valued with a valid value from HL7 Table 0203 - Identifier type (see page 301)") was SHIPPED for presence only; CX-5 membership in the ADRM's Table 0203 is now checked on Orders, Results and Referrals, the same value set as XCN-13 (00044.7.4).
+- **Fixed (requirement 4):** the ADRM's Table 0203 prints a pattern row, "NNxxx National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code" (p 306), which the AU locale table had not carried, so XCN-13 (00044.7.4) and PRD-7.3 (00104.7.3.1) fired on a conformant `NNAUS`. The AU locale `0203.json` gains the pattern row (`^NN[A-Z]{3}$`, as the base tables carry it); the profile value sets accept a full match. Internal: `ComponentValueSet.allowedPatterns`. No public API change.
+- Tests: `AUIdentifierTypeTests`. Registers updated (section B row 00044.1.2/.1.3 corrected).
+
+### Added — P12 S2-2: HL7au:000043.1 / 00044.2.1 HD Namespace ID presence under `auNASHTransport`
+
+- With `ValidationOptions.auNASHTransport` set, MSH-4.1 and MSH-6.1 must be valued: 000043.1 (Appendix 5 p 447: "The format must be "registered organisation name in HI service^1.2.36.1.2001.1003.0.<hpio>^ISO"") and 00044.2.1 (p 449: "the HD Namespace ID component must contain the registered organisation name", under the grouper "HD Datatype conformance points for MSH-4, and MSH-6"). Silent when not asserted, as before.
+- Both points stay PARTIAL: whether the name is the one the HPOS/HI service registers needs the directory. 00044.2.1 moves OUT to PARTIAL in the conformance register; limitations register and the option's DocC updated. Tests: `AUNASHNamespaceTests`.
+
+### Added — P12 S2-2: HL7au:000001 MSH-6 required on an order message
+
+- HL7au:000001 (Appendix 5 p 417, Orders: "Senders and receivers must ensure an order message is addressed using MSH-6 Receiving facility") was REGISTERED as receiver behaviour or "should" guidance throughout; its sender half is wire-checkable. Under `.auLocalisation` an ORM with MSH-6 empty now draws a `profileConstraintViolation` at MSH-6 citing HL7au:000001; other message types are untouched.
+- The point moves REGISTERED to PARTIAL: 000001.1 (reject a foreign MSH-6) is receiver behaviour, and 000001.2 / .2.1 are "should" guidance naming the NATA number and NATA name. Tests: `AUOrderAddressingTests`. Conformance register regenerated; limitations register section B row corrected.
+
+### Added — P12 S2-2: HL7au:000008.1.5 display OBX last in its OBR/OBX group
+
+- HL7au:000008.1.5 (Appendix 5 p 422, Senders, Results, Referrals: "The OBX display segment(s) must be the last in a set of OBX segments in each OBR/OBX group, with the exception of digital signature OBX(s) which may be after the display segments OBXs. (Display segments can be identified by having AUSPDI OBX-3 <name of coding system>)") now ships. On an ORU or REF under `.auLocalisation`, after the first display OBX of an OBR/OBX group every later OBX of that group must be a display OBX or a digital signature OBX, which the ADRM identifies on p 438 (the HL7au:000010 comment): "OBX-3 (CE) identifier component starting with "AUSETAV", and OBX-3 name of code system component "L"". Each other OBX draws a `profileConstraintViolation` at that OBX.
+- The group is the one the HL7au:000008 display count reads (`.obrObxGroup`: the structure's spans, or the walk where they are withheld). Internal: a new `GroupOrderingRule` on the profile. No public API change.
+- REGISTERED to SHIPPED: the registered reason (signature identifiers in HB 308-2011) is superseded by p 438. Before shipping, the rule was run over every test message (only the new tests' three intended messages fire) and over the full ADRM example messages (39 OBR groups, 15 display OBX: none out of order). Tests: `AUDisplayOrderingTests`. Conformance register regenerated; limitations register section D row corrected.
+
+### Added — P12 S2-2: HL7au:00104.7.1.4 VDI for vendor assigning authorities
+
+- On a REF, a PRD-7 repetition whose PRD-7.2 is valued and is not one of the six printed Table 0363 values (p 310) now requires PRD-7.3 = `VDI`: the PRD-7 prose (p 334) says "Table 0363 values may be extended to allow for secure messaging vendor assigning authorities" and "Secure messaging vendor allocated identifiers must use "VDI" as the value for <other qualifying info (ST)>", and the point (Appendix 5 p 473) requires "the correct matching <type of ID number (IS)> and <other qualifying info (ST)>". `JD455600041^Medical-Objects^VDI` is silent; `JD455600041^Medical-Objects^UPIN` fires at PRD-7.3. Each repetition pairs its own components; an empty authority or qualifier skips.
+- The point stays PARTIAL: AUSDVA, AUSNATA, AUSLINK and IHI have no printed pair and skip. Internal: `ComponentCorrespondence` gains `unlistedKeyValues` and `exemptKeys`. No public API change. Tests: `AUPRDVendorIdentifierTests`. Registers updated.
+
+### Added — P12 S2-2: `ValidationOptions.auAssigningAuthorityTable` (HL7au:00104.7.2.1, caller-asserted)
+
+- New public property `ValidationOptions.auAssigningAuthorityTable` (`Bool`, default `false` in every preset, not an init parameter; owner approval 2026-10-07). With it set, under `.auLocalisation` on a REF, PRD-7.2 must be one of the printed User-defined Table 0363 values (p 310) or a vendor authority the caller lists in `localTableExtensions["0363"]`: the point (Appendix 5 p 473: "PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority") with the extension the PRD-7 prose allows (p 334: "Table 0363 values may be extended to allow for secure messaging vendor assigning authorities"). A value outside both draws a `profileConstraintViolation` at PRD-7.2.
+- Unasserted, nothing changes: the ADRM's own `Medical-Objects` and `Argus` rows lie outside the printed table, so an unconditional check would misfire. PRD-7.2 is the only place the profile reads Table 0363. REGISTERED to SHIPPED (caller-asserted). DocC (the option, `localTableExtensions`, the Validation article's assertion table), a Migration row and a `SignatureCompatibilityTests` pin; the validation digest asserts it with the other AU options. Tests: `AUAssigningAuthorityTableTests`.
+
+### Changed — P12 S2-2: register corrections (no rule change)
+
+- Limitations register section B: HL7au:00044.5.7 / 00044.6.7 were described as "Removed" in ADRM r2. The print marks `00044.5.6 (r2)` (p 453) and `00044.6.6 (r2)` (p 454) Removed; `.5.7` and `.6.7` stand ("Both <identifier> and <alternative identifier> must reflect the same concept ..."), registered as terminology-service limitations like `.4.7`.
+- Section D: HL7au:00100.1 was described as "REF-4" ordering; the point (p 468) puts "the current referral summary OBR/OBX group" first, and the summary is identified by its OBR-4 code (p 212: "In referral messages the referral summary is indicated by the OBR-4 code"). Still REGISTERED (SNOMED CT-AU subsumption).
+- The conformance register's HL7au:00044.3.1 note credits HL7au:000028 for the within-message uniqueness leg (a duplicate OBR-3 already fires). The SHIPPED rows HL7au:000024.1, .3, .4, .5 (MSH, FHS, BHS) and 00044.1.3 (CX-5 presence and Table 0203 membership) were checked against the code once more and hold.
+
+### Fixed — P12 S2-2: the NASH HD rules on MSH-4 and MSH-6 keep to Orders, Results and Referrals
+
+- Under `ValidationOptions.auNASHTransport`, HL7au:00044.2.2 / .2.3 (M32) and the HD-1 presence half of 000043.1 / 00044.2.1 (S2-2) ran on every message. Each point's scope column reads "Orders, Results, Referrals" (Appendix 5 p 447 for 000043.1, p 449 for 00044.2.1 to .2.3), and p 416 defines those values ("Orders = ORM messages", "Results = ORU messages", "Referrals = All REF messages"; ACK is a value of its own), so the six MSH-4 / MSH-6 rules are now gated `messageCode in (ORM, ORU, REF)` as well. An asserted ADT, SIU or MDM is no longer checked; ORM, ORU and REF are unchanged. The EI twins (00044.3.3 / .3.4) already sat under the EI override's same gate. Controller ruling on the S2-2a concern. Tests: `AUNASHScopeTests`; the option's DocC and the Validation article updated.
+
+### Added — P12 S2-1: the ADRM partial-points audit
+
+- `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).
+
+### Added — P12 S1: the AU profile structures completed (epic P12 sprint 1)
+
+Under `.auLocalisation` with `messageStructureSeverity` set (on in the default and strict presets), on v2.4. More `HL7au:00060.1` findings may fire; the international locale is unchanged.
+
+- **`StructureVariant.profileIdentifiers`** (additive public property, `[String]`; Migration row, signature pin): a profile structure's variant selected by the profile the message declares in MSH-12.3.1, matched exactly. Empty for every trigger-selected variant; `variant(messageCode:triggerEvent:)` never returns a declared-profile variant.
+- **S1-1, ADRM-2021 Appendix 8 (owner ruling G-AU3):** the AU `REF_I12` profile structure carries the A8.5 constrained REF_I12 (pp 484 to 485) as a variant selected by `HL7AU-OO-REF-SIMPLIFIED-201706` or `HL7AU-OO-REF-SIMPLIFIED-201706-L1` (A8.3, p 483). A declaring REF^I12 without the OBR group, without an OBX in it, or with an ORC lacking RXO and RXR draws `profileConstraintViolation(localeRule: "HL7au:00060.1")`. Without the declaration the section 7.2.1 profile governs; RRI^I12 is unchanged.
+- **S1-2, ORR^O02 (owner ruling G-AU2):** new profile structure `ORR_O02.json` (section 5.2, pp 280 to 281), the unclosed `[PID` read as the base v2.4 reading (PID optional), cited as an erratum. An RQD or RQ1 in place of OBR draws the 00060.1 finding; a response without PID, or without the order group, is accepted.
+- **S1-3, OSR^Q06 order detail:** RQD and RQ1 are removed from the order detail choice (no ADRM print or prose admits them), so a requisition detail in place of OBR, and an OBX after one, draw the 00060.1 finding. RXO, ODS or ODT in place of OBR in either response stays accepted: the one residual of 00060.1, which stays PARTIAL (the print does not settle whether the p 280 medication and diet replacement carries over).
+- **Codegen:** `profileIdentifiers` is admitted on a variant in a profile file only, required there, each identifier well formed, named once and quoted in the variant's citation; `scripts/check-structure-codegen.sh` gains nine accept and reject cases (150 cases).
+- **Structure guards** (`StructureGuardTests`) now cover the six ADRM profile structures and the Appendix 8 variant.
+- **Docs:** permanent-limitations register section E (the Appendix 8, ORR^O02 and order status response rows), the ADRM conformance register (regenerated; 00060.1 PARTIAL, one residual), ADR-019 amendment "P12 S1".
+
+### Changed — P12 S1-4: an optional ERR in the CH05 5.6.5 no-data head (owner ruling 6)
+
+- A v2.4 to v2.8.2 query response with MSA-1 AA and QAK-2 NF (5.6.5 Situation 3) is now matched against `MSH [{SFT}] [UAC] MSA [ERR] QAK [<query segments>] [DSC]`: an ERR after MSA is no longer reported as unexpected, since an AA reply may carry a warning or informational ERR (ERR-4 severity W or I, v2.5.1 CH02 2.15.5.4, p 2-68). ERR keeps its printed repetition (`[{ERR}]` where the structure repeats it). Fewer findings only: an ERR before MSA is still reported, the AE/AR error-response head is unchanged, and v2.3 and v2.3.1 keep the full structure. No public API change.
+- **Tests:** the `StructureErrorResponseTests` pin "no data found names no ERR" (formerly `unexpected ERR at ERR[1]`) flips to clean; new probes for an informational ERR, two ERRs on v2.5.1 RSP_K25, an ERR before MSA and v2.3.1 with an ERR; the no-data head test gains `[{ERR}]`.
+- **Docs:** ADR-019 S4-3 amendment (ruling 6 note replaces the earlier ruling) and the P12 gate amendment, the permanent-limitations register no-data row, `Validation.md`.
+
 ### Changed — P12 S0: owner rulings recorded; ADRM conformance register reconciled (epic P12 sprint 0)
 
 Documents only; no code, schema or behaviour change.

@@ -25,8 +25,8 @@ enum ConditionPredicate: Equatable, Sendable {
 enum ConditionReferent: Equatable, Sendable {
     /// `messageCode`, `messageStructure`, `triggerEvent`: MSH-9.1 / .3 / .2.
     case messageCode, messageStructure, triggerEvent
-    /// Caller assertions from ``ValidationOptions`` (M29, M30, M32).
-    case auPathologySender, auDisplayIntended, auNASHTransport
+    /// Caller assertions from ``ValidationOptions`` (M29, M30, M32, P12 S2-2).
+    case auPathologySender, auDisplayIntended, auNASHTransport, auAssigningAuthorityTable
     /// `nextSegmentID(<ID>|...)`: the next segment ID after skipping the listed IDs.
     case nextSegmentID(skipping: Set<String>)
     /// `previousSegment(<ID>).<fieldref>`.
@@ -141,6 +141,7 @@ enum ConditionLanguage {
         case "auPathologySender": return .auPathologySender
         case "auDisplayIntended": return .auDisplayIntended
         case "auNASHTransport": return .auNASHTransport
+        case "auAssigningAuthorityTable": return .auAssigningAuthorityTable
         default: break
         }
         if referent.hasPrefix("nextSegmentID("), referent.hasSuffix(")") {

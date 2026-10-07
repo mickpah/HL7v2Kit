@@ -90,16 +90,45 @@ def parse_appendix5(path):
 CALLER_ASSERTED = {
     'HL7au:00050.1.5': (None, 'shipped caller-asserted (M29): `ValidationOptions.auPathologySender`'),
     'HL7au:00044.4.3': (None, 'shipped caller-asserted (M30): `ValidationOptions.auDisplayIntended`'),
-    'HL7au:00044.2.2': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; prefix + the 16-digit HPI-O of HL7au:000043.1, honoured by all 8 OID values the ADRM prints'),
-    'HL7au:00044.2.3': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`'),
+    'HL7au:00044.2.2': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; prefix + the 16-digit HPI-O of HL7au:000043.1, honoured by all 8 OID values the ADRM prints; on ORM/ORU/REF only (P12 S2-2; p 416 defines the scope column: Orders = ORM, Results = ORU, Referrals = REF, ACK its own value)'),
+    'HL7au:00044.2.3': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; on ORM/ORU/REF only (P12 S2-2; p 416 defines the scope column: Orders = ORM, Results = ORU, Referrals = REF, ACK its own value)'),
     'HL7au:00044.3.4': ('Universal ID component',
                         'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI; '
                         'the sentence constrains the shape, not whose HPI-O it is'),
     'HL7au:00044.3.3': (None, 'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI'),
+    'HL7au:00104.7.2.1': (None, 'shipped caller-asserted (P12 S2-2): `ValidationOptions.auAssigningAuthorityTable`; '
+                                'PRD-7.2 in the printed Table 0363 (p 310) plus the caller\'s vendor authorities '
+                                'in `localTableExtensions["0363"]` (p 334), on Referrals. Under-report (owner '
+                                'ruling S2-3): the AU 0363 table also carries an IHI accommodation row that '
+                                'p 310 does not print, so IHI as PRD-7.2 is accepted'),
 }
 
 # Shipped points whose register row needs a scope note.
 SHIPPED_NOTES = {
+    # P12 S2-2: the FHS and BHS legs, named by every 000024 point, ship in
+    # BatchValidator; before S2-2 only MSH was checked.
+    'HL7au:000024.1': 'MSH-1 (profile) and FHS-1 / BHS-1 (`BatchValidator`, scoped by '
+                      'the messages the header carries), Orders/Results/Referrals',
+    'HL7au:000024.2': 'MSH-2 whole literal on Orders/Results and first character on '
+                      'Referrals (P12 S2-2); FHS-2 / BHS-2 the same in `BatchValidator`',
+    'HL7au:000024.3': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
+    'HL7au:000024.4': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
+    'HL7au:000024.5': 'MSH-2 literal pin on Orders/Results; FHS-2 / BHS-2 in `BatchValidator`',
+    # P12 S2-2: register correction, no rule change. All 15 v2.4 Table 0291
+    # values are keys of subtypeToTypeMap, so no 0291 subtype skips
+    # (AUSubtypeCorrespondenceTests pins it).
+    'HL7au:00044.10.1.6': 'ED subtype => type of data for every v2.4 Table 0291 value '
+                          '(all 15 are map keys; pinned)',
+    'HL7au:00044.11.1.6': 'RP subtype => type of data, as 00044.10.1.6 (RP fire/silent pair pinned)',
+    # P12 S2-2: CX-5 membership built (the row named it, only presence was
+    # checked); the printed NNxxx pattern row of Table 0203 (p 306) is
+    # accepted on CX-5, XCN-13 and PRD-7.3 alike (XCN-13 used to fire on it).
+    'HL7au:00044.1.3': 'CX-5 presence and membership in the ADRM Table 0203 (pp 301-309, '
+                       'AU locale axis), the NNxxx pattern row (p 306) included (P12 S2-2); '
+                       'a caller-declared `localTableExtensions["0203"]` value accepted (P12 S2-3)',
+    'HL7au:00044.7.4': 'XCN-13 presence and Table 0203 membership; the NNxxx pattern row '
+                       '(p 306) accepted since P12 S2-2; a caller-declared '
+                       '`localTableExtensions["0203"]` value accepted (P12 S2-3)',
     # P4-20 / P4-24 / P4-26 / P4-31 (owner rulings G6, G9): see
     # permanent-limitations-register (00060.4 row) and ADR-021.
     'HL7au:00060.4': 'explicit prohibitions on C fields (`prohibitedWhen` / '
@@ -117,6 +146,10 @@ SHIPPED_NOTES = {
                      'no predicate the text settles as a prohibition (RQ1-2/3/4/5 read '
                      'inclusively, RXE-10/18/19 bare, PTH-6 undefined event), 12 whose '
                      'predicate the message does not carry',
+    # P12 S1-5 (carried here by P12 S2-2 so the register stays generated).
+    'HL7au:000008.3.1': 'Level 1 is served by the same simplified variant as Level 2 with no '
+                        'cap on the OBR group (a reading, P12 S1-5; owner item open; see '
+                        'ADR-019 P12 S1, "Level 1 and the single OBR group").',
 }
 
 SHIPPED = {
@@ -134,6 +167,12 @@ SHIPPED = {
     'HL7au:00044.6.4', 'HL7au:00044.6.5',
     # M6-A stage 1 — MSH envelope literals (2026-09-04).
     'HL7au:000024.1', 'HL7au:000024.3', 'HL7au:000024.4', 'HL7au:000024.5',
+    # P12 S2-2 — the REF leg (MSH-2 first character) and the FHS/BHS legs.
+    'HL7au:000024.2',
+    # P12 S2-2 — every v2.4 Table 0291 subtype is mapped (register correction).
+    'HL7au:00044.10.1.6', 'HL7au:00044.11.1.6',
+    # P12 S2-2 — display OBX last in its OBR/OBX group (GroupOrderingRule).
+    'HL7au:000008.1.5',
     'HL7au:00047.1', 'HL7au:00047.2',
     'HL7au:00048.3.1', 'HL7au:00049.2', 'HL7au:00049.3',
     # M6-A stage 2 — XCN required components (2026-09-04).
@@ -179,8 +218,8 @@ PARTIAL = {
     # structures.
     'HL7au:00060.1': 'P8b-4, P8b-4a: with the structure check on (`messageStructureSeverity`, '
                      'on in the default and strict presets since P8b-18), a v2.4 ORU^R01, '
-                     'ORM^O01, REF^I12, RRI^I12 or OSR^Q06 is also matched against the ADRM-2021 '
-                     'structure (pp 205, 279, 324, 325, 281; '
+                     'ORM^O01, ORR^O02, REF^I12, RRI^I12 or OSR^Q06 is also matched against the '
+                     'ADRM-2021 structure (pp 205, 279, 280, 324, 325, 281, 484; '
                      '`Resources/structures/profiles/au-adrm-2021/`) and a segment it requires and '
                      'the message lacks is reported (RRI^I12: MSA); removed base segments are not '
                      'findings (decision 7), and a base structure finding is dropped where the ADRM '
@@ -194,23 +233,26 @@ PARTIAL = {
                      '`.info` `profileMaximumExceeded(localeRule: "HL7au:00060.1")`, not a '
                      'finding; every other profile `unexpected` finding is dropped, and the final '
                      'review traced ORU_R01 and REF_I12 and found no ordering that differs from the '
-                     'base). Not enforced, three leftovers scheduled for P12 S1: the Appendix 8 '
-                     'simplified REF structure (pp 483 to 485, declared in MSH-12; owner ruling '
-                     'G-AU3 2026-10-07: a profile structure selected by the declared profile), the '
-                     'ORR^O02 print (pp 280 to 281, unbalanced bracket; owner ruling G-AU2 '
-                     '2026-10-07: a cited erratum taking the base v2.4 reading, PID optional) and '
-                     'the order detail of the order status response (p 281 prints only OBR; the '
-                     'base choice is kept, so RQD, RQ1, RXO, ODS or ODT in its place and an OBX '
-                     'after any of them go unflagged); '
+                     'base). Closed by P12 S1 (2026-10-07): the Appendix 8 simplified REF structure '
+                     '(A8.5, pp 484 to 485) as a variant of the AU REF_I12 selected by the profile '
+                     'MSH-12.3.1 declares (A8.3, p 483; owner ruling G-AU3); the ORR^O02 print '
+                     '(pp 280 to 281) modelled with its unbalanced bracket read as the base v2.4 '
+                     'reading, PID optional (owner ruling G-AU2); and RQD or RQ1 in place of OBR '
+                     'in the ORR^O02 and order status responses (no ADRM print or prose admits '
+                     'them). One residual, not enforced: RXO, ODS or ODT in place of OBR in those '
+                     'two responses (and an OBX after one in the order status response), since '
+                     'the print does not settle whether the p 280 replacement for medication and '
+                     'diet orders, printed for ORM^O01, carries over to them; '
                      'permanent-limitations register section E, close-out summary and the P8b-4 '
                      'and P8b-4a addenda',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
-                      '(`auNASHTransport`); the "registered organisation name in HI service" half '
-                      'needs the HPOS/HI directory and stays out',
-    'HL7au:000024.2': 'enforced on Orders/Results as part of the MSH-2 '
-                      'literal pin; unenforced on Referrals, where .3/.4/.5 '
-                      'do not apply and pinning the whole literal would '
-                      'over-fire — needs character-position addressing (M6-B)',
+                      '(`auNASHTransport`); since P12 S2-2 the organisation name must be present '
+                      '(MSH-4.1); whether it is the name "in HI service" needs the HPOS/HI '
+                      'directory and stays out',
+    # P12 S2-2: the presence half, caller-asserted, on MSH-4 and MSH-6.
+    'HL7au:00044.2.1': 'caller-asserted (`auNASHTransport`): MSH-4.1 and MSH-6.1 must carry '
+                       'the organisation name (P12 S2-2); whether it is the name "as registered '
+                       'by in the Medicare Australia HPOS/HI service" needs the HI directory',
     'HL7au:000020': 'Z-prefixed trigger events prohibited on Orders/Results '
                     'and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 '
                     'profile gate; the message-CODE leg stays unenforced — '
@@ -220,13 +262,15 @@ PARTIAL = {
     'HL7au:00044.10.1.5': 'ED subtype => type enforced for spec-stated pairs '
                           '(ADRM §3.20.5 + example annotations); arbitrary IANA '
                           'subtypes skip, fail-safe',
-    'HL7au:00044.10.1.6': 'ED subtype => type enforced for the 0291 subtypes '
-                          'whose 0191 main type §3.20.5 states; unstated ones skip',
     'HL7au:00044.11.1.5': 'RP subtype => type, as 00044.10.1.5',
-    'HL7au:00044.11.1.6': 'RP subtype => type, as 00044.10.1.6',
-    'HL7au:00104.7.1.4': 'authority => qualifier pairs enforced for the closed AU '
-                         'authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor '
-                         'authorities are open-ended examples and skip',
+    'HL7au:00104.7.1.4': 'authority => qualifier pairs enforced for the printed '
+                         'pairs (AUSHICPR => UPIN, AUSHIC => NPIO/NOI) and, since '
+                         'P12 S2-2, VDI for an authority outside the printed Table '
+                         '0363 (p 334: vendor extensions "must use "VDI""); AUSDVA, '
+                         'AUSNATA, AUSLINK and IHI have no printed pair and skip. '
+                         'Under-report (owner ruling S2-3): IHI is an accommodation row '
+                         'of the AU 0363 table that p 310 does not print, so an IHI '
+                         'authority escapes the VDI requirement',
     'HL7au:000032.2': 'OBR-24 presence + table 0074 membership enforced on '
                       'Referrals; the "appropriate for the content in the '
                       'OBR/OBX group" half is receiver-judgement over '
@@ -238,13 +282,20 @@ PARTIAL = {
                         'activationPredicate); the "same content" '
                         'equality half needs cross-format rendering '
                         'comparison and is not machine-checkable',
-    'HL7au:000034.1': 'enforced for the public systems the ADRM names '
-                      '(LN, SCT, UCUM): a named public system relegated '
-                      'to the CE/CWE alternate triplet behind a '
-                      'non-public primary fires; systems the ADRM does '
-                      'not name skip fail-safe',
-    'HL7au:000034.2': 'same machinery on OBX-5 coded values; same '
-                      'named-public-systems scope as 000034.1',
+    # P12 S2-2: the M6-B-9 rule (a LN/SCT/UCUM alternate required a
+    # LN/SCT/UCUM primary) fired on two public systems, e.g. I10 with SCT;
+    # a requirement 4 defect, fixed by detecting the local side the ADRM
+    # prints ("99ZZZ or L", Table 0396 p 144).
+    'HL7au:000034.1': 'OBX-3 and coded OBX-5 (OBX-2 CE/CWE/CNE) on Results/'
+                      'Referrals: a local primary (`L` or `99zzz`, Table '
+                      '0396 p 144) with a non-local row of the ADRM Table '
+                      '0396 (pp 142-145, AU locale axis) in the alternate '
+                      'fires; two public systems are outside the point. '
+                      'Public systems outside the printed table and other '
+                      'local spellings skip; the equivalence half is '
+                      '000034.3 (terminology)',
+    'HL7au:000034.2': 'OBX-3, the same rule as 000034.1 (P12 S2-2); same '
+                      'residual',
     # P3 fix wave — the BASE rows these replace cited CX/EI/XCN base
     # requirements that the v2.4 grammar (the AU base) does not carry.
     'HL7au:00044.1.1': 'the presence half is enforced on Orders/Results/'
@@ -253,8 +304,10 @@ PARTIAL = {
                        'identifier scheme" needs identifier-scheme '
                        'recognition and is not checked',
     'HL7au:00044.3.1': 'the presence half is enforced on Orders/Results/'
-                       'Referrals (EI-1 valued); the uniqueness half is '
-                       'cross-message and out of scope',
+                       'Referrals (EI-1 valued); within one message a '
+                       'duplicate OBR-3 already fires under HL7au:000028 '
+                       '(noted by P12 S2-2); uniqueness across the sender\'s '
+                       'messages is cross-message and out of scope',
     'HL7au:00044.7.1': 'the presence half is enforced on Orders/Results/'
                        'Referrals (XCN-1 valued); "valid according to the '
                        'identifier scheme" needs identifier-scheme '
@@ -273,6 +326,13 @@ PARTIAL = {
                       'message; the "no information from the file '
                       'header/footer or batch segments must be used" '
                       'half is receiver processing behaviour',
+    # P12 S2-2: REGISTERED to PARTIAL.
+    'HL7au:000001': 'the sender half is enforced: MSH-6 is required on an '
+                    'ORM (p 417, "an order message is addressed using MSH-6 '
+                    'Receiving facility"); 000001.1 (reject a foreign MSH-6) '
+                    'is receiver behaviour, and 000001.2 / .2.1 are "should" '
+                    'guidance (the NATA number and NATA name need the NATA '
+                    'register)',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -302,21 +362,22 @@ BASE = {
 # ADRM's own PRD-7 matches table (p. 334) uses vendor authorities
 # outside it (Medical-Objects, Argus) — a closed-set membership check
 # misfires on the spec's own examples (req #4). Withdrawn from the
-# profile; registered.
+# profile; registered. SHIPPED caller-asserted by P12 S2-2 (see above).
 # M6-B-9 registrations (each cited in permanent-limitations-register §D):
-# 00100.1 — REF-4 SNOMED CT hierarchy subsumption needs a terminology
-#   server; no closed value set exists in the ADRM.
-# 000008.1.5 — signature-format identifiers live in HB 308-2011, an
-#   external Standards Australia handbook not reproduced in the ADRM;
-#   no closed list to check against (req #2).
+# 00100.1 — the referral summary group is the one whose OBR-4 is a SNOMED
+#   CT-AU child of 373942005 or 3457005 (p 212; corrected from "REF-4" by
+#   P12 S2-2): subsumption needs a terminology server; no closed value set
+#   exists in the ADRM.
+# 000008.1.5 — SHIPPED by P12 S2-2: the HB 308 reason is superseded by the
+#   ADRM's own signature identifier (p 438, the HL7au:000010 comment).
 # 000034.3 / 00044.6.7 — "the alternate must encode the SAME CONCEPT as
 #   the primary" is a terminology-service equivalence judgement, not a
 #   structural check.
 # 000022.1 / 000022.3 — MOVED OUT at M8-C (2026-09-17): BatchValidator
 #   shipped; .3 is SHIPPED, .1 is PARTIAL (see their entries above).
-REGISTERED = {'HL7au:000001', 'HL7au:00044.2', 'HL7au:00104.7.2.1',
+REGISTERED = {'HL7au:00044.2',
               'HL7au:00044.4.7', 'HL7au:00044.5.7',
-              'HL7au:00100.1', 'HL7au:000008.1.5', 'HL7au:000034.3',
+              'HL7au:00100.1', 'HL7au:000034.3',
               'HL7au:00044.6.7'}
 
 # Withdrawn by the r2 revision — must never be cited.
@@ -352,8 +413,6 @@ OUT_OF_SCOPE = [
                          'a the message to the receiving system"'),
     ('HL7au:000043',     'transport addressing / NASH PKI'),
     ('HL7au:00043',      'transport addressing / SMD directory'),
-    ('HL7au:00044.2.1',  'the organisation name "as registered in the Medicare Australia '
-                         'HPOS/HI service" — needs the HI directory'),
     ('HL7au:00044.2.4',  'vendor X.509 certificate + provider-directory agreement'),
     ('HL7au:00044.2',    'transport addressing / NASH PKI'),
     ('HL7au:00044.3.2',  'EI twin of 00044.2.1 — needs the HI directory'),

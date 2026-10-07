@@ -130,11 +130,32 @@ public struct ValidationOptions: Sendable {
     /// the 16-digit HPI-O, per HL7au:000043.1) and HL7au:00044.2.3 (the
     /// Universal ID Type must be `"ISO"`) — and the transport is not on
     /// the wire. `false`, the default, leaves them unchecked; `true`
-    /// applies them under ``HL7Locale/auLocalisation``. The sibling
-    /// points that name the HPOS/HI registered organisation name, or a
-    /// vendor X.509 certificate, need a directory and stay out of scope.
-    /// Not an init parameter. M32.
+    /// applies them under ``HL7Locale/auLocalisation``. Since P12 S2-2 it
+    /// also requires the HD Namespace ID (MSH-4.1, MSH-6.1) to be valued,
+    /// the presence half of HL7au:000043.1 and 00044.2.1; whether the name
+    /// is the one the HPOS/HI service registers, and the points that name
+    /// a vendor X.509 certificate, need a directory and stay out of scope.
+    /// The checks run on ORM, ORU and REF only, the "Orders, Results,
+    /// Referrals" scope the points print (P12 S2-2), whose values Appendix 5
+    /// p 416 defines as ORM, ORU and all REF messages. Not an init
+    /// parameter. M32.
     public var auNASHTransport: Bool = false
+
+    /// The caller asserts that its PRD-7 assigning authorities come from
+    /// User-defined Table 0363 as ADRM-2021 prints it (p. 310), extended by
+    /// the secure messaging vendor authorities it lists in
+    /// ``localTableExtensions`` under `"0363"`. HL7au:00104.7.2.1 requires
+    /// PRD-7 `<type of ID number (IS)>` to be "valued from User-defined Table
+    /// 0363", and the ADRM lets the table "be extended to allow for secure
+    /// messaging vendor assigning authorities" (p. 334); which vendors a site
+    /// has agreed is not on the wire. `false`, the default, leaves the rule
+    /// unchecked (the ADRM's own `Medical-Objects` and `Argus` rows lie
+    /// outside the printed table); `true` checks PRD-7.2 on Referrals under
+    /// ``HL7Locale/auLocalisation``, against the printed values plus the IHI
+    /// accommodation row (not printed in Table 0363, kept so a sender using
+    /// it is not misreported; an under-report). Not an init parameter.
+    /// P12 S2-2.
+    public var auAssigningAuthorityTable: Bool = false
 
     /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
     /// pre-v2.7 maximum length (v2.3 to v2.6, a plain-integer LEN cell), measured
@@ -206,7 +227,11 @@ public struct ValidationOptions: Sendable {
     /// for a table is accepted wherever the base-spec code-table check reads that table,
     /// at field or component level; every other value outside the table is still reported.
     /// AU profile value-set rules are not affected: a value a profile rule rejects is
-    /// still rejected. Empty by default, so HL7 tables stay closed.
+    /// still rejected. The exceptions are the AU profile's Table 0203 value sets (CX-5,
+    /// XCN-13, PRD-7.3), which accept the values listed under `"0203"` (P12 S2-3), and
+    /// `"0363"` under ``auAssigningAuthorityTable``, whose listed codes are the caller's
+    /// secure messaging vendor authorities (P12 S2-2).
+    /// Empty by default, so HL7 tables stay closed.
     ///
     /// Keys are four-digit table numbers (`"0074"`), matched against the table number the
     /// field or component is bound to; any other key (`"74"`, `"HL70074"`) is ignored.
