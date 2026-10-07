@@ -131,3 +131,100 @@ The three-knob surface is more API than one switch, documented on `ParserOptions
 **Amended (ADR-018, P3):** a non-`Z` ID with no grammar entry was previously routed into the
 Z-segment branch; it is now `segmentNotInVersionGrammar`, so a standard segment is never
 labelled a Z-segment.
+
+## ADR-004 Codegen over macros
+
+**Status:** Accepted. Related: ADR-005, ADR-015, ADR-016, ADR-017, ADR-019, ADR-020.
+
+**Context.** Seven versions of roughly 140 segments at about 25 fields each is far too much
+typed surface to write by hand, and the per-field metadata (optionality, repeatability,
+datatype) that shapes an accessor is exactly what the validator needs. One source of truth is
+required. The options were Swift macros, build-time templating (gyb and friends), or an
+explicit generator whose output is committed.
+
+**Decision.**
+
+- An explicit generator, the `HL7v2KitCodegen` executable target, reads the hand-curated and
+  extracted JSON under `Resources/` and emits Swift into the `Generated/` directories (segments,
+  segment grammars and the parser's registry, composite views, code tables, datatype grammars,
+  locale data, message structures).
+- The output is committed. `bash scripts/regenerate-typed-segments.sh` is the only way it
+  changes; nobody hand-edits a `Generated/` file.
+- The codegen-drift CI job regenerates and fails on any diff, so a schema edit without its
+  regenerated output cannot merge.
+- Output is deterministic: consecutive runs are byte-identical.
+- The generator does not depend on the library target; it is data conversion, not public API.
+
+**Consequences.** Every generated accessor is reviewable as plain Swift, and a schema change
+shows its JSON and Swift diffs side by side. There is no per-build macro cost, and generated
+members are indexed by DocC like any other source. The price is an onboarding rule ("don't
+hand-edit `Generated/`"), carried by file headers, the contributing guide and CI. Macros are
+"not now", not "never".
+
+**Amended:** the generator's scope grew from typed segments to every generated artefact listed
+above (ADR-005 Path C, ADR-016, ADR-017, ADR-019, ADR-020); the method is unchanged.
+
+## ADR-005 Dictionaries strategy
+
+**Status:** Accepted (Path C). Related: ADR-002, ADR-004.
+
+**Context.** The validator needs a per-segment, per-field grammar (optionality, repeatability,
+datatype), and the same metadata drives typed-segment generation. The founding spec proposed a
+separate `HL7v2KitDictionaries` target loading per-version JSON at run time. By the time the
+validator was built, the schemas under `Resources/schemas/` already carried everything needed,
+and the generator could emit a grammar table as easily as it emits typed segments.
+
+**Decision.**
+
+- Path C: the generator emits one Swift literal grammar table per version
+  (`SegmentGrammar+vX_Y_Z.swift`) into the main target, from the same schemas that drive the
+  typed segments.
+- `Resources/schemas/` stays the single source of truth; nothing is loaded from JSON at run
+  time.
+- Rejected: reading `Resources/schemas/` at run time (a development-time location, not
+  bundled) and a separate dictionaries target with run-time JSON (a schema fork and a
+  first-use parse cost for no user value).
+
+**Consequences.** One JSON edit and one regenerate update the typed surface and the validator
+together, and the drift job keeps them in step. Validation pays no deserialisation cost. The
+grammar is compiled in, so selecting a different grammar means a different package version; no
+consumer has asked for run-time dictionaries.
+
+**Amended (R10):** the placeholder `HL7v2KitDictionaries` target, kept "in place for v0.1.0",
+was never imported and was retired at the 2.0 boundary with its product and test target.
+
+## ADR-006 Portable core boundary
+
+**Status:** Accepted. Related: ADR-001, ADR-002.
+
+**Context.** Swift is the right language for the package's first consumers, but plausible
+future consumers (a hosted service, cross-platform command-line tools, other platforms, a
+community port) might want the core in another language. Porting now would buy optionality that
+may never be used; the shape of the Swift code, though, decides how cheap a later port would be.
+
+**Decision.** The package stays in Swift, structured as two strata held as an architecture
+invariant.
+
+- Stratum 1, the portable kernel: pure parse, serialise and path logic. Rules: no
+  Foundation-specific APIs (`Data` only at the edges, converting to and from `[UInt8]`);
+  explicit byte or character scanning rather than Swift-only string cleverness; no protocols,
+  generics or property wrappers on the parse path; errors are plain enums with associated values
+  (ADR-002); concurrency annotations never carry logic.
+- Kernel files carry a header comment naming them as kernel and pointing here: `Parser.swift`,
+  `ParseError.swift`, `Serializer.swift`, `Field.swift`, `Path.swift`,
+  `EncodingCharacters.swift`, `EscapeSequences.swift`, `Version.swift`, `HL7Locale.swift` and
+  `MLLPCodec.swift`.
+- Stratum 2, the Swift skin: typed-segment protocols and type erasure, `Message` conveniences,
+  generated typed segments, and any `Codable` or description conformances. It may use all of
+  Swift and must not leak into the kernel.
+
+**Consequences.** A port is "translate the kernel, write an idiomatic skin", not a rewrite. The
+kernel is also where the interesting correctness properties live (round-trip, escapes), so the
+boundary aids testing. The cost is the occasional few lines of manual code where Foundation had
+a one-liner, and the boundary needs watching in review. This keeps the door unlocked; it does
+not commit to a port. A porter starts with `Field.swift` and `Path.swift`, keeps empty
+subsequences when splitting (empty fields must survive for round-trip), and uses the round-trip
+property (ADR-001) as the port's acceptance test.
+
+**Amended (R6):** the one-shot script that stamped the kernel headers was retired once every
+kernel file carried the marker.
