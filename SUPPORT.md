@@ -16,8 +16,9 @@ These are commitments. If they change, this file changes first.
   are never replaced once published.
 - **Semantic Versioning.** `MAJOR.MINOR.PATCH`. Breaking changes only in a MAJOR bump
   (or in `0.x`, only in a MINOR bump). Breaking changes are listed in `CHANGELOG.md`.
-- **Security reports get a response.** Open an issue titled "Security: <summary>"; there
-  is no private reporting channel yet. A report will be acknowledged within 14 days. Whether a fix follows, and how fast, is covered below.
+- **Security reports get a response.** Report a vulnerability privately through GitHub's
+  private vulnerability reporting (the repository's Security tab), not in a public issue. A
+  report will be acknowledged within 14 days. Whether a fix follows, and how fast, is covered below.
 - **Status is published.** The badge at the top of `README.md` and the "Current status"
   section of this file are kept accurate. If this project is abandoned, that will be stated
   here rather than left to be inferred from silence.

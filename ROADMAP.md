@@ -18,11 +18,11 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-23 (M33 merged, unreleased; `v3.13.0` tagged) |
-| Current release | **`v3.13.0`** (2026-09-23) — AU NASH transport assertion for 00044.2.2 / .2.3 (M32), on top of `v3.12.0`: AU caller assertions for 00050.1.5 and 00044.4.3 (M29, M30), on top of `v3.11.0`: v2.8.2 XAD.7 checked when the field repeats (M28), on top of `v3.10.0`: the 32 v2.7 conditional rules as an opt-in tier (M27), on top of `v3.9.0`: conditional components checked where the spec states the condition, 36 rules; the "as of v2.7" family registered with measurements (M26), on top of `v3.8.0`: printed lengths recorded (M25), on top of `v3.7.3`: four v2.3 chapter-only tables added (M24), on top of `v3.7.2`: docs only (M23), on top of `v3.7.1`: repeatability audited per version (M22), on top of `v3.7.0`: `requiredComponentSeverity` and the name audit (M20, M21), on top of `v3.6.5`: optionality audited per version, 30 fields corrected (M19), on top of `v3.6.4`: OBX-2 waveform value types fixed and the spec's example messages run through the Validator (M18), on top of `v3.6.3`: the spec's printed datatype examples as a standing audit, `NA.1` and Table 0528 `AHS` fixed (M17), on top of `v3.6.2`: HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
+| Last change | (M33 merged, unreleased; `v3.13.0` tagged) |
+| Current release | **`v3.13.0`** — AU NASH transport assertion for 00044.2.2 / .2.3 (M32), on top of `v3.12.0`: AU caller assertions for 00050.1.5 and 00044.4.3 (M29, M30), on top of `v3.11.0`: v2.8.2 XAD.7 checked when the field repeats (M28), on top of `v3.10.0`: the 32 v2.7 conditional rules as an opt-in tier (M27), on top of `v3.9.0`: conditional components checked where the spec states the condition, 36 rules; the "as of v2.7" family registered with measurements (M26), on top of `v3.8.0`: printed lengths recorded (M25), on top of `v3.7.3`: four v2.3 chapter-only tables added (M24), on top of `v3.7.2`: docs only (M23), on top of `v3.7.1`: repeatability audited per version (M22), on top of `v3.7.0`: `requiredComponentSeverity` and the name audit (M20, M21), on top of `v3.6.5`: optionality audited per version, 30 fields corrected (M19), on top of `v3.6.4`: OBX-2 waveform value types fixed and the spec's example messages run through the Validator (M18), on top of `v3.6.3`: the spec's printed datatype examples as a standing audit, `NA.1` and Table 0528 `AHS` fixed (M17), on top of `v3.6.2`: HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
 | Next planned cycle | **None scheduled.** Gap closure plan delivered M29, M30, M32 and M33; M31 withdrawn. No open decisions. |
-| Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
-| Guiding requirements | Project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
+| Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
+| Guiding requirements | Project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
@@ -69,26 +69,26 @@ The four themes below are roughly independent and can interleave across cycles. 
 ### M4 — Distribution & open-source readiness **(all gates met; awaiting the owner's push)**
 *Goal: the package is publishable and discoverable to the HL7 integrator community it's built for.*
 
-- **IP review** — **CLEARED** (2026-07-09). The employment-contract gate passed; the *legal* blocker is gone.
-- **The M5 gate is RELEASED** (M5 closed 2026-09-16) — every stated gate on the first public push is now met. What remains is the owner's action: name the remote, push. Remote target TBD (owner names host/repo).
+- **IP review** — **CLEARED**. The employment-contract gate passed; the *legal* blocker is gone.
+- **The M5 gate is RELEASED** (M5 closed) — every stated gate on the first public push is now met. What remains is the owner's action: name the remote, push. Remote target TBD (owner names host/repo).
 - **Spec-PDF handling** — the `docs/standards/` Final Standard PDFs stay **out of the public tree** (author-local).
 - **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges.
 - **Real-world fixture acquisition** — pipeline ready (`scripts/anonymise-fixture.sh` + the `HL7v2KitAnonymise` target); gated on the owner supplying source material (the IP review is cleared). No PHI ever enters the repo (`CONTRIBUTING.md`, rule 1).
 
-### M5 — Full HL7 segment coverage across all versions **CLOSED (2026-09-16, owner-confirmed)**
-*Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
+### M5 — Full HL7 segment coverage across all versions **CLOSED (owner-confirmed)**
+*Goal (owner, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
 
 - **Close-out:** the bar is met and measured — **188 typed segments, 853 schemas, zero
   never-authored and zero deferred instances on all six versions**; depth, presence and
   per-field dataType verified by `scripts/audit-schemas.py --depth` (all predicates zero).
-  The v3 coverage cycles (2026-09-16) finished the v2.5-only quartet, the deferred
+  The v3 coverage cycles finished the v2.5-only quartet, the deferred
   v2.6/v2.8.2 batches A–C, and the never-authored backlog, with a codegen
   earliest-defining-version fallback for the 38 v2.6/v2.8.2-only segments. Formally
-  confirmed closed by the owner 2026-09-16; released as **`v3.1.0`**. The public-push
+  confirmed closed by the owner; released as **`v3.1.0`**. The public-push
   gate M5 held is released — the push itself remains the owner's action.
   *(The section below is the historical sweep narrative.)*
 
-- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today (post-Sprint 0 §3, 2026-09-02): **146 typed segments**; **never-authored: 0 on v2.3/v2.3.1/v2.4**, 4 on v2.5.1 (the v2.5-only set), 28/42 on the deferred v2.6/v2.8.2. **Depth *and presence* of the authored surface are verified, not assumed** (`scripts/audit-schemas.py --depth`, re-run every batch): 706 of 717 committed schemas match their own version's attribute table exactly, 0 suspects, presence 0 (whitelist: RDT + ADD `1-n`; v2.3.1/NSC).
+- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. After Sprint 0 §3: **146 typed segments**; **never-authored: 0 on v2.3/v2.3.1/v2.4**, 4 on v2.5.1 (the v2.5-only set), 28/42 on the deferred v2.6/v2.8.2. **Depth *and presence* of the authored surface are verified, not assumed** (`scripts/audit-schemas.py --depth`, re-run every batch): 706 of 717 committed schemas match their own version's attribute table exactly, 0 suspects, presence 0 (whitelist: RDT + ADD `1-n`; v2.3.1/NSC).
 - **Prerequisite — extraction pipeline (DONE, v1.1, ADR-015).** `pdftotext -layout` (poppler) recovers every attribute-table column cleanly on all 6 versions; the legacy-`RP/#` blocker is retired. Dev-time tool only (no new package dep). Its golden `--verify` caught **11 canonical v2.5.1 defects** (fixed) + **2 incomplete segments** (OBR 47→50, OBX 17→24, completed) — validating both the tool and the M5 premise. See `docs/design/segment-coverage-extraction.md`.
 - **Segment inventory (DONE, v1.1, S5).** `docs/design/segment-inventory.md` — the 188-segment work-list + proposed sweep order.
 - **Sweep (ongoing):** additive cycles (ADR-014 §open — add, never remove; API frozen), extractor-seeded (`--emit-schema`) + human-verified, by chapter/family.
@@ -107,10 +107,10 @@ The four themes below are roughly independent and can interleave across cycles. 
   **v1.8 added two reading lessons.** A field's condition may be stated in a **different field's** entry — CTI-2's requirement is written in CTI-3's definition, which is the only reason it shipped a predicate instead of joining the limitation register. And version prose must be located by **stable ITEM number**, never by heading shape: the v2.3-era chapters number definitions `7.8.1.9 <Name> (TS) 01043` with no `SEG-N` prefix, so a `CSR-9`-shaped regex returns nothing — which reads as "no condition stated" when the condition is right there. Both mean the honest answer to "is this conditionality expressible?" is often **yes**, and finding out takes reading the neighbours.
 - **This is what "v1.0 complete" now means, and it gates the first public push.**
 
-#### Re-prioritisation (owner, 2026-08-23): AU-relevant versions first
+#### Re-prioritisation (owner): AU-relevant versions first
 
 The sweep is **re-sequenced**, not reduced. Remaining coverage was measured at **263
-schema-instances / ~2,431 fields** and split by Australian relevance (Sprint 0 §3 — 2026-09-02 —
+schema-instances / ~2,431 fields** and split by Australian relevance (Sprint 0 §3 —
 has since authored the entire AU-priority half; what remains is the v2.5-only quartet and the
 deferred tier below):
 
@@ -139,7 +139,7 @@ Two things set that order, and both are gaps the segment counts alone did not sh
 - **Sprint 0 leads on a defect, not new work.** v2.4 is missing six already-modelled
   lab-automation segments, and `scripts/audit-schemas.py` could not see it — the depth pass
   only inspects schemas that **exist**, so an absent segment is invisible to it.
-  *(2026-08-28: both fixed — the six authored, and the audit now runs a presence predicate.)*
+  *(Both fixed — the six authored, and the audit now runs a presence predicate.)*
 - **Sprint 1 leads on the batch envelope.** `BatchParser` / `StreamingBatchParser` already
   *frame* `FHS/BHS/BTS/FTS` (v0.3-T2), but **no schemas exist** for them — they parse with no
   grammar, no typed accessors and no validation. That is a coherence gap between the parser
@@ -164,7 +164,7 @@ If the intent ever hardens into "v2.6/v2.8.2 are out of scope permanently", that
 different decision — it would need requirement #1 amended and the public-push gate redefined,
 because it changes what the package *is*. This is not that.
 
-### M6 — Australian localisation completeness **CLOSED (2026-09-16)**
+### M6 — Australian localisation completeness **CLOSED**
 *Goal: the AU localisation surface is complete and spec-cited against ADRM-2021 over its v2.4
 base, so AU integrators can trust the profile as a faithful rendering of the localisation.*
 
@@ -186,7 +186,7 @@ base, so AU integrators can trust the profile as a faithful rendering of the loc
   number. Full narrative: `docs/design/m6-adrm-2021-localisation-audit.md` +
   `docs/archive/STATUS-2026-09-16-m6-closed.md`.
 
-### M7 — ADRM prose sweep **CLOSED (2026-09-16; released in `v3.2.0`)**
+### M7 — ADRM prose sweep **CLOSED (released in `v3.2.0`)**
 *Goal: audit the ADRM text Appendix 5 explicitly does not cover — chapter-body prose and
 the normative appendices — so no prose-only narrowing is invisible to the profile.*
 
@@ -199,7 +199,7 @@ the normative appendices — so no prose-only narrowing is invisible to the prof
   read-ack MSH-3.3 scheme; the VMR header OBX pins; single-batch-per-file landed with
   M8's `BatchValidator`). Every non-shippable finding registered with its reason.
 
-### M8 — Base-spec consistency + batch scope **CLOSED (2026-09-17; released in `v3.2.0`)**
+### M8 — Base-spec consistency + batch scope **CLOSED (released in `v3.2.0`)**
 *Goal: the base-spec cross-segment rules and batch-envelope scope the message-scoped
 Validator could not carry.*
 
@@ -211,115 +211,115 @@ Validator could not carry.*
   (PAC-2, PRT-6/7 — the bare-C guard set shrank by three). New `IssueCode` cases:
   `pairedFieldMismatch(item:)`, `conditionalFieldProhibited`.
 
-### M9 — General per-version code-table registry **CLOSED (2026-09-20; ADR-016; released in `v3.3.0`)**
+### M9 — General per-version code-table registry **CLOSED (ADR-016; released in `v3.3.0`)**
 *Goal: every HL7 table the spec binds to a field is bound in the schema, available as per-version data with descriptions, and consumable by the validator — defensible against the spec text alone (req #2). Closes M6-O6.*
 
 - **Outcome:** 2,565 per-version tables with descriptions, extracted from each version's own Appendix A / Chapter 2C and generated into `HL7TableRegistry`; schema keys `tables` (4,290 verified bindings) and `table` (1,893 enforced links); `valueNotInTable` on 1,073 `ID` fields over closed HL7-defined tables, never on IS or user-defined tables; a locale table axis carrying the five AU ADRM-2021 tables, which can widen a base table (0211 `UNICODE UTF-8`) and never narrows it. The same cycle landed **Track B**, the `variableColumns` model for the 1-n segments RDT / ADD.
 - **Honesty points (req #3/#4):** a table that printed `...` beside other rows stays open unless explicitly closed; rows that denote an absent field are not codes; corrections are version-scoped, cited overrides, never hand edits. Two registered spec typos (v2.3 DB1-2 TBL# 0033 for 0334; v2.3 Appendix A Table 0207 in lowercase).
 - **Deferred, registered:** table links on composite components and multi-table field bindings.
 
-### M10 — Code tables on composite components **CLOSED (2026-09-20; ADR-017; released in `v3.4.0`)**
+### M10 — Code tables on composite components **CLOSED (ADR-017; released in `v3.4.0`)**
 *Goal: the table bindings integrators ask about most live on components (`CX.5`, `XPN.7`, `XTN.2`), not fields. Model each version's datatype components and enforce their closed tables, under the same honesty rules as the field check.*
 
 - **Outcome:** `Resources/datatypes/` (227 datatype files, 1,323 components) from the Chapter 2A component tables of v2.5.1 / v2.6 / v2.8.2; `DataTypeGrammarTable` generated from it; `valueNotInTable` on populated `ID` components over closed tables, located at the component. About 50 components per version.
 - **Honesty points (req #3/#4):** Table 0354 opened on every version after measuring 15 to 25 chapter-used structures its table omits; four v3.3.0 registry defects found and fixed while vetting; `RE` kept as the printed optionality code instead of being mapped lossily.
-- **M11 (2026-09-21, released in `v3.5.0`):** nested composites (`CX.4.3`, `IssueLocation.subcomponentIndex`) and OBX-5 under its OBX-2 datatype. **Still deferred:** v2.3 to v2.4 (prose-only component definitions) and multi-table cells.
+- **M11 (released in `v3.5.0`):** nested composites (`CX.4.3`, `IssueLocation.subcomponentIndex`) and OBX-5 under its OBX-2 datatype. **Still deferred:** v2.3 to v2.4 (prose-only component definitions) and multi-table cells.
 
-### M12 — AU HL7v2 VMR sub-ID tree **CLOSED (2026-09-21; released in `v3.5.0`)**
+### M12 — AU HL7v2 VMR sub-ID tree **CLOSED (released in `v3.5.0`)**
 *Goal: the one ADRM normative appendix whose rules the DSL could not carry: a template whose elements are OBX segments addressed by a dotted-decimal OBX-4 path.*
 
 - **Outcome:** the 89-row implementation table of ADRM-2021 Appendix 9 as extracted, audited data; a `SubIDTreeRule` model track (req #3: extend the model); rules ADRM-prose P-8, P-9 and P-10, scoped per OBR group and rooted at whatever the header declares.
 - **Honesty points (req #4):** the appendix's own examples are the must-pass test; the table's OBX-2 and OBX-3 columns are registered and not enforced because that example contradicts them; OCCURRENCES is registered because the appendix never says which repeats the VMR forbids.
 
-### M13 — Component grammar for v2.3, v2.3.1 and v2.4 **CLOSED (2026-09-21; released in `v3.5.0`)**
+### M13 — Component grammar for v2.3, v2.3.1 and v2.4 **CLOSED (released in `v3.5.0`)**
 *Goal: Australian traffic is v2.4, and the component check never fired for it, because those versions print no component tables.*
 
 - **Outcome:** the component grammar of the three older versions recovered from their numbered prose subsections under a three-test evidence rule (one table named, present in the registry, stated name matching); 105 datatype files, 168 bound components, zero conflicts with v2.5.1's printed tables. The component check now runs on all six versions.
 - **Honesty points (req #4):** the name test caught real v2.3 misprints that would have become wrong rules; a sweep of every closed table enforced on v2.4 against the ADRM's own print found two AU widenings (Tables 0125 and 0301), one of them a false error live since `v3.3.0`.
 
-### M14 — Required components from the printed grammar **CLOSED (2026-09-21; released in `v3.6.0`)**
+### M14 — Required components from the printed grammar **CLOSED (released in `v3.6.0`)**
 *Goal: use the component grammar to audit, then replace, the Validator's hand-written required-component lists.*
 
 - **Outcome:** eight of eleven hand-written lists contradicted the v2.5.1 tables they cited; required components are now exactly those the message's own version prints `R`. False errors removed (`XAD.1`, `XPN.1`, ...); waived requirements enforced (`MSH-9.3` from v2.5; `CX.5`, `PT.1`, `VID.1`, `XTN.3` on v2.8.2). 48 fixtures corrected.
 - **Honesty points:** the old `MSG` list waived the message structure as "often left empty" — the reasoning req #1 rules out; v2.3 to v2.4 get no component requirements because their prose prints none.
 
-### M15 — The either-or component rules, held to the spec's examples **CLOSED (2026-09-21; released in `v3.6.1`)**
+### M15 — The either-or component rules, held to the spec's examples **CLOSED (released in `v3.6.1`)**
 *Goal: finish the M14 audit for the five rules no table could check.*
 
 - **Outcome:** `XTN`, `PL` and `CWE` rules removed — each rejected an example the spec prints; `EIP` removed as vacuous; `HD` kept, supported by the prose. The spec's examples are now must-pass tests.
 
-### M16 — HD both-or-neither; the spec's HD examples as tests **CLOSED (2026-09-21; released in `v3.6.2`)**
+### M16 — HD both-or-neither; the spec's HD examples as tests **CLOSED (released in `v3.6.2`)**
 
 - **Outcome:** the HD rule all six versions print ("must either both be valued ... or both be not valued") is enforced; and testing every HD example the section prints caught a false error live since `v3.5.0` (`Random` in the table, `RANDOM` in the example).
 
-### M17 — The spec's printed examples as a standing audit **CLOSED (2026-09-21; released in `v3.6.3`)**
+### M17 — The spec's printed examples as a standing audit **CLOSED (released in `v3.6.3`)**
 
 - **Outcome:** `audit-schemas.py --examples` checks all 352 composite examples of the six datatype chapters against the component rules, with three cited exceptions. Two more spec self-contradictions fixed (`NA.1`, Table 0528 `AHS`).
 
-### M18 — The spec's example messages through the Validator **CLOSED (2026-09-21; released in `v3.6.4`)**
+### M18 — The spec's example messages through the Validator **CLOSED (released in `v3.6.4`)**
 
 - **Outcome:** 616 printed messages validated end to end (gated suite, spec text kept out of the repository); Table 0125's missing waveform value types `NA` / `MA` / `CD` restored on v2.3 to v2.6; the rule for when an example may overturn a table written into ADR-017.
 
-### M19 — Optionality audited per version **CLOSED (2026-09-21; released in `v3.6.5`)**
+### M19 — Optionality audited per version **CLOSED (released in `v3.6.5`)**
 
 - **Outcome:** an `optionality` predicate in the depth audit; 30 of ~13,000 fields carried a later version's OPT (a false error on v2.3 `MSH-7`, 21 false deprecation warnings, seven too-lenient v2.6 fields), all corrected from their own version's table.
 
-### M20 — Names audited per version **CLOSED (2026-09-22; released in `v3.7.0`)**
+### M20 — Names audited per version **CLOSED (released in `v3.7.0`)**
 
 - **Outcome:** a `name` predicate in the depth audit; 110 left-truncated and 22 empty names (pharmacy segments), v2.3-era names copied from v2.5.1, and a missing v2.8.2 `ITM-33` all corrected from the print; three extractor layouts fixed.
 
-### M21 — Required-component severity option **CLOSED (2026-09-22; released in `v3.7.0`)**
+### M21 — Required-component severity option **CLOSED (released in `v3.7.0`)**
 
 - **Outcome:** `ValidationOptions.requiredComponentSeverity`; the `MSH-9.3` question closed without special-casing a field. Additive API.
 
-### M22 — Repeatability audited per version **CLOSED (2026-09-22; released in `v3.7.1`)**
+### M22 — Repeatability audited per version **CLOSED (released in `v3.7.1`)**
 
 - **Outcome:** an RP predicate in the depth audit; 19 fields corrected (14 false cardinality errors removed, five checks added); the extractor reads a Y under the TBL# header as the RP cell.
 
-### M23 — Example-message required-field triage **CLOSED (2026-09-22; released in `v3.7.2`, docs only)**
+### M23 — Example-message required-field triage **CLOSED (released in `v3.7.2`, docs only)**
 
 - **Outcome:** all 106 required-field findings on version-consistent example messages traced to example damage; the report is fully triaged and the triage tool records the conclusion.
 
-### M24 — v2.3 chapter-only tables; prose mentions closed **CLOSED (2026-09-22; released in `v3.7.3`)**
+### M24 — v2.3 chapter-only tables; prose mentions closed **CLOSED (released in `v3.7.3`)**
 
 - **Outcome:** Tables 0298 / 0299 / 0301 / 0336 added to the v2.3 registry from the chapters that print them (the only such gap on any version); `HD.3` checked on v2.3; all 39 rejected prose mentions read and found unbindable.
 
-### M25 — Printed lengths recorded **CLOSED (2026-09-22; released in `v3.8.0`)**
+### M25 — Printed lengths recorded **CLOSED (released in `v3.8.0`)**
 
 - **Outcome:** `FieldGrammar.length` / `ComponentGrammar.length`, verbatim from each version's print (9,892 fields), never enforced; the last unrecorded attribute-table column.
 
-### M26 — Conditional components **CLOSED (2026-09-22; released in `v3.9.0`)**
+### M26 — Conditional components **CLOSED (released in `v3.9.0`)**
 
 - **Outcome:** 36 sibling-presence conditions modelled from the spec's own sentences and checked; 32 "as of v2.7" conformance rules authored but registered, because the spec's own v2.7+ examples violate them in 62 to 100 percent of values.
 
-### M27 — v2.7 conformance rules as an opt-in tier **CLOSED (2026-09-22; released in `v3.10.0`)**
+### M27 — v2.7 conformance rules as an opt-in tier **CLOSED (released in `v3.10.0`)**
 
 - **Outcome:** the 32 rules M26 registered ship on `ComponentGrammar.conformanceCondition`, reported as `conformanceConditionMissing` only when `conformanceConditionSeverity` is set. Default output unchanged.
 
-### M33 — the EI half of the NASH assertion **CLOSED (2026-09-23; merged, unreleased)**
+### M33 — the EI half of the NASH assertion **CLOSED (merged, unreleased)**
 
 - **Outcome:** HL7au:00044.3.4 / .3.3 ship datatype-wide on EI under `auNASHTransport`. The scope objection M32 recorded was retracted on the spec text: the sentence constrains the universal ID's shape, not whose HPI-O it is. `ComponentPattern.allowEmpty` prevents double-reporting what HL7au:000006 / 000007 already require.
 
-### M32 — AU NASH transport assertion **CLOSED (2026-09-23; released in `v3.13.0`)**
+### M32 — AU NASH transport assertion **CLOSED (released in `v3.13.0`)**
 
 - **Outcome:** `ValidationOptions.auNASHTransport` applies HL7au:00044.2.2 / .2.3 to MSH-4 and MSH-6 through a new `ComponentPattern` rule (cited prefix + cited 16-digit HPI-O width, no regex). Verified against all 8 OID values the ADRM prints. The conformance register is generated again after M29/M30 hand-edits; counts 70/14/15/8/79.
 
-### M30 — AU display-intended assertion **CLOSED (2026-09-23; released in `v3.12.0`)**
+### M30 — AU display-intended assertion **CLOSED (released in `v3.12.0`)**
 
 - **Outcome:** `ValidationOptions.auDisplayIntended`; HL7au:00044.4.3 (CE-2 text) applied on the caller's assertion through a DSL gate on `ComponentRequirement`. Register row moves to Shipped caller-asserted.
 
-### M29 — AU pathology-sender assertion **CLOSED (2026-09-23; released in `v3.12.0`)**
+### M29 — AU pathology-sender assertion **CLOSED (released in `v3.12.0`)**
 
 - **Outcome:** `ValidationOptions.auPathologySender`; HL7au:00050.1.5 (OBX-6.3 = UCUM, pathology Results) applied on the caller's assertion, the wire carrying no discriminator. Register row moves to Shipped caller-asserted.
 
-### M28 — XAD.7 when the field repeats **CLOSED (2026-09-22; released in `v3.11.0`)**
+### M28 — XAD.7 when the field repeats **CLOSED (released in `v3.11.0`)**
 
 - **Outcome:** `repeated` token in the condition language; v2.8.2 XAD.7 checked from its own sentence.
 
-### R — Over-engineering remediation **(CLOSED 2026-08-28 — R1–R10 all landed; register closed at the `v2.0.0` tag)**
+### R — Over-engineering remediation **(CLOSED — R1–R10 all landed; register closed at the `v2.0.0` tag)**
 
-> **R10 landed the breaking capstone on `main` (owner-scheduled 2026-08-27) and `v2.0.0`
-> shipped it (2026-08-28)**, folding the untagged v1.7–v1.9 merges + the R-track. The M5/M6
+> **R10 landed the breaking capstone on `main` (owner-scheduled) and `v2.0.0`
+> shipped it**, folding the untagged v1.7–v1.9 merges + the R-track. The M5/M6
 > sprint releases below (labelled v1.10–v1.15 when planned) ship as **v2.x** releases; the
 > sprint-plan labels are cycle names, not tags. Delivered: ~1,300 net lines removed, two real
 > defects found-and-fixed (batch MSH-18 detection; extractor cell-collapsing), C1–C3
@@ -327,16 +327,16 @@ Validator could not carry.*
 *Goal: retire the ~1,400 lines of audited complexity debt — dead code, duplicated mechanics,
 hand-rolled stdlib — without touching a line of spec surface.*
 
-- **Source:** a four-agent over-engineering audit (2026-08-26) produced **36 verified findings**
+- **Source:** a four-agent over-engineering audit produced **36 verified findings**
   (0 spec surface; every claim grep-verified same day), staged as **R1–R10** with per-stage
   TDD protocols, pinning tests, and done-when criteria in
   `docs/design/remediation-plan.md`.
 - **Not a gate.** R1–R9 are non-breaking, 1.x-safe, and sized one-stage-one-commit; they
   interleave with the M5/M6 sprints opportunistically (no overlap with schema/sprint files).
   M5 remains the sole public-push gate.
-- **R10 is the v2.0.0 boundary** (owner decision, 2026-08-26): six dead public symbols ship
+- **R10 is the v2.0.0 boundary** (owner decision): six dead public symbols ship
   their removal *as* the 2.0 release — SemVer-honest and costless pre-publication. The owner
-  scheduled 2.0 ahead of the sprints (2026-08-27). The ADR-014-deferred renames
+  scheduled 2.0 ahead of the sprints. The ADR-014-deferred renames
   (`effectiveDateOfReferenceRange` / `producersID`, OBX-12/OBX-15) ride the same boundary.
 - **Characterization tests first** (C1–C3): the DSL-rejects-`[N]`/`~N` guard, exact validator
   messages across the 7 profile-issue sites, and BatchParser MSH-18 Latin-1 — real coverage
@@ -344,7 +344,7 @@ hand-rolled stdlib — without touching a line of spec surface.*
 
 ---
 
-## v1.0 definition — reframed (owner, 2026-07-09)
+## v1.0 definition — reframed (owner)
 
 > **v1.0 = frozen public API + spec-honest conformance surface + full HL7 segment coverage at complete depth across every supported version (v2.3–v2.8.2).**
 

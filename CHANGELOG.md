@@ -30,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   HPI-I in the AU tests and the P12 audit become zero-filled bodies without the `8003` prefix, as
   in the fixtures; the XTN tests' phone numbers move to the ACMA fictional `(02) 5550` range. The
   rules under test check only prefix and digit count, so coverage is unchanged.
+- **Public documents (P13 S1-2).** Security reports go through GitHub private vulnerability
+  reporting, acknowledged within 14 days (`SUPPORT.md`, `CONTRIBUTING.md`). `README.md`,
+  `SUPPORT.md`, `CONTRIBUTING.md` and `ROADMAP.md` carry no dates; the roadmap keeps its order.
+  The README's typed-segment steps no longer ask for a hand-written registry case; the
+  regenerate script emits it.
+  The archive snapshots name `~` in place of the maintainer's home directory.
 
 ## [3.16.0] — 2026-10-07
 

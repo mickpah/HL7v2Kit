@@ -21,8 +21,8 @@ If that changes, this file and `SUPPORT.md` will say so first.
 - **Fork announcements.** The licence lets you fork without asking. If your fork is
   clearly active, open an issue titled "Fork: <url>" and it will be linked from
   `README.md` when the maintainer next looks.
-- **Security reports.** Open an issue titled "Security: <summary>"; there is no private
-  reporting channel yet. A report will be acknowledged within 14 days.
+- **Security reports.** Privately, through GitHub's private vulnerability reporting (the
+  repository's Security tab), not as a public issue. A report will be acknowledged within 14 days.
 
 ## Working on a fork
 
