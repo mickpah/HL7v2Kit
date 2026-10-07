@@ -123,10 +123,10 @@ The first push to the public repository, in order:
 3. The author rewrite on a fresh clone (the owner's step). The current history carries two
    name forms with the same personal email; both become the GitHub noreply address.
 4. Add the `origin` remote.
-5. In `CHANGELOG.md`, `[Unreleased]` becomes `[3.17.0]` with the compare link
-   `v3.16.0...v3.17.0`, and a fresh `[Unreleased]` (ending at `HEAD`) goes above it. The
-   Unreleased heading in `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md` becomes 3.17.0.
-   `python3 scripts/check-changelog-links.py` passes.
+5. Confirm the release documents: `CHANGELOG.md` carries `[3.17.0]` with the compare link
+   `v3.16.0...v3.17.0` under an empty `[Unreleased]` (ending at `HEAD`), and
+   `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md` has its 3.17.0 rows and section (both
+   prepared on the release branch). `python3 scripts/check-changelog-links.py` passes.
 6. Tag `v3.17.0`.
 7. `git push --dry-run origin main --tags`, then the push itself. Every tag goes: the
    CHANGELOG compare links and the README's `from: "3.17.0"` need them.
