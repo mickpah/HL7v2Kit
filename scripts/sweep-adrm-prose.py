@@ -3,6 +3,7 @@
 # "Conformance point" neighbourhood AND not textually matching any
 # Appendix 5 point (the appendix quotes body wording).
 import re, json, subprocess, sys
+from pathlib import Path
 
 WINDOW = 10
 text = open('/tmp/adrm2021.txt').read()
@@ -11,7 +12,7 @@ BODY_START, APPENDIX_START = 3, 372  # 0-based, from pass 1
 
 rows = json.loads(subprocess.run(
     ['python3', 'scripts/extract-adrm-conformance.py', '/tmp/adrm2021.txt', '--json'],
-    capture_output=True, text=True, cwd='/Users/michael/Developer/HL7v2Kit').stdout)
+    capture_output=True, text=True, cwd=Path(__file__).resolve().parents[1]).stdout)
 
 def tokens(s):
     return set(re.findall(r'[a-z0-9]+', s.lower())) - {

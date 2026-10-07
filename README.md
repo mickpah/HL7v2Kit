@@ -69,7 +69,7 @@ Segment IDs without a typed struct (Z-segments, less-common segments) come back 
 Add to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/<your-org>/HL7v2Kit.git", from: "1.0.0")
+.package(url: "https://github.com/mickpah/HL7v2Kit.git", from: "3.16.0")
 ```
 
 Then add `"HL7v2Kit"` to your target's `dependencies`.

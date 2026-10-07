@@ -11,7 +11,7 @@ This article covers the four-step "hello v2" flow: add the dependency, parse, re
 Add HL7v2Kit to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/<your-org>/HL7v2Kit.git", from: "0.1.0")
+.package(url: "https://github.com/mickpah/HL7v2Kit.git", from: "3.16.0")
 ```
 
 Then add `"HL7v2Kit"` to your target's `dependencies`. HL7v2Kit has no transitive dependencies — Foundation only.

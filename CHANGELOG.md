@@ -6251,5 +6251,5 @@ Tests: 159 (v0.1.0 tag) → 205 (default `swift test`); 210 with `RUN_PERF_TESTS
   - `ParseError.unsupportedVersion` is reachable code but never thrown — unknown MSH-12 silently falls back to v2.5.1. Wire on `.strict` mode.
 - **`HL7v2KitDictionaries` runtime JSON.** Path C (ADR-005 revised) supersedes the original spec § 8 plan for v0.1.0; placeholder.json stays. Revisit in v0.2 if dynamic version selection becomes a real consumer need.
 
-[Unreleased]: https://github.com/<your-org>/HL7v2Kit/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/<your-org>/HL7v2Kit/releases/tag/v0.1.0
+[Unreleased]: https://github.com/mickpah/HL7v2Kit/compare/v3.16.0...HEAD
+[0.1.0]: https://github.com/mickpah/HL7v2Kit/releases/tag/v0.1.0
