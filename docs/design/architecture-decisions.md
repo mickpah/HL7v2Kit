@@ -584,7 +584,7 @@ Tables change between versions, so one merged set would be wrong.
 
 - Contents: per-version JSON, `Resources/tables/v<version>/NNNN.json` (kind `HL7` or `User`,
   name, `permitsLocalExtensions`, citation, entries, optional `patterns`), written only by the
-  extractor from Appendix A (v2.3 to v2.6) or Chapter 2C (v2.7.1, v2.8.2), and generated into
+  extractor from Appendix A (v2.3 to v2.7.1) or Chapter 2C (v2.8.2), and generated into
   `HL7TableRegistry`; `HL7TableRegistry.table(_:version:)` is the lookup.
 - Rows are kept as Appendix A prints them, misprints included. A Table 0354 misprint is
   corrected only on the message-structure side, by a cited erratum (ADR-019).
@@ -757,3 +757,250 @@ falls back silently.
 
 **Amended (P10-6):** v2.7.1 modelled; `2.7` substituted by v2.7.1 (owner gate G11), so
 `Version` has nine cases, seven modelled and two substituted.
+
+## ADR-019 Message-structure grammar
+
+**Status:** Accepted (owner gate G2, Option C hybrid). Rollout complete on all seven modelled
+versions; the check is on in the default and strict presets. Related: ADR-003, ADR-007, ADR-008,
+ADR-010, ADR-014, ADR-015, ADR-016, ADR-017, ADR-018.
+
+**Context.** HL7 v2 defines every message by an abstract message syntax: an ordered list of
+segments, `[ ]` optional, `{ }` repeating, `< | >` a choice (v2.4 on), and segment groups that are
+themselves optional or repeating. Each chapter prints one syntax per structure under a caption
+such as `ADT^A04^ADT_A01`; from v2.3.1 on MSH-9.3 names the structure, and Table 0354 lists
+structure against event. Nothing in the package checked segment order, groups, the segments an
+event requires or MSH-9's agreement with itself, and group-scoped rules approximated groups by
+walking the flat segment list back to the nearest ORC.
+
+### Source and data
+
+- One file per structure, `Resources/structures/v<ver>/<STRUCT>.json` (`structure`, `version`,
+  `citation`, `triggers`, `elements`), written only by `scripts/extract-message-structures.py`
+  from the print (decision 1). The three pilot structures were hand-authored and then reproduced
+  by the extractor byte for byte; no hand-authored base file survives.
+- `Resources/structures/overrides.json` holds everything the print does not give cleanly, each
+  entry cited: unprinted group names, citation notes, trigger folds (`ACK^*`), exclusions of
+  non-normative prints (ruling G7), errata for print typos, shared and referenced triggers,
+  withdrawn segments, keyed choices, error responses, prose fragments, variant prints and the two
+  remaining primary prints. A stale or unmatched entry fails the extractor.
+- `Resources/structures/completeness.json` marks each modelled grammar version complete (all
+  seven are) and registers the structures a version prints that cannot be modelled, each with a
+  one-line reason pointing at limitations register section E. The registrations are public:
+  `MessageStructureTable.registration(_:version:)` and `registrations(for:)` return
+  `StructureRegistration` (ID, grammar version, triggers, reason).
+- Group names (decision 3): the printed name; else the name the version's HL7 v2.xml schema bundle
+  gives the group with the same parent path, first segment and member set (`v2xml`), derived from
+  the v2.4 bundle for v2.3 and v2.3.1 (`v2xml-v2.4`); else a cited override; else synthesised as
+  `<FIRSTSEG>_GROUP`. Each non-printed name is cited inside the structure's `citation`. Bundles
+  are names-only: the print stays normative, and no bundle text is committed.
+- Caption forms per era: `CODE^EVT^STRUCT` (v2.4 to v2.6), `CODE^EVT^STRUCT:` (v2.7.1, v2.8.2),
+  `CODE^EVT` with the ID from the version's Table 0354 (v2.3.1), and the message code alone with
+  events from the section title on v2.3, whose structure IDs are synthesised as `CODE_EVT`. An ID
+  the table cannot resolve is reported, never guessed.
+- Which print governs: where two normative prints of one ID disagree under different triggers,
+  each governs its own triggers as a variant (`variantPrints`). Where two prints share one
+  trigger (v2.3 ORM_O01 and ORR_O02), the looser print, the one that accepts every message the
+  other accepts, is committed (`primaryPrints`), because the stricter print would misfire on
+  messages the other allows. Union of incomparable prints is not used.
+- Table 0354: Appendix A governs the code table; IDs only a chapter listing prints, or only
+  Appendix A prints, are handled on the structure side (registered or matched). A gotcha worth
+  recording: v2.3.1's Table 0354 prints rows such as `RROR_ROR`, `ORM__O01` and `SIIU_S12`, kept
+  as printed in the code table and registered on the structure side (rather like Kryten's spare
+  heads: several versions of the same thing, none quite agreeing). Table 0354 is never consulted
+  at run time.
+- AU profile structures are hand-authored profile data under
+  `Resources/structures/profiles/au-adrm-2021/` (ruling G9), each with page citations and the keys
+  `profile`, `baseVersion` and `rule`; each must constrain a loaded base structure of the same ID.
+
+### Elements
+
+`StructureElement` is a public, open enum; `MessageStructure` is public with an internal
+initialiser.
+
+- `segment(_:min:max:)` and `group(_:min:max:elements:)`. `min` is 0 for `[ ]` and 1 otherwise;
+  `max` is nil for `{ }` and 1 otherwise; `{[X]}` normalises to min 0, max nil.
+- `choice(_:min:max:alternatives:)`: each occurrence takes exactly one alternative, chosen by the
+  current segment; a named choice (v2.7.1 on) opens a group span.
+- `slot(_:min:max:citation:)`: the open position the print leaves with "etc." (the general order
+  detail, `< OBR | etc. >`, the ERP query body). It takes any segment but MSH,
+  nondeterministically: a segment that could begin what follows may end the slot or stay in it,
+  and a message draws a finding only when no parse accepts it. A required segment after the slot
+  is still enforced; a misplaced optional one may be read as slot content. A slot opens no group
+  and is never inside a choice.
+- `keyedChoice(_:min:max:key:alternatives:)`: the alternative is selected by a field value
+  (`StructureChoiceKey`: segment, field, component, the printed value map, citation), as MFN^M03
+  is keyed by MFI-1. A value the map does not hold is `messageStructureNotModelled` (info).
+- `children` and `segmentIDs` cover every case, so a consumer recursing through them (with
+  `@unknown default`) never skips segments inside a case it does not know.
+- `MessageStructure.variants` (public, `StructureVariant`: triggers, citation, elements) carries
+  the per-trigger prints; `variant(messageCode:triggerEvent:)` names the one governing a trigger,
+  by exact trigger only. `StructureVariant.profileIdentifiers` selects a profile variant by the
+  identifier MSH-12.3.1 declares (the ADRM Appendix 8 simplified REF).
+- `MessageStructure.aliasOf` names the structure whose syntax a structure takes when its print
+  gives it an ID and trigger of its own and refers its syntax elsewhere (v2.4 and v2.5.1
+  QRY_P04, alias of QRY_Q01). It keeps its own ID and triggers.
+- Withdrawn segments: on v2.7.1 and v2.8.2, QRD, QRF, URD and URS are listed with their
+  Appendix A status ("withdrawn" or "deprecated") and last defining version (v2.6). They are
+  matched where a structure names them, and each occurrence draws one info
+  `segmentWithdrawnInVersion` saying its fields were not validated; no earlier version's
+  attribute table is borrowed.
+- Error-response heads: for each query response a version prints (v2.4 on), MSA-1 of AE or AR
+  selects the CH05 5.6.5 head (MSH, the SFT and UAC printed after it, MSA, ERR, QAK, the query
+  defining segments, DSC) and anything else is unexpected. MSA-1 of AA with QAK-2 of `NF` selects
+  the no-data head (no data segments; an optional ERR after MSA, owner ruling 6). Internal model
+  (`StructureErrorResponse`).
+- Prose fragments: a structure the print gives only in prose, or by cross-reference, is
+  transcribed by hand into a cited `proseFragments` entry in bracket notation. There is no prose
+  parser.
+- Placeholders (ruling G6): an "etc." with an enumerable position is a slot; query-template rows
+  (`[...]` and the ellipsis rows of CH05 5.4 and CH08 8.4.1) stand for a whole body chosen by a
+  field value and stay registered as permanent limits.
+
+### Resolution (the lookup rule)
+
+Structures come from the grammar version (ADR-018): each modelled version uses its own, `2.7`
+takes v2.7.1's and `2.8` takes v2.8.2's. An unresolved, empty or other MSH-12, or a
+`message.version` whose grammar version differs from the wire reading's, gets no structure and one
+info `messageStructureNotModelled` (decision 4: no fallback grammar). Within the version:
+
+1. MSH-9.3 valued: look the ID up. If MSH-9.1^9.2 is not among its triggers, report
+   `messageStructureMismatch` alone, with no body match. An ID the version's print gives for the
+   trigger (a caption, a Table 0354 listing or a cited reference) is never a mismatch: it is
+   matched if modelled, or information if registered (ruling F-I1). An ID the version does not
+   print at all is a mismatch.
+2. MSH-9.3 empty: resolve MSH-9.1^9.2 through the triggers. A trigger no structure prints, or one
+   only a registered structure prints, is not modelled; a trigger under two structures is not
+   resolved and the info issue names both.
+3. v2.3 has no MSH-9.3: once MSH-12 reads as v2.3, a populated MSH-9.3 is ignored and the message
+   resolves by trigger alone.
+4. `ACK^<any>` resolves to `ACK` through the `*` trigger.
+
+Message fragments (MSH-14 populated, or a trailing DSC with DSC-1 populated, or a trailing DSC the
+structure does not end with) are not structure-checked and get the info issue; reassembly is a
+transport concern (permanent).
+
+### Matching
+
+- Decision 2: a greedy one-pass recursive descent over the element tree, guarded by a
+  determinism lint run at code-generation time. The lint requires, for every nullable or
+  repeating element, that its FIRST set be disjoint from its FOLLOW set, with one exemption (the
+  re-entry of an enclosing unbounded group reachable only through the element itself, the
+  prefix condition); choice alternatives must have disjoint FIRST sets and none may be nullable.
+- A structure that fails the lint (owner gate G15), or holds a slot, carries
+  `requiresExactMatch` and is matched by `ExactStructureMatcher`: a nondeterministic automaton
+  over the element tree, advanced one segment at a time in linear time. It reports at most one
+  finding, at the furthest position any parse reached, naming what the structure accepts there.
+- The one-pass matcher reports each missing or unexpected segment; after the first divergence
+  recovery can report a second issue for one defect (the first is always accurate).
+- Z-segments, ADD segments and segments the version's grammar does not define are transparent to
+  both matchers; `ZSegmentPolicy` and `segmentNotInVersionGrammar` keep governing them.
+- Guards: a backtracking reference recogniser checks both matchers on generated and mutated
+  sequences (`StructureMatcherPropertyTests`), and `StructureGuardTests` checks every committed
+  structure, variant and keyed resolution. Compiled matchers are cached per print.
+
+### Findings and severity
+
+- Issue codes (additive): `messageStructureSegmentMissing(structure:segmentID:group:)`,
+  `messageStructureSegmentUnexpected(structure:segmentID:)` and
+  `messageStructureMismatch(declared:trigger:)` at `ValidationOptions.messageStructureSeverity`;
+  `messageStructureNotModelled(structure:)` always info.
+- Decision 10: `messageStructureSeverity` is a stored property (nil leaves the check off). The
+  presets are `.strict` error, `.default` warning and `.lenient` off (owner gate G12).
+
+### Group spans (decision 5)
+
+- A clean match yields a group-span index: each group occurrence's name, position and segment
+  range. Group identity is by position, never by name.
+- Group-dependent lookups (`associatedSegment`, so every cross-segment field reference and the
+  presence atoms; `resolveGroup(scope:)`; the ORC and OBR pair check) use the spans when the
+  version is complete, the structure resolves, the message is not a fragment, the base match has
+  no finding and the parses agree. The peer is sought from the innermost group occurrence holding
+  the anchor outwards, to the first group whose definition contains the peer.
+- The exact matcher yields spans only when every accepting parse places every segment in the same
+  group occurrences (ruling R1); otherwise it withholds them.
+- Otherwise the ORC walk is used, except for the message codes the former `messageCode not in
+  (...)` gates covered (OUL, and OPU and OPL from v2.6), whose structures print OBR before ORC in
+  one group: there the formerly gated conditions are not evaluated, and one info
+  `conditionNotEvaluated(fields:)` says so (rule R4, owner decision 9).
+- A group-scope count keeps only the head's own segments, so an OBX in a specimen or order
+  document group does not satisfy an OBR-to-OBX rule.
+
+### AU profile structures
+
+- Under `.auLocalisation` with the check on, a v2.4 message whose base structure resolves is also
+  matched against the ADRM structure for its trigger, when one exists: ORM_O01, ORR_O02,
+  ORU_R01, OSR_Q06, REF_I12 (with the Appendix 8 simplified variant) and RRI_I12. Missing
+  segments are reported as `profileConstraintViolation(localeRule: "HL7au:00060.1")`.
+- Decision 7: a segment the ADRM removed is not a finding. A base finding is dropped where the
+  profile structure accepts the message at that point. A segment occurrence beyond a maximum the
+  profile narrows below the base's is reported once per occurrence as info
+  `profileMaximumExceeded(localeRule:)`.
+- ORR_O02's unclosed `[PID` cell is read as the base v2.4 reading, PID optional (G-AU2).
+  HL7au:00060.1 stays partial: the OSR^Q06 and ORR^O02 order detail is the named residual.
+
+### Acknowledgments (decision 9)
+
+The package builds and validates the general acknowledgment and implements no protocol logic.
+`MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` applies the echo rules
+(MSA-1 from Table 0008 via `AcknowledgmentCode`; MSA-2 the original MSH-10; sending and receiving
+applications and facilities swapped; MSH-9 `ACK^<event>^ACK`; MSH-11, MSH-12 and a populated
+MSH-18 echoed) and throws `BuilderError.acknowledgedMessageControlIDMissing` when there is no
+MSH-10. Enhanced-mode acknowledgment is receiving-application behaviour and a non-goal.
+
+### Decisions (owner gate G2, as they stand)
+
+| # | Choice | Decision |
+|---|---|---|
+| 1 | Source of truth | Option C: extractor for base structures, cited overrides, hand-authored AU profile data |
+| 2 | Matcher | Greedy one-pass plus determinism lint; lint failures matched exactly (G15) |
+| 3 | Unprinted group names | HL7 v2.xml bundle names, cited; overrides and synthesis where no bundle names them |
+| 4 | Unrecognised or empty MSH-12 | No structure check, `messageStructureNotModelled` (info); no fallback grammar |
+| 5 | Group spans | On for complete versions with a clean, agreeing match, independent of severity |
+| 6 | ORC-8 OUL misfire | Interim gates removed once spans landed; rule R4 keeps their effect where there are no spans |
+| 7 | AU removed segments | Not a finding; base findings the profile structure accepts are dropped; narrowed maxima at info |
+| 8 | AU overlay timing | Straight after the extractor |
+| 9 | Acknowledgments | Build and validate the general ACK; no protocol logic |
+| 10 | Severity | Stored property; presets warning (default), error (strict), off (lenient) |
+
+### Known ceilings
+
+1. A lint-failing structure is matched exactly, with at most one finding and spans only when the
+   parses agree; a required segment absent mid-message is reported as the next segment unexpected.
+2. After the first divergence, the one-pass matcher can report a second issue for one defect.
+3. The lint's exempt case attributes a segment to the innermost open group; acceptance is
+   unaffected.
+4. Group spans are used only on a clean match.
+5. Where Z-segments sit is not checked.
+6. Message fragments are not structure-checked or reassembled (permanent, a transport concern).
+7. A message whose `message.version` differs in grammar version from its wire MSH-12 (for
+   example under `ParserOptions.versionOverride`) is not structure-checked (permanent; version
+   provenance on `Message` would be an API change).
+
+**Consequences.** All additive public API: `MessageStructure`, `StructureElement`,
+`StructureVariant`, `StructureChoiceKey`, `StructureRegistration`, `MessageStructureTable`, the
+issue codes above, `messageStructureSeverity`, and the acknowledgment builder types, each pinned
+in `SignatureCompatibilityTests`. Group-dependent predicates are structure-exact on conformant
+messages. The structure check and the span-derived groups changed default output, recorded in
+`Migration.md`. What stays open is in limitations register section E.
+
+**Amended (P8b-1 to P8b-18):** the pilot grew into the full rollout: the generated version
+switch and completeness data, the extractor and `overrides.json`, bundle names, every caption
+form, the choice element (P8b-6), exact matching (P8b-12), structure guards and the matcher cache
+(P8b-7), each version's completion, lookup rule 3 (P8b-15), the AU structures (P8b-4, P8b-4a),
+group spans (P8b-17) and the preset switch (P8b-18).
+
+**Superseded (P8b-final, ruling F-I1):** the earlier ruling that literally printed v2.3.1 IDs are
+mismatches was reversed: a printed ID is never a mismatch.
+
+**Superseded (S6-1):** the P8b-9 rule that committed the looser of two prints for every trigger
+now applies only where two prints share one trigger; elsewhere each print governs its triggers
+as a variant, and the one `unionPrints` entry was withdrawn.
+
+**Amended (P11, S1 to S6):** public registrations (S1-3); the R4 info issue (S1-4); withdrawn
+segments (S2-1, S2-2); the open slot (S3-1, S3-3), which supersedes ruling G6 for enumerable
+placeholders; the keyed choice and alias (S4); error-response heads (S4-3); prose fragments (S5);
+per-trigger variants, the group-count fix and AU beyond-maxima at info (S6-1 to S6-3); fragments
+and version provenance re-classed permanent (S6-4).
+
+**Amended (P12):** owner ruling 6 allowed an optional ERR in the no-data head; the ADRM ORR_O02
+and the Appendix 8 simplified REF variant completed the AU profile structures (S1).
