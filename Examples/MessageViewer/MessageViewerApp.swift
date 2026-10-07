@@ -8,6 +8,8 @@ import SwiftUI
 /// `swift run MessageViewer`.
 @main
 struct MessageViewerApp: App {
+    @StateObject private var document = Document()
+
     init() {
         // `swift run` has no app bundle; without this the window opens behind the terminal.
         NSApplication.shared.setActivationPolicy(.regular)
@@ -16,84 +18,44 @@ struct MessageViewerApp: App {
 
     var body: some Scene {
         WindowGroup("MessageViewer") {
-            ContentView().frame(minWidth: 900, minHeight: 560)
+            ContentView(document: document).frame(minWidth: 900, minHeight: 560)
+        }
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("Open...") { document.open() }.keyboardShortcut("o")
+            }
+            CommandGroup(after: .pasteboard) {
+                Button("Copy Issues") { document.copyIssues() }
+                    .keyboardShortcut("c", modifiers: [.command, .shift])
+                    .disabled(document.grid == nil)
+            }
         }
     }
 }
 
-/// The same synthetic v2.4 ORU^R01 as the QuickStart example: no real identifiers.
-private let sample = [
-    #"MSH|^~\&|SYNTH_LAB|SYNTH_PATH|SYNTH_EMR|SYNTH_CLINIC|20260101120000+1000||ORU^R01^ORU_R01|SYN-MSG-0001|P|2.4"#,
-    #"PID|1||SYN-000123^^^SYNTH_PATH^MR||Synthetic^Alex^^^^^L||1980-01-01|F|||1 Example Street^^Sydney^NSW^2000^AUS||(02) 5550 1234^PRN^PH"#,
-    #"PV1|1|O"#,
-    #"OBR|1|SYN-ORD-0001|SYN-FIL-0001|2951-2^Sodium^LN|||20260101100000+1000|||||||||||||||20260101115000+1000||CH|F"#,
-    #"OBX|1|NM|2951-2^Sodium^LN||140|mmol/L^mmol/L^UCUM|135-145|N|||F"#,
-].joined(separator: "\n")
-
-struct ContentView: View {
-    @State private var text = sample
-    @State private var strictAU = false
-    @State private var hovered: Cell?
+/// The message text, the chosen preset and the grids computed from them.
+@MainActor
+final class Document: ObservableObject {
+    @Published var text = sample { didSet { cache = [:]; ensure() } }
+    @Published var strictAU = false { didSet { ensure() } }
     // One grid per preset, kept until the message changes, so switching presets is instant and
     // a hover (also a state change) never re-validates. The work runs off the main thread.
-    @State private var cache: [Bool: Outcome] = [:]
-    @State private var work: Task<Void, Never>?
+    @Published private(set) var cache: [Bool: Outcome] = [:]
+    private var work: Task<Void, Never>?
 
     enum Outcome: Sendable {
         case grid(CellGrid)
         case failure(String)
     }
 
-    private let mono = Font.system(.body, design: .monospaced)
-
-    var body: some View {
-        VSplitView {
-            editor
-            VStack(spacing: 0) {
-                grid
-                Divider()
-                detail
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Picker("Validation", selection: $strictAU) {
-                    Text("Default").tag(false)
-                    Text("Strict, AU").tag(true)
-                }
-                .pickerStyle(.segmented)
-                .help("The validation preset applied to the message")
-            }
-        }
-        .navigationTitle("MessageViewer")
-        .navigationSubtitle(subtitle)
-        .onAppear(perform: ensure)
-        .onChange(of: text) { _ in cache = [:]; ensure() }
-        .onChange(of: strictAU) { _ in ensure() }
-    }
-
-    private var editor: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Message")
-                .font(.headline)
-                .padding(.horizontal, 12)
-                .padding(.top, 8)
-            TextEditor(text: $text)
-                .font(mono)
-                .padding(.horizontal, 8)
-        }
-        .frame(minHeight: 140)
-        .background(Color(nsColor: .textBackgroundColor))
-    }
-
-    private var subtitle: String {
-        guard case .grid(let grid)? = cache[strictAU] else { return "" }
-        let s = grid.rows.count, e = grid.errorCount, w = grid.warningCount
-        return "\(s) segment\(s == 1 ? "" : "s"), \(e) error\(e == 1 ? "" : "s"), \(w) warning\(w == 1 ? "" : "s")"
+    var outcome: Outcome? { cache[strictAU] }
+    var grid: CellGrid? {
+        if case .grid(let grid)? = outcome { return grid }
+        return nil
     }
 
     /// Computes the grid for the current preset unless it is cached. Edits are debounced.
-    private func ensure() {
+    func ensure() {
         guard cache[strictAU] == nil else { return }
         work?.cancel()
         let text = text, strict = strictAU
@@ -116,9 +78,90 @@ struct ContentView: View {
         }
     }
 
+    /// File > Open: reads the file as UTF-8, or Latin-1 when it is not UTF-8.
+    func open() {
+        let panel = NSOpenPanel()
+        panel.message = "Choose an HL7 v2 message file"
+        guard panel.runModal() == .OK, let url = panel.url, let data = try? Data(contentsOf: url) else { return }
+        guard let read = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .isoLatin1) else { return }
+        text = read
+    }
+
+    /// Edit > Copy Issues: every issue of the current grid, one per line.
+    func copyIssues() {
+        guard let grid else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(grid.issuesText, forType: .string)
+    }
+}
+
+/// The same synthetic v2.4 ORU^R01 as the QuickStart example: no real identifiers.
+private let sample = [
+    #"MSH|^~\&|SYNTH_LAB|SYNTH_PATH|SYNTH_EMR|SYNTH_CLINIC|20260101120000+1000||ORU^R01^ORU_R01|SYN-MSG-0001|P|2.4"#,
+    #"PID|1||SYN-000123^^^SYNTH_PATH^MR||Synthetic^Alex^^^^^L||1980-01-01|F|||1 Example Street^^Sydney^NSW^2000^AUS||(02) 5550 1234^PRN^PH"#,
+    #"PV1|1|O"#,
+    #"OBR|1|SYN-ORD-0001|SYN-FIL-0001|2951-2^Sodium^LN|||20260101100000+1000|||||||||||||||20260101115000+1000||CH|F"#,
+    #"OBX|1|NM|2951-2^Sodium^LN||140|mmol/L^mmol/L^UCUM|135-145|N|||F"#,
+].joined(separator: "\n")
+
+struct ContentView: View {
+    @ObservedObject var document: Document
+    @State private var hovered: Cell?
+
+    private let mono = Font.system(.body, design: .monospaced)
+
+    var body: some View {
+        VSplitView {
+            editor
+            VStack(spacing: 0) {
+                grid
+                Divider()
+                detail
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Picker("Validation", selection: $document.strictAU) {
+                    Text("Default").tag(false)
+                    Text("Strict, AU").tag(true)
+                }
+                .pickerStyle(.segmented)
+                .help("The validation preset applied to the message")
+            }
+            ToolbarItem {
+                Button("Copy Issues") { document.copyIssues() }
+                    .disabled(document.grid == nil)
+                    .help("Copy every issue, one per line")
+            }
+        }
+        .navigationTitle("MessageViewer")
+        .navigationSubtitle(subtitle)
+        .onAppear(perform: document.ensure)
+    }
+
+    private var editor: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Message")
+                .font(.headline)
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+            TextEditor(text: $document.text)
+                .font(mono)
+                .padding(.horizontal, 8)
+        }
+        .frame(minHeight: 140)
+        .background(Color(nsColor: .textBackgroundColor))
+    }
+
+    private var subtitle: String {
+        guard let grid = document.grid else { return "" }
+        let s = grid.rows.count, e = grid.errorCount, w = grid.warningCount
+        return "\(s) segment\(s == 1 ? "" : "s"), \(e) error\(e == 1 ? "" : "s"), \(w) warning\(w == 1 ? "" : "s")"
+    }
+
     @ViewBuilder private var grid: some View {
-        switch cache[strictAU] {
-        case nil where text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty:
+        switch document.outcome {
+        case nil where document.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty:
             placeholder("Paste an HL7 v2 message above.")
         case nil:
             placeholder("Validating")

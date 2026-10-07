@@ -91,6 +91,12 @@ struct CellGrid: Equatable, Sendable {
         }
     }
 
+    /// Every issue, one per line, `"PID-7 Date/Time of Birth: warning: ..."`, for the clipboard.
+    var issuesText: String {
+        (rows.flatMap { row in row.cells.flatMap { cell in cell.notes.map { "\(cell.title): \($0)" } } } + unplaced)
+            .joined(separator: "\n")
+    }
+
     /// The segment grammars the validator applies to `version` (v2.7 and v2.8 read the next
     /// point release's tables, as the validator does).
     static func grammar(for version: Version) -> [String: SegmentGrammar] {

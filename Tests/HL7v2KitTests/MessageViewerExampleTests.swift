@@ -125,6 +125,15 @@ struct MessageViewerExampleTests {
         #expect(lines[1].hasPrefix("warning: "))
     }
 
+    @Test("the issues text has one line per issue, titled")
+    func issuesText() throws {
+        let grid = try Self.grid(options: .default)
+        let lines = grid.issuesText.split(separator: "\n")
+        #expect(lines.count == 1)
+        #expect(lines[0].hasPrefix("PID-7 Date/Time of Birth: warning: "))
+        #expect(try Self.grid(options: .strict, locale: .auLocalisation).issuesText.split(separator: "\n").count == 17)
+    }
+
     @Test("a cell takes the worst severity; info alone stays clean")
     func severityFolding() {
         func issue(_ severity: IssueSeverity) -> ValidationIssue {
