@@ -1393,7 +1393,8 @@ public struct Validator: Sendable {
 
     /// M6-B-8: evaluate key⇒value correspondence rules against one
     /// repetition. Keys the map does not state SKIP (fail-safe — the
-    /// source tables enumerate correspondences for named keys only);
+    /// source tables enumerate correspondences for named keys only),
+    /// unless the rule gives `unlistedKeyValues` (P12 S2-2);
     /// an EMPTY value component skips too (presence belongs to the
     /// required-component / membership rules, and firing here as well
     /// would double-report). Case-insensitive on both sides: the
@@ -1423,7 +1424,16 @@ public struct Validator: Sendable {
             }
             let key = valueSetScalarValue(
                 in: repetition, component: rule.keyComponent, subcomponent: nil)
-            guard !key.isEmpty, let mapped = rule.map[key.lowercased()] else { continue }
+            guard !key.isEmpty else { continue }
+            let lowerKey = key.lowercased()
+            let mapped: [String]
+            if let listed = rule.map[lowerKey] {
+                mapped = listed
+            } else if let unlisted = rule.unlistedKeyValues, !rule.exemptKeys.contains(lowerKey) {
+                mapped = unlisted
+            } else {
+                continue
+            }
             let value = valueSetScalarValue(
                 in: repetition, component: rule.valueComponent, subcomponent: nil)
             guard !value.isEmpty else { continue }

@@ -824,8 +824,15 @@ extension Profile {
                 // M6-B-8 — HL7au:00104.7.1.4: "the correct matching
                 // <type of ID number> and <other qualifying info> must
                 // be used as per Table 7.3.3.7.1" (p. 334). The table
-                // states pairs for the closed AU authorities; vendor
-                // authorities are open-ended examples and skip.
+                // states pairs for two of the printed AU authorities.
+                // P12 S2-2: every other authority is a vendor one, since
+                // "Table 0363 values may be extended to allow for secure
+                // messaging vendor assigning authorities" and "Secure
+                // messaging vendor allocated identifiers must use "VDI" as
+                // the value for <other qualifying info (ST)>" (p. 334): a
+                // PRD-7.2 outside the printed Table 0363 (p. 310) requires
+                // VDI. The printed authorities without a printed pair
+                // (AUSDVA, AUSNATA, AUSLINK, IHI) still skip.
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 2,
@@ -834,8 +841,10 @@ extension Profile {
                             "aushicpr": ["UPIN"],
                             "aushic": ["NPIO", "NOI"],
                         ],
+                        unlistedKeyValues: ["VDI"],
+                        exemptKeys: Set(HL7CodeTables.table0363.map { $0.lowercased() }),
                         condition: "messageCode = REF",
-                        specCitation: "HL7au:00104.7.1.4 — PRD-7 authority => qualifying-info pairs per Table 7.3.3.7.1 (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); AU ADRM-2021 p. 334 (vendor authorities are open-ended and skip)"
+                        specCitation: "HL7au:00104.7.1.4 — PRD-7 authority => qualifying-info pairs per Table 7.3.3.7.1 (AUSHICPR => UPIN, AUSHIC => NPIO/NOI) and, for a secure messaging vendor authority outside the printed Table 0363, VDI; AU ADRM-2021 pp. 310, 334, 473"
                     ),
                 ],
                 specCitation: "HL7au:00104.7.0 (r3) — PRD-7 must have at least 1 repeat on the Intended Recipient (PRD-1 = IR) PRD in the REF message; AU ADRM-2021 Appendix 5 p. 472"

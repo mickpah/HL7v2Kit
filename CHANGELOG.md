@@ -48,6 +48,11 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 - The group is the one the HL7au:000008 display count reads (`.obrObxGroup`: the structure's spans, or the walk where they are withheld). Internal: a new `GroupOrderingRule` on the profile. No public API change.
 - REGISTERED to SHIPPED: the registered reason (signature identifiers in HB 308-2011) is superseded by p 438. Before shipping, the rule was run over every test message (only the new tests' three intended messages fire) and over the full ADRM example messages (39 OBR groups, 15 display OBX: none out of order). Tests: `AUDisplayOrderingTests`. Conformance register regenerated; limitations register section D row corrected.
 
+### Added — P12 S2-2: HL7au:00104.7.1.4 VDI for vendor assigning authorities
+
+- On a REF, a PRD-7 repetition whose PRD-7.2 is valued and is not one of the six printed Table 0363 values (p 310) now requires PRD-7.3 = `VDI`: the PRD-7 prose (p 334) says "Table 0363 values may be extended to allow for secure messaging vendor assigning authorities" and "Secure messaging vendor allocated identifiers must use "VDI" as the value for <other qualifying info (ST)>", and the point (Appendix 5 p 473) requires "the correct matching <type of ID number (IS)> and <other qualifying info (ST)>". `JD455600041^Medical-Objects^VDI` is silent; `JD455600041^Medical-Objects^UPIN` fires at PRD-7.3. Each repetition pairs its own components; an empty authority or qualifier skips.
+- The point stays PARTIAL: AUSDVA, AUSNATA, AUSLINK and IHI have no printed pair and skip. Internal: `ComponentCorrespondence` gains `unlistedKeyValues` and `exemptKeys`. No public API change. Tests: `AUPRDVendorIdentifierTests`. Registers updated.
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).

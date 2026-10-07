@@ -256,9 +256,11 @@ PARTIAL = {
                           '(ADRM §3.20.5 + example annotations); arbitrary IANA '
                           'subtypes skip, fail-safe',
     'HL7au:00044.11.1.5': 'RP subtype => type, as 00044.10.1.5',
-    'HL7au:00104.7.1.4': 'authority => qualifier pairs enforced for the closed AU '
-                         'authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor '
-                         'authorities are open-ended examples and skip',
+    'HL7au:00104.7.1.4': 'authority => qualifier pairs enforced for the printed '
+                         'pairs (AUSHICPR => UPIN, AUSHIC => NPIO/NOI) and, since '
+                         'P12 S2-2, VDI for an authority outside the printed Table '
+                         '0363 (p 334: vendor extensions "must use "VDI""); AUSDVA, '
+                         'AUSNATA, AUSLINK and IHI have no printed pair and skip',
     'HL7au:000032.2': 'OBR-24 presence + table 0074 membership enforced on '
                       'Referrals; the "appropriate for the content in the '
                       'OBR/OBX group" half is receiver-judgement over '

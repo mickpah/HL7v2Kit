@@ -765,7 +765,8 @@ struct SubIDTreeRule: Sendable, Equatable, Hashable {
 /// - Keys the map does not know SKIP (fail-safe): the spec tables that
 ///   feed these maps state correspondences for enumerated keys only
 ///   (ADRM §3.20.5 type-subtype combinations; the PRD-7 matches table),
-///   and an unstated key is not a violation.
+///   and an unstated key is not a violation. A rule whose source states
+///   what every other key needs sets `unlistedKeyValues` (P12 S2-2).
 /// - Comparison is CASE-INSENSITIVE on both key and value: the ADRM's
 ///   own sanctioned examples mix case (`TEXT^RTF` in §4.5.2,
 ///   `text^html` in §4.5.3).
@@ -786,12 +787,21 @@ struct ComponentCorrespondence: Sendable, Equatable, Hashable {
     /// What the mapped values mean: allowed (the M6-B-8 default) or
     /// forbidden (P12 S2-2).
     let valueRule: CorrespondenceValueRule
+    /// The values a key the `map` does not list maps to, unless it is one
+    /// of `exemptKeys`; `nil` (the M6-B-8 default) lets unlisted keys skip.
+    /// P12 S2-2, HL7au:00104.7.1.4: a PRD-7.2 outside the printed Table
+    /// 0363 is a vendor authority, whose qualifier must be `VDI` (p 334).
+    let unlistedKeyValues: [String]?
+    /// Lowercased keys that skip although the `map` does not list them.
+    let exemptKeys: Set<String>
 
     init(
         keyComponent: Int,
         valueComponent: Int,
         map: [String: [String]],
         valueRule: CorrespondenceValueRule = .allowed,
+        unlistedKeyValues: [String]? = nil,
+        exemptKeys: Set<String> = [],
         condition: String? = nil,
         specCitation: String? = nil
     ) {
@@ -799,6 +809,8 @@ struct ComponentCorrespondence: Sendable, Equatable, Hashable {
         self.valueComponent = valueComponent
         self.map = map
         self.valueRule = valueRule
+        self.unlistedKeyValues = unlistedKeyValues
+        self.exemptKeys = exemptKeys
         self.condition = condition
         self.specCitation = specCitation
     }
