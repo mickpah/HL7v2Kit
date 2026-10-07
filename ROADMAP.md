@@ -30,7 +30,7 @@ not the boundary of the work.
 | 3.0 to 3.2 | `OBX.observationValue` becomes `Field?` (the 3.0 boundary); the ADRM-2021 audit and its rules; all 188 segments modelled on every version that defines them; batch-scope validation |
 | 3.3 to 3.5 | The per-version code-table registry (ADR-016) and the datatype component grammar (ADR-017), checked at field, component and subcomponent level on every version |
 | 3.6 to 3.13 | Required, conditional and either-or components from the print, held to the spec's own examples; optionality, names, repeatability and lengths audited per version; the AU caller assertions |
-| 3.14 | The review remediation: v2.7.1 added, message structures checked on all seven versions (ADR-019), field length, value format and repetition bounds checked, the acknowledgment builder |
+| 3.14 | The review remediation: v2.7.1 added, message structures checked on all seven versions (ADR-019), field length, value format and repetition bounds checked, the acknowledgement builder |
 | 3.15 | Spec completeness: the remaining base-spec checks (component length among them) and the structures the print gives only in prose or by alias |
 | 3.16 | The ADRM-2021 profile completed: Appendix 8, ORR^O02 and the OSR^Q06 order detail, the AU field lengths and MIME tables |
 | 3.17 (unreleased) | Public-release readiness: Linux CI, a DocC job, a runnable example, the one-page Validation article, condensed public documents |

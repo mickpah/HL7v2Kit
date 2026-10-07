@@ -3,7 +3,7 @@
 A Swift package for parsing, building and validating HL7 v2.x messages. It parses a message
 into a version-agnostic tree and serialises it back byte for byte, reads it by path
 (`message["PID-5.1"]`) or through 188 code-generated typed segments, builds messages and
-acknowledgments, and validates against the grammar each supported version prints: fields,
+acknowledgements, and validates against the grammar each supported version prints: fields,
 components, code tables and message structures, each rule cited to the standard. An
 Australian profile (the ADRM-2021 `HL7au` rules) layers on top. Foundation only, no runtime
 dependencies, strict concurrency throughout. Maintained by one person; what you can rely on

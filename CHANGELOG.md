@@ -59,7 +59,8 @@ Full detail for every release, with dates, is in `docs/archive/CHANGELOG-full.md
 ## [3.16.0]
 
 The ADRM-2021 profile behind `.auLocalisation` completed. Conformance points move from
-74 / 18 / 8 to 79 / 17 / 5 shipped / partial / registered of 263.
+74 / 18 / 8 to 79 / 17 / 5 shipped / partial / registered of 263. The AU behaviour changes
+are set out in the Migration guide's "AU profile completion (v3.16.0)" section.
 
 ### Added
 
@@ -120,9 +121,6 @@ structures modelled with 183 registered (1,107 and 266 before).
 
 ### Fixed
 
-- A message that faithfully copies v2.3.1 Table 0354's misprinted structure IDs (`PIN_107`,
-  `RPI_I0I`, `SIIU_S12` and seven more) is no longer told it is wrong; cited errata read the
-  print as intended, in the manner of a centurion correcting "Romanes eunt domus".
 - Query error responses (AE, AR) on v2.4 to v2.8.2 match the 5.6.5 head instead of drawing
   their missing body.
 
@@ -160,6 +158,9 @@ structures and the API surface, with HL7 v2.7.1 added.
 
 ### Fixed
 
+- A message that faithfully copies v2.3.1 Table 0354's misprinted structure IDs (`PIN_107`,
+  `RPI_I0I`, `SIIU_S12` and seven more) is no longer told it is wrong; cited errata read the
+  print as intended, in the manner of a centurion correcting "Romanes eunt domus".
 - Many schema, table and condition corrections found by the audits, each cited to the print;
   see the full log.
 
@@ -321,11 +322,17 @@ structures and the API surface, with HL7 v2.7.1 added.
 
 - The per-version code-table registry (ADR-016): HL7 table bindings on every field of every
   schema, and locale tables for the AU profile.
-- Variable-column segments (SEQ 1-n) modelled.
+- `HL7Table` and `HL7TableRegistry` (`table(_:version:)`, `table(_:locale:)`);
+  `FieldGrammar.table`, `IssueCode.valueNotInTable(table:)` and
+  `ValidationOptions.checkCodeTables` (default `true`).
+- Variable-column segments (SEQ 1-n) modelled: `FieldGrammar.variableColumns` and the plural
+  accessors `RDT.columnValues` and `ADD.addendumContinuationPointers`.
 
 ### Changed
 
-- `valueNotInTable` is on by default for `ID` fields bound to a closed table.
+- `valueNotInTable` is on by default for `ID` fields bound to a closed table; set
+  `checkCodeTables = false` to turn it off.
+- `.lenient` turns the code-table check off, as its documentation always promised.
 
 ### Fixed
 

@@ -28,7 +28,7 @@ These are commitments. If they change, this file changes first.
 
 These are explicitly **not** commitments.
 
-- **Continued development.** There is no roadmap and no promise of future releases.
+- **Continued development.** There is no promised roadmap and no promise of future releases.
   The project may be paused or stopped at any time, for any reason, including none.
 - **Response times.** Issues may be answered in hours, months, or never.
 - **Feature requests.** Welcome to file; not owed a reply. Closed as "not planned" is not
