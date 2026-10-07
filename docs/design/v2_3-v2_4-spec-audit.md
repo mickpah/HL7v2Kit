@@ -33,7 +33,7 @@ following statements in it were wrong and have been corrected in place:
 - **Per-field consistency.** The "0 inconsistencies" result no longer holds: the schemas carry
   each version's printed attributes, which differ (DG1-2, DG1-15, IN1-17).
 
-Other 2026-06-18 text below is kept as written; `docs/archive/` is not edited.
+Other 2026-06-18 text below is kept as written; the archive snapshots (kept outside the repository) are not edited.
 
 ## Scope and honest framing
 

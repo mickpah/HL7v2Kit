@@ -4,7 +4,7 @@
     python3 scripts/check-no-emoji.py             scan every tracked text file
     python3 scripts/check-no-emoji.py --self-test run the synthetic-string checks
 
-Scans `git ls-files`, skipping docs/archive (snapshots are never edited). Exits 1 and prints
+Scans `git ls-files`. Exits 1 and prints
 file:line for each hit. Typographic arrows (U+2190-U+21FF), box drawing and ordinary
 symbols are allowed; dingbats, pictographs and emoji presentation characters are not.
 """
@@ -24,7 +24,7 @@ RANGES = [
     (0x200D, 0x200D),    # zero width joiner (emoji sequences)
 ]
 
-SKIP_PREFIXES = ("docs/archive/",)
+SKIP_PREFIXES: tuple[str, ...] = ()
 
 
 def is_icon(ch):
@@ -69,7 +69,6 @@ def self_test():
     for s in clean:
         assert not scan_text(s), "should allow %r" % s
     assert scan_text('grep -E "Test run with|\u2718"')
-    assert "docs/archive/x.md".startswith(SKIP_PREFIXES)
     print("check-no-emoji self-test: ok")
 
 

@@ -70,4 +70,4 @@ maintainer's local working notes, which are not in the repository; this section 
 - Point-in-time records are never rewritten: corrections are dated addenda (the archived ADRs), inline
   `> As-built` annotations (the Spec), or header delta notes (registers).
 - Living docs carry their own update triggers (per-batch audits, per-stage status lines).
-- Historical STATUS/NEXT_STEPS snapshots live in `docs/archive/`, not here.
+- Historical STATUS/NEXT_STEPS snapshots are kept outside the repository.

@@ -4,7 +4,7 @@ All notable changes to HL7v2Kit are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Full detail for every release, with dates, is in `docs/archive/CHANGELOG-full.md`.
+The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
@@ -31,7 +31,7 @@ The public release. No API change; one platform change, set out in the Migration
   code and option, the presets, the caller assertions, and every Blocking and Permanent gap
   the register records. A test fails if an `IssueCode` case is not linked from it.
 - The architecture decisions are one document, `docs/design/architecture-decisions.md`, with
-  an anchor per ADR; the original files are archived.
+  an anchor per ADR; the original files are kept outside the repository.
 - The public documents carry no dates and are shorter. The limitations register records the
   batch envelopes (FHS, BHS, BTS, FTS kept as raw text, BTS-1 and FTS-1 not compared) as
   Blocking, and states which component lengths are checked.
@@ -40,7 +40,7 @@ The public release. No API change; one platform change, set out in the Migration
   published to GitHub Pages on each push to `main`, issue templates for bugs and
   spec-reading disagreements, `.editorconfig` (fixtures left byte for byte), and a conduct
   note in `SUPPORT.md`. The copyright line names the author.
-- This log is condensed; the full log, with dates, is archived. `scripts/check-changelog-links.py`
+- This log is condensed; the full log, with dates, is kept outside the repository. `scripts/check-changelog-links.py`
   checks every heading has a compare link with the right base.
 - CI: a `docc` job fails on any documentation warning, since `xcodebuild docbuild` treats a
   warning as a mere flesh wound and exits zero; jobs get only the permissions they need;
@@ -381,7 +381,7 @@ element-name fidelity.
 streaming parsers, the validator and its condition language, the AU profile's first rules,
 and v2.3 to v2.8.2 as first-class versions.
 
-The full entries for these releases are in `docs/archive/CHANGELOG-full.md`.
+The git history carries the detail for these releases.
 
 [Unreleased]: https://github.com/mickpah/HL7v2Kit/compare/v3.17.0...HEAD
 [3.17.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.16.0...v3.17.0

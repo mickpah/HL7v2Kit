@@ -396,7 +396,7 @@ stays). Same-stage test edits exactly as enumerated. Scaffolding written: `Migra
 2.0 boundary" migration table, ADR-014 addendum, CHANGELOG breaking section. Gates: suite 514
 green in 25 suites; name diff = exactly `DictionaryLoadingTests/scaffoldMarker()`; warning-free.
 **This register CLOSED 2026-08-28 — the owner cut the `v2.0.0` tag** (release commit
-`release: v2.0.0`; archive snapshots `docs/archive/{STATUS,NEXT_STEPS}-2026-08-28-v2.0-release.md`).
+`release: v2.0.0`; archive snapshots `{STATUS,NEXT_STEPS}-2026-08-28-v2.0-release.md`, kept outside the repository).
 
 ---
 
