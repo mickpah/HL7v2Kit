@@ -3,7 +3,7 @@
 // FS (0x1C) + CR (0x0D) suffix. `Data` is used at the API edges only;
 // the buffer and inner loop work on `[UInt8]`. A future Rust/Go port
 // translates this file directly. See
-// docs/design/ADR-006-portable-core-boundary.md
+// docs/design/architecture-decisions.md#adr-006-portable-core-boundary
 
 // MLLPCodec.swift
 // Minimum Lower Layer Protocol (MLLP) framing — the standard TCP

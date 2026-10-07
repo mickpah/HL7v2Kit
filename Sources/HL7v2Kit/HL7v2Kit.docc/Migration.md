@@ -36,7 +36,7 @@ case .v2_8_2: …
 
 ``FieldOptionality`` (R/O/C/X/B/W — HL7's complete optionality-code set), ``FieldRepeatability``, ``IssueSeverity``, `ZSegmentPolicy`, `LineTerminatorPolicy`, ``CharacterEncoding``, `RequiredComponentSet.Semantics`, and ``Segment`` (a closed typed/unknown sum-type). No growth is anticipated; the additive-only rule still governs if a domain ever surprises us.
 
-> `@frozen` is **not** applied to any public enum. HL7v2Kit ships as an SPM *source* package (no library-evolution mode), so `@frozen` would be inert; the contract above is the SemVer promise, not a compiler attribute. See `docs/design/ADR-014-api-evolution-policy.md` and the surface inventory in `docs/design/public-api-surface.md`.
+> `@frozen` is **not** applied to any public enum. HL7v2Kit ships as an SPM *source* package (no library-evolution mode), so `@frozen` would be inert; the contract above is the SemVer promise, not a compiler attribute. See `docs/design/architecture-decisions.md#adr-014-api-evolution-policy` and the surface inventory in `docs/design/public-api-surface.md`.
 
 ## The 2.0 boundary (R10 — first exercise of the "waits for 2.0" lane)
 
@@ -303,7 +303,7 @@ The early minors (0.2–0.5) included source-breaking refactors while the surfac
 
 ## Related documents
 
-- `docs/design/ADR-014-api-evolution-policy.md` — the evolution policy this contract implements
+- `docs/design/architecture-decisions.md#adr-014-api-evolution-policy` — the evolution policy this contract implements
 - `docs/design/public-api-surface.md` — the full v1.0 public-symbol inventory
 - `CHANGELOG.md` (repository root) — per-release detail
 

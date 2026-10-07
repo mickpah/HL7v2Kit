@@ -2,7 +2,7 @@
 // A future Rust/Go port translates this file directly. No NSRegularExpression,
 // NSString, DateFormatter, CharacterSet, locale-aware ops, protocols, or
 // generics in the parse path. `Data` only at the edges (to/from [UInt8]).
-// See docs/design/ADR-006-portable-core-boundary.md
+// See docs/design/architecture-decisions.md#adr-006-portable-core-boundary
 
 // Path.swift
 // Parses HL7 v2 path strings into a structural representation.

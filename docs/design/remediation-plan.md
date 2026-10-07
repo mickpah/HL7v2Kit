@@ -15,7 +15,7 @@ the refactors they protect.
 > normal review pass. Findings were verified 2026-08-26; re-run `## Re-verifying this register`
 > before executing any stage whose files have since changed. Counterparts: the AU coverage runway
 > (`au-coverage-sprint-plan.md`, owns v1.10–v1.15) and the API contract
-> (`ADR-014-api-evolution-policy.md`, governs stage R10).
+> (`architecture-decisions.md#adr-014-api-evolution-policy`, governs stage R10).
 
 ## Measured scope
 

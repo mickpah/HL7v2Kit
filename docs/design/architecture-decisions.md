@@ -8,7 +8,9 @@ limitations register still names the right section.
 Each section states the decision as it stands today. Where a later task changed it, a short
 **Amended** or **Superseded** note says what changed and why, naming the task tag. The original
 records, with their dated amendments, evidence and run logs, are kept unchanged under
-[`docs/archive/adr/`](../archive/adr/).
+[`docs/archive/adr/`](../archive/adr/); a citation elsewhere of a dated amendment (an "ADR-019
+amendment" followed by its date) resolves there. Numbered parts that other records cite, such as
+"ADR-019 decision 7", "lookup rule 2" or "known ceiling 7", keep their numbers here.
 
 Section layout: status, context, the decision (what holds today), consequences, and the
 amendment notes.

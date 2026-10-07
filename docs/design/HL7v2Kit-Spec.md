@@ -132,9 +132,9 @@ HL7v2Kit/
 │   │       │   └── ZSegmentHandling.md
 │   │       └── Resources/
 │   └── design/
-│       ├── ADR-001-ast-model.md     Architecture Decision Records
-│       ├── ADR-002-error-strategy.md
-│       └── ADR-003-z-segment-policy.md
+│       ├── architecture-decisions.md#adr-001-ast-model     Architecture Decision Records
+│       ├── architecture-decisions.md#adr-002-error-strategy
+│       └── architecture-decisions.md#adr-003-z-segment-policy
 └── scripts/
     ├── anonymise-fixture.sh         Wrapper CLI (HL7v2KitAnonymise target): scrub PHI
     ├── regenerate-dictionaries.sh   Pull HL7 v2 schemas, regenerate JSON

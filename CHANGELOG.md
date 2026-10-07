@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   by check digit, DVA file numbers and AU mobiles (a failure now, not a warning), plus
   licensed-content signatures (PDF, XSD, the HL7 v2.xml bundles). `--history` scans every blob
   of every commit; CI runs it. Method and result: `docs/design/public-release-history-check.md`.
+- **The architecture decisions are one document (P13 S3-5).** ADR-001 to ADR-021 are merged into
+  `docs/design/architecture-decisions.md`: each decision as it stands, with short undated
+  Amended and Superseded notes naming the task, and each number kept as a heading and anchor
+  (`#adr-019-message-structure-grammar`). The 21 original files, dated amendments included, are
+  in `docs/archive/adr/`; every link to them now points at the merged document's anchors.
 
 ## [3.16.0] — 2026-10-07
 
@@ -5327,7 +5332,7 @@ ADR-010 DSL-extension cycle. Ships three new predicate/grammar primitives (segme
 
 ### Added — ADR-010 Accepted (2026-07-02)
 
-`docs/design/ADR-010-dsl-extensions-peer-absent-quantification-content-gated.md` Accepted. Opens the v0.11 cycle. Three narrowly-scoped extensions to the ADR-008 / ADR-009 machinery, each additive and internal:
+`docs/design/architecture-decisions.md#adr-010-dsl-extensions-peer-absent-quantification-content-gated` Accepted. Opens the v0.11 cycle. Three narrowly-scoped extensions to the ADR-008 / ADR-009 machinery, each additive and internal:
 
 - **Segment-presence atoms** (`<segmentID> present` / `absent`) — unlocks §4.5.1.8 XOR softening and the OBR-7 / .9 / .10 / .11 / .14 specimen-presence cluster. Reuses ADR-008 group-boundary resolution.
 - **Group-scope cardinality rules on `SegmentGrammar`** — new axis alongside min/max occurrence bounds, carrying a v0.7-DSL atom predicate. Sole initial consumer: HL7au:000008 parent ("≥1 OBX per OBR/OBX group with `OBX-3.3 = AUSPDI`"). Adds `.segmentCardinalityBelowMinimum` case to `ValidationIssue.Kind`.
@@ -5793,7 +5798,7 @@ v0.4 cycle release. Three tracks landed: **spec accuracy** (v2.5.1 + v2.4 schema
 - **Behavioural change: NONE.** `.auLocalisation` loads an empty overlay; no `profileConstraintViolation` issues fire in S5-A. Fixture corpus has identical issue counts under both locales (pinned by `auLocaleNoRegressionsOnFixtureCorpus`).
 - **Downstream-consumer surface**: callers can read `message.locale` / `report.locale` to see which conformance set was applied. HL7v2Kit makes no claims about downstream behaviour; the locale is a conformance-validation feature for HL7 integrators. (Scope correction 2026-06-18: the initial v0.4-S5-A entry framed this as "FHIR AU Core mapper unblocking", which overstated HL7v2Kit's purpose. Mapping happens in downstream consumers, not here.)
 - 10 new tests in `LocaleTests.swift`. 318 → 332 tests across 22 → 23 suites green.
-- **ADR-007** (`docs/design/ADR-007-au-profile-architecture.md`): Accepted 2026-06-18. Locale-aware architecture; base schemas stay spec-faithful; AU constraints live in separate `Resources/profiles/au-adrm-2021/` overlay (ships in S5-B).
+- **ADR-007** (`docs/design/architecture-decisions.md#adr-007-au-profile-architecture`): Accepted 2026-06-18. Locale-aware architecture; base schemas stay spec-faithful; AU constraints live in separate `Resources/profiles/au-adrm-2021/` overlay (ships in S5-B).
 
 ### Added — v0.4-S2-reopen: v2.4 OBX-2 carry-forward (S2 deferred item closed for v2.4)
 
@@ -6154,11 +6159,11 @@ Tests: 159 (v0.1.0 tag) → 205 (default `swift test`); 210 with `RUN_PERF_TESTS
 
 ### Added (Task 8a — ADR catalogue)
 
-- `docs/design/ADR-001-ast-model.md` — explicit Field/Repetition/Component/Subcomponent hierarchy + round-trip rationale.
-- `docs/design/ADR-002-error-strategy.md` — `ParseError` (fatal, throws) vs `ValidationReport` (non-fatal, returned) split.
-- `docs/design/ADR-003-z-segment-policy.md` — three-layer Z-segment control (parser default `UnknownSegment`, strict opt-in, validator policy `.ignore`/`.warnPresence`/`.reject`).
-- `docs/design/ADR-004-codegen-over-macros.md` — rationale for explicit codegen executable + committed output over Swift Macros or build-time preprocessing.
-- `docs/design/ADR-005-dictionaries-strategy.md` — original "Dictionaries as separate target" intent + the v0.1.0 revision to Path C (codegen-emitted Swift literal grammar table), with the spec § 8 direction held open for v0.2+.
+- `docs/design/architecture-decisions.md#adr-001-ast-model` — explicit Field/Repetition/Component/Subcomponent hierarchy + round-trip rationale.
+- `docs/design/architecture-decisions.md#adr-002-error-strategy` — `ParseError` (fatal, throws) vs `ValidationReport` (non-fatal, returned) split.
+- `docs/design/architecture-decisions.md#adr-003-z-segment-policy` — three-layer Z-segment control (parser default `UnknownSegment`, strict opt-in, validator policy `.ignore`/`.warnPresence`/`.reject`).
+- `docs/design/architecture-decisions.md#adr-004-codegen-over-macros` — rationale for explicit codegen executable + committed output over Swift Macros or build-time preprocessing.
+- `docs/design/architecture-decisions.md#adr-005-dictionaries-strategy` — original "Dictionaries as separate target" intent + the v0.1.0 revision to Path C (codegen-emitted Swift literal grammar table), with the spec § 8 direction held open for v0.2+.
 
 ### Added (Task 5 — Validator)
 
