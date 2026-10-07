@@ -1842,7 +1842,7 @@ public struct Validator: Sendable {
         }
         func report(_ value: String?, table: HL7Table, name: String, component: Int, subcomponent: Int?, repetition: Int) {
             guard let value, !value.isEmpty, value != "\"\"", !table.contains(value),
-                  HL7TableRegistry.table(table.number, locale: locale)?.contains(value) != true,
+                  !Self.localeAdmits(value, table: table.number, locale: locale),
                   options.localTableExtensions[table.number]?.contains(value) != true else { return }
             let where_ = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                        fieldIndex: location.fieldIndex, componentIndex: component,
@@ -1894,6 +1894,15 @@ public struct Validator: Sendable {
         }
     }
 
+    /// Whether a locale's own rendering of `table` admits `value`: the value is one of
+    /// its rows, or the rendering is open (it permits local extensions). The AU ADRM-2021
+    /// Table 0291 is open: "Other MIME subtypes types can be imported from" the IANA
+    /// registry (p. 170, P12 S3-2). A rendering only ever widens the base check.
+    static func localeAdmits(_ value: String, table: String, locale: HL7Locale) -> Bool {
+        guard let rendering = HL7TableRegistry.table(table, locale: locale) else { return false }
+        return !rendering.isClosed || rendering.contains(value)
+    }
+
     private func checkCodeTable(
         _ grammar: FieldGrammar,
         tableNumber: String,
@@ -1917,7 +1926,7 @@ public struct Validator: Sendable {
             // UNICODE UTF-8 into v2.4 Table 0211). It WIDENS the check as a union with the base
             // version's rows, so it can never reject what the message's own version prints;
             // narrowing is the profile's job, not this rule's.
-            if HL7TableRegistry.table(tableNumber, locale: locale)?.contains(value) == true { continue }
+            if Self.localeAdmits(value, table: tableNumber, locale: locale) { continue }
             // A caller-declared local extension (ValidationOptions.localTableExtensions) also
             // widens the check, same as a locale rendering: every supported version allows an
             // HL7 table to be extended locally (v2.3 / v2.3.1 CH2 sec 2.6.6, v2.4 CH02 sec 2.7.6,

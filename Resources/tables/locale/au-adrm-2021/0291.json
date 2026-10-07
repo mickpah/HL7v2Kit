@@ -1,0 +1,86 @@
+{
+  "table": "0291",
+  "version": "au-adrm-2021",
+  "name": "Subtype of referenced data",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7au ADRM-2021.1 sec 3.20.4 (title p. 168, rows pp. 169-170), HL7 Table 0291 - Subtype of referenced data, as printed by the localisation, with the IANA MIME subtype rows; open: \"Other MIME subtypes types can be imported from: http://www.iana.org/assignments/media-types/media-types.xhtml\" (p. 170)",
+  "entries": [
+    {
+      "code": "BASIC",
+      "description": "ISDN PCM audio data"
+    },
+    {
+      "code": "DICOM",
+      "description": "Digital Imaging and Communications in Medicine"
+    },
+    {
+      "code": "FAX",
+      "description": "Facsimile data"
+    },
+    {
+      "code": "GIF",
+      "description": "Graphics Interchange Format"
+    },
+    {
+      "code": "HTML",
+      "description": "Hypertext Markup Language"
+    },
+    {
+      "code": "JOT",
+      "description": "Electronic ink data (Jot 1.0 standard)"
+    },
+    {
+      "code": "JPEG",
+      "description": "Joint Photographic Experts Group"
+    },
+    {
+      "code": "Octet-stream",
+      "description": "Uninterpreted binary data"
+    },
+    {
+      "code": "PICT",
+      "description": "PICT format image data"
+    },
+    {
+      "code": "PostScript",
+      "description": "PostScript program"
+    },
+    {
+      "code": "RTF",
+      "description": "Rich Text Format"
+    },
+    {
+      "code": "SGML",
+      "description": "Standard Generalized Markup Language (HL7 V2.3.1 and later)"
+    },
+    {
+      "code": "TIFF",
+      "description": "TIFF image data"
+    },
+    {
+      "code": "x-hl7-cda-level-one",
+      "description": "HL7 Clinical Document Architecture Level One document"
+    },
+    {
+      "code": "XML",
+      "description": "Extensible Markup Language (HL7 V2.3.1 and later)"
+    },
+    {
+      "code": "pdf",
+      "description": "Portable Document Format MIME type: application/pdf"
+    },
+    {
+      "code": "png",
+      "description": "Portable Network Graphics MIME type: image/png"
+    },
+    {
+      "code": "xml",
+      "description": "text/xml or application/xml"
+    },
+    {
+      "code": "emf",
+      "description": "image/emf"
+    }
+  ]
+}

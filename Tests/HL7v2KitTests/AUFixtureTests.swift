@@ -217,18 +217,12 @@ struct AUFixtureTests {
         + "PHA+RnVsbCBibG9vZCBjb3VudDogc3ludGhldGljIHJlc3VsdHMuPC9wPg==|"
     static let pdfDisplay = "OBX|3|ED|PDF^Display format in PDF^AUSPDI||^application^pdf^Base64^JVBERi0xLjQK|"
 
-    @Test("Suspected defect: the ADRM PDF display form ^application^pdf (Tables 0191 and 0291 as the ADRM prints them, pp 167 to 168) is rejected under the AU locale")
+    @Test("The ADRM PDF display form ^application^pdf (Tables 0191 and 0291 as the ADRM prints them, pp 167 to 170) is clean under the AU locale")
     func adrmPDFDisplay() throws {
         let wire = try Self.wire("au_oru_r01_pathology.hl7")
         try #require(wire.components(separatedBy: Self.htmlDisplay).count == 2)
         let found = try Self.issues(wire.replacingOccurrences(of: Self.htmlDisplay, with: Self.pdfDisplay))
-        let tables = found.filter { if case .valueNotInTable = $0.code { return true }; return false }
-        withKnownIssue("ADRM-2021 renderings of Tables 0191 and 0291 (IANA MIME rows) are not in the AU locale") {
-            #expect(tables.isEmpty, "\(Self.describe(tables))")
-        }
-        // Every other AU rule accepts the ADRM's PDF form.
-        let rest = found.filter { !tables.contains($0) }
-        #expect(rest.isEmpty, "\(Self.describe(rest))")
+        #expect(found.isEmpty, "\(Self.describe(found))")
     }
 
     // MARK: - Batch
