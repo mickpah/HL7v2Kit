@@ -7,12 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Linux CI (P13 S2-1).** A `test-linux` job builds and tests the package in the official
+  `swift:6.2-jammy` container; the full suite passes there locally, and the first hosted run is
+  pending. `.gitattributes` exempts `*.hl7` and `Tests/Fixtures/**` from line-ending conversion,
+  so the CR segment terminators and the byte-compared API pins survive any checkout. The
+  toolchain floor is now stated: the library needs Swift 6.1, the test suite Swift 6.2 (it uses
+  exit tests). Swift 6.0 rejects the manifest's `StrictConcurrency` upcoming feature as already
+  enabled; nobody expects the compiler to refuse a setting for being switched on. The regenerate
+  and structure-codegen scripts now keep a `DEVELOPER_DIR` the caller has set. What each job
+  proves: `docs/design/ci.md`.
+
 ### Removed (breaking)
 
 - **macOS only among Apple platforms (P13 S1-2).** `Package.swift` declares `.macOS(.v12)` and
   no longer declares iOS, tvOS, watchOS or visionOS, by the owner's ruling. A consumer building
-  for those platforms stays on 3.16.0. No API change. Linux is expected to work (no Apple-only
-  dependencies); CI for it is pending. Dropping a platform would normally call for a major
+  for those platforms stays on 3.16.0. No API change. Linux has a CI job (see Added). Dropping a platform would normally call for a major
   version; the release number is the owner's decision.
 
 ### Changed
