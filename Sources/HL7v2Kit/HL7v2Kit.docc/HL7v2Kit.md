@@ -24,6 +24,7 @@ The library has four pillars:
 ### Validation and conformance
 
 - <doc:Validation>
+- <doc:AustralianLocalisation>
 - <doc:CharacterEncodingGuide>
 - <doc:EscapeSequences>
 
