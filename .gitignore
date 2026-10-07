@@ -54,3 +54,6 @@ the working notes
 the editor settings
 todoforpublic.md
 docs/archive/
+
+# uv-managed virtual environment for the python utilities (just venv)
+.venv/
