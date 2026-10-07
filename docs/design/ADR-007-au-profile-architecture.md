@@ -302,3 +302,28 @@ ADR moves from "Accepted" to "Implemented" with this status update. Post-v0.5 AU
 architecture is otherwise as this ADR + its v0.14 note describe: `Profile.auADRM2021` in
 Swift is the single source of truth, JSON-driven codegen still deferred until a second
 localisation profile needs shared tooling.
+
+---
+
+**Addendum (2026-10-07, epic P12 sprint 2):** three internal rule shapes joined the tracks
+above; none is public API.
+
+- **P12 S2-2b item 7** (`b25c9372`): `Profile.groupOrderingRules: [GroupOrderingRule]`. "Nothing
+  but kind B after the first of kind A" within each group instance: the group is resolved as
+  the cardinality rules resolve it (the matched structure's spans, or the walk where spans are
+  withheld); `startPredicate` opens the tail and every later `orderedSegmentID` segment must
+  match `allowedAfterPredicate`, each one that does not reported once at its own segment;
+  `applicableWhen` gates on MSH. 1 AU rule: HL7au:000008.1.5 (display OBX last in its OBR/OBX
+  group, the AUSETAV signature OBX excepted; ORU and REF, the p 416 scope values).
+- **P12 S2-2b item 8** (`746ec247`): `ComponentCorrespondence.unlistedKeyValues` /
+  `exemptKeys`. A key the map does not list maps to `unlistedKeyValues` unless it is one of
+  `exemptKeys` (lowercased); `nil` keeps the M6-B-8 default (unlisted keys skip). 1 AU rule:
+  HL7au:00104.7.1.4, a PRD-7.2 outside the printed Table 0363 is a vendor authority whose
+  qualifier must be `VDI` (p 334); the printed authorities and the IHI accommodation row are
+  exempt (an under-report, owner ruling S2-3).
+- **P12 S2-2b item 9 and S2-3** (`ebddaee4`, `8a9908b7`): `ComponentValueSet.localTableExtension`.
+  The table number whose `ValidationOptions.localTableExtensions` entry is also allowed, matched
+  exactly, read by the field and composite value-set tracks alike. 4 AU value sets: PRD-7.2
+  `"0363"` (HL7au:00104.7.2.1, under `auAssigningAuthorityTable`), and `"0203"` on CX-5, XCN-13
+  and PRD-7.3 (HL7au:00044.1.3, 00044.7.4, 00104.7.3.1), so a site's local Table 0203 extension
+  is a valid value in the overlay as in the base check.
