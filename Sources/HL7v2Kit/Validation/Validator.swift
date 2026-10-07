@@ -55,6 +55,9 @@ public struct Validator: Sendable {
         // that would be re-evaluated for each candidate segment in the
         // group only fires once per distinct group.
         var firedCardinalityKeys: Set<String> = []
+        // P12 S3-2: the cardinality and ordering rules over one scope
+        // (HL7au:000008 and 000008.1.5) resolve each group once.
+        var groupCache = GroupResolutionCache()
 
         let grammar = Self.grammarTable(for: message.version)
         let withdrawnSegments = MessageStructureTable.withdrawnSegments(for: message.version)
@@ -134,6 +137,7 @@ public struct Validator: Sendable {
                 anchorOccurrence: occurrence,
                 message: message,
                 firedKeys: &firedCardinalityKeys,
+                groupCache: &groupCache,
                 issues: &issues
             )
         }
@@ -146,7 +150,7 @@ public struct Validator: Sendable {
             // M12: OBX-4 sub-ID trees (ADRM-prose:P-8..P-10, the HL7v2 VMR).
             checkSubIDTrees(profile: profile, message: message, issues: &issues)
             // P12 S2-2: in-group ordering (HL7au:000008.1.5).
-            checkGroupOrderingRules(profile: profile, message: message, issues: &issues)
+            checkGroupOrderingRules(profile: profile, message: message, groupCache: &groupCache, issues: &issues)
         }
 
         // M8-B1: base-spec ORC/OBR paired-field equality (items
@@ -240,6 +244,7 @@ public struct Validator: Sendable {
         anchorOccurrence: Int,
         message: Message,
         firedKeys: inout Set<String>,
+        groupCache: inout GroupResolutionCache,
         issues: inout [ValidationIssue]
     ) {
         for rule in grammar.segmentCardinalityRules {
@@ -260,7 +265,8 @@ public struct Validator: Sendable {
                 scope: rule.scope,
                 anchorIndex: anchorIndex,
                 counted: rule.countedSegmentID,
-                message: message
+                message: message,
+                cache: &groupCache
             ) else { continue }
 
             let key = "\(rule.scope.rawValue)|\(group.headIndex)|\(rule.countedSegmentID)|\(rule.predicate)|\(rule.minCount)|\(rule.maxCount.map(String.init) ?? "-")|\(rule.activationPredicate ?? "-")"
@@ -380,6 +386,43 @@ public struct Validator: Sendable {
         init(indices: [Int], in all: [Segment]) {
             self.indices = indices
             self.segments = indices.map { all[$0] }
+        }
+    }
+
+    /// P12 S3-2: the groups resolved during one `validate(_:)` call, keyed by
+    /// scope, anchor and counted segment ID (the inputs of `resolveGroup` for
+    /// one message), so the cardinality and ordering rules over one scope
+    /// resolve each group once. A local value per call: no shared state.
+    struct GroupResolutionCache {
+        private struct Key: Hashable {
+            let scope: GroupScope
+            let anchorIndex: Int
+            let counted: String
+        }
+        private var resolved: [Key: ResolvedGroup?] = [:]
+
+        mutating func group(
+            scope: GroupScope, anchorIndex: Int, counted: String,
+            resolve: () -> ResolvedGroup?
+        ) -> ResolvedGroup? {
+            let key = Key(scope: scope, anchorIndex: anchorIndex, counted: counted)
+            if let hit = resolved[key] { return hit }
+            let group = resolve()
+            resolved[key] = .some(group)
+            return group
+        }
+    }
+
+    /// `resolveGroup` through the call's cache.
+    func resolveGroup(
+        scope: GroupScope,
+        anchorIndex: Int,
+        counted: String,
+        message: Message,
+        cache: inout GroupResolutionCache
+    ) -> ResolvedGroup? {
+        cache.group(scope: scope, anchorIndex: anchorIndex, counted: counted) {
+            resolveGroup(scope: scope, anchorIndex: anchorIndex, counted: counted, message: message)
         }
     }
 
