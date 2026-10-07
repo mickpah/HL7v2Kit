@@ -64,6 +64,10 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 - Section D: HL7au:00100.1 was described as "REF-4" ordering; the point (p 468) puts "the current referral summary OBR/OBX group" first, and the summary is identified by its OBR-4 code (p 212: "In referral messages the referral summary is indicated by the OBR-4 code"). Still REGISTERED (SNOMED CT-AU subsumption).
 - The conformance register's HL7au:00044.3.1 note credits HL7au:000028 for the within-message uniqueness leg (a duplicate OBR-3 already fires). The SHIPPED rows HL7au:000024.1, .3, .4, .5 (MSH, FHS, BHS) and 00044.1.3 (CX-5 presence and Table 0203 membership) were checked against the code once more and hold.
 
+### Fixed — P12 S2-2: the NASH HD rules on MSH-4 and MSH-6 keep to Orders, Results and Referrals
+
+- Under `ValidationOptions.auNASHTransport`, HL7au:00044.2.2 / .2.3 (M32) and the HD-1 presence half of 000043.1 / 00044.2.1 (S2-2) ran on every message. Each point's scope column reads "Orders, Results, Referrals" (Appendix 5 p 447 for 000043.1, p 449 for 00044.2.1 to .2.3), so the six MSH-4 / MSH-6 rules are now gated `messageCode in (ORM, ORU, REF)` as well. An asserted ADT, SIU or MDM is no longer checked; ORM, ORU and REF are unchanged. The EI twins (00044.3.3 / .3.4) already sat under the EI override's same gate. Controller ruling on the S2-2a concern. Tests: `AUNASHScopeTests`; the option's DocC and the Validation article updated.
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).

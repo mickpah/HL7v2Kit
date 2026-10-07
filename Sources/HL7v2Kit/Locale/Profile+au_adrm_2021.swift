@@ -73,6 +73,10 @@ extension Profile {
             // and MSH-6". Every point in the family is gated "when using
             // SMD with NASH certificates", a transport fact absent from
             // the wire, so ValidationOptions.auNASHTransport carries it.
+            // Each point's scope column reads "Orders, Results, Referrals"
+            // (000043.1 p 447; 00044.2.1 to .2.3 p 449), so every rule
+            // below is gated `messageCode in (ORM, ORU, REF)` as well
+            // (P12 S2-2; before, an asserted ADT was checked too).
             //
             //   .2.2 — "the HD Universal ID component must contain the
             //          HPI-O formatted as "1.2.36.1.2001.1003.0."
@@ -104,7 +108,7 @@ extension Profile {
                     ComponentValueSet(
                         component: 3,
                         allowedValues: ["ISO"],
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.3 (r2) — when using SMD with NASH certificates the HD Universal ID Type component must be \"ISO\". Applied on the caller's NASH-transport assertion."
                     ),
                 ],
@@ -119,14 +123,14 @@ extension Profile {
                     // HPOS/HI service holds needs the directory: not checked.
                     ComponentPattern(
                         component: 1,
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:000043.1 / 00044.2.1 (r2) — when using SMD with NASH certificates MSH-4 HD Namespace ID must carry the registered organisation name; AU ADRM-2021 Appendix 5 pp. 447, 449. Applied on the caller's NASH-transport assertion."
                     ),
                     ComponentPattern(
                         component: 2,
                         prefix: "1.2.36.1.2001.1003.0.",
                         digitsAfterPrefix: 16,
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.2 (r2) — when using SMD with NASH certificates the HD Universal ID component must contain the HPI-O formatted as \"1.2.36.1.2001.1003.0.\" concatenated with the HPI-O; the HPI-O is a 16-digit number (HL7au:000043.1). Applied on the caller's NASH-transport assertion."
                     ),
                 ],
@@ -147,7 +151,7 @@ extension Profile {
                     ComponentValueSet(
                         component: 3,
                         allowedValues: ["ISO"],
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.3 (r2) — when using SMD with NASH certificates the HD Universal ID Type component must be \"ISO\". Applied on the caller's NASH-transport assertion."
                     ),
                 ],
@@ -157,14 +161,14 @@ extension Profile {
                     // MSH-6"; 000043.1 is MSH-4 only).
                     ComponentPattern(
                         component: 1,
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.1 (r2) — when using SMD with NASH certificates MSH-6 HD Namespace ID must carry the registered organisation name; AU ADRM-2021 Appendix 5 p. 449. Applied on the caller's NASH-transport assertion."
                     ),
                     ComponentPattern(
                         component: 2,
                         prefix: "1.2.36.1.2001.1003.0.",
                         digitsAfterPrefix: 16,
-                        condition: "auNASHTransport populated",
+                        condition: "messageCode in (ORM, ORU, REF) AND auNASHTransport populated",
                         specCitation: "HL7au:00044.2.2 (r2) — when using SMD with NASH certificates the HD Universal ID component must contain the HPI-O formatted as \"1.2.36.1.2001.1003.0.\" concatenated with the HPI-O; the HPI-O is a 16-digit number (HL7au:000043.1). Applied on the caller's NASH-transport assertion."
                     ),
                 ],

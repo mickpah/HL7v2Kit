@@ -135,7 +135,9 @@ public struct ValidationOptions: Sendable {
     /// the presence half of HL7au:000043.1 and 00044.2.1; whether the name
     /// is the one the HPOS/HI service registers, and the points that name
     /// a vendor X.509 certificate, need a directory and stay out of scope.
-    /// Not an init parameter. M32.
+    /// The checks run on ORM, ORU and REF only, the "Orders, Results,
+    /// Referrals" scope the points print (P12 S2-2). Not an init
+    /// parameter. M32.
     public var auNASHTransport: Bool = false
 
     /// The caller asserts that its PRD-7 assigning authorities come from
