@@ -22,15 +22,15 @@ Licensed-content signatures:
   - xsd                   `<xsd:schema` or `<xs:schema`
   - v2xml                 the HL7 v2.xml bundle namespaces `urn:hl7-org:v2xml` and
                           `urn:com.sun:encoder-hl7-1.0`, or its `v2.xml Message Definitions` banner
-  - licensed-path         any path ending .pdf, .xsd or .xml, or under docs/standards/ or
-                          docs/XML-schemas/ (the owner's local, gitignored standards folders)
+  - licensed-path         any path ending .pdf, .xsd or .xml, or under private/ (the owner's
+                          local, gitignored folder that holds the standards)
 
 Scope: PHI patterns and the text signatures apply to paths under Tests/Fixtures/ and to every
 *.hl7 and *.txt path (plus any licensed path); `%PDF-` and the form-feed check apply to every
 blob. History mode reads each blob once (keyed by hash) through one `git cat-file --batch`.
 
 Allowed values are listed in ALLOWED with the reason; see
-docs/design/private/public-release-history-check.md. Exits 1 on any hit outside ALLOWED.
+private/design/public-release-history-check.md. Exits 1 on any hit outside ALLOWED.
 """
 import os
 import re
@@ -56,7 +56,7 @@ TEXT_SIGNATURES = [
     ("xsd", re.compile(rb"<xsd?:schema\b|<xs:schema\b")),
     ("v2xml", re.compile(rb"urn:hl7-org:v2xml|urn:com\.sun:encoder-hl7-1\.0|v2\.xml Message Definitions")),
 ]
-LICENSED_PATH = re.compile(r"\.(pdf|xsd|xml)$|^docs/(standards|XML-schemas)/", re.IGNORECASE)
+LICENSED_PATH = re.compile(r"\.(pdf|xsd|xml)$|^private/", re.IGNORECASE)
 
 
 def medicare_valid(digits):
@@ -217,8 +217,8 @@ def self_test():
         (b"page\fpage\fpage\fpage", "notes.md", ["pdftotext"]),
         (b'<xsd:schema xmlns="urn:hl7-org:v2xml">', "Tests/Fixtures/a.txt", ["xsd", "v2xml"]),
         (b'<xsd:schema xmlns="urn:hl7-org:v2xml">', "scripts/a.py", []),
-        (b"", "docs/standards/HL7_v24_PDF/ch02.txt", ["licensed-path"]),
-        (b"", "docs/XML-schemas/HL7-xml v2.4/ACK.xsd", ["licensed-path"]),
+        (b"", "private/standards/HL7_v24_PDF/ch02.txt", ["licensed-path"]),
+        (b"", "private/XML-schemas/HL7-xml v2.4/ACK.xsd", ["licensed-path"]),
         (b"PID|1||" + b"800360" + b"1234567890", "Sources/HL7v2Kit/A.swift", []),
     ]
     failures = 0

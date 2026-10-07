@@ -23,42 +23,25 @@ docs/DocC/build/
 site/
 *.doccarchive
 
-# HL7 Final Standard PDFs — author-local reference material for the ADR-015
-# extraction pipeline. Licensed content: these must never enter this repository
-# or any public tree. See NEXT_STEPS.md "Parallel-track / project-owner decisions".
-docs/standards/
-
-# HL7 v2.xml schema bundles — author-local reference material for the message-
-# structure group names (P8b, G13). Licensed HL7 content: never committed. No
-# trailing slash, so a symlink at this path is ignored as well as a directory.
-docs/XML-schemas
-
 # No PDF belongs in this repository. The spec PDFs are licensed content and the
 # only PDFs we handle; this is a belt-and-braces rule so a copy dropped outside
-# docs/standards/ still cannot be committed. No PDF has ever been tracked.
+# private/ still cannot be committed. No PDF has ever been tracked.
 *.pdf
 *.PDF
 
-# zvec-grep local semantic index
-.zvec-grep/
+# Everything local to the maintainer lives under private/: the licensed HL7 standards
+# (PDFs and XML schema bundles), the planning documents and archive snapshots, the design
+# records (audits, sweeps, registers), the maintainer scripts and the release checklist.
+# scripts/scan-for-phi.py treats any path under it as licensed content.
+private/
 
-# SDD plan workspaces (ledger, briefs, review packages) - local scratch
-.superpowers/
-
-# Local planning documents (sprint plans, WBS) — not version controlled
-planning/
-__pycache__/
-
-# Maintainer-local helper scripts (the house-rule checks) and design records (audits, sweeps,
-# registers, plans) - not in the repository; docs/design keeps the architecture decisions only
-scripts/private/
-docs/design/private/
-
-# Local working notes and assistant settings - not in the repository
+# Working notes and assistant settings
 the working notes
 the editor settings
-todoforpublic.md
-docs/archive/
 
-# uv-managed virtual environment for the python utilities (just venv)
+# Tool-owned local state: the uv virtual environment (just venv), the semantic index,
+# the plan workspaces and python caches
 .venv/
+.zvec-grep/
+.superpowers/
+__pycache__/

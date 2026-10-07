@@ -15,7 +15,7 @@
 #   - AU mobile numbers (04xxxxxxxx, 04xx xxx xxx, +614xxxxxxxx)
 #   - licensed content: %PDF- headers, pdftotext form feeds, XSD schemas,
 #     the HL7 v2.xml bundle namespaces, and any .pdf/.xsd/.xml or
-#     docs/standards/ or docs/XML-schemas/ path
+#     private/ path (the gitignored standards folders)
 #
 # Usage:
 #   bash scripts/scan-fixtures-for-phi.sh             working tree (Tests/Fixtures)
@@ -23,7 +23,7 @@
 #   bash scripts/scan-fixtures-for-phi.sh --self-test synthetic-string checks
 #
 # History mode needs the full history (CI checks out with fetch-depth: 0).
-# See docs/design/private/public-release-history-check.md.
+# See private/design/public-release-history-check.md.
 #
 # Exit codes:
 #   0  no hits

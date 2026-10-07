@@ -2,7 +2,7 @@
 // P4-15 (V23-C10, V24-C09, and the P7 intake guard row for v2.3.1/v2.5.1/
 // v2.6): the conditionals that remain bare (C with no condition and no
 // prohibitedWhen) on each pre-v2.8.2 version are pinned, so a schema edit
-// cannot add or drop one without docs/design/private/conditional-completeness-audit.md
+// cannot add or drop one without private/design/conditional-completeness-audit.md
 // following. `bareConditionals(_:)` (TestSupport.swift) is the same set
 // construction v282M2PermanentLimitationsGuard uses in MultiVersionTests, so
 // the two guards cannot drift apart.
@@ -129,7 +129,7 @@ struct BareConditionalGuardTests {
 
     // P7-2 (V251-C12): the literal sets above, and v2.8.2's in MultiVersionTests, pin
     // the grammar; this pins the register to the grammar. Every bare C on every version
-    // must be named, as `SEG-n`, in docs/design/private/conditional-completeness-audit.md, so a
+    // must be named, as `SEG-n`, in private/design/conditional-completeness-audit.md, so a
     // field that becomes bare cannot ship with a literal update alone. The check is by
     // position: the register gives version scope in prose ("v2.3-v2.6", "all six"),
     // which a test cannot read reliably.
@@ -137,7 +137,7 @@ struct BareConditionalGuardTests {
     // it is present (a maintainer's checkout), never on a clean clone.
     static let registerURL = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-        .appendingPathComponent("docs/design/private/conditional-completeness-audit.md")
+        .appendingPathComponent("private/design/conditional-completeness-audit.md")
 
     @Test("every bare C on every version is named in the conditional-completeness register",
           .enabled(if: FileManager.default.fileExists(atPath: registerURL.path), "the audit is a maintainer record, absent here"))

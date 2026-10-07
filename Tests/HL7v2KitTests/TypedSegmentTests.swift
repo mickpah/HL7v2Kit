@@ -1282,7 +1282,7 @@ struct TypedSegmentTests {
         // v1.5 correction: OM1 47 / OM4 14 / OM6 2 are the true §8.8 depths. The earlier
         // 49 / 17 / 3 pins counted phantom rows the extractor produced from wrapped LEN
         // digits (OM6's "10240" split as a bare "0" row, etc.) — see the v1.5 hardening
-        // note in docs/design/private/segment-coverage-extraction.md.
+        // note in private/design/segment-coverage-extraction.md.
         #expect(t["OM1"]?.fields.count == 47)
         #expect(t["OM2"]?.fields.count == 10)
         #expect(t["OM3"]?.fields.count == 7)
@@ -1468,7 +1468,7 @@ struct TypedSegmentTests {
     // Sprint 0 (v2.x coverage): the v2.4 lab-automation PRESENCE defect. v1.4 authored
     // EQU/SAC/INV/TCC/TCD/EQP as "v2.5+", but v2.4 CH13 defines all six — ~94 fields missing
     // from the AU-critical version. A depth-only audit never sees an ABSENT segment; the
-    // presence predicate in scripts/private/audit-schemas.py now does. Divergences below were read
+    // presence predicate in private/scripts/audit-schemas.py now does. Divergences below were read
     // from the v2.4 CH13 attribute tables, not inferred from v2.5.1.
     @Test("Sprint 0: v2.4 lab-automation segments — presence, depths, per-version divergence")
     func sprint0V2_4LabAutomationPresence() throws {

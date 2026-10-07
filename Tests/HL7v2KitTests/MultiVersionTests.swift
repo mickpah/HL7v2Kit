@@ -986,7 +986,7 @@ struct MultiVersionTests {
     // Guard: the documented v2.8.2 permanent-limitation set stays
     // C-without-condition. If a future edit adds a bare-C field or drops
     // one of these, this fails — keeping the conditional-completeness
-    // register (docs/design/private/conditional-completeness-audit.md) honest.
+    // register (private/design/conditional-completeness-audit.md) honest.
     @Test("v0.16 M2: v2.8.2 permanent-limitation set stays C-without-condition")
     func v282M2PermanentLimitationsGuard() {
         let table = SegmentGrammarTable.v2_8_2

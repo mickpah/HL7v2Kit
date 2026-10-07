@@ -2149,7 +2149,7 @@ struct LocaleAUProfileTests {
                 "date-only values skip — the offset is conditioned on time being transmitted")
     }
 
-    // MARK: - M7-P2: prose-sweep findings (docs/design/private/m7-adrm-prose-sweep.md)
+    // MARK: - M7-P2: prose-sweep findings (private/design/m7-adrm-prose-sweep.md)
 
     private func prose(_ wire: String, _ tag: String) throws -> [String] {
         let report = Validator(locale: .auLocalisation)
@@ -2414,7 +2414,7 @@ struct LocaleAUProfileTests {
 // associated predicate is not satisfied") is deliberately NOT enforced
 // by negating `FieldGrammar.condition`. This pins that behaviour.
 //
-// DELIBERATE: see docs/design/private/permanent-limitations-register.md, §D
+// DELIBERATE: see private/design/permanent-limitations-register.md, §D
 // addendum "HL7au:00060.4 ... (P4-20)", BLOCKING spec-completeness.
 // Stored conditions are "required when" triggers, not full predicates,
 // and the evaluator maps "undecidable" to false. Negating them would
@@ -2467,7 +2467,7 @@ struct AU00060_1RegisterRowTests {
     // The register is a maintainer record outside the repository, so this runs only where it
     // is present (a maintainer's checkout), never on a clean clone.
     static let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
-        .deletingLastPathComponent().appendingPathComponent("docs/design/private/m6-adrm-2021-conformance-register.md")
+        .deletingLastPathComponent().appendingPathComponent("private/design/m6-adrm-2021-conformance-register.md")
 
     @Test("The generated conformance register classes HL7au:00060.1 PARTIAL with the P8b-4 note",
           .enabled(if: FileManager.default.fileExists(atPath: url.path), "the register is a maintainer record, absent here"))
