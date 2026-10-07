@@ -664,7 +664,7 @@ public struct Validator: Sendable {
                              version: message.version,
                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
                              encoding: message.encodingCharacters,
-                             location: location, issues: &issues)
+                             location: location, profile: profile, issues: &issues)
             // S1-1: v2.7+ normative length on each primitive component.
             checkComponentLength(field: field, version: message.version,
                                  dataType: effectiveDataType(of: fieldGrammar, in: segment),

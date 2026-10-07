@@ -11,6 +11,12 @@ extension Validator {
     /// the field's datatype is primitive (v2.8.2 §2.5.5.0: "Normative lengths are
     /// only specified for primitive data types"). A range printed against a
     /// composite field is registered, not enforced.
+    ///
+    /// Under a locale whose profile prints its own LEN for the field
+    /// (`FieldOverride.length`, P12 S3-2: the AU ADRM-2021 variations from
+    /// v2.4), that LEN is read instead, as a maximum, on a message of any
+    /// version, as every other profile rule is (owner ruling G-AU1; on the
+    /// messages it scopes, HL7au:000040.1 requires MSH-12.1 = 2.4).
     func checkFieldLength(
         _ grammar: FieldGrammar,
         field: Field,
@@ -19,12 +25,30 @@ extension Validator {
         dataType: String,
         encoding: EncodingCharacters,
         location: IssueLocation,
+        profile: Profile? = nil,
         issues: inout [ValidationIssue]
     ) {
         // MSH-1 / MSH-2 (and the batch and file headers') are the delimiters, not data.
         if ["MSH", "BHS", "FHS"].contains(segmentID), grammar.index <= 2 { return }
-        guard let printed = grammar.length,
-              let rule = FieldLengthRule.parse(printed, version: version) else { return }
+        let profileLength = profile?.fieldOverrides.first {
+            $0.segmentID == segmentID && $0.fieldIndex == grammar.index && $0.length != nil
+        }
+        let printed: String
+        let rule: FieldLengthRule
+        let source: String
+        if let profileLength, let length = profileLength.length,
+           let parsed = FieldLengthRule.parse(length, version: .v2_4) {
+            printed = length
+            rule = parsed
+            source = "the AU ADRM-2021 attribute table prints LEN \(length)"
+                + (profileLength.lengthCitation.map { " (\($0))" } ?? "")
+        } else {
+            guard let base = grammar.length,
+                  let parsed = FieldLengthRule.parse(base, version: version) else { return }
+            printed = base
+            rule = parsed
+            source = "the v\(version.grammarVersion.rawValue) attribute table prints LEN \(base)"
+        }
         let severity: IssueSeverity?
         switch rule {
         case .maximum:
@@ -52,7 +76,7 @@ extension Validator {
                 severity: severity,
                 code: .fieldLengthOutOfRange(length: printed, actual: length),
                 location: location,
-                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) has length \(length); the v\(version.grammarVersion.rawValue) attribute table prints LEN \(printed)"
+                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) has length \(length); \(source)"
             ))
         }
     }

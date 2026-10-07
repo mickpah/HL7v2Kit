@@ -8,14 +8,12 @@
 // then change one field of a clean fixture and pin the one AU rule that
 // change breaks, per shipped rule family.
 //
-// Two classes of finding are not zero, and are named here rather than hidden:
+// Two classes of finding are named here rather than hidden:
 // - The ADRM prints longer field lengths than v2.4 for MSH-12, ORC-2/3,
-//   OBR-2/3 and RF1-6 (the "Australian variation" notes, pp 37, 209, 282 and
-//   327). The AU locale does not apply them, so a value the ADRM requires
-//   (the Level 2 MSH-12, a NASH-addressed order number) draws the v2.4 length
-//   warning. That is a suspected defect (S3-1 report) and is recorded as a
-//   known issue under the AU locale; under the international locale the same
-//   warning is the correct v2.4 finding.
+//   OBR-2/3 and RF1-6 among others (the "Australian variation" notes, pp 38,
+//   209, 283 and 327). The AU locale applies them (P12 S3-2, defect D1 of
+//   S3-1), so the fixtures are clean there; under the international locale
+//   the v2.4 length warning on the same values is the correct v2.4 finding.
 // - `au_ref_i12.hl7` follows the Chapter 7 structure (p 324) and declares no
 //   Appendix 8 profile, so it draws HL7au:000040.4 (p 446), which requires
 //   every Referral to declare a simplified profile: the ADRM itself leaves no
@@ -54,12 +52,11 @@ struct AUFixtureTests {
         return options
     }
 
-    /// The ADRM-2021 field lengths that replace the v2.4 ones, as printed:
-    /// MSH-12 250 (p 37, note ††††), OBR-2/3 250 (p 209, note **), ORC-2/3
-    /// 250 (p 282, note **), RF1-6 250 (p 327, note ††).
-    static let adrmLengths: [String: Int] = [
-        "MSH-12": 250, "OBR-2": 250, "OBR-3": 250, "ORC-2": 250, "ORC-3": 250, "RF1-6": 250,
-    ]
+    /// The ADRM-2021 field lengths that replace the v2.4 ones, as printed
+    /// (the full list and pages: `AUFieldLengthTests.variations`).
+    static let adrmLengths: [String: Int] = Dictionary(
+        uniqueKeysWithValues: AUFieldLengthTests.variations.map { ("\($0.segment)-\($0.field)", $0.adrm) }
+    )
 
     static func wire(_ name: String) throws -> String {
         try String(contentsOf: FixtureCorpus.fixtureURL(named: name), encoding: .utf8)
@@ -93,19 +90,12 @@ struct AUFixtureTests {
         name == "au_ref_i12.hl7" && rule(issue)?.hasPrefix("HL7au:000040.4") == true
     }
 
-    /// Checks an AU-locale run: nothing but the expected findings, with the
-    /// ADRM length variances recorded as the known suspected defect.
+    /// Checks an AU-locale run: nothing but the expected findings.
     static func checkAU(_ name: String, _ found: [ValidationIssue]) {
-        let variance = found.filter(isADRMLengthVariance)
-        let rest = found.filter { !isADRMLengthVariance($0) && !expectedAU(name, $0) }
+        let rest = found.filter { !expectedAU(name, $0) }
         #expect(rest.isEmpty, "\(name):\n\(describe(rest))")
         if name == "au_ref_i12.hl7" {
             #expect(found.filter { expectedAU(name, $0) }.map(\.location.pathDescription) == ["MSH[1]-12.3", "MSH[1]-12.3"])
-        }
-        if !variance.isEmpty {
-            withKnownIssue("ADRM-2021 printed field lengths are not applied under the AU locale (P12 S3-1 report)") {
-                #expect(variance.isEmpty, "\(name):\n\(describe(variance))")
-            }
         }
     }
 
@@ -214,15 +204,13 @@ struct AUFixtureTests {
         #expect(Self.hits(try Self.issues(Self.dropping(["OBX"], from: "au_ref_i12.hl7")), "HL7au:00060.1").isEmpty)
     }
 
-    // MARK: - Suspected defects (P12 S3-1 report), pinned as known issues
+    // MARK: - The S3-1 defects, fixed in P12 S3-2
 
-    @Test("Suspected defect: the Level 2 MSH-12 the ADRM requires (61 characters, LEN 250 p 37) draws the v2.4 LEN 60 warning")
+    @Test("The Level 2 MSH-12 the ADRM requires (61 characters, LEN 250 p 37) is clean under the AU locale")
     func adrmMSH12Length() throws {
         let found = try Self.issues(Self.wire("au_ref_i12_simplified.hl7"))
         let msh12 = found.filter { $0.location.segmentID == "MSH" && $0.location.fieldIndex == 12 }
-        withKnownIssue("ADRM-2021 printed field lengths are not applied under the AU locale") {
-            #expect(msh12.isEmpty, "\(Self.describe(msh12))")
-        }
+        #expect(msh12.isEmpty, "\(Self.describe(msh12))")
     }
 
     static let htmlDisplay = "OBX|3|ED|HTML^Display format in HTML^AUSPDI||^TEXT^HTML^Base64^"
@@ -239,7 +227,7 @@ struct AUFixtureTests {
             #expect(tables.isEmpty, "\(Self.describe(tables))")
         }
         // Every other AU rule accepts the ADRM's PDF form.
-        let rest = found.filter { !Self.isADRMLengthVariance($0) && !tables.contains($0) }
+        let rest = found.filter { !tables.contains($0) }
         #expect(rest.isEmpty, "\(Self.describe(rest))")
     }
 
@@ -259,8 +247,7 @@ struct AUFixtureTests {
         #expect(report.batchIssues.isEmpty, "\(Self.describe(report.batchIssues))")
         #expect(report.messageReports.count == 2)
         for messageReport in report.messageReports {
-            let rest = messageReport.issues.filter { !Self.isADRMLengthVariance($0) }
-            #expect(rest.isEmpty, "\(Self.describe(rest))")
+            #expect(messageReport.issues.isEmpty, "\(Self.describe(messageReport.issues))")
         }
     }
 
