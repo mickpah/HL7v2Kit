@@ -29,7 +29,8 @@ The public release. No API change; one platform change, set out in the Migration
   Started quote it, and a test runs the same steps.
 - `Examples/MessageViewer` (`swift run MessageViewer`, macOS only): a SwiftUI window that
   shows a pasted message as a grid, one row per segment and one cell per field, each cell
-  white, yellow or red by the worst validation issue on it. The grid model is tested.
+  tinted yellow or red by the worst validation issue on it, with the field's name and issues
+  in a pane below. The grid model is tested.
 - The Validation article answers "will this catch X?" on one page: every check with its issue
   code and option, the presets, the caller assertions, and every Blocking and Permanent gap
   the register records. A test fails if an `IssueCode` case is not linked from it.

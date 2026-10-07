@@ -3,8 +3,9 @@ import HL7v2Kit
 import SwiftUI
 
 /// A window with a message editor above and the message as a grid below: one row per segment,
-/// one cell per field, the cell white when the field draws nothing, yellow for a warning and red
-/// for an error. Hover a cell for its name and the issues on it. Run with `swift run MessageViewer`.
+/// one cell per field, the cell tinted yellow for a warning and red for an error. The pane
+/// under the grid names the cell under the pointer and lists its issues. Run with
+/// `swift run MessageViewer`.
 @main
 struct MessageViewerApp: App {
     init() {
@@ -14,8 +15,8 @@ struct MessageViewerApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("HL7v2Kit MessageViewer") {
-            ContentView().frame(minWidth: 900, minHeight: 500)
+        WindowGroup("MessageViewer") {
+            ContentView().frame(minWidth: 900, minHeight: 560)
         }
     }
 }
@@ -43,37 +44,52 @@ struct ContentView: View {
         case failure(String)
     }
 
+    private let mono = Font.system(.body, design: .monospaced)
+
     var body: some View {
         VSplitView {
-            TextEditor(text: $text)
-                .font(.system(.body, design: .monospaced))
-                .frame(minHeight: 120)
-            VStack(alignment: .leading, spacing: 8) {
+            editor
+            VStack(spacing: 0) {
+                grid
+                Divider()
+                detail
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
                 Picker("Validation", selection: $strictAU) {
                     Text("Default").tag(false)
                     Text("Strict, AU").tag(true)
                 }
                 .pickerStyle(.segmented)
-                .frame(maxWidth: 320)
-                // The hovered cell's name and issues. Fixed height: if this panel grew with its
-                // text the grid would shift under the pointer, the hover would change, and the
-                // two would chase each other until the window hung. (A `.help` tooltip on every
-                // cell hung it too.)
-                ScrollView {
-                    Text(hovered?.tooltip ?? "Hover a cell for its name and any issues.")
-                        .font(.system(.body, design: .monospaced))
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                        .padding(6)
-                }
-                .frame(height: 96)
-                .background(Color.gray.opacity(0.15))
-                grid
+                .help("The validation preset applied to the message")
             }
-            .padding(8)
         }
+        .navigationTitle("MessageViewer")
+        .navigationSubtitle(subtitle)
         .onAppear(perform: ensure)
         .onChange(of: text) { _ in cache = [:]; ensure() }
         .onChange(of: strictAU) { _ in ensure() }
+    }
+
+    private var editor: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Message")
+                .font(.headline)
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+            TextEditor(text: $text)
+                .font(mono)
+                .padding(.horizontal, 8)
+        }
+        .frame(minHeight: 140)
+        .background(Color(nsColor: .textBackgroundColor))
+    }
+
+    private var subtitle: String {
+        guard case .grid(let grid)? = cache[strictAU] else { return "" }
+        let s = grid.rows.count, e = grid.errorCount, w = grid.warningCount
+        return "\(s) segment\(s == 1 ? "" : "s"), \(e) error\(e == 1 ? "" : "s"), \(w) warning\(w == 1 ? "" : "s")"
     }
 
     /// Computes the grid for the current preset unless it is cached. Edits are debounced.
@@ -102,44 +118,93 @@ struct ContentView: View {
 
     @ViewBuilder private var grid: some View {
         switch cache[strictAU] {
+        case nil where text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty:
+            placeholder("Paste an HL7 v2 message above.")
         case nil:
-            Text("Validating...")
-            Spacer()
+            placeholder("Validating")
         case .failure(let error):
-            Text(error).foregroundColor(.red)
-            Spacer()
+            placeholder(error)
         case .grid(let grid):
             ScrollView([.horizontal, .vertical]) {
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 3) {
                     ForEach(grid.rows.indices, id: \.self) { r in
-                        HStack(spacing: 2) {
+                        HStack(spacing: 3) {
                             ForEach(grid.rows[r].cells.indices, id: \.self) { c in
-                                cell(grid.rows[r].cells[c])
+                                cell(grid.rows[r].cells[c], isHeader: c == 0)
                             }
                         }
                     }
-                    ForEach(grid.unplaced, id: \.self) { Text($0).foregroundColor(.red) }
+                    ForEach(grid.unplaced, id: \.self) {
+                        Text($0).font(mono).foregroundColor(.secondary).padding(.top, 6)
+                    }
                 }
-                .padding(2)
+                .padding(12)
             }
+            .background(Color(nsColor: .controlBackgroundColor))
         }
     }
 
-    private func cell(_ cell: Cell) -> some View {
-        Text(cell.text.isEmpty ? " " : cell.text)
-            .font(.system(.body, design: .monospaced))
-            .foregroundColor(.black)   // the cell backgrounds are light in dark mode too
-            .padding(4)
-            .background(colour(cell.state))
-            .border(Color.gray.opacity(0.4))
+    private func placeholder(_ message: String) -> some View {
+        VStack {
+            Spacer()
+            Text(message).foregroundColor(.secondary).multilineTextAlignment(.center).padding()
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color(nsColor: .controlBackgroundColor))
+    }
+
+    private func cell(_ cell: Cell, isHeader: Bool) -> some View {
+        let isHovered = hovered == cell
+        return Text(cell.text.isEmpty ? " " : cell.text)
+            .font(isHeader ? mono.weight(.semibold) : mono)
+            .foregroundColor(.primary)
+            .textSelection(.enabled)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
+            .background(RoundedRectangle(cornerRadius: 4).fill(fill(cell.state, isHeader: isHeader)))
+            .overlay(RoundedRectangle(cornerRadius: 4)
+                .stroke(isHovered ? Color.accentColor : Color(nsColor: .separatorColor), lineWidth: isHovered ? 2 : 1))
             .onHover { inside in hovered = inside ? cell : (hovered == cell ? nil : hovered) }
     }
 
-    private func colour(_ state: CellState) -> Color {
+    private func fill(_ state: CellState, isHeader: Bool) -> Color {
         switch state {
-        case .clean: return .white
-        case .warning: return .yellow
-        case .error: return .red
+        case .clean: return isHeader ? Color(nsColor: .windowBackgroundColor) : Color(nsColor: .textBackgroundColor)
+        case .warning: return Color(nsColor: .systemYellow).opacity(0.45)
+        case .error: return Color(nsColor: .systemRed).opacity(0.4)
         }
+    }
+
+    // The pane has a fixed height on purpose: if it grew with its text the grid would shift under
+    // the pointer, the hover would change, and the two would chase each other until the window
+    // hung. (A `.help` tooltip on every cell hung it the same way.)
+    private var detail: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 6) {
+                if let cell = hovered {
+                    Text(cell.title).font(.headline)
+                    if cell.notes.isEmpty {
+                        Text("No issues.").foregroundColor(.secondary)
+                    }
+                    ForEach(cell.notes, id: \.self) { note in
+                        let parts = note.split(separator: ":", maxSplits: 1).map { $0.trimmingCharacters(in: .whitespaces) }
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            Text(parts[0].capitalized)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundColor(parts[0] == "error" ? .red : parts[0] == "warning" ? .orange : .secondary)
+                                .frame(width: 64, alignment: .leading)
+                            Text(parts.count > 1 ? parts[1] : note).textSelection(.enabled)
+                        }
+                    }
+                } else {
+                    Text("Move the pointer over a cell to see its name and any issues.")
+                        .foregroundColor(.secondary)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .padding(12)
+        }
+        .frame(height: 120)
     }
 }

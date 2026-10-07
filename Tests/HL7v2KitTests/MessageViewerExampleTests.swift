@@ -39,6 +39,8 @@ struct MessageViewerExampleTests {
         let states = grid.rows.flatMap(\.cells).map(\.state)
         #expect(states.contains(.error))
         #expect(states.contains(.warning))
+        #expect(grid.errorCount == 16)
+        #expect(grid.warningCount == 1)
     }
 
     @Test("a row has the segment ID in cell 0 and one cell per field; MSH shows its separators")

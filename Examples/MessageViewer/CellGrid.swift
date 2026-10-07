@@ -40,6 +40,9 @@ struct CellGrid: Equatable, Sendable {
     let rows: [Row]
     /// Issues whose segment is not in the message (a missing required segment, for example).
     let unplaced: [String]
+    /// The report's totals, for the window's subtitle.
+    let errorCount: Int
+    let warningCount: Int
 
     init(message: Message, report: ValidationReport) {
         let chars = message.encodingCharacters
@@ -72,6 +75,8 @@ struct CellGrid: Equatable, Sendable {
             byCell["\(at.segmentID)/\(at.segmentIndex)/\(field)", default: []].append(issue)
         }
         self.unplaced = unplaced
+        errorCount = report.errors.count
+        warningCount = report.warnings.count
         rows = zip(message.segments, keys).map { segment, keys in
             Row(segmentID: segment.segmentID, cells: zip(segment.fields, keys).enumerated().map { i, pair in
                 let (field, key) = pair
