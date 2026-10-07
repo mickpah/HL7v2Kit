@@ -109,5 +109,6 @@ struct PathTests {
         #expect(m["OBX[2]-5"] == "2")
         #expect(m["OBX[3]-5"] == "3")
         #expect(m["OBX[4]-5"] == nil)
+        #expect(m["OBX[0]-5"] == nil)
     }
 }

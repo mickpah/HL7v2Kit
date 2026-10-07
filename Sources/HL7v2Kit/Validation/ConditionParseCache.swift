@@ -17,6 +17,9 @@ import Foundation
 /// access to the mutable state is under `lock` (NSLock: the deployment targets
 /// predate `Synchronization.Mutex` and `OSAllocatedUnfairLock`). Two threads
 /// missing at once may both parse; both results are equal.
+///
+/// The cache is bounded by the condition strings declared in grammars and
+/// profiles: message content never enters it, so it cannot grow with input.
 final class ConditionParseCache: @unchecked Sendable {
     /// The cache the Validator uses.
     static let shared = ConditionParseCache()
