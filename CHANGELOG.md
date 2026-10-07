@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P12 S3-2: the AU profile's Table 0074 and 0200 value sets honour `localTableExtensions`
+
+- The S2-3 fix reached only the Table 0203 value sets. The other two profile value sets built from a table's codes now name their table too: OBR-24 against Table 0074 (HL7au:000032 on Results and 000032.2 on Referrals, "must have values from HL7 table 0074", p 444) and XCN-10 against Table 0200 (HL7au:00044.7.3). A caller's `localTableExtensions["0074"]` or `["0200"]` value now passes the profile rule as it already passed the base code-table check; a declaration for another table does not reach them. Value sets that narrow a field to a fixed list (MSH-16, MSH-18, the display formats) are not table membership and take no extension. Tests: `AULocalTableExtensionOtherTablesTests`. The `localTableExtensions` DocC and the Validation article list every table the setting reaches.
+
 ### Added — P12 S3-1: synthetic AU fixtures for every message the ADRM localises
 
 - Eight v2.4 fixtures written from scratch (`Tests/Fixtures/au_*.hl7`: ORU^R01 pathology and radiology, ORM^O01, OSR^Q06, REF^I12 in the Chapter 7 structure, REF^I12 declaring the Appendix 8 Level 2 profile, RRI^I12, ORR^O02) and one AU batch (`Batches/au_batch_oru_r01.hl7`), each with a `Tests/Fixtures/README.md` row. `AUFixtureTests` checks each parses, round-trips byte for byte, and draws nothing under `.strict` with the AU locale (the four caller assertions set and unset) or the international locale beyond the classes below; the batch is clean through `BatchValidator`. Fire and silent pairs cover NASH transport, CX components, display OBX, coding-system precedence, MSH-2 and FHS separators, MSH-6 on orders, UCUM, required segments (00060.1) and the Appendix 8 structure.

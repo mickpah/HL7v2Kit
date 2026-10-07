@@ -82,3 +82,66 @@ struct AULocalTableExtensionTests {
         #expect(try findings(lower, extensions: declared, point: "HL7au:00044.1.3").count == 1)
     }
 }
+
+// P12 S3-2 item 0: the overlay's other table-membership value sets honour
+// their table's extension too. HL7au:000032 / 000032.2 (OBR-24, p 444) read
+// "must have values from HL7 table 0074"; HL7au:00044.7.3 (XCN-10, p 455)
+// reads "valued from HL7 Table 0200". The base table check already honours
+// a declared 0074 or 0200 extension, so the profile rule must agree with it.
+// Value sets that narrow a field to a fixed list (MSH-18, MSH-16, the
+// display formats) are not table membership and take no extension.
+@Suite("AU Table 0074 and 0200 value sets honour local table extensions (HL7au:000032, 000032.2, 00044.7.3)")
+struct AULocalTableExtensionOtherTablesTests {
+    private func findings(_ wire: String, extensions: [String: Set<String>], point: String) throws -> [ValidationIssue] {
+        var options = ValidationOptions()
+        options.localTableExtensions = extensions
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        return Validator(options: options, locale: .auLocalisation).validate(message).issues.filter {
+            if case .profileConstraintViolation(let rule) = $0.code { return rule.hasPrefix(point + " ") }
+            return false
+        }
+    }
+
+    private func obr(_ obr24: String) -> String {
+        TestWires.segment("OBR", [1: "1", 2: "P1^H", 3: "F1^L^1.2.36^ISO", 4: "GLU^Glucose^L", 24: obr24]) + "\r"
+    }
+
+    private var oruWire: String {
+        "MSH|^~\\&|LAB|FAC|GP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4\r"
+            + "PID|1||12345678^^^AUSHIC^MR\r" + obr("ZZ")
+    }
+
+    private var refWire: String {
+        "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r"
+            + "PID|1||X^^^F^MR\r" + obr("ZZ")
+    }
+
+    private var xcnWire: String {
+        // OBR-16 Ordering Provider (XCN), XCN-10 = Z.
+        "MSH|^~\\&|LAB|FAC|GP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4\r"
+            + "PID|1||12345678^^^AUSHIC^MC\r"
+            + TestWires.segment("OBR", [1: "1", 2: "P1^H", 3: "F1^L^1.2.36^ISO", 4: "GLU^Glucose^L", 24: "CH",
+                                        16: "12345^Citizen^Jane^^^^^^AUSHIC^Z^^^MC"]) + "\r"
+    }
+
+    @Test("A declared extension is silent on OBR-24 (ORU and REF) and XCN-10")
+    func declaredExtensionSilent() throws {
+        #expect(try findings(oruWire, extensions: ["0074": ["ZZ"]], point: "HL7au:000032").isEmpty)
+        #expect(try findings(refWire, extensions: ["0074": ["ZZ"]], point: "HL7au:000032.2").isEmpty)
+        #expect(try findings(xcnWire, extensions: ["0200": ["Z"]], point: "HL7au:00044.7.3").isEmpty)
+    }
+
+    @Test("Without the declaration each point still fires")
+    func undeclaredFires() throws {
+        #expect(try findings(oruWire, extensions: [:], point: "HL7au:000032").count == 1)
+        #expect(try findings(refWire, extensions: [:], point: "HL7au:000032.2").count == 1)
+        #expect(try findings(xcnWire, extensions: [:], point: "HL7au:00044.7.3").count == 1)
+    }
+
+    @Test("A declaration for another table does not silence 0074 or 0200")
+    func otherTableDoesNotSilence() throws {
+        #expect(try findings(oruWire, extensions: ["0200": ["ZZ"]], point: "HL7au:000032").count == 1)
+        #expect(try findings(refWire, extensions: ["0200": ["ZZ"]], point: "HL7au:000032.2").count == 1)
+        #expect(try findings(xcnWire, extensions: ["0074": ["Z"]], point: "HL7au:00044.7.3").count == 1)
+    }
+}

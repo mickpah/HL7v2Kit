@@ -889,12 +889,14 @@ extension Profile {
                     ComponentValueSet(
                         component: 1,
                         allowedValues: HL7CodeTables.table0074,
+                        localTableExtension: "0074",
                         condition: "messageCode = ORU",
                         specCitation: "HL7au:000032 — OBR-24 must be valued from HL7 Table 0074 (Diagnostic Service Section) on Senders Results; AU ADRM-2021 Appendix 5 p. 444, table pp. 225-226"
                     ),
                     ComponentValueSet(
                         component: 1,
                         allowedValues: HL7CodeTables.table0074,
+                        localTableExtension: "0074",
                         condition: "messageCode = REF",
                         specCitation: "HL7au:000032.2 — OBR-24 must be valued from HL7 Table 0074 on Senders Referrals (content-appropriateness half not machine-checkable); AU ADRM-2021 Appendix 5 p. 444"
                     ),
@@ -1147,6 +1149,7 @@ extension Profile {
                     ComponentValueSet(
                         component: 10,
                         allowedValues: HL7CodeTables.table0200,
+                        localTableExtension: "0200",
                         specCitation: "HL7au:00044.7.3 — XCN-10 (name type code) must be a valid value from HL7 Table 0200 (Name Type); AU ADRM-2021 table p. 62"
                     ),
                     ComponentValueSet(

@@ -34,9 +34,8 @@ enum HL7CodeTables {
     static let table0074: [String] = auCodes("0074")
 
     /// HL7 Table 0200 — Name Type, as printed in AU ADRM-2021 (p. 62).
-    /// Not yet consumed by a shipped rule: XCN-10's HL7au:00044.7.3
-    /// stays PARTIAL until the composite-override track grows a
-    /// value-set rule (§D).
+    /// Consumed by HL7au:00044.7.3 (XCN-10 membership, M6-B-5), with
+    /// the caller's `localTableExtensions["0200"]` (P12 S3-2).
     static let table0200: [String] = auCodes("0200")
 
     /// HL7 Table 0203 — Identifier Type, as printed in AU ADRM-2021

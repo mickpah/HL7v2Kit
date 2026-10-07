@@ -582,7 +582,10 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// is allowed too (P12 S2-2): the ADRM lets Table 0363 "be extended to
     /// allow for secure messaging vendor assigning authorities" (p. 334).
     /// Table 0203 value sets carry `"0203"` (P12 S2-3): every supported
-    /// version lets a site extend an HL7 table locally. Read by the field
+    /// version lets a site extend an HL7 table locally. The Table 0074
+    /// (OBR-24) and Table 0200 (XCN-10) value sets carry theirs too (P12
+    /// S3-2): every value set built from a table's codes names that table;
+    /// a narrowing to a fixed list (MSH-16, MSH-18) names none. Read by the field
     /// and composite value-set tracks alike; matching is exact.
     /// `nil` (default): the caller's extensions do not apply.
     let localTableExtension: String?
