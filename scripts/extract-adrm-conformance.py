@@ -310,6 +310,13 @@ PARTIAL = {
                       'message; the "no information from the file '
                       'header/footer or batch segments must be used" '
                       'half is receiver processing behaviour',
+    # P12 S2-2: REGISTERED to PARTIAL.
+    'HL7au:000001': 'the sender half is enforced: MSH-6 is required on an '
+                    'ORM (p 417, "an order message is addressed using MSH-6 '
+                    'Receiving facility"); 000001.1 (reject a foreign MSH-6) '
+                    'is receiver behaviour, and 000001.2 / .2.1 are "should" '
+                    'guidance (the NATA number and NATA name need the NATA '
+                    'register)',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -351,7 +358,7 @@ BASE = {
 #   structural check.
 # 000022.1 / 000022.3 — MOVED OUT at M8-C (2026-09-17): BatchValidator
 #   shipped; .3 is SHIPPED, .1 is PARTIAL (see their entries above).
-REGISTERED = {'HL7au:000001', 'HL7au:00044.2', 'HL7au:00104.7.2.1',
+REGISTERED = {'HL7au:00044.2', 'HL7au:00104.7.2.1',
               'HL7au:00044.4.7', 'HL7au:00044.5.7',
               'HL7au:00100.1', 'HL7au:000008.1.5', 'HL7au:000034.3',
               'HL7au:00044.6.7'}

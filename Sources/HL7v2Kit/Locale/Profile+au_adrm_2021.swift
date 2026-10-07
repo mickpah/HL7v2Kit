@@ -132,9 +132,17 @@ extension Profile {
                 ],
                 specCitation: "HL7au:00044.2 — HD datatype conformance points for MSH-4 and MSH-6 (caller-asserted NASH transport)"
             ),
+            // P12 S2-2 — the sender half of HL7au:000001 (p 417, Orders):
+            // "Senders and receivers must ensure an order message is
+            // addressed using MSH-6 Receiving facility". An ORM with MSH-6
+            // empty is not so addressed: MSH-6 is R on ORM. 000001.1 (the
+            // receiver rejects a foreign MSH-6) is receiver behaviour.
+            // The override-level citation is what the usage check reports.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 6,
+                profileUsage: .required,
+                condition: "messageCode = ORM",
                 componentValueSets: [
                     ComponentValueSet(
                         component: 3,
@@ -160,7 +168,7 @@ extension Profile {
                         specCitation: "HL7au:00044.2.2 (r2) — when using SMD with NASH certificates the HD Universal ID component must contain the HPI-O formatted as \"1.2.36.1.2001.1003.0.\" concatenated with the HPI-O; the HPI-O is a 16-digit number (HL7au:000043.1). Applied on the caller's NASH-transport assertion."
                     ),
                 ],
-                specCitation: "HL7au:00044.2 — HD datatype conformance points for MSH-4 and MSH-6 (caller-asserted NASH transport)"
+                specCitation: "HL7au:000001 — an order message must be addressed using MSH-6 Receiving facility; AU ADRM-2021 Appendix 5 p. 417. MSH-6 HD components: HL7au:00044.2 (caller-asserted NASH transport)"
             ),
             FieldOverride(
                 segmentID: "MSH",

@@ -18,9 +18,9 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
 | SHIPPED | 77 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 16 | partly enforced — see each row's note for what is not |
+| PARTIAL | 17 | partly enforced — see each row's note for what is not |
 | BASE | 9 | already enforced by the base model; overlay deliberately silent |
-| REGISTERED | 8 | known limitation, already registered |
+| REGISTERED | 7 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
 | OUT | 76 | out of scope by nature (transport, payload, cross-message) |
@@ -109,10 +109,11 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (16)
+## PARTIAL (17)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
+| `HL7au:000001` |  | Senders/Receivers | Orders | Order addressing - Senders and receivers must ensure an order message is addressed using MSH-6 Receiving facility, as per rules in sub points of HD Datatype conformance heading HL7au:00044.2. | the sender half is enforced: MSH-6 is required on an ORM (p 417, "an order message is addressed using MSH-6 Receiving facility"); 000001.1 (reject a foreign MSH-6) is receiver behaviour, and 000001.2 / .2.1 are "should" guidance (the NATA number and NATA name need the NATA register) |
 | `HL7au:000008.3.2` |  | Senders | Referrals(L2) | If an RTF display segment is sent in an OBR/OBX group, then the same content must be sent in one of either HTML, PDF, or TXT (HL7 FT) same OBR/OBX group. | the STRUCTURAL half is enforced: an RTF display OBX in an OBR group without an HTML/PDF/TXT sibling fires (relational cardinality via activationPredicate); the "same content" equality half needs cross-format rendering comparison and is not machine-checkable |
 | `HL7au:000020` |  | Senders | Orders, Results, Referrals(L2) | All message types and trigger event codes beginning with the letter “Z” are reserved for locally-defined messages and must NOT be used. | Z-prefixed trigger events prohibited on Orders/Results and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 profile gate; the message-CODE leg stays unenforced — a wholly-Z message code never satisfies any message-type gate, so that half is undecidable inside this rule shape |
 | `HL7au:000022.1` |  | Senders | Orders, Results, Referrals | If the batch header is used it must specify individual message acknowledgement. No information from the file header/footer or batch segments must be used. | the individual-acknowledgement half is enforced: BHS carries no acknowledgement field, so the mode lives in each contained message's MSH-15/16, and BatchValidator runs the per-message AU rules (00047.1/.2, MSH-15/16 = AL) on every batched message; the "no information from the file header/footer or batch segments must be used" half is receiver processing behaviour |
@@ -144,11 +145,10 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00046.3` |  | Senders | Orders, Results, Referrals | All fields required by HL7 segments table must be validly valued. | R-optionality enforcement is the Validator core |
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 
-## REGISTERED (8)
+## REGISTERED (7)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
-| `HL7au:000001` |  | Senders/Receivers | Orders | Order addressing - Senders and receivers must ensure an order message is addressed using MSH-6 Receiving facility, as per rules in sub points of HD Datatype conformance heading HL7au:00044.2. | known limitation, registered with citation |
 | `HL7au:000008.1.5` |  | Senders | Results, Referrals | The OBX display segment(s) must be the last in a set of OBX segments in each OBR/OBX group, with the exception of digital signature OBX(s) which may be after the display segments OBXs. (Display segments can be identif... | known limitation, registered with citation |
 | `HL7au:000034.3` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, In either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both a public (e.g. LOINC) and a local terminology, then concepts from... | known limitation, registered with citation |
 | `HL7au:00044.4.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |

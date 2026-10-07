@@ -37,6 +37,11 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 - With `ValidationOptions.auNASHTransport` set, MSH-4.1 and MSH-6.1 must be valued: 000043.1 (Appendix 5 p 447: "The format must be "registered organisation name in HI service^1.2.36.1.2001.1003.0.<hpio>^ISO"") and 00044.2.1 (p 449: "the HD Namespace ID component must contain the registered organisation name", under the grouper "HD Datatype conformance points for MSH-4, and MSH-6"). Silent when not asserted, as before.
 - Both points stay PARTIAL: whether the name is the one the HPOS/HI service registers needs the directory. 00044.2.1 moves OUT to PARTIAL in the conformance register; limitations register and the option's DocC updated. Tests: `AUNASHNamespaceTests`.
 
+### Added — P12 S2-2: HL7au:000001 MSH-6 required on an order message
+
+- HL7au:000001 (Appendix 5 p 417, Orders: "Senders and receivers must ensure an order message is addressed using MSH-6 Receiving facility") was REGISTERED as receiver behaviour or "should" guidance throughout; its sender half is wire-checkable. Under `.auLocalisation` an ORM with MSH-6 empty now draws a `profileConstraintViolation` at MSH-6 citing HL7au:000001; other message types are untouched.
+- The point moves REGISTERED to PARTIAL: 000001.1 (reject a foreign MSH-6) is receiver behaviour, and 000001.2 / .2.1 are "should" guidance naming the NATA number and NATA name. Tests: `AUOrderAddressingTests`. Conformance register regenerated; limitations register section B row corrected.
+
 ### Added — P12 S2-1: the ADRM partial-points audit
 
 - `docs/design/p12-adrm-partial-points-audit.md`: the 18 PARTIAL and 8 REGISTERED ADRM points re-read against the capabilities shipped since M6-B, with a verdict per point and the proposed S2-2 order (documentation only).
