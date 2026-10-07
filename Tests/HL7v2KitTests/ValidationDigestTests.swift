@@ -53,6 +53,7 @@ struct ValidationDigestTests {
         asserted.auPathologySender = true
         asserted.auDisplayIntended = true
         asserted.auNASHTransport = true
+        asserted.auAssigningAuthorityTable = true
         var lines: [String] = []
         for (name, wire) in wires {
             for locale in [HL7Locale.international, .auLocalisation] {

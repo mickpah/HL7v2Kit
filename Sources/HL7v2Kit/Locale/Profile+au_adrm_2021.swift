@@ -808,11 +808,26 @@ extension Profile {
                 componentValueSets: [
                     // M6-B-4 — HL7au:00104.7.3.1: "<other qualifying
                     // info (ST)> must be a valued from HL7 Table 0203 -
-                    // Identifier Type." (00104.7.2.1's 0363 membership
-                    // was withdrawn at M6-B-8: table 0363 is
-                    // user-defined and the ADRM's own PRD-7 matches
-                    // table uses vendor authorities outside it —
-                    // registered, see permanent-limitations-register.)
+                    // Identifier Type."
+                    //
+                    // P12 S2-2 — HL7au:00104.7.2.1 (p. 473): "PRD-7 <type of
+                    // ID number (IS)> must be valued from User-defined
+                    // Table 0363 - Assigning Authority (see page 310)",
+                    // which "may be extended to allow for secure messaging
+                    // vendor assigning authorities" (p. 334). The vendors a
+                    // site has agreed are not on the wire, so the check runs
+                    // on the caller's assertion only, over the printed rows
+                    // plus `localTableExtensions["0363"]`. Unasserted it is
+                    // silent: the ADRM's own Medical-Objects and Argus rows
+                    // lie outside the printed table (M6-B-8 withdrew the
+                    // unconditional check for that reason).
+                    ComponentValueSet(
+                        component: 2,
+                        allowedValues: HL7CodeTables.table0363,
+                        localTableExtension: "0363",
+                        condition: "messageCode = REF AND auAssigningAuthorityTable populated",
+                        specCitation: "HL7au:00104.7.2.1 — PRD-7.2 (type of ID number) must be valued from User-defined Table 0363 (Assigning Authority) as printed, plus the caller's declared vendor authorities, on Senders Referrals; AU ADRM-2021 Appendix 5 p. 473, table p. 310, extension p. 334. Applied on the caller's assertion."
+                    ),
                     ComponentValueSet(
                         component: 3,
                         allowedValues: HL7CodeTables.table0203,

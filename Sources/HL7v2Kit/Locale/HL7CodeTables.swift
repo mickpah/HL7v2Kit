@@ -57,12 +57,14 @@ enum HL7CodeTables {
         HL7TableRegistry.table("0203", locale: .auLocalisation)?.patterns ?? []
 
     /// User-defined Table 0363 — Assigning Authority, the AU-defined
-    /// value set printed in AU ADRM-2021 (p. 310). NOT consumed by a
+    /// value set printed in AU ADRM-2021 (p. 310). No unconditional
     /// membership rule: the table is user-defined and the ADRM's own
     /// PRD-7 matches table (p. 334) uses vendor authorities outside it
     /// (`Medical-Objects`, `Argus`), so a closed-set check would
-    /// misfire (req #4) — HL7au:00104.7.2.1 is registered instead.
-    /// Kept for reference and for the correspondence map's AU keys.
+    /// misfire (req #4). HL7au:00104.7.2.1 checks it only under
+    /// `ValidationOptions.auAssigningAuthorityTable`, with the caller's
+    /// vendor authorities from `localTableExtensions["0363"]` (P12 S2-2);
+    /// HL7au:00104.7.1.4 reads it to tell vendor authorities apart.
     static let table0363: [String] = auCodes("0363")
 
     /// ED/RP subtype ⇒ allowed type-of-data values (M6-B-8, for

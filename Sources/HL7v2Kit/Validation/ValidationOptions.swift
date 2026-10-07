@@ -138,6 +138,19 @@ public struct ValidationOptions: Sendable {
     /// Not an init parameter. M32.
     public var auNASHTransport: Bool = false
 
+    /// The caller asserts that its PRD-7 assigning authorities come from
+    /// User-defined Table 0363 as ADRM-2021 prints it (p. 310), extended by
+    /// the secure messaging vendor authorities it lists in
+    /// ``localTableExtensions`` under `"0363"`. HL7au:00104.7.2.1 requires
+    /// PRD-7 `<type of ID number (IS)>` to be "valued from User-defined Table
+    /// 0363", and the ADRM lets the table "be extended to allow for secure
+    /// messaging vendor assigning authorities" (p. 334); which vendors a site
+    /// has agreed is not on the wire. `false`, the default, leaves the rule
+    /// unchecked (the ADRM's own `Medical-Objects` and `Argus` rows lie
+    /// outside the printed table); `true` checks PRD-7.2 on Referrals under
+    /// ``HL7Locale/auLocalisation``. Not an init parameter. P12 S2-2.
+    public var auAssigningAuthorityTable: Bool = false
+
     /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
     /// pre-v2.7 maximum length (v2.3 to v2.6, a plain-integer LEN cell), measured
     /// per repetition with component and subcomponent separators counted (v2.3.1
@@ -208,7 +221,9 @@ public struct ValidationOptions: Sendable {
     /// for a table is accepted wherever the base-spec code-table check reads that table,
     /// at field or component level; every other value outside the table is still reported.
     /// AU profile value-set rules are not affected: a value a profile rule rejects is
-    /// still rejected. Empty by default, so HL7 tables stay closed.
+    /// still rejected. The one exception is `"0363"` under ``auAssigningAuthorityTable``,
+    /// whose listed codes are the caller's secure messaging vendor authorities (P12 S2-2).
+    /// Empty by default, so HL7 tables stay closed.
     ///
     /// Keys are four-digit table numbers (`"0074"`), matched against the table number the
     /// field or component is bound to; any other key (`"74"`, `"HL70074"`) is ignored.

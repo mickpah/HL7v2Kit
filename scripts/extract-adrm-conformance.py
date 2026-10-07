@@ -96,6 +96,9 @@ CALLER_ASSERTED = {
                         'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI; '
                         'the sentence constrains the shape, not whose HPI-O it is'),
     'HL7au:00044.3.3': (None, 'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI'),
+    'HL7au:00104.7.2.1': (None, 'shipped caller-asserted (P12 S2-2): `ValidationOptions.auAssigningAuthorityTable`; '
+                                'PRD-7.2 in the printed Table 0363 (p 310) plus the caller\'s vendor authorities '
+                                'in `localTableExtensions["0363"]` (p 334), on Referrals'),
 }
 
 # Shipped points whose register row needs a scope note.
@@ -350,7 +353,7 @@ BASE = {
 # ADRM's own PRD-7 matches table (p. 334) uses vendor authorities
 # outside it (Medical-Objects, Argus) — a closed-set membership check
 # misfires on the spec's own examples (req #4). Withdrawn from the
-# profile; registered.
+# profile; registered. SHIPPED caller-asserted by P12 S2-2 (see above).
 # M6-B-9 registrations (each cited in permanent-limitations-register §D):
 # 00100.1 — REF-4 SNOMED CT hierarchy subsumption needs a terminology
 #   server; no closed value set exists in the ADRM.
@@ -361,7 +364,7 @@ BASE = {
 #   structural check.
 # 000022.1 / 000022.3 — MOVED OUT at M8-C (2026-09-17): BatchValidator
 #   shipped; .3 is SHIPPED, .1 is PARTIAL (see their entries above).
-REGISTERED = {'HL7au:00044.2', 'HL7au:00104.7.2.1',
+REGISTERED = {'HL7au:00044.2',
               'HL7au:00044.4.7', 'HL7au:00044.5.7',
               'HL7au:00100.1', 'HL7au:000034.3',
               'HL7au:00044.6.7'}

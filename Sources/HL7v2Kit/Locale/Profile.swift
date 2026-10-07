@@ -578,11 +578,18 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// `NNxxx` (p. 306), a family no list of values can hold.
     let allowedPatterns: [HL7Table.CodePattern]
 
+    /// A table number whose `ValidationOptions.localTableExtensions` entry
+    /// is allowed too (P12 S2-2): the ADRM lets Table 0363 "be extended to
+    /// allow for secure messaging vendor assigning authorities" (p. 334).
+    /// `nil` (default): the caller's extensions do not apply.
+    let localTableExtension: String?
+
     init(
         component: Int,
         subcomponent: Int? = nil,
         allowedValues: [String],
         allowedPatterns: [HL7Table.CodePattern] = [],
+        localTableExtension: String? = nil,
         condition: String? = nil,
         specCitation: String? = nil
     ) {
@@ -590,6 +597,7 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
         self.subcomponent = subcomponent
         self.allowedValues = allowedValues
         self.allowedPatterns = allowedPatterns
+        self.localTableExtension = localTableExtension
         self.condition = condition
         self.specCitation = specCitation
     }

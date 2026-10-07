@@ -86,6 +86,7 @@ Further switches are set by mutation, not the initialiser, among them ``Validati
 | `auPathologySender` | HL7au:00050.1.5 — OBX-6.3 must be `UCUM` on Results | the sender's discipline |
 | `auDisplayIntended` | HL7au:00044.4.3 — CE `<text>` must be valued | whether the location displays to a user |
 | `auNASHTransport` | HL7au:00044.2.2 / .2.3 on MSH-4 and MSH-6, and HL7au:00044.3.4 / .3.3 on every EI: the Universal ID must be `1.2.36.1.2001.1003.0.` + a 16-digit HPI-O, its type `ISO` | whether SMD with NASH certificates is in use |
+| `auAssigningAuthorityTable` | HL7au:00104.7.2.1 — PRD-7.2 must be a printed Table 0363 value or a vendor authority listed in `localTableExtensions["0363"]`, on Referrals | which secure messaging vendor authorities the site has agreed |
 
 Each defaults to `false` and applies only under ``HL7Locale/auLocalisation``.
 

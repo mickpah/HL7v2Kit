@@ -17,17 +17,17 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 78 | enforced by the `.auLocalisation` overlay today |
+| SHIPPED | 79 | enforced by the `.auLocalisation` overlay today |
 | PARTIAL | 17 | partly enforced — see each row's note for what is not |
 | BASE | 9 | already enforced by the base model; overlay deliberately silent |
-| REGISTERED | 6 | known limitation, already registered |
+| REGISTERED | 5 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
 | OUT | 76 | out of scope by nature (transport, payload, cross-message) |
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## SHIPPED (78)
+## SHIPPED (79)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -108,6 +108,7 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00104.1.1` |  | Receivers | Referrals | The receiving system must identify the authoring provider in its display of the message content (indicated by "AP" in the associated PRD-1). |  |
 | `HL7au:00104.2.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "IR" (Intended Recipient) in the REF message. |  |
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
+| `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). | shipped caller-asserted (P12 S2-2): `ValidationOptions.auAssigningAuthorityTable`; PRD-7.2 in the printed Table 0363 (p 310) plus the caller's vendor authorities in `localTableExtensions["0363"]` (p 334), on Referrals |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
 ## PARTIAL (17)
@@ -146,7 +147,7 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00046.3` |  | Senders | Orders, Results, Referrals | All fields required by HL7 segments table must be validly valued. | R-optionality enforcement is the Validator core |
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 
-## REGISTERED (6)
+## REGISTERED (5)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -155,7 +156,6 @@ Classification last reconciled with the shipped state on 2026-10-07 (P12 S0-1); 
 | `HL7au:00044.5.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |
 | `HL7au:00044.6.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |
 | `HL7au:00100.1` | r2 | Senders | Referrals | The current referral summary OBR/OBX group must appear as the first OBR/OBX group in the message. | known limitation, registered with citation |
-| `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). | known limitation, registered with citation |
 
 ## WITHDRAWN (3)
 

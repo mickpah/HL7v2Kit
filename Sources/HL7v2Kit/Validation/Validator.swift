@@ -1553,6 +1553,10 @@ public struct Validator: Sendable {
                     subcomponent: valueSet.subcomponent
                 )
                 if valueSet.allows(actual) { continue }
+                // P12 S2-2: a table the caller extends locally (0363 vendors).
+                let extended = valueSet.localTableExtension
+                    .flatMap { options.localTableExtensions[$0] }?.sorted() ?? []
+                if extended.contains(actual) { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: occurrence,
@@ -1561,7 +1565,7 @@ public struct Validator: Sendable {
                 )
                 let citation = valueSet.specCitation
                     ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(valueSet.component)"
-                let allowedList = valueSet.allowedValues.map { "\"\($0)\"" }.joined(separator: ", ")
+                let allowedList = (valueSet.allowedValues + extended).map { "\"\($0)\"" }.joined(separator: ", ")
                 let pathSuffix = valueSet.subcomponent.map { ".\($0)" } ?? ""
                 appendProfileIssue(
                     citation: citation,
@@ -2484,6 +2488,7 @@ public struct Validator: Sendable {
         case .auPathologySender: return flag(options.auPathologySender)
         case .auDisplayIntended: return flag(options.auDisplayIntended)
         case .auNASHTransport: return flag(options.auNASHTransport)
+        case .auAssigningAuthorityTable: return flag(options.auAssigningAuthorityTable)
 
         case .nextSegmentID(let skip):
             // P4 lookahead: the ID of the first segment after the current

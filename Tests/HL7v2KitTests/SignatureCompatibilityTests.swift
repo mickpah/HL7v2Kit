@@ -35,6 +35,15 @@ struct SignatureCompatibilityTests {
         #expect(options.localTableExtensions.isEmpty, "set by mutation, not an init parameter")
     }
 
+    @Test("P12 S2-2 auAssigningAuthorityTable is a mutable Bool defaulting to false, not an init parameter")
+    func assigningAuthorityTableAssertion() {
+        let assertion: WritableKeyPath<ValidationOptions, Bool> = \.auAssigningAuthorityTable
+        #expect(ValidationOptions()[keyPath: assertion] == false)
+        #expect(ValidationOptions.default.auAssigningAuthorityTable == false)
+        #expect(ValidationOptions.strict.auAssigningAuthorityTable == false)
+        #expect(ValidationOptions.lenient.auAssigningAuthorityTable == false)
+    }
+
     @Test("P6-6 length settings are mutable IssueSeverity? properties defaulting to .warning")
     func lengthSeverities() {
         let maximum: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.fieldLengthSeverity
