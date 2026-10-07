@@ -13,9 +13,9 @@ import Testing
 
 @Suite("AU NASH namespace ID presence (HL7au:000043.1, 00044.2.1)")
 struct AUNASHNamespaceTests {
-    private let oid = "1.2.36.1.2001.1003.0.8003621566684455"
+    private let oid = "1.2.36.1.2001.1003.0.0000000000001001"
 
-    private func findings(sending: String, receiving: String = "Good Hospital^1.2.36.1.2001.1003.0.8003629900024197^ISO",
+    private func findings(sending: String, receiving: String = "Good Hospital^1.2.36.1.2001.1003.0.0000000000002002^ISO",
                           nash: Bool) throws -> [ValidationIssue] {
         let wire = "MSH|^~\\&|LAB|\(sending)|APP|\(receiving)|20240101120000||ORU^R01^ORU_R01|MSG00001|P|2.4\r"
             + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"

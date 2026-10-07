@@ -107,7 +107,7 @@ dispatch pin today. Then the two rows read SHIPPED.
 registered organisation name, so an asserted NASH MSH-4 with HD-1 empty is non-conformant whatever
 the directory says. Rule: a `ComponentRequirement(component: 1)` on the MSH-4 HD override with
 condition `auNASHTransport populated` (and on MSH-6 for 00044.2.1, whose presence half is the same).
-Failing test: asserted, MSH-4 `^1.2.36.1.2001.1003.0.8003621566684455^ISO` fires (silent today).
+Failing test: asserted, MSH-4 `^1.2.36.1.2001.1003.0.0000000000001001^ISO` fires (silent today).
 
 **000001 (row 19): MSH-6 on an order.** Rule: MSH-6 populated when `messageCode = ORM`, cited
 HL7au:000001. Failing test: an AU ORM^O01 with MSH-6 empty fires; ORU with MSH-6 empty stays silent.

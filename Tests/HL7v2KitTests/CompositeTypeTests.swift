@@ -325,20 +325,20 @@ struct CompositeTypeTests {
     // (email) + XTN-5/6/7 (country/area/local) + XTN-12 (unformatted).
     // Field map for the XTN: phone^use^equip^email^cc^area^local^^^^^unformatted
     // Components 8/9/10/11 left empty so XTN-12 is at the right slot.
-    private let xtnRichWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)555-1234^PRN^PH^john@example.com^61^2^5551234^^^^^+61255551234")
+    private let xtnRichWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)5550-1234^PRN^PH^john@example.com^61^2^55501234^^^^^+61255501234")
 
     @Test("XTN exposes telephoneNumber / use / equipment / email / country / area / local / unformatted accessors")
     func xtnNamedAccessors() throws {
         let message = try Parser().parse(xtnRichWire)
         let phone = try #require(message.firstSegment(PID.self)?.phoneNumberHome)
-        #expect(phone.telephoneNumber == "(02)555-1234")
+        #expect(phone.telephoneNumber == "(02)5550-1234")
         #expect(phone.telecommunicationUseCode == "PRN")
         #expect(phone.telecommunicationEquipmentType == "PH")
         #expect(phone.emailAddress == "john@example.com")
         #expect(phone.countryCode == "61")
         #expect(phone.areaCityCode == "2")
-        #expect(phone.localNumber == "5551234")
-        #expect(phone.unformattedTelephoneNumber == "+61255551234")
+        #expect(phone.localNumber == "55501234")
+        #expect(phone.unformattedTelephoneNumber == "+61255501234")
     }
 
     @Test("XTN cross-checks each named accessor against the path API")
@@ -356,19 +356,19 @@ struct CompositeTypeTests {
     }
 
     // PID-13 with two repetitions: a home phone and a mobile.
-    private let xtnRepeatingWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)555-1234^PRN^PH~0412345678^PRN^CP")
+    private let xtnRepeatingWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)5550-1234^PRN^PH~0255505678^PRN^CP")
 
     @Test("XTN multi-repetition — wrap each Repetition for typed view")
     func xtnMultiRepetitionAccess() throws {
         let message = try Parser().parse(xtnRepeatingWire)
         let phone = try #require(message.firstSegment(PID.self)?.phoneNumberHome)
         // Named accessors → first repetition (home phone).
-        #expect(phone.telephoneNumber == "(02)555-1234")
+        #expect(phone.telephoneNumber == "(02)5550-1234")
         #expect(phone.telecommunicationEquipmentType == "PH")
         // Second repetition reached via .field (mobile).
         #expect(phone.field.repetitions.count == 2)
         let mobile = XTN(repetition: phone.field.repetitions[1])
-        #expect(mobile.telephoneNumber == "0412345678")
+        #expect(mobile.telephoneNumber == "0255505678")
         #expect(mobile.telecommunicationEquipmentType == "CP")
     }
 

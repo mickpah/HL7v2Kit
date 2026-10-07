@@ -270,7 +270,7 @@ struct CodeTableValidationTests {
     @Test("Under the AU localisation a declared extension widens the table check and leaves AU profile rules alone")
     func localExtensionUnderAULocalisation() throws {
         // EI.4 Universal ID Type binds Table 0301; HL7au:00044.3.3 requires "ISO" under the NASH assertion.
-        let ei = "12123-1^Good Hospital^1.2.36.1.2001.1003.0.8003629900024197^ZZ"
+        let ei = "12123-1^Good Hospital^1.2.36.1.2001.1003.0.0000000000002002^ZZ"
         let wire = "MSH|^~\\&|LAB|FAC|APP|FAC|20240101120000||ORU^R01^ORU_R01|MSG00001|P|2.5.1\r"
             + "PID|1||123^^^AUTH^MR||DOE^JOHN\r" + "ORC|RE|\(ei)\r"
         func issues(_ extensions: [String: Set<String>]) throws -> [ValidationIssue] {

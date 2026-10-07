@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tracked and is ignored, with two other local files. The four project requirements
   the design records cite now live in `docs/design/README.md`; every reference to the old file is
   rewritten. `scripts/check-no-emoji.py` loses its one allow-list entry, which named that file.
+- **No test carries an identifier that could be real (P13 S1-2).** Two Luhn-valid HPI-Os and one
+  HPI-I in the AU tests and the P12 audit become zero-filled bodies without the `8003` prefix, as
+  in the fixtures; the XTN tests' phone numbers move to the ACMA fictional `(02) 5550` range. The
+  rules under test check only prefix and digit count, so coverage is unchanged.
 
 ## [3.16.0] — 2026-10-07
 

@@ -45,7 +45,7 @@ struct AUAssigningAuthorityTableTests {
     @Test("Asserted: a declared vendor authority and a printed one are silent")
     func declaredAndPrintedSilent() throws {
         #expect(try findings(identifiers: "JD455600041^Medical-Objects^VDI", asserted: true).isEmpty)
-        #expect(try findings(identifiers: "049960CT^AUSHICPR^UPIN~8003621566684455^AUSHIC^NOI", asserted: true).isEmpty)
+        #expect(try findings(identifiers: "049960CT^AUSHICPR^UPIN~0000000000001001^AUSHIC^NOI", asserted: true).isEmpty)
     }
 
     @Test("Asserted: each repetition is checked")

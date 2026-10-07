@@ -10,9 +10,9 @@ import Testing
 /// not carry, so the caller asserts it.
 @Suite("AU NASH transport assertion")
 struct AUNASHTransportTests {
-    private let validOID = "1.2.36.1.2001.1003.0.8003621566684455"
+    private let validOID = "1.2.36.1.2001.1003.0.0000000000001001"
 
-    private func issues(sending: String, receiving: String = "HOSPITAL^1.2.36.1.2001.1003.0.8003629900024197^ISO",
+    private func issues(sending: String, receiving: String = "HOSPITAL^1.2.36.1.2001.1003.0.0000000000002002^ISO",
                         nash: Bool, locale: HL7Locale = .auLocalisation) throws -> [ValidationIssue] {
         let wire = "MSH|^~\\&|LAB|\(sending)|APP|\(receiving)|20240101120000||ORU^R01^ORU_R01|MSG00001|P|2.5.1\r"
             + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
@@ -39,10 +39,10 @@ struct AUNASHTransportTests {
     @Test("Asserted: the right root with the wrong HPI-O digit count fires")
     func wrongDigitCount() throws {
         // 15 digits, and 17 digits: HL7au:000043.1 says the HPI-O is a 16-digit number.
-        #expect(try issues(sending: "ACME^1.2.36.1.2001.1003.0.800362156668445^ISO", nash: true).count == 1)
-        #expect(try issues(sending: "ACME^1.2.36.1.2001.1003.0.80036215666844551^ISO", nash: true).count == 1)
+        #expect(try issues(sending: "ACME^1.2.36.1.2001.1003.0.000000000000100^ISO", nash: true).count == 1)
+        #expect(try issues(sending: "ACME^1.2.36.1.2001.1003.0.00000000000010011^ISO", nash: true).count == 1)
         // Right length, but not digits.
-        #expect(try issues(sending: "ACME^1.2.36.1.2001.1003.0.80036215666844X5^ISO", nash: true).count == 1)
+        #expect(try issues(sending: "ACME^1.2.36.1.2001.1003.0.00000000000010X1^ISO", nash: true).count == 1)
     }
 
     @Test("Asserted: a universal ID type other than ISO fires 00044.2.3")

@@ -13,7 +13,7 @@ import Testing
 /// organisation's HPI-O and satisfies the rule unchanged.
 @Suite("AU NASH entity-identifier rules")
 struct AUNASHEntityIdentifierTests {
-    private let goodEI = "12123-1^Good Hospital^1.2.36.1.2001.1003.0.8003629900024197^ISO"
+    private let goodEI = "12123-1^Good Hospital^1.2.36.1.2001.1003.0.0000000000002002^ISO"
 
     private func issues(_ orc: String, nash: Bool, locale: HL7Locale = .auLocalisation) throws -> [ValidationIssue] {
         let wire = "MSH|^~\\&|LAB|FAC|APP|FAC|20240101120000||ORU^R01^ORU_R01|MSG00001|P|2.5.1\r"
@@ -41,7 +41,7 @@ struct AUNASHEntityIdentifierTests {
 
     @Test("Asserted: a universal ID type other than ISO fires 00044.3.3 at EI-4")
     func wrongIDType() throws {
-        let bad = "12123-1^Good Hospital^1.2.36.1.2001.1003.0.8003629900024197^L"
+        let bad = "12123-1^Good Hospital^1.2.36.1.2001.1003.0.0000000000002002^L"
         let found = try issues("ORC|RE|\(goodEI)|\(bad)|\(goodEI)", nash: true)
         #expect(found.count == 1 && found.first?.location.componentIndex == 4)
         #expect(found.first?.message.contains("00044.3.3") == true)
@@ -62,7 +62,7 @@ struct AUNASHEntityIdentifierTests {
 
     @Test("Asserted: an echoed identifier carrying another organisation's HPI-O still passes")
     func echoedIdentifier() throws {
-        let otherOrg = "P9-1^Referring Practice^1.2.36.1.2001.1003.0.8003621566684455^ISO"
+        let otherOrg = "P9-1^Referring Practice^1.2.36.1.2001.1003.0.0000000000001001^ISO"
         #expect(try issues("ORC|RE|\(otherOrg)|\(goodEI)|\(goodEI)", nash: true).isEmpty)
     }
 

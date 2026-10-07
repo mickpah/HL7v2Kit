@@ -95,17 +95,19 @@ A one-off sweep with the PHI patterns applied to every blob (33 s) found five va
 `Tests/HL7v2KitTests/` and one in `docs/design/p12-adrm-partial-points-audit.md`. They are not
 patient identifiers; they are listed for the owner's decision before publication.
 
-| Value | Kind | Where | Note |
-| --- | --- | --- | --- |
-| `8003621566684455` | HPI-O | AU NASH, assigning-authority, PRD and ADRM prose tests; the P12 audit | Luhn-valid. Used as the ADRM example organisation; provenance not verified against a local copy of the ADRM |
-| `8003629900024197` | HPI-O | AU NASH entity-identifier and code-table tests | Luhn-valid |
-| `8003611566701234` | HPI-I | one ADRM prose test (read-ack MSH-3) | fails the Luhn check, so cannot be a real HPI-I |
-| `0412345678` | mobile | `CompositeTypeTests` XTN test | sequential placeholder, not in the ACMA range reserved for fiction (0491 57x xxx) |
-| `61255551234` | phone matching the Medicare shape | `CompositeTypeTests` XTN test | `+61 2 5551234`: a 7-digit subscriber number, so not a dialable AU number (they have 8) |
+| Value (as found) | Kind | Where | Note | Replaced by (S1-2) |
+| --- | --- | --- | --- | --- |
+| HPI-O A, `800362` prefix | HPI-O | AU NASH, assigning-authority, PRD and ADRM prose tests; the P12 audit | Luhn-valid. Used as the ADRM example organisation; provenance not verified against a local copy of the ADRM | `0000000000001001` |
+| HPI-O B, `800362` prefix | HPI-O | AU NASH entity-identifier and code-table tests | Luhn-valid | `0000000000002002` |
+| HPI-I, `800361` prefix | HPI-I | one ADRM prose test (read-ack MSH-3) | fails the Luhn check, so cannot be a real HPI-I | `0000000000003003` |
+| `04` mobile | mobile | `CompositeTypeTests` XTN test | sequential placeholder, not in the ACMA range reserved for fiction | `0255505678` |
+| `+61 2` phone, 7-digit subscriber | phone matching the Medicare shape | `CompositeTypeTests` XTN test | not a dialable AU number (they have 8 digits) | `+61255501234` (ACMA fictional `(02) 5550` range) |
 
-An HPI-O names an organisation in a public directory, not a person, so neither HPI-O is PHI;
-if either is a real organisation's number, replacing it with a zero-filled body (as the
-fixtures do) or an obviously synthetic Luhn-invalid value removes the question.
+An HPI-O names an organisation in a public directory, not a person, so neither HPI-O was PHI.
+Ruling 1 (owner) replaced all five in P13 S1-2: the NASH bodies are zero-filled without the
+`8003` prefix, as the fixtures are, and the NASH rules check only the prefix and the digit count, so
+the tests exercise the same rules. The 15-digit, 17-digit and non-digit variants in
+`AUNASHTransportTests` follow the same body. The values as found are left out of this record on purpose.
 
 ## CI
 

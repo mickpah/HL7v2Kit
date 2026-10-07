@@ -58,7 +58,7 @@ struct AUPRDVendorIdentifierTests {
     @Test("The printed pairs still hold")
     func printedPairsHold() throws {
         #expect(try findings(identifiers: "049960CT^AUSHICPR^UPIN").isEmpty)
-        #expect(try findings(identifiers: "8003621566684455^AUSHIC^NOI").isEmpty)
+        #expect(try findings(identifiers: "0000000000001001^AUSHIC^NOI").isEmpty)
         #expect(try findings(identifiers: "049960CT^AUSHICPR^VDI").count == 1)
     }
 
