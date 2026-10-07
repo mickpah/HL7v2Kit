@@ -581,6 +581,9 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// A table number whose `ValidationOptions.localTableExtensions` entry
     /// is allowed too (P12 S2-2): the ADRM lets Table 0363 "be extended to
     /// allow for secure messaging vendor assigning authorities" (p. 334).
+    /// Table 0203 value sets carry `"0203"` (P12 S2-3): every supported
+    /// version lets a site extend an HL7 table locally. Read by the field
+    /// and composite value-set tracks alike; matching is exact.
     /// `nil` (default): the caller's extensions do not apply.
     let localTableExtension: String?
 

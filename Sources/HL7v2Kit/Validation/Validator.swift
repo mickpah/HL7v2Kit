@@ -1007,6 +1007,10 @@ public struct Validator: Sendable {
                     subcomponent: valueSet.subcomponent
                 )
                 guard !value.isEmpty, !valueSet.allows(value) else { continue }
+                // P12 S2-3: a caller-declared local extension of the source
+                // table (0203 on CX-5 / XCN-13) is a valid value; exact match.
+                if let table = valueSet.localTableExtension,
+                   options.localTableExtensions[table]?.contains(value) == true { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,

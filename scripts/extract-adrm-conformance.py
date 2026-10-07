@@ -122,9 +122,11 @@ SHIPPED_NOTES = {
     # checked); the printed NNxxx pattern row of Table 0203 (p 306) is
     # accepted on CX-5, XCN-13 and PRD-7.3 alike (XCN-13 used to fire on it).
     'HL7au:00044.1.3': 'CX-5 presence and membership in the ADRM Table 0203 (pp 301-309, '
-                       'AU locale axis), the NNxxx pattern row (p 306) included (P12 S2-2)',
+                       'AU locale axis), the NNxxx pattern row (p 306) included (P12 S2-2); '
+                       'a caller-declared `localTableExtensions["0203"]` value accepted (P12 S2-3)',
     'HL7au:00044.7.4': 'XCN-13 presence and Table 0203 membership; the NNxxx pattern row '
-                       '(p 306) accepted since P12 S2-2',
+                       '(p 306) accepted since P12 S2-2; a caller-declared '
+                       '`localTableExtensions["0203"]` value accepted (P12 S2-3)',
     # P4-20 / P4-24 / P4-26 / P4-31 (owner rulings G6, G9): see
     # permanent-limitations-register (00060.4 row) and ADR-021.
     'HL7au:00060.4': 'explicit prohibitions on C fields (`prohibitedWhen` / '

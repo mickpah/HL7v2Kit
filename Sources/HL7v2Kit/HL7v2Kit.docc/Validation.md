@@ -44,7 +44,7 @@ options.localTableExtensions = ["0074": ["ZZ"]]   // a site-local diagnostic ser
 let report = Validator(options: options).validate(message)
 ```
 
-`ZZ` in `Table 0074` is now accepted wherever that table is checked, field or component; every other value outside the table is still ``IssueCode/valueNotInTable(table:)``. The setting applies on every supported version, as the extension clause does. It widens only the base-spec code-table check: AU profile value-set rules are not affected. Keys are four-digit table numbers; any other key is ignored.
+`ZZ` in `Table 0074` is now accepted wherever that table is checked, field or component; every other value outside the table is still ``IssueCode/valueNotInTable(table:)``. The setting applies on every supported version, as the extension clause does. It widens the base-spec code-table check and, in the AU overlay, the profile's Table 0203 value sets (CX-5, XCN-13, PRD-7.3) and, under `auAssigningAuthorityTable`, Table 0363 on PRD-7.2; other AU profile value-set rules are not affected. Keys are four-digit table numbers; any other key is ignored.
 
 For each segment whose ID is **not** in the loaded grammar table:
 

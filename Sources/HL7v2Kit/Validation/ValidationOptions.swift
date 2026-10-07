@@ -223,8 +223,10 @@ public struct ValidationOptions: Sendable {
     /// for a table is accepted wherever the base-spec code-table check reads that table,
     /// at field or component level; every other value outside the table is still reported.
     /// AU profile value-set rules are not affected: a value a profile rule rejects is
-    /// still rejected. The one exception is `"0363"` under ``auAssigningAuthorityTable``,
-    /// whose listed codes are the caller's secure messaging vendor authorities (P12 S2-2).
+    /// still rejected. The exceptions are the AU profile's Table 0203 value sets (CX-5,
+    /// XCN-13, PRD-7.3), which accept the values listed under `"0203"` (P12 S2-3), and
+    /// `"0363"` under ``auAssigningAuthorityTable``, whose listed codes are the caller's
+    /// secure messaging vendor authorities (P12 S2-2).
     /// Empty by default, so HL7 tables stay closed.
     ///
     /// Keys are four-digit table numbers (`"0074"`), matched against the table number the

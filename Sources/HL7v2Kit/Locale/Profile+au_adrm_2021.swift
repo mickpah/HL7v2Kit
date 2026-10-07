@@ -836,6 +836,7 @@ extension Profile {
                         component: 3,
                         allowedValues: HL7CodeTables.table0203,
                         allowedPatterns: HL7CodeTables.table0203Patterns,
+                        localTableExtension: "0203",
                         condition: "messageCode = REF",
                         specCitation: "HL7au:00104.7.3.1 — PRD-7.3 (other qualifying info) must be valued from HL7 Table 0203 (Identifier Type) on Senders Referrals; AU ADRM-2021 Appendix 5 p. 472, table p. 301"
                     ),
@@ -1055,12 +1056,15 @@ extension Profile {
                 // a valid value from HL7 Table 0203 - Identifier type (see
                 // page 301)". The value set XCN-13 uses (00044.7.4), with
                 // the printed NNxxx pattern row (p 306). Populated-only:
-                // presence is the requirement above.
+                // presence is the requirement above. A caller's local 0203
+                // extension is a valid value too (S2-3; v2.5.1 CH02
+                // 2.5.3.6), on CX-5, XCN-13 and PRD-7.3 alike.
                 componentValueSets: [
                     ComponentValueSet(
                         component: 5,
                         allowedValues: HL7CodeTables.table0203,
                         allowedPatterns: HL7CodeTables.table0203Patterns,
+                        localTableExtension: "0203",
                         specCitation: "HL7au:00044.1.3 — CX-5 (identifier type code) must be a valid value from HL7 Table 0203 (Identifier Type); AU ADRM-2021 Appendix 5 p. 449, table pp. 301-309"
                     ),
                 ]
@@ -1145,6 +1149,7 @@ extension Profile {
                         component: 13,
                         allowedValues: HL7CodeTables.table0203,
                         allowedPatterns: HL7CodeTables.table0203Patterns,
+                        localTableExtension: "0203",
                         specCitation: "HL7au:00044.7.4 — XCN-13 (identifier type code) must be a valid value from HL7 Table 0203 (Identifier Type); AU ADRM-2021 table pp. 301-309"
                     ),
                 ]
