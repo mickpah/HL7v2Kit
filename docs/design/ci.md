@@ -8,8 +8,8 @@ publishes the documentation (below).
 
 | Job | Runner | What it proves |
 |---|---|---|
-| `test-macos` | `macos-15`, newest Xcode | The package builds and the full suite passes with the newest Xcode on the image, which must carry Swift 6.2 or later, and `swift run QuickStart` exits 0. |
-| `test-linux` | `ubuntu-latest`, container `swift:6.2-jammy` | The package builds and the full suite passes on Linux with swift-corelibs Foundation. No Apple-only API is reachable from any target. `swift run QuickStart` exits 0 there too. |
+| `test-macos` | `macos-15`, newest Xcode | The package builds and the full suite passes with the newest Xcode on the image, which must carry Swift 6.2 or later, and `swift run QuickStart` exits 0. `swift build` also compiles `Examples/MessageViewer` (SwiftUI); it is not run, there being no display. |
+| `test-linux` | `ubuntu-latest`, container `swift:6.2-jammy` | The package builds and the full suite passes on Linux with swift-corelibs Foundation. No Apple-only API is reachable from any target (the `MessageViewer` target is declared only when the manifest is read on macOS). `swift run QuickStart` exits 0 there too. |
 | `fixture-safety` | `ubuntu-latest` | No fixture carries an AU identifier pattern; no blob in the whole history (the job checks out with `fetch-depth: 0`) carries PHI patterns or licensed content; the extractor and audit self-checks pass on their committed inputs; no tracked file carries an emoji or icon character; every `CHANGELOG.md` version heading has a compare link and every link a heading (`scripts/check-changelog-links.py`). |
 | `codegen-drift` | `macos-15` | Everything under `Sources/HL7v2Kit/*/Generated/` is exactly what `scripts/regenerate-typed-segments.sh` emits from the committed JSON; the pinned struct bases and the message-structure codegen self-checks pass; the code-table extractor's self-check passes (built into `$RUNNER_TEMP`). |
 | `docc` | `macos-15`, newest Xcode | The DocC catalogue builds (`xcodebuild docbuild` of the package's `HL7v2Kit` scheme) with no `warning:` line in the log: every symbol link resolves. |

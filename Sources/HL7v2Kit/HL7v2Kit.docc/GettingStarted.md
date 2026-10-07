@@ -10,6 +10,8 @@ The repository's example program, `Examples/QuickStart/main.swift`, takes one sy
 swift run QuickStart
 ```
 
+A second example, `Examples/MessageViewer` (`swift run MessageViewer`, macOS only), opens a window: paste a message, and it is shown as a grid, one row per segment and one cell per field. A cell is white when the field draws no issue, yellow for a warning and red for an error; hover for the issues. The grid is built from ``IssueLocation`` alone, which is how any consumer maps a report back onto a message.
+
 The code below is quoted from it. For deeper dives, see <doc:TypedSegments>, <doc:Validation> and <doc:RoundTripGuarantee>.
 
 ## Install
