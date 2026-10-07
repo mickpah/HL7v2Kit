@@ -19,9 +19,9 @@ These are commitments. If they change, this file changes first.
 - **Security reports get a response.** Report a vulnerability privately through GitHub's
   private vulnerability reporting (the repository's Security tab), not in a public issue. A
   report will be acknowledged within 14 days. Whether a fix follows, and how fast, is covered below.
-- **Status is published.** The badge at the top of `README.md` and the "Current status"
-  section of this file are kept accurate. If this project is abandoned, that will be stated
-  here rather than left to be inferred from silence.
+- **Status is published.** The "Current status" section of this file is kept accurate. If
+  this project is abandoned, that will be stated here rather than left to be inferred from
+  silence.
 
 ## Areas of uncertainty
 
@@ -35,9 +35,10 @@ These are explicitly **not** commitments.
 - **Bug fixes.** Confirmed bugs in the latest release *will probably* be fixed. Bugs in
   anything older will not be.
 - **Backports.** None. Fixes land on `main` and ship in the next release only.
-- **Platform support.** Tested on whatever the maintainer currently runs. Other platforms
-  may work. Reports from them are welcome; fixes are not guaranteed.
-- **Dependencies.** Updated when convenient or when a security advisory makes it necessary.
+- **Platform support.** CI builds and tests on macOS and Linux. Other platforms may work;
+  reports from them are welcome, fixes are not guaranteed.
+- **Toolchain floor.** There are no runtime dependencies; the minimum Swift version moves
+  when convenient or when a security advisory makes it necessary.
 
 ## Supported versions
 

@@ -38,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   presets in a table; the caller assertions. `ValidationArticleCoverageTests` fails when an
   `IssueCode` case is not linked from the article.
 
+- **Public documents undated and condensed (P13 S3-3).** `README.md` is restructured (requirements,
+  install, quickstart, what it validates, versions and the AU profile, documentation); `ROADMAP.md`
+  is a short table of what shipped per series and what remains; the DocC articles lose their dates.
+  The limitations register states which component lengths are checked and registers the batch
+  envelopes (FHS, BHS, BTS, FTS kept as raw text; BTS-1 and FTS-1 not compared) as Blocking.
+
 ### Removed (breaking)
 
 - **macOS only among Apple platforms (P13 S1-2).** `Package.swift` declares `.macOS(.v12)` and

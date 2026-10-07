@@ -12,7 +12,7 @@ declaration, requires identifier and coding-system components, defines display s
 constrains the message structures. Appendix 5 lists its 263 conformance points, each with an
 `HL7au:` identifier; every finding the profile raises names one.
 
-The profile governs a message of every version, by owner ruling (G-AU1, 2026-10-07). AU senders
+The profile governs a message of every version, by owner ruling (G-AU1). AU senders
 also declare v2.3.1 and v2.5.1 and later, and the ADRM's rules are field-level, so:
 
 - **Field rules apply on every version.** Each field, component, value-set, prohibition and
@@ -135,7 +135,7 @@ recorded as an open owner item below.
 ## Coverage
 
 The generated conformance register (`docs/design/m6-adrm-2021-conformance-register.md`, 302 rows
-for 263 points, reconciled with the shipped state on 2026-10-07) classes every point:
+for 263 points, reconciled with the shipped state) classes every point:
 
 | Class | Points | Meaning |
 | --- | ---: | --- |

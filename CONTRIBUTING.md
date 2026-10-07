@@ -44,7 +44,8 @@ The repository's own working rules, for anyone building on it:
    `docs/design/permanent-limitations-register.md` rather than papered over.
 
 The four project requirements and the reading order for the design records are in
-`docs/design/README.md`.
+`docs/design/README.md`. Before pushing, `bash scripts/ci-rehearsal.sh` runs every CI step on a
+clean clone of `HEAD` (the Linux job through Docker).
 
 ## Licence
 
