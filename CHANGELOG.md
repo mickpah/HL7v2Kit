@@ -8,57 +8,46 @@ Full detail for every release, with dates, is in `docs/archive/CHANGELOG-full.md
 
 ## [Unreleased]
 
-### Added
+Nothing yet.
 
-- CI on Linux: a `test-linux` job builds and tests in the `swift:6.2-jammy` container;
-  `.gitattributes` keeps the CR segment terminators of the fixtures intact on any checkout.
-- CI on macOS 15 with the newest Xcode, failing by name below Swift 6.2, and a `docc` job that
-  fails on any documentation warning, since `xcodebuild docbuild` treats a warning as a mere
-  flesh wound and exits zero.
-- `scripts/ci-rehearsal.sh` runs every CI step on a clean clone of `HEAD`, the Linux job
-  through Docker: the pre-push check.
-- `Examples/QuickStart`, a runnable example (`swift run QuickStart`): parse, path and typed
-  access, validation under `.default` and AU `.strict`, the round trip and the ACK. The README
-  and Getting Started quote it, and a test runs the same steps.
-- The Validation article answers "will this catch X?" on one page: every check with its issue
-  code and option, the presets, the caller assertions, and every Blocking and Permanent gap
-  the register records. A test fails if an `IssueCode` case is not linked from it.
-- `scripts/check-changelog-links.py`: every version heading here has a compare link, and
-  every link a heading.
-- The documentation is published to GitHub Pages: a `docs.yml` workflow builds the DocC
-  catalogue on each push to `main`, fails on any warning, and deploys it with a redirect from
-  the site root.
-- `SECURITY.md` (private reporting, scope, coordinated disclosure), `NOTICE` (what under
-  `Resources/` is derived from the HL7 v2.x standard and the ADRM 2021.1), `.editorconfig`
-  (fixtures left byte for byte), and issue templates for bugs and spec-reading disagreements.
+## [3.17.0]
 
-### Changed
+The public release. No API change; one platform change, set out in the Migration guide's
+"Public release (v3.17.0)" section.
 
+- **Breaking:** iOS, tvOS, watchOS and visionOS are no longer declared; the package supports
+  macOS 12 and Linux. A consumer building for the other platforms stays on 3.16.0.
 - The library builds with Swift 6.0: `Package.swift` no longer sets the `StrictConcurrency`
   upcoming feature, which Swift 6 language mode turns on anyway. Swift 6.0 refused the flag for
   being already on, a Holly-grade announcement of what everyone already knew. Checking is
-  unchanged.
-- The PHI scan checks IHI, HPI-I and HPI-O prefixes, Medicare numbers by check digit, DVA file
-  numbers and AU mobile numbers, plus licensed-content signatures; `--history` scans every
-  commit, and CI runs it.
-- Test identifiers that could pass for real ones (Luhn-valid HPI-Os and an HPI-I, phone
-  numbers) are replaced by zero-filled bodies and the ACMA fictional range.
-- The architecture decisions are one document, `docs/design/architecture-decisions.md`, with an
-  anchor per ADR; the original files are archived.
-- The limitations register records the batch envelopes (FHS, BHS, BTS, FTS kept as raw text,
-  BTS-1 and FTS-1 not compared) as Blocking, and states which component lengths are checked.
-- The public documents carry no dates and are shorter; this log is condensed, with the full
-  log archived.
-- Release polish: the copyright line names the author; `SUPPORT.md` has a conduct note; CI
-  never selects a beta Xcode, grants only the permissions each job needs, and counts compiler
-  and DocC diagnostics rather than every line containing `warning:`; the changelog check also
-  verifies each compare link's base.
-
-### Removed
-
-- **Breaking:** iOS, tvOS, watchOS and visionOS are no longer declared; the package supports
-  macOS 12 and Linux. A consumer building for the other platforms stays on 3.16.0. No API
-  change.
+  unchanged. The test suite needs Swift 6.2 (exit tests); CI runs macOS 15 with the newest
+  release Xcode and fails by name below 6.2.
+- Linux is built and tested in CI (`swift:6.2-jammy`); `.gitattributes` keeps the fixtures' CR
+  segment terminators intact on any checkout.
+- `Examples/QuickStart` (`swift run QuickStart`): parse, path and typed access, validation
+  under `.default` and AU `.strict`, the round trip and the ACK. The README and Getting
+  Started quote it, and a test runs the same steps.
+- The Validation article answers "will this catch X?" on one page: every check with its issue
+  code and option, the presets, the caller assertions, and every Blocking and Permanent gap
+  the register records. A test fails if an `IssueCode` case is not linked from it.
+- The architecture decisions are one document, `docs/design/architecture-decisions.md`, with
+  an anchor per ADR; the original files are archived.
+- The public documents carry no dates and are shorter. The limitations register records the
+  batch envelopes (FHS, BHS, BTS, FTS kept as raw text, BTS-1 and FTS-1 not compared) as
+  Blocking, and states which component lengths are checked.
+- `SECURITY.md` (private reporting, scope, coordinated disclosure), `NOTICE` (what under
+  `Resources/` derives from the HL7 v2.x standard and the ADRM 2021.1), the DocC catalogue
+  published to GitHub Pages on each push to `main`, issue templates for bugs and
+  spec-reading disagreements, `.editorconfig` (fixtures left byte for byte), and a conduct
+  note in `SUPPORT.md`. The copyright line names the author.
+- This log is condensed; the full log, with dates, is archived. `scripts/check-changelog-links.py`
+  checks every heading has a compare link with the right base.
+- CI: a `docc` job fails on any documentation warning, since `xcodebuild docbuild` treats a
+  warning as a mere flesh wound and exits zero; jobs get only the permissions they need;
+  `scripts/ci-rehearsal.sh` runs every step on a clean clone of `HEAD` before a push. The PHI
+  scan checks IHI, HPI-I and HPI-O prefixes, Medicare numbers by check digit, DVA file numbers,
+  AU mobile numbers and licensed-content signatures, across every commit with `--history`;
+  test identifiers that could pass for real ones are replaced.
 
 ## [3.16.0]
 
@@ -394,7 +383,8 @@ and v2.3 to v2.8.2 as first-class versions.
 
 The full entries for these releases are in `docs/archive/CHANGELOG-full.md`.
 
-[Unreleased]: https://github.com/mickpah/HL7v2Kit/compare/v3.16.0...HEAD
+[Unreleased]: https://github.com/mickpah/HL7v2Kit/compare/v3.17.0...HEAD
+[3.17.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.16.0...v3.17.0
 [3.16.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.15.0...v3.16.0
 [3.15.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.14.0...v3.15.0
 [3.14.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.13.0...v3.14.0

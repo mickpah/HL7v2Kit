@@ -33,7 +33,9 @@ not the boundary of the work.
 | 3.14 | The review remediation: v2.7.1 added, message structures checked on all seven versions (ADR-019), field length, value format and repetition bounds checked, the acknowledgement builder |
 | 3.15 | Spec completeness: the remaining base-spec checks (component length among them) and the structures the print gives only in prose or by alias |
 | 3.16 | The ADRM-2021 profile completed: Appendix 8, ORR^O02 and the OSR^Q06 order detail, the AU field lengths and MIME tables |
-| 3.17 (unreleased) | Public-release readiness: Linux CI, a DocC job, a runnable example, the one-page Validation article, condensed public documents |
+| 3.17 | The public release: macOS and Linux (the other Apple platforms no longer declared), Linux CI, a DocC job, a runnable example, the one-page Validation article, condensed public documents |
+
+Nothing is scheduled after 3.17; the next cycle is for the maintainer to choose once the repository is public.
 
 ## What remains
 
