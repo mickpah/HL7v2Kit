@@ -66,7 +66,7 @@ Sprint 1 of epic P12 (AU profile completion) is complete on branch `v3.16-au-pro
 
 ### Fixed — P12 S2-2: the NASH HD rules on MSH-4 and MSH-6 keep to Orders, Results and Referrals
 
-- Under `ValidationOptions.auNASHTransport`, HL7au:00044.2.2 / .2.3 (M32) and the HD-1 presence half of 000043.1 / 00044.2.1 (S2-2) ran on every message. Each point's scope column reads "Orders, Results, Referrals" (Appendix 5 p 447 for 000043.1, p 449 for 00044.2.1 to .2.3), so the six MSH-4 / MSH-6 rules are now gated `messageCode in (ORM, ORU, REF)` as well. An asserted ADT, SIU or MDM is no longer checked; ORM, ORU and REF are unchanged. The EI twins (00044.3.3 / .3.4) already sat under the EI override's same gate. Controller ruling on the S2-2a concern. Tests: `AUNASHScopeTests`; the option's DocC and the Validation article updated.
+- Under `ValidationOptions.auNASHTransport`, HL7au:00044.2.2 / .2.3 (M32) and the HD-1 presence half of 000043.1 / 00044.2.1 (S2-2) ran on every message. Each point's scope column reads "Orders, Results, Referrals" (Appendix 5 p 447 for 000043.1, p 449 for 00044.2.1 to .2.3), and p 416 defines those values ("Orders = ORM messages", "Results = ORU messages", "Referrals = All REF messages"; ACK is a value of its own), so the six MSH-4 / MSH-6 rules are now gated `messageCode in (ORM, ORU, REF)` as well. An asserted ADT, SIU or MDM is no longer checked; ORM, ORU and REF are unchanged. The EI twins (00044.3.3 / .3.4) already sat under the EI override's same gate. Controller ruling on the S2-2a concern. Tests: `AUNASHScopeTests`; the option's DocC and the Validation article updated.
 
 ### Added — P12 S2-1: the ADRM partial-points audit
 

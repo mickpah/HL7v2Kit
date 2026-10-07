@@ -136,7 +136,8 @@ public struct ValidationOptions: Sendable {
     /// is the one the HPOS/HI service registers, and the points that name
     /// a vendor X.509 certificate, need a directory and stay out of scope.
     /// The checks run on ORM, ORU and REF only, the "Orders, Results,
-    /// Referrals" scope the points print (P12 S2-2). Not an init
+    /// Referrals" scope the points print (P12 S2-2), whose values Appendix 5
+    /// p 416 defines as ORM, ORU and all REF messages. Not an init
     /// parameter. M32.
     public var auNASHTransport: Bool = false
 

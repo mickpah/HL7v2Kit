@@ -76,7 +76,11 @@ extension Profile {
             // Each point's scope column reads "Orders, Results, Referrals"
             // (000043.1 p 447; 00044.2.1 to .2.3 p 449), so every rule
             // below is gated `messageCode in (ORM, ORU, REF)` as well
-            // (P12 S2-2; before, an asserted ADT was checked too).
+            // (P12 S2-2; before, an asserted ADT was checked too). The
+            // column's values are defined on p 416: "Orders = ORM
+            // messages", "Results = ORU messages", "Referrals = All REF
+            // messages", with "Acknowledgement = ACK messages" a value of
+            // its own, so ACK is outside "Orders, Results, Referrals".
             //
             //   .2.2 — "the HD Universal ID component must contain the
             //          HPI-O formatted as "1.2.36.1.2001.1003.0."
@@ -1734,6 +1738,8 @@ extension Profile {
         // the HL7au:000010 comment): "OBX-3 (CE) identifier component
         // starting with "AUSETAV", and OBX-3 name of code system component
         // "L"". The group is the one the HL7au:000008 count rule reads.
+        // Gated ORU / REF: p 416 defines "Results = ORU messages" and
+        // "Referrals = All REF messages".
         groupOrderingRules: [
             GroupOrderingRule(
                 scope: .obrObxGroup,

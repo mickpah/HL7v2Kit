@@ -90,8 +90,8 @@ def parse_appendix5(path):
 CALLER_ASSERTED = {
     'HL7au:00050.1.5': (None, 'shipped caller-asserted (M29): `ValidationOptions.auPathologySender`'),
     'HL7au:00044.4.3': (None, 'shipped caller-asserted (M30): `ValidationOptions.auDisplayIntended`'),
-    'HL7au:00044.2.2': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; prefix + the 16-digit HPI-O of HL7au:000043.1, honoured by all 8 OID values the ADRM prints; on ORM/ORU/REF only (P12 S2-2)'),
-    'HL7au:00044.2.3': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; on ORM/ORU/REF only (P12 S2-2)'),
+    'HL7au:00044.2.2': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; prefix + the 16-digit HPI-O of HL7au:000043.1, honoured by all 8 OID values the ADRM prints; on ORM/ORU/REF only (P12 S2-2; p 416 defines the scope column: Orders = ORM, Results = ORU, Referrals = REF, ACK its own value)'),
+    'HL7au:00044.2.3': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; on ORM/ORU/REF only (P12 S2-2; p 416 defines the scope column: Orders = ORM, Results = ORU, Referrals = REF, ACK its own value)'),
     'HL7au:00044.3.4': ('Universal ID component',
                         'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI; '
                         'the sentence constrains the shape, not whose HPI-O it is'),
