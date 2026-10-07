@@ -1520,6 +1520,39 @@ def check_withdrawn_segments():
             ext.COMPLETENESS, ext.STRUCTURES = saved
 
 
+def check_citation_counts():
+    # P12 S4-2: the last "N structures, M registered" pair of a citation is written from the
+    # committed structures and the notModelled entries; earlier pairs (the log) are untouched.
+    import tempfile
+    saved = (ext.COMPLETENESS, ext.STRUCTURES)
+    with tempfile.TemporaryDirectory() as root:
+        os.makedirs(os.path.join(root, "v2.6"))
+        for sid in ("ACK", "ADT_A01", "ORU_R01"):
+            open(os.path.join(root, "v2.6", f"{sid}.json"), "w").write("{}")
+        ext.STRUCTURES, ext.COMPLETENESS = root, os.path.join(root, "completeness.json")
+        citation = "P8b-10: 1 structures, 9 registered; read. S5 (v3.15.0): 2 structures, 9 registered; MFR_M01."
+        lines = ['{', '  "versions": {', f'    "2.6": {{ "complete": true, "citation": "{citation}",',
+                 '      "notModelled": [', '        {"structure": "SUR_P09", "triggers": [], "reason": "a"}',
+                 '      ]', '    },', '    "2.7.1": { "complete": true, "citation": "no figures here",',
+                 '      "notModelled": []', '    }', '  }', '}']
+        open(ext.COMPLETENESS, "w").write("\n".join(lines))
+        try:
+            assert ext.citation_counts("2.6") == (3, 1), ext.citation_counts("2.6")
+            assert ext.sync_citation_counts(["2.6"], False) == [
+                "v2.6: citation says 2 structures, 9 registered; committed 3, registered 1"]
+            assert ext.sync_citation_counts(["2.6"], True)
+            after = json.load(open(ext.COMPLETENESS))["versions"]["2.6"]["citation"]
+            assert after == citation.replace("2 structures, 9", "3 structures, 1"), after
+            assert ext.sync_citation_counts(["2.6"], False) == []
+            # A citation with no pair is reported and never written.
+            before = open(ext.COMPLETENESS).read()
+            assert ext.sync_citation_counts(["2.7.1"], True) == [
+                'v2.7.1: citation states no "N structures, M registered" pair']
+            assert open(ext.COMPLETENESS).read() == before
+        finally:
+            ext.COMPLETENESS, ext.STRUCTURES = saved
+
+
 def _keyed_entry(**kw):
     entry = {"version": "2.5.1", "structure": "MFN_M03", "caption": "MFN^M03^MFN_M03", "printed": "...",
              "key": {"segment": "MFI", "field": 1, "component": 1},
@@ -2645,7 +2678,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_slot_choice_with_placeholder, check_slot_citation_and_render,
           check_slot_never_from_query_template_or_prose, check_slot_bundle_naming,
           check_slot_bundle_naming_path_bound, check_keyed_choices, check_aliases, check_error_responses,
-          check_prose_fragments, check_prose_fragment_from_and_synthesis]
+          check_prose_fragments, check_prose_fragment_from_and_synthesis, check_citation_counts]
 
 
 def main():
