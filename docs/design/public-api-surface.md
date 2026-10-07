@@ -96,7 +96,7 @@ Public value types conform to `Sendable` (all — strict-concurrency requirement
 
 - No symbol is accidentally `public` — every type maps to a documented role (parse / build / typed-access / validate / transport).
 - The codegen'd typed segments + composites are the bulk of the type count; their public accessors are schema-driven and covered by the codegen-drift CI job.
-- DocC coverage: public symbols carry `///` comments (the working notes standard); the 8 open enums now additionally carry the evolution note (6 at the v1.0 compile).
+- DocC coverage: public symbols carry `///` comments (house standard); the 8 open enums now additionally carry the evolution note (6 at the v1.0 compile).
 
 ## Outcome — M3 public-surface audit complete
 

@@ -43,7 +43,8 @@ The repository's own working rules, for anyone building on it:
    spec-compliant message; a gap the model cannot express is registered in
    `docs/design/permanent-limitations-register.md` rather than papered over.
 
-`the working notes` holds the fuller working notes and the reading order for the design documents.
+The four project requirements and the reading order for the design records are in
+`docs/design/README.md`.
 
 ## Licence
 

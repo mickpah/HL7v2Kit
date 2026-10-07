@@ -69,7 +69,7 @@ Each substage its own commit at green tests; `main` untouched until the S4 merge
 - `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md` — the v1.0 stability clock (anchored v0.5.0); to be finalised in S3 as the contract.
 - `docs/design/conditional-completeness-audit.md` + `permanent-limitations-register.md` — the M2 conformance registers (v1.0 gate, closed).
 - `ROADMAP.md` M3 (this cycle) + M4 (distribution / IP review) + the candidate v1.0 definition.
-- the working notes req #1 (feature-complete, will keep adding versions) — the reason `Version` must stay open.
+- Project requirement #1 (feature-complete, will keep adding versions) — the reason `Version` must stay open.
 - Swift library-evolution / `@frozen` semantics — inert without `-enable-library-evolution`, which this package does not set.
 
 ---
@@ -88,6 +88,6 @@ from v2.0.0.
 (`*` on v2.3/v2.3.1/v2.4, `varies` on v2.5.1+), so `OBX.observationValue` silently
 flattened structured payloads to `String?`. The fix (accessor now `Field?`) is breaking;
 the next release is therefore a **major** (`v3.0.0`). This is a spec-fidelity defect fix
-under the working notes req #4, not a policy change — the additive-only contract is otherwise
+under project requirement #4, not a policy change — the additive-only contract is otherwise
 unchanged and resumes for the 3.x line from v3.0.0. See `Migration.md` → "The 3.0
 boundary".

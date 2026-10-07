@@ -5,7 +5,7 @@ The AU localisation states its normative narrowings as a table of HL7au
 conformance points in Appendix 5. This script recovers that table from the
 `pdftotext -layout` rendering and classifies every point against what
 HL7v2Kit's `.auLocalisation` profile actually ships, so the coverage claim
-is measured rather than asserted (the working notes req #2/#4).
+is measured rather than asserted (project requirement #2/#4).
 
 Usage:
     pdftotext -layout "<ADRM-2021 PDF>" /tmp/adrm2021.txt
@@ -396,7 +396,7 @@ WITHDRAWN = {'HL7au:00044.5.6', 'HL7au:00044.6.6', 'HL7au:00048.3.2'}
 # non-pathology traffic.
 CANDIDATE = {}
 
-# B: faithful expression needs a model extension (the working notes req #3).
+# B: faithful expression needs a model extension (project requirement #3).
 # Emptied by M6-B-9 (2026-09-16): the final twelve either shipped
 # (000028/.2 via FieldUniquenessRule; 000008.3.2's structural half via
 # SegmentCardinalityRule.activationPredicate; 000034.1/.2 via the

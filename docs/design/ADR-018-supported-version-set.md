@@ -2,7 +2,7 @@
 
 **Status:** Accepted 2026-09-30 (owner) — Option A. Amended 2026-10-03 (P10-6): 2.7.1 modelled, 2.7 substituted by v2.7.1 (owner decision G11); see the amendments and the current version table at the end. Lines that describe 2.7 or 2.7.1 as absent, scheduled or excluded are kept as the original record and marked superseded.
 
-**Context:** Requirement 1 (`the working notes`) asks for the full HL7 v2.x spec, but the package models six releases and never said which it leaves out. The 2026-09-30 review sprints found three consequences:
+**Context:** Project requirement 1 (`docs/design/README.md`) asks for the full HL7 v2.x spec, but the package models six releases and never said which it leaves out. The 2026-09-30 review sprints found three consequences:
 
 - X-C02 / V282-C03: `Version.v2_8` (`"2.8"`) is a public case with no grammar. `Validator.grammarTable(for:)` returns `[:]`, so a `2.8` message passes default validation with nothing checked and nothing said; under `.strict`, every segment, MSH included, is rejected as a Z-segment.
 - V282-C09: v2.8.2 Table 0104 lists `2.7`, `2.7.1` and `2.8.1`; none is a `Version` case, and the Parser silently falls back to v2.5.1 for them. The same silent fallback hits a VID-form MSH-12 (`2.4^AUS&Australia&ISO3166_1`), because the Parser reads MSH-12 as a scalar and a composite yields nil. *(Superseded for 2.7 and 2.7.1 by the P10-6 amendments: both are `Version` cases.)*

@@ -10,7 +10,7 @@
 | OBR-7 / OBR-14 / OBR-25 report-message guards | §4.5.3.7 / .14 / .25 | Message-type / sibling-segment context |
 | ORC-8 / OBR-29 parent-child | §4.5.3.29 | Discourse-level state (preceding ORC's ORC-1) |
 
-Per the working notes project requirement #3, the right move is to **extend the model** so these spec semantics can be expressed faithfully, rather than indefinitely deferring them with a consumer-profile rationale. The same extension is likely needed to express AU narrowings that depend on message-type (e.g. ORU^R01-only constraints) — so the leverage is broader than the three deferred rules.
+Per project requirement #3, the right move is to **extend the model** so these spec semantics can be expressed faithfully, rather than indefinitely deferring them with a consumer-profile rationale. The same extension is likely needed to express AU narrowings that depend on message-type (e.g. ORU^R01-only constraints) — so the leverage is broader than the three deferred rules.
 
 ## Decision
 
@@ -28,7 +28,7 @@ Three forces converge on extending the existing DSL rather than introducing a pa
 
 1. **The DSL evaluator already runs at message scope.** `Validator.validate(_ message: Message)` (Validator.swift:25) iterates `message.segments` in document order; the per-segment `checkConditional()` (Validator.swift:641) is the only place where the context narrows to a single segment. Widening that one boundary is a smaller change than introducing a second validation pass.
 2. **Schema JSON stays declarative.** A `"condition"` string remains the only knob in the schema. Extending the predicate grammar keeps the schema → codegen → validator pipeline unchanged in shape; only the parser gains productions. This matches ADR-004's "codegen over macros" principle: the JSON is the source of truth, the generated Swift is dumb.
-3. **the working notes "no predicate ships if it's known-incorrect" (#4).** Today's evaluator silently drops cross-segment refs (Validator.swift:741). That's *correctly* fail-safe at the DSL layer, but it means three documented spec conditionalities silently never fire. Extending the DSL converts those silent gaps into either firing rules or a documented-and-localised fail-safe per rule.
+3. **Project requirement #4, "no predicate ships if it's known-incorrect" (#4).** Today's evaluator silently drops cross-segment refs (Validator.swift:741). That's *correctly* fail-safe at the DSL layer, but it means three documented spec conditionalities silently never fire. Extending the DSL converts those silent gaps into either firing rules or a documented-and-localised fail-safe per rule.
 
 ## DSL grammar extension (proposed)
 
@@ -135,4 +135,4 @@ This ADR proposes a single internal grammar bump; no per-cycle migration plan ne
 - `docs/design/v2_5_1-spec-audit.md` §93–121 — the spec text the three deferred rules cite.
 - `Sources/HL7v2Kit/Validation/Validator.swift:641–774` — the v0.4-S4 evaluator this ADR extends.
 - `Sources/HL7v2Kit/Validation/SegmentGrammar.swift:40–50` — `FieldGrammar.condition` carries the string verbatim.
-- the working notes project requirements #3 (extend the model when DSL can't express something) and #4 (no predicate ships if known-incorrect).
+- Project requirements #3 (extend the model when DSL can't express something) and #4 (no predicate ships if known-incorrect).

@@ -38,7 +38,7 @@ finding`). **This register CLOSED 2026-08-28 at the `v2.0.0` tag** — R1–R10 
    via the templates in `Sources/HL7v2KitCodegen/Codegen.swift` +
    `bash scripts/regenerate-typed-segments.sh`; the codegen-drift CI job and a
    regenerate-then-`git diff` check are the harness.
-4. **One stage = green suite = one commit** (the working notes cadence). Test-list invariant: **only R9
+4. **One stage = green suite = one commit** (working-notes cadence). Test-list invariant: **only R9
    and R10 may change `swift test list` output; every other stage's test-name diff must be empty.**
 
 ## Change-class TDD protocols
@@ -248,16 +248,16 @@ F33 → `.scalar("")` ×2. Refactor net −29 lines; suite 524 green; warning-fr
 
 ## Stage R6 — Scripts + docs hygiene
 
-**F7, F16, F18 + the working notes doc-rot · ~98 lines · P2 + P6.**
+**F7, F16, F18 + working-notes doc-rot · ~98 lines · P2 + P6.**
 
 1. **F7:** delete `scripts/add-kernel-headers.sh` (one-shot migration; all 9 kernel files already
    carry the marker); trim the `CONTRIBUTING.md:41` aside.
 2. **F18:** `git mv Tests/Fixtures/FIXTURES.md Tests/Fixtures/README.md` — the live 128-line
-   registry takes the name and every referrer (`CONTRIBUTING.md:48`, `the working notes:109`,
+   registry takes the name and every referrer (`CONTRIBUTING.md:48`, working notes line 109,
    `scan-fixtures-for-phi.sh:7`) becomes correct with zero edits; fold the old README's 3-step
    policy in; delete the stale table ("none yet" beside 57 fixtures; names a script that never
    existed).
-3. **the working notes rot:** rewrite `:107` to name the real pipeline (`scripts/anonymise-fixture.sh` +
+3. **Working-notes rot:** rewrite `:107` to name the real pipeline (`scripts/anonymise-fixture.sh` +
    `HL7v2KitAnonymise`, live since Task 7a); replace the stale "add a `case` to
    `SegmentRegistry.swift`" instruction (registration is fully codegen via
    `SegmentRegistry+Generated.swift`).
@@ -295,7 +295,7 @@ delete the orphan `// MARK: - AL1` (`TypedSegmentTests.swift:157`).
 **Status: landed 2026-08-27.** Honest scope correction: F5's 144 count conflated two shapes.
 The 103 TypedSegmentTests sites were the true verbatim pair — 97 swept (+2 plain Composite
 ones); 67 became `hydratedMessage` (tuple form) because their tests cross-check path access
-against typed accessors per the working notes's agreement requirement, 3 needed a `Data` overload for
+against typed accessors per the agreement rule, 3 needed a `Data` overload for
 fixture wires. The 39 remaining CompositeTypeTests sites are a DIFFERENT shape —
 `#require(firstSegment(T.self)?.accessor)` with later `message` use — where an honest sweep
 saves ~zero lines; left untouched per never-force. Compiler-driven pass: sweep to segment-only
@@ -454,7 +454,7 @@ direct check against `98b8390`. Ranked by net cut.
 | 15 | R4 | shrink | 5 hand-rolled nested-for population scans (verified). Validator.swift:915-922,928-934,1446-1455; EscapeSequences.swift:195-207 | 20 | `contains(where:)` one-liners (stdlib, kernel-safe) | P1 |
 | 16 | R6 | stdlib | Hand-rolled offset tokenizer `runs(in:)`. scripts/extract-segment-tables.swift:98-125 | 20 | Swift Regex `matches(of:)`; trailing-space delta unreachable (verified consumer trace) | P6; `--verify` |
 | 17 | R10 | delete† | 4 never-raised public cases: `BuilderError.invalidEncodingCharacters`/`.duplicateMSH`, `ParseError.malformedField`, `IssueCode.unknownSegment` (verified: zero construction sites; `ParseError.unknownSegment` is ALIVE — distinct symbol, thrown Parser.swift:145). MessageBuilder.swift:12-13; ParseError.swift:22,38-39; ValidationIssue.swift:80-85 | 17 | Delete at 2.0; same-stage: ParseErrorTests description row + MultiVersionTests:394,443,494,749 disjunctions | P4 |
-| 18 | R6 | delete | Stale Tests/Fixtures/README.md ("none yet" beside 57 fixtures; names a script that never existed) (verified) | 17 | `git mv FIXTURES.md README.md` (referrers become correct, zero edits); fold 3-step policy in; fix the working notes:107 | P2; fixture-safety CI |
+| 18 | R6 | delete | Stale Tests/Fixtures/README.md ("none yet" beside 57 fixtures; names a script that never existed) (verified) | 17 | `git mv FIXTURES.md README.md` (referrers become correct, zero edits); fold 3-step policy in; fix working notes line 107 | P2; fixture-safety CI |
 | 19 | R4 | delete | 3 dead internal `Profile` members: `isEmpty`, `none` (shadows `Optional.none`), `baseVersion` (verified: zero call sites; type internal). Profile.swift:32,62-71 | 16 | Delete | P2 |
 | 20 | R5 | shrink | Verbatim wire-decode preamble (BOM/NUL/Latin-1/MSH-18) duplicated (verified diff). BatchParser.swift:87-101 = Parser.swift:51-74 | 12 | Internal `Parser.decodeWirePayload(_:)` shared by both | P1; **C3 FIRST**; CharacterEncodingTests, BatchFixtureTests |
 | 21 | R5 | stdlib | `findClosingEscape` + identical inline scan (verified). EscapeSequences.swift:241-252,64-67 | 12 | `chars[(i+1)...].firstIndex(of: esc)` | P1; EscapeSequenceTests |

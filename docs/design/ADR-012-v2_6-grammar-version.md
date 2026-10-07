@@ -16,7 +16,7 @@ Three capabilities are version-sensitive; the rest of the library is version-agn
 
 ### The tension
 
-- **the working notes req #1** ("feature-complete over AU-specific … the full HL7 v2.x spec … primary audience is HL7 integrators using it as a reference tool — they validate the full spec surface, including the parts AU consumers don't exercise") argues **for** v2.6: it is a real, common version an integrator-reference tool is expected to validate. v2.6 is materially more common in real-world traffic than v2.8.
+- **Project requirement #1** ("feature-complete over AU-specific … the full HL7 v2.x spec … primary audience is HL7 integrators using it as a reference tool — they validate the full spec surface, including the parts AU consumers don't exercise") argues **for** v2.6: it is a real, common version an integrator-reference tool is expected to validate. v2.6 is materially more common in real-world traffic than v2.8.
 - **AU-baseline priority** (memory `project_au_baseline`): v2.5.1 + v2.4 lead, v2.3/v2.3.1 lower, v2.8 deferred. **v2.6 is not in the AU priority set at all** — no AU consumer needs it.
 - **v1.0 clock** (Migration.md): the public API — including `Version` — is meant to stabilise. Adding a `Version` case is cleanest **before** v1.0; doing it after the freeze is a heavier lift.
 
@@ -79,5 +79,5 @@ Each substage is its own commit at green tests. The `Version` case lands in S1 s
 - `docs/design/ADR-004-codegen-over-macros.md` — the schema-JSON → generated-grammar pipeline v2.6 would use.
 - `docs/archive/*v0.6*` + CHANGELOG `[0.12.0]` — the T-back-port precedent for per-version schema authoring.
 - `ROADMAP.md` M1 (version coverage) + M3 (API freeze) — the milestones this decision sits between.
-- the working notes req #1 (feature-complete over AU-specific) vs memory `project_au_baseline` (AU version priority) — the two poles of the tension.
+- Project requirement #1 (feature-complete over AU-specific) vs memory `project_au_baseline` (AU version priority) — the two poles of the tension.
 - Migration.md — v1.0 stability clock; `Version` listed under the stabilising surface.

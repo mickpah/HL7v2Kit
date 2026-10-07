@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   by check digit, DVA file numbers and AU mobiles (a failure now, not a warning), plus
   licensed-content signatures (PDF, XSD, the HL7 v2.xml bundles). `--history` scans every blob
   of every commit; CI runs it. Method and result: `docs/design/public-release-history-check.md`.
+- **The maintainer's working notes leave the repository (P13 S1-2).** The notes file is no longer
+  tracked and is ignored, with two other local files. The four project requirements
+  the design records cite now live in `docs/design/README.md`; every reference to the old file is
+  rewritten. `scripts/check-no-emoji.py` loses its one allow-list entry, which named that file.
 
 ## [3.16.0] — 2026-10-07
 
@@ -3709,7 +3713,7 @@ STF-2/STF-3 value-equality sentence is recorded in the permanent-limitations reg
 - ADR-016; design index; `permanent-limitations-register.md` (M6-O6 row
   shipped, composite-component links registered in section C); dated
   addendum under M6-O6 in the M6 audit; DocC `Validation.md` and
-  `Migration.md`; `the working notes` regeneration note.
+  `Migration.md`; working-notes regeneration note.
 
 ### Added
 
@@ -3845,7 +3849,7 @@ STF-2/STF-3 value-equality sentence is recorded in the permanent-limitations reg
   sweep and M8 items still listed as open, the fixture gate (source material,
   not IP), and the `private` remote's actual state.
 - Commit-message rule: no co-author or AI-attribution line anywhere
-  (`the working notes`, NEXT_STEPS working rules). Icons removed from the three live
+  (the working notes, NEXT_STEPS working rules). Icons removed from the three live
   documents. Pre-review snapshots archived as `*-2026-09-20-pre-doc-review.md`.
 
 ### Fixed — extractor dropped wrapped TBL# fragments
@@ -4666,7 +4670,7 @@ F7 + F16 + F18 + doc-rot healing of `docs/design/remediation-plan.md`.
   takes the name, and the referrers in CONTRIBUTING / the working notes / scan-fixtures-for-phi.sh
   became correct with zero edits. The 3-step adding-a-fixture policy folded in with the real
   pipeline named.
-- **Doc-rot healing beyond the enumerated set:** the working notes's "add a case to
+- **Doc-rot healing beyond the enumerated set:** the working notes' "add a case to
   SegmentRegistry.swift" step (registration has been fully codegen since ADR-015) and its
   "anonymisation script does not yet exist" claim; the same stale claim in the root README,
   CONTRIBUTING, and ROADMAP; six `anonymise-fixture.swift` / `FIXTURES.md` references in the
@@ -5414,7 +5418,7 @@ Fourth implementation stage of ADR-010 lands on branch `v0.11-adr-010`. Uses the
 - **v2.5.1 OBR-14**: new condition `"SPM present OR OBR-15 populated"` per §4.5.3.14 "must contain a value when the order is accompanied by a specimen".
 - **v2.4 OBR-14**: new condition `"OBR-15 populated"` per §4.5.3.14 with SPM-absent fallback.
 
-**Scope trim per the working notes req #4**:
+**Scope trim per project requirement #4**:
 - ADR-010 §"Rules expressed…" named "OBR-7 second trigger + OBR-9 / OBR-10 / OBR-11 / OBR-14" as the specimen-presence targets. PDFKit extraction of v2.4 CH04 pp. 46-48 confirmed only OBR-7 (§4.5.3.7) and OBR-14 (§4.5.3.14) carry crisp "must be filled in when X" conditional-required triggers.
 - OBR-9 §4.5.3.9 ("results-only field except when the placer has drawn the specimen"), OBR-10 §4.5.3.10 ("will identify..."), OBR-11 §4.5.3.11 ("identifies the action...") are descriptive statements without MUST language. Not shipped per req #4 ("no predicate ships if known-incorrect"). Re-audit if a future spec revision adds MUST language.
 - ADR-010 amended with a "Clarification 2026-07-03 (during S4 implementation)" block documenting the trim.
@@ -5478,14 +5482,14 @@ Combined audit findings reveal a pattern: multiple deferred rules (§4.5.1.8 XOR
 
 ### Carried over from v0.9.0 onto the v0.10.0 line
 
-- `cc14e89` ORC-8 predicate corrected (`previousSegment(ORC).ORC-1 = PA` → `"ORC-1 = CH"`) per the working notes req #4.
+- `cc14e89` ORC-8 predicate corrected (`previousSegment(ORC).ORC-1 = PA` → `"ORC-1 = CH"`) per project requirement #4.
 - `f750e56` OBR-29 silently-missing condition filled (`"ORC-1 = CH"`).
 
 These were tagged into v0.9.0; included here for cycle continuity.
 
 ## [0.9.0] — 2026-06-25
 
-Docs + defect-fix release. Closes the v0.7-S4 deferred work by back-filling verbatim v2.4 CH04 § citations for the four cross-segment / message-context rules into `docs/design/v2_3-v2_4-spec-audit.md`, using the PDFKit-based spec-extraction recipe (memory file `reference_pdf_extraction.md`) that cleared the prior "no pdftotext" gate. The audit pass surfaced two the working notes req #4 defects — both corrected in the same session per the new `feedback_correct_defects_as_found` working rule. **No public-API change** vs v0.8.0; v1.0 stability clock continues from v0.5.0. Tests: 435 (v0.8.0) → 439 across 26 suites.
+Docs + defect-fix release. Closes the v0.7-S4 deferred work by back-filling verbatim v2.4 CH04 § citations for the four cross-segment / message-context rules into `docs/design/v2_3-v2_4-spec-audit.md`, using the PDFKit-based spec-extraction recipe (memory file `reference_pdf_extraction.md`) that cleared the prior "no pdftotext" gate. The audit pass surfaced two project requirement #4 defects — both corrected in the same session per the new `feedback_correct_defects_as_found` working rule. **No public-API change** vs v0.8.0; v1.0 stability clock continues from v0.5.0. Tests: 435 (v0.8.0) → 439 across 26 suites.
 
 ### Added — v2.4 spec-audit § citation back-fill
 
@@ -5499,7 +5503,7 @@ Docs + defect-fix release. Closes the v0.7-S4 deferred work by back-filling verb
 
 PDFKit-based extraction recipe captured as `reference_pdf_extraction.md` memory; clears the previously-deferred "no pdftotext" gate that blocked spec-audit work.
 
-### Fixed — ORC-8 predicate (the working notes req #4 defect)
+### Fixed — ORC-8 predicate (project requirement #4 defect)
 
 The v0.7-S4 mirror shipped `previousSegment(ORC).ORC-1 = PA` as the ORC-8 conditional. The v2.4 CH04 audit surfaced that the spec §4.5.1.1 trigger is keyed on "current ORC carries ORC-1 = CH", not on "preceding ORC carried PA". The prior predicate under-fired on standalone CH orders and CH orders whose parent was sent in a prior message — silent false negatives on spec-compliant scenarios.
 
@@ -5515,7 +5519,7 @@ Known limitation documented: the §4.5.1.8 XOR softening (parent in ORC OR OBR s
 
 ### Added — Process improvement
 
-New feedback memory `feedback_correct_defects_as_found.md`: when an audit surfaces a the working notes req #4 defect with clear spec text and a mechanical fix path, fix it in the same session rather than queuing as a future candidate. This release sequence (audit → 2 defect corrections → same-session ship) exercises the rule.
+New feedback memory `feedback_correct_defects_as_found.md`: when an audit surfaces a project requirement #4 defect with clear spec text and a mechanical fix path, fix it in the same session rather than queuing as a future candidate. This release sequence (audit → 2 defect corrections → same-session ship) exercises the rule.
 
 ### Known follow-ups (deferred to v0.10+)
 
@@ -5819,7 +5823,7 @@ v0.4 cycle release. Three tracks landed: **spec accuracy** (v2.5.1 + v2.4 schema
 - **0 corrections warranted on the structural-delta axis.** Per-field consistency check across 4 versions: every field present in 2+ versions has identical `name` / `dataType` / `optionality` / `repeatability`.
 - **Field-count progression** captured for all 9 segments: MSH 15→17→20→21; PID 30→30→32→39; OBR 43→43→47→47; OBX 11→14→16→17; ORC 17→17→19→31; NTE 3→3→3→4. NK1 / PV1 / AL1 stable at their typed-surface caps. End-to-end pinned in `MultiVersionTests.swift`.
 - **Conditional-rule carry-forward**: PID-35 / PID-36 from S4-C don't apply below v2.5 (fields don't exist). OBX-2 carry-forward is plausible but **deferred** — the v2.3 / v2.3.1 / v2.4 Final Standard PDFs aren't locally available, so the per-version §7.4.2.2 text can't be cited.
-- **Known limitations documented honestly** under the the working notes "honesty over completeness" requirement: per-version conditional rules, per-version composite-component definitions, and per-version errata are deferred to a future cycle when the relevant PDFs become available.
+- **Known limitations documented honestly** under the "honesty over completeness" project requirement: per-version conditional rules, per-version composite-component definitions, and per-version errata are deferred to a future cycle when the relevant PDFs become available.
 - No schema mutations; no source / test changes. 322/322 tests across 22 suites green (unchanged).
 
 ### Added — v0.4-S4 substage C: spec-text-driven schema corrections (PID-35 / PID-36 / OBX-2)
@@ -5844,7 +5848,7 @@ v0.4 cycle release. Three tracks landed: **spec accuracy** (v2.5.1 + v2.4 schema
 
 ### Added — HL7 v2.5.1 schema audit document (v0.4-S1)
 
-- **`docs/design/v2_5_1-spec-audit.md`** — new design doc capturing the v0.4-S1 audit of all 9 v2.5.1 schemas against the public HL7 v2.5.1 spec, **re-framed under the the working notes project requirements** (feature-complete over AU-specific; integrator primary-reference tool).
+- **`docs/design/v2_5_1-spec-audit.md`** — new design doc capturing the v0.4-S1 audit of all 9 v2.5.1 schemas against the public HL7 v2.5.1 spec, **re-framed under the project requirements** (feature-complete over AU-specific; integrator primary-reference tool).
 - **Per-field attributes (name / dataType / optionality / repeatability) — 0 corrections warranted** across 198 rows. The schemas faithfully render the spec on those four axes.
 - **3 spec-completeness defects identified** — not deferrable under the project requirements; each must be closed before v1.0 freezes the API:
   1. **PID-36 `condition: "PID-35 populated"` is over-broad** — fires false-positive on spec-compliant `PID-35 = L1^Human` (human patient with species explicitly declared, PID-36 legitimately empty).
@@ -5852,7 +5856,7 @@ v0.4 cycle release. Three tracks landed: **spec accuracy** (v2.5.1 + v2.4 schema
   3. **Five composite OR-rules silently unenforced** — CWE-1 OR CWE-9; XTN-1 OR XTN-4 OR XTN-12; HD-1 OR HD-2&3; PL-1 OR PL-4; EIP-1 OR EIP-2. Validator's `requiredComponents` dispatch returns empty for each.
 - **No schema mutations in S1.** The defect fixes require model extensions (compound predicates in the conditional-field DSL; `RequiredComponentSet` for composite OR-rules). Both are scheduled for **v0.4-S4** — a new stage inserted between S1 and S2 per the cycle re-scope. S4 extends the model; the schema-level corrections land in S4's commit alongside the model change. S2 and S3 then absorb the richer model.
 - **v0.4 cycle scope updated** from Option A (6 stages) to Option α (7 stages) — see NEXT_STEPS.md for the new S4 task entry and the updated stage order on the spec branch (S1 → S4 → S2 → S3).
-- **Note on framing history**: an earlier S1 framing deferred these as "AU traffic doesn't trigger them" known limitations. That framing was rejected by the project owner under the integrator-reference-tool requirement and replaced with the current "defect, not deferrable" classification. The the working notes update at commit `909142b` codifies the requirement going forward.
+- **Note on framing history**: an earlier S1 framing deferred these as "AU traffic doesn't trigger them" known limitations. That framing was rejected by the project owner under the integrator-reference-tool requirement and replaced with the current "defect, not deferrable" classification. The working-notes update at commit `909142b` codifies the requirement going forward.
 - **No source / generated / test changes** in S1. `SegmentGrammar+v2_5_1.swift` codegen output is byte-identical pre- and post-audit. 316/316 tests across 22 suites green (unchanged).
 
 ## [0.3.0] — 2026-06-17
@@ -6013,7 +6017,7 @@ v0.3 cycle release. Covers four parallel-track surface expansions and a post-cyc
   - `v0.2-perf-tests` — X1 performance budget tests
   - Documented merge order: parser-hardening → fringe-fields → composites → perf-tests.
 - **`NEXT_STEPS.md` reorganised** around the v0.2 cycle: new "Workspaces and worktrees" section, each task names its worktree + position in the serial chain, full v0.1.0 task history preserved under "Historical: v0.1.0 runway".
-- **`the working notes` "Project at a glance"** surfaces the workspace + worktree setup so future sessions discover them without re-derivation.
+- **The working notes' "Project at a glance"** surfaces the workspace + worktree setup so future sessions discover them without re-derivation.
 
 ### Fixed (parser hardening)
 

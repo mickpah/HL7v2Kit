@@ -1,10 +1,10 @@
 # HL7 v2.5.1 schema audit — v0.4-S1 / S4
 
-**Original audit date:** 2026-06-17 (substage S1, re-framed under the working notes project requirements)
+**Original audit date:** 2026-06-17 (substage S1, re-framed under project requirements)
 **Spec-text corrections landed:** 2026-06-18 (substage S4, with authoritative spec PDFs in `docs/standards/HL7_v251_PDF/`)
 **Audited:** `Resources/schemas/v2.5.1/*.json` (9 segments: MSH, PID, ORC, OBR, OBX, NK1, PV1, NTE, AL1)
 **Reference:** HL7 v2.5.1 spec, ANSI/HL7 Final Standard, April 2007. PDFs referenced locally by the author; not committed to-tree pending IP review. The pull-quoted spec text below is preserved verbatim so the audit conclusions are reproducible without the PDFs being checked in.
-**Lens:** the working notes project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. Audit conclusions must be defensible against the HL7 v2 spec text alone, not against test-fixture observations or AU vendor behaviour assumptions.
+**Lens:** Project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. Audit conclusions must be defensible against the HL7 v2 spec text alone, not against test-fixture observations or AU vendor behaviour assumptions.
 
 ## Outcome summary
 
@@ -29,7 +29,7 @@
 
 3. **Gap 3 (composite OR-rule conformance)** — INFRASTRUCTURE LANDED in S4 substage A; spec-text validation revealed the OR-rule choices are **interpretive**, not directly cited. The v2.5.1 component tables (§2.A.13, §2.A.26, §2.A.33, §2.A.53, §2.A.89) mark all CWE / EIP / HD / PL / XTN components as `O`. There is no spec text that explicitly states "CWE-1 OR CWE-9 must be populated" or equivalent for the other four composites. The S4 substage A choices were drawn from HL7 community convention (the spec's prose talks about "either … or" forms, particularly for CWE's three modes — Coded / Uncoded / Data Missing — and for EIP's "either the placer or the filler system") but are not strict spec citations. The rules are encoded and enforced, but integrators should know they are conformance-profile choices, not literal spec assertions.
 
-None of these are deferrable under the integrator-reference requirement on the spec-citable axes. Gaps 1 and the OBX-2 portion of Gap 2 are closed. The cross-segment portion of Gap 2 is documented as a known limitation requiring DSL extension; this is the right framing under the "honesty over completeness when the DSL can't express something" requirement in the working notes.
+None of these are deferrable under the integrator-reference requirement on the spec-citable axes. Gaps 1 and the OBX-2 portion of Gap 2 are closed. The cross-segment portion of Gap 2 is documented as a known limitation requiring DSL extension; this is the right framing under the "honesty over completeness when the DSL can't express something" project requirement.
 
 ## Audit methodology
 
@@ -158,7 +158,7 @@ type.
 
 ## Conclusion
 
-Under the project's the working notes requirements (feature-complete over AU-specific; integrator primary reference), the v2.5.1 schemas as of v0.4-S4 commit C are:
+Under the project requirements (feature-complete over AU-specific; integrator primary reference), the v2.5.1 schemas as of v0.4-S4 commit C are:
 
 - **Faithful on per-field attributes** (name / dataType / optionality / repeatability) — no per-field corrections needed.
 - **Gap 1 (PID conditional rules)** — RESOLVED with spec-accurate predicates.

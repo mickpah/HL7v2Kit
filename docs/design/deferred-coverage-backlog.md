@@ -25,7 +25,7 @@ see exactly which versions are complete, which are partial, and by how much.
 
 ## Why this register exists (the requirement it sits against)
 
-`the working notes` project requirement **#1** states: *feature-complete over AU-specific — "AU
+Project requirement **#1** states: *feature-complete over AU-specific — "AU
 traffic doesn't trigger this case" is **not** a valid defence for a known feature gap.*
 Requirement **#2** frames the package as an integrator primary-reference tool, defensible
 against the spec text alone.

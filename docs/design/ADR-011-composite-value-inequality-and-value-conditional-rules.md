@@ -8,12 +8,12 @@
 |---|---|---|
 | HL7au:00044.5.3 (CNE) | "`<text (ST)>` component must be valued and this must be what is intended for display to the user." | **Yes** — `requiredComponents: [2]` on the CNE override. Ships without this ADR. |
 | HL7au:00044.6.3 (CWE) | Same wording, CWE. | **Yes** — `requiredComponents: [2]` on the CWE override. Ships without this ADR. |
-| HL7au:00044.4.3 (CE) | "`<text (ST)>` component must be valued as what is intended for display to the user. **(In some locations user display is not intended and the text may be blank.)**" | **No — unshippable.** The carve-out ("may be blank in some locations") is not wire-detectable; an unconditional CE-2-required rule would over-fire in the blank-allowed locations, violating the working notes req #4. |
+| HL7au:00044.4.3 (CE) | "`<text (ST)>` component must be valued as what is intended for display to the user. **(In some locations user display is not intended and the text may be blank.)**" | **No — unshippable.** The carve-out ("may be blank in some locations") is not wire-detectable; an unconditional CE-2-required rule would over-fire in the blank-allowed locations, violating project requirement #4. |
 | HL7au:00044.4.4 (CE) | "When multiple codes are used LOINC codes (LN) must be placed first using the identifier rather than the alternate identifier." | **No — needs this ADR.** A *value-conditional* rule: fire when the alternate-coding-system component (CE-6) = "LN". No current primitive expresses "component X has value V → violation". |
 | HL7au:00044.4.7 (CE) | "Both `<identifier>` and `<alternative identifier>` must reflect the same concept…" | **No — unshippable.** Requires a terminology service to compare concepts; not machine-checkable from the wire alone. |
 | HL7au:00044.4.8 (CE) | "Alternate coding system must be a different from the primary coding system." | **No — needs this ADR.** A *component-value inequality*: CE-3 (primary coding system) ≠ CE-6 (alt coding system) when both are populated. No current primitive expresses value inequality between two components. |
 
-Per the working notes req #3 ("extend the model when the DSL can't express something") the two machine-checkable-but-inexpressible rules (44.4.4, 44.4.8) justify a model extension. Per req #4 the two genuinely-unshippable rules (44.4.3 carve-out, 44.4.7 semantic) must be documented as known limitations, not forced into a misfiring predicate.
+Per project requirement #3 ("extend the model when the DSL can't express something") the two machine-checkable-but-inexpressible rules (44.4.4, 44.4.8) justify a model extension. Per req #4 the two genuinely-unshippable rules (44.4.3 carve-out, 44.4.7 semantic) must be documented as known limitations, not forced into a misfiring predicate.
 
 ## Decision
 
@@ -113,7 +113,7 @@ Single ADR, staged implementation after Accept:
 - ADR-007 — Locale architecture (composite-override types are internal to this mechanism).
 - ADR-009 — ComponentValueSet extensions (this ADR reuses the same v0.7 `conditionTriggers` gate for `valueConditionals.condition`).
 - ADR-010 — DSL extensions (precedent for the "extend the model, document what stays unshippable" pattern).
-- the working notes project requirements #3 (extend the model) and #4 (no predicate ships if known-incorrect).
+- Project requirements #3 (extend the model) and #4 (no predicate ships if known-incorrect).
 - `Sources/HL7v2Kit/Locale/Profile.swift:90–160` — current `CompositeOverride` / `PairConditional` / `ComponentRequirement` shapes.
 - `Sources/HL7v2Kit/Validation/Validator.swift:452` — `checkProfileCompositeOverrides` dispatch this ADR extends.
 - AU ADRM-2021 Appendix 5, pp. 450–455 (extracted via PDFKit) — HL7au:00044.3/.4/.5/.6/.7 verbatim.

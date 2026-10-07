@@ -29,7 +29,7 @@ Implications for callers:
 
 Three forces converge on locale-as-mode rather than profile-as-overlay-toggle:
 
-1. **the working notes project requirements.** Base schemas must stay spec-faithful. AU constraints cannot bake in. The overlay storage stays as proposed in the first ADR draft; only the public-API framing changes.
+1. **Project requirements.** Base schemas must stay spec-faithful. AU constraints cannot bake in. The overlay storage stays as proposed in the first ADR draft; only the public-API framing changes.
 2. **Integrator conformance validation is the use case.** Integrators validating AU pathology / referral traffic need a clear way to ask the validator "check this against the AU ADRM-2021 profile, not just base HL7 v2". A buried `options.profile = X` toggle hides that intent; a top-level `locale:` parameter makes the validation conformance set visible at every call site.
 3. **v1.0 stability window.** Pre-v1.0 is the window to land the right shape. Locale-as-mode is the right shape: it generalises to other localisations (UK Spine, DE Basisprofil) without API change. A `profile:` option that's "really an enum in practice" would need refactoring later.
 

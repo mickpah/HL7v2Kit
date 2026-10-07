@@ -3,7 +3,7 @@
 **Audit date:** 2026-07-09 (v0.15 cycle, substages S1–S5).
 **Audited:** `Resources/schemas/v2.8.2/*.json` (15 segments at the v0.15 audit: MSH, MSA, ERR, EVN, NTE, PID, PD1, NK1, PV1, AL1, ORC, OBR, OBX, DG1, IN1; superseded: 180 segment schemas today, see the addendum).
 **Reference:** HL7 v2.8.2, ANSI/HL7 Final Standard, September 2015 — the latest published HL7 v2.x release. PDFs referenced locally in `docs/standards/HL7_V2.8.2_PDF/PDF/` (not committed to-tree pending IP review). Attribute tables and field-definition prose extracted via PDFKit and verified field-by-field against the v2.6 baseline schemas.
-**Lens:** the working notes project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. v2.8.2 is a deliberate req-#1 reach to the latest standard; ADR-013 accepted first-class grammar (Option A). Sequel to ADR-012 (v2.6).
+**Lens:** Project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. v2.8.2 is a deliberate req-#1 reach to the latest standard; ADR-013 accepted first-class grammar (Option A). Sequel to ADR-012 (v2.6).
 
 ## Superseded in part (2026-10-05, remediation P7-4)
 

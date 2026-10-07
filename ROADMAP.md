@@ -22,7 +22,7 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | Current release | **`v3.13.0`** (2026-09-23) — AU NASH transport assertion for 00044.2.2 / .2.3 (M32), on top of `v3.12.0`: AU caller assertions for 00050.1.5 and 00044.4.3 (M29, M30), on top of `v3.11.0`: v2.8.2 XAD.7 checked when the field repeats (M28), on top of `v3.10.0`: the 32 v2.7 conditional rules as an opt-in tier (M27), on top of `v3.9.0`: conditional components checked where the spec states the condition, 36 rules; the "as of v2.7" family registered with measurements (M26), on top of `v3.8.0`: printed lengths recorded (M25), on top of `v3.7.3`: four v2.3 chapter-only tables added (M24), on top of `v3.7.2`: docs only (M23), on top of `v3.7.1`: repeatability audited per version (M22), on top of `v3.7.0`: `requiredComponentSeverity` and the name audit (M20, M21), on top of `v3.6.5`: optionality audited per version, 30 fields corrected (M19), on top of `v3.6.4`: OBX-2 waveform value types fixed and the spec's example messages run through the Validator (M18), on top of `v3.6.3`: the spec's printed datatype examples as a standing audit, `NA.1` and Table 0528 `AHS` fixed (M17), on top of `v3.6.2`: HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
 | Next planned cycle | **None scheduled.** Gap closure plan delivered M29, M30, M32 and M33; M31 withdrawn. No open decisions. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
-| Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
+| Guiding requirements | Project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
@@ -73,7 +73,7 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **The M5 gate is RELEASED** (M5 closed 2026-09-16) — every stated gate on the first public push is now met. What remains is the owner's action: name the remote, push. Remote target TBD (owner names host/repo).
 - **Spec-PDF handling** — the `docs/standards/` Final Standard PDFs stay **out of the public tree** (author-local).
 - **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges.
-- **Real-world fixture acquisition** — pipeline ready (`scripts/anonymise-fixture.sh` + the `HL7v2KitAnonymise` target); gated on the owner supplying source material (the IP review is cleared). No PHI ever enters the repo (the working notes).
+- **Real-world fixture acquisition** — pipeline ready (`scripts/anonymise-fixture.sh` + the `HL7v2KitAnonymise` target); gated on the owner supplying source material (the IP review is cleared). No PHI ever enters the repo (`CONTRIBUTING.md`, rule 1).
 
 ### M5 — Full HL7 segment coverage across all versions **CLOSED (2026-09-16, owner-confirmed)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
@@ -149,7 +149,7 @@ Sprint 5 is deliberately empty of new segments: it is what makes "v2.3–v2.5.1 
 **measured** claim rather than an assumption, and it is where the coverage statements in
 README / STATUS / DocC get corrected to say v2.6 / v2.8.2 are partial.
 
-**The tension this creates, stated plainly.** the working notes requirement #1 says
+**The tension this creates, stated plainly.** Project requirement #1 says
 feature-completeness beats AU-specificity, and "AU traffic doesn't trigger this case" is not
 a valid defence for a known gap. This decision does **not** retract that as the end state —
 it changes **sequencing only**. Two guards keep the two compatible:

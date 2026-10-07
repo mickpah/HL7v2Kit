@@ -96,7 +96,7 @@ share the alternate-identifier numbering `.5` / `.6`, and only CWE differs at
 
 `HL7au:00044.5.6` is not merely the wrong point — it is marked **"Removed"** in
 revision r2 and no longer exists. The two CNE rules are behaviourally correct;
-only their `specCitation` strings are wrong. Under the working notes req #4 a rule
+only their `specCitation` strings are wrong. Under project requirement #4 a rule
 carrying a false citation is a defect, so this is the first thing to fix.
 
 **Fixed 2026-09-04.** `ceCwePairRules` now derives the alternate pair from an

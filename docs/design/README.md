@@ -8,6 +8,22 @@ Reading order for a cold start: `STATUS.md` → `NEXT_STEPS.md` → this index �
 
 A path under `planning/` in any record here names the local planning folder, which is not in the repository.
 
+## Project requirements
+
+The records below cite these as "project requirement #1" to "#4". They were first kept in the
+maintainer's local working notes, which are not in the repository; this section is their public home.
+
+1. **Feature-complete over AU-specific.** The package implements the full HL7 v2.x standard, not
+   the subset Australian traffic uses. "AU traffic does not trigger this case" does not excuse a gap.
+2. **Integrator primary-reference tool.** Schemas, predicates and composite metadata must be
+   defensible against the HL7 v2 text alone, not against test fixtures or vendor practice.
+3. **Honesty over completeness when the model cannot express something.** Extend the model so the
+   standard is represented faithfully; where that is out of scope, register the gap as a known
+   limitation that blocks spec-completeness.
+4. **No predicate ships if it is known to be incorrect.** A condition, required-component rule or
+   grammar rule that misfires in any spec-compliant scenario is a defect: fix it, remove it, or
+   change the model so it can be expressed correctly.
+
 ## Founding design
 
 | Record | Status |

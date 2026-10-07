@@ -9,7 +9,7 @@
 - **V251-C11.** The composite views expose only part of v2.5.1: CX 6 of 10
   components, XPN 6 of 14, XAD 7 of 14, XCN 6 of 23, XTN 8 of 12 and PL 4 of 11.
   The XCN header justifies this with "the six commonly-populated components", a
-  consumer-profile argument that the working notes requirement 1 rejects. Typed accessors
+  consumer-profile argument that project requirement 1 rejects. Typed accessors
   on repeating fields (PID-3) return the first repetition only, and the DocC does
   not say the field repeats.
 - **V282-C10.** Typed segment structs are generated from v2.5.1 only
@@ -116,7 +116,7 @@ and hand-add later-version accessors to the segment structs.
 
 ### Option C — Record the gap as a limitation only
 Add a register row and DocC, and change no code.
-- **Verdict:** rejected as the end state, under the working notes requirement 3: the model
+- **Verdict:** rejected as the end state, under project requirement 3: the model
   can be extended, so it must be. Its register row is written now (P9-1) and
   narrowed to the residual once Option B lands (P9-6).
 

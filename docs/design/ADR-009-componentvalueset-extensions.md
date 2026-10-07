@@ -8,7 +8,7 @@
 
 2. **Conditional gating.** HL7au:000040.3 requires VID-3 = `"HL7AU-OO-201701&&L"` **only when the message type is Orders or Results** (ORM, ORU). HL7au:000040.4 requires a different VID-3 value **only on Referrals / RRI** (REF, RRI). The current model has no way to make a value-set fire on a subset of message types. Today the override applies to every message that uses the segment.
 
-Without these extensions, HL7au:000040 ships as a partial overlay (040.1/.2 first-subcomponent only), which violates the working notes project requirement #3: "When a spec semantic exceeds what the current code can model, the right move is to **extend the model**." Per requirement #4: "A condition predicate... that's known to misfire in any spec-compliant scenario is a defect" — so we cannot ship 040.3/.4 unconditionally either.
+Without these extensions, HL7au:000040 ships as a partial overlay (040.1/.2 first-subcomponent only), which violates project requirement #3: "When a spec semantic exceeds what the current code can model, the right move is to **extend the model**." Per requirement #4: "A condition predicate... that's known to misfire in any spec-compliant scenario is a defect" — so we cannot ship 040.3/.4 unconditionally either.
 
 ## Decision
 
@@ -57,7 +57,7 @@ The CHANGELOG `[Unreleased]` entry will note "new internal axes on ComponentValu
 - **Per-override condition (one condition for the whole FieldOverride)** rather than per-ComponentValueSet. Rejected: HL7au:000040.3 and 040.4 both target the SAME field (MSH-12) but apply to different message types — a single override-level condition can't encode "use VID-3 set A on Orders OR VID-3 set B on Referrals". The condition has to live at the value-set level.
 - **A separate `messageTypeFilter` enum** instead of reusing the v0.7 DSL. Rejected: introduces a parallel mechanism. The v0.7 DSL already expresses `messageCode in (ORM, ORU)` cleanly; mirror-imaging it as a new enum would duplicate the dispatch surface and break the principle that schema/profile predicates funnel through one evaluator.
 - **Subcomponent-as-path (`path: "12.2.1"`)** instead of separate `component` + `subcomponent` fields. Rejected: adding one optional Int is a smaller diff than refactoring every existing override to a new path syntax, and the existing field structure mirrors the HL7 spec's "field/component/subcomponent" terminology directly.
-- **Wait for "every spec narrowing we'll ever need" before extending** the model. Rejected per the working notes req #3: "If extension is out of scope for the current cycle, the gap must be documented as a known limitation that **blocks** spec-completeness" — the gap is documented for v0.5–v0.7 and is now being closed.
+- **Wait for "every spec narrowing we'll ever need" before extending** the model. Rejected per project requirement #3: "If extension is out of scope for the current cycle, the gap must be documented as a known limitation that **blocks** spec-completeness" — the gap is documented for v0.5–v0.7 and is now being closed.
 
 ## Risk
 
@@ -79,7 +79,7 @@ Single ADR; no per-cycle migration plan needed. Substages:
 
 - ADR-007 — Locale architecture (this ADR is internal to that mechanism).
 - ADR-008 — Cross-segment DSL (this ADR reuses the v0.7 evaluator as the gating predicate engine).
-- the working notes project requirements #3 (extend the model when needed) and #4 (no predicate ships if known-incorrect).
+- Project requirements #3 (extend the model when needed) and #4 (no predicate ships if known-incorrect).
 - `Sources/HL7v2Kit/Locale/Profile.swift` — current `ComponentValueSet` shape.
 - `Sources/HL7v2Kit/Validation/Validator.swift:checkProfileFieldOverrides` — current value-set dispatch.
 - AU ADRM-2021 pp. 445–446 (extracted via PDFKit) — HL7au:000040.1–.5 verbatim.

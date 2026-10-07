@@ -3,7 +3,7 @@
 **Date:** 2026-06-18 (original v0.4-S2 audit); **2026-06-25** v0.9 update adds verbatim v2.4 CH04 citations for the v0.7-S4 cross-segment / message-context rules (PDFKit recipe — `memory/reference_pdf_extraction.md` — cleared the prior pdftotext gate).
 **Audited:** `Resources/schemas/v2.3/*.json`, `Resources/schemas/v2.3.1/*.json`, `Resources/schemas/v2.4/*.json` (9 segments per version: MSH, PID, NK1, PV1, OBR, OBX, ORC, AL1, NTE).
 **Baseline reference:** the now-spec-audited `Resources/schemas/v2.5.1/*.json` (see `v2_5_1-spec-audit.md`).
-**Lens:** the working notes project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. Audit conclusions must be defensible against the HL7 v2 spec text alone, not against test-fixture observations.
+**Lens:** Project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. Audit conclusions must be defensible against the HL7 v2 spec text alone, not against test-fixture observations.
 
 ## Correction addendum (2026-10-05, remediation P7-3)
 
@@ -114,7 +114,7 @@ The v2.5.1 audit (S4 substage C) added three conditional predicates citable to s
 
 ## Known limitations (explicit)
 
-Per the working notes's "honesty over completeness" requirement, these are the per-version checks deferred to a future cycle when the corresponding PDFs become available:
+Per The "honesty over completeness" requirement, these are the per-version checks deferred to a future cycle when the corresponding PDFs become available:
 
 1. **Per-version conditional rules** — apart from the OBX-2 carry-forward and the four v0.7-S4 cross-segment rules documented above (all v2.4 now RESOLVED via CH04 + CH07 audit; **v2.3 / v2.3.1 still DEFERRED** pending those PDFs). Per-version spec text for v2.3 / v2.3.1 would surface (a) other same-segment predicates the v2.5.1 audit didn't enumerate because they're version-specific, and (b) the version-history of the three predicates we did land (i.e. whether PID-35/36 and OBX-2 first appeared in v2.5.1 or earlier).
 2. **Per-version component-table audit** — composite definitions evolve across versions (CWE was introduced in v2.5; v2.3 uses CE in those positions; XPN gained components across the version chain; etc.). The per-version spec PDFs would let the audit confirm composite component lists match the spec text per version.
@@ -144,7 +144,7 @@ raised six findings against the schema/validator layer this audit does not itsel
 
 ## Conclusion
 
-Under the project's the working notes requirements, the v2.3 / v2.3.1 / v2.4 schemas as of v0.4-S2 are:
+Under the project requirements, the v2.3 / v2.3.1 / v2.4 schemas as of v0.4-S2 are:
 
 - **Structurally consistent** with the spec-audited v2.5.1 baseline on every field that exists in multiple versions.
 - **Field-count progression** matches the documented HL7 minor-version additive-history pattern and is pinned end-to-end in `MultiVersionTests.swift`.

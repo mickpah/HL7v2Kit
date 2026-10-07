@@ -3,7 +3,7 @@
 **Audit date:** 2026-07-09 (v0.14 cycle, substages S1–S5).
 **Audited:** `Resources/schemas/v2.6/*.json` (15 segments at the v0.14 audit: MSH, MSA, ERR, EVN, NTE, PID, PD1, NK1, PV1, AL1, ORC, OBR, OBX, DG1, IN1; superseded: 170 segment schemas today, every segment with an attribute table in the v2.6 chapters except the CH08 example Z-segment ZL7).
 **Reference:** HL7 v2.6, ANSI/HL7 Final Standard, October 2007. PDFs referenced locally in `docs/standards/HL7_v26_PDF/` (not committed to-tree pending IP review). Attribute tables and field-definition prose were extracted via PDFKit and verified field-by-field against the v2.5.1 baseline schemas.
-**Lens:** the working notes project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. v2.6 is a mainstream version; ADR-012 accepted first-class grammar (Option A) rather than leave it recognised-but-unvalidated (Option B, rejected as a shipped end-state).
+**Lens:** Project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. v2.6 is a mainstream version; ADR-012 accepted first-class grammar (Option A) rather than leave it recognised-but-unvalidated (Option B, rejected as a shipped end-state).
 
 ## Outcome summary
 
@@ -48,7 +48,7 @@ Segments held at the v2.5.1 curation depth where v2.6 added no fields in the mod
 
 v2.6 is the **first modelled version to use the `W` (withdrawn) optionality code** in its attribute tables: DG1-2/4 and the DRG/outlier block DG1-7..14 were withdrawn and removed from the standard (the DRG detail moved to the new DRG segment). A withdrawn field's sequence slot is retained but carries no meaning.
 
-`W` is semantically distinct from `B` (deprecated but retained for backward compatibility). Mapping `W → B` would have been a **known-incorrect representation** (the working notes req #4). Per req #3, the model was extended: `FieldOptionality.withdrawn = "W"`, codegen maps `"W" → .withdrawn`, and `Validator.checkDeprecation` warns (`.fieldNotSupported`) when a withdrawn field is populated — the same warn-on-populated family as `B`/`X`. This is an **additive** public-API change (a new case on the non-`@frozen` `FieldOptionality`), landed pre-v1.0.
+`W` is semantically distinct from `B` (deprecated but retained for backward compatibility). Mapping `W → B` would have been a **known-incorrect representation** (project requirement #4). Per req #3, the model was extended: `FieldOptionality.withdrawn = "W"`, codegen maps `"W" → .withdrawn`, and `Validator.checkDeprecation` warns (`.fieldNotSupported`) when a withdrawn field is populated — the same warn-on-populated family as `B`/`X`. This is an **additive** public-API change (a new case on the non-`@frozen` `FieldOptionality`), landed pre-v1.0.
 
 Withdrawn fields keep their historical (v2.5.1) `dataType` string in the schema for positional/type continuity, with optionality `W`.
 

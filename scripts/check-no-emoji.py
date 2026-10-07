@@ -26,22 +26,16 @@ RANGES = [
 
 SKIP_PREFIXES = ("docs/archive/",)
 
-# Literal documented exceptions: (path, exact substring). the working notes quotes the grep pattern
-# that matches Swift Testing's own failure marker; the character is the match target.
-ALLOWED = [("the working notes", 'grep -E "Test run with|\u2718"')]
-
 
 def is_icon(ch):
     cp = ord(ch)
     return any(lo <= cp <= hi for lo, hi in RANGES)
 
 
-def scan_text(text, path=""):
+def scan_text(text):
     """Return (line_number, character) for each icon character in text."""
     hits = []
     for n, line in enumerate(text.split("\n"), 1):
-        if any(p == path and sub in line for p, sub in ALLOWED):
-            continue
         hits.extend((n, ch) for ch in line if is_icon(ch))
     return hits
 
@@ -60,7 +54,7 @@ def scan_repo():
                 text = fh.read()
         except (UnicodeDecodeError, OSError):
             continue  # binary or unreadable
-        found.extend((rel, n, ch) for n, ch in scan_text(text, rel))
+        found.extend((rel, n, ch) for n, ch in scan_text(text))
     return found
 
 
@@ -74,8 +68,7 @@ def self_test():
              "box ─│┌", "math ≤ ≠ ×", "… ellipsis §"]
     for s in clean:
         assert not scan_text(s), "should allow %r" % s
-    assert not scan_text('grep -E "Test run with|\u2718"', "the working notes")
-    assert scan_text('grep -E "Test run with|\u2718"', "other.md")
+    assert scan_text('grep -E "Test run with|\u2718"')
     assert "docs/archive/x.md".startswith(SKIP_PREFIXES)
     print("check-no-emoji self-test: ok")
 
