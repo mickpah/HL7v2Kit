@@ -37,9 +37,8 @@ viewer:
 regenerate:
     bash scripts/regenerate-typed-segments.sh
 
-# The CI checks that need no display: emoji, changelog links, PHI scan, extractor and codegen guards.
+# The CI checks that need no display: changelog links, PHI scan, extractor and codegen guards.
 check:
-    {{python}} scripts/check-no-emoji.py
     {{python}} scripts/check-changelog-links.py
     bash scripts/scan-fixtures-for-phi.sh
     {{python}} scripts/check-extract-message-structures.py

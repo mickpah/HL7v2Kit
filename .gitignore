@@ -49,6 +49,9 @@ docs/XML-schemas
 planning/
 __pycache__/
 
+# Maintainer-local helper scripts (the house-rule checks) - not in the repository
+scripts/private/
+
 # Local working notes and assistant settings - not in the repository
 the working notes
 the editor settings
