@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Sprint 3 of epic P12 (AU profile completion) adds nine synthetic AU fixtures, a batch and a PDF-display fixture (`AUFixtureTests`). They found two defects, both fixed: the ADRM's printed field lengths did not apply under the AU locale (D1), and the AU MIME Tables 0191 and 0291 were missing, so the PDF display form drew errors (D2); Table 0191 is now open, as 0291 is, so any registered IANA type is admitted. The remaining AU value sets were completed through local extensions. The AU REF^I12 performance known issues are closed: 200 / 400 / 800 added segments validate in 2.7 / 5.1 / 10 ms (release) against the derived limits of 6.1 / 12 / 24 ms, the cause being a per-read filter of every segment in `Message.subscript(path:)` plus repeated condition parsing; the same changes speed up the 5,002-segment ORU^R01 (0.075 s on v2.5.1).
+
 ### Fixed — P12 S3-3: AU Table 0191 is open to IANA types, as Table 0291 is
 
 - The AU rendering of Table 0191 was closed, so a registered IANA type the 2016 import list lacks (`font`, as in `^font^woff`) drew a `valueNotInTable` error under `.auLocalisation`. The print does not support that: p 168 introduces 0191 as it does 0291, "MIME types are imported from: http://www.iana.org/assignments/media-types/media-types.xhtml". `Resources/tables/locale/au-adrm-2021/0191.json` now has `permitsLocalExtensions` true (registry regenerated); the international rendering still reports the v2.4 finding.
