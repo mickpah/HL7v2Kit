@@ -32,6 +32,16 @@ private let sample = [
 struct ContentView: View {
     @State private var text = sample
     @State private var strictAU = false
+    @State private var hovered: Cell?
+    // One grid per preset, kept until the message changes, so switching presets is instant and
+    // a hover (also a state change) never re-validates. The work runs off the main thread.
+    @State private var cache: [Bool: Outcome] = [:]
+    @State private var work: Task<Void, Never>?
+
+    enum Outcome: Sendable {
+        case grid(CellGrid)
+        case failure(String)
+    }
 
     var body: some View {
         VSplitView {
@@ -45,18 +55,60 @@ struct ContentView: View {
                 }
                 .pickerStyle(.segmented)
                 .frame(maxWidth: 320)
+                // The hovered cell's name and issues. Fixed height: if this panel grew with its
+                // text the grid would shift under the pointer, the hover would change, and the
+                // two would chase each other until the window hung. (A `.help` tooltip on every
+                // cell hung it too.)
+                ScrollView {
+                    Text(hovered?.tooltip ?? "Hover a cell for its name and any issues.")
+                        .font(.system(.body, design: .monospaced))
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .padding(6)
+                }
+                .frame(height: 96)
+                .background(Color.gray.opacity(0.15))
                 grid
             }
             .padding(8)
         }
+        .onAppear(perform: ensure)
+        .onChange(of: text) { _ in cache = [:]; ensure() }
+        .onChange(of: strictAU) { _ in ensure() }
+    }
+
+    /// Computes the grid for the current preset unless it is cached. Edits are debounced.
+    private func ensure() {
+        guard cache[strictAU] == nil else { return }
+        work?.cancel()
+        let text = text, strict = strictAU
+        work = Task {
+            guard (try? await Task.sleep(nanoseconds: 250_000_000)) != nil else { return }
+            let outcome = await Task.detached(priority: .userInitiated) { Self.compute(text, strict: strict) }.value
+            if !Task.isCancelled { cache[strict] = outcome }
+        }
+    }
+
+    nonisolated private static func compute(_ text: String, strict: Bool) -> Outcome {
+        do {
+            let message = try Parser().parse(CellGrid.wire(from: text))
+            let validator = strict
+                ? Validator(options: .strict, locale: .auLocalisation)
+                : Validator(options: .default)
+            return .grid(CellGrid(message: message, report: validator.validate(message)))
+        } catch {
+            return .failure(String(describing: error))
+        }
     }
 
     @ViewBuilder private var grid: some View {
-        switch result {
-        case .failure(let error):
-            Text(String(describing: error)).foregroundColor(.red)
+        switch cache[strictAU] {
+        case nil:
+            Text("Validating...")
             Spacer()
-        case .success(let grid):
+        case .failure(let error):
+            Text(error).foregroundColor(.red)
+            Spacer()
+        case .grid(let grid):
             ScrollView([.horizontal, .vertical]) {
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach(grid.rows.indices, id: \.self) { r in
@@ -80,7 +132,7 @@ struct ContentView: View {
             .padding(4)
             .background(colour(cell.state))
             .border(Color.gray.opacity(0.4))
-            .help(cell.tooltip)
+            .onHover { inside in hovered = inside ? cell : (hovered == cell ? nil : hovered) }
     }
 
     private func colour(_ state: CellState) -> Color {
@@ -88,16 +140,6 @@ struct ContentView: View {
         case .clean: return .white
         case .warning: return .yellow
         case .error: return .red
-        }
-    }
-
-    private var result: Result<CellGrid, Error> {
-        Result {
-            let message = try Parser().parse(CellGrid.wire(from: text))
-            let validator = strictAU
-                ? Validator(options: .strict, locale: .auLocalisation)
-                : Validator(options: .default)
-            return CellGrid(message: message, report: validator.validate(message))
         }
     }
 }

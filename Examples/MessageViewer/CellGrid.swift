@@ -2,7 +2,7 @@ import HL7v2Kit
 
 /// The colour of a cell: the worst validation severity on the field it shows.
 /// `info` leaves a cell clean; the tooltip still lists it.
-enum CellState: Equatable {
+enum CellState: Equatable, Sendable {
     case clean, warning, error
 
     init(_ issues: [ValidationIssue]) {
@@ -16,7 +16,7 @@ enum CellState: Equatable {
     }
 }
 
-struct Cell: Equatable {
+struct Cell: Equatable, Sendable {
     let text: String
     /// `"PID-7 Date/Time of Birth"`: the field's name from the grammar of the message's version,
     /// or just `"ZAU-2"` for a segment the version does not define; the segment ID for cell 0.
@@ -29,14 +29,14 @@ struct Cell: Equatable {
     var tooltip: String { ([title] + notes).joined(separator: "\n") }
 }
 
-struct Row: Equatable {
+struct Row: Equatable, Sendable {
     let segmentID: String
     /// Cell 0 is the segment ID; cell n is field n (so MSH-1 is the field separator).
     let cells: [Cell]
 }
 
 /// One row per segment, one cell per field, each cell carrying the issues located on it.
-struct CellGrid: Equatable {
+struct CellGrid: Equatable, Sendable {
     let rows: [Row]
     /// Issues whose segment is not in the message (a missing required segment, for example).
     let unplaced: [String]
