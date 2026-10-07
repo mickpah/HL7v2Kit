@@ -98,7 +98,9 @@ CALLER_ASSERTED = {
     'HL7au:00044.3.3': (None, 'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI'),
     'HL7au:00104.7.2.1': (None, 'shipped caller-asserted (P12 S2-2): `ValidationOptions.auAssigningAuthorityTable`; '
                                 'PRD-7.2 in the printed Table 0363 (p 310) plus the caller\'s vendor authorities '
-                                'in `localTableExtensions["0363"]` (p 334), on Referrals'),
+                                'in `localTableExtensions["0363"]` (p 334), on Referrals. Under-report (owner '
+                                'ruling S2-3): the AU 0363 table also carries an IHI accommodation row that '
+                                'p 310 does not print, so IHI as PRD-7.2 is accepted'),
 }
 
 # Shipped points whose register row needs a scope note.
@@ -265,7 +267,10 @@ PARTIAL = {
                          'pairs (AUSHICPR => UPIN, AUSHIC => NPIO/NOI) and, since '
                          'P12 S2-2, VDI for an authority outside the printed Table '
                          '0363 (p 334: vendor extensions "must use "VDI""); AUSDVA, '
-                         'AUSNATA, AUSLINK and IHI have no printed pair and skip',
+                         'AUSNATA, AUSLINK and IHI have no printed pair and skip. '
+                         'Under-report (owner ruling S2-3): IHI is an accommodation row '
+                         'of the AU 0363 table that p 310 does not print, so an IHI '
+                         'authority escapes the VDI requirement',
     'HL7au:000032.2': 'OBR-24 presence + table 0074 membership enforced on '
                       'Referrals; the "appropriate for the content in the '
                       'OBR/OBX group" half is receiver-judgement over '

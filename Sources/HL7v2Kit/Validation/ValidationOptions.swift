@@ -151,7 +151,10 @@ public struct ValidationOptions: Sendable {
     /// has agreed is not on the wire. `false`, the default, leaves the rule
     /// unchecked (the ADRM's own `Medical-Objects` and `Argus` rows lie
     /// outside the printed table); `true` checks PRD-7.2 on Referrals under
-    /// ``HL7Locale/auLocalisation``. Not an init parameter. P12 S2-2.
+    /// ``HL7Locale/auLocalisation``, against the printed values plus the IHI
+    /// accommodation row (not printed in Table 0363, kept so a sender using
+    /// it is not misreported; an under-report). Not an init parameter.
+    /// P12 S2-2.
     public var auAssigningAuthorityTable: Bool = false
 
     /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
