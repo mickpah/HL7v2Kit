@@ -121,6 +121,11 @@ but transparently fake). No real-world data sources.
 | `adt_a01_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 ADT^A01 with PID-40 XTN (XTN.1 empty, withdrawn); fictional-range phone number (02) 5550 1234; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
 | `oru_r01_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 ORU^R01 with PRT, TQ1, SPM and OBX-26..30 populated together; PRT one-of / PRT-7 prohibition pairs; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
 | `oml_o21_v282.hl7` | Multi-version (v2.8.2) | v2.8.2 OML^O21 lab order (ORC `NW`) with TQ1 and SPM; pins the registered OBR-7 request-leg gap; validates with no issues under `.strict` | N/A — synthetic from scratch (P7-7); licence Apache 2.0, as the package |
+| `au_oru_r01_pathology.hl7` | AU ADRM-2021 (v2.4) | ORU^R01 pathology result: NASH-shaped HD and EI addressing, LOINC-coded NM OBX with UCUM units, an HTML display OBX (AUSPDI) last in its group; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); HPI-O digits all zero-filled (`0000000000001001`), not a real identifier; licence Apache 2.0, as the package |
+| `au_oru_r01_radiology.hl7` | AU ADRM-2021 (v2.4) | ORU^R01 radiology report with a TXT (FT) display OBX; OBR-24 `RAD`; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_orm_o01.hl7` | AU ADRM-2021 (v2.4) | ORM^O01 new order (ORC `NW`) addressed by MSH-6; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_osr_q06.hl7` | AU ADRM-2021 (v2.4) | OSR^Q06 order status response (QRD, ORC `SR`, OBR); `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_orr_o02.hl7` | AU ADRM-2021 (v2.4) | ORR^O02 order acknowledgement (ORC `OK`) with PID; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
 
 ### Batch fixtures (`Batches/` subdirectory)
 
