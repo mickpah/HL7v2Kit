@@ -43,10 +43,10 @@ These are explicitly **not** commitments.
 
 ## Supported versions
 
-| Version         | Status      | Bug fixes | Security fixes |
-|-----------------|-------------|-----------|----------------|
-| Latest release  | Supported   | Likely    | Yes, best effort |
-| Everything else | Unsupported | No        | No             |
+| Version              | Status      | Bug fixes | Security fixes   |
+|----------------------|-------------|-----------|------------------|
+| Latest minor release | Supported   | Likely    | Yes, best effort |
+| Everything else      | Unsupported | No        | No               |
 
 "Best effort" means: the maintainer intends to fix it and will try, but is not on call.
 
@@ -75,6 +75,11 @@ what it says.
   so first.
 - Issues are the way in: bug reports, spec-reading disagreements with a chapter and page
   cited, and fork announcements (below) are all welcome.
+
+## Conduct
+
+Discussions and issues are expected to be courteous and on topic. Abuse is removed and
+the account blocked. No formal code of conduct is adopted at this stage.
 
 ## If this project goes quiet
 

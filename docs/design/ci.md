@@ -21,7 +21,7 @@ publishes the documentation (below).
 | `docs.yml` | push to `main`, `workflow_dispatch` | `macos-15`, newest Xcode, then `ubuntu-latest` | Builds the DocC archive as the `docc` job does (failing on any `warning:`), transforms it with `docc process-archive transform-for-static-hosting --hosting-base-path HL7v2Kit` into `site/`, replaces DocC's root app shell with a redirect to `/HL7v2Kit/documentation/hl7v2kit/`, and deploys `site/` with `actions/upload-pages-artifact` and `actions/deploy-pages` to the `github-pages` environment. |
 
 GitHub Pages must be enabled in the repository settings (Pages, Source: GitHub Actions) before
-the first run can deploy; until then the deploy job fails. That is a pre-push checklist item.
+the first run can deploy; until then the deploy job fails. That is item 1 of the pre-push checklist (below).
 The site is about 72 MB. The build and transform steps run locally with no extra setup; the
 deploy steps run only on GitHub. `ci-rehearsal.sh` reads `ci.yml` only, so it does not run them.
 
@@ -65,14 +65,14 @@ to the schemas, the structures or the AU profile.
   [text]`: the ADRM prose sweep, which looks for normative sentences outside the numbered
   conformance points, and the Appendix 5 conformance-register generator. Both read the
   `pdftotext -layout` rendering of the ADRM-2021 PDF (default `/tmp/adrm2021.txt`).
+- `bash scripts/anonymise-fixture.sh` for any new real-world-derived fixture, followed by the
+  PHI scan.
 
 Without their input each guard stops with one line and status 1, never a traceback:
 `check-printed-structure-ids.py` prints `setup failure: the licensed PDFs are not under
 docs/standards (local guard only)`; the two ADRM scripts print `setup failure: <path> is absent;
 render the ADRM-2021 PDF under docs/standards with pdftotext -layout first (local guard only)`.
 `audit-schemas.py` skips its PDF-backed passes with a message and runs the rest.
-- `bash scripts/anonymise-fixture.sh` for any new real-world-derived fixture, followed by the
-  PHI scan.
 
 Nothing a hosted job runs needs `docs/standards/`, `docs/XML-schemas/`, `/tmp/extractbin` or
 `/tmp/tablesbin`. A grep of `ci.yml` and every script it reaches (21 files, following each
@@ -104,3 +104,23 @@ pass, fail or skip line per step and a summary per job. It exits 1 if any step f
 
 The scripts point `DEVELOPER_DIR` at `/Applications/Xcode.app` only when the caller has not set
 it, so a job that selects another Xcode keeps it.
+
+## Pre-push checklist
+
+The first push to the public repository, in order:
+
+1. Enable GitHub Pages with Source: GitHub Actions (Settings > Pages).
+2. Enable private vulnerability reporting (Settings > Security), which `SECURITY.md` points at.
+3. The author rewrite on a fresh clone (the owner's step). The current history carries two
+   name forms with the same personal email; both become the GitHub noreply address.
+4. Add the `origin` remote.
+5. In `CHANGELOG.md`, `[Unreleased]` becomes `[3.17.0]` with the compare link
+   `v3.16.0...v3.17.0`, and a fresh `[Unreleased]` (ending at `HEAD`) goes above it. The
+   Unreleased heading in `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md` becomes 3.17.0.
+   `python3 scripts/check-changelog-links.py` passes.
+6. Tag `v3.17.0`.
+7. `git push --dry-run origin main --tags`, then the push itself. Every tag goes: the
+   CHANGELOG compare links and the README's `from: "3.17.0"` need them.
+8. Optionally, branch protection on `main`.
+9. After the push: confirm the Pages deploy and the first CI run, then remove "(live after the
+   first push)" from `README.md`.
