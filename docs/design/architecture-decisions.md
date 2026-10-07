@@ -228,3 +228,120 @@ property (ADR-001) as the port's acceptance test.
 
 **Amended (R6):** the one-shot script that stamped the kernel headers was retired once every
 kernel file carried the marker.
+
+## ADR-007 AU profile architecture
+
+**Status:** Accepted. Related: ADR-008, ADR-009, ADR-010, ADR-011, ADR-016, ADR-019, ADR-021.
+
+**Context.** The Australian localisation profile HL7AUSD-STD-OO-ADRM-2021.1 (the ADRM) layers
+narrowings over HL7 v2.4: extended usage codes (`RE`, `CE`), tightened optionality, AU value
+sets, pre-adopted v2.5-and-later fields, tighter required components on composites, and
+constraints that fire only for some message types. Baking these into the base schemas would make
+them unfaithful to the HL7 standard and mislead non-AU integrators; a duplicated schema tree per
+profile would drift.
+
+**Decision.**
+
+- Locale is a first-class public mode. `HL7Locale` has `.international` (the base standard,
+  the default) and `.auLocalisation`. It is passed to `Parser` and `Validator` (or set as
+  `ValidationOptions.locale`) and is reported back on `Message.locale` and
+  `ValidationReport.locale`, read-only.
+- The base schemas stay faithful to the standard. AU narrowings live in an internal `Profile`
+  value, `Profile.auADRM2021`, hand-curated in compiler-checked Swift and returned by
+  `Profile.load(for:)`. `Profile` and its rule types are not public API.
+- A violated AU rule is reported as `profileConstraintViolation(localeRule:)`, whose associated
+  value carries the verbatim HL7au rule identifier and citation. No rule ships without a citation.
+- The profile is a set of rule tracks: field overrides (usage, required components, component
+  value sets with optional subcomponent and condition, patterns, correspondences, lengths,
+  time-zone requirements), composite overrides (required components, pair conditionals,
+  inequalities, value conditionals), grammar extensions (the pre-adopted PID-35 to PID-38 on
+  v2.4), cardinality extensions, uniqueness rules, escape prohibitions, sub-ID trees, group
+  ordering rules and the full-predicate rule (ADR-021).
+- Scope: `.auLocalisation` governs a message of every version. Field-level rules apply on every
+  version, read through that version's grammar; the ADRM profile structures apply only when the
+  message's base structure is v2.4 (limitations register section B).
+- Profile structures: the ADRM's own message structures (ADR-019) include ORR_O02 with the
+  `[PID` cell read as the base v2.4 reading, and the Appendix 8 simplified REF as a variant of
+  the AU REF_I12 selected by the identifier MSH-12.3.1 declares (public
+  `StructureVariant.profileIdentifiers`).
+- Caller assertions: four `ValidationOptions` properties (among them
+  `auAssigningAuthorityTable`) assert facts the message cannot carry; each is silent by default.
+- The locale axis carries AU code-table content (ADR-016), with `localTableExtensions` honoured
+  on the AU value sets for Tables 0074, 0200, 0203 and 0363.
+- Mapping (to FHIR or anywhere else) is out of scope: the package reports what it validated
+  against and leaves downstream consumers to decide.
+
+**Consequences.** Other localisations follow the same pattern without API change (`HL7Locale`
+is an open enum). Each new rule shape is an internal track, so the profile grows without public
+surface. JSON-driven generation of profiles is deferred until a second localisation makes shared
+tooling worthwhile.
+
+**Superseded (v0.14):** the original design loaded JSON overlays from
+`Resources/profiles/au-adrm-2021/` at run time. The profile shipped as Swift instead; the JSON
+was never consumed, drifted, and was deleted.
+
+**Amended (R4):** the scaffolded `ProfileLoader` was folded into `Profile.load(for:)`.
+
+**Amended (P12):** rulings G-AU1 (every version), G-AU2 (ORR_O02 reading) and G-AU3 (Appendix 8
+as a declared-profile variant); new tracks `GroupOrderingRule`,
+`ComponentCorrespondence.unlistedKeyValues` and `exemptKeys`, and
+`ComponentValueSet.localTableExtension` (S2-2b, S2-3); `FieldOverride.length` for the ADRM's
+printed length variations (S3).
+
+## ADR-008 Cross-segment DSL
+
+**Status:** Accepted. Related: ADR-004, ADR-007, ADR-010, ADR-021.
+
+**Context.** The original condition DSL could only reference fields of the segment being
+checked. A cluster of spec conditionals needs more: the ORC-2 and OBR-2 placer-number
+relationship (cross-segment), the OBR report-message guards (message type), and ORC-8 parent and
+child (the preceding ORC's ORC-1). Requirement 3 says extend the model rather than defer.
+
+**Decision.** The single schema `"condition"` string stays the only knob; the predicate grammar
+gains three categories, evaluated against the whole message:
+
+- Cross-segment field references: `OBR-2 populated` inside an ORC entry binds to the associated
+  segment (the nearest one of that ID within the current ORC and OBR group). The explicit form is
+  `associatedSegment(OBR).OBR-2 ...`.
+- Message context: `messageCode`, `triggerEvent` and `messageStructure`, read from MSH-9.1,
+  MSH-9.2 and MSH-9.3 (`ORU_R01` in a predicate stands for `ORU^R01`).
+- Position: `previousSegment(ORC).ORC-1 = PA` finds the nearest preceding segment of that ID.
+- Atoms combine with `AND` and `OR`; operators are `populated`, `empty`, `=`, `!=`, `in (...)`
+  and `not in (...)` (ADR-010 and ADR-011 add more).
+- A reference that does not resolve, or an atom that does not parse, never makes a field
+  required. Since ADR-021 that is the `unknown` state of the three-state evaluator, which a
+  "required when" check treats as not triggered.
+- No public API change: more spec-faithful validation under the same API is a minor release.
+
+**Consequences.** Spec conditionals that were silently unenforced now fire, and the fixture
+corpus was audited for the newly reported issues. The grammar surface grows, so additions are
+kept narrow and each needs its own decision; typed predicate trees, per-schema "associated"
+overrides and a parallel cross-segment rule axis were rejected.
+
+**Amended (R4, via ADR-010):** referent parsing shares the `Path` parser.
+
+**Amended (ADR-021, P4-31):** the evaluator is three-state; the two-state answer is unchanged.
+
+## ADR-009 componentValueSet extensions
+
+**Status:** Accepted. Related: ADR-007, ADR-008.
+
+**Context.** HL7au:000040 needed two things the AU value-set track lacked: subcomponent
+granularity (MSH-12.2 must equal `AUS&Australia&ISO3166_1`, three subcomponents) and message-type
+gating (a VID-3 value required only on orders and results, another only on referrals). Shipping
+it partially, or unconditionally, would break requirements 3 and 4.
+
+**Decision.**
+
+- The internal `ComponentValueSet` carries an optional `subcomponent` (nil reads the first
+  subcomponent, as before) and an optional `condition` in the ADR-008 predicate DSL.
+- The condition is evaluated first; when it is not true the value-set check is skipped. Several
+  entries on one field with different conditions are the intended use.
+- The gating reuses the one condition evaluator; no parallel message-type filter.
+- No public API change: the profile types are internal (ADR-007).
+
+**Consequences.** HL7au:000040.1 to .4 ship in full (040.5 is receiver behaviour, outside a
+validator). An unparseable profile condition fails safe: the check does not fire.
+
+**Amended (P12 S2-2b, S2-3):** `ComponentValueSet.localTableExtension` names a table whose
+`ValidationOptions.localTableExtensions` entry is also allowed (ADR-007).
