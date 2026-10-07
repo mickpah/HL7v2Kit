@@ -100,6 +100,19 @@ struct AUFieldLengthTests {
         #expect(international.first?.severity == .warning)
     }
 
+    @Test("A message declaring 2.5.1 gets the ADRM MSH-12 length under AU and the v2.5.1 length (60) internationally")
+    func declaredV251VersionID() throws {
+        let msh12 = Variation(segment: "MSH", field: 12, v24: 60, adrm: 250)
+        func vid(_ length: Int) -> String { "2.5.1^" + String(repeating: "X", count: length - 6) }
+        func wire251(_ length: Int) -> String { wire(msh12, vid(length)) }
+        #expect(try lengthFindings(wire251(61), locale: .auLocalisation, msh12).isEmpty)
+        let past = try lengthFindings(wire251(251), locale: .auLocalisation, msh12)
+        #expect(past.map(\.code) == [.fieldLengthOutOfRange(length: "250", actual: 251)])
+        #expect(past.first?.message.contains("AU ADRM-2021") == true)
+        let international = try lengthFindings(wire251(61), locale: .international, msh12)
+        #expect(international.map(\.code) == [.fieldLengthOutOfRange(length: "60", actual: 61)])
+    }
+
     @Test("Each AU profile field override is unique per segment and field, so a length cannot shadow another rule")
     func overrideKeysUnique() throws {
         let profile = try #require(Profile.load(for: .auLocalisation))
