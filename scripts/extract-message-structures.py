@@ -7,7 +7,10 @@ PDFs print under each CODE^EVENT^STRUCTURE caption and emit Resources/structures
     python3 scripts/extract-message-structures.py --version 2.5.1 --report /tmp/p8b-report-2.5.1.tsv
 
 --check exits 1 on any byte difference from the committed file; --write is idempotent. Without
---only, --check and --write cover the structures already committed for that version. Every run
+--only, --check and --write cover the structures already committed for that version. Both also
+keep completeness.json in step: the figures of the last "N structures, M registered" pair in each
+version's citation are the committed structure count and the notModelled count (P12 S4-2), so
+--check fails when they drift and --write sets them. Every run
 prints one summary line per version: captions found, structures, parsed, skipped by reason.
 
 The print is the only source of structure (ADR-019). One rule reads a table: a row is syntax
@@ -2598,6 +2601,53 @@ def sync_modelled_registrations(versions, write):
     return diffs
 
 
+# A version's citation is a dated log, one sentence per change: "<tag> (<release>): N structures,
+# M registered; <what changed>". The last such pair states the version's current counts.
+COUNT_PAIR = re.compile(r"(\d+)( structures?[^;.\"]{0,40}?, )(\d+)( registered)")
+
+
+def citation_counts(ver):
+    """(modelled, registered) for `ver`: the structures committed under Resources/structures/v<ver>
+    and the completeness.json notModelled entries."""
+    target = os.path.join(STRUCTURES, f"v{ver}")
+    modelled = len([f for f in os.listdir(target) if f.endswith(".json")]) if os.path.isdir(target) else 0
+    with open(COMPLETENESS, encoding="utf-8") as f:
+        registered = len(json.load(f)["versions"].get(ver, {}).get("notModelled", []))
+    return modelled, registered
+
+
+def sync_citation_counts(versions, write):
+    """Compare (or, with write, set) the figures of the last "N structures, M registered" pair in
+    each version's completeness.json citation with citation_counts (P12 S4-2). Edits only those two
+    numbers on the version's head line; the sentences around them stay hand-written. A change that
+    alters the counts appends its own dated sentence in that form before --write fills the figures,
+    or --write corrects the previous sentence's figures. A citation with no pair is reported, never
+    written. Returns the versions that differ (before any write)."""
+    with open(COMPLETENESS, encoding="utf-8") as f:
+        lines = f.read().split("\n")
+    diffs = []
+    for i, line in enumerate(lines):
+        head = re.match(r'^\s*"(\d+(?:\.\d+)+)": \{.*"citation": ', line)
+        if not head or head.group(1) not in versions:
+            continue
+        ver = head.group(1)
+        pairs = list(COUNT_PAIR.finditer(line, head.end()))
+        if not pairs:
+            diffs.append(f"v{ver}: citation states no \"N structures, M registered\" pair")
+            continue
+        last, (modelled, registered) = pairs[-1], citation_counts(ver)
+        if (int(last.group(1)), int(last.group(3))) == (modelled, registered):
+            continue
+        diffs.append(f"v{ver}: citation says {last.group(1)} structures, {last.group(3)} registered; "
+                     f"committed {modelled}, registered {registered}")
+        lines[i] = (line[:last.start()] + f"{modelled}{last.group(2)}{registered}{last.group(4)}"
+                    + line[last.end():])
+    if write and any("states no" not in d for d in diffs):
+        with open(COMPLETENESS, "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+    return diffs
+
+
 def summary(version, structures, report, count):
     """One line per version: captions, structures, parsed, skipped by reason and the P8b-3a
     report classes."""
@@ -2732,6 +2782,11 @@ def main(argv=None):
         for line in sync_modelled_registrations([v[1:] for v in versions], args.write):
             print(f"  {line}" + (": removed" if args.write else ""))
             failed |= bool(args.check)
+        # P12 S4-2: the citation's current counts are written from the committed structures.
+        for line in sync_citation_counts([v[1:] for v in versions], args.write):
+            unwritable = "states no" in line
+            print(f"  {line}" + (": written" if args.write and not unwritable else ""))
+            failed |= bool(args.check) or unwritable
     if args.report:
         with open(args.report, "w", encoding="utf-8") as f:
             f.writelines("\t".join(r) + "\n" for r in tsv)

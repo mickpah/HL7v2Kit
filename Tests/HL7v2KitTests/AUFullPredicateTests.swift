@@ -1,5 +1,5 @@
 // AUFullPredicateTests.swift
-// P4-31 (ADR-021) — HL7au:00060.4 route C. ADRM-2021 Appendix 5 (p. 466):
+// P4-31 (ADR-021) — HL7au:00060.4 route C. ADRM-2021 Appendix 5 (p. 467):
 // "HL7 message elements with a usage of C (conditional) must not be valued
 // when the associated predicate is not satisfied." Enforced only on C
 // fields whose schema marks the stored condition as the spec's full

@@ -146,6 +146,11 @@ SHIPPED_NOTES = {
                      'no predicate the text settles as a prohibition (RQ1-2/3/4/5 read '
                      'inclusively, RXE-10/18/19 bare, PTH-6 undefined event), 12 whose '
                      'predicate the message does not carry',
+    # P12 S2-2 (note added by P12 S4-3, whole-epic review M3).
+    'HL7au:000008.1.5': '`GroupOrderingRule` on the AU profile: a display OBX (OBX-3.3 = '
+                        'AUSPDI) last in each OBR/OBX group, Results and Referrals; the '
+                        'digital signature OBX (OBX-3.1 starting AUSETAV, OBX-3.3 = L, the '
+                        'identifier p 438 gives under HL7au:000010) may follow it (P12 S2-2)',
     # P12 S1-5 (carried here by P12 S2-2 so the register stays generated).
     'HL7au:000008.3.1': 'Level 1 is served by the same simplified variant as Level 2 with no '
                         'cap on the OBR group (a reading, P12 S1-5; owner item open; see '

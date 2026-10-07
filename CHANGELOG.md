@@ -7,7 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.16.0] — 2026-10-07
+
+### Summary — release 3.16.0: AU profile completion (epic P12)
+
+- **Scope:** epic P12, the ADRM-2021 profile behind `.auLocalisation`. HL7au:00060.1 is nearly
+  complete: the Appendix 8 simplified REF structure (selected by MSH-12.3), ORR^O02 and the OSR^Q06
+  order detail are modelled; one residual is named (RXO, ODS or ODT in place of OBR in ORR^O02 and
+  OSR^Q06). The conformance register moves from 74 / 18 / 8 to 79 / 17 / 5 SHIPPED / PARTIAL /
+  REGISTERED of 263 points.
+- **Defects fixed in shipped rules:** HL7au:000034.1/.2 coding-system precedence; the AU Table 0203
+  `NNxxx` pattern row; `localTableExtensions` in the profile's 0074, 0200 and 0203 value sets; the
+  ADRM's 15 printed field lengths under the AU locale; the AU MIME Tables 0191 and 0291 (both open).
+- **New checks:** 000008.1.5, 000024.2 on Referrals and FHS/BHS, CX-5 against Table 0203, HD-1
+  presence and MSH-6 on an order; every NASH rule gated to ORM, ORU and REF.
+- **Fixtures and speed:** ten synthetic AU fixtures (one a batch). The AU REF^I12 performance known
+  issues are closed (800 added segments in 9.9 ms, was 39.3 ms); the 5,002-segment ORU^R01 validates
+  in 0.075 / 0.124 s on v2.5.1 / v2.8.2 (was 0.155 / 0.213), with byte-identical digests.
+- **Docs and API:** the "Australian localisation" DocC article; two additive members,
+  `StructureVariant.profileIdentifiers` and `ValidationOptions.auAssigningAuthorityTable`. Behaviour
+  changes for AU consumers: `Migration.md` "AU profile completion (P12, v3.16.0)". 1,823 tests.
+
+### Fixed — P12 S4-3: whole-epic review fixes; v3.16.0 release documents
+
+- The NASH EI rules (HL7au:00044.3.3 / .3.4) are pinned to Orders, Results and Referrals
+  (`AUNASHScopeTests`): the EI override's message-type gate already covered them; the
+  `auNASHTransport` DocC, register section B and the article now say so. No output change.
+- Citations corrected (Table 0104x p 43; 00050.1.5 p 466; 00060.4 p 467); a 000008.1.5 note in the
+  generated conformance register; the article's partial points completed and the open AU Table
+  0191's v2.7.1 / v2.8.2 TXA-3 consequence recorded; `Migration.md` gains the P12 section.
+
 Sprint 3 of epic P12 (AU profile completion) adds nine synthetic AU fixtures, a batch and a PDF-display fixture (`AUFixtureTests`). They found two defects, both fixed: the ADRM's printed field lengths did not apply under the AU locale (D1), and the AU MIME Tables 0191 and 0291 were missing, so the PDF display form drew errors (D2); Table 0191 is now open, as 0291 is, so any registered IANA type is admitted. The remaining AU value sets were completed through local extensions. The AU REF^I12 performance known issues are closed: 200 / 400 / 800 added segments validate in 2.7 / 5.1 / 10 ms (release) against the derived limits of 6.1 / 12 / 24 ms, the cause being a per-read filter of every segment in `Message.subscript(path:)` plus repeated condition parsing; the same changes speed up the 5,002-segment ORU^R01 (0.075 s on v2.5.1).
+
+### Added — P12 S4-1: the "Australian localisation" DocC article; register sections B and D restated
+
+- `AustralianLocalisation.md`, linked from the catalogue's "Validation and conformance" topics: what `.auLocalisation` is and which messages it governs (field rules on every version, profile structures on base v2.4 only, owner ruling G-AU1); the four caller assertions; what the profile checks, by ADRM section, with the issue code a consumer sees and one rule ID each; the coverage from the conformance register (79 SHIPPED, 17 PARTIAL, 5 REGISTERED, 9 BASE, 74 RECEIVER, 76 OUT, 3 WITHDRAWN of 263 points, 2026-10-07); the PARTIAL residuals and the Permanent reasons; the two open owner items; the AU fixtures as worked examples; `localTableExtensions` on the AU value sets.
+- `Validation.md`: the four AU assertions named together, and the stale sentence saying the Appendix 8 structure and the ORR^O02 print were not modelled replaced with what P12 sprint 1 shipped.
+- Permanent-limitations register: section B rewritten to the shipped state (what ships, what is PARTIAL with its residual, what is Permanent with its reason, each cited by ADRM page; the stale "Deferred" row for HL7au:00044.1.2, which ships, is gone); section D restated as closed (drained 2026-09-16), pointing at the P12 re-audit and at section B. ADR-007 carries a dated summary of what P12 added.
+- Documentation only; no code or behaviour change.
+
+### Changed — P12 S4-2: the completeness citation counts are written by the extractor
+
+- Each version's `citation` in `Resources/structures/completeness.json` is a dated log whose last "N structures, M registered" pair states the current counts; every P11 sprint typed those figures by hand. `scripts/extract-message-structures.py --check` now fails when that pair differs from the structures committed under `Resources/structures/v<ver>` and the version's `notModelled` entries, and `--write` sets the two figures (only they change; a citation with no pair is reported and never written). A change that alters the counts appends its own dated sentence in that form, then runs `--write`.
+- All seven versions agree today (161/8, 117/21, 160/22, 185/20, 200/10, 177/45, 190/57); no generated Swift changes. Self-check: `check_citation_counts` in `scripts/check-extract-message-structures.py`.
 
 ### Fixed — P12 S3-3: AU Table 0191 is open to IANA types, as Table 0291 is
 

@@ -327,3 +327,29 @@ above; none is public API.
   `"0363"` (HL7au:00104.7.2.1, under `auAssigningAuthorityTable`), and `"0203"` on CX-5, XCN-13
   and PRD-7.3 (HL7au:00044.1.3, 00044.7.4, 00104.7.3.1), so a site's local Table 0203 extension
   is a valid value in the overlay as in the base check.
+
+---
+
+**Addendum (2026-10-07, epic P12 summary, S4-1):** what epic P12 (AU profile completion,
+sprints 0 to 4) added to the architecture above. The locale-as-mode decision is unchanged.
+
+- **Scope (owner ruling G-AU1):** `.auLocalisation` governs a message of every version. Field-level
+  rules apply on every version, read through that version's grammar; the six ADRM profile
+  structures apply only when the message's base structure is v2.4 (permanent-limitations register
+  section B).
+- **Profile structures (sprint 1):** ORR_O02 from its print with the `[PID` cell read as the base
+  v2.4 reading (G-AU2), and the Appendix 8 simplified REF as a variant of the AU REF_I12 selected
+  by the identifier MSH-12.3.1 declares (G-AU3; public `StructureVariant.profileIdentifiers`,
+  additive); RQD and RQ1 in place of OBR in the order responses are reported.
+- **Rule shapes (sprint 2):** `GroupOrderingRule`, `ComponentCorrespondence.unlistedKeyValues` /
+  `exemptKeys` and `ComponentValueSet.localTableExtension` (the addendum above); a fourth caller
+  assertion, `ValidationOptions.auAssigningAuthorityTable` (00104.7.2.1), silent by default as the
+  other three are; the NASH rules scoped to ORM, ORU and REF (p 416).
+- **Locale axis (sprints 2 and 3):** AU Tables 0396 and a corrected 0203 (with its `NNxxx` row),
+  and Tables 0191 and 0291 with their IANA rows, both open; `localTableExtensions` honoured on the
+  AU value sets for Tables 0074, 0200, 0203 and 0363.
+- **Field lengths (sprint 3):** `FieldOverride.length` carries the ADRM's 15 printed LEN variations,
+  read by the field-length check under the AU locale in place of the v2.4 LEN.
+- **Evidence and documentation:** nine synthetic AU fixtures and a batch (`AUFixtureTests`); the
+  DocC article "Australian localisation"; register sections B and D restated (sprint 4).
+  Conformance register at the close: 79 SHIPPED, 17 PARTIAL, 5 REGISTERED of 263 points.

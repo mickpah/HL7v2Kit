@@ -1358,6 +1358,9 @@ compiling a structure per message.
   ACK^R01 and ACK^O01 (pp 206, 280) and the Appendix 8 simplified REF structure (p 484, gated on
   the MSH-12 profile). Those that add a required segment are registered (permanent-limitations
   register section E, P8b-4 addendum); 00060.1 is PARTIAL in the conformance register.
+  (Forward note, P12 S4-3: Appendix 8 and ORR^O02 are no longer registered; both are modelled
+  since "Amendment 2026-10-07 — P12 S1: the AU profile structures completed" below, and
+  00060.1 keeps one named residual.)
 
 ## Amendment 2026-10-04 — AU profile structures govern base structure findings (P8b-4a)
 
