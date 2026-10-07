@@ -30,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   round trip and builds the ACK. Both test jobs run it. The README Quickstart and the Getting
   Started article quote it, and `QuickStartExampleTests` runs its steps on the same message, so
   the example cannot drift unnoticed. No library change.
+- **"What the validator checks", on one page (P13 S3-2).** The Validation article is rewritten
+  so "will this catch X?" has one answer: every check, grouped (version and segments, fields,
+  components, composites, escapes and encoding, batches, acknowledgment building, the AU layer),
+  with its issue code and governing option; every Blocking and Permanent class the
+  permanent-limitations register records, one line each with its reason and section; the three
+  presets in a table; the caller assertions. `ValidationArticleCoverageTests` fails when an
+  `IssueCode` case is not linked from the article.
 
 ### Removed (breaking)
 
