@@ -278,7 +278,7 @@ struct ConditionalFieldTests {
     // v0.9 audit pin: a standalone CH order with no preceding parent
     // ORC must still fire — the prior predicate `previousSegment(ORC)
     // .ORC-1 = PA` would have under-fired here. This is the regression
-    // guard for the the working notes req #4 defect fix.
+    // guard for the project requirement #4 defect fix.
     private let standaloneChildORC = """
     MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
     PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\

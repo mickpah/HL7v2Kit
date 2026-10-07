@@ -1,0 +1,36 @@
+HL7v2Kit
+Copyright 2026 Michael Paholski
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes material derived from the following published standards.
+Neither standard is distributed with this product.
+
+1. The HL7 Version 2 standard, versions 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1 and
+   2.8.2, published by Health Level Seven International.
+
+   The code tables (Resources/tables/v*), data-type component definitions
+   (Resources/datatypes/v*) and message-structure grammars
+   (Resources/structures/v*) are machine-extracted from the published
+   standard's PDF chapters and appendices. The segment definitions
+   (Resources/schemas/) are extracted from the same chapters and then
+   reviewed by hand. Group names for some pre-v2.5 message structures are
+   read from the HL7 v2.xml schema bundles. Corrections to the extracted
+   material cite the version, chapter, section and page of the standard.
+   The generated Swift sources under Sources/HL7v2Kit/*/Generated/ are
+   produced from these files.
+
+   HL7 and Health Level Seven are registered trademarks of Health Level
+   Seven International. This product is not endorsed by Health Level Seven
+   International.
+
+2. HL7 Australia, "Australian Diagnostics and Referral Messaging -
+   Localisation of HL7 Version 2.4", ADRM 2021.1
+   (HL7AUSD-STD-OO-ADRM-2021.1), published by HL7 Australia.
+
+   The AU locale code tables (Resources/tables/locale/au-adrm-2021/), the
+   AU message-structure profiles (Resources/structures/profiles/au-adrm-2021/),
+   the VMR OBX implementation table (Resources/profiles/au-adrm-2021/) and
+   the HL7au profile rules the package applies are derived from that
+   document. The locale tables and profile structures cite the section and
+   page they come from.

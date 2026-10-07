@@ -32,8 +32,9 @@ STRUCT_BASES_FILE="$REPO_ROOT/Resources/struct-bases.json"
 
 # The Testing module ships with full Xcode, not Command Line Tools. The
 # codegen target itself only imports Foundation, but `swift run` plans the
-# whole package — so use the Xcode toolchain if available.
-if [[ -d "/Applications/Xcode.app/Contents/Developer" ]]; then
+# whole package — so use the Xcode toolchain if available, unless the caller
+# (a CI job selecting a newer Xcode, say) has already set DEVELOPER_DIR.
+if [[ -z "${DEVELOPER_DIR:-}" && -d "/Applications/Xcode.app/Contents/Developer" ]]; then
   export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
 fi
 

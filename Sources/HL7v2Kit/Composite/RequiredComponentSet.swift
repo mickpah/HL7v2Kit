@@ -4,7 +4,7 @@
 // must be populated" rather than the flat "all of these must be populated"
 // rule `RequiredComponent` carries. v0.4-S4.
 //
-// Per the working notes project requirements (feature-complete over AU-specific;
+// Per project requirements (feature-complete over AU-specific;
 // integrator primary-reference tool), composites with OR-rule conformance
 // must enforce the OR-rule — not silently skip. The five v2.5.1 composites
 // with OR-rule conformance — CWE, XTN, HD, PL, EIP — publish a

@@ -25,7 +25,7 @@ see exactly which versions are complete, which are partial, and by how much.
 
 ## Why this register exists (the requirement it sits against)
 
-`the working notes` project requirement **#1** states: *feature-complete over AU-specific — "AU
+Project requirement **#1** states: *feature-complete over AU-specific — "AU
 traffic doesn't trigger this case" is **not** a valid defence for a known feature gap.*
 Requirement **#2** frames the package as an integrator primary-reference tool, defensible
 against the spec text alone.
@@ -106,8 +106,8 @@ ADT_A01, ORU_R01 and ACK, checked when `ValidationOptions.messageStructureSeveri
 modelled. This is a different axis from the segment surface above: every segment can be
 modelled and a message can still be structurally invalid. It is registered as blocking
 spec-completeness in `permanent-limitations-register.md` section E, designed in ADR-019
-(accepted 2026-10-02 under gate G2), piloted by `planning/remediation/P8-message-structures.md`
-and rolled out per version by `planning/remediation/P8b-message-structure-rollout.md` (to be
+(accepted 2026-10-02 under gate G2), piloted by the P8 plan
+and rolled out per version by the P8b rollout plan (to be
 scoped by P8-9).
 
 > **Superseded (P8b rollout, 2026-10-03 to 2026-10-05; noted 2026-10-05, P7-4).** Every
@@ -115,7 +115,7 @@ scoped by P8-9).
 > a cited reason (`Resources/structures/`, `completeness.json`), and the check is on in the
 > presets (`.warning` in `.default`, `.error` in `.strict`, off in `.lenient`). Section E of
 > `permanent-limitations-register.md` carries the per-version counts and the rows still
-> blocking. The `planning/` paths above are in the local planning folder, not in the repository.
+> blocking. The P8 and P8b plans named above are local planning documents, not in the repository.
 
 ## Exit criteria — when this register closes
 

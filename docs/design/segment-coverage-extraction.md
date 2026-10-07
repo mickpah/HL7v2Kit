@@ -45,7 +45,7 @@ re-read the repeated header, whose column spacing differs per page) → stop at 
 `N.N.N field definitions` section. `RP/#` maps to repeatability (`Y` or a max-count →
 `*`, blank → `1`); a `(B)`/`(B) X` optionality reduces to `B`.
 
-**Authoring discipline is unchanged (the working notes req #2 / #4):** the tool *proposes*; a
+**Authoring discipline is unchanged (project requirement #2 / #4):** the tool *proposes*; a
 human *verifies against the spec text* and the schema carries its citation. Automation
 removes transcription and column-misread error; it does not remove the review.
 

@@ -21,8 +21,9 @@ If that changes, this file and `SUPPORT.md` will say so first.
 - **Fork announcements.** The licence lets you fork without asking. If your fork is
   clearly active, open an issue titled "Fork: <url>" and it will be linked from
   `README.md` when the maintainer next looks.
-- **Security reports.** Open an issue titled "Security: <summary>"; there is no private
-  reporting channel yet. A report will be acknowledged within 14 days.
+- **Security reports.** Privately, through GitHub's private vulnerability reporting (the
+  repository's Security tab), not as a public issue. A report will be acknowledged within 14 days.
+  `SECURITY.md` has the details.
 
 ## Working on a fork
 
@@ -43,9 +44,11 @@ The repository's own working rules, for anyone building on it:
    spec-compliant message; a gap the model cannot express is registered in
    `docs/design/permanent-limitations-register.md` rather than papered over.
 
-`the working notes` holds the fuller working notes and the reading order for the design documents.
+The four project requirements and the reading order for the design records are in
+`docs/design/README.md`. Before pushing, `bash scripts/ci-rehearsal.sh` runs every CI step on a
+clean clone of `HEAD` (the Linux job through Docker).
 
 ## Licence
 
-Apache 2.0, see `LICENSE`. It applies to every release and lets you fork, vendor or build
+Apache 2.0, see `LICENSE` and `NOTICE`. It applies to every release and lets you fork, vendor or build
 on any version without asking.

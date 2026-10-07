@@ -1,0 +1,5 @@
+# HL7 messages end segments with a bare CR, and the API-surface pins are
+# compared byte for byte. Keep every fixture exactly as committed on every
+# platform: no end-of-line conversion on checkout.
+*.hl7 -text
+Tests/Fixtures/** -text

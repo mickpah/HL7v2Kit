@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support policy and pull requests
+    url: https://github.com/mickpah/HL7v2Kit/blob/main/SUPPORT.md
+    about: What the project promises and what it does not. Pull requests are not accepted at this stage.
+  - name: Report a security vulnerability
+    url: https://github.com/mickpah/HL7v2Kit/security/advisories/new
+    about: Privately, through GitHub's private vulnerability reporting. Never as a public issue.

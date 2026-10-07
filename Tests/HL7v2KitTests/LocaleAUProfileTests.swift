@@ -2287,7 +2287,7 @@ struct LocaleAUProfileTests {
                 + "MSA|AA|MSG0\r"
         }
         #expect(try prose(readAck(msh3: "DrSmith^0499602CT^AUSHICPR"), "ADRM-prose:P-5b").isEmpty)
-        #expect(try prose(readAck(msh3: "DrSmith^8003611566701234@8003621566684455^NPIO"), "ADRM-prose:P-5b").isEmpty)
+        #expect(try prose(readAck(msh3: "DrSmith^0000000000003003@0000000000001001^NPIO"), "ADRM-prose:P-5b").isEmpty)
         #expect(try prose(readAck(msh3: "DrSmith^0499602CT^LOCAL"), "ADRM-prose:P-5b").count == 1,
                 "a non-AUSHICPR/NPIO scheme on a read-ack must fire")
         // The gate: a general ACK is not a read-ack — the scheme is free.

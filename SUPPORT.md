@@ -16,17 +16,19 @@ These are commitments. If they change, this file changes first.
   are never replaced once published.
 - **Semantic Versioning.** `MAJOR.MINOR.PATCH`. Breaking changes only in a MAJOR bump
   (or in `0.x`, only in a MINOR bump). Breaking changes are listed in `CHANGELOG.md`.
-- **Security reports get a response.** Open an issue titled "Security: <summary>"; there
-  is no private reporting channel yet. A report will be acknowledged within 14 days. Whether a fix follows, and how fast, is covered below.
-- **Status is published.** The badge at the top of `README.md` and the "Current status"
-  section of this file are kept accurate. If this project is abandoned, that will be stated
-  here rather than left to be inferred from silence.
+- **Security reports get a response.** Report a vulnerability privately through GitHub's
+  private vulnerability reporting (the repository's Security tab), not in a public issue. A
+  report will be acknowledged within 14 days. Whether a fix follows, and how fast, is covered below.
+  `SECURITY.md` says what to include, what is in scope and how disclosure works.
+- **Status is published.** The "Current status" section of this file is kept accurate. If
+  this project is abandoned, that will be stated here rather than left to be inferred from
+  silence.
 
 ## Areas of uncertainty
 
 These are explicitly **not** commitments.
 
-- **Continued development.** There is no roadmap and no promise of future releases.
+- **Continued development.** There is no promised roadmap and no promise of future releases.
   The project may be paused or stopped at any time, for any reason, including none.
 - **Response times.** Issues may be answered in hours, months, or never.
 - **Feature requests.** Welcome to file; not owed a reply. Closed as "not planned" is not
@@ -34,16 +36,17 @@ These are explicitly **not** commitments.
 - **Bug fixes.** Confirmed bugs in the latest release *will probably* be fixed. Bugs in
   anything older will not be.
 - **Backports.** None. Fixes land on `main` and ship in the next release only.
-- **Platform support.** Tested on whatever the maintainer currently runs. Other platforms
-  may work. Reports from them are welcome; fixes are not guaranteed.
-- **Dependencies.** Updated when convenient or when a security advisory makes it necessary.
+- **Platform support.** CI builds and tests on macOS and Linux. Other platforms may work;
+  reports from them are welcome, fixes are not guaranteed.
+- **Toolchain floor.** There are no runtime dependencies; the minimum Swift version moves
+  when convenient or when a security advisory makes it necessary.
 
 ## Supported versions
 
-| Version         | Status      | Bug fixes | Security fixes |
-|-----------------|-------------|-----------|----------------|
-| Latest release  | Supported   | Likely    | Yes, best effort |
-| Everything else | Unsupported | No        | No             |
+| Version              | Status      | Bug fixes | Security fixes   |
+|----------------------|-------------|-----------|------------------|
+| Latest minor release | Supported   | Likely    | Yes, best effort |
+| Everything else      | Unsupported | No        | No               |
 
 "Best effort" means: the maintainer intends to fix it and will try, but is not on call.
 
@@ -72,6 +75,11 @@ what it says.
   so first.
 - Issues are the way in: bug reports, spec-reading disagreements with a chapter and page
   cited, and fork announcements (below) are all welcome.
+
+## Conduct
+
+Discussions and issues are expected to be courteous and on topic. Abuse is removed and
+the account blocked. No formal code of conduct is adopted at this stage.
 
 ## If this project goes quiet
 

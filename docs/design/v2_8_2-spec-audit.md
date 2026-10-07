@@ -3,7 +3,7 @@
 **Audit date:** 2026-07-09 (v0.15 cycle, substages S1–S5).
 **Audited:** `Resources/schemas/v2.8.2/*.json` (15 segments at the v0.15 audit: MSH, MSA, ERR, EVN, NTE, PID, PD1, NK1, PV1, AL1, ORC, OBR, OBX, DG1, IN1; superseded: 180 segment schemas today, see the addendum).
 **Reference:** HL7 v2.8.2, ANSI/HL7 Final Standard, September 2015 — the latest published HL7 v2.x release. PDFs referenced locally in `docs/standards/HL7_V2.8.2_PDF/PDF/` (not committed to-tree pending IP review). Attribute tables and field-definition prose extracted via PDFKit and verified field-by-field against the v2.6 baseline schemas.
-**Lens:** the working notes project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. v2.8.2 is a deliberate req-#1 reach to the latest standard; ADR-013 accepted first-class grammar (Option A). Sequel to ADR-012 (v2.6).
+**Lens:** Project requirements — **feature-complete over AU-specific; integrator primary-reference tool**. v2.8.2 is a deliberate req-#1 reach to the latest standard; ADR-013 accepted first-class grammar (Option A). Sequel to ADR-012 (v2.6).
 
 ## Superseded in part (2026-10-05, remediation P7-4)
 
@@ -91,7 +91,7 @@ Additive only: `Version.v2_8_2 = "2.8.2"` (the grammar-less `.v2_8 = "2.8"` is r
 
 ## P6 findings closed (2026-10-02)
 
-The 2026-09 review (`planning/reviews/v2.8.2-review.md`,(local planning folder, not in the repository) found two gaps invisible to this
+The 2026-09 review (a local review document, not in the repository) found two gaps invisible to this
 audit's own scope (it does not check segment presence or datatype misprints against the
 attribute-table caption):
 

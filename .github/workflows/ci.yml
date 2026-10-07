@@ -6,14 +6,41 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   test-macos:
     name: Test on macOS
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-14, macos-15]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Select the newest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | command grep -vi beta | sort -V | tail -1)/Contents/Developer"
+          echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
+          xcodebuild -version
+          swift --version
+
+      # The suite uses exit tests (#expect(processExitsWith:)), which need Swift 6.2.
+      - name: Require Swift 6.2 or later
+        run: bash scripts/check-swift-version.sh 6.2
+
+      - name: Build
+        run: swift build -v
+
+      - name: Test
+        run: swift test -v
+
+      - name: Run the QuickStart example
+        run: swift run QuickStart
+
+  test-linux:
+    name: Test on Linux
+    runs-on: ubuntu-latest
+    # Swift 6.2 is the floor: the suite uses exit tests (#expect(processExitsWith:)).
+    container: swift:6.2-jammy
     steps:
       - uses: actions/checkout@v5
 
@@ -25,6 +52,9 @@ jobs:
 
       - name: Test
         run: swift test -v
+
+      - name: Run the QuickStart example
+        run: swift run QuickStart
 
   fixture-safety:
     name: PHI scan
@@ -51,12 +81,20 @@ jobs:
         run: |
           python3 scripts/check-no-emoji.py --self-test
           python3 scripts/check-no-emoji.py
+      - name: CHANGELOG headings and links agree
+        run: python3 scripts/check-changelog-links.py
 
   codegen-drift:
     name: Codegen drift
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
+      - name: Select the newest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | command grep -vi beta | sort -V | tail -1)/Contents/Developer"
+          echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
+          xcodebuild -version
+          swift --version
       - name: Regenerate typed segments
         run: bash scripts/regenerate-typed-segments.sh
       - name: Fail if Generated/ is out of date
@@ -77,3 +115,34 @@ jobs:
         run: |
           xcrun swiftc -O scripts/extract-code-tables.swift -o "$RUNNER_TEMP/tablesbin"
           "$RUNNER_TEMP/tablesbin" --self-check
+
+  docc:
+    name: DocC
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Select the newest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | command grep -vi beta | sort -V | tail -1)/Contents/Developer"
+          echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
+          xcodebuild -version
+          swift --version
+      - name: Build the documentation catalogue without warnings
+        run: |
+          # The committed HL7v2Kit.xcworkspace has no scheme, and xcodebuild prefers it to the
+          # package, so the package's own scheme is built from a copy without it.
+          rsync -a --exclude HL7v2Kit.xcworkspace --exclude .build --exclude .swiftpm ./ "$RUNNER_TEMP/docc-src/"
+          cd "$RUNNER_TEMP/docc-src"
+          if ! xcodebuild docbuild -scheme HL7v2Kit -destination 'generic/platform=macOS' -derivedDataPath "$RUNNER_TEMP/docc-derived" > "$RUNNER_TEMP/docc.log" 2>&1; then
+            tail -40 "$RUNNER_TEMP/docc.log"
+            echo "::error::xcodebuild docbuild failed."
+            exit 1
+          fi
+          # Compiler and DocC diagnostics only, not SwiftPM's "warning: '<package>':" echoes.
+          warnings="$(grep -E '^[^ ]+\.(swift|md):[0-9]+(:[0-9]+)?: warning:|^warning: ' "$RUNNER_TEMP/docc.log" | grep -vE "^warning: '[^']+': " | sort -u || true)"
+          if [ -n "$warnings" ]; then
+            echo "$warnings"
+            echo "::error::DocC reported warnings."
+            exit 1
+          fi
+          echo "DocC built with no warnings."

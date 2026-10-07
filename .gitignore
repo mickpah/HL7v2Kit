@@ -18,8 +18,10 @@ xcuserdata/
 *.swp
 *~
 
-# Generated docs
+# Generated docs (site/ is the GitHub Pages output of the docs workflow)
 docs/DocC/build/
+site/
+*.doccarchive
 
 # HL7 Final Standard PDFs — author-local reference material for the ADR-015
 # extraction pipeline. Licensed content: these must never enter this repository
@@ -46,3 +48,8 @@ docs/XML-schemas
 # Local planning documents (sprint plans, WBS) — not version controlled
 planning/
 __pycache__/
+
+# Local working notes and assistant settings - not in the repository
+the working notes
+the editor settings
+todoforpublic.md
