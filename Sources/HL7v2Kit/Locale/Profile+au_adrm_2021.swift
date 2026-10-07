@@ -509,7 +509,7 @@ extension Profile {
             // ---- M7-P2: prose-sweep findings ----------------------
             // These carry no HL7au identifier — Appendix 5 has no row
             // for them. Each is quoted verbatim from chapter prose in
-            // `docs/design/m7-adrm-prose-sweep.md`, cited as
+            // the ADRM prose sweep (a maintainer record), cited as
             // "ADRM-prose:P-n" with the section and printed page.
             //
             // P-1 — "PID-1 is mandatory in the Australian context.
@@ -1849,7 +1849,7 @@ extension Profile {
     /// `.6`; CNE and CWE both use `.4` / `.5`.** Getting CNE wrong cites
     /// `HL7au:00044.5.6`, which revision r2 **removed** — corrected by
     /// M6-D1 (2026-09-04), found by the Appendix 5 diff. See
-    /// `docs/design/m6-adrm-2021-localisation-audit.md`.
+    /// the ADRM 2021 localisation audit (a maintainer record).
     private static func ceCwePairRules(citePrefix: String) -> [PairConditional] {
         let altBase = citePrefix == "HL7au:00044.4" ? 5 : 4
         let altCite: (Int) -> String = { offset in "\(citePrefix).\(altBase + offset)" }

@@ -1282,7 +1282,7 @@ struct TypedSegmentTests {
         // v1.5 correction: OM1 47 / OM4 14 / OM6 2 are the true §8.8 depths. The earlier
         // 49 / 17 / 3 pins counted phantom rows the extractor produced from wrapped LEN
         // digits (OM6's "10240" split as a bare "0" row, etc.) — see the v1.5 hardening
-        // note in docs/design/segment-coverage-extraction.md.
+        // note in docs/design/private/segment-coverage-extraction.md.
         #expect(t["OM1"]?.fields.count == 47)
         #expect(t["OM2"]?.fields.count == 10)
         #expect(t["OM3"]?.fields.count == 7)

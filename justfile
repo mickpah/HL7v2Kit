@@ -19,11 +19,11 @@ build:
 
 # The whole suite, behind a time limit; the summary line only.
 test:
-    timeout 900 xcrun swift test 2>&1 | grep -E "error:|warning:|Test run with|✘"
+    timeout 900 xcrun swift test 2>&1 | grep -E "error:|warning:|Test run with|recorded an issue"
 
 # One suite or test, by name: `just test-only PathTests`.
 test-only pattern:
-    timeout 900 xcrun swift test --filter "{{pattern}}" 2>&1 | grep -E "error:|warning:|Test run with|✘"
+    timeout 900 xcrun swift test --filter "{{pattern}}" 2>&1 | grep -E "error:|warning:|Test run with|recorded an issue"
 
 # The console example.
 quickstart:
@@ -37,11 +37,9 @@ viewer:
 regenerate:
     bash scripts/regenerate-typed-segments.sh
 
-# The CI checks that need no display: changelog links, PHI scan, extractor and codegen guards.
+# The CI checks that need no display: the PHI scan and the codegen guard.
 check:
-    {{python}} scripts/check-changelog-links.py
     bash scripts/scan-fixtures-for-phi.sh
-    {{python}} scripts/check-extract-message-structures.py
     bash scripts/check-structure-codegen.sh
 
 # The full schema, table, data-type, VMR and example audit.

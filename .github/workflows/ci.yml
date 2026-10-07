@@ -71,14 +71,6 @@ jobs:
         run: bash scripts/scan-fixtures-for-phi.sh --history
       - name: Audit script self-check
         run: python3 scripts/check-audit-schemas.py
-      - name: Example-message extractor self-check
-        run: python3 scripts/check-extract-example-messages.py
-      - name: Datatype prose extractor self-check
-        run: python3 scripts/check-extract-datatype-prose.py
-      - name: Message-structure extractor self-check
-        run: python3 scripts/check-extract-message-structures.py
-      - name: CHANGELOG headings and links agree
-        run: python3 scripts/check-changelog-links.py
 
   codegen-drift:
     name: Codegen drift

@@ -5,7 +5,7 @@ import Testing
 /// M18 — the complete example messages the specification prints, validated end to end.
 ///
 /// The messages are spec text, which stays out of the repository like the PDFs they come
-/// from: `scripts/extract-example-messages.py` writes them to a local JSON file and this
+/// from: `scripts/private/extract-example-messages.py` writes them to a local JSON file and this
 /// suite reads the path from `SPEC_EXAMPLE_MESSAGES`. Without it the suite is skipped.
 @Suite("Spec example messages", .enabled(if: ProcessInfo.processInfo.environment["SPEC_EXAMPLE_MESSAGES"] != nil,
                                          "Set SPEC_EXAMPLE_MESSAGES to the extracted examples JSON"))

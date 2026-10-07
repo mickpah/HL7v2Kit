@@ -2,7 +2,7 @@
 // P4-15 (V23-C10, V24-C09, and the P7 intake guard row for v2.3.1/v2.5.1/
 // v2.6): the conditionals that remain bare (C with no condition and no
 // prohibitedWhen) on each pre-v2.8.2 version are pinned, so a schema edit
-// cannot add or drop one without docs/design/conditional-completeness-audit.md
+// cannot add or drop one without docs/design/private/conditional-completeness-audit.md
 // following. `bareConditionals(_:)` (TestSupport.swift) is the same set
 // construction v282M2PermanentLimitationsGuard uses in MultiVersionTests, so
 // the two guards cannot drift apart.
@@ -129,17 +129,20 @@ struct BareConditionalGuardTests {
 
     // P7-2 (V251-C12): the literal sets above, and v2.8.2's in MultiVersionTests, pin
     // the grammar; this pins the register to the grammar. Every bare C on every version
-    // must be named, as `SEG-n`, in docs/design/conditional-completeness-audit.md, so a
+    // must be named, as `SEG-n`, in docs/design/private/conditional-completeness-audit.md, so a
     // field that becomes bare cannot ship with a literal update alone. The check is by
     // position: the register gives version scope in prose ("v2.3-v2.6", "all six"),
     // which a test cannot read reliably.
-    @Test("every bare C on every version is named in the conditional-completeness register")
+    // The audit is a maintainer record outside the repository, so this guard runs only where
+    // it is present (a maintainer's checkout), never on a clean clone.
+    static let registerURL = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        .appendingPathComponent("docs/design/private/conditional-completeness-audit.md")
+
+    @Test("every bare C on every version is named in the conditional-completeness register",
+          .enabled(if: FileManager.default.fileExists(atPath: registerURL.path), "the audit is a maintainer record, absent here"))
     func bareCNamedInRegister() throws {
-        let root = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-        let register = try String(
-            contentsOf: root.appendingPathComponent("docs/design/conditional-completeness-audit.md"),
-            encoding: .utf8)
+        let register = try String(contentsOf: Self.registerURL, encoding: .utf8)
         let tables: [(String, [String: SegmentGrammar])] = [
             ("v2.3", SegmentGrammarTable.v2_3), ("v2.3.1", SegmentGrammarTable.v2_3_1),
             ("v2.4", SegmentGrammarTable.v2_4), ("v2.5.1", SegmentGrammarTable.v2_5_1),

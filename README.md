@@ -76,7 +76,7 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
 - **AU profile:** `HL7Locale.auLocalisation` applies the ADRM-2021 rules; of its 263
   conformance points, 79 are shipped, 17 partial and 5 registered; the rest are enforced by
   the base model, withdrawn, receiver behaviour or out of scope for a message validator
-  (`docs/design/m6-adrm-2021-conformance-register.md`, generated). See the
+  (the conformance register, a maintainer record). See the
   [Australian localisation](Sources/HL7v2Kit/HL7v2Kit.docc/AustralianLocalisation.md) article.
 
 ## Documentation
@@ -86,10 +86,9 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
   with its source in [`Sources/HL7v2Kit/HL7v2Kit.docc/`](Sources/HL7v2Kit/HL7v2Kit.docc/HL7v2Kit.md)
   (Getting Started, Validation, Typed Segments, Adding a Segment, Migration and others);
   build it locally with Xcode's Build Documentation.
-- The design records: [`docs/design/README.md`](docs/design/README.md) (the reading order and
-  the four project requirements), the
-  [permanent-limitations register](docs/design/permanent-limitations-register.md) and the
-  [architecture decisions](docs/design/architecture-decisions.md).
+- The [architecture decisions](docs/design/architecture-decisions.md); the audits, registers
+  and sweeps they cite are maintainer records kept outside the repository. What the validator
+  does not check is listed in the Validation article.
 - [CHANGELOG.md](CHANGELOG.md) for what changed in each release.
 
 ## Support and contributions

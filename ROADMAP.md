@@ -7,8 +7,7 @@ any time. Contributions towards it are not accepted at this stage (see
 [CONTRIBUTING.md](CONTRIBUTING.md)).
 
 The detail of every release is in [CHANGELOG.md](CHANGELOG.md); the gaps the package knows
-about are in the
-[permanent-limitations register](docs/design/permanent-limitations-register.md).
+about are listed in the Validation article, "What the validator does not check".
 
 ## The aim
 

@@ -40,7 +40,7 @@ In scope:
 
 Out of scope:
 
-- a gap already recorded in `docs/design/permanent-limitations-register.md`: those are known
+- a gap already listed under "What the validator does not check" in the Validation article: those are known
   limitations of the model, reported openly, and welcome as ordinary issues if you think one is
   wrong;
 - a spec-reading disagreement, which belongs in an ordinary issue citing the version, chapter,

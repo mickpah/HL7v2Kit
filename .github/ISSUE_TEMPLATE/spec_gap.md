@@ -6,8 +6,8 @@ labels: ""
 ---
 
 <!--
-Check docs/design/permanent-limitations-register.md first: a gap recorded there is
-known. If you think the register's reading is wrong, say so here and cite the print.
+Check "What the validator does not check" in the Validation article first: a gap listed
+there is known. If you think its reading is wrong, say so here and cite the print.
 No real patient data in any example message; use the synthetic conventions in
 Tests/Fixtures/README.md.
 -->

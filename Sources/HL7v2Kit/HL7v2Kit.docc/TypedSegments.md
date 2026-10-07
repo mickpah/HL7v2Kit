@@ -13,7 +13,7 @@ envelopes (`BHS`/`FHS`/`BTS`/`FTS`). The authoritative list is the schema direct
 (`Resources/schemas/v2.5.1/` — one JSON file per segment), and every schema is verified
 against its version's own attribute table by `scripts/audit-schemas.py` (depth *and*
 presence). On v2.3 / v2.3.1 / v2.4 **no segment the spec defines is missing**; v2.6 / v2.8.2
-grammar coverage is deliberately partial (see `docs/design/deferred-coverage-backlog.md`).
+grammar coverage is deliberately partial (a maintainer backlog records the rest).
 
 Segments outside this list parse as ``UnknownSegment`` and remain accessible via path strings — see <doc:#Unknown-segments> below.
 

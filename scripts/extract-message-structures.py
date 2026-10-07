@@ -18,7 +18,7 @@ only when its left column, measured from the caption line's column positions, is
 everything else (wrapped titles, wrapped descriptions, page furniture, the caption repeated
 after a page break) is description and ignored. Nesting comes from bracket balance, never from
 indentation. Group names come from "--- NAME begin" (nameSource printed); an unnamed group takes
-its HL7 v2.xml bundle name (scripts/read-v2xml-bundles.py: nameSource v2xml; v2.3.1 from its own
+its HL7 v2.xml bundle name (scripts/private/read-v2xml-bundles.py: nameSource v2xml; v2.3.1 from its own
 bundle first, then v2xml-v2.4 through the v2.4 bundle, v2.3's only source), else a cited groupNames entry in Resources/structures/overrides.json (nameSource
 override), else <FIRSTSEG>_GROUP (nameSource synthesised, a no-bundle-name report row). Each
 non-printed name is cited in the structure citation. The bundle's element tree is compared with
@@ -63,7 +63,11 @@ OVERRIDES = os.path.join(STRUCTURES, "overrides.json")
 
 
 def _script(name):
-    spec = importlib.util.spec_from_file_location(name.replace("-", "_")[:-3], os.path.join(HERE, name))
+    # A sibling, or a maintainer-local script under scripts/private (outside the repository).
+    path = os.path.join(HERE, name)
+    if not os.path.exists(path):
+        path = os.path.join(HERE, "private", name)
+    spec = importlib.util.spec_from_file_location(name.replace("-", "_")[:-3], path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module

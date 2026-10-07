@@ -30,7 +30,7 @@ Scope: PHI patterns and the text signatures apply to paths under Tests/Fixtures/
 blob. History mode reads each blob once (keyed by hash) through one `git cat-file --batch`.
 
 Allowed values are listed in ALLOWED with the reason; see
-docs/design/public-release-history-check.md. Exits 1 on any hit outside ALLOWED.
+docs/design/private/public-release-history-check.md. Exits 1 on any hit outside ALLOWED.
 """
 import os
 import re

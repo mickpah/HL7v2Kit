@@ -16,7 +16,7 @@ wires) and the batch parser (FHS / BHS / BTS / FTS framing).
 
 ## Adding a fixture
 
-See `docs/design/HL7v2Kit-Spec.md` §10 for the anonymisation policy.
+See `docs/design/private/HL7v2Kit-Spec.md` §10 for the anonymisation policy.
 
 1. Synthetic fixtures written from scratch are always acceptable. Anything
    real-world-derived must go through `scripts/anonymise-fixture.sh` (the

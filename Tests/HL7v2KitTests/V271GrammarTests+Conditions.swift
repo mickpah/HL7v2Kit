@@ -2,7 +2,7 @@
 // P10-5a: v2.7.1 conditions for the orders, results, pharmacy and specimen segments
 // (CH04, CH04A, CH07, CH13, and CH08's OM7 and PRC). Each position was read against its
 // v2.7.1 field definition; the quotes and the bare positions are in
-// docs/design/conditional-completeness-audit.md, "v2.7.1 (P10-5a)". A stored rule equals
+// docs/design/private/conditional-completeness-audit.md, "v2.7.1 (P10-5a)". A stored rule equals
 // v2.8.2's or v2.6's only where the v2.7.1 sentence is that version's sentence.
 
 import Testing

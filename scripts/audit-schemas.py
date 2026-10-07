@@ -96,7 +96,7 @@ def caption_present(version, seg):
 
 
 # Owner-deferred versions. The 2026-08-23 deferral of v2.6 / v2.8.2 closed with M5 on
-# 2026-09-16 (docs/design/deferred-coverage-backlog.md, closure header), so the set is empty:
+# 2026-09-16 (docs/design/private/deferred-coverage-backlog.md, closure header), so the set is empty:
 # on every version a segment modelled elsewhere but absent here is a PRESENCE defect.
 # Re-adding a version needs an owner decision recorded in that backlog.
 DEFERRED_VERSIONS = set()
@@ -1674,7 +1674,7 @@ def vmr(depth=False):
             findings.append((rel, f"{path}: an unbounded row must end in a repeat marker, and only such a row may"))
     if depth:
         import importlib.util
-        spec = importlib.util.spec_from_file_location("vmrx", os.path.join(REPO, "scripts/extract-vmr-table.py"))
+        spec = importlib.util.spec_from_file_location("vmrx", os.path.join(REPO, "scripts/private/extract-vmr-table.py"))
         vmrx = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(vmrx)
         if not os.path.exists(vmrx.PDF):

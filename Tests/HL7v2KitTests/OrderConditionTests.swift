@@ -177,10 +177,10 @@ struct OrderConditionTests {
     //   judgement, not a peer-field value.
     // - RXE-11 / RXD-5 / RXG-33 / RXC-11's "required if the units are
     //   not implied by the actual dispense code" needs a terminology
-    //   service (req #3/#4, docs/design/permanent-limitations-register.md §C).
+    //   service (req #3/#4, docs/design/private/permanent-limitations-register.md §C).
     // - RXE-10 / RXE-19 / RXG-32 / RXC-10 state no conditionality
     //   clause at all.
-    // See docs/design/conditional-completeness-audit.md, "Order/pharmacy
+    // See docs/design/private/conditional-completeness-audit.md, "Order/pharmacy
     // & timing family", for the quoted citations.
 
     private func expectBareC(_ seg: String, _ idx: Int, versions: [String]) {

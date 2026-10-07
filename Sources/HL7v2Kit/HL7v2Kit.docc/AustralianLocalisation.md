@@ -134,7 +134,7 @@ recorded as an open owner item below.
 
 ## Coverage
 
-The generated conformance register (`docs/design/m6-adrm-2021-conformance-register.md`, 302 rows
+The generated conformance register (a maintainer record, 302 rows
 for 263 points, reconciled with the shipped state) classes every point:
 
 | Class | Points | Meaning |
@@ -168,8 +168,9 @@ for 263 points, reconciled with the shipped state) classes every point:
 - **MIME subtype to type.** HL7au:00044.10.1.5 and 00044.11.1.5 check the ED and RP subtype
   against its type for the pairs the ADRM states; any other IANA subtype is not checked.
 
-Every PARTIAL point, with what is not enforced, is a row of register section B
-(`docs/design/permanent-limitations-register.md`) and of the generated conformance register.
+Every PARTIAL point, with what is not enforced, is a row of the limitations register and
+of the generated conformance register (both maintainer records); the Validation article
+summarises them.
 
 ### What is permanent, and why
 

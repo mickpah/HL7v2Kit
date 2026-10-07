@@ -23,7 +23,7 @@
 #   bash scripts/scan-fixtures-for-phi.sh --self-test synthetic-string checks
 #
 # History mode needs the full history (CI checks out with fetch-depth: 0).
-# See docs/design/public-release-history-check.md.
+# See docs/design/private/public-release-history-check.md.
 #
 # Exit codes:
 #   0  no hits

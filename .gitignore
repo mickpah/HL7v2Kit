@@ -49,8 +49,10 @@ docs/XML-schemas
 planning/
 __pycache__/
 
-# Maintainer-local helper scripts (the house-rule checks) - not in the repository
+# Maintainer-local helper scripts (the house-rule checks) and design records (audits, sweeps,
+# registers, plans) - not in the repository; docs/design keeps the architecture decisions only
 scripts/private/
+docs/design/private/
 
 # Local working notes and assistant settings - not in the repository
 the working notes

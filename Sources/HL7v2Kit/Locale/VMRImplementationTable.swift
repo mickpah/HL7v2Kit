@@ -3,7 +3,7 @@
 // (Appendix 9, Normative, table A9.T.1, pp. 492-515). The rows live in
 // `Generated/VMRImplementationTable+au_adrm_2021.swift`, emitted by
 // `HL7v2KitCodegen` from `Resources/profiles/au-adrm-2021/vmr-table.json`,
-// which `scripts/extract-vmr-table.py` extracts from the ADRM PDF. Internal:
+// which a maintainer script extracts from the ADRM PDF. Internal:
 // it backs the sub-ID tree rules and is not public API.
 
 /// One row of the VMR implementation table.

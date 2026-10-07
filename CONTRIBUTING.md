@@ -41,11 +41,11 @@ The repository's own working rules, for anyone building on it:
    `bash scripts/regenerate-typed-segments.sh`. CI fails on drift.
 5. **Defensible against the print.** Every schema field, table, condition and structure
    carries a citation to the standard. Nothing ships if it is known to misfire on a
-   spec-compliant message; a gap the model cannot express is registered in
-   `docs/design/permanent-limitations-register.md` rather than papered over.
+   spec-compliant message; a gap the model cannot express is registered
+   (the Validation article lists them) rather than papered over.
 
 The four project requirements and the reading order for the design records are in
-`docs/design/README.md`. Before pushing, `bash scripts/ci-rehearsal.sh` runs every CI step on a
+`docs/design/architecture-decisions.md`. Before pushing, `bash scripts/ci-rehearsal.sh` runs every CI step on a
 clean clone of `HEAD` (the Linux job through Docker).
 
 ## Licence
