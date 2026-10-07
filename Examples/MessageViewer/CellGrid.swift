@@ -18,9 +18,15 @@ enum CellState: Equatable {
 
 struct Cell: Equatable {
     let text: String
+    /// `"PID-7 Date/Time of Birth"`: the field's name from the grammar of the message's version,
+    /// or just `"ZAU-2"` for a segment the version does not define; the segment ID for cell 0.
+    let title: String
     let state: CellState
-    /// One line per issue on the cell, `"PID[1]-7: ..."`, shown as the tooltip.
+    /// One line per issue on the cell, `"warning: ..."`.
     let notes: [String]
+
+    /// What the mouse shows over the cell.
+    var tooltip: String { ([title] + notes).joined(separator: "\n") }
 }
 
 struct Row: Equatable {
@@ -37,6 +43,7 @@ struct CellGrid: Equatable {
 
     init(message: Message, report: ValidationReport) {
         let chars = message.encodingCharacters
+        let grammar = Self.grammar(for: message.version)
         // Key: segment ID, 1-based occurrence among segments with that ID (IssueLocation.segmentIndex),
         // field index (0 for a segment-level issue).
         var byCell: [String: [ValidationIssue]] = [:]
@@ -70,10 +77,26 @@ struct CellGrid: Equatable {
                 let (field, key) = pair
                 let issues = byCell[key] ?? []
                 // fields[0] is the parser's empty placeholder for the ID slot.
+                let name = grammar[segment.segmentID]?.fields.first { $0.index == i }?.name
                 return Cell(text: i == 0 ? segment.segmentID : Self.text(of: field, chars),
+                            title: i == 0 ? segment.segmentID : "\(segment.segmentID)-\(i)" + (name.map { " " + $0 } ?? ""),
                             state: CellState(issues),
-                            notes: issues.map { "\($0.location.pathDescription): \($0.message)" })
+                            notes: issues.map { "\($0.severity): \($0.message)" })
             })
+        }
+    }
+
+    /// The segment grammars the validator applies to `version` (v2.7 and v2.8 read the next
+    /// point release's tables, as the validator does).
+    static func grammar(for version: Version) -> [String: SegmentGrammar] {
+        switch version {
+        case .v2_3: return SegmentGrammarTable.v2_3
+        case .v2_3_1: return SegmentGrammarTable.v2_3_1
+        case .v2_4: return SegmentGrammarTable.v2_4
+        case .v2_5_1: return SegmentGrammarTable.v2_5_1
+        case .v2_6: return SegmentGrammarTable.v2_6
+        case .v2_7, .v2_7_1: return SegmentGrammarTable.v2_7_1
+        case .v2_8, .v2_8_2: return SegmentGrammarTable.v2_8_2
         }
     }
 

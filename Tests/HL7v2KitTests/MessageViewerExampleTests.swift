@@ -66,7 +66,7 @@ struct MessageViewerExampleTests {
         #expect(grid.rows.count == 6)
         #expect(grid.rows[4].cells[5].state == .clean)
         #expect(grid.rows[5].cells[5].state == .error)
-        #expect(grid.rows[5].cells[5].notes == ["OBX[2]-5: synthetic"])
+        #expect(grid.rows[5].cells[5].notes == ["error: synthetic"])
     }
 
     @Test("a segment-level issue colours the ID cell; an issue on an absent segment is listed, not lost")
@@ -101,6 +101,26 @@ struct MessageViewerExampleTests {
         #expect(CellGrid.wire(from: "MSH|a\r\nPID|b\r\n\r\n") == "MSH|a\rPID|b\r")
         #expect(CellGrid.wire(from: "MSH|a\r") == "MSH|a\r")
         #expect(CellGrid.wire(from: "\n\n") == "")
+    }
+
+    @Test("a cell is titled with its segment, field number and the field's name for the message version")
+    func titles() throws {
+        let message = try Parser().parse(Self.wire + "ZAU|x|y\r")
+        let grid = CellGrid(message: message, report: ValidationReport(issues: []))
+        #expect(grid.rows[0].cells[0].title == "MSH")
+        #expect(grid.rows[0].cells[1].title == "MSH-1 Field Separator")
+        #expect(grid.rows[1].cells[7].title == "PID-7 Date/Time of Birth")
+        #expect(grid.rows[5].cells[2].title == "ZAU-2")
+        #expect(grid.rows[1].cells[7].tooltip == "PID-7 Date/Time of Birth")
+    }
+
+    @Test("the tooltip is the title and then one line per issue")
+    func tooltip() throws {
+        let grid = try Self.grid(options: .default)
+        let lines = grid.rows[1].cells[7].tooltip.split(separator: "\n")
+        #expect(lines.count == 2)
+        #expect(lines[0] == "PID-7 Date/Time of Birth")
+        #expect(lines[1].hasPrefix("warning: "))
     }
 
     @Test("a cell takes the worst severity; info alone stays clean")

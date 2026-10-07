@@ -4,7 +4,7 @@ import SwiftUI
 
 /// A window with a message editor above and the message as a grid below: one row per segment,
 /// one cell per field, the cell white when the field draws nothing, yellow for a warning and red
-/// for an error. Hover a cell for the issues on it. Run with `swift run MessageViewer`.
+/// for an error. Hover a cell for its name and the issues on it. Run with `swift run MessageViewer`.
 @main
 struct MessageViewerApp: App {
     init() {
@@ -80,7 +80,7 @@ struct ContentView: View {
             .padding(4)
             .background(colour(cell.state))
             .border(Color.gray.opacity(0.4))
-            .help(cell.notes.joined(separator: "\n"))
+            .help(cell.tooltip)
     }
 
     private func colour(_ state: CellState) -> Color {
