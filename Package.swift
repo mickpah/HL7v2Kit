@@ -12,6 +12,7 @@ let package = Package(
         .library(name: "HL7v2Kit", targets: ["HL7v2Kit"]),
         .executable(name: "HL7v2KitCodegen", targets: ["HL7v2KitCodegen"]),
         .executable(name: "HL7v2KitAnonymise", targets: ["HL7v2KitAnonymise"]),
+        .executable(name: "QuickStart", targets: ["QuickStart"]),
     ],
     dependencies: [],
     targets: [
@@ -33,6 +34,11 @@ let package = Package(
             swiftSettings: [
                 .enableUpcomingFeature("ExistentialAny"),
             ]
+        ),
+        .executableTarget(
+            name: "QuickStart",
+            dependencies: ["HL7v2Kit"],
+            path: "Examples/QuickStart"
         ),
         .testTarget(
             name: "HL7v2KitTests",

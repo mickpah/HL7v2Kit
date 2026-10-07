@@ -14,36 +14,36 @@ A native Swift package for **parsing, building, and validating** HL7 v2.x health
 
 ## Quickstart
 
+`Examples/QuickStart/main.swift` takes one synthetic ORU^R01 through the package; `swift run QuickStart` from the repository root prints what each step finds. The key lines, quoted from it:
+
 ```swift
 import HL7v2Kit
 
-let wire = Data(/* ... v2 bytes ... */)
 let message = try Parser().parse(wire)
 
-// Ad-hoc path access — works for any field.
-let patientFamilyName = message["PID-5.1"]
+// Path lookups work for any field of any segment.
+print("PID-5.1 family name: \(message["PID-5.1"] ?? "-")")
+// Typed accessors cover the segments HL7v2Kit generates structs for.
+let givenName = message.firstSegment(PID.self)?.patientName?.givenName
 
-// Typed accessors — for the segments HL7v2Kit ships dictionaries for.
-let pid = message.firstSegment(PID.self)
-let dob = pid?.dateTimeOfBirth                      // "19800101"
-let name = pid?.patientName                          // XPN? (typed composite view)
-let familyName = name?.familyName                    // "Smith"
+let report = Validator(options: .default).validate(message)
+let auReport = Validator(options: .strict, locale: .auLocalisation).validate(message)
 
-// Validate against the message's declared version (MSH-12) + optional locale.
-let report = Validator().validate(message)           // international rules
-for issue in report.errors {
-    print(issue.severity, issue.code, issue.location.pathDescription)
-}
-let auReport = Validator(locale: .auLocalisation).validate(message)
+let roundTripped = message.serialize() == wire
 
-// Round-trip — serialised bytes equal the input.
-let rebuilt = message.serialize()
-assert(rebuilt == wire)
+let ack = try MessageBuilder.acknowledgment(
+    to: message,
+    code: .applicationAccept,
+    messageControlID: "SYN-ACK-0001",
+    dateTime: "20260101120005+1000"
+)
 ```
+
+The program builds `wire` from the message's segments, prints each validation issue with its severity, code, location and message, and exits non-zero if the round trip fails. [Getting Started](Sources/HL7v2Kit/HL7v2Kit.docc/GettingStarted.md) shows its output.
 
 ## Supported HL7 v2 versions
 
-Per-version segment and field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1 and v2.8.2** (the version is read from `MSH-12`; the AST itself is version-agnostic). A bare `2.8` or `2.7` wire has no text of its own and is validated against v2.8.2 or v2.7.1, with an info issue saying so; other versions fall back to v2.5.1 with a warning (see [ADR-018](docs/design/architecture-decisions.md#adr-018-supported-version-set)). Segment coverage: **every version has zero missing segments** — all 188 segments the seven specs define are modelled on every version that defines them (the deferred backlog of [`docs/design/deferred-coverage-backlog.md`](docs/design/deferred-coverage-backlog.md) closed 2026-09-16). Every authored schema is verified against its own version's attribute table (depth, presence *and* per-field datatype) by `scripts/audit-schemas.py`. **Message structures:** segment order, segment groups and the segments each trigger event requires are checked against every structure the seven versions print (1,107 modelled, extracted from each version's own print and cited), as warnings in `ValidationOptions.default`, errors in `.strict` and off in `.lenient` (`messageStructureSeverity`). Structures the print gives no checkable syntax for (templates, placeholders, prose-only fragments, Table 0354 rows nothing prints) report one info issue with their reason (240 registered); the residue is registered in [`permanent-limitations-register.md` section E](docs/design/permanent-limitations-register.md) (ADR-019). Conditions that read a peer segment in the same group (ORC-2/3, OBR-2/3 and the group-scope cardinality rules) are scoped by the matched structure's own groups on a conformant message, falling back to the ORC walk otherwise. Under `.auLocalisation`, a v2.4 ORU^R01, ORM^O01, REF^I12, RRI^I12 or OSR^Q06 is also matched against the ADRM-2021 profile structure, which reports the segments it requires (HL7au:00060.1, partial) and governs the base findings.
+Per-version segment and field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1 and v2.8.2** (the version is read from `MSH-12`; the AST itself is version-agnostic). A bare `2.8` or `2.7` wire has no text of its own and is validated against v2.8.2 or v2.7.1, with an info issue saying so; other versions fall back to v2.5.1 with a warning (see [ADR-018](docs/design/architecture-decisions.md#adr-018-supported-version-set)). Segment coverage: **every version has zero missing segments** — all 188 segments the seven specs define are modelled on every version that defines them (the deferred backlog of [`docs/design/deferred-coverage-backlog.md`](docs/design/deferred-coverage-backlog.md) is closed), though the message-structure check still carries three Blocking residuals (v2.6 MFR_M01 with MFI-1 OMA to OME, a no-data query response without QAK, the v2.3 event replay error example; register section E). Every authored schema is verified against its own version's attribute table (depth, presence *and* per-field datatype) by `scripts/audit-schemas.py`. **Message structures:** segment order, segment groups and the segments each trigger event requires are checked against every structure the seven versions print (1,190 modelled, extracted from each version's own print and cited), as warnings in `ValidationOptions.default`, errors in `.strict` and off in `.lenient` (`messageStructureSeverity`). Structures the print gives no checkable syntax for (templates, placeholders, prose-only fragments, Table 0354 rows nothing prints) report one info issue with their reason (183 registered); the residue is registered in [`permanent-limitations-register.md` section E](docs/design/permanent-limitations-register.md) (ADR-019). Conditions that read a peer segment in the same group (ORC-2/3, OBR-2/3 and the group-scope cardinality rules) are scoped by the matched structure's own groups on a conformant message, falling back to the ORC walk otherwise. Under `.auLocalisation`, a v2.4 ORU^R01, ORM^O01, REF^I12, RRI^I12 or OSR^Q06 is also matched against the ADRM-2021 profile structure, which reports the segments it requires (HL7au:00060.1, partial) and governs the base findings.
 
 ## Typed segments & composites
 

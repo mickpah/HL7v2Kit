@@ -24,6 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **A CI rehearsal (P13 S2-3).** `scripts/ci-rehearsal.sh` runs every step of `ci.yml` on a
   clean clone of `HEAD`, the Linux job through Docker, and prints a line per step: the
   pre-push check. See `docs/design/ci.md`.
+- **A runnable example (P13 S3-1).** `Examples/QuickStart` is an executable target:
+  `swift run QuickStart` parses a synthetic ORU^R01, reads it by path and by typed accessor,
+  validates it under `.default` and again under `.strict` with `.auLocalisation`, checks the
+  round trip and builds the ACK. Both test jobs run it. The README Quickstart and the Getting
+  Started article quote it, and `QuickStartExampleTests` runs its steps on the same message, so
+  the example cannot drift unnoticed. No library change.
 
 ### Removed (breaking)
 
