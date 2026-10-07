@@ -126,6 +126,9 @@ but transparently fake). No real-world data sources.
 | `au_orm_o01.hl7` | AU ADRM-2021 (v2.4) | ORM^O01 new order (ORC `NW`) addressed by MSH-6; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
 | `au_osr_q06.hl7` | AU ADRM-2021 (v2.4) | OSR^Q06 order status response (QRD, ORC `SR`, OBR); `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
 | `au_orr_o02.hl7` | AU ADRM-2021 (v2.4) | ORR^O02 order acknowledgement (ORC `OK`) with PID; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_ref_i12.hl7` | AU ADRM-2021 (v2.4) | REF^I12 in the Chapter 7 structure (DG1, AL1, two OBR/OBX groups) declaring no Appendix 8 profile, so it draws HL7au:000040.4 by construction; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); PRD-7 provider numbers `SYN-PRV-nnnn`, not real; licence Apache 2.0, as the package |
+| `au_ref_i12_simplified.hl7` | AU ADRM-2021 (v2.4) | REF^I12 declaring the Appendix 8 simplified profile, Level 2 (MSH-12.3 `HL7AU-OO-REF-SIMPLIFIED-201706`); PRD `AP` and `IR`, one OBR group with an HTML display OBX; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
+| `au_rri_i12.hl7` | AU ADRM-2021 (v2.4) | RRI^I12 referral response echoing the simplified referral's RF1, PRD and PID; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
 
 ### Batch fixtures (`Batches/` subdirectory)
 

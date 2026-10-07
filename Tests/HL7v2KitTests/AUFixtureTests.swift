@@ -34,6 +34,9 @@ struct AUFixtureTests {
         "au_oru_r01_radiology.hl7",
         "au_orm_o01.hl7",
         "au_osr_q06.hl7",
+        "au_ref_i12.hl7",
+        "au_ref_i12_simplified.hl7",
+        "au_rri_i12.hl7",
         "au_orr_o02.hl7",
     ]
 
@@ -199,7 +202,26 @@ struct AUFixtureTests {
         #expect(fired.count == 1 && fired.first?.message.contains("PID") == true, "\(Self.describe(fired))")
     }
 
+    @Test("Appendix 8 structure: dropping the display OBX fires 00060.1 on the simplified REF only")
+    func appendix8Pair() throws {
+        let simplified = "au_ref_i12_simplified.hl7"
+        #expect(Self.hits(try Self.issues(Self.wire(simplified)), "HL7au:00060.1").isEmpty)
+        let fired = Self.hits(try Self.issues(Self.dropping(["OBX"], from: simplified)), "HL7au:00060.1")
+        #expect(fired.count == 1 && fired.first?.message.contains("OBX") == true, "\(Self.describe(fired))")
+        // The Chapter 7 structure prints [{OBX}]: the same change is silent there.
+        #expect(Self.hits(try Self.issues(Self.dropping(["OBX"], from: "au_ref_i12.hl7")), "HL7au:00060.1").isEmpty)
+    }
+
     // MARK: - Suspected defects (P12 S3-1 report), pinned as known issues
+
+    @Test("Suspected defect: the Level 2 MSH-12 the ADRM requires (61 characters, LEN 250 p 37) draws the v2.4 LEN 60 warning")
+    func adrmMSH12Length() throws {
+        let found = try Self.issues(Self.wire("au_ref_i12_simplified.hl7"))
+        let msh12 = found.filter { $0.location.segmentID == "MSH" && $0.location.fieldIndex == 12 }
+        withKnownIssue("ADRM-2021 printed field lengths are not applied under the AU locale") {
+            #expect(msh12.isEmpty, "\(Self.describe(msh12))")
+        }
+    }
 
     static let htmlDisplay = "OBX|3|ED|HTML^Display format in HTML^AUSPDI||^TEXT^HTML^Base64^"
         + "PHA+RnVsbCBibG9vZCBjb3VudDogc3ludGhldGljIHJlc3VsdHMuPC9wPg==|"
