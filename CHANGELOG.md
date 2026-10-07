@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed (breaking)
+
+- **macOS only among Apple platforms (P13 S1-2).** `Package.swift` declares `.macOS(.v12)` and
+  no longer declares iOS, tvOS, watchOS or visionOS, by the owner's ruling. A consumer building
+  for those platforms stays on 3.16.0. No API change. Linux is expected to work (no Apple-only
+  dependencies); CI for it is pending. Dropping a platform would normally call for a major
+  version; the release number is the owner's decision.
+
 ### Changed
 
 - **The PHI scan checks what its header promised, and the whole history (P13 S1-1).**

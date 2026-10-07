@@ -7,10 +7,6 @@ let package = Package(
     name: "HL7v2Kit",
     platforms: [
         .macOS(.v12),
-        .iOS(.v15),
-        .tvOS(.v15),
-        .watchOS(.v8),
-        .visionOS(.v1),
     ],
     products: [
         .library(name: "HL7v2Kit", targets: ["HL7v2Kit"]),

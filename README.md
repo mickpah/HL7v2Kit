@@ -79,11 +79,7 @@ Then add `"HL7v2Kit"` to your target's `dependencies`.
 | Platform | Minimum |
 |---|---|
 | macOS | 12 |
-| iOS | 15 |
-| tvOS | 15 |
-| watchOS | 8 |
-| visionOS | 1 |
-| Linux | No Apple-only dependencies — expected to work on Swift 6.0+ (not yet in CI) |
+| Linux | Swift 6.0+; expected, CI pending |
 
 ## Adding a typed segment
 
