@@ -568,3 +568,192 @@ reconstruction from character bounds fragmented as well.
 **Consequences.** Full coverage became a mechanical but verified sweep (M5), completed as
 additive releases. Only derived schema JSON is committed; the standards' PDFs stay outside the
 repository.
+
+## ADR-016 Code-table registry
+
+**Status:** Accepted. Related: ADR-007, ADR-015, ADR-017, ADR-019.
+
+**Context.** HL7 code tables were not modelled: the schemas dropped the `TBL#` column. A
+registry has to be complete enough to be a reference and conservative enough that a membership
+check never rejects a value the standard allows. Three facts shaped it: a field can bind more
+than one table; a printed table is not always a closed set (a bare `...` row, an open range,
+local-extension rows, a row meaning "not present"); and a localisation may widen a base table.
+Tables change between versions, so one merged set would be wrong.
+
+**Decision.**
+
+- Contents: per-version JSON, `Resources/tables/v<version>/NNNN.json` (kind `HL7` or `User`,
+  name, `permitsLocalExtensions`, citation, entries, optional `patterns`), written only by the
+  extractor from Appendix A (v2.3 to v2.6) or Chapter 2C (v2.7.1, v2.8.2), and generated into
+  `HL7TableRegistry`; `HL7TableRegistry.table(_:version:)` is the lookup.
+- Rows are kept as Appendix A prints them, misprints included. A Table 0354 misprint is
+  corrected only on the message-structure side, by a cited erratum (ADR-019).
+- Corrections are never hand edits: they go in `Resources/tables/overrides.json`, version-scoped
+  and cited, and the table is re-extracted. Print-versus-prose binding conflicts are resolved in
+  `scripts/table-repairs.json` with a citation.
+- Field bindings: `tables` (any datatype) records the spec's `TBL#` cell; `table` (one string,
+  `ID` and `IS` fields only) is the enforced link, derived where a field binds exactly one table.
+  The integrity audit fails if `table` is not among `tables`.
+- The closed-set rule: `valueNotInTable` fires only on an `ID` field bound to a closed table
+  (kind `HL7`, no local extensions, at least one entry). `IS` fields and user-defined tables are
+  linked, never enforced. Empty and HL7-null values are never checked.
+  `ValidationOptions.checkCodeTables = false` (and the `lenient` preset) suppress the check.
+- Openness: an HL7 table that printed `...` beside other rows stays open unless an override
+  closes it. A table is open when its governing field's prose cites it "for suggested values" or
+  says it may be extended locally, and closed when the prose says "valid values" or is silent;
+  where the field prose calls an HL7 table user-defined, the chapter wins and the kind becomes
+  `User`. Where governing fields disagree, the table stays as printed and individual fields are
+  opened with `tableOpen` plus a quoted `tableOpenCitation`. Table 0203 is open on v2.4 to
+  v2.8.2 (owner gate G5).
+- Pattern rows naming a family of codes (0203 `NNxxx`) are declared as `patterns` and matched in
+  full.
+- Locale axis: `Resources/tables/locale/<locale-id>/` holds a localisation's own rendering;
+  `HL7TableRegistry.table(_:locale:)`. It is consulted only after the version's table has
+  rejected a value, so a locale can widen but never reject, and a locale rendering that is open
+  admits every value. Narrowing a value set is a profile rule, not a table.
+- Local extension is caller-declared: `ValidationOptions.localTableExtensions` lists the codes a
+  site has added per table, consulted after the version and locale checks at field and component
+  level. Nothing is inferred from the wire.
+- Audit: `scripts/audit-schemas.py --tables` (shape, suspect codes with a cited allowlist, kind
+  mismatches, schema links; `--depth` re-extracts and reports drift).
+
+**Consequences.** The check is live on more than 1,200 `ID` fields across seven versions; a
+handful of advisory kind mismatches remain where the print itself is inconsistent, none
+enforced. Generated Swift keeps each expression small: one version's grammar emitted as a
+single dictionary literal took sixteen minutes to type-check (not three million years, but
+Lister would have known the feeling), so codegen emits one constant per segment.
+
+**Amended (P2 fix wave, P2-6, P2-7, P2-13, P2-14, P2-15):** the single openness criterion, the
+0203 opening, pattern rows, caller-declared local extensions and per-field `tableOpen`.
+
+**Amended (ADR-017):** component-level table links, deferred here, shipped there.
+
+**Amended (P7-8):** kind mismatches resolved against the defining chapter where it prints the
+kind.
+
+**Amended (P12 S2-2, S3-2, S3-3):** AU locale renderings of Tables 0396 (open), 0203 (with its
+`NNxxx` row), 0191 and 0291 (open, because the ADRM imports them from the IANA media-type
+registry).
+
+## ADR-017 Datatype component grammar
+
+**Status:** Accepted. Related: ADR-014, ADR-015, ADR-016, ADR-020.
+
+**Context.** The table bindings integrators ask about most sit on components (`XPN.7`,
+`XTN.2`, `XAD.7`), and the package had no per-version model of a datatype's components.
+v2.5.1 and later print regular component tables; v2.3 to v2.4 define components only in prose.
+
+**Decision.**
+
+- Data: `Resources/datatypes/v<version>/<DT>.json` (components with index, name, datatype,
+  printed optionality, bound tables), written only by the extractors and generated into
+  `DataTypeGrammarTable`; `grammar(_:version:)` is the lookup and `optionalityCode` is the
+  printed code verbatim (`RE` has no `FieldOptionality` equivalent).
+- Sources: the printed component tables on v2.5.1, v2.6, v2.7.1 and v2.8.2. On v2.3 to v2.4,
+  numbered section headings (`"source": "prose"`), completed by the printed "Components:" line,
+  which ranks below the headings and never binds a table; line-only composites (CD, CF, TS);
+  field-local composites for `CM` fields (`fields/<SEG>-<N>.json`, `"source": "prose-field"`).
+  MA and NA have no grammar by design (open lists of NM).
+- A prose table binding must pass three tests: the subsection names exactly one table, that
+  number is in the version's registry, and any table name stated matches the registry's name.
+- Resolution: every composite-aware check resolves a field's grammar through
+  `Validator.fieldGrammar(segment:field:dataType:version:)` (a primitive stays primitive, else the
+  field-local grammar, else `Validator.componentGrammar(_:version:)`, which treats `TS` as
+  primitive). The lookup uses `Version.grammarVersion`.
+- Code tables on components: a populated `ID` component bound to exactly one closed table must
+  carry one of its codes, reported as `valueNotInTable(table:)` at the component. ADR-016's
+  guards all apply. One level of nested composite is checked (the HD in `CX.4`, at `CX.4.3`);
+  OBX-5 is checked under the datatype OBX-2 declares. A top-level `CE` component bound to a
+  closed HL7 table is checked only when CE.3 (or CE.6, for the alternate) names that table as
+  `HL7nnnn`. Table 0354 (MSG.3) is linked and never enforced.
+- Required components are exactly those the version's component table prints `R`; the old
+  hand-written lists are informational. Of the either-or rules, only HD (1, or 2 and 3 together,
+  which must both be valued or both empty) survives.
+- Conditional components: `C` conditions stated in prose ship on `ComponentGrammar.condition`,
+  cited in `Resources/datatypes/conditions.json`, in a small predicate language that includes
+  `repeated`. The "as of v2.7" family ships on `conformanceCondition`, evaluated only when
+  `ValidationOptions.conformanceConditionSeverity` is set.
+- Length and optionality: a printed normative length draws `componentLengthOutOfRange` under
+  `normativeLengthSeverity`; a populated `B`, `X` or `W` component draws `componentNotSupported`
+  under `warnDeprecatedFields`. The same rules apply one level down to subcomponents.
+- Evidence rule: normative text (tables and prose) decides. A printed example overturns a table
+  only when normative prose agrees with it, or when the rule's data is plainly a spelling or
+  extraction artefact. `audit-schemas.py --examples` applies the component rules to every
+  printed datatype example as a standing audit.
+
+**Consequences.** Component checks found real defects on their first runs, in the fixtures and
+in the registry alike. Known limits stay in the limitations register: conditions the model
+cannot express (CWE.7 and kin, CNE.20), OM2-6 on v2.3 to v2.4, and the CM field table mentions no
+rule can attribute to one component (section D).
+
+**Amended (M11):** nested composites and OBX-5.
+
+**Amended (M13, P5):** v2.3 to v2.4 read from prose, then from the printed Components line,
+TQ and field-local composites. The prose name test caught real mis-bindings (v2.3 QSC.4 cites
+"0102 - Relation conjunction", but v2.3's 0102 is Delayed Acknowledgment Type).
+
+**Superseded (M14):** the hand-written required-component lists contradicted the print; the
+printed `R` governs, which also enforces `MSH-9.3` from v2.5.
+
+**Superseded (M15, M16):** the XTN, PL, CWE and EIP either-or rules were removed because each
+rejected an example the standard prints or could never fire; HD's both-or-neither sentence
+shipped.
+
+**Amended (M17, M18, M26, M27, M28):** the examples audit and the evidence rule; conditional
+components, with the "as of v2.7" family held back to an opt-in tier because the standard's own
+v2.7-and-later examples violate them in 62 to 100 percent of values; `repeated` for XAD.7.
+
+**Amended (P10-2):** v2.7.1 component tables.
+
+**Superseded (P11 S1):** component length and optionality, previously recorded but not
+enforced, are enforced for components and subcomponents.
+
+## ADR-018 Supported version set
+
+**Status:** Accepted (Option A, as amended by P10-6). Related: ADR-003, ADR-013, ADR-014,
+ADR-015.
+
+**Context.** Requirement 1 asks for the full HL7 v2.x standard, but the package never said
+which releases it leaves out. A `2.8` message passed validation with nothing checked; other
+Table 0104 versions silently fell back to v2.5.1; a VID-form MSH-12 (the AU form) was read as a
+scalar and fell back too.
+
+**Decision.**
+
+- A version is modelled (its own `Version` case, segment grammar, code tables and component
+  grammar, each extracted from its own text), substituted (a `Version` case validated against
+  another modelled version, and every report says so), or excluded (no case; it parses, falls back
+  to the v2.5.1 grammar and warns).
+- MSH-12 is read as a VID: the version is VID.1. `Version.grammarVersion` is the single mapping;
+  the public registries stay version-literal.
+- A non-`Z` segment with no entry in the applied grammar is `segmentNotInVersionGrammar`
+  (warning), never a Z-segment.
+- An excluded or unresolvable populated MSH-12 (whitespace, empty VID.1 with VID.2 valued, a
+  VID.1 with a subcomponent) falls back to v2.5.1 with `versionNotRecognised(wireValue:)`
+  (warning); under `ParserOptions.rejectUnknownVersion` (set by `.strict`) it throws
+  `ParseError.unsupportedVersion(found:)`. An empty MSH-12 is reported by the required-field
+  check.
+- The version table today (pinned by `VersionHandlingTests.versionMatrix`):
+
+| MSH-12 (VID.1) | Status | Grammar applied | Issue raised |
+|---|---|---|---|
+| 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1, 2.8.2 | Modelled | Its own | none |
+| 2.7 | Substituted | v2.7.1 | `versionGrammarSubstituted` (info) |
+| 2.8 | Substituted | v2.8.2 | `versionGrammarSubstituted` (info) |
+| 2.1, 2.2, 2.5, 2.8.1, 2.9, any other | Excluded | v2.5.1 fallback | `versionNotRecognised` (warning) |
+
+- Excluded versions are recorded in the limitations register, section F. Re-opening one needs
+  its text, an amendment here, and an ADR-015 extraction cycle.
+
+**Consequences.** `2.8` and `2.7` messages are checked against the nearest published grammar,
+with the unverified differences stated in the info issue. AU v2.4 traffic meets the v2.4
+grammar; AU conformance points that relied on a v2.5.1 base component requirement are stated by
+the profile itself (`ComponentRequirement.yieldsToBase`). `2.8.1` falls back to v2.5.1 while
+`2.8` is substituted, because `.v2_8` was an existing public case and `.v2_8_1` is not; adding it
+is an open question for the owner.
+
+**Amended (P3 fix wave):** every populated MSH-12 from which no version resolves warns; none
+falls back silently.
+
+**Amended (P10-6):** v2.7.1 modelled; `2.7` substituted by v2.7.1 (owner gate G11), so
+`Version` has nine cases, seven modelled and two substituted.
