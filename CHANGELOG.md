@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **The PHI scan checks what its header promised, and the whole history (P13 S1-1).**
+  `scripts/scan-fixtures-for-phi.sh` now checks IHI, HPI-I and HPI-O prefixes, Medicare numbers
+  by check digit, DVA file numbers and AU mobiles (a failure now, not a warning), plus
+  licensed-content signatures (PDF, XSD, the HL7 v2.xml bundles). `--history` scans every blob
+  of every commit; CI runs it. Method and result: `docs/design/public-release-history-check.md`.
+
 ## [3.16.0] — 2026-10-07
 
 ### Summary — release 3.16.0: AU profile completion (epic P12)
