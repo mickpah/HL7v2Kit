@@ -102,9 +102,8 @@ extension Profile {
             // 00043.2 is an anti-spoofing check the ADRM marks "applies
             // only to SMD Agent implementers ... before handing off a the
             // message to the receiving system". The EI twins (00044.3.3 /
-            // .3.4) are registered pending a scope pass: EI carries
-            // identifiers echoed from other organisations, whose HPI-O is
-            // not the sender's, so a datatype-wide rule would over-fire.
+            // .3.4) ship on the EI CompositeOverride below (M33), under
+            // the same assertion and the same message-type gate.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 4,
@@ -1352,7 +1351,11 @@ extension Profile {
             //          and not checked. P3 fix wave (absorbs P4-19).
             CompositeOverride(
                 dataType: "EI",
-                // The 00044.3 series is scoped "Orders, Results, Referrals".
+                // The 00044.3 series is scoped "Orders, Results, Referrals"
+                // (p 450). The validator applies this gate to the whole
+                // override, value sets and patterns included, so the NASH
+                // rules below carry only the assertion (pinned by
+                // AUNASHScopeTests, P12 S4-3).
                 condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [
                     ComponentRequirement(

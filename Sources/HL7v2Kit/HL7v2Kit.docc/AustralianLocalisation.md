@@ -58,8 +58,9 @@ with those options.
   NASH certificates. When set, HL7au:00044.2.2 and 00044.2.3 require the MSH-4 and MSH-6
   Universal ID to be `1.2.36.1.2001.1003.0.` and a 16-digit HPI-O with Universal ID Type `ISO`,
   HL7au:00044.3.3/.3.4 constrain the EI universal ID the same way, and HL7au:000043.1 and
-  00044.2.1 require the organisation name in MSH-4.1 and MSH-6.1. The MSH rules run on ORM, ORU
-  and REF only, the scope Appendix 5 defines on p 416 ("Orders = ORM messages").
+  00044.2.1 require the organisation name in MSH-4.1 and MSH-6.1. All the NASH rules, MSH and EI
+  alike, run on ORM, ORU and REF only, the scope Appendix 5 defines on p 416 ("Orders = ORM
+  messages").
 - ``ValidationOptions/auAssigningAuthorityTable``: PRD-7 assigning authorities come from Table 0363
   as printed (p 310) plus the vendor authorities you list in
   ``ValidationOptions/localTableExtensions`` under `"0363"`. HL7au:00104.7.2.1 requires the table,

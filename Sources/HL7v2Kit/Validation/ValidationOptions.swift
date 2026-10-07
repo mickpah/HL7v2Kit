@@ -135,10 +135,13 @@ public struct ValidationOptions: Sendable {
     /// the presence half of HL7au:000043.1 and 00044.2.1; whether the name
     /// is the one the HPOS/HI service registers, and the points that name
     /// a vendor X.509 certificate, need a directory and stay out of scope.
-    /// The checks run on ORM, ORU and REF only, the "Orders, Results,
-    /// Referrals" scope the points print (P12 S2-2), whose values Appendix 5
-    /// p 416 defines as ORM, ORU and all REF messages. Not an init
-    /// parameter. M32.
+    /// The same assertion applies the EI twins, HL7au:00044.3.4 (an EI
+    /// Universal ID in the same HPI-O form) and HL7au:00044.3.3 (an EI
+    /// Universal ID Type of `"ISO"`), to every EI field the message
+    /// carries (M33). Every check, HD and EI, runs on ORM, ORU and REF
+    /// only, the "Orders, Results, Referrals" scope the points print
+    /// (P12 S2-2), whose values Appendix 5 p 416 defines as ORM, ORU and
+    /// all REF messages. Not an init parameter. M32.
     public var auNASHTransport: Bool = false
 
     /// The caller asserts that its PRD-7 assigning authorities come from
