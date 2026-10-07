@@ -277,7 +277,7 @@ extension Validator {
                                                 dataType: dataType, version: grammarVersion) else { return }
         // P5-6: a field-local composite is width-checked against the components its field
         // prints. One is extracted only where the field's datatype has no table of its own
-        // (extract-field-components.py), so a datatype with a table names the table.
+        // (the maintainer's field-components extractor), so a datatype with a table names the table.
         let closed = Self.closedComposite(composite, dataType: dataType) != nil
         let printedBy = Self.componentGrammar(dataType, version: grammarVersion) != nil
             ? "which the v\(grammarVersion.rawValue) component table defines with"

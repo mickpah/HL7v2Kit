@@ -1,7 +1,7 @@
 // FieldLengthSpecConflictTests.swift
 // P6-6 fix round 1, owner ruling G10: where a pre-v2.7 LEN cell is shorter than values its
 // own spec defines as valid, the schema carries the smallest length that admits every valid
-// value, with a cited LENGTH_WHITELIST entry (scripts/audit-schemas.py) and a row in the
+// value, with a cited LENGTH_WHITELIST entry (scripts/private/audit-schemas.py) and a row in the
 // permanent-limitations register, section C. The guard below keeps the class closed.
 
 import Testing

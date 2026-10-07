@@ -1,7 +1,7 @@
 // FieldLengthRule.swift
 // The printed shapes of a FieldGrammar.length cell, and the enforceable reading of
 // one (P6-6, V231-C15). PrintedLength mirrors the audit's LENGTH_TOKEN grammar
-// (scripts/audit-schemas.py) plus the two shapes the schemas store verbatim that the
+// (the maintainer's schema audit) plus the two shapes the schemas store verbatim that the
 // token leaves to its whitelists: `*` (variable) and the open range `m..`.
 
 import Foundation

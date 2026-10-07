@@ -42,10 +42,6 @@ check:
     bash scripts/scan-fixtures-for-phi.sh
     bash scripts/check-structure-codegen.sh
 
-# The full schema, table, data-type, VMR and example audit.
-audit:
-    {{python}} scripts/audit-schemas.py --depth --tables --datatypes --vmr --examples
-
 # Build the DocC catalogue from a scratch copy and fail on any warning, as the docc CI job does.
 docc:
     #!/usr/bin/env bash

@@ -2,7 +2,7 @@
 // The HL7 datatype component tables (Chapter 2A), per version. The per-version
 // dictionaries live in `Generated/DataTypeGrammarTable+v<X_Y_Z>.swift`, emitted
 // by `HL7v2KitCodegen` from `Resources/datatypes/<version>/`, which
-// `scripts/extract-datatype-components.py` extracts from the spec PDFs. To
+// a maintainer script extracts from the spec PDFs. To
 // correct a datatype, fix the extractor and re-extract; never edit the JSON.
 
 /// One component of an HL7 datatype, as its version's component table prints it.

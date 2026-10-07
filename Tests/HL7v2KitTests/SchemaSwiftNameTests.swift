@@ -22,7 +22,7 @@ struct SchemaSwiftNameTests {
 
     /// The longest legitimate name is 66 characters (v2.8.2 OM1-56, "Observation/Identifier
     /// associated with Producer's Service/Test/Observation ID"); every prose bleed was 94 or
-    /// more. Mirrors `SWIFT_NAME_MAX` in scripts/audit-schemas.py.
+    /// more. Mirrors `SWIFT_NAME_MAX` in scripts/private/audit-schemas.py.
     private static let maxLength = 70
 
     private static var schemasRoot: URL {
@@ -105,7 +105,7 @@ struct SchemaSwiftNameTests {
 
     @Test("Every element name reads as a title, not definition prose")
     func elementNamesAreTitles() throws {
-        // Mirrors ELEMENT_NAME_WORDS_MAX / ELEMENT_NAME_LOWER_RUN_MAX in scripts/audit-schemas.py:
+        // Mirrors ELEMENT_NAME_WORDS_MAX / ELEMENT_NAME_LOWER_RUN_MAX in scripts/private/audit-schemas.py:
         // the corpus maximum is 10 words and a run of 4 lowercase-led words.
         for (version, schema) in try schemas() {
             for field in schema.fields {

@@ -22,7 +22,7 @@ Drop a file under `Resources/schemas/<version>/<SegmentID>.json`. Copy an existi
 ```
 
 - `index` — 1-based HL7 v2 field number.
-- `swiftName` — the generated Swift accessor name (lowerCamelCase, rendered from the printed element name, at most 70 characters; `scripts/audit-schemas.py` fails a name that breaks this).
+- `swiftName` — the generated Swift accessor name (lowerCamelCase, rendered from the printed element name, at most 70 characters; the maintainer's schema audit fails a name that breaks this).
   - Naming convention for the non-canonical versions. A slot whose element name matches
     the canonical v2.5.1 element at the same index takes the canonical swiftName,
     possessive "S" included (`totalOccurrenceS`). Any other slot takes the extractor's
@@ -32,9 +32,9 @@ Drop a file under `Resources/schemas/<version>/<SegmentID>.json`. Copy an existi
 - `name` — human-readable field name (used in DocC + validation messages).
 - `dataType` — the HL7 data-type code (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `XPN`, `CX`, `XAD`, `CE`, `CWE`, `EI`, `XCN`, ...).
 - `optionality` — `R` (required), `O` (optional), `C` (conditional), `X` (not supported), `B` (deprecated, retained for backward compatibility), `W` (withdrawn — removed from the standard; the sequence slot is retained but carries no meaning; first used by the v2.6 attribute tables). Populated `B`, `X`, and `W` fields each raise a warning.
-- `repeatability` — `"1"` (blank or N, single), `"*"` (Y, unbounded) or the printed bound as a decimal string (`"3"` for `Y/3` before v2.5, a bare `3` from v2.5), which becomes ``FieldGrammar/maxRepetitions``. Run `audit-schemas.py --depth --write-repeatability` to take it from the PDF.
-- `length` — optional. The LEN cell the version's attribute table prints, verbatim (`"250"`; v2.7+ `"2..2"`, `"32="`, `"250#"`). Enforced by the Validator per era (``ValidationOptions/fieldLengthSeverity``, ``ValidationOptions/normativeLengthSeverity``), so it must be one of the printed shapes the schema-wide `FieldLengthValidationTests` accepts. `scripts/audit-schemas.py --depth` fails on any disagreement with the spec.
-- `tables` — optional. The HL7 table numbers the version's attribute table binds to the field (its TBL# column), as four-digit strings: `["0001"]`, or more than one where the spec prints several (`["0327", "0328"]`). Omit the key when the cell is blank. `scripts/audit-schemas.py --depth` fails on any disagreement with the spec.
+- `repeatability` — `"1"` (blank or N, single), `"*"` (Y, unbounded) or the printed bound as a decimal string (`"3"` for `Y/3` before v2.5, a bare `3` from v2.5), which becomes ``FieldGrammar/maxRepetitions``. The maintainer's schema audit takes it from the PDF.
+- `length` — optional. The LEN cell the version's attribute table prints, verbatim (`"250"`; v2.7+ `"2..2"`, `"32="`, `"250#"`). Enforced by the Validator per era (``ValidationOptions/fieldLengthSeverity``, ``ValidationOptions/normativeLengthSeverity``), so it must be one of the printed shapes the schema-wide `FieldLengthValidationTests` accepts. The maintainer's schema audit fails on any disagreement with the spec.
+- `tables` — optional. The HL7 table numbers the version's attribute table binds to the field (its TBL# column), as four-digit strings: `["0001"]`, or more than one where the spec prints several (`["0327", "0328"]`). Omit the key when the cell is blank. The maintainer's schema audit fails on any disagreement with the spec.
 - `condition` (optional, only meaningful when `optionality=C`) — a predicate string controlling when the field is required. See the Conditional-field DSL in <doc:Validation>. Example: `"condition": "PID-35 populated"` on `PID-36` means "breed code is required when species code is declared". A `C` field without a `condition` falls through as `.optional`.
 
 The data-type code drives the accessor return type:

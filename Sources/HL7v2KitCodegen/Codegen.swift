@@ -137,7 +137,7 @@ func renderAdditionalProhibitions(_ rules: [ProhibitionSchema]?, context: String
         let label = "\(context) additionalProhibitions[\(offset)]"
         let when = rule.when ?? ""
         // Plain spaces only, none leading or trailing, at least two tokens. Same rule as
-        // `when_is_well_formed` in scripts/audit-schemas.py.
+        // `when_is_well_formed` in the maintainer's schema audit.
         let otherWhitespace = when.unicodeScalars.contains {
             $0 != " " && CharacterSet.whitespacesAndNewlines.contains($0)
         }

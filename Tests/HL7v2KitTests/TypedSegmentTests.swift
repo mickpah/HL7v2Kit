@@ -1468,7 +1468,7 @@ struct TypedSegmentTests {
     // Sprint 0 (v2.x coverage): the v2.4 lab-automation PRESENCE defect. v1.4 authored
     // EQU/SAC/INV/TCC/TCD/EQP as "v2.5+", but v2.4 CH13 defines all six — ~94 fields missing
     // from the AU-critical version. A depth-only audit never sees an ABSENT segment; the
-    // presence predicate in scripts/audit-schemas.py now does. Divergences below were read
+    // presence predicate in scripts/private/audit-schemas.py now does. Divergences below were read
     // from the v2.4 CH13 attribute tables, not inferred from v2.5.1.
     @Test("Sprint 0: v2.4 lab-automation segments — presence, depths, per-version divergence")
     func sprint0V2_4LabAutomationPresence() throws {

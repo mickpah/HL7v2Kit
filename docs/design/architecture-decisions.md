@@ -594,7 +594,7 @@ Tables change between versions, so one merged set would be wrong.
   corrected only on the message-structure side, by a cited erratum (ADR-019).
 - Corrections are never hand edits: they go in `Resources/tables/overrides.json`, version-scoped
   and cited, and the table is re-extracted. Print-versus-prose binding conflicts are resolved in
-  `scripts/table-repairs.json` with a citation.
+  the maintainer's table-repairs record with a citation.
 - Field bindings: `tables` (any datatype) records the spec's `TBL#` cell; `table` (one string,
   `ID` and `IS` fields only) is the enforced link, derived where a field binds exactly one table.
   The integrity audit fails if `table` is not among `tables`.
@@ -618,7 +618,7 @@ Tables change between versions, so one merged set would be wrong.
 - Local extension is caller-declared: `ValidationOptions.localTableExtensions` lists the codes a
   site has added per table, consulted after the version and locale checks at field and component
   level. Nothing is inferred from the wire.
-- Audit: `scripts/audit-schemas.py --tables` (shape, suspect codes with a cited allowlist, kind
+- Audit: the maintainer's schema audit, `--tables` (shape, suspect codes with a cited allowlist, kind
   mismatches, schema links; `--depth` re-extracts and reports drift).
 
 **Consequences.** The check is live on more than 1,200 `ID` fields across seven versions; a
@@ -682,7 +682,7 @@ v2.5.1 and later print regular component tables; v2.3 to v2.4 define components 
   under `warnDeprecatedFields`. The same rules apply one level down to subcomponents.
 - Evidence rule: normative text (tables and prose) decides. A printed example overturns a table
   only when normative prose agrees with it, or when the rule's data is plainly a spelling or
-  extraction artefact. `audit-schemas.py --examples` applies the component rules to every
+  extraction artefact. the schema audit's `--examples` pass applies the component rules to every
   printed datatype example as a standing audit.
 
 **Consequences.** Component checks found real defects on their first runs, in the fixtures and
@@ -779,7 +779,7 @@ walking the flat segment list back to the nearest ORC.
 ### Source and data
 
 - One file per structure, `Resources/structures/v<ver>/<STRUCT>.json` (`structure`, `version`,
-  `citation`, `triggers`, `elements`), written only by `scripts/extract-message-structures.py`
+  `citation`, `triggers`, `elements`), written only by the maintainer's structure extractor
   from the print (decision 1). The three pilot structures were hand-authored and then reproduced
   by the extractor byte for byte; no hand-authored base file survives.
 - `Resources/structures/overrides.json` holds everything the print does not give cleanly, each
@@ -1081,7 +1081,7 @@ the right fail-safe for "required when" and exactly the wrong one for "prohibite
 - Full-predicate marking: a field printed C with a non-empty condition may carry
   `"conditionIsPredicate": true` with a quoting `"predicateCitation"`, asserting that the
   condition is the complete C predicate for that field on that version. Codegen and
-  `audit-schemas.py` reject a marker without a citation, a citation without a marker, and a
+  the schema audit reject a marker without a citation, a citation without a marker, and a
   marker on a field that is not C or has no condition. The marked set is generated into an
   internal lookup; `FieldGrammar` is unchanged.
 - AU enforcement: the profile's internal `fullPredicateRule` (scope `messageCode in (ORM, ORU,

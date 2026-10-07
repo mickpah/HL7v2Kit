@@ -11,7 +11,7 @@ HL7v2Kit ships typed Swift structs for the most common HL7 v2.5.1 segments. Thes
 personnel management, clinical trials, lab automation, the query family, and the batch
 envelopes (`BHS`/`FHS`/`BTS`/`FTS`). The authoritative list is the schema directory
 (`Resources/schemas/v2.5.1/` — one JSON file per segment), and every schema is verified
-against its version's own attribute table by `scripts/audit-schemas.py` (depth *and*
+against its version's own attribute table by the maintainer's schema audit (depth *and*
 presence). On v2.3 / v2.3.1 / v2.4 **no segment the spec defines is missing**; v2.6 / v2.8.2
 grammar coverage is deliberately partial (a maintainer backlog records the rest).
 
