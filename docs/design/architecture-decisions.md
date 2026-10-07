@@ -345,3 +345,121 @@ validator). An unparseable profile condition fails safe: the check does not fire
 
 **Amended (P12 S2-2b, S2-3):** `ComponentValueSet.localTableExtension` names a table whose
 `ValidationOptions.localTableExtensions` entry is also allowed (ADR-007).
+
+## ADR-010 DSL extensions: peer-absent, quantification, content-gated
+
+**Status:** Accepted. Related: ADR-003, ADR-007, ADR-008, ADR-009, ADR-014, ADR-021.
+
+**Context.** Three rule clusters pointed at one gap in the ADR-008 machinery: the v2.4
+§4.5.1.8 ORC-8 and OBR-29 parent-reference rule over-fired because "peer segment absent" and
+"peer field empty" were indistinguishable; the OBR specimen conditionals needed a segment-presence
+test; and HL7au:000008 needed a group-scope count and a subcomponent-level field reference. A
+bespoke rule axis per cluster would have forked the pipeline, so the one condition language was
+extended instead.
+
+**Decision.** The condition language, as it stands, is parsed in one place
+(`ConditionLanguage.swift`) and read by the one evaluator:
+
+- Atoms combine with `AND` and `OR`. A value atom is `<referent> <predicate>`.
+- Referents: `<SEG>-<field>[.<component>[.<subcomponent>]]` (parsed by the shared `Path`
+  parser; repetition and segment-index forms are rejected), `associatedSegment(<ID>).<ref>`,
+  `previousSegment(<ID>).<ref>`, `messageCode`, `messageStructure`, `triggerEvent`,
+  `nextSegmentID(<ID>|...)` and the `ValidationOptions` caller assertions.
+- Predicates: `populated`, `empty`, `= v`, `!= v`, `> n`, `startsWith v`, `not startsWith v`,
+  `in (...)` and `not in (...)` (a list names at least one non-empty value).
+- Segment-presence atoms: `<SEG> present` and `<SEG> absent`, scoped to the current ORC and OBR
+  group (message-wide otherwise), distinct from field emptiness.
+- Quantifiers over repetitions: `anyRepeat(<ref>) <predicate>` and `noRepeat(<ref>)
+  <predicate>`. `noRepeat` is true when at least one repetition is populated and none satisfies
+  the predicate; full universal negation is written `<field> empty OR noRepeat(<field>) = v`.
+- `nextSegmentID(<ID>|...)` is a lookahead: the ID of the first following segment not in the
+  skip list, skipping Z-segments always (ADR-003), or empty at the end of the message. It hosts
+  the TQ1-12 conjunction rule.
+- Group-scope cardinality: an internal `SegmentCardinalityRule` (counted segment, scope, minimum
+  count, per-segment predicate, optional `applicableWhen` gate) reports
+  `segmentCardinalityBelowMinimum`. The rules live on the profile
+  (`Profile.cardinalityExtensions`), so a locale-specific count never fires universally.
+- Prohibitions: a field may carry `prohibitedWhen` plus `additionalProhibitions`, each with its
+  own condition, severity and citation, and optionally `permitsNull` (a lone HL7 null `""` does
+  not count as a value). Each holding rule raises its own `conditionalFieldProhibited`.
+  `FieldGrammar.additionalProhibitions` and `FieldProhibition` are public and additive
+  (ADR-014).
+- Every condition string in every grammar, datatype table and the AU profile is parsed by test
+  (`ConditionParseValidityTests`); a misspelt condition fails the build instead of silently never
+  firing.
+
+**Consequences.** One pipeline and one grammar serve base-standard and AU rules alike. Each
+extension is narrow and fails safe: an atom that does not resolve or parse is `unknown`
+(ADR-021) and never makes a field required. The grammar surface is larger, so further additions
+each need a cited rule that cannot be written today.
+
+**Amended (P1-1):** the OBR-7 and OBR-14 specimen legs (`SPM present OR OBR-15 populated`) were
+wrong. OBR-15 is valued on new orders before collection and SPM may describe a virtual
+specimen, so both legs raised false errors on conformant orders and were removed on every
+version. OBR-9 to OBR-11 never shipped a condition (their text carries no "must").
+
+**Amended (R2):** the schema-side `segmentCardinalityRules` key, never used by any schema, was
+removed; the runtime rule type and the AU profile's rules are unchanged.
+
+**Amended (R4):** field-reference suffix parsing routes through the shared `Path` parser.
+
+**Amended (P4, P4-4):** `noRepeat(...)` added for prohibitions keyed to "no repetition carries
+X" (SPM-13); `nextSegmentID(...)` added for TQ1-12, rejected as a segment count because it would
+demand a conjunction on the last TQ1 of a chain.
+
+**Amended (P4-21, P4-25, P4-26):** more than one prohibition per field; every condition string
+validated by test, with the parse half moved into `ConditionLanguage`; a prohibition may exempt
+the HL7 null (OBX-2 and OBX-5 under OBX-11 = O).
+
+## ADR-011 Composite value inequality and value-conditional rules
+
+**Status:** Accepted. Related: ADR-007, ADR-009, ADR-010.
+
+**Context.** Of the HL7au:00044 CE, CNE and CWE conformance points, two were machine-checkable
+but inexpressible: 00044.4.8 (the alternate coding system must differ from the primary) and
+00044.4.4 (LOINC must be placed first). The composite overrides could relate only the
+population state of two components, never their values. Two other points are not checkable from
+the wire at all.
+
+**Decision.**
+
+- The internal `CompositeOverride` gains `componentInequalities` (two components must differ
+  when both are populated) and `valueConditionals` (a component must not carry a denied value,
+  optionally gated by a condition in the ADR-008 language).
+- Both report the existing `profileConstraintViolation(localeRule:)`; no new issue code.
+- 00044.4.8 ships as CE-3 differs from CE-6. 00044.4.4 ships as "CE-6 is not `LN`" on orders
+  and results: a necessary condition, recorded as partial.
+- 00044.5.3 and 00044.6.3 (CNE and CWE text must be valued) ship with the existing
+  required-components track.
+- 00044.4.3 (CE text, with a "some locations" carve-out no wire signal reveals) and 00044.4.7
+  (both identifiers must reflect the same concept; needs a terminology service) are permanent
+  limitations.
+
+**Consequences.** Both rules fail safe on empty components. Each new semantic gets its own
+narrow type rather than overloading the population-state pair rules or a general expression
+language on composites. The CWE and CNE inequality legs were removed from the ADRM and are not
+modelled.
+
+## ADR-012 v2.6 grammar version
+
+**Status:** Accepted (Option A, first-class v2.6). Related: ADR-004, ADR-013, ADR-018.
+
+**Context.** Only three things in the package are version-sensitive: the `Version` case read
+from MSH-12, the per-version grammar table that drives validation, and (since ADR-020) the
+per-version composite and accessor metadata. v2.6 was a common version left unmodelled, which
+requirement 1 does not allow in a full-standard reference tool. The options were a first-class
+grammar, a recognised case with no grammar, or leaving it out.
+
+**Decision.**
+
+- v2.6 is a first-class grammar version: `Version.v2_6`, schemas under
+  `Resources/schemas/v2.6/` extracted from the v2.6 standard with every divergence from v2.5.1
+  kept as printed, and a generated `SegmentGrammar+v2_6.swift`.
+- A recognised version with no grammar is acceptable only as an interim inside a delivery
+  cycle, never as an end state: silence would read as conformance.
+
+**Consequences.** The common-version set was completed before the v1.0 freeze, when adding a
+`Version` case was cheapest.
+
+**Amended (M5):** the first cycle covered the 15 most-used segments; segment coverage was
+completed in M5, closing the backlog register.
