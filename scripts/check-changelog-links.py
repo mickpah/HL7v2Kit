@@ -2,8 +2,10 @@
 """Check that CHANGELOG.md's version headings and link references agree.
 
 Every `## [X]` heading must have a `[X]: <url>` link reference, and every link
-reference must name a heading. Each URL must point at this repository's compare
-or release-tag pages. Standard library only; exits non-zero on any finding.
+reference must name a heading; no label is defined twice. Each URL must point at
+this repository's compare or release-tag pages. A version's compare link starts at
+the next older heading's tag and ends at its own; `[Unreleased]` ends at `HEAD`.
+Standard library only; exits non-zero on any finding.
 """
 import pathlib
 import re
@@ -16,8 +18,10 @@ REPO = "https://github.com/mickpah/HL7v2Kit/"
 def main() -> int:
     text = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     headings = re.findall(r"^## \[([^\]]+)\]", text, re.MULTILINE)
-    links = dict(re.findall(r"^\[([^\]]+)\]: (\S+)$", text, re.MULTILINE))
-    findings = []
+    pairs = re.findall(r"^\[([^\]]+)\]: (\S+)$", text, re.MULTILINE)
+    links = dict(pairs)
+    findings = [f"link [{n}] is defined more than once" for n in links
+                if [p[0] for p in pairs].count(n) > 1]
     for name in headings:
         if headings.count(name) > 1:
             findings.append(f"heading [{name}] appears more than once")
@@ -30,6 +34,12 @@ def main() -> int:
             findings.append(f"link [{name}] points outside the repository: {url}")
         elif name != "Unreleased" and not url.endswith("v" + name):
             findings.append(f"link [{name}] does not end at tag v{name}: {url}")
+    for i, name in enumerate(headings):
+        end = "HEAD" if name == "Unreleased" else "v" + name
+        if i + 1 < len(headings) and name in links:
+            want = f"{REPO}compare/v{headings[i + 1]}...{end}"
+            if links[name] != want:
+                findings.append(f"link [{name}] should be {want}")
     for line in sorted(set(findings)):
         print(f"check-changelog-links: {line}")
     print(f"check-changelog-links: {len(headings)} heading(s), {len(links)} link(s), "

@@ -516,8 +516,7 @@ Checked during the audit and cleared — do not re-flag:
 The evidence is from 2026-08-26 (`98b8390`). Before executing a stage, re-run the relevant checks:
 
 ```bash
-cd ~/Developer/HL7v2Kit
-
+# From the repository root.
 # Baseline + test-name capture (CLT lacks the Testing module; use the Xcode toolchain)
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test list | sort > /tmp/tests-before.txt
 

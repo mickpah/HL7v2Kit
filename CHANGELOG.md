@@ -49,6 +49,10 @@ Full detail for every release, with dates, is in `docs/archive/CHANGELOG-full.md
   BTS-1 and FTS-1 not compared) as Blocking, and states which component lengths are checked.
 - The public documents carry no dates and are shorter; this log is condensed, with the full
   log archived.
+- Release polish: the copyright line names the author; `SUPPORT.md` has a conduct note; CI
+  never selects a beta Xcode, grants only the permissions each job needs, and counts compiler
+  and DocC diagnostics rather than every line containing `warning:`; the changelog check also
+  verifies each compare link's base.
 
 ### Removed
 

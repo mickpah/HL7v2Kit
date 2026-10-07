@@ -10,8 +10,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # One deployment at a time; a queued run waits rather than cancelling one in progress.
 concurrency:
@@ -27,7 +25,8 @@ jobs:
 
       - name: Select the newest Xcode
         run: |
-          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)/Contents/Developer"
+          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | command grep -vi beta | sort -V | tail -1)/Contents/Developer"
+          echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
           xcodebuild -version
           swift --version
 
@@ -42,8 +41,10 @@ jobs:
             echo "::error::xcodebuild docbuild failed."
             exit 1
           fi
-          if grep -q "warning:" "$RUNNER_TEMP/docc.log"; then
-            grep "warning:" "$RUNNER_TEMP/docc.log" | sort -u
+          # Compiler and DocC diagnostics only, not SwiftPM's "warning: '<package>':" echoes.
+          warnings="$(grep -E '^[^ ]+\.(swift|md):[0-9]+(:[0-9]+)?: warning:|^warning: ' "$RUNNER_TEMP/docc.log" | grep -vE "^warning: '[^']+': " | sort -u || true)"
+          if [ -n "$warnings" ]; then
+            echo "$warnings"
             echo "::error::DocC reported warnings."
             exit 1
           fi
@@ -61,8 +62,10 @@ jobs:
             echo "::error::docc transform-for-static-hosting failed."
             exit 1
           fi
-          if grep -q "warning:" "$RUNNER_TEMP/transform.log"; then
-            grep "warning:" "$RUNNER_TEMP/transform.log" | sort -u
+          # Compiler and DocC diagnostics only, not SwiftPM's "warning: '<package>':" echoes.
+          warnings="$(grep -E '^[^ ]+\.(swift|md):[0-9]+(:[0-9]+)?: warning:|^warning: ' "$RUNNER_TEMP/transform.log" | grep -vE "^warning: '[^']+': " | sort -u || true)"
+          if [ -n "$warnings" ]; then
+            echo "$warnings"
             echo "::error::The static-hosting transform reported warnings."
             exit 1
           fi
@@ -91,6 +94,9 @@ jobs:
     name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}documentation/hl7v2kit/

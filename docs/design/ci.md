@@ -33,15 +33,21 @@ deploy steps run only on GitHub. `ci-rehearsal.sh` reads `ci.yml` only, so it do
 - The test suite needs Swift 6.2 (Xcode 26), because it uses exit tests
   (`#expect(processExitsWith:)`).
 - Every macOS job (`test-macos`, `codegen-drift`, `docc`) first selects the newest Xcode on the
-  image (`sudo xcode-select -s` on the highest-sorting `/Applications/Xcode*.app`) and prints
-  `xcodebuild -version` and `swift --version`. One selection step serves all three, although
-  `codegen-drift` would pass on the image's default Xcode 16.4 (Swift 6.1).
+  image (`sudo xcode-select -s` on the highest-sorting `/Applications/Xcode*.app` whose name
+  does not contain `beta`, so a beta is never picked silently), exports `DEVELOPER_DIR` to
+  `$GITHUB_ENV` so the repository's scripts use the same Xcode, and prints `xcodebuild -version`
+  and `swift --version`. One selection step serves all three, although `codegen-drift` would
+  pass on the image's default Xcode 16.4 (Swift 6.1).
 - `test-macos` then runs `scripts/check-swift-version.sh 6.2`, which fails the job by name when
   the selected Swift is older, instead of leaving a compile error in the test target to explain
   it. `macos-14` is dropped: its newest Xcode is a 16.x with Swift 6.0, too old for the suite.
 - `docc` builds from a copy without `HL7v2Kit.xcworkspace`: that workspace has no scheme, and
   `xcodebuild` in the repository root picks it over the package. `xcodebuild docbuild` exits 0
-  on documentation warnings, so the job greps the log for `warning:`.
+  on documentation warnings, so the job greps the log for compiler and DocC diagnostics
+  (`<file>.swift:<line>: warning:`, `<file>.md:<line>: warning:` or a bare `warning: `), leaving
+  out SwiftPM's `warning: '<package>':` echoes, and prints the unique matches.
+- Both workflows grant the least they need: `contents: read` at the top level, and only the
+  Pages deploy job adds `pages: write` and `id-token: write`.
 
 ## Line endings
 
@@ -94,8 +100,11 @@ The history scan (`scan-fixtures-for-phi.sh --history`) does run in CI, but only
 only) with a scratch `HOME`, `TMPDIR` and `RUNNER_TEMP` and a minimal environment, and prints a
 pass, fail or skip line per step and a summary per job. It exits 1 if any step fails.
 
-- macOS jobs: `DEVELOPER_DIR` is set to the newest `/Applications/Xcode*.app`, standing in for
-  the "Select the newest Xcode" step, which needs `sudo` and is skipped.
+- macOS jobs: `DEVELOPER_DIR` is set to the newest non-beta `/Applications/Xcode*.app`,
+  standing in for the "Select the newest Xcode" step, which runs `sudo` and is skipped (a step
+  is skipped when a line begins with `sudo `; a comment mentioning it does not count).
+- If `--hide-tmp-binaries` cannot put a binary back, the scratch directory is kept and the
+  path is printed instead of deleted.
 - `test-linux` runs each step in its container image through Docker, or is skipped with a
   message when Docker is not running.
 - `--hide-tmp-binaries` moves `/tmp/extractbin` and `/tmp/tablesbin` aside for the run and puts

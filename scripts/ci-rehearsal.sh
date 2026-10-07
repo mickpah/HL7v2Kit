@@ -7,7 +7,7 @@
 # - Each job gets its own clean clone of HEAD (committed work only) in a scratch directory, with
 #   HOME, TMPDIR and RUNNER_TEMP pointing into it and a minimal environment. The `uses:` steps
 #   (the checkout) are replaced by that clone.
-# - macOS jobs: DEVELOPER_DIR is set to the newest /Applications/Xcode*.app, which is what each
+# - macOS jobs: DEVELOPER_DIR is set to the newest non-beta /Applications/Xcode*.app, as each
 #   job's "Select the newest Xcode" step does on the runner; that step needs sudo, so it is
 #   skipped. On a host that is not macOS the macOS jobs are skipped.
 # - A job with a `container:` (test-linux) runs each step in that image through Docker; without
@@ -35,10 +35,14 @@ scratch="$(mktemp -d "${TMPDIR:-/tmp}/ci-rehearsal.XXXXXX")" || exit 2
 hidden=()
 
 cleanup() {
+    local restore_failed=0
     for path in "${hidden[@]+"${hidden[@]}"}"; do
-        /bin/mv -f "$scratch/hidden/$(basename "$path")" "$path"
+        if ! /bin/mv -f "$scratch/hidden/$(basename "$path")" "$path"; then
+            echo "Could not restore $path; it is left at $scratch/hidden/$(basename "$path")" >&2
+            restore_failed=1
+        fi
     done
-    if [ "$keep" = 1 ]; then
+    if [ "$keep" = 1 ] || [ "$restore_failed" = 1 ]; then
         echo "Scratch directory kept: $scratch"
     else
         /bin/rm -rf "$scratch"
@@ -126,7 +130,7 @@ PY
 
 newest_xcode() {
     local app
-    app="$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)"
+    app="$(ls -d /Applications/Xcode*.app 2>/dev/null | command grep -vi beta | sort -V | tail -1)"
     [ -n "$app" ] && echo "$app/Contents/Developer"
 }
 
@@ -171,7 +175,7 @@ while IFS=$'\t' read -r job runner container number name script; do
         echo "SKIP $label ($job_skip)"; skipped=$((skipped + 1)); js=$((js + 1)); job_line="SKIP"
     elif [ "$job_failed" = 1 ]; then
         echo "SKIP $label (an earlier step failed)"; skipped=$((skipped + 1)); js=$((js + 1))
-    elif grep -q "sudo " "$script"; then
+    elif grep -qE '^[[:space:]]*sudo ' "$script"; then
         echo "SKIP $label (needs sudo; DEVELOPER_DIR stands in for it)"; skipped=$((skipped + 1)); js=$((js + 1))
     else
         log="$scratch/logs/$(basename "$script" .sh).log"
