@@ -139,6 +139,7 @@ These fixtures use the HL7 v2 batch grammar (FHS / BHS / BTS / FTS framing marke
 | `Batches/batch_bhs_minimal.hl7` | Batch (BHS-only) | BHS + 1 MSH + BTS — smallest valid batch wrapper | N/A — synthetic from scratch (v0.3-Z2) |
 | `Batches/batch_file_full.hl7` | Batch (fully wrapped) | FHS + BHS + 2 MSH + BTS + FTS — exercises all four framing markers in one file | N/A — synthetic from scratch (v0.3-Z2) |
 | `Batches/batch_multi_groups.hl7` | Batch (multi-group) | FHS + 2 BHS/BTS pairs + FTS — one ADT batch followed by one ORU batch | N/A — synthetic from scratch (v0.3-Z2) |
+| `Batches/au_batch_oru_r01.hl7` | Batch (AU ADRM-2021) | FHS + BHS + the two AU ORU^R01 fixtures (pathology, radiology) + BTS + FTS; clean through `BatchValidator` under the AU locale, FHS separator fire pair; `AUFixtureTests` | N/A — synthetic, written from scratch (P12 S3-1); licence Apache 2.0, as the package |
 
 ### API-surface snapshots (`APISurface/` subdirectory)
 

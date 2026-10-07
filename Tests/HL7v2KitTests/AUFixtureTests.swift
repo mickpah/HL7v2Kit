@@ -40,6 +40,8 @@ struct AUFixtureTests {
         "au_orr_o02.hl7",
     ]
 
+    static let batchFixture = "au_batch_oru_r01.hl7"
+
     /// `.strict` with the four AU caller assertions set: the message comes
     /// from a pathology sender, is intended for display, travels by SMD with
     /// NASH certificates, and draws PRD-7 authorities from Table 0363.
@@ -239,5 +241,35 @@ struct AUFixtureTests {
         // Every other AU rule accepts the ADRM's PDF form.
         let rest = found.filter { !Self.isADRMLengthVariance($0) && !tables.contains($0) }
         #expect(rest.isEmpty, "\(Self.describe(rest))")
+    }
+
+    // MARK: - Batch
+
+    static func batchWire() throws -> String {
+        try String(contentsOf: FixtureCorpus.batchFixtureURL(named: batchFixture), encoding: .utf8)
+    }
+
+    static func batchReport(_ wire: String) throws -> BatchValidationReport {
+        BatchValidator(options: asserted, locale: .auLocalisation).validate(try BatchParser().parse(wire))
+    }
+
+    @Test("The AU batch fixture validates clean through BatchValidator under the AU locale")
+    func batchClean() throws {
+        let report = try Self.batchReport(Self.batchWire())
+        #expect(report.batchIssues.isEmpty, "\(Self.describe(report.batchIssues))")
+        #expect(report.messageReports.count == 2)
+        for messageReport in report.messageReports {
+            let rest = messageReport.issues.filter { !Self.isADRMLengthVariance($0) }
+            #expect(rest.isEmpty, "\(Self.describe(rest))")
+        }
+    }
+
+    @Test("Batch headers: an FHS field separator other than | fires HL7au:000024.1 at FHS-1")
+    func batchSeparatorPair() throws {
+        let wire = try Self.batchWire()
+        let header = try #require(wire.split(separator: "\r").first.map(String.init))
+        let mutated = wire.replacingOccurrences(of: header, with: header.replacingOccurrences(of: "|", with: "!"))
+        let fired = Self.hits(try Self.batchReport(mutated).batchIssues, "HL7au:000024.1")
+        #expect(fired.map(\.location.pathDescription) == ["FHS[1]-1"], "\(Self.describe(fired))")
     }
 }
