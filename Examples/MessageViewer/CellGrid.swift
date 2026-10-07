@@ -119,7 +119,7 @@ struct CellGrid: Equatable, Sendable {
         return lines.map { $0 + "\r" }.joined()
     }
 
-    // remediation: values are shown decoded (no re-escaping); the kit keeps its encoder internal.
+    // Values are shown decoded (no re-escaping); the kit keeps its encoder internal.
     private static func text(of field: Field, _ chars: EncodingCharacters) -> String {
         field.repetitions.map { repetition in
             repetition.components.map { component in
