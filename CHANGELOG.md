@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`scripts/check-swift-version.sh`); `macos-14` is dropped. `codegen-drift` selects the same
   Xcode. A new `docc` job builds the catalogue and fails on any warning, since
   `xcodebuild docbuild` itself shrugs warnings off with a zero exit status.
+- **A CI rehearsal (P13 S2-3).** `scripts/ci-rehearsal.sh` runs every step of `ci.yml` on a
+  clean clone of `HEAD`, the Linux job through Docker, and prints a line per step: the
+  pre-push check. See `docs/design/ci.md`.
 
 ### Removed (breaking)
 

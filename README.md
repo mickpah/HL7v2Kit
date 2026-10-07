@@ -96,7 +96,7 @@ The codegen-drift CI job fails any commit that edits a schema without committing
 
 ## Contributing
 
-**Contributions are not accepted at this stage of the project**; pull requests will be closed unread. Bug reports, spec-reading disagreements (with chapter and page cited) and fork announcements are welcome as issues. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SUPPORT.md](SUPPORT.md). **No PHI ever enters the repository**: every fixture is synthetic, and `scripts/scan-fixtures-for-phi.sh` is a hard gate in CI.
+**Contributions are not accepted at this stage of the project**; pull requests will be closed unread. Bug reports, spec-reading disagreements (with chapter and page cited) and fork announcements are welcome as issues. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SUPPORT.md](SUPPORT.md). **No PHI ever enters the repository**: every fixture is synthetic, and `scripts/scan-fixtures-for-phi.sh` is a hard gate in CI. Before pushing, `bash scripts/ci-rehearsal.sh` runs every CI step on a clean clone of `HEAD` (the Linux job through Docker), so the hosted run holds no surprises.
 
 ## Licence
 

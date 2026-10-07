@@ -68,18 +68,26 @@ usage text; PDF-backed functions of the modules the self-checks import (`audit-s
 `extract-example-messages.py`, `extract-message-structures.py`, `extract-datatype-prose.py`,
 `extract-datatype-components.py`, `extract-vmr-table.py`, `read-v2xml-bundles.py`), which the
 self-checks never call; and the PHI scanner's licensed-path patterns, which flag those paths
-rather than read them. P13 S2-1 ran every step on a clean clone with none of them present.
+rather than read them. P13 S2-1 ran every step on a clean clone with none of them present, as
+`scripts/ci-rehearsal.sh --hide-tmp-binaries` now does.
 
 The history scan (`scan-fixtures-for-phi.sh --history`) does run in CI, but only because the
 `fixture-safety` checkout fetches the full history; a shallow clone would scan one commit.
 
 ## Running a job's steps locally
 
-Every step's shell runs unchanged on a clean clone with a scratch `HOME`, and with
-`RUNNER_TEMP` set to a scratch directory for the code-table extractor. The scripts point
-`DEVELOPER_DIR` at `/Applications/Xcode.app` only when the caller has not set it, so a job that
-selects another Xcode keeps it. To run the Linux job:
+`bash scripts/ci-rehearsal.sh` is the pre-push check. It reads `ci.yml` at `HEAD` and runs every
+`run:` step, job by job and in order, each job on its own clean clone of `HEAD` (committed work
+only) with a scratch `HOME`, `TMPDIR` and `RUNNER_TEMP` and a minimal environment, and prints a
+pass, fail or skip line per step and a summary per job. It exits 1 if any step fails.
 
-```bash
-docker run --rm -v "$PWD":/src -w /src swift:6.2-jammy swift test
-```
+- macOS jobs: `DEVELOPER_DIR` is set to the newest `/Applications/Xcode*.app`, standing in for
+  the "Select the newest Xcode" step, which needs `sudo` and is skipped.
+- `test-linux` runs each step in its container image through Docker, or is skipped with a
+  message when Docker is not running.
+- `--hide-tmp-binaries` moves `/tmp/extractbin` and `/tmp/tablesbin` aside for the run and puts
+  them back on exit, proving no step relies on them; `--keep` keeps the scratch directory and
+  each step's log.
+
+The scripts point `DEVELOPER_DIR` at `/Applications/Xcode.app` only when the caller has not set
+it, so a job that selects another Xcode keeps it.
