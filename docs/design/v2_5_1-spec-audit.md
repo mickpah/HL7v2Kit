@@ -149,7 +149,7 @@ DG1-20 / DG1-21 and PR1-19 / PR1-20 carry `triggerEvent = P12`. The spec scopes 
 
 ## P6 findings closed (2026-10-02)
 
-The 2026-09 review (`planning/reviews/v2.5.1-review.md`) found V251-C10: no primitive-value
+The 2026-09 review (a local review document, not in the repository) found V251-C10: no primitive-value
 lexical checks existed, and no issue code could report one. Closed by P6-7 (`3890ff0`):
 `IssueCode.valueFormatInvalid(dataType:)`, `ValidationOptions.valueFormatSeverity` and
 `PrimitiveFormat` now check NM, SI, DT, TM, DTM and TS against their printed section 2.A

@@ -18,7 +18,7 @@
 
 Optionality across the 2,519 fields: O 1,815, R 305, C 180, B 55, W 77, blank 87. Chapter 2B's unnamed 40-field PID profile table, the CH07 OBX example tables and the second CH04A RXA table are profile or example prints and are not the base grammar; only each segment's first (defining) table is used.
 
-Counts in this document were recomputed from the shipped resources at P10-8. The P10-0 measurement figures (`.superpowers/sdd/P10-v2_7_1-grammar/p10-0-measurements.md`) differ in places because they were taken from the raw print before the cited overrides, repairs and fixes below.
+Counts in this document were recomputed from the shipped resources at P10-8. The P10-0 measurement figures (a local task report, not in the repository) differ in places because they were taken from the raw print before the cited overrides, repairs and fixes below.
 
 ## Rulings
 

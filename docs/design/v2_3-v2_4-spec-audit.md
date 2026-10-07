@@ -129,7 +129,7 @@ Per The "honesty over completeness" requirement, these are the per-version check
 
 ## P6 findings closed (2026-10-02)
 
-The 2026-09 review (`planning/reviews/v2.3-review.md`, `v2.3.1-review.md`, `v2.4-review.md`;(local planning folder, not in the repository)
+The 2026-09 review (the v2.3, v2.3.1 and v2.4 review documents; local, not in the repository)
 raised six findings against the schema/validator layer this audit does not itself cover
 (repeatability bounds, field length). All six are closed:
 

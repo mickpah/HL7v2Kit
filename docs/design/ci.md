@@ -27,7 +27,7 @@ deploy steps run only on GitHub. `ci-rehearsal.sh` reads `ci.yml` only, so it do
 
 ## Toolchain floor
 
-- The library needs Swift 6.0, the manifest's tools-version. (Until P13 S2-2 the manifest also
+- The library needs Swift 6.0, the manifest's tools-version. (The manifest once also
   enabled the `StrictConcurrency` upcoming feature, which Swift 6.0 rejects in Swift 6 language
   mode as already enabled; the flag was redundant and is gone. Proved in `swift:6.0-jammy`.)
 - The test suite needs Swift 6.2 (Xcode 26), because it uses exit tests
@@ -87,8 +87,8 @@ usage text; PDF-backed functions of the modules the self-checks import (`audit-s
 `extract-example-messages.py`, `extract-message-structures.py`, `extract-datatype-prose.py`,
 `extract-datatype-components.py`, `extract-vmr-table.py`, `read-v2xml-bundles.py`), which the
 self-checks never call; and the PHI scanner's licensed-path patterns, which flag those paths
-rather than read them. P13 S2-1 ran every step on a clean clone with none of them present, as
-`scripts/ci-rehearsal.sh --hide-tmp-binaries` now does.
+rather than read them. Every step has been run on a clean clone with none of them present, as
+`scripts/ci-rehearsal.sh --hide-tmp-binaries` does.
 
 The history scan (`scan-fixtures-for-phi.sh --history`) does run in CI, but only because the
 `fixture-safety` checkout fetches the full history; a shallow clone would scan one commit.

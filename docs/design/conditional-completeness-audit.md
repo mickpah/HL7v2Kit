@@ -55,7 +55,7 @@ Shipped as `ORC-26 condition = "ORC-20 in (3, 4)"` on v2.8.2, and on v2.5.1 and 
 
 ## Shipped in P4 (expressible-conditions remediation, 2026-09)
 
-The 2026-09 review (planning/reviews (local planning folder, not in the repository), finding X-C09) found positions this register called permanent although the condition DSL already states them, prohibitions it did not model, and one shipped prohibition that misfired. Each row cites the printed sentence. "Partial" means the predicate fires only where the wire decides the rule and stays silent elsewhere (fail-safe, v0.2-V1). Axis `condition` fires `conditionalFieldMissing`; axis `prohibitedWhen` fires `conditionalFieldProhibited` at the stated severity.
+The 2026-09 review (a local review document, not in the repository; finding X-C09) found positions this register called permanent although the condition DSL already states them, prohibitions it did not model, and one shipped prohibition that misfired. Each row cites the printed sentence. "Partial" means the predicate fires only where the wire decides the rule and stays silent elsewhere (fail-safe, v0.2-V1). Axis `condition` fires `conditionalFieldMissing`; axis `prohibitedWhen` fires `conditionalFieldProhibited` at the stated severity.
 
 | Position | Versions | Axis | Predicate | Severity | Citation | Exactness |
 |---|---|---|---|---|---|---|

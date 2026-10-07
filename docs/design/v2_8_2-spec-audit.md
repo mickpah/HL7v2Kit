@@ -91,7 +91,7 @@ Additive only: `Version.v2_8_2 = "2.8.2"` (the grammar-less `.v2_8 = "2.8"` is r
 
 ## P6 findings closed (2026-10-02)
 
-The 2026-09 review (`planning/reviews/v2.8.2-review.md`,(local planning folder, not in the repository) found two gaps invisible to this
+The 2026-09 review (a local review document, not in the repository) found two gaps invisible to this
 audit's own scope (it does not check segment presence or datatype misprints against the
 attribute-table caption):
 

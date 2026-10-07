@@ -6,7 +6,7 @@ by dated addenda/annotations, per the archive convention), or *closed*.
 
 Reading order for a cold start: `STATUS.md` → `NEXT_STEPS.md` → this index → the record you need.
 
-A path under `planning/` in any record here names the local planning folder, which is not in the repository.
+A record here that cites a local plan or review means the maintainer's planning notes, which are not in the repository.
 
 ## Project requirements
 
