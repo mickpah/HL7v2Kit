@@ -1004,3 +1004,93 @@ and version provenance re-classed permanent (S6-4).
 
 **Amended (P12):** owner ruling 6 allowed an optional ERR in the no-data head; the ADRM ORR_O02
 and the Appendix 8 simplified REF variant completed the AU profile structures (S1).
+
+## ADR-020 Composite views and version-union accessors
+
+**Status:** Accepted (Option B, owner gate G3). Related: ADR-001, ADR-004, ADR-013, ADR-014,
+ADR-017.
+
+**Context.** The typed API had been shaped by what common traffic populates and by one canonical
+version. The hand-written composite views exposed only part of each type (XCN six of 23
+components, "the commonly-populated ones", a consumer-profile argument requirement 1 rejects);
+typed accessors on repeating fields returned the first repetition without saying the field
+repeats; and typed segment structs were generated from v2.5.1 alone, so later-version fields
+(PID-40, OBX-26 to OBX-30) had no accessor. No wire data was lost, but the later surface was out
+of reach. The per-version component tables (ADR-017) and segment schemas already existed.
+
+**Decision.**
+
+- Composite views are generated to full spec depth on every supported version. A curated name map,
+  `Resources/composites/composite-views.json`, names every component index; the original
+  hand-written names keep their spelling. Codegen fails when an index any version defines lacks a
+  name, or a name clashes. Each accessor returns the first subcomponent; its DocC lists the
+  versions that define the component and every differing printed name.
+  `CompositeView.component(_:as:)` views a sub-composite (CX-4 as `HD`) and `viewed(as:)` views
+  the same field as another composite.
+- Every repeating field gains `<name>All` (`[T]`, `[String?]` or `[Field]`), built on
+  `TypedSegment.repetitions(_:)`; the singular accessor's DocC says the field repeats.
+- Version union: each segment struct renders from its base schema and adds what the other
+  versions contribute: fields past the base maximum, and positions the base reserves that a later
+  version defines. A position the base defines is the same element in every version: a later name
+  gets its own accessor only when its Swift type differs (ruling 1), worded as a rename with
+  cross-references (ruling 2); a version that types the position as a composite where the accessor
+  is scalar or raw gets `<name>As<T>` (ruling 3).
+- A released struct's base never changes. The base is v2.5.1, or the earliest definer for a
+  segment v2.5.1 lacks, except that every released non-v2.5.1 base is pinned in
+  `Resources/struct-bases.json`, so adding a version can never rename or retype a released
+  accessor (`StructBasePinTests`, `scripts/check-struct-base-pin.py`).
+- Accessors are not gated by the message's version: on another version's message an accessor reads
+  whatever the position holds, and an absent field returns nil (the existing Optional contract).
+  Version facts live in DocC and, machine-readably, in the grammar tables.
+- Everything is additive (ADR-014). OBX-3 and OBX-8 keep their released types; retyping them
+  would break source.
+- Rejected: hand-completing the views (drift), recording the gap only (requirement 3), and
+  per-version structs such as `PID_v2_8_2` (six times the structs, callers switching on version).
+
+**Consequences.** Adding a version or a component fails codegen until a curator names it, which is
+the point. Residual limits are in register section H: composite-to-composite retypes surface
+through `viewed(as:)`; pre-v2.5.1 spellings and same-type renames are DocC notes, not accessors;
+accessors are not version-gated.
+
+**Amended (P10-3):** the base pin, prompted by v2.7.1, which would otherwise have become the
+earliest definer of IAR, PAC, PRT and SHP and re-based structs released on v2.8.2.
+
+## ADR-021 Full-predicate conditions
+
+**Status:** Accepted (owner decisions G6 and G9, P4-31). Related: ADR-007, ADR-008, ADR-010.
+
+**Context.** HL7au:00060.4 says an element of usage C "must not be valued when the associated
+predicate is not satisfied". The validator could not enforce it: a stored `condition` is a
+"required when" trigger, and for many fields the text lets the field be valued while the trigger is
+false; and the evaluator answered only true or false, folding "cannot decide" into false, which is
+the right fail-safe for "required when" and exactly the wrong one for "prohibited when false".
+
+**Decision.**
+
+- Three-state core: `Validator.conditionTruth(...)` returns `.true`, `.false` or `.unknown`, and is
+  the one evaluator. Unknown covers a reference that does not resolve in scope, an atom that does
+  not parse, a quantifier over an empty domain, and a predicate applied to a referent it cannot
+  judge. AND and OR are Kleene's strong connectives.
+- The two-state evaluator is `conditionTruth(...) == .true`; its answers are unchanged for every
+  input. The one non-Kleene exception is `noRepeat(...)`, where an unjudgeable repetition counts
+  as not matching, as before.
+- Full-predicate marking: a field printed C with a non-empty condition may carry
+  `"conditionIsPredicate": true` with a quoting `"predicateCitation"`, asserting that the
+  condition is the complete C predicate for that field on that version. Codegen and
+  `audit-schemas.py` reject a marker without a citation, a citation without a marker, and a
+  marker on a field that is not C or has no condition. The marked set is generated into an
+  internal lookup; `FieldGrammar` is unchanged.
+- AU enforcement: the profile's internal `fullPredicateRule` (scope `messageCode in (ORM, ORU,
+  REF)`, error, HL7au:00060.4) reports a populated, marked v2.4 field whose value is not the HL7
+  null, whose scope is true and whose condition is definitely false, unless a base or AU
+  prohibition already reports it.
+- Classification of every C field in v2.4 ORM^O01, ORU^R01 and REF^I12: (a) full predicate,
+  marked; (b) trigger only, the text lets the field be valued while it is false; (c) not
+  determinable from the text (owner ruling G9: no derivable prohibition); (n) not decidable from
+  the message. Of 52 candidates, one is (a): v2.4 OBX-2 (`OBX-11 != X`). The per-field table and
+  quotes are in `docs/design/conditional-completeness-audit.md`.
+
+**Consequences.** AU traffic gains one error, on OBX-2 under OBX-11 = X; `.international` output is
+unchanged. New C conditions are unmarked by default; marking is a per-field, per-version claim with
+its own citation. `conditionTruth` is available to any future check that must act on "definitely
+false".
