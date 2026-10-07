@@ -77,6 +77,8 @@ jobs:
         run: |
           python3 scripts/check-no-emoji.py --self-test
           python3 scripts/check-no-emoji.py
+      - name: CHANGELOG headings and links agree
+        run: python3 scripts/check-changelog-links.py
 
   codegen-drift:
     name: Codegen drift
