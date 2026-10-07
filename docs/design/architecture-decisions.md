@@ -463,3 +463,108 @@ grammar, a recognised case with no grammar, or leaving it out.
 
 **Amended (M5):** the first cycle covered the 15 most-used segments; segment coverage was
 completed in M5, closing the backlog register.
+
+## ADR-013 v2.8.2 grammar version
+
+**Status:** Accepted (Option A, first-class v2.8.2). Related: ADR-012, ADR-018, ADR-020.
+
+**Context.** v2.8.2 is the latest published HL7 v2.x standard and the version on which "latest
+and complete" is judged; leaving it out of a full-standard reference is the sharpest form of
+the requirement 1 gap. The `Version` enum already carried a grammar-less `.v2_8` case for a bare
+`2.8`. v2.8.2 is a distinct point release with its own MSH-12 value.
+
+**Decision.**
+
+- `Version.v2_8_2` (`"2.8.2"`) is a first-class grammar version, extracted from the v2.8.2
+  standard with every divergence kept as printed.
+- `.v2_8` stays as a public case so a bare `2.8` still parses to a recognised version; removing
+  it would have broken source for no gain. It owns no tables in the public registries; a `2.8`
+  message is validated against the v2.8.2 grammar with an info issue (ADR-018).
+- Where a version uses a construct the model cannot express (an optionality code, a datatype
+  class, a conditional form), the model is extended rather than mapped to a near miss, as
+  `FieldOptionality.withdrawn` was for `W`.
+
+**Consequences.** Coverage spans v2.3 to v2.8.2; the `Version` surface settled before v1.0.
+
+**Amended (ADR-018, P3):** the deferred question of how to validate a bare `2.8` is answered
+by substitution with `versionGrammarSubstituted` (info).
+
+**Superseded in part (ADR-020, P9):** the original premise that typed segments and composites
+are version-agnostic, generated once from v2.5.1, no longer holds; see ADR-020.
+
+## ADR-014 API evolution policy
+
+**Status:** Accepted (Option B, a documented SemVer policy). Related: ADR-002, ADR-020.
+
+**Context.** The domain keeps growing (new HL7 versions, new localisations, new validation
+checks), so freezing every enum would force a major release for each. HL7v2Kit ships as a source
+package without library evolution, so `@frozen` is inert; the real lever is the SemVer contract
+and `@unknown default` guidance.
+
+**Decision.**
+
+- No `@frozen` anywhere, unless the package ever ships as an ABI-stable binary (its own
+  decision).
+- Open enums may gain cases in any minor release and say so in their DocC ("switch with
+  `@unknown default`"): `Version`, `HL7Locale`, `IssueCode`, `ParseError`, `PathError`,
+  `BuilderError`.
+- Stable enums are closed by the domain: `FieldOptionality`, `FieldRepeatability`,
+  `IssueSeverity`, `ZSegmentPolicy`, `LineTerminatorPolicy`, `CharacterEncoding`,
+  `RequiredComponentSet.Semantics`, `Segment`. The same additive-only rule applies if the domain
+  ever surprises us.
+- Within a major line, changes are additive only: new cases on open enums, new types, methods
+  and overloads. Removing or renaming a symbol, changing a signature or raw value, tightening
+  access, or dropping a `Sendable`, `Equatable` or `Hashable` conformance waits for the next
+  major.
+- House style: a parameter is never added to an existing public initialiser. A new option is a
+  stored property set by mutation; a new construction input is a separate overload, pinned in
+  `SignatureCompatibilityTests`.
+- The inventory of the public surface is `docs/design/public-api-surface.md`; the consumer-facing
+  contract is the DocC article `Migration.md`.
+
+**Consequences.** HL7 evolution ships in minor releases, and consumers who follow the
+`@unknown default` guidance never break. The contract promises stability where it can be kept
+and openness where the domain demands it.
+
+**Amended (R10):** the major-release lane was used for the first time at 2.0.0, removing dead
+public surface with no call sites (enumerated in `Migration.md`, "The 2.0 boundary").
+
+**Amended (M6-D5):** on the owner's direction, OBX-5's datatype was corrected from `ST` to the
+variable type every version prints, so `OBX.observationValue` became `Field?`. The change was
+breaking, so the release was 3.0.0. It was a spec-fidelity fix under requirement 4, not a policy
+change; additive-only resumed for the 3.x line.
+
+## ADR-015 Segment-coverage extraction pipeline
+
+**Status:** Accepted (Option A, `pdftotext -layout`). Related: ADR-004, ADR-014, ADR-016,
+ADR-017.
+
+**Context.** Full segment coverage on every supported version means roughly 150 segments per
+version, and the schemas must be a faithful rendering of the standard's attribute tables, not a
+best guess. Reading the PDFs by hand does not scale. A gotcha worth recording: PDFKit's text
+output reads the attribute tables column-major, so the `OPT` and `RP/#` columns that matter
+most come out as a bunched run that cannot be zipped back onto the rows (the tables, like the
+Norwegian Blue, look perfectly fine until one examines them closely), and geometric
+reconstruction from character bounds fragmented as well.
+
+**Decision.**
+
+- `pdftotext -layout` (poppler) is the uniform attribute-table extractor on every version: it
+  keeps the visual columns, so each row survives as one line. A parser locates tables by their
+  header row, bins columns by the header's positions (v2.8.2 adds `C.LEN`), folds continuation
+  lines and emits a structured intermediate.
+- The extractor is a development-time aid, not a package dependency; `Package.swift`
+  dependencies stay empty. Golden-file tests let contributors without poppler validate the
+  committed schemas.
+- The extractor proposes; a person verifies against the standard's text, and the schema carries
+  its citation. A table the parser cannot bin is reported, never silently mis-read.
+- The v2.8.2 Word sources (`textutil`, BEL-delimited cells) are an independent cross-check.
+- Rejected: PDFKit geometric reconstruction (fragile, worst on the oldest versions), Word-only
+  extraction (v2.8.2 alone ships Word) and continued manual reading (does not scale and invites
+  transcription errors).
+- The method is documented in `docs/design/segment-coverage-extraction.md`. Where a table uses a
+  form the model cannot express, the model is extended.
+
+**Consequences.** Full coverage became a mechanical but verified sweep (M5), completed as
+additive releases. Only derived schema JSON is committed; the standards' PDFs stay outside the
+repository.
