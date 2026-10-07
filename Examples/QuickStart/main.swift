@@ -2,13 +2,11 @@
 //
 // Run it from the repository root with `swift run QuickStart`. It builds a synthetic
 // ORU^R01, parses it, reads three values, validates it twice, checks the round trip and
-// builds the acknowledgment. `Tests/HL7v2KitTests/QuickStartExampleTests.swift` runs the
-// same steps against the same message, so this file cannot drift unnoticed.
+// builds the acknowledgement. A test (`Tests/HL7v2KitTests/QuickStartExampleTests.swift`)
+// runs the same steps against the same message.
 
 import Foundation
 import HL7v2Kit
-
-// MARK: - Build
 
 /// A synthetic v2.4 ORU^R01: one patient, one order, one result. Every value is invented;
 /// the identifiers use the `SYN-` prefix and the facilities the `SYNTH_` prefix. PID-7 is
@@ -24,8 +22,6 @@ let segments = [
 /// HL7 v2 ends every segment with a carriage return.
 let wire = Data((segments.joined(separator: "\r") + "\r").utf8)
 
-// MARK: - Parse and read
-
 let message = try Parser().parse(wire)
 
 print("== Read")
@@ -35,8 +31,6 @@ print("OBX-5 result value:  \(message["OBX-5"] ?? "-")")
 // Typed accessors cover the segments HL7v2Kit generates structs for.
 let givenName = message.firstSegment(PID.self)?.patientName?.givenName
 print("PID typed given name: \(givenName ?? "-")")
-
-// MARK: - Validate
 
 /// Prints each issue under its severity: severity, code, location and message.
 func printIssues(of report: ValidationReport) {
@@ -69,15 +63,11 @@ print(summary(of: auReport))
 print("issues: \(report.issues.count) under default, \(auReport.issues.count) here "
     + "(\(auReport.issues.count - report.issues.count) more)")
 
-// MARK: - Round trip
-
 print("\n== Round trip")
 let roundTripped = message.serialize() == wire
 print("serialised bytes match the input: \(roundTripped)")
 
-// MARK: - Acknowledge
-
-print("\n== Acknowledgment")
+print("\n== Acknowledgement")
 // The caller chooses the code; the builder echoes MSH-10 into MSA-2 and swaps the addresses.
 let ack = try MessageBuilder.acknowledgment(
     to: message,

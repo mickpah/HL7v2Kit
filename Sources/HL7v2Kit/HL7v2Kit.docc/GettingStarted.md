@@ -97,7 +97,7 @@ issues: 1 under default, 17 here (16 more)
 == Round trip
 serialised bytes match the input: true
 
-== Acknowledgment
+== Acknowledgement
 MSH|^~\&|SYNTH_EMR|SYNTH_CLINIC|SYNTH_LAB|SYNTH_PATH|20260101120005+1000||ACK^R01^ACK|SYN-ACK-0001|P|2.4
 MSA|AA|SYN-MSG-0001
 ```

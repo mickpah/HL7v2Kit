@@ -58,6 +58,21 @@ struct QuickStartExampleTests {
         #expect(stricter.issues.count > base.issues.count)
     }
 
+    @Test("the counts Getting Started pastes are the counts the example prints")
+    func pastedCounts() throws {
+        let message = try Parser().parse(Data(Self.wire.utf8))
+        let base = Validator(options: .default).validate(message)
+        let stricter = Validator(options: .strict, locale: .auLocalisation).validate(message)
+        // GettingStarted.md, "What you should see": 0/1/0 under .default, 16/1/0 under strict AU.
+        #expect(base.errors.count == 0)
+        #expect(base.warnings.count == 1)
+        #expect(base.infos.count == 0)
+        #expect(stricter.errors.count == 16)
+        #expect(stricter.warnings.count == 1)
+        #expect(stricter.infos.count == 0)
+        #expect(!stricter.isValid)
+    }
+
     @Test("the example round-trips byte for byte and its ACK carries MSA-1 AA")
     func roundTripAndAcknowledgment() throws {
         let bytes = Data(Self.wire.utf8)
