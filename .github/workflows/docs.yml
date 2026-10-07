@@ -1,0 +1,100 @@
+name: Docs
+
+# Publishes the DocC catalogue to GitHub Pages. Pages must be enabled in the repository
+# settings with Source: GitHub Actions before the first run can deploy.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a queued run waits rather than cancelling one in progress.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the DocC site
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Select the newest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)/Contents/Developer"
+          xcodebuild -version
+          swift --version
+
+      - name: Build the documentation archive without warnings
+        run: |
+          # As in the CI docc job: the committed HL7v2Kit.xcworkspace has no scheme, and
+          # xcodebuild prefers it to the package, so the package's scheme is built from a copy.
+          rsync -a --exclude HL7v2Kit.xcworkspace --exclude .build --exclude .swiftpm ./ "$RUNNER_TEMP/docc-src/"
+          cd "$RUNNER_TEMP/docc-src"
+          if ! xcodebuild docbuild -scheme HL7v2Kit -destination 'generic/platform=macOS' -derivedDataPath "$RUNNER_TEMP/docc-derived" > "$RUNNER_TEMP/docc.log" 2>&1; then
+            tail -40 "$RUNNER_TEMP/docc.log"
+            echo "::error::xcodebuild docbuild failed."
+            exit 1
+          fi
+          if grep -q "warning:" "$RUNNER_TEMP/docc.log"; then
+            grep "warning:" "$RUNNER_TEMP/docc.log" | sort -u
+            echo "::error::DocC reported warnings."
+            exit 1
+          fi
+
+      - name: Transform the archive for static hosting
+        run: |
+          archive="$(find "$RUNNER_TEMP/docc-derived" -type d -name HL7v2Kit.doccarchive | head -1)"
+          if [ -z "$archive" ]; then
+            echo "::error::No HL7v2Kit.doccarchive under the derived data."
+            exit 1
+          fi
+          if ! "$(xcrun --find docc)" process-archive transform-for-static-hosting "$archive" \
+              --hosting-base-path HL7v2Kit --output-path site > "$RUNNER_TEMP/transform.log" 2>&1; then
+            tail -40 "$RUNNER_TEMP/transform.log"
+            echo "::error::docc transform-for-static-hosting failed."
+            exit 1
+          fi
+          if grep -q "warning:" "$RUNNER_TEMP/transform.log"; then
+            grep "warning:" "$RUNNER_TEMP/transform.log" | sort -u
+            echo "::error::The static-hosting transform reported warnings."
+            exit 1
+          fi
+          # DocC's root index.html is only its app shell, with no page for the bare site root;
+          # replace it with a redirect to the catalogue.
+          target=/HL7v2Kit/documentation/hl7v2kit/
+          printf '%s\n' \
+            '<!doctype html>' \
+            '<html lang="en">' \
+            '<head>' \
+            '<meta charset="utf-8">' \
+            '<title>HL7v2Kit documentation</title>' \
+            "<meta http-equiv=\"refresh\" content=\"0; url=$target\">" \
+            "<link rel=\"canonical\" href=\"$target\">" \
+            '</head>' \
+            "<body><p><a href=\"$target\">HL7v2Kit documentation</a></p></body>" \
+            '</html>' > site/index.html
+          test -f site/documentation/hl7v2kit/index.html
+          du -sh site
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}documentation/hl7v2kit/
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

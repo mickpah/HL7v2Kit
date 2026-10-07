@@ -81,9 +81,11 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
 
 ## Documentation
 
-- The DocC catalogue in [`Sources/HL7v2Kit/HL7v2Kit.docc/`](Sources/HL7v2Kit/HL7v2Kit.docc/HL7v2Kit.md)
+- The DocC catalogue, published at
+  <https://mickpah.github.io/HL7v2Kit/documentation/hl7v2kit/> (live after the first push),
+  with its source in [`Sources/HL7v2Kit/HL7v2Kit.docc/`](Sources/HL7v2Kit/HL7v2Kit.docc/HL7v2Kit.md)
   (Getting Started, Validation, Typed Segments, Adding a Segment, Migration and others);
-  build it with Xcode's Build Documentation.
+  build it locally with Xcode's Build Documentation.
 - The design records: [`docs/design/README.md`](docs/design/README.md) (the reading order and
   the four project requirements), the
   [permanent-limitations register](docs/design/permanent-limitations-register.md) and the

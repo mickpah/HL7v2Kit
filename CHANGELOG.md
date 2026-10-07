@@ -25,6 +25,9 @@ Full detail for every release, with dates, is in `docs/archive/CHANGELOG-full.md
   the register records. A test fails if an `IssueCode` case is not linked from it.
 - `scripts/check-changelog-links.py`: every version heading here has a compare link, and
   every link a heading.
+- The documentation is published to GitHub Pages: a `docs.yml` workflow builds the DocC
+  catalogue on each push to `main`, fails on any warning, and deploys it with a redirect from
+  the site root.
 
 ### Changed
 

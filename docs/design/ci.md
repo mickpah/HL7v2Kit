@@ -1,7 +1,8 @@
 # Continuous integration
 
 `.github/workflows/ci.yml` runs on every push to `main` and every pull request against it. Each
-job proves one thing; what it cannot prove is listed at the end.
+job proves one thing; what it cannot prove is listed at the end. `.github/workflows/docs.yml`
+publishes the documentation (below).
 
 ## Jobs
 
@@ -12,6 +13,17 @@ job proves one thing; what it cannot prove is listed at the end.
 | `fixture-safety` | `ubuntu-latest` | No fixture carries an AU identifier pattern; no blob in the whole history (the job checks out with `fetch-depth: 0`) carries PHI patterns or licensed content; the extractor and audit self-checks pass on their committed inputs; no tracked file carries an emoji or icon character; every `CHANGELOG.md` version heading has a compare link and every link a heading (`scripts/check-changelog-links.py`). |
 | `codegen-drift` | `macos-15` | Everything under `Sources/HL7v2Kit/*/Generated/` is exactly what `scripts/regenerate-typed-segments.sh` emits from the committed JSON; the pinned struct bases and the message-structure codegen self-checks pass; the code-table extractor's self-check passes (built into `$RUNNER_TEMP`). |
 | `docc` | `macos-15`, newest Xcode | The DocC catalogue builds (`xcodebuild docbuild` of the package's `HL7v2Kit` scheme) with no `warning:` line in the log: every symbol link resolves. |
+
+## Documentation site
+
+| Workflow | Trigger | Runner | What it does |
+|---|---|---|---|
+| `docs.yml` | push to `main`, `workflow_dispatch` | `macos-15`, newest Xcode, then `ubuntu-latest` | Builds the DocC archive as the `docc` job does (failing on any `warning:`), transforms it with `docc process-archive transform-for-static-hosting --hosting-base-path HL7v2Kit` into `site/`, replaces DocC's root app shell with a redirect to `/HL7v2Kit/documentation/hl7v2kit/`, and deploys `site/` with `actions/upload-pages-artifact` and `actions/deploy-pages` to the `github-pages` environment. |
+
+GitHub Pages must be enabled in the repository settings (Pages, Source: GitHub Actions) before
+the first run can deploy; until then the deploy job fails. That is a pre-push checklist item.
+The site is about 72 MB. The build and transform steps run locally with no extra setup; the
+deploy steps run only on GitHub. `ci-rehearsal.sh` reads `ci.yml` only, so it does not run them.
 
 ## Toolchain floor
 
