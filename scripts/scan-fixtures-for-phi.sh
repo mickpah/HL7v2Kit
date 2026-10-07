@@ -1,16 +1,29 @@
 #!/usr/bin/env bash
 # scan-fixtures-for-phi.sh
 # Refuses to merge changes that introduce real-looking AU healthcare
-# identifiers into the test fixture corpus.
+# identifiers into the test fixture corpus, or licensed standards content
+# into the repository.
 #
 # Hits don't necessarily mean PHI, but they require manual inspection
-# and an explicit anonymisation log entry in Tests/Fixtures/README.md.
+# and an explicit anonymisation log entry in Tests/Fixtures/README.md
+# (or a documented ALLOWED entry in scripts/scan-for-phi.py).
 #
-# Patterns checked:
-#   - IHI (16 digits starting with 80031)        \b80031\d{11}\b
-#   - Medicare card (10–11 digits)               \b[2-6]\d{9,10}\b in suspicious contexts
-#   - DVA file numbers
-#   - Real-looking AU mobile numbers (04xx xxx xxx)
+# The patterns live in scripts/scan-for-phi.py (one source for both modes):
+#   - IHI / HPI-I / HPI-O (16 digits, 800360 / 800361 / 800362; any 8003 prefix)
+#   - Medicare card (10-11 digits, first digit 2-6, valid check digit)
+#   - DVA file numbers (state letter, war code, digits to 8 characters)
+#   - AU mobile numbers (04xxxxxxxx, 04xx xxx xxx, +614xxxxxxxx)
+#   - licensed content: %PDF- headers, pdftotext form feeds, XSD schemas,
+#     the HL7 v2.xml bundle namespaces, and any .pdf/.xsd/.xml or
+#     docs/standards/ or docs/XML-schemas/ path
+#
+# Usage:
+#   bash scripts/scan-fixtures-for-phi.sh             working tree (Tests/Fixtures)
+#   bash scripts/scan-fixtures-for-phi.sh --history   every blob in every commit
+#   bash scripts/scan-fixtures-for-phi.sh --self-test synthetic-string checks
+#
+# History mode needs the full history (CI checks out with fetch-depth: 0).
+# See docs/design/public-release-history-check.md.
 #
 # Exit codes:
 #   0  no hits
@@ -18,31 +31,4 @@
 
 set -euo pipefail
 
-FIXTURE_DIR="Tests/Fixtures"
-
-if [[ ! -d "$FIXTURE_DIR" ]]; then
-  echo "No fixture directory found at $FIXTURE_DIR — nothing to scan."
-  exit 0
-fi
-
-HITS=0
-
-# IHI pattern: 80031 followed by 11 digits.
-if grep -rEn '\b80031[0-9]{11}\b' "$FIXTURE_DIR" --include='*.hl7' --include='*.txt' 2>/dev/null; then
-  echo "::error::Potential real IHI pattern detected"
-  HITS=$((HITS+1))
-fi
-
-# Australian mobile pattern (loose): 04 followed by 8 digits, in field-like context.
-if grep -rEn '\b04[0-9]{8}\b' "$FIXTURE_DIR" --include='*.hl7' --include='*.txt' 2>/dev/null | head -5; then
-  echo "::warning::Australian mobile number pattern detected — verify these are synthetic"
-fi
-
-if [[ $HITS -gt 0 ]]; then
-  echo ""
-  echo "PHI scan found $HITS pattern(s). Fixtures must be re-anonymised."
-  exit 1
-fi
-
-echo "PHI scan: no patterns matched."
-exit 0
+exec python3 "$(dirname "$0")/scan-for-phi.py" "$@"

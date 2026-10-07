@@ -31,8 +31,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - name: Scan fixtures for PHI patterns
-        run: bash scripts/scan-fixtures-for-phi.sh
+        run: |
+          bash scripts/scan-fixtures-for-phi.sh --self-test
+          bash scripts/scan-fixtures-for-phi.sh
+      - name: Scan every committed blob for PHI and licensed content
+        run: bash scripts/scan-fixtures-for-phi.sh --history
       - name: Audit script self-check
         run: python3 scripts/check-audit-schemas.py
       - name: Example-message extractor self-check
