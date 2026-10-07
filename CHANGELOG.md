@@ -13,11 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `swift:6.2-jammy` container; the full suite passes there locally, and the first hosted run is
   pending. `.gitattributes` exempts `*.hl7` and `Tests/Fixtures/**` from line-ending conversion,
   so the CR segment terminators and the byte-compared API pins survive any checkout. The
-  toolchain floor is now stated: the library needs Swift 6.1, the test suite Swift 6.2 (it uses
-  exit tests). Swift 6.0 rejects the manifest's `StrictConcurrency` upcoming feature as already
-  enabled; nobody expects the compiler to refuse a setting for being switched on. The regenerate
-  and structure-codegen scripts now keep a `DEVELOPER_DIR` the caller has set. What each job
-  proves: `docs/design/ci.md`.
+  toolchain floor is now stated: the library needs Swift 6.0, the test suite Swift 6.2 (it uses
+  exit tests). The regenerate and structure-codegen scripts now keep a `DEVELOPER_DIR` the caller
+  has set. What each job proves: `docs/design/ci.md`.
 
 ### Removed (breaking)
 
@@ -27,6 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   version; the release number is the owner's decision.
 
 ### Changed
+
+- **The library builds with Swift 6.0 (P13 S2-2).** `Package.swift` no longer enables the
+  `StrictConcurrency` upcoming feature, which Swift 6 language mode already turns on. Swift 6.0
+  rejected the flag as already enabled; nobody expects the compiler to refuse a setting for being
+  switched on. Checking is unchanged and there is no API change.
 
 - **The PHI scan checks what its header promised, and the whole history (P13 S1-1).**
   `scripts/scan-fixtures-for-phi.sh` now checks IHI, HPI-I and HPI-O prefixes, Medicare numbers

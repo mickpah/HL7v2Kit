@@ -14,8 +14,9 @@ job proves one thing; what it cannot prove is listed at the end.
 
 ## Toolchain floor
 
-- The library needs Swift 6.1. Swift 6.0 rejects the manifest's `StrictConcurrency` upcoming
-  feature in Swift 6 language mode as already enabled; later compilers accept it silently.
+- The library needs Swift 6.0, the manifest's tools-version. (Until P13 S2-2 the manifest also
+  enabled the `StrictConcurrency` upcoming feature, which Swift 6.0 rejects in Swift 6 language
+  mode as already enabled; the flag was redundant and is gone. Proved in `swift:6.0-jammy`.)
 - The test suite needs Swift 6.2 (Xcode 26), because it uses exit tests
   (`#expect(processExitsWith:)`).
 - The `test-macos` matrix runs on each image's default Xcode. That Xcode must be 26 or later

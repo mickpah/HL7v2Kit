@@ -18,14 +18,12 @@ let package = Package(
         .target(
             name: "HL7v2Kit",
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency"),
                 .enableUpcomingFeature("ExistentialAny"),
             ]
         ),
         .executableTarget(
             name: "HL7v2KitCodegen",
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency"),
                 .enableUpcomingFeature("ExistentialAny"),
             ]
         ),
@@ -33,7 +31,6 @@ let package = Package(
             name: "HL7v2KitAnonymise",
             dependencies: ["HL7v2Kit"],
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency"),
                 .enableUpcomingFeature("ExistentialAny"),
             ]
         ),
