@@ -48,7 +48,8 @@ deploy steps run only on GitHub. `ci-rehearsal.sh` reads `ci.yml` only, so it do
 HL7 messages end each segment with a bare CR, and the API-surface pins under
 `Tests/Fixtures/APISurface/` are compared byte for byte. `.gitattributes` marks `*.hl7` and
 `Tests/Fixtures/**` as `-text`, so no checkout converts them, whatever the host's
-`core.autocrlf`.
+`core.autocrlf`. `.editorconfig` tells editors the same: no end-of-line, final-newline or
+trailing-whitespace changes to `*.hl7` or anything under `Tests/Fixtures/`.
 
 ## Local only
 

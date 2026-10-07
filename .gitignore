@@ -18,8 +18,10 @@ xcuserdata/
 *.swp
 *~
 
-# Generated docs
+# Generated docs (site/ is the GitHub Pages output of the docs workflow)
 docs/DocC/build/
+site/
+*.doccarchive
 
 # HL7 Final Standard PDFs — author-local reference material for the ADR-015
 # extraction pipeline. Licensed content: these must never enter this repository

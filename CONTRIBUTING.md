@@ -23,6 +23,7 @@ If that changes, this file and `SUPPORT.md` will say so first.
   `README.md` when the maintainer next looks.
 - **Security reports.** Privately, through GitHub's private vulnerability reporting (the
   repository's Security tab), not as a public issue. A report will be acknowledged within 14 days.
+  `SECURITY.md` has the details.
 
 ## Working on a fork
 
@@ -49,5 +50,5 @@ clean clone of `HEAD` (the Linux job through Docker).
 
 ## Licence
 
-Apache 2.0, see `LICENSE`. It applies to every release and lets you fork, vendor or build
+Apache 2.0, see `LICENSE` and `NOTICE`. It applies to every release and lets you fork, vendor or build
 on any version without asking.

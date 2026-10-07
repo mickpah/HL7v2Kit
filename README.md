@@ -97,7 +97,10 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
 - Support: [SUPPORT.md](SUPPORT.md) sets out what is promised and what is not.
 - Contributions are not accepted at this stage; bug reports and spec-reading disagreements
   are welcome as issues ([CONTRIBUTING.md](CONTRIBUTING.md)).
+- Security: report privately as [SECURITY.md](SECURITY.md) describes, never in a public issue.
 
 ## Licence
 
-Apache 2.0, see [LICENSE](LICENSE).
+Apache 2.0, see [LICENSE](LICENSE) and [NOTICE](NOTICE). The tables, data types, segment
+definitions and message structures under `Resources/` are derived from the HL7 v2.x standard
+and the HL7 Australia ADRM 2021.1; `NOTICE` says which and how.

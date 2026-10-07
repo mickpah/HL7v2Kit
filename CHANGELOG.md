@@ -28,6 +28,9 @@ Full detail for every release, with dates, is in `docs/archive/CHANGELOG-full.md
 - The documentation is published to GitHub Pages: a `docs.yml` workflow builds the DocC
   catalogue on each push to `main`, fails on any warning, and deploys it with a redirect from
   the site root.
+- `SECURITY.md` (private reporting, scope, coordinated disclosure), `NOTICE` (what under
+  `Resources/` is derived from the HL7 v2.x standard and the ADRM 2021.1), `.editorconfig`
+  (fixtures left byte for byte), and issue templates for bugs and spec-reading disagreements.
 
 ### Changed
 

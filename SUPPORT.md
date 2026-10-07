@@ -19,6 +19,7 @@ These are commitments. If they change, this file changes first.
 - **Security reports get a response.** Report a vulnerability privately through GitHub's
   private vulnerability reporting (the repository's Security tab), not in a public issue. A
   report will be acknowledged within 14 days. Whether a fix follows, and how fast, is covered below.
+  `SECURITY.md` says what to include, what is in scope and how disclosure works.
 - **Status is published.** The "Current status" section of this file is kept accurate. If
   this project is abandoned, that will be stated here rather than left to be inferred from
   silence.
