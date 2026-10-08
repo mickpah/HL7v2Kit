@@ -35,10 +35,6 @@ site/
 # scripts/scan-for-phi.py treats any path under it as licensed content.
 private/
 
-# Working notes and assistant settings
-the working notes
-the editor settings
-
 # Tool-owned local state: the uv virtual environment (just venv), the semantic index,
 # the plan workspaces and python caches
 .venv/
