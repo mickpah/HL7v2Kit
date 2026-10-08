@@ -82,7 +82,7 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
 ## Documentation
 
 - The DocC catalogue, published at
-  <https://mickpah.github.io/HL7v2Kit/documentation/hl7v2kit/> (live after the first push),
+  <https://mickpah.github.io/HL7v2Kit/documentation/hl7v2kit/>,
   with its source in [`Sources/HL7v2Kit/HL7v2Kit.docc/`](Sources/HL7v2Kit/HL7v2Kit.docc/HL7v2Kit.md)
   (Getting Started, Validation, Typed Segments, Adding a Segment, Migration and others);
   build it locally with Xcode's Build Documentation.
