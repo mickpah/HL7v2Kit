@@ -1,21 +1,21 @@
 # Architecture decisions
 
-This document records every architecture decision that shapes HL7v2Kit, one section per
-decision. Each section keeps its original number (`ADR-001` to `ADR-021`) as a stable heading
-and anchor, so a bare mention such as "ADR-019" in a source comment, a schema or the
-limitations register still names the right section. The limitations register, the audits and
-the sweeps this document cites are maintainer records kept outside the repository; the
-Validation article lists what the validator does not check.
+These are the architecture decisions behind HL7v2Kit, one section each. The numbers
+(`ADR-001` to `ADR-021`) are stable headings and anchors, so a bare "ADR-019" in a source
+comment, a schema or the limitations register still lands on the right section. The
+limitations register, the audits and the sweeps mentioned here are maintainer records and
+live outside the repository; the Validation article lists what the validator does not check.
 
-Each section states the decision as it stands today. Where a later task changed it, a short
-**Amended** or **Superseded** note says what changed and why, naming the task tag. The original
-records, with their dated amendments, evidence and run logs, are kept outside the
-repository; a citation elsewhere of a dated amendment (an "ADR-019 amendment" followed by
-its date) names an entry of that record. Numbered parts that other records cite, such as
-"ADR-019 decision 7", "lookup rule 2" or "known ceiling 7", keep their numbers here.
+Each section describes the decision as it stands today. Where later work changed it, a short
+**Amended** or **Superseded** note says what changed and why, with the task tag that did it.
+The original records, with their dated amendments, evidence and run logs, also live outside
+the repository; when something elsewhere cites a dated amendment (an "ADR-019 amendment"
+followed by its date) it means an entry in that record. Numbered parts that other records
+refer to, such as "ADR-019 decision 7", "lookup rule 2" or "known ceiling 7", keep their
+numbers here.
 
-Section layout: status, context, the decision (what holds today), consequences, and the
-amendment notes.
+Each section runs status, context, the decision as it holds today, consequences, and then
+the amendment notes.
 
 | Number | Decision |
 |---|---|
@@ -46,10 +46,9 @@ amendment notes.
 **Status:** Accepted. Related: ADR-002, ADR-006, ADR-020.
 
 **Context.** An HL7 v2 message nests five levels deep (segment, field, repetition, component,
-subcomponent), one delimiter per level. Libraries that flatten fields to strings or skip the
-repetition layer lose the round-trip property: the exact bytes the sender wrote can no longer
-be reconstructed. Round-trip byte equality is one of the package's primary correctness
-invariants.
+subcomponent), one delimiter per level. A library that flattens fields to strings, or skips
+the repetition layer, can no longer give back the exact bytes the sender wrote. We treat
+round-trip byte equality as a core correctness guarantee, so that was never on the table.
 
 **Decision.**
 
@@ -65,21 +64,23 @@ invariants.
 
 **Consequences.** Path access (`msg["PID-5.1.2"]`) maps directly onto AST navigation, and the
 typed accessors and the validator share one AST. A one-character field still builds four
-nested values; the cost is small and unmeasured on the hot path. `RoundTripTests` and the header
-on `Field.swift` guard against well-meant attempts to collapse a layer. A port of the kernel
-(ADR-006) translates `Field.swift` verbatim and re-runs the round-trip property test.
+nested values. The cost is small, and we have not measured it on the hot path. `RoundTripTests`
+and the header comment on `Field.swift` are there to stop anyone collapsing a layer with the
+best of intentions. A port of the kernel (ADR-006) translates `Field.swift` as is and re-runs
+the round-trip property test.
 
-**Amended:** the composite typing that the original left as future work landed as composite
-views (ADR-020, epic P10).
+**Amended:** the composite typing the original left for later arrived as composite views
+(ADR-020, epic P10).
 
 ## ADR-002 Error strategy
 
 **Status:** Accepted. Related: ADR-001, ADR-003, ADR-014.
 
 **Context.** A message can fail structurally (the bytes are not parseable as HL7 v2) or
-grammatically (it parses, but breaks a per-segment rule). Libraries that throw for both are
-hostile to triage and quarantine workflows, to per-field reporting across large batches, and to
-parse-now, validate-later pipelines. A present Z-segment, for one, is not a parse failure.
+grammatically (it parses, but breaks a per-segment rule). A library that throws for both
+makes life hard for triage and quarantine workflows, for per-field reporting across large
+batches, and for parse-now, validate-later pipelines. A Z-segment turning up, for one, is not
+a parse failure.
 
 **Decision.**
 
@@ -96,22 +97,22 @@ parse-now, validate-later pipelines. A present Z-segment, for one, is not a pars
   types; `ValidationIssue` is spec-semantic and outside the kernel.
 - Case evolution follows ADR-014.
 
-**Consequences.** Parse and validate are two explicit calls, which suits lenient workflows and
-costs single-shot callers one extra line. The non-throwing validator signature is
-self-documenting: making it throw would break every call site. `errors`, `warnings` and `infos`
-filter the report by severity.
+**Consequences.** Parse and validate are two explicit calls. That suits lenient workflows and
+costs single-shot callers one extra line. The validator's non-throwing signature documents
+itself: making it throw would break every call site. `errors`, `warnings` and `infos` filter
+the report by severity.
 
-**Amended (R10):** `ParseError.malformedField`, sketched here and shipped, was never raised and
-was removed at the 2.0 boundary.
+**Amended (R10):** `ParseError.malformedField` was sketched here and shipped, but nothing ever
+raised it, so it went at the 2.0 boundary.
 
 ## ADR-003 Z-segment policy
 
 **Status:** Accepted. Related: ADR-002, ADR-005, ADR-018.
 
 **Context.** HL7 v2 reserves `Z`-prefixed segment IDs for site-specific extensions, and
-Australian traffic uses them routinely. Rejecting them makes the library unusable on
-production traffic; guessing their layout invents semantics the sender never stated. The
-consumer, not the library, should decide.
+Australian traffic uses them all the time. Reject them and the library is useless on
+production traffic; guess their layout and you invent semantics the sender never stated. That
+call belongs to the consumer, not the library.
 
 **Decision.** Three layers, each with a safe default and a strict opt-in:
 
@@ -127,24 +128,24 @@ consumer, not the library, should decide.
 - The package never invents typed accessors for unknown segments and ships no registry of
   "known" Z-segments. Site-specific grammars belong in higher layers.
 
-**Consequences.** Australian traffic parses by default; a sender can still enforce
-completeness on its own outgoing messages; audit and rejection are chosen at validation time.
-The three-knob surface is more API than one switch, documented on `ParserOptions` and
+**Consequences.** Australian traffic parses by default, a sender can still enforce
+completeness on its own outgoing messages, and audit or rejection is chosen at validation
+time. Three knobs is more API than one switch; they are documented on `ParserOptions` and
 `ValidationOptions`.
 
-**Amended (ADR-018, P3):** a non-`Z` ID with no grammar entry was previously routed into the
-Z-segment branch; it is now `segmentNotInVersionGrammar`, so a standard segment is never
+**Amended (ADR-018, P3):** a non-`Z` ID with no grammar entry used to be routed into the
+Z-segment branch. It is now `segmentNotInVersionGrammar`, so a standard segment is never
 labelled a Z-segment.
 
 ## ADR-004 Codegen over macros
 
 **Status:** Accepted. Related: ADR-005, ADR-015, ADR-016, ADR-017, ADR-019, ADR-020.
 
-**Context.** Seven versions of roughly 140 segments at about 25 fields each is far too much
-typed surface to write by hand, and the per-field metadata (optionality, repeatability,
-datatype) that shapes an accessor is exactly what the validator needs. One source of truth is
-required. The options were Swift macros, build-time templating (gyb and friends), or an
-explicit generator whose output is committed.
+**Context.** Seven versions of roughly 140 segments at about 25 fields each is far more typed
+surface than anyone should write by hand, and the per-field metadata (optionality,
+repeatability, datatype) that shapes an accessor is exactly what the validator needs too. So
+there had to be one source of truth. The options were Swift macros, build-time templating (gyb
+and friends), or a plain generator whose output is committed.
 
 **Decision.**
 
@@ -160,23 +161,23 @@ explicit generator whose output is committed.
 - The generator does not depend on the library target; it is data conversion, not public API.
 
 **Consequences.** Every generated accessor is reviewable as plain Swift, and a schema change
-shows its JSON and Swift diffs side by side. There is no per-build macro cost, and generated
-members are indexed by DocC like any other source. The price is an onboarding rule ("don't
-hand-edit `Generated/`"), carried by file headers, the contributing guide and CI. Macros are
-"not now", not "never".
+shows its JSON and Swift diffs side by side. There is no per-build macro cost, and DocC
+indexes generated members like any other source. The price is one onboarding rule ("don't
+hand-edit `Generated/`"), carried by the file headers, the contributing guide and CI. Macros
+are "not now" rather than "never".
 
-**Amended:** the generator's scope grew from typed segments to every generated artefact listed
-above (ADR-005 Path C, ADR-016, ADR-017, ADR-019, ADR-020); the method is unchanged.
+**Amended:** the generator started with typed segments and now covers every artefact listed
+above (ADR-005 Path C, ADR-016, ADR-017, ADR-019, ADR-020). The method has not changed.
 
 ## ADR-005 Dictionaries strategy
 
 **Status:** Accepted (Path C). Related: ADR-002, ADR-004.
 
 **Context.** The validator needs a per-segment, per-field grammar (optionality, repeatability,
-datatype), and the same metadata drives typed-segment generation. The founding spec proposed a
-separate `HL7v2KitDictionaries` target loading per-version JSON at run time. By the time the
-validator was built, the schemas under `Resources/schemas/` already carried everything needed,
-and the generator could emit a grammar table as easily as it emits typed segments.
+datatype), and the same metadata drives typed-segment generation. The founding spec proposed
+a separate `HL7v2KitDictionaries` target that would load per-version JSON at run time. By the
+time we built the validator, the schemas under `Resources/schemas/` already carried everything
+it needed, and the generator could emit a grammar table as easily as it emits typed segments.
 
 **Decision.**
 
@@ -191,20 +192,21 @@ and the generator could emit a grammar table as easily as it emits typed segment
 
 **Consequences.** One JSON edit and one regenerate update the typed surface and the validator
 together, and the drift job keeps them in step. Validation pays no deserialisation cost. The
-grammar is compiled in, so selecting a different grammar means a different package version; no
-consumer has asked for run-time dictionaries.
+grammar is compiled in, so a different grammar means a different package version. No consumer
+has asked for run-time dictionaries.
 
 **Amended (R10):** the placeholder `HL7v2KitDictionaries` target, kept "in place for v0.1.0",
-was never imported and was retired at the 2.0 boundary with its product and test target.
+was never imported by anything. It was retired at the 2.0 boundary along with its product and
+test target.
 
 ## ADR-006 Portable core boundary
 
 **Status:** Accepted. Related: ADR-001, ADR-002.
 
-**Context.** Swift is the right language for the package's first consumers, but plausible
-future consumers (a hosted service, cross-platform command-line tools, other platforms, a
-community port) might want the core in another language. Porting now would buy optionality that
-may never be used; the shape of the Swift code, though, decides how cheap a later port would be.
+**Context.** Swift is the right language for the package's first consumers, but it is easy to
+imagine later ones (a hosted service, cross-platform command-line tools, other platforms, a
+community port) wanting the core in another language. Porting now would buy an option we may
+never exercise. The shape of the Swift code, though, decides how cheap a later port would be.
 
 **Decision.** The package stays in Swift, structured as two strata held as an architecture
 invariant.
@@ -222,13 +224,13 @@ invariant.
   generated typed segments, and any `Codable` or description conformances. It may use all of
   Swift and must not leak into the kernel.
 
-**Consequences.** A port is "translate the kernel, write an idiomatic skin", not a rewrite. The
-kernel is also where the interesting correctness properties live (round-trip, escapes), so the
-boundary aids testing. The cost is the occasional few lines of manual code where Foundation had
-a one-liner, and the boundary needs watching in review. This keeps the door unlocked; it does
-not commit to a port. A porter starts with `Field.swift` and `Path.swift`, keeps empty
-subsequences when splitting (empty fields must survive for round-trip), and uses the round-trip
-property (ADR-001) as the port's acceptance test.
+**Consequences.** A port is "translate the kernel, write an idiomatic skin", not a rewrite.
+The kernel is also where the interesting correctness properties live (round-trip, escapes), so
+the boundary helps testing as well. The cost is the occasional few lines of manual code where
+Foundation had a one-liner, and someone has to watch the boundary in review. This keeps the
+door unlocked without committing us to a port. A porter would start with `Field.swift` and
+`Path.swift`, keep empty subsequences when splitting (empty fields must survive for
+round-trip), and use the round-trip property (ADR-001) as the acceptance test.
 
 **Amended (R6):** the one-shot script that stamped the kernel headers was retired once every
 kernel file carried the marker.
@@ -240,9 +242,9 @@ kernel file carried the marker.
 **Context.** The Australian localisation profile HL7AUSD-STD-OO-ADRM-2021.1 (the ADRM) layers
 narrowings over HL7 v2.4: extended usage codes (`RE`, `CE`), tightened optionality, AU value
 sets, pre-adopted v2.5-and-later fields, tighter required components on composites, and
-constraints that fire only for some message types. Baking these into the base schemas would make
-them unfaithful to the HL7 standard and mislead non-AU integrators; a duplicated schema tree per
-profile would drift.
+constraints that fire only for some message types. Bake these into the base schemas and they
+stop being faithful to the HL7 standard and mislead everyone outside Australia; duplicate the
+schema tree per profile and the copies drift.
 
 **Decision.**
 
@@ -275,14 +277,14 @@ profile would drift.
 - Mapping (to FHIR or anywhere else) is out of scope: the package reports what it validated
   against and leaves downstream consumers to decide.
 
-**Consequences.** Other localisations follow the same pattern without API change (`HL7Locale`
-is an open enum). Each new rule shape is an internal track, so the profile grows without public
-surface. JSON-driven generation of profiles is deferred until a second localisation makes shared
-tooling worthwhile.
+**Consequences.** Another localisation can follow the same pattern without an API change
+(`HL7Locale` is an open enum). Each new rule shape is an internal track, so the profile grows
+without adding public surface. Generating profiles from JSON can wait until a second
+localisation makes shared tooling worth the effort.
 
 **Superseded (v0.14):** the original design loaded JSON overlays from
-`Resources/profiles/au-adrm-2021/` at run time. The profile shipped as Swift instead; the JSON
-was never consumed, drifted, and was deleted.
+`Resources/profiles/au-adrm-2021/` at run time. The profile shipped as Swift instead, nothing
+ever read the JSON, it drifted, and we deleted it.
 
 **Amended (R4):** the scaffolded `ProfileLoader` was folded into `Profile.load(for:)`.
 
@@ -299,7 +301,8 @@ printed length variations (S3).
 **Context.** The original condition DSL could only reference fields of the segment being
 checked. A cluster of spec conditionals needs more: the ORC-2 and OBR-2 placer-number
 relationship (cross-segment), the OBR report-message guards (message type), and ORC-8 parent and
-child (the preceding ORC's ORC-1). Requirement 3 says extend the model rather than defer.
+child (the preceding ORC's ORC-1). Requirement 3 says extend the model rather than put it
+off.
 
 **Decision.** The single schema `"condition"` string stays the only knob; the predicate grammar
 gains three categories, evaluated against the whole message:
@@ -317,10 +320,10 @@ gains three categories, evaluated against the whole message:
   "required when" check treats as not triggered.
 - No public API change: more spec-faithful validation under the same API is a minor release.
 
-**Consequences.** Spec conditionals that were silently unenforced now fire, and the fixture
-corpus was audited for the newly reported issues. The grammar surface grows, so additions are
-kept narrow and each needs its own decision; typed predicate trees, per-schema "associated"
-overrides and a parallel cross-segment rule axis were rejected.
+**Consequences.** Spec conditionals that had been silently unenforced now fire, and we audited
+the fixture corpus for the issues they newly reported. The grammar surface grows, so additions
+stay narrow and each needs a decision of its own. We rejected typed predicate trees, per-schema
+"associated" overrides and a parallel cross-segment rule axis.
 
 **Amended (R4, via ADR-010):** referent parsing shares the `Path` parser.
 
@@ -333,7 +336,7 @@ overrides and a parallel cross-segment rule axis were rejected.
 **Context.** HL7au:000040 needed two things the AU value-set track lacked: subcomponent
 granularity (MSH-12.2 must equal `AUS&Australia&ISO3166_1`, three subcomponents) and message-type
 gating (a VID-3 value required only on orders and results, another only on referrals). Shipping
-it partially, or unconditionally, would break requirements 3 and 4.
+it half-done, or unconditionally, would have broken requirements 3 and 4.
 
 **Decision.**
 
@@ -345,7 +348,7 @@ it partially, or unconditionally, would break requirements 3 and 4.
 - No public API change: the profile types are internal (ADR-007).
 
 **Consequences.** HL7au:000040.1 to .4 ship in full (040.5 is receiver behaviour, outside a
-validator). An unparseable profile condition fails safe: the check does not fire.
+validator). An unparseable profile condition fails safe: the check simply does not fire.
 
 **Amended (P12 S2-2b, S2-3):** `ComponentValueSet.localTableExtension` names a table whose
 `ValidationOptions.localTableExtensions` entry is also allowed (ADR-007).
@@ -358,8 +361,8 @@ validator). An unparseable profile condition fails safe: the check does not fire
 §4.5.1.8 ORC-8 and OBR-29 parent-reference rule over-fired because "peer segment absent" and
 "peer field empty" were indistinguishable; the OBR specimen conditionals needed a segment-presence
 test; and HL7au:000008 needed a group-scope count and a subcomponent-level field reference. A
-bespoke rule axis per cluster would have forked the pipeline, so the one condition language was
-extended instead.
+bespoke rule axis per cluster would have forked the pipeline, so we extended the one condition
+language instead.
 
 **Decision.** The condition language, as it stands, is parsed in one place
 (`ConditionLanguage.swift`) and read by the one evaluator:
@@ -394,12 +397,12 @@ extended instead.
 
 **Consequences.** One pipeline and one grammar serve base-standard and AU rules alike. Each
 extension is narrow and fails safe: an atom that does not resolve or parse is `unknown`
-(ADR-021) and never makes a field required. The grammar surface is larger, so further additions
-each need a cited rule that cannot be written today.
+(ADR-021) and never makes a field required. The grammar surface is larger than it was, so
+anything further needs a cited rule that cannot be written with what is there today.
 
 **Amended (P1-1):** the OBR-7 and OBR-14 specimen legs (`SPM present OR OBR-15 populated`) were
 wrong. OBR-15 is valued on new orders before collection and SPM may describe a virtual
-specimen, so both legs raised false errors on conformant orders and were removed on every
+specimen, so both legs raised false errors on conformant orders. They came out on every
 version. OBR-9 to OBR-11 never shipped a condition (their text carries no "must").
 
 **Amended (R2):** the schema-side `segmentCardinalityRules` key, never used by any schema, was
@@ -420,10 +423,10 @@ the HL7 null (OBX-2 and OBX-5 under OBX-11 = O).
 **Status:** Accepted. Related: ADR-007, ADR-009, ADR-010.
 
 **Context.** Of the HL7au:00044 CE, CNE and CWE conformance points, two were machine-checkable
-but inexpressible: 00044.4.8 (the alternate coding system must differ from the primary) and
-00044.4.4 (LOINC must be placed first). The composite overrides could relate only the
-population state of two components, never their values. Two other points are not checkable from
-the wire at all.
+but there was no way to express them: 00044.4.8 (the alternate coding system must differ from
+the primary) and 00044.4.4 (LOINC must be placed first). The composite overrides could relate
+only the population state of two components, never their values. Two other points cannot be
+checked from the wire at all.
 
 **Decision.**
 
@@ -440,9 +443,9 @@ the wire at all.
   limitations.
 
 **Consequences.** Both rules fail safe on empty components. Each new semantic gets its own
-narrow type rather than overloading the population-state pair rules or a general expression
-language on composites. The CWE and CNE inequality legs were removed from the ADRM and are not
-modelled.
+narrow type rather than overloading the population-state pair rules or growing a general
+expression language on composites. The ADRM removed the CWE and CNE inequality legs, so they
+are not modelled.
 
 ## ADR-012 v2.6 grammar version
 
@@ -450,9 +453,9 @@ modelled.
 
 **Context.** Only three things in the package are version-sensitive: the `Version` case read
 from MSH-12, the per-version grammar table that drives validation, and (since ADR-020) the
-per-version composite and accessor metadata. v2.6 was a common version left unmodelled, which
-requirement 1 does not allow in a full-standard reference tool. The options were a first-class
-grammar, a recognised case with no grammar, or leaving it out.
+per-version composite and accessor metadata. v2.6 was a common version we had not modelled,
+which requirement 1 does not allow in a full-standard reference tool. The options were a
+first-class grammar, a recognised case with no grammar, or leaving it out.
 
 **Decision.**
 
@@ -462,8 +465,8 @@ grammar, a recognised case with no grammar, or leaving it out.
 - A recognised version with no grammar is acceptable only as an interim inside a delivery
   cycle, never as an end state: silence would read as conformance.
 
-**Consequences.** The common-version set was completed before the v1.0 freeze, when adding a
-`Version` case was cheapest.
+**Consequences.** The common-version set was complete before the v1.0 freeze, while adding a
+`Version` case was still cheap.
 
 **Amended (M5):** the first cycle covered the 15 most-used segments; segment coverage was
 completed in M5, closing the backlog register.
@@ -473,9 +476,9 @@ completed in M5, closing the backlog register.
 **Status:** Accepted (Option A, first-class v2.8.2). Related: ADR-012, ADR-018, ADR-020.
 
 **Context.** v2.8.2 is the latest published HL7 v2.x standard and the version on which "latest
-and complete" is judged; leaving it out of a full-standard reference is the sharpest form of
-the requirement 1 gap. The `Version` enum already carried a grammar-less `.v2_8` case for a bare
-`2.8`. v2.8.2 is a distinct point release with its own MSH-12 value.
+and complete" is judged, so leaving it out of a full-standard reference would be the
+requirement 1 gap at its most obvious. The `Version` enum already carried a grammar-less `.v2_8`
+case for a bare `2.8`. v2.8.2 is a distinct point release with its own MSH-12 value.
 
 **Decision.**
 
@@ -488,7 +491,8 @@ the requirement 1 gap. The `Version` enum already carried a grammar-less `.v2_8`
   class, a conditional form), the model is extended rather than mapped to a near miss, as
   `FieldOptionality.withdrawn` was for `W`.
 
-**Consequences.** Coverage spans v2.3 to v2.8.2; the `Version` surface settled before v1.0.
+**Consequences.** Coverage runs from v2.3 to v2.8.2, and the `Version` surface settled before
+v1.0.
 
 **Amended (ADR-018, P3):** the deferred question of how to validate a bare `2.8` is answered
 by substitution with `versionGrammarSubstituted` (info).
@@ -501,9 +505,9 @@ are version-agnostic, generated once from v2.5.1, no longer holds; see ADR-020.
 **Status:** Accepted (Option B, a documented SemVer policy). Related: ADR-002, ADR-020.
 
 **Context.** The domain keeps growing (new HL7 versions, new localisations, new validation
-checks), so freezing every enum would force a major release for each. HL7v2Kit ships as a source
-package without library evolution, so `@frozen` is inert; the real lever is the SemVer contract
-and `@unknown default` guidance.
+checks), so freezing every enum would force a major release for each one. HL7v2Kit ships as a
+source package without library evolution, which makes `@frozen` inert; the real lever is the
+SemVer contract and the `@unknown default` guidance.
 
 **Decision.**
 
@@ -526,17 +530,17 @@ and `@unknown default` guidance.
 - The inventory of the public surface is `public-api-surface.md` (a maintainer record, outside the repository); the consumer-facing
   contract is the DocC article `Migration.md`.
 
-**Consequences.** HL7 evolution ships in minor releases, and consumers who follow the
-`@unknown default` guidance never break. The contract promises stability where it can be kept
+**Consequences.** HL7 evolution ships in minor releases, and a consumer who follows the
+`@unknown default` guidance never breaks. The contract promises stability where we can keep it
 and openness where the domain demands it.
 
 **Amended (R10):** the major-release lane was used for the first time at 2.0.0, removing dead
 public surface with no call sites (enumerated in `Migration.md`, "The 2.0 boundary").
 
 **Amended (M6-D5):** on the owner's direction, OBX-5's datatype was corrected from `ST` to the
-variable type every version prints, so `OBX.observationValue` became `Field?`. The change was
-breaking, so the release was 3.0.0. It was a spec-fidelity fix under requirement 4, not a policy
-change; additive-only resumed for the 3.x line.
+variable type every version prints, so `OBX.observationValue` became `Field?`. That was a
+breaking change, hence 3.0.0. It was a spec-fidelity fix under requirement 4, not a change of
+policy, and additive-only resumed for the 3.x line.
 
 ## ADR-015 Segment-coverage extraction pipeline
 
@@ -545,11 +549,11 @@ ADR-017.
 
 **Context.** Full segment coverage on every supported version means roughly 150 segments per
 version, and the schemas must be a faithful rendering of the standard's attribute tables, not a
-best guess. Reading the PDFs by hand does not scale. One gotcha, for the record: PDFKit's text
+best guess. Reading the PDFs by hand does not scale. One gotcha worth recording: PDFKit's text
 output reads the attribute tables column-major, so the `OPT` and `RP/#` columns that matter
-most come out as a bunched run that cannot be zipped back onto the rows (the tables, like the
-Norwegian Blue, look perfectly fine until one examines them closely), and geometric
-reconstruction from character bounds fragmented as well.
+most come out as one bunched run that cannot be zipped back onto the rows (the tables, like
+the Norwegian Blue, look perfectly fine until you examine them closely), and geometric
+reconstruction from character bounds fell apart as well.
 
 **Decision.**
 
@@ -569,20 +573,20 @@ reconstruction from character bounds fragmented as well.
 - The method is documented in `segment-coverage-extraction.md` (a maintainer record, outside the repository). Where a table uses a
   form the model cannot express, the model is extended.
 
-**Consequences.** Full coverage became a mechanical but verified sweep (M5), completed as
-additive releases. Only derived schema JSON is committed; the standards' PDFs stay outside the
+**Consequences.** Full coverage became a mechanical, verified sweep (M5), shipped as additive
+releases. Only the derived schema JSON is committed; the standards' PDFs stay outside the
 repository.
 
 ## ADR-016 Code-table registry
 
 **Status:** Accepted. Related: ADR-007, ADR-015, ADR-017, ADR-019.
 
-**Context.** HL7 code tables were not modelled: the schemas dropped the `TBL#` column. A
-registry has to be complete enough to be a reference and conservative enough that a membership
-check never rejects a value the standard allows. Three facts shaped it: a field can bind more
-than one table; a printed table is not always a closed set (a bare `...` row, an open range,
-local-extension rows, a row meaning "not present"); and a localisation may widen a base table.
-Tables change between versions, so one merged set would be wrong.
+**Context.** HL7 code tables were not modelled at all: the schemas dropped the `TBL#` column.
+A registry has to be complete enough to serve as a reference and conservative enough that a
+membership check never rejects a value the standard allows. Three facts shaped it: a field can
+bind more than one table; a printed table is not always a closed set (a bare `...` row, an
+open range, local-extension rows, a row meaning "not present"); and a localisation may widen a
+base table. Tables also change between versions, so one merged set would be wrong.
 
 **Decision.**
 
@@ -621,11 +625,11 @@ Tables change between versions, so one merged set would be wrong.
 - Audit: the maintainer's schema audit, `--tables` (shape, suspect codes with a cited allowlist, kind
   mismatches, schema links; `--depth` re-extracts and reports drift).
 
-**Consequences.** The check is live on more than 1,200 `ID` fields across seven versions; a
-handful of advisory kind mismatches remain where the print itself is inconsistent, none
-enforced. Generated Swift keeps each expression small: one version's grammar emitted as a
-single dictionary literal took sixteen minutes to type-check (not three million years, but
-Lister would have known the feeling), so codegen emits one constant per segment.
+**Consequences.** The check is live on more than 1,200 `ID` fields across seven versions. A
+handful of advisory kind mismatches remain where the print itself is inconsistent, and none of
+them is enforced. Generated Swift keeps each expression small: one version's grammar emitted
+as a single dictionary literal took sixteen minutes to type-check (not three million years,
+but Lister would have known the feeling), so codegen emits one constant per segment.
 
 **Amended (P2 fix wave, P2-6, P2-7, P2-13, P2-14, P2-15):** the single openness criterion, the
 0203 opening, pattern rows, caller-declared local extensions and per-field `tableOpen`.
@@ -644,7 +648,7 @@ registry).
 **Status:** Accepted. Related: ADR-014, ADR-015, ADR-016, ADR-020.
 
 **Context.** The table bindings integrators ask about most sit on components (`XPN.7`,
-`XTN.2`, `XAD.7`), and the package had no per-version model of a datatype's components.
+`XTN.2`, `XAD.7`), and the package had no per-version model of a datatype's components at all.
 v2.5.1 and later print regular component tables; v2.3 to v2.4 define components only in prose.
 
 **Decision.**
@@ -682,13 +686,13 @@ v2.5.1 and later print regular component tables; v2.3 to v2.4 define components 
   under `warnDeprecatedFields`. The same rules apply one level down to subcomponents.
 - Evidence rule: normative text (tables and prose) decides. A printed example overturns a table
   only when normative prose agrees with it, or when the rule's data is plainly a spelling or
-  extraction artefact. the schema audit's `--examples` pass applies the component rules to every
+  extraction artefact. The schema audit's `--examples` pass applies the component rules to every
   printed datatype example as a standing audit.
 
-**Consequences.** Component checks found real defects on their first runs, in the fixtures and
-in the registry alike. Known limits stay in the limitations register: conditions the model
-cannot express (CWE.7 and kin, CNE.20), OM2-6 on v2.3 to v2.4, and the CM field table mentions no
-rule can attribute to one component (section D).
+**Consequences.** The component checks found real defects on their first runs, in the
+fixtures and in the registry alike. The known limits are in the limitations register:
+conditions the model cannot express (CWE.7 and its relatives, CNE.20), OM2-6 on v2.3 to v2.4,
+and the CM field table mentions no rule can pin to one component (section D).
 
 **Amended (M11):** nested composites and OBX-5.
 
@@ -717,10 +721,10 @@ enforced, are enforced for components and subcomponents.
 **Status:** Accepted (Option A, as amended by P10-6). Related: ADR-003, ADR-013, ADR-014,
 ADR-015.
 
-**Context.** Requirement 1 asks for the full HL7 v2.x standard, but the package never said
-which releases it leaves out. A `2.8` message passed validation with nothing checked; other
-Table 0104 versions silently fell back to v2.5.1; a VID-form MSH-12 (the AU form) was read as a
-scalar and fell back too.
+**Context.** Requirement 1 asks for the full HL7 v2.x standard, but the package had never
+said which releases it leaves out. A `2.8` message passed validation with nothing checked,
+other Table 0104 versions quietly fell back to v2.5.1, and a VID-form MSH-12 (the AU form) was
+read as a scalar and fell back too.
 
 **Decision.**
 
@@ -751,10 +755,10 @@ scalar and fell back too.
 
 **Consequences.** `2.8` and `2.7` messages are checked against the nearest published grammar,
 with the unverified differences stated in the info issue. AU v2.4 traffic meets the v2.4
-grammar; AU conformance points that relied on a v2.5.1 base component requirement are stated by
-the profile itself (`ComponentRequirement.yieldsToBase`). `2.8.1` falls back to v2.5.1 while
-`2.8` is substituted, because `.v2_8` was an existing public case and `.v2_8_1` is not; adding it
-is an open question for the owner.
+grammar; AU conformance points that relied on a v2.5.1 base component requirement are stated
+by the profile itself (`ComponentRequirement.yieldsToBase`). `2.8.1` falls back to v2.5.1
+while `2.8` is substituted, because `.v2_8` was already a public case and `.v2_8_1` is not.
+Whether to add it is an open question for the owner.
 
 **Amended (P3 fix wave):** every populated MSH-12 from which no version resolves warns; none
 falls back silently.
@@ -773,8 +777,8 @@ segments, `[ ]` optional, `{ }` repeating, `< | >` a choice (v2.4 on), and segme
 themselves optional or repeating. Each chapter prints one syntax per structure under a caption
 such as `ADT^A04^ADT_A01`; from v2.3.1 on MSH-9.3 names the structure, and Table 0354 lists
 structure against event. Nothing in the package checked segment order, groups, the segments an
-event requires or MSH-9's agreement with itself, and group-scoped rules approximated groups by
-walking the flat segment list back to the nearest ORC.
+event requires or whether MSH-9 agrees with itself, and group-scoped rules approximated groups
+by walking the flat segment list back to the nearest ORC.
 
 ### Source and data
 
@@ -984,8 +988,8 @@ MSH-10. Enhanced-mode acknowledgment is receiving-application behaviour and a no
 `StructureVariant`, `StructureChoiceKey`, `StructureRegistration`, `MessageStructureTable`, the
 issue codes above, `messageStructureSeverity`, and the acknowledgment builder types, each pinned
 in `SignatureCompatibilityTests`. Group-dependent predicates are structure-exact on conformant
-messages. The structure check and the span-derived groups changed default output, recorded in
-`Migration.md`. What stays open is in limitations register section E.
+messages. The structure check and the span-derived groups changed the default output, which
+`Migration.md` records. What is still open is in limitations register section E.
 
 **Amended (P8b-1 to P8b-18):** the pilot grew into the full rollout: the generated version
 switch and completeness data, the extractor and `overrides.json`, bundle names, every caption
@@ -1014,13 +1018,14 @@ and the Appendix 8 simplified REF variant completed the AU profile structures (S
 **Status:** Accepted (Option B, owner gate G3). Related: ADR-001, ADR-004, ADR-013, ADR-014,
 ADR-017.
 
-**Context.** The typed API had been shaped by what common traffic populates and by one canonical
-version. The hand-written composite views exposed only part of each type (XCN six of 23
-components, "the commonly-populated ones", a consumer-profile argument requirement 1 rejects);
-typed accessors on repeating fields returned the first repetition without saying the field
-repeats; and typed segment structs were generated from v2.5.1 alone, so later-version fields
-(PID-40, OBX-26 to OBX-30) had no accessor. No wire data was lost, but the later surface was out
-of reach. The per-version component tables (ADR-017) and segment schemas already existed.
+**Context.** The typed API had been shaped by what common traffic populates and by one
+canonical version. The hand-written composite views exposed only part of each type (XCN six of
+23 components, "the commonly-populated ones", which is a consumer-profile argument and
+requirement 1 rejects it); typed accessors on repeating fields returned the first repetition
+without saying the field repeats; and typed segment structs were generated from v2.5.1 alone,
+so later-version fields (PID-40, OBX-26 to OBX-30) had no accessor. No wire data was lost, but
+the later surface was out of reach. The per-version component tables (ADR-017) and segment
+schemas already existed.
 
 **Decision.**
 
@@ -1051,10 +1056,10 @@ of reach. The per-version component tables (ADR-017) and segment schemas already
 - Rejected: hand-completing the views (drift), recording the gap only (requirement 3), and
   per-version structs such as `PID_v2_8_2` (six times the structs, callers switching on version).
 
-**Consequences.** Adding a version or a component fails codegen until a curator names it, which is
-the point. Residual limits are in register section H: composite-to-composite retypes surface
-through `viewed(as:)`; pre-v2.5.1 spellings and same-type renames are DocC notes, not accessors;
-accessors are not version-gated.
+**Consequences.** Adding a version or a component fails codegen until someone names it, and
+that is the point. The residual limits are in register section H: composite-to-composite
+retypes surface through `viewed(as:)`; pre-v2.5.1 spellings and same-type renames are DocC
+notes, not accessors; accessors are not version-gated.
 
 **Amended (P10-3):** the base pin, prompted by v2.7.1, which would otherwise have become the
 earliest definer of IAR, PAC, PRT and SHP and re-based structs released on v2.8.2.
@@ -1065,9 +1070,10 @@ earliest definer of IAR, PAC, PRT and SHP and re-based structs released on v2.8.
 
 **Context.** HL7au:00060.4 says an element of usage C "must not be valued when the associated
 predicate is not satisfied". The validator could not enforce it: a stored `condition` is a
-"required when" trigger, and for many fields the text lets the field be valued while the trigger is
-false; and the evaluator answered only true or false, folding "cannot decide" into false, which is
-the right fail-safe for "required when" and exactly the wrong one for "prohibited when false".
+"required when" trigger, and for many fields the text lets the field be valued while the
+trigger is false; and the evaluator answered only true or false, folding "cannot decide" into
+false. That is the right fail-safe for "required when" and exactly the wrong one for
+"prohibited when false".
 
 **Decision.**
 
@@ -1094,7 +1100,7 @@ the right fail-safe for "required when" and exactly the wrong one for "prohibite
   the message. Of 52 candidates, one is (a): v2.4 OBX-2 (`OBX-11 != X`). The per-field table and
   quotes are in `conditional-completeness-audit.md` (a maintainer record, outside the repository).
 
-**Consequences.** AU traffic gains one error, on OBX-2 under OBX-11 = X; `.international` output is
-unchanged. New C conditions are unmarked by default; marking is a per-field, per-version claim with
-its own citation. `conditionTruth` is available to any future check that must act on "definitely
-false".
+**Consequences.** AU traffic gains one error, on OBX-2 under OBX-11 = X; `.international`
+output is unchanged. New C conditions are unmarked by default, since marking one is a
+per-field, per-version claim with its own citation. `conditionTruth` is there for any future
+check that has to act on "definitely false".
