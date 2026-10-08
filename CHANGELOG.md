@@ -22,7 +22,7 @@ The public release. No API change; one platform change, set out in the Migration
   being already on, a Holly-grade announcement of what everyone already knew. Checking is
   unchanged. The test suite needs Swift 6.2 (exit tests); CI runs macOS 15 with the newest
   release Xcode and fails by name below 6.2.
-- Linux is built and tested in CI (`swift:6.2-jammy`); `.gitattributes` keeps the fixtures' CR
+- Linux is built and tested in CI only (`swift:6.2-jammy`); `.gitattributes` keeps the fixtures' CR
   segment terminators intact on any checkout.
 - `Examples/QuickStart` (`swift run QuickStart`): parse, path and typed access, validation
   under `.default` and AU `.strict`, the round trip and the ACK. The README and Getting
@@ -70,7 +70,6 @@ are set out in the Migration guide's "AU profile completion (v3.16.0)" section.
   presence on MSH-4 and MSH-6 under `auNASHTransport`; MSH-6 on an order; VDI for vendor
   assigning authorities on a REF.
 - Ten synthetic AU fixtures, one a batch.
-- The "Australian localisation" DocC article.
 
 ### Changed
 
@@ -155,9 +154,9 @@ structures and the API surface, with HL7 v2.7.1 added.
 
 ### Fixed
 
-- A message that faithfully copies v2.3.1 Table 0354's misprinted structure IDs (`PIN_107`,
-  `RPI_I0I`, `SIIU_S12` and seven more) is no longer told it is wrong; cited errata read the
-  print as intended, in the manner of a centurion correcting "Romanes eunt domus".
+- A message that accurately copies v2.3.1 Table 0354's misprinted structure IDs (`PIN_107`,
+  `RPI_I0I`, `SIIU_S12` and seven more) is no longer flagged as wrong; quoted errata read the
+  print as intended.
 - Many schema, table and condition corrections found by the audits, each cited to the print;
   see the full log.
 
@@ -274,7 +273,7 @@ structures and the API surface, with HL7 v2.7.1 added.
 
 - Three either-or component rules rejected the spec's own examples, an exchange of the
   "this isn't an argument, it's just contradiction" kind; they are removed, and every
-  rule is now held to the examples.
+  rule is now faithful to the examples.
 
 ## [3.6.0]
 
@@ -373,7 +372,7 @@ structures and the API surface, with HL7 v2.7.1 added.
 
 ## Earlier releases
 
-**2.0 and 2.1.** The over-engineering remediation removed public surface that nothing used
+**2.0 and 2.1.** The over-engineering review removed public surface that nothing used
 (the 2.0 boundary, listed in the Migration article); v2.4 lab-automation and personnel
 segments followed.
 
@@ -384,33 +383,3 @@ element-name fidelity.
 **0.1 to 0.19.** The parser, round trip, typed segments by code generation, MLLP, batch and
 streaming parsers, the validator and its condition language, the AU profile's first rules,
 and v2.3 to v2.8.2 as first-class versions.
-
-The git history carries the detail for these releases.
-
-[Unreleased]: https://github.com/mickpah/HL7v2Kit/compare/v3.17.0...HEAD
-[3.17.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.16.0...v3.17.0
-[3.16.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.15.0...v3.16.0
-[3.15.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.14.0...v3.15.0
-[3.14.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.13.0...v3.14.0
-[3.13.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.12.0...v3.13.0
-[3.12.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.11.0...v3.12.0
-[3.11.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.10.0...v3.11.0
-[3.10.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.9.0...v3.10.0
-[3.9.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.8.0...v3.9.0
-[3.8.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.7.3...v3.8.0
-[3.7.3]: https://github.com/mickpah/HL7v2Kit/compare/v3.7.2...v3.7.3
-[3.7.2]: https://github.com/mickpah/HL7v2Kit/compare/v3.7.1...v3.7.2
-[3.7.1]: https://github.com/mickpah/HL7v2Kit/compare/v3.7.0...v3.7.1
-[3.7.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.6.5...v3.7.0
-[3.6.5]: https://github.com/mickpah/HL7v2Kit/compare/v3.6.4...v3.6.5
-[3.6.4]: https://github.com/mickpah/HL7v2Kit/compare/v3.6.3...v3.6.4
-[3.6.3]: https://github.com/mickpah/HL7v2Kit/compare/v3.6.2...v3.6.3
-[3.6.2]: https://github.com/mickpah/HL7v2Kit/compare/v3.6.1...v3.6.2
-[3.6.1]: https://github.com/mickpah/HL7v2Kit/compare/v3.6.0...v3.6.1
-[3.6.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.5.0...v3.6.0
-[3.5.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.4.0...v3.5.0
-[3.4.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.3.0...v3.4.0
-[3.3.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.2.0...v3.3.0
-[3.2.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.1.0...v3.2.0
-[3.1.0]: https://github.com/mickpah/HL7v2Kit/compare/v3.0.0...v3.1.0
-[3.0.0]: https://github.com/mickpah/HL7v2Kit/compare/v2.1.0...v3.0.0

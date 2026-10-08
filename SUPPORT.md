@@ -69,7 +69,7 @@ what it says.
 - Bug reports need: version, platform, minimal reproduction, expected vs. actual behaviour.
   Reports without a reproduction may be closed without investigation.
 - **Contributions are not accepted at this stage of the project.** Pull requests will be
-  closed unread, however good they are. This is about the project's stage, not the work:
+  closed unread, however good they are. This is about the project's stage and my available time, not your work:
   the design is still moving under one pair of hands, and reviewing outside changes costs
   more than it returns right now. If that changes, `CONTRIBUTING.md` and this file will say
   so first.
@@ -78,14 +78,14 @@ what it says.
 
 ## Conduct
 
-Discussions and issues are expected to be courteous and on topic. Abuse is removed and
+Discussions and issues are requested to be courteous and on topic. Abuse is removed and
 the account blocked. No formal code of conduct is adopted at this stage.
 
 ## If this project goes quiet
 
 - Fork it. The licence allows this without asking.
-- If you maintain a fork that is clearly active, open an issue titled
-  "Fork: <url>" and it will be linked from `README.md` when the maintainer next looks.
+- If you maintain a fork that is active, open an issue titled
+  "Fork: <url>" and it will be linked from `README.md` when I next look.
 - If you'd like to take over this repository rather than fork it, open an issue and say so.
   No promises, but it's the only way it could happen.
 

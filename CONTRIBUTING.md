@@ -2,10 +2,11 @@
 
 **Contributions are not accepted at this stage of the project.**
 
-Pull requests will be closed unread. This is a statement about the project's stage, not
-about your work: HL7v2Kit is maintained by one person, its design is still moving, and
+Pull requests will be closed unread, sorry. This is a statement about the project's stage, not
+about your work.
+HL7v2Kit is maintained by one person, its design is still moving, and
 reviewing outside changes costs more than it returns right now. `SUPPORT.md` sets out
-exactly what the project does and does not promise; this file follows it.
+exactly what the project does and does not promise.
 
 If that changes, this file and `SUPPORT.md` will say so first.
 
@@ -14,15 +15,14 @@ If that changes, this file and `SUPPORT.md` will say so first.
 - **Bug reports**, as issues. Include the version, platform, a minimal reproduction, and
   expected versus actual behaviour. Reports without a reproduction may be closed without
   investigation.
-- **Spec-reading disagreements.** The package aims to be a faithful rendering of the
-  HL7 v2 standard. If a schema, table, rule or message structure disagrees with the print,
-  open an issue citing the version, chapter, section and page. These are the most useful
+- **Spec-reading disagreements.** The project aims to be accurate to the
+  HL7 v2 standard and Australian localisations. If a schema, table, rule or message structure disagrees with the print, open an issue with reference to the version, chapter, section and page. These are the most useful
   reports the project can receive.
-- **Fork announcements.** The licence lets you fork without asking. If your fork is
-  clearly active, open an issue titled "Fork: <url>" and it will be linked from
-  `README.md` when the maintainer next looks.
+- **Fork announcements.** The licence allows you to fork without asking. If your fork is
+   active and you wish, open an issue titled "Fork: <url>" and it will be linked from
+  `README.md` when I next look.
 - **Security reports.** Privately, through GitHub's private vulnerability reporting (the
-  repository's Security tab), not as a public issue. A report will be acknowledged within 14 days.
+  repository's Security tab), not as a public issue. I will endeavour to respond within 14 days.
   `SECURITY.md` has the details.
 
 ## Working on a fork
