@@ -238,26 +238,42 @@ struct GroupSpanScopeTests {
 
     /// Runs `work` on another thread and waits at most `seconds`: a lookup that
     /// does not terminate fails the test (the thread is left behind) instead of
-    /// hanging the run. Returns the elapsed time, or nil on a timeout.
-    static func watchdog(_ seconds: Int, _ work: @escaping @Sendable () -> Void) -> Duration? {
-        let done = DispatchSemaphore(value: 0)
-        let start = ContinuousClock.now
-        DispatchQueue.global().async {
-            work()
-            done.signal()
+    /// hanging the run. Returns the elapsed time, or nil on a timeout. The wait
+    /// is a suspension, not a blocked thread: a semaphore here starved the
+    /// three-core CI runner, where the parallel suite then stalled for minutes.
+    static func watchdog(_ seconds: Int, _ work: @escaping @Sendable () -> Void) async -> Duration? {
+        final class Once: @unchecked Sendable {
+            private let queue = DispatchQueue(label: "watchdog.once")
+            private var taken = false
+            func take() -> Bool {
+                queue.sync {
+                    if taken { return false }
+                    taken = true
+                    return true
+                }
+            }
         }
-        guard done.wait(timeout: .now() + .seconds(seconds)) == .success else { return nil }
-        return ContinuousClock.now - start
+        let once = Once()
+        let start = ContinuousClock.now
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.global().async {
+                work()
+                if once.take() { continuation.resume(returning: ContinuousClock.now - start) }
+            }
+            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(seconds)) {
+                if once.take() { continuation.resume(returning: nil) }
+            }
+        }
     }
 
     /// Every message-level lookup (`context`, `group`, and so `region`) for every
     /// segment of a conforming message of every structure on every version, with
     /// the group-dependent pairs.
     @Test("Message-level lookups terminate, fast, on a conforming message of every structure")
-    func everyMessageLookupTerminates() {
+    func everyMessageLookupTerminates() async {
         final class Count: @unchecked Sendable { var structures = 0; var lookups = 0 }
         let count = Count()
-        let elapsed = Self.watchdog(120) {
+        let elapsed = await Self.watchdog(600) {
             for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
                 let pairs = Self.predicatePairs(Validator.grammarTable(for: version))
                 for structure in MessageStructureTable.structures(for: version).values {
@@ -282,7 +298,7 @@ struct GroupSpanScopeTests {
         // The suite runs tests in parallel, so wall-clock time here depends on the
         // load; the watchdog catches a lookup that does not terminate, and the
         // long-message test below checks the growth rate.
-        #expect(elapsed != nil, "message-level lookups did not finish within 120 s")
+        #expect(elapsed != nil, "message-level lookups did not finish within 600 s")
         #expect(count.structures > 500, "\(count.structures) structures")
         if let elapsed { print("message-level lookups: \(count.lookups) on \(count.structures) structures in \(elapsed)") }
     }
@@ -298,7 +314,7 @@ struct GroupSpanScopeTests {
     /// before the OBR in ORU_R01 ORDER_OBSERVATION, after it in OUL_R22 ORDER.
     @Test("A long ORU_R01 and OUL_R22 validate in time linear in their length",
           arguments: ["2.5.1 ORU", "2.5.1 OUL", "2.8.2 ORU", "2.8.2 OUL"])
-    func longMessage(_ key: String) throws {
+    func longMessage(_ key: String) async throws {
         let parts = key.split(separator: " ").map(String.init)
         let version = parts[0], which = parts[1]
         func message(orders: Int) throws -> Message {
@@ -316,12 +332,12 @@ struct GroupSpanScopeTests {
         #expect(GroupSpanSeamTests.describe(Validator().groupScoping(for: long)) == "spans")
         final class Box: @unchecked Sendable { var findings: [String] = [] }
         let box = Box()
-        func timed(_ message: Message) -> Duration? {
-            Self.watchdog(120) { box.findings = GroupSpanPredicateTests.groupFindings(Validator().validate(message).issues) }
+        func timed(_ message: Message) async -> Duration? {
+            await Self.watchdog(600) { box.findings = GroupSpanPredicateTests.groupFindings(Validator().validate(message).issues) }
         }
-        let shortTimes = [timed(short), timed(short)].compactMap { $0 }
-        let longTime = timed(long)
-        #expect(longTime != nil && shortTimes.count == 2, "\(key): validation did not finish within 120 s")
+        let shortTimes = [await timed(short), await timed(short)].compactMap { $0 }
+        let longTime = await timed(long)
+        #expect(longTime != nil && shortTimes.count == 2, "\(key): validation did not finish within 600 s")
         #expect(box.findings.isEmpty, "\(key): \(box.findings.prefix(3))")
         if let longTime, let shortTime = shortTimes.min() {
             let ratio = longTime / shortTime
