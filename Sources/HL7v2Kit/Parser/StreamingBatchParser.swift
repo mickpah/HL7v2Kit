@@ -37,12 +37,25 @@ public struct StreamingBatchParser: Sendable {
     /// Running byte offset, used for ``ParseError/truncatedMessage(atByte:)``
     /// reporting when a NUL is encountered mid-stream.
     private var bytesConsumed: Int
+    /// Input not yet read: the rest of a chunk after a failure.
+    private var unread: [UInt8]
+    /// Messages completed before a failure, returned first by the next call.
+    private var ready: [Message]
+    /// After a failure inside a message, its remaining lines are dropped
+    /// until the next MSH or batch marker.
+    private var skippingMessage: Bool
+
+    /// Segment IDs that start a new run: a message or a batch / file marker.
+    private static let runStarts = ["MSH", "FHS", "FTS", "BHS", "BTS"]
 
     public init(options: ParserOptions = .default) {
         self.options = options
         self.segmentBuffer = []
         self.messageSegments = []
         self.bytesConsumed = 0
+        self.unread = []
+        self.ready = []
+        self.skippingMessage = false
     }
 
     /// Feed an incremental byte chunk. Returns any messages that
@@ -51,47 +64,84 @@ public struct StreamingBatchParser: Sendable {
     /// MSH-starting runs.
     ///
     /// Throws ``ParseError/truncatedMessage(atByte:)`` if a `0x00`
-    /// byte is encountered (real HL7 v2 wire never carries NUL).
+    /// byte is encountered (real HL7 v2 wire never carries NUL), or the
+    /// ``Parser`` error for a message that fails to parse.
+    ///
+    /// A failure loses only the failed message. The parser keeps the
+    /// messages completed before it and the input after it, and the next
+    /// call to ``feed(_:)`` or ``finish()`` returns those messages first
+    /// and carries on reading. After a NUL, the message it falls in is
+    /// dropped up to the next MSH or batch marker.
     public mutating func feed(_ bytes: Data) throws -> [Message] {
-        var emitted: [Message] = []
-        for byte in bytes {
-            defer { bytesConsumed += 1 }
-            if byte == 0x00 {
-                throw ParseError.truncatedMessage(atByte: bytesConsumed)
-            }
-            if byte == 0x0D || byte == 0x0A {
-                if let message = try flushPendingSegment() {
-                    emitted.append(message)
-                }
-            } else {
-                segmentBuffer.append(byte)
-            }
-        }
-        return emitted
+        unread.append(contentsOf: bytes)
+        return try read(finishing: false)
     }
 
     /// Close the stream. Flushes any unterminated trailing segment
-    /// and emits any in-flight message. Call exactly once after the
-    /// last ``feed(_:)``.
+    /// and emits any in-flight message. Call after the last
+    /// ``feed(_:)``; if it throws, call it again to collect the
+    /// messages that follow the failure.
     public mutating func finish() throws -> [Message] {
-        var emitted: [Message] = []
-        if let message = try flushPendingSegment() {
-            emitted.append(message)
-        }
-        if let message = try drainOpenMessage() {
-            emitted.append(message)
+        try read(finishing: true)
+    }
+
+    /// True if the parser holds input or messages not yet returned: a
+    /// partial segment, an open MSH run, or what a failure kept for the
+    /// next call. Useful for half-frame timeout detection.
+    public var hasPending: Bool {
+        !segmentBuffer.isEmpty || !messageSegments.isEmpty || !unread.isEmpty || !ready.isEmpty
+    }
+
+    // MARK: - Internals
+
+    /// Reads `unread` and, at the end of the stream, closes the open
+    /// message. On a failure, keeps the messages completed so far and
+    /// the input after the failing byte for the next call.
+    private mutating func read(finishing: Bool) throws -> [Message] {
+        var emitted = ready
+        ready = []
+        var index = 0
+        defer { unread.removeFirst(index) }
+        do {
+            while index < unread.count {
+                let byte = unread[index]
+                index += 1
+                if let message = try step(byte) {
+                    emitted.append(message)
+                }
+            }
+            if finishing {
+                if let message = try flushPendingSegment() {
+                    emitted.append(message)
+                }
+                if let message = try drainOpenMessage() {
+                    emitted.append(message)
+                }
+            }
+        } catch {
+            ready = emitted
+            throw error
         }
         return emitted
     }
 
-    /// True if the parser has buffered bytes that haven't yet been
-    /// emitted as a message — i.e., there's a partial segment or an
-    /// open MSH run. Useful for half-frame timeout detection.
-    public var hasPending: Bool {
-        !segmentBuffer.isEmpty || !messageSegments.isEmpty
+    private mutating func step(_ byte: UInt8) throws -> Message? {
+        defer { bytesConsumed += 1 }
+        switch byte {
+        case 0x00:
+            dropFailingMessage()
+            throw ParseError.truncatedMessage(atByte: bytesConsumed)
+        case 0x0D, 0x0A:
+            return try flushPendingSegment()
+        default:
+            // While skipping, a segment ID is enough to spot the next run.
+            if skippingMessage && segmentBuffer.count >= 3 && !startsMessageRun(segmentBuffer) {
+                return nil
+            }
+            segmentBuffer.append(byte)
+            return nil
+        }
     }
-
-    // MARK: - Internals
 
     private mutating func flushPendingSegment() throws -> Message? {
         guard !segmentBuffer.isEmpty else { return nil }
@@ -107,22 +157,49 @@ public struct StreamingBatchParser: Sendable {
             // Batch / file marker. Close any in-flight message; the
             // marker line itself is intentionally discarded — streaming
             // mode flattens to messages only.
+            skippingMessage = false
             return try drainOpenMessage()
         case "MSH":
-            let emitted = try drainOpenMessage()
-            messageSegments.append(line)
-            return emitted
+            // Start the new message before parsing the one it closes, so
+            // a failure in the old message cannot lose this line.
+            skippingMessage = false
+            let closed = messageSegments
+            messageSegments = [line]
+            return try parse(closed)
         default:
-            messageSegments.append(line)
+            if !skippingMessage {
+                messageSegments.append(line)
+            }
             return nil
         }
     }
 
     private mutating func drainOpenMessage() throws -> Message? {
-        guard !messageSegments.isEmpty else { return nil }
-        let wire = messageSegments.joined(separator: "\r") + "\r"
+        let closed = messageSegments
         messageSegments.removeAll(keepingCapacity: true)
-        return try Parser(options: options).parse(wire)
+        return try parse(closed)
+    }
+
+    private func parse(_ segments: [String]) throws -> Message? {
+        guard !segments.isEmpty else { return nil }
+        return try Parser(options: options).parse(segments.joined(separator: "\r") + "\r")
+    }
+
+    /// Drops the message a failing byte belongs to and skips its
+    /// remaining lines up to the next MSH or batch marker. A segment
+    /// that has already started a new run belongs to the next message,
+    /// so the open message is kept and parses when that run closes.
+    private mutating func dropFailingMessage() {
+        if !startsMessageRun(segmentBuffer) {
+            messageSegments.removeAll(keepingCapacity: true)
+        }
+        segmentBuffer.removeAll(keepingCapacity: true)
+        skippingMessage = true
+    }
+
+    /// True when `bytes` begins with MSH or a batch / file marker.
+    private func startsMessageRun(_ bytes: [UInt8]) -> Bool {
+        Self.runStarts.contains { bytes.starts(with: $0.utf8) }
     }
 }
 
@@ -135,7 +212,7 @@ extension StreamingBatchParser {
     /// the stream when the upstream sequence ends.
     ///
     /// The stream throws on the first parser error (NUL byte, malformed
-    /// MSH, etc.).
+    /// MSH, etc.), after yielding every message that completed before it.
     public static func messages<S: AsyncSequence & Sendable>(
         from bytes: S,
         options: ParserOptions = .default
@@ -164,6 +241,11 @@ extension StreamingBatchParser {
                     }
                     continuation.finish()
                 } catch {
+                    // Messages completed before the failure are still on
+                    // the parser; deliver them before the error.
+                    for message in parser.ready {
+                        continuation.yield(message)
+                    }
                     continuation.finish(throwing: error)
                 }
             }

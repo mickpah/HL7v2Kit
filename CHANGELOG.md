@@ -8,7 +8,13 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
-Nothing yet.
+- **Fixed:** `StreamingBatchParser` loses only the message that fails. When a message fails to
+  parse, the parser keeps the messages completed before it and the input after it, and the
+  next call to `feed(_:)` or `finish()` returns them. Before, the next message's MSH line and
+  the rest of the chunk were dropped, so the following message failed, or parsed with segments
+  missing. A NUL now drops the message it falls in, up to the next MSH or batch marker, instead
+  of joining the bytes either side of it. `messages(from:options:)` yields the messages that
+  completed before a failure, then throws.
 
 ## [3.17.0]
 

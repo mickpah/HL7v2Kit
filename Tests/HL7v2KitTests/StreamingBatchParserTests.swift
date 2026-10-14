@@ -180,6 +180,79 @@ struct StreamingBatchParserTests {
         #expect(!parser.hasPending)
     }
 
+    // MARK: - Recovery after a failure
+
+    private let first = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG1|P|2.5.1\rPID|1||111\r"
+    /// An MSH shorter than eight characters: the parser throws `.invalidMSH(reason: "too short")`.
+    private let broken = "MSH|^~\rPID|9||999\r"
+    private let second = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120100||ADT^A01|MSG2|P|2.5.1\rPID|2||222\r"
+
+    private func controlIDs(_ messages: [Message]) -> [String?] {
+        messages.map { $0.firstSegment(MSH.self)?.messageControlID }
+    }
+
+    @Test("A message that fails to parse loses nothing else in the same chunk")
+    func failureKeepsTheRestOfTheChunk() throws {
+        var parser = StreamingBatchParser()
+        #expect(throws: ParseError.invalidMSH(reason: "too short")) {
+            _ = try parser.feed(Data((first + broken + second).utf8))
+        }
+        let rest = try parser.finish()
+        try #require(rest.count == 2)
+        #expect(controlIDs(rest) == ["MSG1", "MSG2"])
+        #expect(rest[1].segments.count == 2)
+        #expect(!parser.hasPending)
+    }
+
+    @Test("A message that fails to parse does not lose the next MSH, byte by byte")
+    func failureKeepsTheNextMSH() throws {
+        var parser = StreamingBatchParser()
+        var messages: [Message] = []
+        var errors: [ParseError] = []
+        for byte in Data((first + broken + second).utf8) {
+            do {
+                messages += try parser.feed(Data([byte]))
+            } catch let error as ParseError {
+                errors.append(error)
+            }
+        }
+        messages += try parser.finish()
+        #expect(errors == [.invalidMSH(reason: "too short")])
+        #expect(controlIDs(messages) == ["MSG1", "MSG2"])
+    }
+
+    @Test("A NUL drops only the message it falls in; the next message parses whole")
+    func nulDropsOnlyItsMessage() throws {
+        var parser = StreamingBatchParser()
+        var bytes = Data("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG1|P|2.5.1\rPID|1".utf8)
+        let nulOffset = bytes.count
+        bytes.append(0x00)
+        bytes.append(contentsOf: Data("||111\r".utf8))
+        bytes.append(contentsOf: Data(second.utf8))
+        #expect(throws: ParseError.truncatedMessage(atByte: nulOffset)) {
+            _ = try parser.feed(bytes)
+        }
+        let rest = try parser.finish()
+        #expect(controlIDs(rest) == ["MSG2"])
+        #expect(rest.first?.segments.count == 2)
+    }
+
+    @Test("AsyncStream wrapper yields the messages before a failure, then throws")
+    func asyncStreamYieldsBeforeFailure() async {
+        let bytes = Data((first + broken + second).utf8).asyncBytes
+        var collected: [String?] = []
+        var thrown: (any Error)?
+        do {
+            for try await message in StreamingBatchParser.messages(from: bytes) {
+                collected.append(message.firstSegment(MSH.self)?.messageControlID)
+            }
+        } catch {
+            thrown = error
+        }
+        #expect(collected == ["MSG1"])
+        #expect(thrown as? ParseError == .invalidMSH(reason: "too short"))
+    }
+
     // MARK: - AsyncStream wrapper
 
     @Test("AsyncStream wrapper yields each message in order")

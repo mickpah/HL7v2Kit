@@ -152,6 +152,12 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.17.0 | No API change. By ruling, `Package.swift` no longer enables the `StrictConcurrency` upcoming feature, which Swift 6 language mode already turns on; the checking is unchanged. The library now builds with Swift 6.0, the minimum its tools-version states. |
 | v3.17.0 | No API change. `QuickStart` is a new executable product (`swift run QuickStart` in a clone). A package that depends on HL7v2Kit does not build it: SwiftPM builds only the products the dependent's targets use. |
 
+## Stream recovery and input limits
+
+No source change for a caller; the changes are in behaviour.
+
+- **A failure in ``StreamingBatchParser`` costs only the failed message.** ``StreamingBatchParser/feed(_:)`` and ``StreamingBatchParser/finish()`` keep the messages completed before a failure and the input after it, and the next call returns them first. A caller that catches the error and keeps feeding now receives every other message whole. ``StreamingBatchParser/finish()`` may need calling again after it throws. A NUL drops the message it falls in, up to the next MSH or batch marker, instead of joining the bytes either side of it.
+
 ## Public release (v3.17.0)
 
 No API change and no change to validation output; the release changes what the package declares and how it is built.
