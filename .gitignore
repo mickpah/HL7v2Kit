@@ -29,9 +29,9 @@ site/
 *.pdf
 *.PDF
 
-# Everything local to the maintainer lives under private/: the licensed HL7 standards
+# Everything kept out of the repository lives under private/: the licensed HL7 standards
 # (PDFs and XML schema bundles), the planning documents and archive snapshots, the design
-# records (audits, sweeps, registers), the maintainer scripts and the release checklist.
+# records (audits, sweeps, registers), the extractor and audit scripts, and the release checklist.
 # scripts/scan-for-phi.py treats any path under it as licensed content.
 private/
 

@@ -48,11 +48,11 @@ These are explicitly **not** commitments.
 | Latest minor release | Supported   | Likely    | Yes, best effort |
 | Everything else      | Unsupported | No        | No               |
 
-"Best effort" means: the maintainer intends to fix it and will try, but is not on call.
+"Best effort" means: a fix will be attempted, but nobody is on call.
 
 ## Current status
 
-**Active** — the maintainer is using this project and expects to keep working on it.
+**Active** — the project is in use and work on it is expected to continue.
 
 Other values this field may take:
 

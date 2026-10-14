@@ -598,7 +598,7 @@ base table. Tables also change between versions, so one merged set would be wron
   corrected only on the message-structure side, by a cited erratum (ADR-019).
 - Corrections are never hand edits: they go in `Resources/tables/overrides.json`, version-scoped
   and cited, and the table is re-extracted. Print-versus-prose binding conflicts are resolved in
-  the maintainer's table-repairs record with a citation.
+  the private table-repairs record with a citation.
 - Field bindings: `tables` (any datatype) records the spec's `TBL#` cell; `table` (one string,
   `ID` and `IS` fields only) is the enforced link, derived where a field binds exactly one table.
   The integrity audit fails if `table` is not among `tables`.
@@ -622,7 +622,7 @@ base table. Tables also change between versions, so one merged set would be wron
 - Local extension is caller-declared: `ValidationOptions.localTableExtensions` lists the codes a
   site has added per table, consulted after the version and locale checks at field and component
   level. Nothing is inferred from the wire.
-- Audit: the maintainer's schema audit, `--tables` (shape, suspect codes with a cited allowlist, kind
+- Audit: the private schema audit, `--tables` (shape, suspect codes with a cited allowlist, kind
   mismatches, schema links; `--depth` re-extracts and reports drift).
 
 **Consequences.** The check is live on more than 1,200 `ID` fields across seven versions. A
@@ -783,7 +783,7 @@ by walking the flat segment list back to the nearest ORC.
 ### Source and data
 
 - One file per structure, `Resources/structures/v<ver>/<STRUCT>.json` (`structure`, `version`,
-  `citation`, `triggers`, `elements`), written only by the maintainer's structure extractor
+  `citation`, `triggers`, `elements`), written only by the private structure extractor
   from the print (decision 1). The three pilot structures were hand-authored and then reproduced
   by the extractor byte for byte; no hand-authored base file survives.
 - `Resources/structures/overrides.json` holds everything the print does not give cleanly, each

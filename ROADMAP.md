@@ -1,7 +1,7 @@
 # HL7v2Kit roadmap
 
 **This file is not a commitment.** [SUPPORT.md](SUPPORT.md) is explicit that there is no
-promised roadmap and no promise of future releases. What follows is the maintainer's working
+promised roadmap and no promise of future releases. What follows is the working
 arc: what has shipped, and what is known to remain. It may be reordered, paused or dropped at
 any time. Contributions towards it are not accepted at this stage (see
 [CONTRIBUTING.md](CONTRIBUTING.md)).
