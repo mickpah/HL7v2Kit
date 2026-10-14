@@ -4,7 +4,7 @@ Versioning contract and per-release migration notes for HL7v2Kit consumers.
 
 ## Overview
 
-HL7v2Kit is at **`v3.16.0`** (the latest release); the stable API line began at `v1.0.0`. The public API is governed by the evolution policy below (ADR-014). It has been stable since v0.5.0; every change since has been additive, except the two owner-directed boundaries recorded below (2.0 and 3.0).
+The stable API line began at `v1.0.0`; `CHANGELOG.md` lists every release. The public API is governed by the evolution policy below (ADR-014). It has been stable since v0.5.0; every change since has been additive, except the two owner-directed boundaries recorded below (2.0 and 3.0).
 
 - **`3.x`**: strict SemVer under the evolution policy below (ADR-014). Additive-only in minors; breaking changes wait for `4.0`.
 - **`2.0` and `3.0` (historical)**: the two boundaries below. Each removal or behaviour change is listed in its own section and in `CHANGELOG.md`.
@@ -151,6 +151,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.17.0 | **Not additive: platforms dropped.** `Package.swift` declares macOS 12 only among Apple platforms; iOS, tvOS, watchOS and visionOS are no longer declared (by ruling). No API change. A consumer on those platforms pins `.upToNextMinor(from: "3.16.0")`; see "Public release (v3.17.0)" below. Linux is built and tested in CI. |
 | v3.17.0 | No API change. By ruling, `Package.swift` no longer enables the `StrictConcurrency` upcoming feature, which Swift 6 language mode already turns on; the checking is unchanged. The library now builds with Swift 6.0, the minimum its tools-version states. |
 | v3.17.0 | No API change. `QuickStart` is a new executable product (`swift run QuickStart` in a clone). A package that depends on HL7v2Kit does not build it: SwiftPM builds only the products the dependent's targets use. |
+| Unreleased | `MLLPUnframer.init(maxFrameBytes:)`, `MLLPUnframer.maxFrameBytes` and `MLLPUnframer.oversizedFrameCount`; `StreamingBatchParser.init(options:maxMessageBytes:)`, `StreamingBatchParser.maxMessageBytes` and `StreamingBatchParser.messages(from:options:maxMessageBytes:)` (additive; every new parameter has a default); `ParseError.messageTooLarge(limit:)` (additive; open enum). The behaviour changes are in "Streaming input: recovery, limits and character sets". |
 
 ## Streaming input: recovery, limits and character sets
 
