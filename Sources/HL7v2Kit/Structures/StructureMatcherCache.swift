@@ -37,7 +37,7 @@ enum CompiledStructureMatcher: Sendable {
     }
 }
 
-/// Compiled matchers keyed by structure version and ID, built on first use.
+/// Compiled matchers keyed by structure version, ID and profile, built on first use.
 ///
 /// Why a locked dictionary rather than precomputed statics in the generated
 /// table: the Validator also matches structures that are not in the table
@@ -61,6 +61,9 @@ final class StructureMatcherCache: @unchecked Sendable {
     private struct Key: Hashable {
         let version: String
         let id: String
+        /// The profile a constrained structure belongs to, so it and the base
+        /// structure it shares an ID with keep separate entries.
+        var profile: String? = nil
         /// The keyed-choice selection (S4-1), so each is compiled once.
         var selection: String? = nil
         /// The per-trigger print (S6-1), so each is compiled once.
@@ -73,8 +76,8 @@ final class StructureMatcherCache: @unchecked Sendable {
 
     /// The compiled matcher for `structure`, built on the first request.
     func matcher(for structure: MessageStructure) -> CompiledStructureMatcher {
-        let key = Key(version: structure.version, id: structure.id, selection: structure.keySelection,
-                      variant: structure.variantIndex)
+        let key = Key(version: structure.version, id: structure.id, profile: structure.profile,
+                      selection: structure.keySelection, variant: structure.variantIndex)
         if let hit = locked({ matchers[key] }), hit.structure == structure { return hit }
         let compiled = CompiledStructureMatcher(structure)
         locked {
@@ -84,9 +87,9 @@ final class StructureMatcherCache: @unchecked Sendable {
         return compiled
     }
 
-    /// How many times the matcher for `version` and `id` has been compiled.
-    func buildCount(version: String, id: String) -> Int {
-        locked { builds[Key(version: version, id: id)] ?? 0 }
+    /// How many times the matcher for `version`, `id` and `profile` has been compiled.
+    func buildCount(version: String, id: String, profile: String? = nil) -> Int {
+        locked { builds[Key(version: version, id: id, profile: profile)] ?? 0 }
     }
 
     private func locked<T>(_ body: () -> T) -> T {

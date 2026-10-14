@@ -53,6 +53,20 @@ struct StructureMatcherCacheTests {
         #expect(cache.buildCount(version: "2.5.1", id: "P8B7_CACHE_B") == 2)
     }
 
+    @Test("A profile structure and the base it shares an ID with are each built once")
+    func profileAndBaseBuiltOnce() throws {
+        let cache = StructureMatcherCache()
+        let base = try #require(MessageStructureTable.structures(for: .v2_4)["ORM_O01"])
+        let profile = try #require(MessageStructureTable.auADRM2021["ORM_O01"])
+        #expect(base != profile)
+        for _ in 0..<3 {
+            _ = cache.matcher(for: base)
+            _ = cache.matcher(for: profile)
+        }
+        #expect(cache.buildCount(version: "2.4", id: "ORM_O01") == 1)
+        #expect(cache.buildCount(version: "2.4", id: "ORM_O01", profile: "au-adrm-2021") == 1)
+    }
+
     @Test("The cached matcher for every committed structure is the one its flag selects, built once")
     func selectionEqualsFlag() {
         let cache = StructureMatcherCache()

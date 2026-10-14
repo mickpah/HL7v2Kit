@@ -31,6 +31,9 @@ The entries are condensed; the git history carries the detail.
   accented letters became U+FFFD with no error. A message that declares ASCII but carries other
   bytes now throws `unsupportedCharacterEncoding`, as `Parser` does, and a UTF-8 byte-order
   mark before the first MSH is ignored.
+- **Fixed:** validating under the AU profile compiles each message-structure matcher once. A
+  profile structure and the base structure it shares an ID with used to evict each other from
+  the matcher cache, so both were recompiled for every message.
 
 ## [3.17.0]
 
