@@ -152,13 +152,14 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.17.0 | No API change. By ruling, `Package.swift` no longer enables the `StrictConcurrency` upcoming feature, which Swift 6 language mode already turns on; the checking is unchanged. The library now builds with Swift 6.0, the minimum its tools-version states. |
 | v3.17.0 | No API change. `QuickStart` is a new executable product (`swift run QuickStart` in a clone). A package that depends on HL7v2Kit does not build it: SwiftPM builds only the products the dependent's targets use. |
 
-## Stream recovery and input limits
+## Streaming input: recovery, limits and character sets
 
 No source change for a caller; the changes are in behaviour.
 
 - **A failure in ``StreamingBatchParser`` costs only the failed message.** ``StreamingBatchParser/feed(_:)`` and ``StreamingBatchParser/finish()`` keep the messages completed before a failure and the input after it, and the next call returns them first. A caller that catches the error and keeps feeding now receives every other message whole. ``StreamingBatchParser/finish()`` may need calling again after it throws. A NUL drops the message it falls in, up to the next MSH or batch marker, instead of joining the bytes either side of it.
 - **``MLLPUnframer`` keeps frame bodies up to 64 MiB.** A longer frame is dropped, the unframer waits for the next start byte, and ``MLLPUnframer/oversizedFrameCount`` goes up by one. `MLLPUnframer(maxFrameBytes: .max)` restores the old behaviour.
 - **``StreamingBatchParser`` holds at most 64 MiB per message.** A longer message is dropped and reported as ``ParseError/messageTooLarge(limit:)``; reading carries on at the next MSH. `StreamingBatchParser(maxMessageBytes: .max)` and `messages(from:options:maxMessageBytes:)` restore the old behaviour. ``ParseError`` is an open enum, so a `switch` with `@unknown default` needs no change.
+- **``StreamingBatchParser`` decodes each message by its own MSH-18,** as ``Parser/parse(_:)-(Data)`` does, instead of reading every message as UTF-8. A Latin-1 message now keeps its accented letters; a message declaring ASCII but carrying other bytes throws ``ParseError/unsupportedCharacterEncoding(declared:)``.
 
 ## Public release (v3.17.0)
 

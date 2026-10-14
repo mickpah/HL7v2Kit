@@ -26,6 +26,11 @@ The entries are condensed; the git history carries the detail.
   PID-20), and the providers in ORC-10 to ORC-12, OBR-28, OBR-33 to OBR-35, OBX-16, PV1-52 and
   PD1-4. A date of birth now moves by one to four whole weeks, so it keeps its day of the week
   and is never left unchanged. The tool has its first tests.
+- **Fixed:** `StreamingBatchParser` decodes each message by its own MSH-18, as
+  `Parser.parse(_: Data)` does. A message declaring ISO 8859-1 was read as UTF-8, so its
+  accented letters became U+FFFD with no error. A message that declares ASCII but carries other
+  bytes now throws `unsupportedCharacterEncoding`, as `Parser` does, and a UTF-8 byte-order
+  mark before the first MSH is ignored.
 
 ## [3.17.0]
 

@@ -20,11 +20,10 @@ import Foundation
 /// Callers that need the batch / file structure should use the
 /// non-streaming ``BatchParser`` instead.
 ///
-/// **Charset note**. Streaming mode assumes UTF-8 input. MSH-18
-/// charset detection requires the whole first message to be buffered,
-/// which defeats the streaming property; callers parsing non-UTF-8
-/// batches should pre-decode and use ``BatchParser/parse(_:)-(String)``,
-/// or use the non-streaming ``BatchParser`` directly.
+/// **Charset**. Each message is decoded by its own MSH-18, as
+/// ``Parser/parse(_:)-(Data)`` decodes it: UTF-8 when MSH-18 is empty,
+/// ASCII or ISO 8859-1 when declared; an unrecognised value throws
+/// ``ParseError/unsupportedCharacterEncoding(declared:)``.
 public struct StreamingBatchParser: Sendable {
     public let options: ParserOptions
     /// The most bytes one message may hold, segment terminators excluded.
@@ -35,9 +34,9 @@ public struct StreamingBatchParser: Sendable {
     /// Byte-level buffer for the in-progress segment. Drained on every
     /// CR/LF.
     private var segmentBuffer: [UInt8]
-    /// Already-terminated segment lines accumulated for the current
-    /// open message. Drained when an MSH / batch marker closes the run.
-    private var messageSegments: [String]
+    /// Raw bytes of the terminated segment lines of the open message,
+    /// decoded by its MSH-18 when an MSH / batch marker closes the run.
+    private var messageSegments: [[UInt8]]
     /// Running byte offset, used for ``ParseError/truncatedMessage(atByte:)``
     /// reporting when a NUL is encountered mid-stream.
     private var bytesConsumed: Int
@@ -161,36 +160,33 @@ public struct StreamingBatchParser: Sendable {
 
     private mutating func flushPendingSegment() throws -> Message? {
         guard !segmentBuffer.isEmpty else { return nil }
-        let line = String(decoding: segmentBuffer, as: UTF8.self)
-        let byteCount = segmentBuffer.count
+        let line = segmentBuffer
         segmentBuffer.removeAll(keepingCapacity: true)
-        return try classify(line, byteCount: byteCount)
+        return try classify(line)
     }
 
-    private mutating func classify(_ line: String, byteCount: Int) throws -> Message? {
-        let id = line.prefix(3)
-        switch id {
-        case "FHS", "FTS", "BHS", "BTS":
-            // Batch / file marker. Close any in-flight message; the
-            // marker line itself is intentionally discarded — streaming
-            // mode flattens to messages only.
-            skippingMessage = false
-            return try drainOpenMessage()
-        case "MSH":
+    private mutating func classify(_ line: [UInt8]) throws -> Message? {
+        if line.starts(with: "MSH".utf8) {
             // Start the new message before parsing the one it closes, so
             // a failure in the old message cannot lose this line.
             skippingMessage = false
             let closed = messageSegments
             messageSegments = [line]
-            messageBytes = byteCount
+            messageBytes = line.count
             return try parse(closed)
-        default:
-            if !skippingMessage {
-                messageSegments.append(line)
-                messageBytes += byteCount
-            }
-            return nil
         }
+        if startsMessageRun(line) {
+            // Batch / file marker. Close any in-flight message; the
+            // marker line itself is intentionally discarded — streaming
+            // mode flattens to messages only.
+            skippingMessage = false
+            return try drainOpenMessage()
+        }
+        if !skippingMessage {
+            messageSegments.append(line)
+            messageBytes += line.count
+        }
+        return nil
     }
 
     private mutating func drainOpenMessage() throws -> Message? {
@@ -200,9 +196,16 @@ public struct StreamingBatchParser: Sendable {
         return try parse(closed)
     }
 
-    private func parse(_ segments: [String]) throws -> Message? {
+    /// Parses one message's raw lines through ``Parser/parse(_:)-(Data)``,
+    /// which decodes them by the message's own MSH-18.
+    private func parse(_ segments: [[UInt8]]) throws -> Message? {
         guard !segments.isEmpty else { return nil }
-        return try Parser(options: options).parse(segments.joined(separator: "\r") + "\r")
+        var wire = Data()
+        for segment in segments {
+            wire.append(contentsOf: segment)
+            wire.append(0x0D)
+        }
+        return try Parser(options: options).parse(wire)
     }
 
     /// Drops the message a failing byte belongs to and skips its

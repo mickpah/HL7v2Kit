@@ -292,6 +292,29 @@ struct StreamingBatchParserTests {
         #expect(controlIDs(try parser.finish()) == ["MSG2"])
     }
 
+    // MARK: - Character sets
+
+    @Test("A message declaring ISO 8859-1 decodes as Latin-1, as Parser does")
+    func latin1MessageDecodes() throws {
+        var bytes = Data("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG1|P|2.5.1|||||AUS|8859/1\rPID|1||111||Zo".utf8)
+        bytes.append(0xE9)  // é in ISO 8859-1; on its own it is not valid UTF-8
+        bytes.append(contentsOf: Data("^Ann\r".utf8))
+        var parser = StreamingBatchParser()
+        var messages = try parser.feed(bytes)
+        messages += try parser.finish()
+        try #require(messages.count == 1)
+        #expect(messages[0]["PID-5.1"] == "Zoé")
+        #expect(messages[0].characterEncoding == .iso8859_1)
+    }
+
+    @Test("A UTF-8 byte-order mark before the first MSH is ignored, as Parser does")
+    func leadingByteOrderMarkIgnored() throws {
+        var parser = StreamingBatchParser()
+        var messages = try parser.feed(Data([0xEF, 0xBB, 0xBF]) + Data((first + second).utf8))
+        messages += try parser.finish()
+        #expect(controlIDs(messages) == ["MSG1", "MSG2"])
+    }
+
     // MARK: - AsyncStream wrapper
 
     @Test("AsyncStream wrapper yields each message in order")
