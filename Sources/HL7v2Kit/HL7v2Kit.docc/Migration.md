@@ -157,6 +157,8 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 No source change for a caller; the changes are in behaviour.
 
 - **A failure in ``StreamingBatchParser`` costs only the failed message.** ``StreamingBatchParser/feed(_:)`` and ``StreamingBatchParser/finish()`` keep the messages completed before a failure and the input after it, and the next call returns them first. A caller that catches the error and keeps feeding now receives every other message whole. ``StreamingBatchParser/finish()`` may need calling again after it throws. A NUL drops the message it falls in, up to the next MSH or batch marker, instead of joining the bytes either side of it.
+- **``MLLPUnframer`` keeps frame bodies up to 64 MiB.** A longer frame is dropped, the unframer waits for the next start byte, and ``MLLPUnframer/oversizedFrameCount`` goes up by one. `MLLPUnframer(maxFrameBytes: .max)` restores the old behaviour.
+- **``StreamingBatchParser`` holds at most 64 MiB per message.** A longer message is dropped and reported as ``ParseError/messageTooLarge(limit:)``; reading carries on at the next MSH. `StreamingBatchParser(maxMessageBytes: .max)` and `messages(from:options:maxMessageBytes:)` restore the old behaviour. ``ParseError`` is an open enum, so a `switch` with `@unknown default` needs no change.
 
 ## Public release (v3.17.0)
 

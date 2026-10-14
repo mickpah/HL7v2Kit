@@ -139,6 +139,38 @@ struct MLLPCodecTests {
         #expect(frames.first == body)
     }
 
+    // MARK: - Size limit
+
+    @Test("A frame body over maxFrameBytes is dropped and counted; the next frame arrives")
+    func oversizedFrameDropped() {
+        let small = Data("MSH|^~\\&|A\r".utf8)
+        var unframer = MLLPUnframer(maxFrameBytes: body.count - 1)
+        let frames = unframer.feed(MLLP.frame(body) + MLLP.frame(small))
+        #expect(frames == [small])
+        #expect(unframer.oversizedFrameCount == 1)
+        #expect(!unframer.isMidFrame)
+    }
+
+    @Test("A frame body of exactly maxFrameBytes is kept")
+    func frameAtLimitKept() {
+        var unframer = MLLPUnframer(maxFrameBytes: body.count)
+        #expect(unframer.feed(MLLP.frame(body)) == [body])
+        #expect(unframer.oversizedFrameCount == 0)
+    }
+
+    @Test("A frame that never ends cannot grow past maxFrameBytes, even on a run of FS bytes")
+    func unterminatedFrameBounded() {
+        var unframer = MLLPUnframer(maxFrameBytes: 10)
+        var stream = Data([MLLP.startByte])
+        stream.append(Data(repeating: 0x41, count: 100))
+        // A trailing FS is not counted as body, so a run of them must still trip the limit.
+        stream.append(MLLP.startByte)
+        stream.append(Data(repeating: MLLP.endBodyByte, count: 100))
+        #expect(unframer.feed(stream).isEmpty)
+        #expect(unframer.oversizedFrameCount == 2)
+        #expect(!unframer.isMidFrame)
+    }
+
     // MARK: - Round-trip
 
     @Test("Round-trip through the Parser: framed wire parses to the same Message")

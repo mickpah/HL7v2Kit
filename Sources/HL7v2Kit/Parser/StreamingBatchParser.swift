@@ -11,7 +11,7 @@ import Foundation
 /// byte chunks via ``StreamingBatchParser/feed(_:)`` / ``finish()``
 /// and emits ``Message`` values as soon as the next MSH (or batch
 /// marker, or EOF) closes the current message run. Memory footprint
-/// stays bounded by the size of the largest in-flight message —
+/// stays bounded by ``maxMessageBytes`` per in-flight message —
 /// previously-emitted messages don't accumulate on the parser.
 ///
 /// **Scope note**. Streaming mode flattens the batch grammar — FHS /
@@ -27,6 +27,10 @@ import Foundation
 /// or use the non-streaming ``BatchParser`` directly.
 public struct StreamingBatchParser: Sendable {
     public let options: ParserOptions
+    /// The most bytes one message may hold, segment terminators excluded.
+    /// A longer message is dropped and reported as
+    /// ``ParseError/messageTooLarge(limit:)``.
+    public let maxMessageBytes: Int
 
     /// Byte-level buffer for the in-progress segment. Drained on every
     /// CR/LF.
@@ -37,6 +41,8 @@ public struct StreamingBatchParser: Sendable {
     /// Running byte offset, used for ``ParseError/truncatedMessage(atByte:)``
     /// reporting when a NUL is encountered mid-stream.
     private var bytesConsumed: Int
+    /// Bytes in `messageSegments`, checked against `maxMessageBytes`.
+    private var messageBytes: Int
     /// Input not yet read: the rest of a chunk after a failure.
     private var unread: [UInt8]
     /// Messages completed before a failure, returned first by the next call.
@@ -48,8 +54,14 @@ public struct StreamingBatchParser: Sendable {
     /// Segment IDs that start a new run: a message or a batch / file marker.
     private static let runStarts = ["MSH", "FHS", "FTS", "BHS", "BTS"]
 
-    public init(options: ParserOptions = .default) {
+    /// - Parameters:
+    ///   - options: parser options applied to each message.
+    ///   - maxMessageBytes: the most bytes one message may hold; 64 MiB
+    ///     by default. Pass `.max` for no limit.
+    public init(options: ParserOptions = .default, maxMessageBytes: Int = 64 << 20) {
         self.options = options
+        self.maxMessageBytes = maxMessageBytes
+        self.messageBytes = 0
         self.segmentBuffer = []
         self.messageSegments = []
         self.bytesConsumed = 0
@@ -139,6 +151,10 @@ public struct StreamingBatchParser: Sendable {
                 return nil
             }
             segmentBuffer.append(byte)
+            if messageBytes + segmentBuffer.count > maxMessageBytes && overLimit() {
+                dropFailingMessage()
+                throw ParseError.messageTooLarge(limit: maxMessageBytes)
+            }
             return nil
         }
     }
@@ -146,11 +162,12 @@ public struct StreamingBatchParser: Sendable {
     private mutating func flushPendingSegment() throws -> Message? {
         guard !segmentBuffer.isEmpty else { return nil }
         let line = String(decoding: segmentBuffer, as: UTF8.self)
+        let byteCount = segmentBuffer.count
         segmentBuffer.removeAll(keepingCapacity: true)
-        return try classify(line)
+        return try classify(line, byteCount: byteCount)
     }
 
-    private mutating func classify(_ line: String) throws -> Message? {
+    private mutating func classify(_ line: String, byteCount: Int) throws -> Message? {
         let id = line.prefix(3)
         switch id {
         case "FHS", "FTS", "BHS", "BTS":
@@ -165,10 +182,12 @@ public struct StreamingBatchParser: Sendable {
             skippingMessage = false
             let closed = messageSegments
             messageSegments = [line]
+            messageBytes = byteCount
             return try parse(closed)
         default:
             if !skippingMessage {
                 messageSegments.append(line)
+                messageBytes += byteCount
             }
             return nil
         }
@@ -177,6 +196,7 @@ public struct StreamingBatchParser: Sendable {
     private mutating func drainOpenMessage() throws -> Message? {
         let closed = messageSegments
         messageSegments.removeAll(keepingCapacity: true)
+        messageBytes = 0
         return try parse(closed)
     }
 
@@ -192,9 +212,20 @@ public struct StreamingBatchParser: Sendable {
     private mutating func dropFailingMessage() {
         if !startsMessageRun(segmentBuffer) {
             messageSegments.removeAll(keepingCapacity: true)
+            messageBytes = 0
         }
         segmentBuffer.removeAll(keepingCapacity: true)
         skippingMessage = true
+    }
+
+    /// True when the message the buffered segment belongs to passes
+    /// `maxMessageBytes`. A segment that starts a new run counts on its
+    /// own; while skipping, the open message is not growing.
+    private func overLimit() -> Bool {
+        if skippingMessage || startsMessageRun(segmentBuffer) {
+            return segmentBuffer.count > maxMessageBytes
+        }
+        return messageBytes + segmentBuffer.count > maxMessageBytes
     }
 
     /// True when `bytes` begins with MSH or a batch / file marker.
@@ -215,11 +246,12 @@ extension StreamingBatchParser {
     /// MSH, etc.), after yielding every message that completed before it.
     public static func messages<S: AsyncSequence & Sendable>(
         from bytes: S,
-        options: ParserOptions = .default
+        options: ParserOptions = .default,
+        maxMessageBytes: Int = 64 << 20
     ) -> AsyncThrowingStream<Message, any Error> where S.Element == UInt8 {
         AsyncThrowingStream { continuation in
             let task = Task {
-                var parser = StreamingBatchParser(options: options)
+                var parser = StreamingBatchParser(options: options, maxMessageBytes: maxMessageBytes)
                 do {
                     var chunk = Data()
                     for try await byte in bytes {

@@ -21,6 +21,8 @@ public enum ParseError: Error, Equatable, Sendable, CustomStringConvertible {
     case unknownSegment(id: String, position: Int)
     case unsupportedCharacterEncoding(declared: String)
     case truncatedMessage(atByte: Int)
+    /// A streamed message passed the byte limit it was read under.
+    case messageTooLarge(limit: Int)
 
     public var description: String {
         switch self {
@@ -38,6 +40,8 @@ public enum ParseError: Error, Equatable, Sendable, CustomStringConvertible {
             return "Unsupported declared character encoding: '\(enc)'"
         case .truncatedMessage(let byte):
             return "Message truncated at byte \(byte)"
+        case .messageTooLarge(let limit):
+            return "Message larger than the \(limit)-byte limit"
         }
     }
 }

@@ -15,6 +15,12 @@ The entries are condensed; the git history carries the detail.
   missing. A NUL now drops the message it falls in, up to the next MSH or batch marker, instead
   of joining the bytes either side of it. `messages(from:options:)` yields the messages that
   completed before a failure, then throws.
+- **Changed:** `MLLPUnframer` and `StreamingBatchParser` cap what they buffer, 64 MiB by
+  default. `MLLPUnframer(maxFrameBytes:)` drops a longer frame, waits for the next start byte
+  and counts it in `oversizedFrameCount`; `StreamingBatchParser(options:maxMessageBytes:)`
+  drops a longer message and throws the new `ParseError.messageTooLarge(limit:)`. Before, a
+  sender that never closed a frame or a line grew the buffer until the process ran out of
+  memory. Pass `.max` to keep the old behaviour.
 
 ## [3.17.0]
 

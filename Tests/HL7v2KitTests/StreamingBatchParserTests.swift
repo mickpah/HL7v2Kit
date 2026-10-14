@@ -253,6 +253,45 @@ struct StreamingBatchParserTests {
         #expect(thrown as? ParseError == .invalidMSH(reason: "too short"))
     }
 
+    // MARK: - Size limit
+
+    @Test("A message over maxMessageBytes is dropped; the messages around it parse")
+    func oversizedMessageDropped() throws {
+        let oversized = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|BIG|P|2.5.1\rOBX|1|ED|||"
+            + String(repeating: "A", count: 500) + "\r"
+        var parser = StreamingBatchParser(maxMessageBytes: 200)
+        #expect(throws: ParseError.messageTooLarge(limit: 200)) {
+            _ = try parser.feed(Data((first + oversized + second).utf8))
+        }
+        #expect(controlIDs(try parser.finish()) == ["MSG1", "MSG2"])
+    }
+
+    @Test("A message of exactly maxMessageBytes parses; one byte less is too large")
+    func messageLimitIsInclusive() throws {
+        let size = first.utf8.count - 2  // segment bytes, without the two CR terminators
+        var atLimit = StreamingBatchParser(maxMessageBytes: size)
+        var parsed = try atLimit.feed(Data(first.utf8))
+        parsed += try atLimit.finish()
+        #expect(controlIDs(parsed) == ["MSG1"])
+        var underLimit = StreamingBatchParser(maxMessageBytes: size - 1)
+        #expect(throws: ParseError.messageTooLarge(limit: size - 1)) {
+            _ = try underLimit.feed(Data(first.utf8))
+        }
+    }
+
+    @Test("A segment that never ends cannot grow past maxMessageBytes")
+    func unterminatedSegmentBounded() throws {
+        var parser = StreamingBatchParser(maxMessageBytes: 100)
+        let endless = Data(("MSH|^~\\&|" + String(repeating: "A", count: 1_000)).utf8)
+        #expect(throws: ParseError.messageTooLarge(limit: 100)) {
+            _ = try parser.feed(endless)
+        }
+        // The rest of the line is skipped, not buffered, so more of it raises nothing.
+        #expect(try parser.feed(Data(String(repeating: "A", count: 1_000).utf8)).isEmpty)
+        #expect(try parser.feed(Data(("\r" + second).utf8)).isEmpty)
+        #expect(controlIDs(try parser.finish()) == ["MSG2"])
+    }
+
     // MARK: - AsyncStream wrapper
 
     @Test("AsyncStream wrapper yields each message in order")

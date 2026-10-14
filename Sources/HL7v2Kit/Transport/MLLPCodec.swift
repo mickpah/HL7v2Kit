@@ -57,11 +57,26 @@ public enum MLLP {
 /// frame. Inside a frame, a second `0x0B` re-syncs the unframer
 /// (drops the partial body and restarts) — handles the case of a
 /// sender restarting mid-frame.
+///
+/// A frame whose body passes ``maxFrameBytes`` is dropped: the
+/// unframer waits for the next start byte and ``oversizedFrameCount``
+/// goes up by one, so a sender that never closes a frame cannot grow
+/// the buffer without limit.
 public struct MLLPUnframer: Sendable {
+    /// The longest frame body kept, in bytes.
+    public let maxFrameBytes: Int
+    /// Frames dropped because their body passed ``maxFrameBytes``. Compare
+    /// it before and after ``feed(_:)`` to reject the message or close
+    /// the connection.
+    public private(set) var oversizedFrameCount: Int
     private var buffer: [UInt8]
     private var insideFrame: Bool
 
-    public init() {
+    /// - Parameter maxFrameBytes: the longest frame body to keep; 64 MiB
+    ///   by default. Pass `.max` for no limit.
+    public init(maxFrameBytes: Int = 64 << 20) {
+        self.maxFrameBytes = maxFrameBytes
+        self.oversizedFrameCount = 0
         self.buffer = []
         self.insideFrame = false
     }
@@ -100,6 +115,12 @@ public struct MLLPUnframer: Sendable {
                 continue
             }
             buffer.append(byte)
+            // A trailing FS may still close the frame, so it is not body yet.
+            if buffer.count - (byte == MLLP.endBodyByte ? 1 : 0) > maxFrameBytes {
+                buffer.removeAll()
+                insideFrame = false
+                oversizedFrameCount += 1
+            }
         }
         return frames
     }
