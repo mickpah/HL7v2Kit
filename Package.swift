@@ -60,7 +60,7 @@ let package = Package(
         ),
         .testTarget(
             name: "HL7v2KitTests",
-            dependencies: ["HL7v2Kit"] + viewerTargetNames,
+            dependencies: ["HL7v2Kit", "HL7v2KitAnonymise"] + viewerTargetNames,
             resources: [
                 .copy("../Fixtures"),
             ]

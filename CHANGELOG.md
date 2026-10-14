@@ -21,6 +21,11 @@ The entries are condensed; the git history carries the detail.
   drops a longer message and throws the new `ParseError.messageTooLarge(limit:)`. Before, a
   sender that never closed a frame or a line grew the buffer until the process ran out of
   memory. Pass `.max` to keep the old behaviour.
+- **Fixed:** `HL7v2KitAnonymise` scrubs the fields it missed: the insured's name, date of birth
+  and address (IN1-16, IN1-18, IN1-19), more patient identifiers (PID-2, PID-4, PID-19,
+  PID-20), and the providers in ORC-10 to ORC-12, OBR-28, OBR-33 to OBR-35, OBX-16, PV1-52 and
+  PD1-4. A date of birth now moves by one to four whole weeks, so it keeps its day of the week
+  and is never left unchanged. The tool has its first tests.
 
 ## [3.17.0]
 

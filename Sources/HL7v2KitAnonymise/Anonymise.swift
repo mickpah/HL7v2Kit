@@ -73,8 +73,11 @@ func scrub(_ message: Message, salt: Int) -> Message {
         switch segment.segmentID {
         case "MSH": segments.append(scrubMSH(segment, salt: salt))
         case "PID": segments.append(scrubPID(segment, salt: salt))
+        case "PD1": segments.append(scrubPD1(segment, salt: salt))
         case "NK1": segments.append(scrubNK1(segment, salt: salt))
         case "PV1": segments.append(scrubPV1(segment, salt: salt))
+        case "IN1": segments.append(scrubIN1(segment, salt: salt))
+        case "ORC": segments.append(scrubORC(segment, salt: salt))
         case "OBR": segments.append(scrubOBR(segment, salt: salt))
         case "OBX": segments.append(scrubOBX(segment, salt: salt))
         case "NTE": segments.append(scrubNTE(segment, salt: salt))
@@ -102,7 +105,9 @@ func scrubMSH(_ segment: Segment, salt: Int) -> Segment {
 
 func scrubPID(_ segment: Segment, salt: Int) -> Segment {
     var fields = segment.fields
+    replace(&fields, index: 2, withScrubbedCXList: fields, fieldIndex: 2, salt: salt)     // patient ID (external)
     replace(&fields, index: 3, withScrubbedCXList: fields, fieldIndex: 3, salt: salt)
+    replace(&fields, index: 4, withScrubbedCXList: fields, fieldIndex: 4, salt: salt)     // alternate patient ID
     replace(&fields, index: 5, withScrubbedNameList: fields, fieldIndex: 5, salt: salt)
     replace(&fields, index: 6, withScrubbedNameList: fields, fieldIndex: 6, salt: salt)
     replace(&fields, index: 7, withScrubbedDOB: fields, fieldIndex: 7, salt: salt)
@@ -111,6 +116,14 @@ func scrubPID(_ segment: Segment, salt: Int) -> Segment {
     replace(&fields, index: 13, withScrubbedPhoneList: fields, fieldIndex: 13, salt: salt)
     replace(&fields, index: 14, withScrubbedPhoneList: fields, fieldIndex: 14, salt: salt)
     replace(&fields, index: 18, withScrubbedCXList: fields, fieldIndex: 18, salt: salt)   // account number
+    replace(&fields, index: 19, withScrubbedCXList: fields, fieldIndex: 19, salt: salt)   // SSN: first component, as for CX
+    replace(&fields, index: 20, withScrubbedCXList: fields, fieldIndex: 20, salt: salt)   // driver's licence number
+    return rebuild(segment, with: fields)
+}
+
+func scrubPD1(_ segment: Segment, salt: Int) -> Segment {
+    var fields = segment.fields
+    replace(&fields, index: 4, withScrubbedProviderList: fields, fieldIndex: 4, salt: salt)   // primary care provider
     return rebuild(segment, with: fields)
 }
 
@@ -129,6 +142,23 @@ func scrubPV1(_ segment: Segment, salt: Int) -> Segment {
     replace(&fields, index: 8, withScrubbedProviderList: fields, fieldIndex: 8, salt: salt)
     replace(&fields, index: 9, withScrubbedProviderList: fields, fieldIndex: 9, salt: salt)
     replace(&fields, index: 17, withScrubbedProviderList: fields, fieldIndex: 17, salt: salt)
+    replace(&fields, index: 52, withScrubbedProviderList: fields, fieldIndex: 52, salt: salt)   // other healthcare provider
+    return rebuild(segment, with: fields)
+}
+
+func scrubIN1(_ segment: Segment, salt: Int) -> Segment {
+    var fields = segment.fields
+    replace(&fields, index: 16, withScrubbedNameList: fields, fieldIndex: 16, salt: salt)   // name of insured
+    replace(&fields, index: 18, withScrubbedDOB: fields, fieldIndex: 18, salt: salt)        // insured's date of birth
+    replace(&fields, index: 19, withScrubbedAddress: fields, fieldIndex: 19, salt: salt)    // insured's address
+    return rebuild(segment, with: fields)
+}
+
+func scrubORC(_ segment: Segment, salt: Int) -> Segment {
+    var fields = segment.fields
+    replace(&fields, index: 10, withScrubbedProviderList: fields, fieldIndex: 10, salt: salt)   // entered by
+    replace(&fields, index: 11, withScrubbedProviderList: fields, fieldIndex: 11, salt: salt)   // verified by
+    replace(&fields, index: 12, withScrubbedProviderList: fields, fieldIndex: 12, salt: salt)   // ordering provider
     return rebuild(segment, with: fields)
 }
 
@@ -136,7 +166,11 @@ func scrubOBR(_ segment: Segment, salt: Int) -> Segment {
     var fields = segment.fields
     replace(&fields, index: 10, withScrubbedProviderList: fields, fieldIndex: 10, salt: salt)   // collector
     replace(&fields, index: 16, withScrubbedProviderList: fields, fieldIndex: 16, salt: salt)   // ordering provider
+    replace(&fields, index: 28, withScrubbedProviderList: fields, fieldIndex: 28, salt: salt)   // result copies to
     replace(&fields, index: 32, withScrubbedProviderList: fields, fieldIndex: 32, salt: salt)   // principal result interpreter
+    replace(&fields, index: 33, withScrubbedProviderList: fields, fieldIndex: 33, salt: salt)   // assistant result interpreter
+    replace(&fields, index: 34, withScrubbedProviderList: fields, fieldIndex: 34, salt: salt)   // technician
+    replace(&fields, index: 35, withScrubbedProviderList: fields, fieldIndex: 35, salt: salt)   // transcriptionist
     return rebuild(segment, with: fields)
 }
 
@@ -149,6 +183,7 @@ func scrubOBX(_ segment: Segment, salt: Int) -> Segment {
        ["TX", "FT", "ST", "ED"].contains(valueType.uppercased()) {
         replace(&fields, index: 5, with: .scalar("[REDACTED]"))
     }
+    replace(&fields, index: 16, withScrubbedProviderList: fields, fieldIndex: 16, salt: salt)   // responsible observer
     return rebuild(segment, with: fields)
 }
 
@@ -278,8 +313,8 @@ func scrubXPN(_ rep: Repetition, salt: Int) -> Repetition {
 }
 
 func scrubDOB(_ raw: String, salt: Int) -> String {
-    // Preserve YYYYMMDD prefix; shift by (salt mod 365) days but cap so we
-    // don't shift across decade boundaries (preserves rough age bucket).
+    // Shift by one to four whole weeks, either way: the day of the week holds,
+    // the age stays about right, and the shift is never zero.
     guard raw.count >= 8 else { return raw }
     let yyyy = Int(raw.prefix(4)) ?? 1980
     let mm = Int(raw.dropFirst(4).prefix(2)) ?? 1
@@ -292,7 +327,8 @@ func scrubDOB(_ raw: String, salt: Int) -> String {
     components.day = dd
     let calendar = Calendar(identifier: .gregorian)
     guard let date = calendar.date(from: components) else { return raw }
-    let shiftDays = (salt % 60) - 30   // ± 30 days
+    let weeks = salt % 4 + 1
+    let shiftDays = 7 * (salt & 4 == 0 ? weeks : -weeks)
     guard let shifted = calendar.date(byAdding: .day, value: shiftDays, to: date) else { return raw }
     let shiftedComponents = calendar.dateComponents([.year, .month, .day], from: shifted)
     return String(format: "%04d%02d%02d%@",
