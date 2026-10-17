@@ -4,7 +4,7 @@ A round-trip-safe HL7 v2.x parser, builder, and validator for Swift.
 
 ## Overview
 
-HL7v2Kit is the foundational parsing layer for AU Core Workbench (a macOS application for Australian healthcare integration engineers). It is designed to be useful to anyone shipping a Swift app that talks HL7 v2.x — clinical, lab, pathology, mental-health, admin/billing.
+HL7v2Kit is designed to be useful to anyone shipping a Swift app that talks HL7 v2.x — clinical, lab, pathology, mental-health, admin/billing.
 
 The library has four pillars:
 

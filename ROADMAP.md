@@ -67,8 +67,6 @@ the portable core by design (ADR-006).
 - **Performance:** the performance and fuzz suites are gated (`RUN_PERF_TESTS`,
   `RUN_FUZZ_TESTS`); they could become a measured baseline if large-batch throughput matters to
   someone.
-- **AU Core Workbench**, the downstream macOS application (a separate repository), is a
-  consumer; its needs may surface new validation or ergonomics requirements.
 
 ## Release cadence
 
