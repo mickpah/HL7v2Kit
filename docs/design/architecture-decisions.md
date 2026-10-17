@@ -3,7 +3,7 @@
 These are the architecture decisions behind HL7v2Kit, one section each. The numbers
 (`ADR-001` to `ADR-021`) are stable headings and anchors, so a bare "ADR-019" in a source
 comment, a schema or the limitations register still lands on the right section. The
-limitations register, the audits and the sweeps mentioned here are maintainer records and
+limitations register, the audits and the sweeps mentioned here are private records and
 live outside the repository; the Validation article lists what the validator does not check.
 
 Each section describes the decision as it stands today. Where later work changed it, a short
@@ -527,7 +527,7 @@ SemVer contract and the `@unknown default` guidance.
 - House style: a parameter is never added to an existing public initialiser. A new option is a
   stored property set by mutation; a new construction input is a separate overload, pinned in
   `SignatureCompatibilityTests`.
-- The inventory of the public surface is `public-api-surface.md` (a maintainer record, outside the repository); the consumer-facing
+- The inventory of the public surface is `public-api-surface.md` (a private record, outside the repository); the consumer-facing
   contract is the DocC article `Migration.md`.
 
 **Consequences.** HL7 evolution ships in minor releases, and a consumer who follows the
@@ -570,7 +570,7 @@ reconstruction from character bounds fell apart as well.
 - Rejected: PDFKit geometric reconstruction (fragile, worst on the oldest versions), Word-only
   extraction (v2.8.2 alone ships Word) and continued manual reading (does not scale and invites
   transcription errors).
-- The method is documented in `segment-coverage-extraction.md` (a maintainer record, outside the repository). Where a table uses a
+- The method is documented in `segment-coverage-extraction.md` (a private record, outside the repository). Where a table uses a
   form the model cannot express, the model is extended.
 
 **Consequences.** Full coverage became a mechanical, verified sweep (M5), shipped as additive
@@ -1098,7 +1098,7 @@ false. That is the right fail-safe for "required when" and exactly the wrong one
   marked; (b) trigger only, the text lets the field be valued while it is false; (c) not
   determinable from the text (owner ruling G9: no derivable prohibition); (n) not decidable from
   the message. Of 52 candidates, one is (a): v2.4 OBX-2 (`OBX-11 != X`). The per-field table and
-  quotes are in `conditional-completeness-audit.md` (a maintainer record, outside the repository).
+  quotes are in `conditional-completeness-audit.md` (a private record, outside the repository).
 
 **Consequences.** AU traffic gains one error, on OBX-2 under OBX-11 = X; `.international`
 output is unchanged. New C conditions are unmarked by default, since marking one is a

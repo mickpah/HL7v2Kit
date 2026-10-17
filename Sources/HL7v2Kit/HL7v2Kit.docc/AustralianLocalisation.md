@@ -134,7 +134,7 @@ recorded as an open owner item below.
 
 ## Coverage
 
-The generated conformance register (a maintainer record, 302 rows
+The generated conformance register (a private record, 302 rows
 for 263 points, reconciled with the shipped state) classes every point:
 
 | Class | Points | Meaning |
@@ -169,7 +169,7 @@ for 263 points, reconciled with the shipped state) classes every point:
   against its type for the pairs the ADRM states; any other IANA subtype is not checked.
 
 Every PARTIAL point, with what is not enforced, is a row of the limitations register and
-of the generated conformance register (both maintainer records); the Validation article
+of the generated conformance register (both private records); the Validation article
 summarises them.
 
 ### What is permanent, and why

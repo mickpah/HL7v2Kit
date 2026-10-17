@@ -11,7 +11,7 @@ import Foundation
 /// (pre-flight B5).
 let structureCompletenessFileName = "completeness.json"
 
-/// The structure extractor's override file (a maintainer script,
+/// The structure extractor's override file (a private script,
 /// P8b-2a) under the structures root. The codegen skips it.
 let structureOverridesFileName = "overrides.json"
 

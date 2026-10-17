@@ -133,14 +133,14 @@ struct BareConditionalGuardTests {
     // field that becomes bare cannot ship with a literal update alone. The check is by
     // position: the register gives version scope in prose ("v2.3-v2.6", "all six"),
     // which a test cannot read reliably.
-    // The audit is a maintainer record outside the repository, so this guard runs only where
-    // it is present (a maintainer's checkout), never on a clean clone.
+    // The audit is a private record outside the repository, so this guard runs only where
+    // it is present (a checkout with private/), never on a clean clone.
     static let registerURL = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         .appendingPathComponent("private/design/conditional-completeness-audit.md")
 
     @Test("every bare C on every version is named in the conditional-completeness register",
-          .enabled(if: FileManager.default.fileExists(atPath: registerURL.path), "the audit is a maintainer record, absent here"))
+          .enabled(if: FileManager.default.fileExists(atPath: registerURL.path), "the audit is a private record, absent here"))
     func bareCNamedInRegister() throws {
         let register = try String(contentsOf: Self.registerURL, encoding: .utf8)
         let tables: [(String, [String: SegmentGrammar])] = [

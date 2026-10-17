@@ -148,7 +148,7 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
     /// message types, but the overrides applied to all of them, so an
     /// ADT with a two-component CX failed AU validation citing a point
     /// that does not reach ADT. See
-    /// the ADRM 2021 localisation audit (a maintainer record).
+    /// the ADRM 2021 localisation audit (a private record).
     let condition: String?
 
     /// Profile-required components that NARROW the base spec. When a
@@ -413,7 +413,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// conformance point for a named set of message types; without a
     /// gate here, `profileUsage = .required` fired on message types the
     /// spec never addressed — see
-    /// the ADRM 2021 localisation audit (a maintainer record).
+    /// the ADRM 2021 localisation audit (a private record).
     let condition: String?
 
     /// Profile-defined required-component narrowings for composite

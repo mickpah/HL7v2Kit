@@ -2464,13 +2464,13 @@ struct AU00060_4PartialTests {
 @Suite("AU HL7au:00060.1 register row (P8b-4)")
 struct AU00060_1RegisterRowTests {
 
-    // The register is a maintainer record outside the repository, so this runs only where it
-    // is present (a maintainer's checkout), never on a clean clone.
+    // The register is a private record outside the repository, so this runs only where it
+    // is present (a checkout with private/), never on a clean clone.
     static let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         .deletingLastPathComponent().appendingPathComponent("private/design/m6-adrm-2021-conformance-register.md")
 
     @Test("The generated conformance register classes HL7au:00060.1 PARTIAL with the P8b-4 note",
-          .enabled(if: FileManager.default.fileExists(atPath: url.path), "the register is a maintainer record, absent here"))
+          .enabled(if: FileManager.default.fileExists(atPath: url.path), "the register is a private record, absent here"))
     func registerRow() throws {
         let url = Self.url
         var section = ""
