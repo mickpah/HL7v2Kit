@@ -120,4 +120,70 @@ struct PerformanceTests {
         #expect(elapsed < 10.0,
                 "1000 validations took \(elapsed)s; budget 10s (spec § 9.5)")
     }
+
+    // MARK: - Large messages and long streams (X1 task 1)
+
+    /// A ~2 MB ORU^R01: the PID of `au_oru_r01_pathology.hl7`, one OBR, and 400 TX OBX
+    /// segments of 5,002 characters each. Built here so no large fixture is committed.
+    private static func largeORU() throws -> Data {
+        let fixture = try String(contentsOf: FixtureCorpus.fixtureURL(named: "au_oru_r01_pathology.hl7"), encoding: .utf8)
+        let pid = try #require(fixture.split(whereSeparator: \.isNewline).first { $0.hasPrefix("PID|") })
+        let text = String(repeating: "Synthetic narrative line of report text. ", count: 122)
+        var lines = [
+            "MSH|^~\\&|SYNTH_LIS|SYNTH_LAB|SYNTH_EMR|SYNTH_FAC|20240101120000+1000||ORU^R01^ORU_R01|PERF0001|P|2.4",
+            String(pid),
+            "OBR|1||PERF0001^SYNTH_LAB|11502-2^Laboratory report^LN|||20240101110000+1000",
+        ]
+        for n in 1...400 {
+            lines.append("OBX|\(n)|TX|11502-2^Laboratory report^LN||\(text)||||||F")
+        }
+        return Data((lines.joined(separator: "\r") + "\r").utf8)
+    }
+
+    @Test("Parse a 2 MB ORU^R01 (400 TX OBX) under 0.5 s")
+    func parseLargeORU() throws {
+        let data = try Self.largeORU()
+        #expect(data.count > 2_000_000)
+        _ = try Self.parser.parse(data)   // warm-up
+        let elapsed = try Self.elapsed { _ = try Self.parser.parse(data) }
+        print("perf parseLargeORU \(elapsed)")
+        #expect(elapsed < 0.5, "Parse took \(elapsed)s; budget 0.5 s (X1 task 1)")
+    }
+
+    @Test("Validate a 2 MB ORU^R01 under .strict with the AU profile under 1 s")
+    func validateLargeORU() throws {
+        let message = try Self.parser.parse(try Self.largeORU())
+        let validator = Validator(options: .strict, locale: .auLocalisation)
+        _ = validator.validate(message)   // warm-up
+        let elapsed = Self.elapsed { _ = validator.validate(message) }
+        print("perf validateLargeORU \(elapsed)")
+        #expect(elapsed < 1.0, "Validation took \(elapsed)s; budget 1 s (X1 task 1)")
+    }
+
+    @Test("Stream 10,000 messages in 64 KiB chunks: first 100 within 0.2 s, all within 20 s")
+    func streamTenThousand() throws {
+        let fixture = try String(contentsOf: FixtureCorpus.fixtureURL(named: "adt_a01_minimal.hl7"), encoding: .utf8)
+        let segments = fixture.split(whereSeparator: \.isNewline).map(String.init)
+        var msh = try #require(segments.first).split(separator: "|", omittingEmptySubsequences: false).map(String.init)
+        var wire = ""
+        for n in 0..<10_000 {
+            msh[9] = "PERF\(n)"   // MSH-10: split index 9, since MSH-1 is the separator itself
+            wire += ([msh.joined(separator: "|")] + segments.dropFirst()).joined(separator: "\r") + "\r"
+        }
+        let data = Data(wire.utf8)
+        var parser = StreamingBatchParser()
+        var count = 0
+        var firstHundred: TimeInterval?
+        let start = Date()
+        for offset in stride(from: 0, to: data.count, by: 65_536) {
+            count += try parser.feed(data.subdata(in: offset..<min(offset + 65_536, data.count))).count
+            if firstHundred == nil, count >= 100 { firstHundred = -start.timeIntervalSinceNow }
+        }
+        count += try parser.finish().count
+        let total = -start.timeIntervalSinceNow
+        print("perf streamTenThousand first100 \(firstHundred ?? -1) total \(total)")
+        #expect(count == 10_000)
+        #expect((firstHundred ?? .infinity) < 0.2, "First 100 took \(firstHundred ?? -1)s; budget 0.2 s")
+        #expect(total < 20, "10,000 took \(total)s; budget 20 s")
+    }
 }
