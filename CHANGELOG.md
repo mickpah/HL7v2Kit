@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.20.0]
+
 - **Added:** `BatchFile.fileHeaderSegment` and `fileTrailerSegment`, `BatchGroup.headerSegment`
   and `trailerSegment`: the batch envelope parsed into typed segments beside the raw strings.
 - **Added:** `IssueCode.batchCountMismatch(declared:actual:)` (2009),

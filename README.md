@@ -20,7 +20,7 @@ is set out in [SUPPORT.md](SUPPORT.md).
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/mickpah/HL7v2Kit", from: "3.19.0")
+.package(url: "https://github.com/mickpah/HL7v2Kit", from: "3.20.0")
 ```
 
 Then add `"HL7v2Kit"` to your target's `dependencies`.

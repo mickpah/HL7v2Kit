@@ -35,6 +35,7 @@ not the boundary of the work.
 | 3.17 | The public release: macOS and Linux, Linux CI, a DocC job, a runnable example, the one-page Validation article, condensed public documents |
 | 3.18 | Hardened input: a failed message no longer takes its neighbours with it in the streaming parser, MLLP and streaming buffers are capped, each streamed message is decoded by its own MSH-18, the anonymiser covers the fields it missed, and the AU profile compiles each structure matcher once |
 | 3.19 | Safer reports: a stable number for each issue code, an option that keeps message values out of issue messages, the anonymiser as a library API under a caller's key, and the guarantor and the identifying fields it still missed now scrubbed |
+| 3.20 | Batch envelopes: FHS, BHS, BTS and FTS parsed into typed segments and checked against their attribute tables, BTS-1 and FTS-1 compared with the counts, and an envelope out of order reported |
 
 ## What remains
 
