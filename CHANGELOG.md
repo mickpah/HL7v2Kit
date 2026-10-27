@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.18.0]
+
 - **Fixed:** `StreamingBatchParser` loses only the message that fails. When a message fails to
   parse, the parser keeps the messages completed before it and the input after it, and the
   next call to `feed(_:)` or `finish()` returns them. Before, the next message's MSH line and
