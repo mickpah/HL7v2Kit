@@ -196,7 +196,7 @@ Each ``ValidationIssue`` carries:
 - ``ValidationIssue/severity``: ``IssueSeverity/info``, ``IssueSeverity/warning`` or ``IssueSeverity/error``.
 - ``ValidationIssue/code``: the ``IssueCode``; its ``IssueCode/number`` is a stable number for the check (see <doc:#Issue-codes>).
 - ``ValidationIssue/location``: an ``IssueLocation`` with the segment ID, the 1-based occurrence of that segment, and optional field, component and subcomponent indices. `location.pathDescription` renders `PID[1]-3`, `PID[1]-3.4.3` or `ZAU[1]`.
-- ``ValidationIssue/message``: a readable summary for logs or display. It quotes the message value it is about; with ``ValidationOptions/valueExcerpts`` set to `false` it writes `[value]` instead.
+- ``ValidationIssue/message``: a readable summary for logs or display. It quotes the message value it is about; with ``ValidationOptions/valueExcerpts`` set to `false` it writes `[value]` instead, except for the few values that describe the message's form, which that option lists.
 
 ## Issue codes
 
