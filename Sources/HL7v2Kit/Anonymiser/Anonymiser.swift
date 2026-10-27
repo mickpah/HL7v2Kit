@@ -21,9 +21,9 @@ import Foundation
 /// let safe = anonymiser.anonymise(try Parser().parse(bytes)).serialize()
 /// ```
 ///
-/// Covered: MSH-3 to MSH-6; the identifiers, names, dates of birth, addresses and phone
-/// numbers in PID, NK1 and IN1; the providers in PD1, PV1, ORC, OBR and OBX; free-text OBX-5
-/// and NTE-3. Every repetition of a covered field is replaced. Any other segment or field,
+/// Covered: MSH-3 to MSH-6; the identifiers, names, dates of birth and death, addresses, phone
+/// numbers and birth places in PID, NK1, IN1 and GT1 (the guarantor), and PD1-10; the providers
+/// in PD1, PV1, ORC, OBR and OBX; free-text OBX-5 and NTE-3. Every repetition of a covered field is replaced. Any other segment or field,
 /// Z-segments included, is kept as it is.
 public struct Anonymiser: Sendable {
     /// What a caller-supplied replacement sees for one identifier: a CX, or an identifier

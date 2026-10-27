@@ -1,10 +1,11 @@
 # AnonymiseTests.wire
 MSH|^~\&|SYNTH_HOSP|SYNTH_PMS|SYNTH_LIS|SYNTH_RIS|20240101120000||ORU^R01|CTRL0001|P|2.4
-PID|1|SYN-5883|SYN-5883|SYN-5883|Davies|Davies|19800713||Davies||140 Coolabah Cres^^Norwood^SA^5067^AU||61-2-2130-4286|61-2-2130-4286||||SYN-5883|SYN-5883|SYN-5883
-PD1||||DR21304286^Davies^Alex
-NK1|1|Davies||140 Coolabah Cres^^Norwood^SA^5067^AU|61-2-2130-4286|61-2-2130-4286
+PID|1|SYN-5883|SYN-5883|SYN-5883|Davies|Davies|19800713||Davies||140 Coolabah Cres^^Norwood^SA^5067^AU||61-2-2130-4286|61-2-2130-4286||||SYN-5883|SYN-5883|SYN-5883|SYN-5883||[REDACTED]||||||20200129|||||||||||61-2-2130-4286
+PD1||||DR21304286^Davies^Alex||||||SYN-5883
+NK1|1|Davies||140 Coolabah Cres^^Norwood^SA^5067^AU|61-2-2130-4286|61-2-2130-4286||||||SYN-5883||||19500129||||||||||Davies||||Davies|61-2-2130-4286|140 Coolabah Cres^^Norwood^SA^5067^AU|SYN-5883||||SYN-5883|[REDACTED]||61-2-2130-4286|61-2-2130-4286
 PV1|1|O|||||DR21304286^Davies^Alex|DR21304286^Davies^Alex|DR21304286^Davies^Alex||||||||DR21304286^Davies^Alex|||||||||||||||||||||||||||||||||||DR21304286^Davies^Alex
-IN1|1|||||||||||||||Davies||19700129|140 Coolabah Cres^^Norwood^SA^5067^AU
+IN1|1|||||||||||||||Davies||19700129|140 Coolabah Cres^^Norwood^SA^5067^AU|||||||||||||||||SYN-5883||||||||140 Coolabah Cres^^Norwood^SA^5067^AU|||||SYN-5883|||[REDACTED]
+GT1|1|SYN-5883|Davies|Davies|140 Coolabah Cres^^Norwood^SA^5067^AU|61-2-2130-4286|61-2-2130-4286|19700129||||SYN-5883||||Davies|140 Coolabah Cres^^Norwood^SA^5067^AU|61-2-2130-4286|SYN-5883|||||20200129|||||SYN-5883|||||||||||||Davies|||Davies|61-2-2130-4286||||||||||[REDACTED]
 ORC|NW|||||||||DR21304286^Davies^Alex|DR21304286^Davies^Alex|DR21304286^Davies^Alex
 OBR|1|||||||||DR21304286^Davies^Alex||||||DR21304286^Davies^Alex||||||||||||DR21304286^Davies^Alex||||DR21304286^Davies^Alex|DR21304286^Davies^Alex|DR21304286^Davies^Alex|DR21304286^Davies^Alex
 OBX|1|TX|||[REDACTED]|||||||||||DR21304286^Davies^Alex
@@ -69,7 +70,7 @@ DG1|1||I10^Essential hypertension^I10|||A
 # adt_a01_v282.hl7
 MSH|^~\&|SYNTH_FAC|SYNTH_LAB|SYNTH_HOSP|SYNTH_PMS|20240403090000||ADT^A01^ADT_A01|SYN-2821|P|2.8.2
 EVN||20240403090000
-PID|1||SYN-7881^^^SYNTH_HOSP^MR||Bennett^Drew^||19900317|F|||42 Wattle Rd^^Carlton^VIC^3053^AU|||||||||||||||||||||||||||||^PRN^PH^^^02^55501234
+PID|1||SYN-7881^^^SYNTH_HOSP^MR||Bennett^Drew^||19900317|F|||42 Wattle Rd^^Carlton^VIC^3053^AU|||||||||||||||||||||||||||||61-2-6494-7793
 PV1|1|I|WARD3^301^1^SYNTH_HOSP
 
 # adt_a01_with_allergies.hl7

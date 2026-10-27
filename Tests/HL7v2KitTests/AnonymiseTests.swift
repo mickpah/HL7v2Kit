@@ -23,6 +23,12 @@ struct AnonymiseTests {
         "OBR-10", "OBR-16", "OBR-28", "OBR-32", "OBR-33", "OBR-34", "OBR-35",
         "OBX-5", "OBX-16",
         "NTE-3",
+        "PID-21", "PID-23", "PID-40",
+        "PD1-10",
+        "NK1-12", "NK1-26", "NK1-30", "NK1-31", "NK1-32", "NK1-33", "NK1-37", "NK1-38", "NK1-40", "NK1-41",
+        "IN1-36", "IN1-44", "IN1-49", "IN1-52",
+        "GT1-2", "GT1-3", "GT1-4", "GT1-5", "GT1-6", "GT1-7", "GT1-12", "GT1-16", "GT1-17", "GT1-18",
+        "GT1-19", "GT1-29", "GT1-42", "GT1-45", "GT1-46", "GT1-56",
     ]
 
     /// The value a covered field holds before scrubbing. Each is unique and none
@@ -44,11 +50,12 @@ struct AnonymiseTests {
 
     static let wire = [
         "MSH|^~\\&|\(marker("MSH-3"))|\(marker("MSH-4"))|\(marker("MSH-5"))|\(marker("MSH-6"))|20240101120000||ORU^R01|CTRL0001|P|2.4",
-        segment("PID", [1: "1", 7: "19800615"]),
+        segment("PID", [1: "1", 7: "19800615", 29: "20200101"]),
         segment("PD1"),
-        segment("NK1", [1: "1"]),
+        segment("NK1", [1: "1", 16: "19500101"]),
         segment("PV1", [1: "1", 2: "O"]),
         segment("IN1", [1: "1", 18: "19700101"]),
+        segment("GT1", [1: "1", 8: "19700101", 24: "20200101"]),
         segment("ORC", [1: "NW"]),
         segment("OBR", [1: "1"]),
         segment("OBX", [1: "1", 2: "TX"]),
@@ -98,6 +105,17 @@ struct AnonymiseTests {
         let out = try Self.scrubbed(Self.wire)
         #expect(out["PID-7"] != "19800615")
         #expect(out["IN1-18"] != "19700101")
+        for (path, original) in [("PID-29", "20200101"), ("NK1-16", "19500101"), ("GT1-8", "19700101"), ("GT1-24", "20200101")] {
+            #expect(out[path] != original, "\(path)")
+        }
+    }
+
+    @Test("A date with a degree-of-precision component is moved too")
+    func dateWithPrecisionMoves() throws {
+        let wire = Self.wire.replacingOccurrences(of: "|19800615|", with: "|19800615^D|")
+        let out = try Self.scrubbed(wire)
+        #expect(out["PID-7.1"] != "19800615")
+        #expect(out["PID-7.2"] == "D")
     }
 
     @Test("The same input gives byte-identical output")

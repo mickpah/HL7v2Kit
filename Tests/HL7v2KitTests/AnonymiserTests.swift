@@ -81,9 +81,9 @@ struct AnonymiserTests {
 
     @Test("An empty or absent field or component stays empty: nothing is invented")
     func emptyStaysEmpty() throws {
-        let wire = "MSH|^~\\&|LAB|FAC||FAC|20240101120000||ADT^A01^ADT_A01|C1|P|2.4\rPID|1||1^^^H^MR||FAM\rNTE|1||\r"
+        let wire = "MSH|^~\\&|LAB|FAC||FAC|20240101120000||ADT^A01^ADT_A01|C1|P|2.4\rPID|1||1^^^H^MR||FAM\rGT1|1||GUARFAM^GUARGIV|||\rNTE|1||\r"
         let out = try Parser().parse(Anonymiser(key: 7).anonymise(try Parser().parse(wire)).serialize())
-        for path in ["MSH-5", "PID-5.2", "PID-13", "NTE-3"] { #expect((out[path] ?? "").isEmpty, "\(path)") }
+        for path in ["MSH-5", "PID-5.2", "PID-13", "GT1-6", "NTE-3"] { #expect((out[path] ?? "").isEmpty, "\(path)") }
     }
 
     @Test("Type codes, authorities and use codes are kept")

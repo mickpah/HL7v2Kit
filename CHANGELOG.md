@@ -8,6 +8,11 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+- **Fixed:** `HL7v2KitAnonymise` and `Anonymiser` scrub the guarantor (GT1) and the identifying
+  fields they missed: PID-21, PID-23, PID-29 and PID-40; PD1-10; NK1-12, NK1-16, NK1-26, NK1-30
+  to NK1-33, NK1-37, NK1-38, NK1-40 and NK1-41; IN1-36, IN1-44, IN1-49 and IN1-52. A date of
+  birth or death with a degree-of-precision component, or in a repeating field, now moves too;
+  before, it was left as it was.
 - **Added:** `Anonymiser`, the library form of `HL7v2KitAnonymise`'s scrubbing.
   `Anonymiser(key:replacingIdentifier:)` replaces the identifying fields of a parsed message
   with synthetic values chosen from the caller's key. The same value under one key gives the

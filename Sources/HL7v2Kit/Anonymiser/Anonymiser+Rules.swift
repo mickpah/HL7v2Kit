@@ -17,17 +17,27 @@ extension Anonymiser {
         case phone
         /// XCN: ID, family and given names.
         case provider
+        /// Free text that identifies (a birth place): replaced by `[REDACTED]`.
+        case redact
     }
 
     /// The covered fields of each segment, besides MSH-3 to MSH-6, OBX-5 and NTE-3.
     static let coverage: [String: [(field: Int, rule: Rule)]] = [
         "PID": [(2, .identifier), (3, .identifier), (4, .identifier), (5, .name), (6, .name),
                 (7, .date), (9, .name), (11, .address), (13, .phone), (14, .phone),
-                (18, .identifier), (19, .identifier), (20, .identifier)],
-        "PD1": [(4, .provider)],
-        "NK1": [(2, .name), (4, .address), (5, .phone), (6, .phone)],
+                (18, .identifier), (19, .identifier), (20, .identifier), (21, .identifier),
+                (23, .redact), (29, .date), (40, .phone)],
+        "PD1": [(4, .provider), (10, .identifier)],
+        "NK1": [(2, .name), (4, .address), (5, .phone), (6, .phone), (12, .identifier), (16, .date),
+                (26, .name), (30, .name), (31, .phone), (32, .address), (33, .identifier),
+                (37, .identifier), (38, .redact), (40, .phone), (41, .phone)],
         "PV1": [(7, .provider), (8, .provider), (9, .provider), (17, .provider), (52, .provider)],
-        "IN1": [(16, .name), (18, .date), (19, .address)],
+        "IN1": [(16, .name), (18, .date), (19, .address), (36, .identifier), (44, .address),
+                (49, .identifier), (52, .redact)],
+        "GT1": [(2, .identifier), (3, .name), (4, .name), (5, .address), (6, .phone), (7, .phone),
+                (8, .date), (12, .identifier), (16, .name), (17, .address), (18, .phone),
+                (19, .identifier), (24, .date), (29, .identifier), (42, .name), (45, .name),
+                (46, .phone), (56, .redact)],
         "ORC": [(10, .provider), (11, .provider), (12, .provider)],
         "OBR": [(10, .provider), (16, .provider), (28, .provider), (32, .provider), (33, .provider),
                 (34, .provider), (35, .provider)],
@@ -108,11 +118,6 @@ extension Anonymiser {
     func apply(_ rule: Rule, to fields: inout [Field], at index: Int) {
         guard fields.indices.contains(index), isPopulated(fields[index]) else { return }
         let original = fields[index]
-        if rule == .date {
-            guard let raw = original.stringValue, !raw.isEmpty else { return }
-            fields[index] = .scalar(scrubDOB(raw, salt: source.pick("date", raw).salt))
-            return
-        }
         fields[index] = Field(repetitions: original.repetitions.enumerated().map { i, repetition in
             replaced(repetition, under: rule, repetition: i)
         })
@@ -163,7 +168,10 @@ extension Anonymiser {
                 ? setting(repetition, [0: id, 1: name.family, 2: name.given, 3: "", 10: ""])
                 : .components([id, name.family, name.given])
         case .date:
-            return repetition   // a date is replaced whole, in apply(_:to:at:)
+            let raw = repetition.components.first?.stringValue ?? ""
+            return raw.isEmpty ? repetition : setting(repetition, [0: scrubDOB(raw, salt: source.pick("date", raw).salt)])
+        case .redact:
+            return .scalar("[REDACTED]")
         }
     }
 
