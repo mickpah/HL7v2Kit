@@ -193,9 +193,46 @@ let pidIssues = report.issues.filter { $0.location.segmentID == "PID" }
 Each ``ValidationIssue`` carries:
 
 - ``ValidationIssue/severity``: ``IssueSeverity/info``, ``IssueSeverity/warning`` or ``IssueSeverity/error``.
-- ``ValidationIssue/code``: the ``IssueCode``.
+- ``ValidationIssue/code``: the ``IssueCode``; its ``IssueCode/number`` is a stable number for the check (see <doc:#Issue-codes>).
 - ``ValidationIssue/location``: an ``IssueLocation`` with the segment ID, the 1-based occurrence of that segment, and optional field, component and subcomponent indices. `location.pathDescription` renders `PID[1]-3`, `PID[1]-3.4.3` or `ZAU[1]`.
 - ``ValidationIssue/message``: a readable summary for logs or display.
+
+## Issue codes
+
+``IssueCode/number`` gives each check a stable number. A number is never renumbered or reused; a new check takes the next free number in its band. The 6xxx to 8xxx bands (slicing, extension and reference, must-support and obligation) have no HL7 v2 check.
+
+| Code | Check | Band |
+| --- | --- | --- |
+| 1001 | ``IssueCode/fieldNotSupported`` | Structure and profile |
+| 1002 | ``IssueCode/zSegmentPresent`` | Structure and profile |
+| 1003 | ``IssueCode/profileConstraintViolation(localeRule:)`` | Structure and profile |
+| 1004 | ``IssueCode/segmentNotInVersionGrammar`` | Structure and profile |
+| 1005 | ``IssueCode/segmentWithdrawnInVersion`` | Structure and profile |
+| 1006 | ``IssueCode/versionGrammarSubstituted(declared:validatedAs:)`` | Structure and profile |
+| 1007 | ``IssueCode/versionNotRecognised(wireValue:)`` | Structure and profile |
+| 1008 | ``IssueCode/componentNotSupported(optionality:)`` | Structure and profile |
+| 1009 | ``IssueCode/messageStructureSegmentMissing(structure:segmentID:group:)`` | Structure and profile |
+| 1010 | ``IssueCode/messageStructureSegmentUnexpected(structure:segmentID:)`` | Structure and profile |
+| 1011 | ``IssueCode/messageStructureMismatch(declared:trigger:)`` | Structure and profile |
+| 1012 | ``IssueCode/messageStructureNotModelled(structure:)`` | Structure and profile |
+| 2001 | ``IssueCode/requiredFieldMissing`` | Cardinality and type |
+| 2002 | ``IssueCode/requiredComponentMissing`` | Cardinality and type |
+| 2003 | ``IssueCode/cardinalityExceeded`` | Cardinality and type |
+| 2004 | ``IssueCode/profileMaximumExceeded(localeRule:)`` | Cardinality and type |
+| 2005 | ``IssueCode/segmentCardinalityBelowMinimum(segmentID:minCount:actual:groupScope:)`` | Cardinality and type |
+| 2006 | ``IssueCode/segmentCardinalityAboveMaximum(segmentID:maxCount:actual:groupScope:)`` | Cardinality and type |
+| 2007 | ``IssueCode/extraComponentsInPrimitiveField`` | Cardinality and type |
+| 2008 | ``IssueCode/extraComponentsInCompositeField`` | Cardinality and type |
+| 3001 | ``IssueCode/pairedFieldMismatch(item:)`` | Primitive and value |
+| 3002 | ``IssueCode/fieldLengthOutOfRange(length:actual:)`` | Primitive and value |
+| 3003 | ``IssueCode/componentLengthOutOfRange(length:actual:)`` | Primitive and value |
+| 3004 | ``IssueCode/valueFormatInvalid(dataType:)`` | Primitive and value |
+| 4001 | ``IssueCode/valueNotInTable(table:)`` | Binding and terminology |
+| 5001 | ``IssueCode/conditionalFieldMissing`` | Invariant |
+| 5002 | ``IssueCode/conditionalComponentMissing`` | Invariant |
+| 5003 | ``IssueCode/conformanceConditionMissing`` | Invariant |
+| 5004 | ``IssueCode/conditionalFieldProhibited`` | Invariant |
+| 9001 | ``IssueCode/conditionNotEvaluated(fields:)`` | Not evaluated |
 
 ## Conditional-field DSL
 

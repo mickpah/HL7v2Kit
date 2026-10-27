@@ -8,6 +8,11 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+- **Added:** `IssueCode.number`, a stable number for each check in six bands (1xxx structure
+  and profile, 2xxx cardinality and type, 3xxx primitive and value, 4xxx binding and
+  terminology, 5xxx invariant, 9xxx not evaluated). A number is never changed or reused; the
+  Validation article lists them.
+
 ## [3.18.0]
 
 - **Fixed:** `StreamingBatchParser` loses only the message that fails. When a message fails to

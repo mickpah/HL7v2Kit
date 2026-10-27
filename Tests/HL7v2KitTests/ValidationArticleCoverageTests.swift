@@ -9,7 +9,7 @@ import HL7v2Kit
 
 @Suite("Validation article coverage")
 struct ValidationArticleCoverageTests {
-    private static var root: URL {
+    static var root: URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()   // HL7v2KitTests
             .deletingLastPathComponent()   // Tests
@@ -35,7 +35,7 @@ struct ValidationArticleCoverageTests {
 
     /// One value of every case. The switch in `name(of:)` is exhaustive, so a new case stops
     /// this file compiling until it is named there and given a value here.
-    private static let everyCode: [IssueCode] = [
+    static let everyCode: [IssueCode] = [
         .requiredFieldMissing, .conditionalFieldMissing, .requiredComponentMissing,
         .fieldNotSupported, .cardinalityExceeded, .zSegmentPresent,
         .profileConstraintViolation(localeRule: ""), .profileMaximumExceeded(localeRule: ""),
@@ -55,7 +55,7 @@ struct ValidationArticleCoverageTests {
         .messageStructureNotModelled(structure: ""), .conditionNotEvaluated(fields: []),
     ]
 
-    private static func name(of code: IssueCode) -> String {
+    static func name(of code: IssueCode) -> String {
         switch code {
         case .requiredFieldMissing: "requiredFieldMissing"
         case .conditionalFieldMissing: "conditionalFieldMissing"
