@@ -172,23 +172,47 @@ public enum DataTypeGrammarTable {
 }
 
 /// The predicate language of ``ComponentGrammar/condition``: `<n> populated`,
-/// `<n> empty`, `repeated` (the field has more than one populated
-/// repetition; XAD.7), `AND`, `OR`, parentheses. Fail-safe: an unparseable
-/// expression evaluates `false`, so a malformed rule can never fire (req #4).
+/// `<n> empty`, `<n> hl7Table` (the value is `HL7` and four digits, a Table 0396 HL7
+/// table), `<n> userTable` (such a value whose table is user-defined in the message's
+/// version), `repeated` (the field has more than one populated repetition; XAD.7), `NOT`
+/// (one atom, binding tighter than `AND`), `AND`, `OR`, parentheses. Fail-safe: an
+/// unparseable expression evaluates `false`, so a malformed rule can never fire (req #4).
 enum ComponentCondition {
-    static func holds(_ expression: String, populated: (Int) -> Bool, repeated: Bool = false) -> Bool {
+    /// What an atom asks of the repetition.
+    enum Query { case populated(Int), repeated, hl7Table(Int), userTable(Int) }
+
+    /// `value` gives component n's single value (nil when absent or split into
+    /// subcomponents); `tableKind` gives a table's kind by number (nil when unlisted). Both
+    /// default to knowing nothing, so a caller that passes neither evaluates as before.
+    static func holds(_ expression: String, populated: (Int) -> Bool, repeated: Bool = false,
+                      value: (Int) -> String? = { _ in nil },
+                      tableKind: (String) -> HL7Table.Kind? = { _ in nil }) -> Bool {
         var tokens = tokenize(expression)[...]
-        // Index 0 is not a component; parseAtom asks for it on the `repeated` token.
-        let p: (Int) -> Bool = { $0 == 0 ? repeated : populated($0) }
-        guard let value = parseOr(&tokens, p), tokens.isEmpty else { return false }
-        return value
+        let ask: (Query) -> Bool = { query in
+            switch query {
+            case .populated(let n): populated(n)
+            case .repeated: repeated
+            case .hl7Table(let n): hl7TableNumber(value(n)) != nil
+            case .userTable(let n): hl7TableNumber(value(n)).flatMap(tableKind) == .userDefined
+            }
+        }
+        guard let result = parseOr(&tokens, ask), tokens.isEmpty else { return false }
+        return result
     }
 
-    /// Whether `expression` parses: the same parse ``holds(_:populated:repeated:)``
+    /// Whether `expression` parses: the same parse ``holds(_:populated:repeated:value:tableKind:)``
     /// runs, with every atom false. An unparseable condition would never fire (P4-25).
     static func parses(_ expression: String) -> Bool {
         var tokens = tokenize(expression)[...]
         return parseOr(&tokens, { _ in false }) != nil && tokens.isEmpty
+    }
+
+    /// `nnnn` when `value` is exactly `HL7` and four ASCII digits, the Table 0396 form of an
+    /// HL7 table; nil otherwise.
+    static func hl7TableNumber(_ value: String?) -> String? {
+        guard let value, value.count == 7, value.hasPrefix("HL7") else { return nil }
+        let digits = value.dropFirst(3)
+        return digits.allSatisfy { $0.isASCII && $0.isNumber } ? String(digits) : nil
     }
 
     private static func tokenize(_ s: String) -> [String] {
@@ -196,44 +220,51 @@ enum ComponentCondition {
             .split(separator: " ").map { String($0).uppercased() }
     }
 
-    private static func parseOr(_ t: inout ArraySlice<String>, _ p: (Int) -> Bool) -> Bool? {
-        guard var value = parseAnd(&t, p) else { return nil }
+    private static func parseOr(_ t: inout ArraySlice<String>, _ ask: (Query) -> Bool) -> Bool? {
+        guard var value = parseAnd(&t, ask) else { return nil }
         while t.first == "OR" {
             t.removeFirst()
-            guard let rhs = parseAnd(&t, p) else { return nil }
+            guard let rhs = parseAnd(&t, ask) else { return nil }
             value = value || rhs
         }
         return value
     }
 
-    private static func parseAnd(_ t: inout ArraySlice<String>, _ p: (Int) -> Bool) -> Bool? {
-        guard var value = parseAtom(&t, p) else { return nil }
+    private static func parseAnd(_ t: inout ArraySlice<String>, _ ask: (Query) -> Bool) -> Bool? {
+        guard var value = parseAtom(&t, ask) else { return nil }
         while t.first == "AND" {
             t.removeFirst()
-            guard let rhs = parseAtom(&t, p) else { return nil }
+            guard let rhs = parseAtom(&t, ask) else { return nil }
             value = value && rhs
         }
         return value
     }
 
-    private static func parseAtom(_ t: inout ArraySlice<String>, _ p: (Int) -> Bool) -> Bool? {
+    private static func parseAtom(_ t: inout ArraySlice<String>, _ ask: (Query) -> Bool) -> Bool? {
         guard let first = t.first else { return nil }
         if first == "(" {
             t.removeFirst()
-            guard let inner = parseOr(&t, p), t.first == ")" else { return nil }
+            guard let inner = parseOr(&t, ask), t.first == ")" else { return nil }
             t.removeFirst()
             return inner
         }
+        if first == "NOT" {
+            t.removeFirst()
+            guard let inner = parseAtom(&t, ask) else { return nil }
+            return !inner
+        }
         if first == "REPEATED" {
             t.removeFirst()
-            return p(0)
+            return ask(.repeated)
         }
         guard let index = Int(first), index >= 1, t.count >= 2 else { return nil }
         let state = t[t.startIndex + 1]
         t.removeFirst(2)
         switch state {
-        case "POPULATED": return p(index)
-        case "EMPTY":     return !p(index)
+        case "POPULATED": return ask(.populated(index))
+        case "EMPTY":     return !ask(.populated(index))
+        case "HL7TABLE":  return ask(.hl7Table(index))
+        case "USERTABLE": return ask(.userTable(index))
         default:          return nil
         }
     }
