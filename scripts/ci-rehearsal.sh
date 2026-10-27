@@ -11,7 +11,9 @@
 #   job's "Select the newest Xcode" step does on the runner; that step needs sudo, so it is
 #   skipped. On a host that is not macOS the macOS jobs are skipped.
 # - A job with a `container:` (test-linux) runs each step in that image through Docker; without
-#   a running Docker it is skipped with a message.
+#   a running Docker it is skipped with a message. The job's .build lives in a Docker volume,
+#   not on the bind-mounted clone: there, clang's module cache intermittently reads one .pcm as
+#   two ("module 'SwiftShims' is defined in both") and the test step fails before any test runs.
 # - --hide-tmp-binaries moves /tmp/extractbin and /tmp/tablesbin (the author's local extractor
 #   builds) aside for the run and restores them on exit, proving no step relies on them.
 # - --keep leaves the scratch directory, with each step's log, in place.
@@ -33,9 +35,13 @@ repo="$(git rev-parse --show-toplevel)" || exit 2
 head="$(git -C "$repo" rev-parse HEAD)" || exit 2
 scratch="$(mktemp -d "${TMPDIR:-/tmp}/ci-rehearsal.XXXXXX")" || exit 2
 hidden=()
+volumes=()
 
 cleanup() {
     local restore_failed=0
+    for volume in "${volumes[@]+"${volumes[@]}"}"; do
+        docker volume rm -f "$volume" > /dev/null 2>&1
+    done
     for path in "${hidden[@]+"${hidden[@]}"}"; do
         if ! /bin/mv -f "$scratch/hidden/$(basename "$path")" "$path"; then
             echo "Could not restore $path; it is left at $scratch/hidden/$(basename "$path")" >&2
@@ -181,8 +187,10 @@ while IFS=$'\t' read -r job runner container number name script; do
         log="$scratch/logs/$(basename "$script" .sh).log"
         start=$(date +%s)
         if [ "$container" != "-" ]; then
+            volume="ci-rehearsal-$$-$job-build"
+            [[ " ${volumes[*]+"${volumes[*]}"} " == *" $volume "* ]] || volumes+=("$volume")
             docker run --rm --name "ci-rehearsal-$$-$job-$number" \
-                -v "$workdir/src":/src -v "$scratch/steps":/steps:ro -w /src \
+                -v "$workdir/src":/src -v "$volume":/src/.build -v "$scratch/steps":/steps:ro -w /src \
                 "$container" bash -e "/steps/$(basename "$script")" > "$log" 2>&1
         else
             (cd "$workdir/src" && env -i HOME="$workdir/home" TMPDIR="$workdir/tmp/" \
