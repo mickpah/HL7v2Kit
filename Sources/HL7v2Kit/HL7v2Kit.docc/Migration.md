@@ -155,6 +155,15 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.19.0 | `IssueCode.number` (additive; a number is never changed or reused); `ValidationOptions.valueExcerpts` (additive, `Bool`, default `true` in every preset, not an init parameter); `Anonymiser` and `Anonymiser.Identifier` (additive). No behaviour change with default options. `HL7v2KitAnonymise` scrubs GT1 and the identifying fields it missed (a fix). |
 | Unreleased | `BatchFile.fileHeaderSegment`, `BatchFile.fileTrailerSegment`, `BatchGroup.headerSegment` and `BatchGroup.trailerSegment` (additive; derived from the existing raw strings by the existing initialisers); `IssueCode.batchCountMismatch(declared:actual:)` and `IssueCode.batchEnvelopeMalformed(segmentID:)` (additive; open enum); `ValidationOptions.batchEnvelopeSeverity` (additive, `IssueSeverity?`, `.error` in `default` and `strict`, `nil` in `lenient`, not an init parameter). The behaviour change is in "Batch envelopes are checked". |
 
+## Batch envelopes are checked
+
+``BatchValidator`` used to validate the messages of a batch file and, under the AU locale, the AU batch rules. It now also checks the envelope: the fields of FHS, BHS, BTS and FTS against their attribute tables, BTS-1 and FTS-1 against the real counts, and the order of the envelope segments. No source break, but validation results change.
+
+- **New findings:** a file whose counts are wrong, whose envelope is out of order or whose header delimiters cannot be read now reports errors, so ``BatchValidationReport/isValid`` can be false where it was true. Envelope field findings arrive at the severity their option gives a message field.
+- **To turn the count and order checks off:** set ``ValidationOptions/batchEnvelopeSeverity`` to `nil`, as ``ValidationOptions/lenient`` does.
+- **If you switch over `IssueCode`:** it is an open enum; the two new cases land in your `@unknown default` branch.
+- **Parsing:** ``BatchParser`` keeps the first FHS and FTS when a file carries a second, where it used to keep the last.
+
 ## Streaming input: recovery, limits and character sets
 
 No source change for a caller; the changes are in behaviour.

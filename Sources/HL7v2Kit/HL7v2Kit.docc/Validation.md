@@ -73,6 +73,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 ### Batches
 
 - ``BatchParser`` (and ``StreamingBatchParser``) split an `FHS`/`BHS` ... `BTS`/`FTS` file into messages, and ``BatchValidator`` gives one ``ValidationReport`` per message, each checked as above. A batch trailer left on a message passed to the plain ``Parser`` is an unexpected segment when the structure check is on.
+- ``BatchValidator`` also checks the envelope: each FHS, BHS, BTS and FTS field against the attribute table of the version its batch's messages declare (v2.5.1 when a batch has none), under the options that govern message fields; BTS-1 against the messages in its batch and FTS-1 against the batches in the file (``IssueCode/batchCountMismatch(declared:actual:)``); and the file grammar `[FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]` with readable FHS and BHS delimiters (``IssueCode/batchEnvelopeMalformed(segmentID:)``). The last two follow ``ValidationOptions/batchEnvelopeSeverity``. ``StreamingBatchParser`` does not keep the envelope, so a streamed file's envelope is not checked.
 - Under ``HL7Locale/auLocalisation`` the batch-scope rules apply: one batch per file, a REF batched with any other message, and the FHS and BHS delimiters, each as ``IssueCode/profileConstraintViolation(localeRule:)``.
 
 ### Acknowledgement building
@@ -150,7 +151,6 @@ Each line gives the reason. **Blocking** means the rule is decidable from the wi
 - **Blank printed optionality** (150 rows such as NST, NSC, the v2.6 CH17 sterilisation segments, v2.5.1 OBX-20 to 22, and 87 rows on v2.7.1): the spec defines no blank code, so these fields are read as optional.
 - **Repeating TQ fields on v2.3 and v2.3.1** (OBR-27, SCH-11): the repeat delimiter carries both a TQ.6 priority continuation and a new repetition, and the delimiters alone cannot tell them apart. On the single-repeat TQ fields of those versions a wrong second repetition goes unreported for the same reason.
 - **OM2-6 on v2.3 to v2.4**: a repeating tuple with nested subcomponents that no field grammar yet expresses, so its width is not checked.
-- **Batch envelopes**: `FHS`, `BHS`, `BTS` and `FTS` are kept as raw text, so their fields are not checked against the grammar and the trailer counts (BTS-1, FTS-1) are not compared with the messages and batches carried; only the AU delimiter and batch-scope rules read them.
 - **Field-local table mentions and TXA-22**: 15 CM field definitions on v2.3 to v2.4 that name two tables in one sentence are left unbound; TXA-22's "both or neither" rule between a component group and one component is not expressible.
 - **CWE.7 and kin, CNE.20**: the version ID required when the coding system is not an HL7 table needs a value pattern and a table-type lookup; CNE.20's sentence contradicts its own summary. Other printed `C` components with no stated condition (OSP.2, PL.1, XCN.12 and others) are read as optional.
 

@@ -10,19 +10,19 @@ The entries are condensed; the git history carries the detail.
 
 - **Added:** `BatchFile.fileHeaderSegment` and `fileTrailerSegment`, `BatchGroup.headerSegment`
   and `trailerSegment`: the batch envelope parsed into typed segments beside the raw strings.
-- **Fixed:** `BatchParser` keeps the first FHS and FTS when a file carries a second, instead of
-  replacing them, and a header line with no separator (`BHS` alone) no longer crashes the
-  parser, in a batch or in a message.
+- **Added:** `IssueCode.batchCountMismatch(declared:actual:)` (2009),
+  `IssueCode.batchEnvelopeMalformed(segmentID:)` (1013) and `ValidationOptions.batchEnvelopeSeverity`.
 - **Changed:** `BatchValidator` checks the fields of FHS, BHS, BTS and FTS against their
   attribute tables (the version the batch's messages declare, v2.5.1 when there are none),
   under the options that govern message fields. A batch file may report findings it did not
   before.
-- **Added:** `IssueCode.batchCountMismatch(declared:actual:)` (2009),
-  `IssueCode.batchEnvelopeMalformed(segmentID:)` (1013) and `ValidationOptions.batchEnvelopeSeverity`.
 - **Changed:** `BatchValidator` reports a BTS-1 or FTS-1 count that is not the number of messages
   in the batch or batches in the file, and an envelope segment out of the order
   `[FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]` or with unreadable delimiters, at `.error` by
   default. Set `batchEnvelopeSeverity` to `nil` to turn them off.
+- **Fixed:** `BatchParser` keeps the first FHS and FTS when a file carries a second, instead of
+  replacing them, and a header line with no separator (`BHS` alone) no longer crashes the
+  parser, in a batch or in a message.
 
 ## [3.19.0]
 
