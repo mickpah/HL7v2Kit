@@ -46,7 +46,7 @@ The Blocking items, in brief:
 - **Message structures:** v2.6 MFR_M01 with MFI-1 OMA to OME, a no-data query response without
   QAK, and the v2.3 event replay error example (register section E).
 - **Conditions the language cannot yet state:** RXE-15 on v2.3 to v2.4, ROL-4 against STF-2 and
-  STF-3, CWE.7 and kin, TXA-22 (sections A, C and D).
+  STF-3, TXA-22 (sections A, C and D).
 - **Grammar gaps:** repeating TQ fields on v2.3 and v2.3.1, OM2-6 on v2.3 to v2.4, field-local
   table mentions on v2.3 to v2.4, blank printed optionality (sections A, C and D).
 - **The AU profile:** RXO, ODS or ODT in place of OBR in ORR^O02 and OSR^Q06 (HL7au:00060.1,

@@ -716,6 +716,10 @@ v2.7-and-later examples violate them in 62 to 100 percent of values; `repeated` 
 **Superseded (P11 S1):** component length and optionality, previously recorded but not
 enforced, are enforced for components and subcomponents.
 
+**Amended (3.21.0):** the coding-system version ID (CWE.7 and its relatives, v2.5.1 to v2.8.2)
+ships on `conformanceCondition`; the predicate language gains `hl7Table`, `userTable` and `NOT`.
+CNE.20 stays a known limit.
+
 ## ADR-018 Supported version set
 
 **Status:** Accepted (Option A, as amended by P10-6). Related: ADR-003, ADR-013, ADR-014,
