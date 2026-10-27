@@ -17,4 +17,15 @@ extension SignatureCompatibilityTests {
         let excerpts: WritableKeyPath<ValidationOptions, Bool> = \.valueExcerpts
         #expect(ValidationOptions.default[keyPath: excerpts])
     }
+
+    @Test("X1: Anonymiser keeps its signatures")
+    func anonymiserSignatures() {
+        let make: (UInt64, (@Sendable (Anonymiser.Identifier) -> String)?) -> Anonymiser = Anonymiser.init(key:replacingIdentifier:)
+        let anonymise: (Anonymiser) -> (Message) -> Message = Anonymiser.anonymise
+        let value: KeyPath<Anonymiser.Identifier, String> = \.value
+        let typeCode: KeyPath<Anonymiser.Identifier, String?> = \.typeCode
+        let authority: KeyPath<Anonymiser.Identifier, String?> = \.assigningAuthority
+        let seed: KeyPath<Anonymiser.Identifier, UInt64> = \.seed
+        _ = (make, anonymise, value, typeCode, authority, seed)
+    }
 }

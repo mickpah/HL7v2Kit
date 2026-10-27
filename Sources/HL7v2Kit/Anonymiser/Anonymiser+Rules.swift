@@ -34,6 +34,24 @@ extension Anonymiser {
         "OBX": [(16, .provider)],
     ]
 
+    /// True under a caller's key; false under the tool's rule.
+    var keyed: Bool {
+        if case .keyed = source { true } else { false }
+    }
+
+    /// Component `k` (0-based) of `repetition`, its first subcomponent; nil when empty or absent.
+    static func value(_ repetition: Repetition, _ k: Int) -> String? {
+        guard repetition.components.indices.contains(k),
+              let value = repetition.components[k].subcomponents.first?.value, !value.isEmpty else { return nil }
+        return value
+    }
+
+    /// Each repetition of field `index` mapped by `transform`, when the field is populated.
+    func redactEach(_ fields: inout [Field], _ index: Int, _ transform: (Repetition) -> Repetition) {
+        guard fields.indices.contains(index), isPopulated(fields[index]) else { return }
+        fields[index] = Field(repetitions: fields[index].repetitions.map(transform))
+    }
+
     /// A component as text: its subcomponents joined by `&`, whatever the message's delimiters.
     static func text(_ component: Component) -> String {
         component.subcomponents.map(\.value).joined(separator: "&")
@@ -54,23 +72,36 @@ extension Anonymiser {
         if fields.indices.contains(index) { fields[index] = field }
     }
 
-    /// MSH-3 to MSH-6, the sending and receiving applications and facilities.
+    /// MSH-3 to MSH-6, the sending and receiving applications and facilities. Under a key only
+    /// a populated one is replaced, and only its namespace ID.
     func replaceFacilities(_ fields: inout [Field]) {
         for (slot, index) in (3...6).enumerated() where fields.indices.contains(index) {
-            let pick = source.pick("facility", fields[index].first.map(Self.text) ?? "", slot: slot)
-            fields[index] = .scalar(syntheticFacility(salt: pick.salt, slot: pick.slot))
+            let original = fields[index]
+            if keyed, !isPopulated(original) { continue }
+            let pick = source.pick("facility", original.first.map(Self.text) ?? "", slot: slot)
+            let facility = syntheticFacility(salt: pick.salt, slot: pick.slot)
+            fields[index] = keyed ? Field(repetitions: original.repetitions.map { setting($0, [0: facility]) })
+                                  : .scalar(facility)
         }
     }
 
-    /// OBX-5 when it holds text (TX, FT, ST) or encapsulated data (ED); a number, code or date is kept.
+    /// OBX-5 when it holds text (TX, FT, ST) or encapsulated data (ED); a number, code or date
+    /// is kept. Under a key each repetition is replaced, and an ED keeps its type and encoding,
+    /// its data becoming `[REDACTED]` (Base64-encoded when ED-4 says Base64).
     func redactObservationValue(_ fields: inout [Field], valueType: String?) {
         guard let valueType, ["TX", "FT", "ST", "ED"].contains(valueType.uppercased()) else { return }
-        replace(&fields, 5, with: .scalar("[REDACTED]"))
+        guard keyed else { return replace(&fields, 5, with: .scalar("[REDACTED]")) }
+        redactEach(&fields, 5) { repetition in
+            valueType.uppercased() == "ED"
+                ? setting(repetition, [4: Self.value(repetition, 3) == "Base64" ? "W1JFREFDVEVEXQ==" : "[REDACTED]"])
+                : .scalar("[REDACTED]")
+        }
     }
 
-    /// NTE-3, the comment.
+    /// NTE-3, the comment. The tool replaces it even when empty; under a key an empty one is kept.
     func redactComment(_ fields: inout [Field]) {
-        replace(&fields, 3, with: .scalar("[REDACTED]"))
+        guard keyed else { return replace(&fields, 3, with: .scalar("[REDACTED]")) }
+        redactEach(&fields, 3) { _ in .scalar("[REDACTED]") }
     }
 
     /// Field `index` replaced under `rule`, when populated; an empty or absent field is kept.
@@ -91,8 +122,19 @@ extension Anonymiser {
     func replaced(_ repetition: Repetition, under rule: Rule, repetition i: Int) -> Repetition {
         switch rule {
         case .identifier:
-            let id = repetition.components.first?.stringValue ?? ""
-            return setting(repetition, [0: syntheticIdentifier(matching: id, salt: source.pick("identifier", id, offset: i).salt)])
+            guard case .keyed(let key) = source else {
+                let id = repetition.components.first?.stringValue ?? ""
+                return setting(repetition, [0: syntheticIdentifier(matching: id, salt: source.pick("identifier", id, offset: i).salt)])
+            }
+            // CX-1 as text, so one held in subcomponents is replaced too; an empty one is kept.
+            guard let first = repetition.components.first,
+                  first.subcomponents.contains(where: { !$0.value.isEmpty }) else { return repetition }
+            let id = Self.text(first)
+            let seed = anonymiserSeed(key: key, kind: "identifier", original: id)
+            let replacement = replacingIdentifier?(Identifier(
+                value: id, typeCode: Self.value(repetition, 4), assigningAuthority: Self.value(repetition, 3), seed: seed))
+                ?? syntheticIdentifier(matching: id, salt: Int(truncatingIfNeeded: seed & 0x7FFF_FFFF))
+            return setting(repetition, [0: replacement, 1: ""])   // CX-2: the original's check digit
         case .name:
             let family = source.pick("family", repetition.components.first.map(Self.text) ?? "", offset: i)
             let given = source.pick("given", repetition.components.dropFirst().first.map(Self.text) ?? "", offset: i)
@@ -101,23 +143,37 @@ extension Anonymiser {
         case .address:
             let pick = source.pick("address", Self.text(repetition), slot: i)
             let a = syntheticAddress(salt: pick.salt, slot: pick.slot)
-            return .components([a.street, "", a.city, a.state, a.postcode, "AU"])
+            return keyed
+                ? setting(repetition, [0: a.street, 1: "", 2: a.city, 3: a.state, 4: a.postcode,
+                                       7: "", 8: "", 9: "", 18: "", 19: "", 22: ""])
+                : .components([a.street, "", a.city, a.state, a.postcode, "AU"])
         case .phone:
             let pick = source.pick("phone", Self.text(repetition), slot: i)
-            return .scalar(syntheticPhone(salt: pick.salt, slot: pick.slot))
+            let phone = syntheticPhone(salt: pick.salt, slot: pick.slot)
+            let local = String(phone.filter(\.isNumber).suffix(8))
+            return keyed
+                ? setting(repetition, [0: phone, 3: "anonymised@example.invalid", 5: "2", 6: local,
+                                       7: "", 8: "", 9: "", 10: "", 11: "02" + local, 17: ""])
+                : .scalar(phone)
         case .provider:
             let pick = source.pick("provider", Self.text(repetition), slot: i)
+            let id = syntheticProviderID(salt: pick.salt, slot: pick.slot)
             let name = syntheticName(salt: pick.salt &+ 100, slot: pick.slot)
-            return .components([syntheticProviderID(salt: pick.salt, slot: pick.slot), name.family, name.given])
+            return keyed
+                ? setting(repetition, [0: id, 1: name.family, 2: name.given, 3: "", 10: ""])
+                : .components([id, name.family, name.given])
         case .date:
             return repetition   // a date is replaced whole, in apply(_:to:at:)
         }
     }
 
-    /// `repetition` with each component in `values` replaced, where the repetition has it.
+    /// `repetition` with each component in `values` replaced where the repetition has it.
+    /// Under a key only a populated component is replaced, so an empty one stays empty.
     func setting(_ repetition: Repetition, _ values: [Int: String]) -> Repetition {
         Repetition(components: repetition.components.enumerated().map { k, component in
-            values[k].map(Component.scalar) ?? component
+            guard let value = values[k],
+                  !keyed || component.subcomponents.contains(where: { !$0.value.isEmpty }) else { return component }
+            return .scalar(value)
         })
     }
 }

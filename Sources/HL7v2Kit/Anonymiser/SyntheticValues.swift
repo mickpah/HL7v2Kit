@@ -11,13 +11,31 @@ enum SyntheticSource: Sendable {
     /// repetition or slot the tool has always used.
     case legacy(salt: Int)
 
+    /// The library's rule: every value chosen from a seed of the caller's key, its kind and the
+    /// original value alone, so the same value gives the same output in every message.
+    case keyed(UInt64)
+
     /// The salt and slot a generator takes for `original`, a value of `kind`. `offset` and
     /// `slot` are the tool's per-repetition and per-field adjustments.
     func pick(_ kind: String, _ original: String, offset: Int = 0, slot: Int = 0) -> (salt: Int, slot: Int) {
         switch self {
         case .legacy(let salt): (salt &+ offset, slot)
+        case .keyed(let key): (Int(truncatingIfNeeded: anonymiserSeed(key: key, kind: kind, original: original) & 0x7FFF_FFFF), 0)
         }
     }
+}
+
+/// FNV-1a 64 over the key's eight little-endian bytes, then `kind`'s UTF-8 bytes, a 0x00 byte
+/// and `original`'s UTF-8 bytes. Fixed arithmetic, so the same on every run and platform; the
+/// FHIR counterpart uses the same function, so one key maps an identifier to the same value.
+func anonymiserSeed(key: UInt64, kind: String, original: String) -> UInt64 {
+    var hash: UInt64 = 0xcbf2_9ce4_8422_2325
+    func mix(_ byte: UInt8) { hash = (hash ^ UInt64(byte)) &* 0x0000_0100_0000_01b3 }
+    for shift in stride(from: 0, to: 64, by: 8) { mix(UInt8(truncatingIfNeeded: key >> UInt64(shift))) }
+    kind.utf8.forEach(mix)
+    mix(0)
+    original.utf8.forEach(mix)
+    return hash
 }
 
 package func scrubDOB(_ raw: String, salt: Int) -> String {

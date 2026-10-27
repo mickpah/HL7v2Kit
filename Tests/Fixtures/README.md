@@ -153,6 +153,7 @@ Not messages: no fixture harness reads them, and they hold no patient data. `Seg
 | `APISurface/composite-accessors-unreleased.txt` | API snapshot | Every `public var` in `Sources/HL7v2Kit/Composite/` (hand-written views and generated `+Components` extensions) at HEAD (181), as `File\|name\|type\|component index`. Same equality test, regeneration and promotion as the segment file | N/A — no PHI; source declarations only |
 | `Baselines/issue-messages-v3.18.0.txt` | Baseline | Every issue message over the valid corpus under default options and under strict with the AU profile, as 3.18.0 wrote it, one per line as `fixture\|preset\|path\|message`. `IssueMessageBaselineTests` compares it; `BASELINE_WRITE=1` rewrites it for review | N/A: quotes values of the synthetic and anonymised fixtures above |
 | `Baselines/anonymise-tool-v3.18.0.txt` | Baseline | `HL7v2KitAnonymise` output for every valid fixture and the `AnonymiseTests` marker message, one segment per line under a `# name` header. `AnonymiseGoldenTests` compares it; `BASELINE_WRITE=1` rewrites it for review | N/A: synthetic output of the anonymiser |
+| `Baselines/anonymiser-key42.txt` | Baseline | `Anonymiser(key: 42)` output for `adt_a01_with_insurance.hl7` and `adt_a01_with_nk1.hl7`; pins the seed rule across runs and platforms | N/A: synthetic output of the anonymiser |
 
 ## Corrections log
 

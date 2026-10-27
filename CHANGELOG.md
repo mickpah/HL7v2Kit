@@ -8,6 +8,12 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+- **Added:** `Anonymiser`, the library form of `HL7v2KitAnonymise`'s scrubbing.
+  `Anonymiser(key:replacingIdentifier:)` replaces the identifying fields of a parsed message
+  with synthetic values chosen from the caller's key. The same value under one key gives the
+  same output in every message, so linkage across messages survives, and the output keeps the
+  input's shape and validates as the input did. An optional closure supplies identifiers that
+  must pass a check, such as an IHI.
 - **Added:** `ValidationOptions.valueExcerpts`. Set it to `false` and an issue message writes
   `[value]` in place of each value it would quote from the message, so issue messages can go to
   logs and reports that must not carry message content. The values that describe the message's
