@@ -66,7 +66,8 @@
       "name": "Unit of Measure Coding System Version ID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "10="
+      "length": "10=",
+      "conformanceCondition": "4 populated AND (NOT 4 hl7Table OR 4 userTable)"
     },
     {
       "index": 9,
@@ -111,7 +112,8 @@
       "name": "Second Alternate Unit of Measure Coding System Version ID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "10="
+      "length": "10=",
+      "conformanceCondition": "13 populated AND (NOT 13 hl7Table OR 13 userTable)"
     },
     {
       "index": 15,

@@ -56,7 +56,8 @@
       "name": "Coding System Version ID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "10="
+      "length": "10=",
+      "conformanceCondition": "3 populated AND NOT 3 hl7Table"
     },
     {
       "index": 8,
@@ -101,7 +102,8 @@
       "name": "Second Alternate Coding System Version ID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "10="
+      "length": "10=",
+      "conformanceCondition": "12 populated AND NOT 12 hl7Table"
     },
     {
       "index": 14,

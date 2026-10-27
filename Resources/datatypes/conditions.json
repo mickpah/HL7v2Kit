@@ -1,5 +1,5 @@
 {
-  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', 'repeated' (the field has more than one populated repetition), AND, OR, parentheses. When it holds and the component is empty the Validator reports conditionalComponentMissing. 'conformanceRules' carries the 'as of v2.7' family in the same language, applied as conformanceCondition and checked only on opt-in (M27). Applied by private/scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.7 / CWE.7 / CF.7 / CSU.8 (v2.8.2 2.A.13.7: a version ID is required when .3 is anything other than an HL7nnnn table of HL7 type; needs a value-pattern term and a table-type lookup, and the spec's own v2.7+ examples supply .7 in 1 of the 13 values that would require it, so it could only ever join the opt-in tier); CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated). v2.7.1 (P10-2): its Chapter 2A prints the same 72 C components as v2.8.2, and every one's definition was read against the v2.8.2 text: 60 are word for word the same and 12 differ only in a cross-reference (CF.3, CF.6, CSU.4, CNN.8, CNN.9, CNN.11, PPN.9, XCN.9, XCN.10, XCN.13, XCN.22, XCN.23), so the 2.7.1 blocks carry the v2.8.2 rules each re-cited to the v2.7.1 sentence, and the NOT-modelled list above holds for v2.7.1 too.",
+  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', 'repeated' (the field has more than one populated repetition), '<n> hl7Table' (the value is HL7 and four digits, a Table 0396 HL7 table), '<n> userTable' (such a value whose table is user-defined), NOT, AND, OR, parentheses. When it holds and the component is empty the Validator reports conditionalComponentMissing. 'conformanceRules' carries the 'as of v2.7' family in the same language, applied as conformanceCondition and checked only on opt-in (M27). CNE.7 / CWE.7 / CF.7 / CSU.8 and the second-alternate CF.13 / CNE.13 / CSU.14 (v2.7.1, v2.8.2), and CNE.7 / CWE.7 on v2.5.1 and v2.6, are modelled in conformanceRules with the hl7Table and userTable terms, each in its own print's wording (CNE in every version, and v2.5.1 CWE, keep the older usage note, which does not name user-defined tables): the opt-in tier, because the specification's own example messages leave the version ID empty 679 times where these rules require it (v2.6 157, v2.7.1 252, v2.8.2 270). Applied by private/scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated). v2.7.1 (P10-2): its Chapter 2A prints the same 72 C components as v2.8.2, and every one's definition was read against the v2.8.2 text: 60 are word for word the same and 12 differ only in a cross-reference (CF.3, CF.6, CSU.4, CNN.8, CNN.9, CNN.11, PPN.9, XCN.9, XCN.10, XCN.13, XCN.22, XCN.23), so the 2.7.1 blocks carry the v2.8.2 rules each re-cited to the v2.7.1 sentence, and the NOT-modelled list above holds for v2.7.1 too.",
   "rules": {
     "2.5.1": {
       "RPT": {
@@ -307,6 +307,18 @@
             "condition": "2 populated",
             "citation": "HL7 v2.5.1 Chapter 2A, CSU.4 Unit of Measure Coding System: 'This field is required if the unit of measure identifier is present.'"
           }
+        },
+        "CNE": {
+          "7": {
+            "condition": "3 populated AND NOT 3 hl7Table",
+            "citation": "HL7 v2.5.1 Chapter 2A, CNE.7 (sec 2.A.8.7, p 2-142): 'If the coding system is any system other than an \"HL7 coding system,\" version ID must be valued with an actual version ID.'"
+          }
+        },
+        "CWE": {
+          "7": {
+            "condition": "3 populated AND NOT 3 hl7Table",
+            "citation": "HL7 v2.5.1 Chapter 2A, CWE.7 (sec 2.A.13 usage notes, components 1-3 and 7, p 2-147): 'If the coding system is any system other than \"HL7 coding system,\" version ID must be valued with an actual version ID.'"
+          }
         }
       },
       "2.6": {
@@ -314,6 +326,18 @@
           "4": {
             "condition": "2 populated",
             "citation": "HL7 v2.6 Chapter 2A, CSU.4 Unit of Measure Coding System: 'This field is required if the unit of measure identifier is present.'"
+          }
+        },
+        "CNE": {
+          "7": {
+            "condition": "3 populated AND NOT 3 hl7Table",
+            "citation": "HL7 v2.6 Chapter 2A, CNE.7 (sec 2.A.8.7, p 2-110): 'If the coding system is any system other than an \"HL7 coding system,\" version ID must be valued with an actual version ID.'"
+          }
+        },
+        "CWE": {
+          "7": {
+            "condition": "3 populated AND (NOT 3 hl7Table OR 3 userTable)",
+            "citation": "HL7 v2.6 Chapter 2A, CWE.7 (sec 2.A.13.7, p 2-118): 'If CWE.3 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
           }
         }
       },
@@ -338,6 +362,14 @@
           "21": {
             "condition": "11 populated AND 13 empty",
             "citation": "HL7 v2.7.1 Chapter 2A, 2.A.12.21 Second Alternate Unit of Measure Coding System OID (ST) (p23), CSU.21: 'This component is required when CSU.11 is populated and CSU.13 is not populated.'"
+          },
+          "8": {
+            "condition": "4 populated AND (NOT 4 hl7Table OR 4 userTable)",
+            "citation": "HL7 v2.7.1 Chapter 2A, CSU.8 (sec 2.A.12.8, p 21): 'If CSU.4 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
+          },
+          "14": {
+            "condition": "13 populated AND (NOT 13 hl7Table OR 13 userTable)",
+            "citation": "HL7 v2.7.1 Chapter 2A, CSU.14 (sec 2.A.12.14, p 22): 'Analogous to CSU.8 Unit of Measure Coding System Version ID.'"
           }
         },
         "CF": {
@@ -360,6 +392,14 @@
           "20": {
             "condition": "10 populated AND 12 empty",
             "citation": "HL7 v2.7.1 Chapter 2A, 2.A.7.20 Second Alternate Coding System OID (ST) (p11), CF.20: 'This component is required when CF.10 is populated and CF.12 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND (NOT 3 hl7Table OR 3 userTable)",
+            "citation": "HL7 v2.7.1 Chapter 2A, CF.7 (sec 2.A.7.7, p 9): 'If CF.3 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
+          },
+          "13": {
+            "condition": "12 populated AND (NOT 12 hl7Table OR 12 userTable)",
+            "citation": "HL7 v2.7.1 Chapter 2A, CF.13 (sec 2.A.7.13, p 10): 'Analogous To CF.7 Coding System Version ID.'"
           }
         },
         "CNE": {
@@ -370,6 +410,14 @@
           "17": {
             "condition": "4 populated AND 6 empty",
             "citation": "HL7 v2.7.1 Chapter 2A, 2.A.8.17 Alternate Coding System OID (ST) (p15), CNE.17: 'This component is required when CNE.4 is populated and CNE.6 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND NOT 3 hl7Table",
+            "citation": "HL7 v2.7.1 Chapter 2A, CNE.7 (sec 2.A.8.7, p 14): 'If the coding system is any system other than an \"HL7 coding system,\" version ID must be valued with an actual version ID.'"
+          },
+          "13": {
+            "condition": "12 populated AND NOT 12 hl7Table",
+            "citation": "HL7 v2.7.1 Chapter 2A, CNE.13 (sec 2.A.8.13, p 15): 'Analogous to CNE.7 Coding System Version ID.'"
           }
         },
         "CWE": {
@@ -396,6 +444,10 @@
           "20": {
             "condition": "10 populated AND 12 empty",
             "citation": "HL7 v2.7.1 Chapter 2A, 2.A.13.20 Second Alternate Coding System OID (ST) (p30), CWE.20: 'This component is required when CWE.10 is populated and CWE.12 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND (NOT 3 hl7Table OR 3 userTable)",
+            "citation": "HL7 v2.7.1 Chapter 2A, CWE.7 (sec 2.A.13.7, p 29): 'If CWE.3 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
           }
         },
         "CX": {
@@ -476,6 +528,14 @@
           "21": {
             "condition": "11 populated AND 13 empty",
             "citation": "HL7 v2.8.2 Chapter 2A, CSU.21: 'This component is required when CSU.11 is populated and CSU.13 is not populated.'"
+          },
+          "8": {
+            "condition": "4 populated AND (NOT 4 hl7Table OR 4 userTable)",
+            "citation": "HL7 v2.8.2 Chapter 2A, CSU.8 (sec 2.A.12.8, p 22): 'If CSU.4 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
+          },
+          "14": {
+            "condition": "13 populated AND (NOT 13 hl7Table OR 13 userTable)",
+            "citation": "HL7 v2.8.2 Chapter 2A, CSU.14 (sec 2.A.12.14, p 22): 'Analogous to CSU.8 Unit of Measure Coding System Version ID.'"
           }
         },
         "CF": {
@@ -498,6 +558,14 @@
           "20": {
             "condition": "10 populated AND 12 empty",
             "citation": "HL7 v2.8.2 Chapter 2A, CF.20: 'This component is required when CF.10 is populated and CF.12 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND (NOT 3 hl7Table OR 3 userTable)",
+            "citation": "HL7 v2.8.2 Chapter 2A, CF.7 (sec 2.A.7.7, p 9): 'If CF.3 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
+          },
+          "13": {
+            "condition": "12 populated AND (NOT 12 hl7Table OR 12 userTable)",
+            "citation": "HL7 v2.8.2 Chapter 2A, CF.13 (sec 2.A.7.13, p 10): 'Analogous To CF.7 Coding System Version ID.'"
           }
         },
         "CNE": {
@@ -508,6 +576,14 @@
           "17": {
             "condition": "4 populated AND 6 empty",
             "citation": "HL7 v2.8.2 Chapter 2A, CNE.17: 'This component is required when CNE.4 is populated and CNE.6 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND NOT 3 hl7Table",
+            "citation": "HL7 v2.8.2 Chapter 2A, CNE.7 (sec 2.A.8.7, p 14): 'If the coding system is any system other than an \"HL7 coding system,\" version ID must be valued with an actual version ID.'"
+          },
+          "13": {
+            "condition": "12 populated AND NOT 12 hl7Table",
+            "citation": "HL7 v2.8.2 Chapter 2A, CNE.13 (sec 2.A.8.13, p 15): 'Analogous to CNE.7 Coding System Version ID.'"
           }
         },
         "CWE": {
@@ -534,6 +610,10 @@
           "20": {
             "condition": "10 populated AND 12 empty",
             "citation": "HL7 v2.8.2 Chapter 2A, CWE.20: 'This component is required when CWE.10 is populated and CWE.12 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND (NOT 3 hl7Table OR 3 userTable)",
+            "citation": "HL7 v2.8.2 Chapter 2A, CWE.7 (sec 2.A.13.7, p 29): 'If CWE.3 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
           }
         },
         "CX": {

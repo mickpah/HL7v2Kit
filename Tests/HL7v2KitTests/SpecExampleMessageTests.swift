@@ -64,13 +64,16 @@ struct SpecExampleMessageTests {
         let path = try #require(ProcessInfo.processInfo.environment["SPEC_EXAMPLE_MESSAGES"])
         let examples = try JSONDecoder().decode([Example].self, from: Data(contentsOf: URL(fileURLWithPath: path)))
         var lines: [String] = []
+        var options = ValidationOptions()
+        // SPEC_EXAMPLE_CONFORMANCE: report the opt-in conformance tier as errors too (a measurement run).
+        if ProcessInfo.processInfo.environment["SPEC_EXAMPLE_CONFORMANCE"] != nil { options.conformanceConditionSeverity = .error }
         for example in examples {
             let wire = example.segments.joined(separator: "\r") + "\r"
             guard let message = try? Parser(options: Self.parserOptions(for: example)).parse(wire) else {
                 lines.append("SPECEX\t\(example.source)\t\(example.index)\tPARSE\t-\t-")
                 continue
             }
-            for issue in Validator().validate(message).errors {
+            for issue in Validator(options: options).validate(message).errors {
                 var line = "SPECEX\t\(example.source)\t\(example.index)\t\(issue.code)\t\(issue.location.pathDescription)\t\(issue.message)"
                 if isElisionOnly(issue.location.pathDescription, truncatedSegments: example.truncatedSegments) {
                     line += "\tELIDED"

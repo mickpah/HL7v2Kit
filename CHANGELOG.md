@@ -8,6 +8,11 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+- **Added:** 18 opt-in conformance rules that require a coding-system version ID (CNE, CWE, CF and
+  CSU .7 and kin, v2.5.1 to v2.8.2) when the coding system is not an HL7 table (`HL7nnnn`) or, in
+  the newer wording, names a user-defined one; reported as `conformanceConditionMissing` when
+  `ValidationOptions.conformanceConditionSeverity` is set. The default output is unchanged.
+
 ## [3.20.0]
 
 - **Added:** `BatchFile.fileHeaderSegment` and `fileTrailerSegment`, `BatchGroup.headerSegment`

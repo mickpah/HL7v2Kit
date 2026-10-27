@@ -167,7 +167,7 @@ struct V271GrammarTests {
         let rules = components.filter { $0.1.condition != nil }
         let conformance = components.filter { $0.1.conformanceCondition != nil }
         #expect(rules.count == 23)
-        #expect(conformance.count == 30)
+        #expect(conformance.count == 37) // 30, then 7 coding-system version IDs (VersionIDConditionTests)
         for (code, c) in rules + conformance {
             #expect(c.optionalityCode == "C", "\(code).\(c.index)")
             for expression in [c.condition, c.conformanceCondition].compactMap({ $0 }) {
@@ -184,9 +184,9 @@ struct V271GrammarTests {
         // 2.A.13.3 CWE.3 (p28): the "as of v2.7" family stays opt-in.
         #expect(grammars["CWE"]?.component(3)?.condition == nil)
         #expect(grammars["CWE"]?.component(3)?.conformanceCondition == "1 populated AND 14 empty")
-        // 19 stay bare, as on v2.8.2 (conditions.json `_about`; register section D).
+        // 12 stay bare, as on v2.8.2 (conditions.json `_about`; register section D).
         #expect(components.filter { $0.1.optionalityCode == "C" && $0.1.condition == nil
-            && $0.1.conformanceCondition == nil }.count == 19)
+            && $0.1.conformanceCondition == nil }.count == 12)
     }
 
     // MARK: - P10-4a: segment schemas, chapters 2 to 4A

@@ -2022,6 +2022,12 @@ public struct Validator: Sendable {
         guard let dataType = Self.fieldGrammar(segment: segmentID, field: fieldIndex, dataType: grammar.dataType,
                                                version: version) else { return }
         let repeated = field.repetitions.filter(isRepetitionPopulated).count > 1
+        // userTable: the locale's own rendering of a table, else the version's, as the
+        // code-table check reads tables.
+        let tableKind: (String) -> HL7Table.Kind? = { number in
+            (HL7TableRegistry.table(number, locale: locale)
+                ?? HL7TableRegistry.table(number, version: version.grammarVersion))?.kind
+        }
         func check(_ entries: [ComponentGrammar], values: [String?], typeName: String,
                    component: Int?, subcomponent: (Int) -> Int?) {
             func populated(_ i: Int) -> Bool {
@@ -2034,7 +2040,9 @@ public struct Validator: Sendable {
                     (entry.conformanceCondition, options.conformanceConditionSeverity, IssueCode.conformanceConditionMissing),
                 ] {
                     guard let condition, let severity, !populated(entry.index),
-                          ComponentCondition.holds(condition, populated: populated, repeated: repeated) else { continue }
+                          ComponentCondition.holds(condition, populated: populated, repeated: repeated,
+                                                   value: { $0 >= 1 && $0 <= values.count ? values[$0 - 1] : nil },
+                                                   tableKind: tableKind) else { continue }
                     let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
                                                  componentIndex: component ?? entry.index,
                                                  subcomponentIndex: subcomponent(entry.index))

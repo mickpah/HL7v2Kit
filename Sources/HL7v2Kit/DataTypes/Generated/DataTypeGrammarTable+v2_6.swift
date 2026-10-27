@@ -187,7 +187,7 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 5, name: "Alternate Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 7, name: "Coding System Version ID", dataType: "ST", optionalityCode: "C", tables: [], length: "10", condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 7, name: "Coding System Version ID", dataType: "ST", optionalityCode: "C", tables: [], length: "10", condition: nil, conformanceCondition: "3 populated AND NOT 3 hl7Table"),
             ComponentGrammar(index: 8, name: "Alternate Coding System Version ID", dataType: "ST", optionalityCode: "O", tables: [], length: "10", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 9, name: "Original Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil, conformanceCondition: nil),
         ]
@@ -262,7 +262,7 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 5, name: "Alternate Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 7, name: "Coding System Version ID", dataType: "ST", optionalityCode: "C", tables: [], length: "10", condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 7, name: "Coding System Version ID", dataType: "ST", optionalityCode: "C", tables: [], length: "10", condition: nil, conformanceCondition: "3 populated AND (NOT 3 hl7Table OR 3 userTable)"),
             ComponentGrammar(index: 8, name: "Alternate Coding System Version ID", dataType: "ST", optionalityCode: "O", tables: [], length: "10", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 9, name: "Original Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil, conformanceCondition: nil),
         ]
