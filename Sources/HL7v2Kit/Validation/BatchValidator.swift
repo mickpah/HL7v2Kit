@@ -43,6 +43,10 @@ public struct BatchValidationReport: Sendable, Equatable, Hashable {
 /// Validates a `BatchFile` produced by `BatchParser`: every contained
 /// message through the standard `Validator`, plus batch-scope rules.
 ///
+/// Every envelope segment's fields are checked against the attribute table
+/// of the version its messages declare (v2.5.1 when there are none), under
+/// the options that govern message fields.
+///
 /// Batch-scope rules under `.auLocalisation`:
 /// - **Single batch per file** (ADRM-prose:P-7): "In Australia only one
 ///   Batch is supported" (AU ADRM-2021 §1, p. 19). More than one
@@ -83,7 +87,7 @@ public struct BatchValidator: Sendable {
             group.messages.map { validator.validate($0) }
         }
 
-        var batchIssues: [ValidationIssue] = []
+        var batchIssues = envelopeIssues(file, validator: validator)
         if locale == .auLocalisation {
             checkSingleBatchPerFile(file, issues: &batchIssues)
             checkReferralBatchSize(file, issues: &batchIssues)
@@ -101,6 +105,31 @@ public struct BatchValidator: Sendable {
             messageReports: messageReports,
             locale: locale
         )
+    }
+
+    /// The version whose attribute tables an envelope segment is checked against: its first
+    /// message's, else v2.5.1, the fallback ADR-018 uses for an unrecognised version.
+    static func envelopeVersion(_ messages: [Message]) -> Version {
+        messages.first?.version.grammarVersion ?? .v2_5_1
+    }
+
+    /// The envelope's findings in wire order: FHS, then each batch's BHS and BTS, then FTS.
+    private func envelopeIssues(_ file: BatchFile, validator: Validator) -> [ValidationIssue] {
+        let fileVersion = Self.envelopeVersion(file.allMessages)
+        var issues: [ValidationIssue] = []
+        if let fhs = file.fileHeaderSegment {
+            issues += validator.envelopeIssues(fhs, occurrence: 1, version: fileVersion)
+        }
+        for (index, group) in file.batches.enumerated() {
+            let version = Self.envelopeVersion(group.messages)
+            for segment in [group.headerSegment, group.trailerSegment].compactMap({ $0 }) {
+                issues += validator.envelopeIssues(segment, occurrence: index + 1, version: version)
+            }
+        }
+        if let fts = file.fileTrailerSegment {
+            issues += validator.envelopeIssues(fts, occurrence: 1, version: fileVersion)
+        }
+        return issues
     }
 
     /// ADRM-prose:P-7 — "In Australia only one Batch is supported"

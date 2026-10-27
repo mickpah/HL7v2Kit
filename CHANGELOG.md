@@ -13,6 +13,10 @@ The entries are condensed; the git history carries the detail.
 - **Fixed:** `BatchParser` keeps the first FHS and FTS when a file carries a second, instead of
   replacing them, and a header line with no separator (`BHS` alone) no longer crashes the
   parser, in a batch or in a message.
+- **Changed:** `BatchValidator` checks the fields of FHS, BHS, BTS and FTS against their
+  attribute tables (the version the batch's messages declare, v2.5.1 when there are none),
+  under the options that govern message fields. A batch file may report findings it did not
+  before.
 
 ## [3.19.0]
 

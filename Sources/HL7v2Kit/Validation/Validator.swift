@@ -182,7 +182,7 @@ public struct Validator: Sendable {
     /// (typical case — AU PID-35..38 on v2.4) AND override an
     /// existing field's optionality / condition if needed in the
     /// future. Today only the additive case is exercised.
-    private func mergeGrammarExtension(
+    func mergeGrammarExtension(
         base: SegmentGrammar,
         profileExtension: [FieldGrammar]?,
         profileCardinalityExtension: [SegmentCardinalityRule]? = nil
@@ -550,7 +550,7 @@ public struct Validator: Sendable {
         }
     }
 
-    private func checkSegment(
+    func checkSegment(
         _ segment: Segment,
         segmentIndex: Int,
         message: Message,
