@@ -36,6 +36,7 @@ not the boundary of the work.
 | 3.18 | Hardened input: a failed message no longer takes its neighbours with it in the streaming parser, MLLP and streaming buffers are capped, each streamed message is decoded by its own MSH-18, the anonymiser covers the fields it missed, and the AU profile compiles each structure matcher once |
 | 3.19 | Safer reports: a stable number for each issue code, an option that keeps message values out of issue messages, the anonymiser as a library API under a caller's key, and the guarantor and the identifying fields it still missed now scrubbed |
 | 3.20 | Batch envelopes: FHS, BHS, BTS and FTS parsed into typed segments and checked against their attribute tables, BTS-1 and FTS-1 compared with the counts, and an envelope out of order reported |
+| 3.21 | The coding-system version ID: 18 opt-in rules on CNE, CWE, CF and CSU .7 and kin, with HL7-table and user-table terms in the component-condition language |
 
 ## What remains
 
