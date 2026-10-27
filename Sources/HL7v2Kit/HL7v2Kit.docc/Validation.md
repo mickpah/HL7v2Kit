@@ -101,6 +101,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 | `extraComponentsSeverity`, `valueFormatSeverity`, `repetitionBoundSeverity` | `.warning` | `.warning` | off |
 | the four `au` assertions | `false` | `false` | `false` |
 | `localTableExtensions` | empty | empty | empty |
+| `valueExcerpts` | on | on | on |
 
 `default` suits receiving traffic where Z-segments are routine; `strict` suits validating what you send; `lenient` keeps the required-field check and the always-on checks (the version and segment notices, paired fields, withheld conditions) and turns off everything else. `ValidationOptions()` equals `default`. Receivers ignore unexpected segments (v2.5.1 CH02 section 2.6.2), which is why structure findings are warnings in `default` and errors in `strict`.
 
@@ -195,7 +196,7 @@ Each ``ValidationIssue`` carries:
 - ``ValidationIssue/severity``: ``IssueSeverity/info``, ``IssueSeverity/warning`` or ``IssueSeverity/error``.
 - ``ValidationIssue/code``: the ``IssueCode``; its ``IssueCode/number`` is a stable number for the check (see <doc:#Issue-codes>).
 - ``ValidationIssue/location``: an ``IssueLocation`` with the segment ID, the 1-based occurrence of that segment, and optional field, component and subcomponent indices. `location.pathDescription` renders `PID[1]-3`, `PID[1]-3.4.3` or `ZAU[1]`.
-- ``ValidationIssue/message``: a readable summary for logs or display.
+- ``ValidationIssue/message``: a readable summary for logs or display. It quotes the message value it is about; with ``ValidationOptions/valueExcerpts`` set to `false` it writes `[value]` instead.
 
 ## Issue codes
 

@@ -970,7 +970,7 @@ public struct Validator: Sendable {
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(effectiveDataType)-\(rule.componentA) and \(effectiveDataType)-\(rule.componentB) must differ but both are \"\(valueA)\" (\(citation))",
+                    message: "AU profile rule violated at \(location.pathDescription): \(effectiveDataType)-\(rule.componentA) and \(effectiveDataType)-\(rule.componentB) must differ but both are \(options.quoted(valueA)) (\(citation))",
                     into: &issues
                 )
             }
@@ -1000,7 +1000,7 @@ public struct Validator: Sendable {
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(effectiveDataType)-\(rule.component) must not be \"\(value)\" (\(citation))",
+                    message: "AU profile rule violated at \(location.pathDescription): \(effectiveDataType)-\(rule.component) must not be \(options.quoted(value)) (\(citation))",
                     into: &issues
                 )
             }
@@ -1014,7 +1014,7 @@ public struct Validator: Sendable {
                     continue
                 }
                 let actual = valueSetScalarValue(in: repetition, component: pattern.component, subcomponent: nil)
-                guard let failure = pattern.failure(for: actual) else { continue }
+                guard let failure = pattern.failure(for: actual, quote: { options.quoted($0) }) else { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,
@@ -1065,7 +1065,7 @@ public struct Validator: Sendable {
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile value-set rule violated at \(location.pathDescription): \(effectiveDataType)-\(valueSet.component) value \"\(value)\" is not in the allowed set (\(citation))",
+                    message: "AU profile value-set rule violated at \(location.pathDescription): \(effectiveDataType)-\(valueSet.component) value \(options.quoted(value)) is not in the allowed set (\(citation))",
                     into: &issues
                 )
             }
@@ -1104,7 +1104,7 @@ public struct Validator: Sendable {
                     appendProfileIssue(
                         citation: citation,
                         location: location,
-                        message: "AU profile rule violated at \(location.pathDescription): a timestamp with hour-or-greater precision must carry a +/-ZZZZ timezone offset; got \"\(value)\" (\(citation))",
+                        message: "AU profile rule violated at \(location.pathDescription): a timestamp with hour-or-greater precision must carry a +/-ZZZZ timezone offset; got \(options.quoted(value)) (\(citation))",
                         into: &issues
                     )
                 }
@@ -1149,7 +1149,7 @@ public struct Validator: Sendable {
                     appendProfileIssue(
                         citation: citation,
                         location: location,
-                        message: "AU profile uniqueness rule violated at \(location.pathDescription): value \"\(key)\" already used by \(rule.segmentID)[\(firstOccurrence)]-\(rule.fieldIndex) (\(citation))",
+                        message: "AU profile uniqueness rule violated at \(location.pathDescription): value \(options.quoted(key)) already used by \(rule.segmentID)[\(firstOccurrence)]-\(rule.fieldIndex) (\(citation))",
                         into: &issues
                     )
                 } else {
@@ -1251,7 +1251,7 @@ public struct Validator: Sendable {
                     severity: .error,
                     code: .pairedFieldMismatch(item: pair.item),
                     location: location,
-                    message: "ORC-\(pair.orcField) and OBR-\(pair.obrField) are the same data element (\(pair.name), item \(pair.item)) but carry different values in one order group: ORC has \"\(orcValue)\", OBR has \"\(obrValue)\" (HL7 v2.4 §4.5.1; v2.8.2 §4.5.3)"
+                    message: "ORC-\(pair.orcField) and OBR-\(pair.obrField) are the same data element (\(pair.name), item \(pair.item)) but carry different values in one order group: ORC has \(options.quoted(orcValue)), OBR has \(options.quoted(obrValue)) (HL7 v2.4 §4.5.1; v2.8.2 §4.5.3)"
                 ))
             }
         }
@@ -1338,7 +1338,7 @@ public struct Validator: Sendable {
                 guard isDottedDecimal(root) else {
                     appendProfileIssue(
                         citation: rule.headerShapeCitation, location: at(header.occurrence),
-                        message: "AU profile rule violated at \(at(header.occurrence).pathDescription): the template header's OBX-4 sub-ID \"\(root)\" is not a dotted decimal value.",
+                        message: "AU profile rule violated at \(at(header.occurrence).pathDescription): the template header's OBX-4 sub-ID \(options.quoted(root)) is not a dotted decimal value.",
                         into: &issues)
                     continue   // no usable root: the group's other sub-IDs cannot be judged
                 }
@@ -1350,14 +1350,14 @@ public struct Validator: Sendable {
                     guard let element = VMRImplementationTable.element(matching: relative, in: rule.elements) else {
                         appendProfileIssue(
                             citation: rule.unknownPathCitation, location: location,
-                            message: "AU profile rule violated at \(location.pathDescription): sub-ID \"\(value)\" shares the template root \"\(root)\" but matches no element of the implementation table.",
+                            message: "AU profile rule violated at \(location.pathDescription): sub-ID \(options.quoted(value)) shares the template root \(options.quoted(root)) but matches no element of the implementation table.",
                             into: &issues)
                         continue
                     }
                     if element.kind == rule.virtualKind {
                         appendProfileIssue(
                             citation: rule.virtualRowCitation, location: location,
-                            message: "AU profile rule violated at \(location.pathDescription): sub-ID \"\(value)\" is the \(element.kind) row '\(element.name)', which is virtual and must not be written as an OBX.",
+                            message: "AU profile rule violated at \(location.pathDescription): sub-ID \(options.quoted(value)) is the \(element.kind) row '\(element.name)', which is virtual and must not be written as an OBX.",
                             into: &issues)
                     }
                 }
@@ -1508,7 +1508,7 @@ public struct Validator: Sendable {
             appendProfileIssue(
                 citation: citation,
                 location: location,
-                message: "AU profile correspondence rule violated at \(location.pathDescription): \(dataTypeLabel)-\(rule.keyComponent) \"\(key)\" requires \(dataTypeLabel)-\(rule.valueComponent) \(expectation) but got \"\(value)\" (\(citation))",
+                message: "AU profile correspondence rule violated at \(location.pathDescription): \(dataTypeLabel)-\(rule.keyComponent) \(options.quoted(key)) requires \(dataTypeLabel)-\(rule.valueComponent) \(expectation) but got \(options.quoted(value)) (\(citation))",
                 into: &issues
             )
         }
@@ -1618,7 +1618,7 @@ public struct Validator: Sendable {
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile value-set rule violated at \(location.pathDescription)\(pathSuffix): expected one of [\(allowedList)] but got \"\(actual)\" (\(citation))",
+                    message: "AU profile value-set rule violated at \(location.pathDescription)\(pathSuffix): expected one of [\(allowedList)] but got \(options.quoted(actual)) (\(citation))",
                     into: &issues
                 )
             }
@@ -1638,7 +1638,7 @@ public struct Validator: Sendable {
                     continue
                 }
                 let actual = valueSetScalarValue(in: repetition, component: pattern.component, subcomponent: nil)
-                guard let failure = pattern.failure(for: actual) else { continue }
+                guard let failure = pattern.failure(for: actual, quote: { options.quoted($0) }) else { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: occurrence,
@@ -1894,7 +1894,7 @@ public struct Validator: Sendable {
                 severity: .error,
                 code: .valueNotInTable(table: table.number),
                 location: where_,
-                message: "Component \(where_.pathDescription) ('\(name)') repetition \(repetition) value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(grammar.version)."
+                message: "Component \(where_.pathDescription) ('\(name)') repetition \(repetition) value \(options.quoted(value)) is not in HL7 Table \(table.number) (\(table.name)) for v\(grammar.version)."
             ))
         }
 
@@ -1980,7 +1980,7 @@ public struct Validator: Sendable {
                 code: .valueNotInTable(table: table.number),
                 location: partial ? IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                                   fieldIndex: location.fieldIndex, componentIndex: 1) : location,
-                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) \(partial ? "first component " : "")value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
+                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) \(partial ? "first component " : "")value \(options.quoted(value)) is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
             ))
         }
     }

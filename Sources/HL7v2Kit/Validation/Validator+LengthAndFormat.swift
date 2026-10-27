@@ -321,7 +321,7 @@ extension Validator {
                 severity: severity,
                 code: .valueFormatInvalid(dataType: type),
                 location: at,
-                message: "\(at.pathDescription) repetition \(repetition) value \"\(value)\" does not match the v\(grammarVersion.rawValue) \(type) format"
+                message: "\(at.pathDescription) repetition \(repetition) value \(options.quoted(value)) does not match the v\(grammarVersion.rawValue) \(type) format"
             ))
         }
         for (offset, repetition) in field.repetitions.enumerated() {

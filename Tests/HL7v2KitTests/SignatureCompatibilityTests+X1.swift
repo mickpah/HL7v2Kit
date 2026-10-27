@@ -11,4 +11,10 @@ extension SignatureCompatibilityTests {
         let number: KeyPath<IssueCode, Int> = \.number
         #expect(IssueCode.requiredFieldMissing[keyPath: number] == 2001)
     }
+
+    @Test("X1: ValidationOptions.valueExcerpts keeps its signature and defaults on")
+    func valueExcerptsSignature() {
+        let excerpts: WritableKeyPath<ValidationOptions, Bool> = \.valueExcerpts
+        #expect(ValidationOptions.default[keyPath: excerpts])
+    }
 }

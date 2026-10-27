@@ -243,6 +243,26 @@ public struct ValidationOptions: Sendable {
     /// Not an init parameter. P2-13.
     public var localTableExtensions: [String: Set<String>] = [:]
 
+    /// If true (default), an issue message quotes the message value it is about, as it always
+    /// has (`value "XYZ" is not in HL7 Table 0001`). Set it to false when issue messages go
+    /// where message content must not: each such value is then written `[value]`, whole and
+    /// unquoted, whatever it holds. Paths, field names, table values and rule citations are
+    /// still written. Not withheld either: the delimiters, MSH-9, MSH-12 and a message
+    /// structure's choice keys (MFI, ERQ). They describe the message's form, not its content,
+    /// and ``IssueCode/versionNotRecognised(wireValue:)``,
+    /// ``IssueCode/messageStructureMismatch(declared:trigger:)`` and
+    /// ``IssueCode/messageStructureNotModelled(structure:)`` carry the MSH values in their
+    /// payloads, so a report that must carry no message content writes
+    /// ``IssueCode/number``, not the code itself. Excerpts are not shortened when on, so the
+    /// default output is unchanged. Not an init parameter. X1.
+    public var valueExcerpts: Bool = true
+
+    /// `value` as an issue message shows it: in double quotes, or `[value]` when
+    /// ``valueExcerpts`` is false. The only way a message value reaches an issue message.
+    func quoted(_ value: some StringProtocol) -> String {
+        valueExcerpts ? "\"\(value)\"" : "[value]"
+    }
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,

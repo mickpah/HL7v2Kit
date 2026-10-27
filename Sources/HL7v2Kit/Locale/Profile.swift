@@ -693,7 +693,7 @@ struct ComponentPattern: Sendable, Equatable, Hashable {
     /// empty value fails unless ``allowEmpty``; scope *when* the rule
     /// applies with `condition`.
     /// Pure, so the Validator and its tests read the same logic.
-    func failure(for value: String) -> String? {
+    func failure(for value: String, quote: (String) -> String = { "\"\($0)\"" }) -> String? {
         if value.isEmpty { return allowEmpty ? nil : "expected a value" }
         var rest = Substring(value)
         if let prefix, !prefix.isEmpty {
@@ -702,7 +702,7 @@ struct ComponentPattern: Sendable, Equatable, Hashable {
         }
         if let digitsAfterPrefix {
             guard rest.count == digitsAfterPrefix, rest.allSatisfy(\.isNumber) else {
-                return "expected \(digitsAfterPrefix) digits after \"\(prefix ?? "")\", found \"\(rest)\""
+                return "expected \(digitsAfterPrefix) digits after \"\(prefix ?? "")\", found \(quote(String(rest)))"
             }
         }
         return nil

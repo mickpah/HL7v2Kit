@@ -8,6 +8,10 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+- **Added:** `ValidationOptions.valueExcerpts`. Set it to `false` and an issue message writes
+  `[value]` in place of each value it would quote from the message, so issue messages can go to
+  logs and reports that must not carry message content. It is `true` in every preset, and the
+  default output is unchanged.
 - **Added:** `IssueCode.number`, a stable number for each check in six bands (1xxx structure
   and profile, 2xxx cardinality and type, 3xxx primitive and value, 4xxx binding and
   terminology, 5xxx invariant, 9xxx not evaluated). A number is never changed or reused; the
