@@ -13,6 +13,10 @@ import Foundation
 /// boundary; `BHS` / `BTS` mark each batch boundary. All four markers
 /// are optional — a batch file may carry only MSH segments, or only
 /// BHS+MSH+BTS, or the full FHS+BHS+...+BTS+FTS envelope.
+///
+/// Each envelope line is also parsed into a typed segment
+/// (``fileHeaderSegment`` and its siblings); an envelope line out of the
+/// grammar's order is kept, not dropped, and ``BatchValidator`` reports it.
 public struct BatchFile: Sendable, Equatable, Hashable {
     /// The `FHS` segment as a raw wire string (without the trailing
     /// segment terminator), or `nil` if the file had no FHS.
@@ -26,10 +30,31 @@ public struct BatchFile: Sendable, Equatable, Hashable {
     /// The `FTS` segment as a raw wire string, or `nil` if absent.
     public let fileTrailer: String?
 
+    /// ``fileHeader`` parsed into a segment (a typed `FHS`), with FHS-1 and FHS-2 numbered as
+    /// MSH-1 and MSH-2 are; `nil` when the file has no FHS.
+    public let fileHeaderSegment: Segment?
+
+    /// ``fileTrailer`` parsed into a segment (a typed `FTS`), read with the FHS delimiters,
+    /// else the first message's, else the defaults; `nil` when the file has no FTS.
+    public let fileTrailerSegment: Segment?
+
+    /// Envelope lines out of the order `[FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]` prints, in
+    /// wire order. Only ``BatchParser`` records them; ``BatchValidator`` reports them.
+    let envelopeOrderFindings: [EnvelopeOrderFinding]
+
     public init(fileHeader: String?, batches: [BatchGroup], fileTrailer: String?) {
+        self.init(fileHeader: fileHeader, batches: batches, fileTrailer: fileTrailer, envelopeOrderFindings: [])
+    }
+
+    init(fileHeader: String?, batches: [BatchGroup], fileTrailer: String?, envelopeOrderFindings: [EnvelopeOrderFinding]) {
         self.fileHeader = fileHeader
         self.batches = batches
         self.fileTrailer = fileTrailer
+        self.envelopeOrderFindings = envelopeOrderFindings
+        let inherited = batches.lazy.flatMap(\.messages).first?.encodingCharacters ?? .default
+        fileHeaderSegment = fileHeader.map { Parser.envelopeSegment($0, inherited: inherited) }
+        let trailerDelimiters = fileHeader.flatMap(Parser.headerDelimiters) ?? inherited
+        fileTrailerSegment = fileTrailer.map { Parser.envelopeSegment($0, inherited: trailerDelimiters) }
     }
 
     /// Convenience: flat list of every message across every batch
@@ -50,11 +75,41 @@ public struct BatchGroup: Sendable, Equatable, Hashable {
     /// The `BTS` segment as a raw wire string, or `nil` if absent.
     public let trailer: String?
 
+    /// ``header`` parsed into a segment (a typed `BHS`), with BHS-1 and BHS-2 numbered as
+    /// MSH-1 and MSH-2 are; `nil` when the batch has no BHS.
+    public let headerSegment: Segment?
+
+    /// ``trailer`` parsed into a segment (a typed `BTS`), read with the BHS delimiters, else
+    /// the first message's, else the defaults; `nil` when the batch has no BTS.
+    public let trailerSegment: Segment?
+
     public init(header: String?, messages: [Message], trailer: String?) {
         self.header = header
         self.messages = messages
         self.trailer = trailer
+        let inherited = messages.first?.encodingCharacters ?? .default
+        headerSegment = header.map { Parser.envelopeSegment($0, inherited: inherited) }
+        let trailerDelimiters = header.flatMap(Parser.headerDelimiters) ?? inherited
+        trailerSegment = trailer.map { Parser.envelopeSegment($0, inherited: trailerDelimiters) }
     }
+}
+
+/// An envelope line out of the batch file grammar's order, as ``BatchParser`` met it.
+struct EnvelopeOrderFinding: Sendable, Equatable, Hashable {
+    enum Reason: Sendable, Equatable, Hashable {
+        /// An FHS that is not the first line of the file (a second FHS included).
+        case fileHeaderNotFirst
+        /// An FTS after the file's first FTS.
+        case secondFileTrailer
+        /// The first line after the file's first FTS that is not itself an FTS.
+        case afterFileTrailer
+    }
+    let segmentID: String
+    /// Its occurrence among the file's lines with this segment ID, from 1.
+    let occurrence: Int
+    /// The line as it came, so nothing is lost.
+    let line: String
+    let reason: Reason
 }
 
 /// Parses an HL7 v2 batch / file stream into a structured ``BatchFile``.
@@ -71,6 +126,11 @@ public struct BatchGroup: Sendable, Equatable, Hashable {
 /// segments inside (pinned by `ParseErrorTests.multipleMSHSegmentsAcceptedAsIs`).
 /// `BatchParser` is the opt-in alternative when the caller wants those
 /// MSH-starting runs split into separate messages.
+///
+/// Each envelope line is also parsed into a typed segment
+/// (``BatchFile/fileHeaderSegment`` and its siblings); an envelope line out
+/// of the grammar's order is kept, not dropped, and ``BatchValidator``
+/// reports it.
 public struct BatchParser: Sendable {
     public let options: ParserOptions
 
@@ -136,17 +196,32 @@ public struct BatchParser: Sendable {
             currentMessages.removeAll(keepingCapacity: true)
         }
 
-        for line in lines {
+        var findings: [EnvelopeOrderFinding] = []
+        var occurrences: [String: Int] = [:]
+        var afterTrailerReported = false
+
+        for (position, line) in lines.enumerated() {
             // Segment IDs are 3 ASCII characters; anything shorter is
             // malformed — treat it as a body segment so `Parser` can
             // raise the appropriate error when the message closes.
             let id = line.prefix(3)
+            let occurrence = (occurrences[String(id)] ?? 0) + 1
+            occurrences[String(id)] = occurrence
+            let reason: EnvelopeOrderFinding.Reason? =
+                id == "FHS" && position > 0 ? .fileHeaderNotFirst
+                : id == "FTS" && fileTrailer != nil ? .secondFileTrailer
+                : fileTrailer != nil && !afterTrailerReported ? .afterFileTrailer
+                : nil
+            if let reason {
+                findings.append(EnvelopeOrderFinding(segmentID: String(id), occurrence: occurrence, line: line, reason: reason))
+                if reason == .afterFileTrailer { afterTrailerReported = true }
+            }
             switch id {
             case "FHS":
-                fileHeader = line
+                if fileHeader == nil { fileHeader = line }
             case "FTS":
                 try closeBatch()
-                fileTrailer = line
+                if fileTrailer == nil { fileTrailer = line }
             case "BHS":
                 try closeBatch()
                 currentBHS = line
@@ -161,10 +236,7 @@ public struct BatchParser: Sendable {
         }
         try closeBatch()
 
-        return BatchFile(
-            fileHeader: fileHeader,
-            batches: batches,
-            fileTrailer: fileTrailer
-        )
+        return BatchFile(fileHeader: fileHeader, batches: batches, fileTrailer: fileTrailer,
+                         envelopeOrderFindings: findings)
     }
 }

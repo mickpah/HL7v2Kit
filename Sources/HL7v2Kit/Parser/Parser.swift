@@ -198,7 +198,7 @@ public struct Parser: Sendable {
         line.hasPrefix("MSH") || line.hasPrefix("BHS") || line.hasPrefix("FHS")
     }
 
-    private func parseSegment(
+    func parseSegment(
         _ line: String,
         encoding: EncodingCharacters,
         separatorSegment: Bool
@@ -220,15 +220,20 @@ public struct Parser: Sendable {
         //   ...
         var rawFields: [String]
         if separatorSegment {
-            // Slice off the ID + field separator. Reconstruct fields[1] and [2] manually.
-            // line == "MSH|^~\\&|sendingApp|..."
-            let afterPrefix = String(chars[4...])   // everything after "MSH|"
-            let rest = afterPrefix.split(separator: encoding.fieldSeparator,
-                                          omittingEmptySubsequences: false)
-                                   .map(String.init)
-            // The first element of `rest` is "^~\\&" (field 2), then the actual fields.
-            // Build the canonical array:
-            rawFields = [segmentID, String(encoding.fieldSeparator)] + rest
+            if chars.count <= 3 {
+                // "BHS" or "FHS" alone: no separator, so no fields.
+                rawFields = [segmentID]
+            } else {
+                // Slice off the ID + field separator. Reconstruct fields[1] and [2] manually.
+                // line == "MSH|^~\\&|sendingApp|..."
+                let afterPrefix = String(chars[4...])   // everything after "MSH|"
+                let rest = afterPrefix.split(separator: encoding.fieldSeparator,
+                                              omittingEmptySubsequences: false)
+                                       .map(String.init)
+                // The first element of `rest` is "^~\\&" (field 2), then the actual fields.
+                // Build the canonical array:
+                rawFields = [segmentID, String(encoding.fieldSeparator)] + rest
+            }
         } else {
             let afterID = String(chars[3...])
             // afterID starts with field separator. Remove the leading one then split.
@@ -303,5 +308,34 @@ public struct Parser: Sendable {
                 .replacingOccurrences(of: "\r\n", with: "\r")
                 .replacingOccurrences(of: "\n", with: "\r")
         }
+    }
+}
+
+// Batch envelopes: the FHS, BHS, BTS and FTS lines BatchParser keeps beside each batch.
+extension Parser {
+    /// The delimiters an FHS or BHS line declares, or nil when they cannot be read: the field
+    /// separator after the ID, then four distinct encoding characters (a fifth, the v2.7+
+    /// truncation character, is allowed), then the end of the line or the field separator.
+    static func headerDelimiters(_ line: String) -> EncodingCharacters? {
+        let chars = Array(line)
+        guard chars.count >= 8 else { return nil }
+        let separator = chars[3]
+        let encodingEnd = chars.count > 8 && chars[8] != separator ? 9 : 8
+        guard chars.count == encodingEnd || chars[encodingEnd] == separator else { return nil }
+        let encoding = EncodingCharacters(fieldSeparator: separator, componentSeparator: chars[4],
+                                          repetitionSeparator: chars[5], escapeCharacter: chars[6],
+                                          subcomponentSeparator: chars[7])
+        return encoding.isValid ? encoding : nil
+    }
+
+    /// One envelope line as a segment. FHS and BHS use their own delimiters when they can be
+    /// read, else `inherited`; BTS and FTS use `inherited`. Never throws: the line starts with
+    /// its three-character ID, and a header with no separator becomes a segment with no fields.
+    static func envelopeSegment(_ line: String, inherited: EncodingCharacters) -> Segment {
+        let id = String(line.prefix(3))
+        let header = id == "FHS" || id == "BHS"
+        let encoding = header ? headerDelimiters(line) ?? inherited : inherited
+        let parsed = try? Parser().parseSegment(line, encoding: encoding, separatorSegment: header)
+        return parsed ?? .unknown(UnknownSegment(segmentID: id, fields: [Field(repetitions: [])]))
     }
 }

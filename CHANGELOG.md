@@ -8,6 +8,12 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+- **Added:** `BatchFile.fileHeaderSegment` and `fileTrailerSegment`, `BatchGroup.headerSegment`
+  and `trailerSegment`: the batch envelope parsed into typed segments beside the raw strings.
+- **Fixed:** `BatchParser` keeps the first FHS and FTS when a file carries a second, instead of
+  replacing them, and a header line with no separator (`BHS` alone) no longer crashes the
+  parser, in a batch or in a message.
+
 ## [3.19.0]
 
 - **Fixed:** `HL7v2KitAnonymise` and `Anonymiser` scrub the guarantor (GT1) and the identifying
