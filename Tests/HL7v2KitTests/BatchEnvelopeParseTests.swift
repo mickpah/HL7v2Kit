@@ -63,7 +63,7 @@ struct BatchEnvelopeParseTests {
 
     @Test("A conforming file records no order finding")
     func conformingFileHasNoFinding() throws {
-        for url in try FixtureCorpus.batchFixtureURLs() {
+        for url in try FixtureCorpus.batchFixtureURLs() where url.lastPathComponent != "batch_envelope_out_of_order.hl7" {
             #expect(try BatchParser().parse(Data(contentsOf: url)).envelopeOrderFindings.isEmpty, "\(url.lastPathComponent)")
         }
     }

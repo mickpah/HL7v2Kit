@@ -16,6 +16,30 @@ batch 1|header|BHS|^~\&|SYNTH_HIS|SYNTH_FAC|SYNTH_HOSP|SYNTH_FAC|20240101120000|
 fileTrailer|
 default|message 1|warning|PID[1]|ADT_A01 requires EVN before PID[1] (HL7 v2.5.1 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 3-4 to 3-5; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Group names PROCEDURE and INSURANCE are printed.).
 strict-au|message 1|error|PID[1]|ADT_A01 requires EVN before PID[1] (HL7 v2.5.1 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 3-4 to 3-5; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Group names PROCEDURE and INSURANCE are printed.).
+# batch_count_mismatch.hl7
+fileHeader|FHS|^~\&|SYNTH_HIS|SYNTH_FAC|SYNTH_HOSP|SYNTH_FAC|20240101120000||SYN-FILE-CNT
+batch 1|header|BHS|^~\&|SYNTH_HIS|SYNTH_FAC|SYNTH_HOSP|SYNTH_FAC|20240101120000||SYN-BATCH-CNT|trailer|BTS|3|messages|2
+fileTrailer|FTS|2
+default|batch|error|BTS[1]-1|BTS-1 Batch Message Count is "3" but batch 1 carries 2 messages
+default|batch|error|FTS[1]-1|FTS-1 File Batch Count is "2" but the file carries 1 batch
+default|message 1|warning|PID[1]|ADT_A01 requires EVN before PID[1] (HL7 v2.5.1 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 3-4 to 3-5; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Group names PROCEDURE and INSURANCE are printed.).
+default|message 2|error|MSH[1]-9.3|Required component MSH[1]-9.3 ('Message Structure') in MSG field 'Message Type' is missing
+default|message 2|warning|PID[1]|ADT_A03 requires EVN before PID[1] (HL7 v2.5.1 Chapter 3, section 3.3.3 ADT/ACK - Discharge/End Visit (Event A03), pp 3-7 to 3-8.).
+strict-au|batch|error|BTS[1]-1|BTS-1 Batch Message Count is "3" but batch 1 carries 2 messages
+strict-au|batch|error|FTS[1]-1|FTS-1 File Batch Count is "2" but the file carries 1 batch
+strict-au|message 1|error|PID[1]|ADT_A01 requires EVN before PID[1] (HL7 v2.5.1 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 3-4 to 3-5; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Group names PROCEDURE and INSURANCE are printed.).
+strict-au|message 2|error|MSH[1]-9.3|Required component MSH[1]-9.3 ('Message Structure') in MSG field 'Message Type' is missing
+strict-au|message 2|error|PID[1]|ADT_A03 requires EVN before PID[1] (HL7 v2.5.1 Chapter 3, section 3.3.3 ADT/ACK - Discharge/End Visit (Event A03), pp 3-7 to 3-8.).
+# batch_envelope_out_of_order.hl7
+fileHeader|FHS|^~\&|SYNTH_HIS|SYNTH_FAC|SYNTH_HOSP|SYNTH_FAC|20240101120000||SYN-FILE-ORD
+batch 1|header|BHS|^~\&|SYNTH_HIS|SYNTH_FAC|SYNTH_HOSP|SYNTH_FAC|20240101120000||SYN-BATCH-ORD|trailer|BTS|1|messages|1
+fileTrailer|FTS|1
+default|batch|error|FHS[1]|FHS 1 is not the first segment of the file; a batch file is [FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]
+default|batch|error|FTS[2]|FTS 2 follows the file's first FTS; a batch file is [FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]
+default|message 1|warning|PID[1]|ADT_A01 requires EVN before PID[1] (HL7 v2.5.1 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 3-4 to 3-5; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Group names PROCEDURE and INSURANCE are printed.).
+strict-au|batch|error|FHS[1]|FHS 1 is not the first segment of the file; a batch file is [FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]
+strict-au|batch|error|FTS[2]|FTS 2 follows the file's first FTS; a batch file is [FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]
+strict-au|message 1|error|PID[1]|ADT_A01 requires EVN before PID[1] (HL7 v2.5.1 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 3-4 to 3-5; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Group names PROCEDURE and INSURANCE are printed.).
 # batch_file_full.hl7
 fileHeader|FHS|^~\&|SYNTH_HIS|SYNTH_FAC|SYNTH_HOSP|SYNTH_FAC|20240101120000||SYN-FILE-001
 batch 1|header|BHS|^~\&|SYNTH_HIS|SYNTH_FAC|SYNTH_HOSP|SYNTH_FAC|20240101120000||SYN-BATCH-001|trailer|BTS|2|messages|2

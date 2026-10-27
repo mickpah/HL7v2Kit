@@ -25,6 +25,7 @@ extension IssueCode {
         case .messageStructureSegmentUnexpected: 1010
         case .messageStructureMismatch: 1011
         case .messageStructureNotModelled: 1012
+        case .batchEnvelopeMalformed: 1013
         case .requiredFieldMissing: 2001
         case .requiredComponentMissing: 2002
         case .cardinalityExceeded: 2003
@@ -33,6 +34,7 @@ extension IssueCode {
         case .segmentCardinalityAboveMaximum: 2006
         case .extraComponentsInPrimitiveField: 2007
         case .extraComponentsInCompositeField: 2008
+        case .batchCountMismatch: 2009
         case .pairedFieldMismatch: 3001
         case .fieldLengthOutOfRange: 3002
         case .componentLengthOutOfRange: 3003

@@ -344,7 +344,7 @@ struct ValidationTests {
         let twoBatches = "FHS|^~\\&|APP\r"
             + "BHS|^~\\&|APP\r" + batchORU + "BTS|1\r"
             + "BHS|^~\\&|APP\r" + batchORU + "BTS|1\r"
-            + "FTS|1\r"
+            + "FTS|2\r"
         let file = try BatchParser().parse(twoBatches)
         let auReport = BatchValidator(locale: .auLocalisation).validate(file)
         #expect(auReport.batchIssues.contains { $0.message.contains("ADRM-prose:P-7") },

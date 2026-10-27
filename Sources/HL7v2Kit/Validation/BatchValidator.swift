@@ -45,7 +45,10 @@ public struct BatchValidationReport: Sendable, Equatable, Hashable {
 ///
 /// Every envelope segment's fields are checked against the attribute table
 /// of the version its messages declare (v2.5.1 when there are none), under
-/// the options that govern message fields.
+/// the options that govern message fields. Under
+/// ``ValidationOptions/batchEnvelopeSeverity``: BTS-1 and FTS-1 against the
+/// messages and batches, and an envelope out of the grammar's order or with
+/// unreadable delimiters.
 ///
 /// Batch-scope rules under `.auLocalisation`:
 /// - **Single batch per file** (ADRM-prose:P-7): "In Australia only one
@@ -113,23 +116,78 @@ public struct BatchValidator: Sendable {
         messages.first?.version.grammarVersion ?? .v2_5_1
     }
 
-    /// The envelope's findings in wire order: FHS, then each batch's BHS and BTS, then FTS.
+    /// The envelope's findings in wire order: the order findings, then FHS (delimiters, fields),
+    /// each batch's BHS (delimiters, fields) and BTS (fields, count), then FTS (fields, count).
     private func envelopeIssues(_ file: BatchFile, validator: Validator) -> [ValidationIssue] {
         let fileVersion = Self.envelopeVersion(file.allMessages)
-        var issues: [ValidationIssue] = []
-        if let fhs = file.fileHeaderSegment {
+        var issues = file.envelopeOrderFindings.compactMap(malformed)
+        if let header = file.fileHeader, let fhs = file.fileHeaderSegment {
+            issues += unreadable(header, occurrence: 1)
             issues += validator.envelopeIssues(fhs, occurrence: 1, version: fileVersion)
         }
         for (index, group) in file.batches.enumerated() {
             let version = Self.envelopeVersion(group.messages)
-            for segment in [group.headerSegment, group.trailerSegment].compactMap({ $0 }) {
-                issues += validator.envelopeIssues(segment, occurrence: index + 1, version: version)
+            if let header = group.header, let bhs = group.headerSegment {
+                issues += unreadable(header, occurrence: index + 1)
+                issues += validator.envelopeIssues(bhs, occurrence: index + 1, version: version)
+            }
+            if let bts = group.trailerSegment {
+                issues += validator.envelopeIssues(bts, occurrence: index + 1, version: version)
+                issues += countMismatch(bts, actual: group.messages.count, occurrence: index + 1)
             }
         }
         if let fts = file.fileTrailerSegment {
             issues += validator.envelopeIssues(fts, occurrence: 1, version: fileVersion)
+            issues += countMismatch(fts, actual: file.batches.count, occurrence: 1)
         }
         return issues
+    }
+
+    /// BTS-1 or FTS-1 against `actual`, when populated.
+    private func countMismatch(_ segment: Segment, actual: Int, occurrence: Int) -> [ValidationIssue] {
+        guard let severity = options.batchEnvelopeSeverity, let repetition = segment.field(1)?.first else { return [] }
+        let declared = repetition.components.map { $0.subcomponents.map(\.value).joined(separator: "&") }.joined(separator: "^")
+        guard !declared.isEmpty else { return [] }
+        if declared.allSatisfy({ $0.isASCII && $0.isNumber }), Int(declared) == actual { return [] }
+        let id = segment.segmentID
+        let (field, counted) = id == "BTS"
+            ? ("BTS-1 Batch Message Count", "batch \(occurrence) carries \(actual) message\(actual == 1 ? "" : "s")")
+            : ("FTS-1 File Batch Count", "the file carries \(actual) batch\(actual == 1 ? "" : "es")")
+        return [ValidationIssue(
+            severity: severity,
+            code: .batchCountMismatch(declared: declared, actual: actual),
+            location: IssueLocation(segmentID: id, segmentIndex: occurrence, fieldIndex: 1),
+            message: "\(field) is \(options.quoted(declared)) but \(counted)"
+        )]
+    }
+
+    /// An FHS or BHS whose own delimiters cannot be read.
+    private func unreadable(_ header: String, occurrence: Int) -> [ValidationIssue] {
+        guard let severity = options.batchEnvelopeSeverity, Parser.headerDelimiters(header) == nil else { return [] }
+        let id = String(header.prefix(3))
+        return [ValidationIssue(
+            severity: severity,
+            code: .batchEnvelopeMalformed(segmentID: id),
+            location: IssueLocation(segmentID: id, segmentIndex: occurrence, fieldIndex: 2),
+            message: "\(id) \(occurrence) does not declare readable delimiters (\(id)-1 the field separator, \(id)-2 four distinct encoding characters); its fields were read with the message's"
+        )]
+    }
+
+    /// An envelope line the parser met out of the file grammar's order.
+    private func malformed(_ finding: EnvelopeOrderFinding) -> ValidationIssue? {
+        guard let severity = options.batchEnvelopeSeverity else { return nil }
+        let name = "\(finding.segmentID) \(finding.occurrence)"
+        let detail = switch finding.reason {
+        case .fileHeaderNotFirst: "\(name) is not the first segment of the file"
+        case .secondFileTrailer: "\(name) follows the file's first FTS"
+        case .afterFileTrailer: "\(name) follows the file trailer (FTS)"
+        }
+        return ValidationIssue(
+            severity: severity,
+            code: .batchEnvelopeMalformed(segmentID: finding.segmentID),
+            location: IssueLocation(segmentID: finding.segmentID, segmentIndex: finding.occurrence),
+            message: "\(detail); a batch file is [FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]"
+        )
     }
 
     /// ADRM-prose:P-7 — "In Australia only one Batch is supported"

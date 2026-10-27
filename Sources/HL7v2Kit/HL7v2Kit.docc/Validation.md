@@ -97,6 +97,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 | `requiredComponentSeverity` | `.error` | `.error` | `.error` (check off) |
 | `conformanceConditionSeverity` | off | off | off |
 | `messageStructureSeverity` | `.warning` | `.error` | off |
+| `batchEnvelopeSeverity` | `.error` | `.error` | off |
 | `fieldLengthSeverity`, `normativeLengthSeverity` | `.warning` | `.warning` | off |
 | `extraComponentsSeverity`, `valueFormatSeverity`, `repetitionBoundSeverity` | `.warning` | `.warning` | off |
 | the four `au` assertions | `false` | `false` | `false` |
@@ -216,6 +217,7 @@ Each ``ValidationIssue`` carries:
 | 1010 | ``IssueCode/messageStructureSegmentUnexpected(structure:segmentID:)`` | Structure and profile |
 | 1011 | ``IssueCode/messageStructureMismatch(declared:trigger:)`` | Structure and profile |
 | 1012 | ``IssueCode/messageStructureNotModelled(structure:)`` | Structure and profile |
+| 1013 | ``IssueCode/batchEnvelopeMalformed(segmentID:)`` | Structure and profile |
 | 2001 | ``IssueCode/requiredFieldMissing`` | Cardinality and type |
 | 2002 | ``IssueCode/requiredComponentMissing`` | Cardinality and type |
 | 2003 | ``IssueCode/cardinalityExceeded`` | Cardinality and type |
@@ -224,6 +226,7 @@ Each ``ValidationIssue`` carries:
 | 2006 | ``IssueCode/segmentCardinalityAboveMaximum(segmentID:maxCount:actual:groupScope:)`` | Cardinality and type |
 | 2007 | ``IssueCode/extraComponentsInPrimitiveField`` | Cardinality and type |
 | 2008 | ``IssueCode/extraComponentsInCompositeField`` | Cardinality and type |
+| 2009 | ``IssueCode/batchCountMismatch(declared:actual:)`` | Cardinality and type |
 | 3001 | ``IssueCode/pairedFieldMismatch(item:)`` | Primitive and value |
 | 3002 | ``IssueCode/fieldLengthOutOfRange(length:actual:)`` | Primitive and value |
 | 3003 | ``IssueCode/componentLengthOutOfRange(length:actual:)`` | Primitive and value |

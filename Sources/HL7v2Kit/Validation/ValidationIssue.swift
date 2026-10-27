@@ -383,6 +383,22 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// ``ValidationOptions/messageStructureSeverity`` is. Owner decision 9
     /// (2026-10-06); additive case introduced in S1-4.
     case conditionNotEvaluated(fields: [String])
+
+    /// A batch envelope count is not the count it names: BTS-1 Batch Message Count against
+    /// the messages in its batch, or FTS-1 File Batch Count against the batches in the file
+    /// (a batch without BHS included). `declared` is the field as written; a value that is not
+    /// a non-negative decimal integer cannot be the count and is reported too. An absent or
+    /// empty count is not checked. Reported by ``BatchValidator`` at BTS-1 (the batch number)
+    /// or FTS-1, at ``ValidationOptions/batchEnvelopeSeverity``. Additive case (batch
+    /// envelopes task 3).
+    case batchCountMismatch(declared: String, actual: Int)
+
+    /// A batch envelope segment breaks the file grammar `[FHS] { [BHS] { [MSH ...] } [BTS] } [FTS]`
+    /// (an FHS that is not the first segment, an FTS after the first, a segment after the
+    /// FTS), or an FHS or BHS declares delimiters that cannot be read. The segment is kept, and
+    /// the message says which. Reported by ``BatchValidator`` at
+    /// ``ValidationOptions/batchEnvelopeSeverity``. Additive case (batch envelopes task 3).
+    case batchEnvelopeMalformed(segmentID: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

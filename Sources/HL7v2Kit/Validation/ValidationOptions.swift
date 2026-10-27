@@ -253,7 +253,9 @@ public struct ValidationOptions: Sendable {
     /// ``IssueCode/messageStructureMismatch(declared:trigger:)`` and
     /// ``IssueCode/messageStructureNotModelled(structure:)`` carry the MSH values in their
     /// payloads, so a report that must carry no message content writes
-    /// ``IssueCode/number``, not the code itself. Excerpts are not shortened when on, so the
+    /// ``IssueCode/number``, not the code itself.
+    /// ``IssueCode/batchCountMismatch(declared:actual:)`` carries the declared count in its
+    /// payload in the same way. Excerpts are not shortened when on, so the
     /// default output is unchanged. Not an init parameter. X1.
     public var valueExcerpts: Bool = true
 
@@ -262,6 +264,16 @@ public struct ValidationOptions: Sendable {
     func quoted(_ value: some StringProtocol) -> String {
         valueExcerpts ? "\"\(value)\"" : "[value]"
     }
+
+    /// The severity of the batch envelope checks in ``BatchValidator``: a BTS-1 or FTS-1 count
+    /// that is not the number of messages or batches
+    /// (``IssueCode/batchCountMismatch(declared:actual:)``), and an envelope segment out of the
+    /// batch file grammar's order or with unreadable delimiters
+    /// (``IssueCode/batchEnvelopeMalformed(segmentID:)``). `.error` in ``default`` and
+    /// ``strict``: a wrong count usually means lost messages or a truncated batch. `nil` (off)
+    /// in ``lenient``. The envelope's field checks follow their own options. Not an init
+    /// parameter. Batch envelopes task 3.
+    public var batchEnvelopeSeverity: IssueSeverity? = .error
 
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
@@ -315,7 +327,8 @@ public struct ValidationOptions: Sendable {
     /// the extra-component check (`extraComponentsSeverity`), the value-format
     /// check (`valueFormatSeverity`) and the repetition-bound check
     /// (`repetitionBoundSeverity`), and it sets `messageStructureSeverity`
-    /// to `nil` explicitly (`.warning` in `default`, `.error` in `strict`). `checkCardinality`
+    /// to `nil` explicitly (`.warning` in `default`, `.error` in `strict`), as it does the
+    /// batch envelope checks (`batchEnvelopeSeverity`). `checkCardinality`
     /// is already `false` here, which also silences the single-cardinality
     /// error.
     public static let lenient: ValidationOptions = {
@@ -334,6 +347,7 @@ public struct ValidationOptions: Sendable {
         options.valueFormatSeverity = nil
         options.repetitionBoundSeverity = nil
         options.messageStructureSeverity = nil
+        options.batchEnvelopeSeverity = nil
         return options
     }()
 }

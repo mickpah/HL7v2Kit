@@ -66,7 +66,7 @@ struct BatchEnvelopeFieldTests {
             let file = try BatchParser().parse(Data(contentsOf: url))
             for (options, locale) in [(ValidationOptions.default, HL7Locale.international), (.strict, .auLocalisation)] {
                 let issues = BatchValidator(options: options, locale: locale).validate(file).batchIssues
-                #expect(!issues.contains { ["FHS", "BHS"].contains($0.location.segmentID) && ($0.location.fieldIndex ?? 0) <= 2
+                #expect(!issues.contains { ["FHS", "BHS"].contains($0.location.segmentID) && ($0.location.fieldIndex.map { $0 <= 2 } ?? false)
                     && $0.code.number != 1003 }, "\(url.lastPathComponent)")
             }
         }

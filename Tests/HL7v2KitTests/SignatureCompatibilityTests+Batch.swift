@@ -14,4 +14,14 @@ extension SignatureCompatibilityTests {
         let trailer: KeyPath<BatchGroup, Segment?> = \.trailerSegment
         _ = (fileHeader, fileTrailer, header, trailer)
     }
+
+    @Test("Batch envelopes: the codes and the option keep their signatures")
+    func batchEnvelopeCheckSignatures() {
+        let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.batchEnvelopeSeverity
+        let count: (String, Int) -> IssueCode = IssueCode.batchCountMismatch(declared:actual:)
+        let malformed: (String) -> IssueCode = IssueCode.batchEnvelopeMalformed(segmentID:)
+        _ = (severity, count, malformed)
+        #expect(IssueCode.batchCountMismatch(declared: "", actual: 0).number == 2009)
+        #expect(IssueCode.batchEnvelopeMalformed(segmentID: "").number == 1013)
+    }
 }
