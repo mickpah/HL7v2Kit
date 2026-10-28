@@ -42,7 +42,7 @@ struct ValidationArticleCoverageTests {
         .conditionalComponentMissing, .conformanceConditionMissing,
         .segmentCardinalityBelowMinimum(segmentID: "", minCount: 0, actual: 0, groupScope: ""),
         .segmentCardinalityAboveMaximum(segmentID: "", maxCount: 0, actual: 0, groupScope: ""),
-        .conditionalFieldProhibited, .pairedFieldMismatch(item: ""), .valueNotInTable(table: ""),
+        .conditionalFieldProhibited, .pairedFieldMismatch(item: ""), .correlatedValueMismatch, .valueNotInTable(table: ""),
         .segmentNotInVersionGrammar, .segmentWithdrawnInVersion,
         .versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2),
         .versionNotRecognised(wireValue: ""), .fieldLengthOutOfRange(length: "", actual: 0),
@@ -72,6 +72,7 @@ struct ValidationArticleCoverageTests {
         case .segmentCardinalityAboveMaximum: "segmentCardinalityAboveMaximum"
         case .conditionalFieldProhibited: "conditionalFieldProhibited"
         case .pairedFieldMismatch: "pairedFieldMismatch"
+        case .correlatedValueMismatch: "correlatedValueMismatch"
         case .valueNotInTable: "valueNotInTable"
         case .segmentNotInVersionGrammar: "segmentNotInVersionGrammar"
         case .segmentWithdrawnInVersion: "segmentWithdrawnInVersion"

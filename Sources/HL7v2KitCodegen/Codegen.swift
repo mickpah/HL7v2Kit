@@ -72,6 +72,17 @@ struct FieldSchema: Decodable {
     /// corrected them. Each is emitted as a deprecated alias that forwards to `swiftName`,
     /// so released source keeps compiling (ADR-014). P6-9.
     let deprecatedSwiftNames: [String]?
+    /// 3.23.0: cited cross-segment correlations (ROL-4 against STF-2 and STF-3). See
+    /// `FieldGrammar.correlations`; the citation is read by the schema audit, not emitted.
+    let correlations: [CorrelationSchema]?
+}
+
+struct CorrelationSchema: Decodable {
+    let segment: String
+    let field: Int
+    let part: String
+    let components: [String: Int]
+    let citation: String
 }
 
 /// The `version|SEG-n` key of a field marked `conditionIsPredicate`, or `nil` when it is not
@@ -364,7 +375,18 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
                 field.additionalProhibitions, context: "\(schema.segmentID)-\(field.index)")
             // Last in the shared tail, so it is accepted after any of the arguments above (P6-4).
             let bound = maxRepetitions.map { ", maxRepetitions: \($0)" } ?? ""
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)\(additionalProhibitions)\(bound)),"
+            // Emitted only when set, so every other field keeps the released initialisers (3.23.0).
+            let correlations: String = {
+                guard let list = field.correlations, !list.isEmpty else { return "" }
+                let items = list.map { c -> String in
+                    precondition(["identifier", "name"].contains(c.part), "\(schema.segmentID)-\(field.index): correlation part \(c.part)")
+                    let pairs = c.components.map { (Int($0.key)!, $0.value) }.sorted { $0.0 < $1.0 }
+                        .map { "\($0.0): \($0.1)" }.joined(separator: ", ")
+                    return "FieldCorrelation(segment: \(escapeStringLiteral(c.segment)), field: \(c.field), part: \(escapeStringLiteral(c.part)), components: [\(pairs)])"
+                }
+                return ", correlations: [\(items.joined(separator: ", "))]"
+            }()
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)\(additionalProhibitions)\(bound)\(correlations)),"
         }.joined(separator: "\n")
         // One typed constant per segment. The whole version used to be a single dictionary
         // literal, which the type checker solves as ONE expression: once fields carried a

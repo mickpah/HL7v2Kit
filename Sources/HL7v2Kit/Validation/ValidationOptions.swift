@@ -275,6 +275,14 @@ public struct ValidationOptions: Sendable {
     /// parameter. Batch envelopes task 3.
     public var batchEnvelopeSeverity: IssueSeverity? = .error
 
+    /// The severity of the cross-segment correlation check (3.23.0): ROL-4 Role Person against
+    /// STF-2 Staff Identifier List and STF-3 Staff Name ("it must be populated with the same
+    /// values as the correlated field", v2.6 to v2.8.2), reported as
+    /// ``IssueCode/correlatedValueMismatch``. `.warning` in ``default`` and ``strict``: the
+    /// print gives no component mapping, so the check reads one from the Chapter 2A component
+    /// names. `nil` (off) in ``lenient``. Not an init parameter.
+    public var correlationSeverity: IssueSeverity? = .warning
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
@@ -328,7 +336,8 @@ public struct ValidationOptions: Sendable {
     /// check (`valueFormatSeverity`) and the repetition-bound check
     /// (`repetitionBoundSeverity`), and it sets `messageStructureSeverity`
     /// to `nil` explicitly (`.warning` in `default`, `.error` in `strict`), as it does the
-    /// batch envelope checks (`batchEnvelopeSeverity`). `checkCardinality`
+    /// batch envelope checks (`batchEnvelopeSeverity`) and the correlation check
+    /// (`correlationSeverity`). `checkCardinality`
     /// is already `false` here, which also silences the single-cardinality
     /// error.
     public static let lenient: ValidationOptions = {
@@ -348,6 +357,7 @@ public struct ValidationOptions: Sendable {
         options.repetitionBoundSeverity = nil
         options.messageStructureSeverity = nil
         options.batchEnvelopeSeverity = nil
+        options.correlationSeverity = nil
         return options
     }()
 }

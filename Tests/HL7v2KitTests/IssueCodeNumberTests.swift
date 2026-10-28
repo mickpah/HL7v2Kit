@@ -23,7 +23,7 @@ struct IssueCodeNumberTests {
         "segmentCardinalityAboveMaximum": 2006, "extraComponentsInPrimitiveField": 2007,
         "extraComponentsInCompositeField": 2008, "batchCountMismatch": 2009,
         "pairedFieldMismatch": 3001, "fieldLengthOutOfRange": 3002, "componentLengthOutOfRange": 3003,
-        "valueFormatInvalid": 3004,
+        "valueFormatInvalid": 3004, "correlatedValueMismatch": 3005,
         "valueNotInTable": 4001,
         "conditionalFieldMissing": 5001, "conditionalComponentMissing": 5002,
         "conformanceConditionMissing": 5003, "conditionalFieldProhibited": 5004,

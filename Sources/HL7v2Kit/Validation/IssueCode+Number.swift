@@ -39,6 +39,7 @@ extension IssueCode {
         case .fieldLengthOutOfRange: 3002
         case .componentLengthOutOfRange: 3003
         case .valueFormatInvalid: 3004
+        case .correlatedValueMismatch: 3005
         case .valueNotInTable: 4001
         case .conditionalFieldMissing: 5001
         case .conditionalComponentMissing: 5002

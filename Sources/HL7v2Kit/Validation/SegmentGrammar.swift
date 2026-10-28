@@ -41,6 +41,16 @@ public enum FieldRepeatability: Sendable, Equatable, Hashable {
 }
 
 /// One field's grammar within a segment.
+/// A cited cross-segment correlation (3.23.0, ROL-4 against STF-2 and STF-3): every component
+/// a repetition of the field values, among `components`' keys, must equal the mapped component
+/// of one repetition of `segment`-`field` in the segment group scoping associates. Internal.
+struct FieldCorrelation: Sendable, Equatable, Hashable {
+    let segment: String
+    let field: Int
+    let part: String
+    let components: [Int: Int]
+}
+
 public struct FieldGrammar: Sendable, Equatable, Hashable {
     public let index: Int
     public let name: String
@@ -130,6 +140,8 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// `.cardinalityExceeded` at `.warning`. Not set by the released
     /// initialisers; `nil` by default. P6-4.
     public let maxRepetitions: Int?
+    /// Cited cross-segment correlations (internal; ROL-4, 3.23.0). Empty for nearly every field.
+    let correlations: [FieldCorrelation]
 
     public init(
         index: Int,
@@ -237,6 +249,32 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         additionalProhibitions: [FieldProhibition] = [],
         maxRepetitions: Int?
     ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: tableOpen,
+                  prohibitedSeverity: prohibitedSeverity, additionalProhibitions: additionalProhibitions,
+                  maxRepetitions: maxRepetitions, correlations: [])
+    }
+
+    /// Creates a field grammar with cited cross-segment correlations (see ``correlations``).
+    /// Internal: codegen emits it for ROL-4 only (3.23.0).
+    init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool = false,
+        prohibitedSeverity: IssueSeverity = .error,
+        additionalProhibitions: [FieldProhibition] = [],
+        maxRepetitions: Int? = nil,
+        correlations: [FieldCorrelation]
+    ) {
         // P6-4: a bound only means something on a repeating field, and a bound of 1 is
         // `.single`. Codegen never emits either; a hand-built grammar that does is a
         // programmer error, trapped here rather than silently ignored by the Validator.
@@ -258,6 +296,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.prohibitedSeverity = prohibitedSeverity
         self.additionalProhibitions = additionalProhibitions
         self.maxRepetitions = maxRepetitions
+        self.correlations = correlations
     }
 }
 

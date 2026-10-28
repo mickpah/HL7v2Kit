@@ -97,6 +97,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 | `checkCodeTables` | on | on | off |
 | `requiredComponentSeverity` | `.error` | `.error` | `.error` (check off) |
 | `conformanceConditionSeverity` | off | off | off |
+| `correlationSeverity` | warning | warning | off |
 | `messageStructureSeverity` | `.warning` | `.error` | off |
 | `batchEnvelopeSeverity` | `.error` | `.error` | off |
 | `fieldLengthSeverity`, `normativeLengthSeverity` | `.warning` | `.warning` | off |
@@ -231,6 +232,7 @@ Each ``ValidationIssue`` carries:
 | 3002 | ``IssueCode/fieldLengthOutOfRange(length:actual:)`` | Primitive and value |
 | 3003 | ``IssueCode/componentLengthOutOfRange(length:actual:)`` | Primitive and value |
 | 3004 | ``IssueCode/valueFormatInvalid(dataType:)`` | Primitive and value |
+| 3005 | ``IssueCode/correlatedValueMismatch`` | Primitive and value |
 | 4001 | ``IssueCode/valueNotInTable(table:)`` | Binding and terminology |
 | 5001 | ``IssueCode/conditionalFieldMissing`` | Invariant |
 | 5002 | ``IssueCode/conditionalComponentMissing`` | Invariant |

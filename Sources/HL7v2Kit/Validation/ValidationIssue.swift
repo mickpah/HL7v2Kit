@@ -151,6 +151,14 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// case introduced in M8-B1; the enum is open per ADR-014, so this
     /// is a minor bump.
     case pairedFieldMismatch(item: String)
+    /// A field the spec ties to another segment's field carries values that field does not:
+    /// ROL-4 Role Person against STF-2 Staff Identifier List and STF-3 Staff Name ("If this
+    /// field is populated, then it must be populated with the same values as the correlated
+    /// field", v2.6 to v2.8.2 CH15 sec 15.4.7.4). Every component the repetition values, through
+    /// a cited component mapping, must equal one repetition of the correlated field; reported
+    /// at the field at ``ValidationOptions/correlationSeverity`` (a warning by default).
+    /// Additive case (3.23.0).
+    case correlatedValueMismatch
 
     /// An `ID`-typed field carries a value that is not in the HL7-defined
     /// table its spec `TBL#` column names, for the message's version.

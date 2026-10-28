@@ -673,6 +673,13 @@ public struct Validator: Sendable {
             )
         }
 
+        // 3.23.0: a cited cross-segment correlation (ROL-4 against STF-2 and STF-3).
+        if let severity = options.correlationSeverity, !fieldGrammar.correlations.isEmpty,
+           let field, isPopulated {
+            checkCorrelations(fieldGrammar, field: field, segmentIndex: segmentIndex, message: message,
+                              location: location, severity: severity, issues: &issues)
+        }
+
         if options.warnDeprecatedFields, isPopulated {
             checkDeprecation(
                 fieldGrammar,
@@ -2204,7 +2211,7 @@ public struct Validator: Sendable {
     /// True if the repetition has at least one component with at least
     /// one non-empty subcomponent. Used to skip empty repetitions on
     /// multi-rep composite fields.
-    private func isRepetitionPopulated(_ repetition: Repetition) -> Bool {
+    func isRepetitionPopulated(_ repetition: Repetition) -> Bool {
         repetition.components.contains { component in
             component.subcomponents.contains { !$0.value.isEmpty }
         }
