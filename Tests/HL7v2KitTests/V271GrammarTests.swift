@@ -109,7 +109,7 @@ struct V271GrammarTests {
         #expect(grammars.count == 72)
         let components = grammars.values.flatMap(\.components)
         #expect(components.count == 469)
-        #expect(components.filter { $0.optionalityCode == "C" }.count == 72)
+        #expect(components.filter { $0.optionalityCode == "C" }.count == 73) // 72 printed, plus PPN.15 read as C (3.22.0)
         #expect(components.filter { !$0.tables.isEmpty }.count == 151)
         #expect(grammars.values.allSatisfy { $0.version == "2.7.1" })
         // Chapter 2A 2.A.38 (p50) and 2.A.39 (p51): retained for backward compatibility.
@@ -166,7 +166,7 @@ struct V271GrammarTests {
         let components = grammars.values.flatMap { g in g.components.map { (g.dataType, $0) } }
         let rules = components.filter { $0.1.condition != nil }
         let conformance = components.filter { $0.1.conformanceCondition != nil }
-        #expect(rules.count == 23)
+        #expect(rules.count == 24) // 23, then PPN.15 (TXA-22, 3.22.0)
         #expect(conformance.count == 37) // 30, then 7 coding-system version IDs (VersionIDConditionTests)
         for (code, c) in rules + conformance {
             #expect(c.optionalityCode == "C", "\(code).\(c.index)")

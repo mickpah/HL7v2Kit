@@ -718,7 +718,7 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 12, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "C", tables: ["0061"], length: "3", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 13, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 14, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 15, name: "Date/Time Action Performed", dataType: "TS", optionalityCode: "O", tables: [], length: "26", condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 15, name: "Date/Time Action Performed", dataType: "TS", optionalityCode: "C", tables: [], length: "26", condition: "1-14 populated OR 16-24 populated", conformanceCondition: nil),
             ComponentGrammar(index: 16, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 17, name: "Name Context", dataType: "CE", optionalityCode: "O", tables: ["0448"], length: "483", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 18, name: "Name Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "17", condition: nil, conformanceCondition: nil),
@@ -728,6 +728,9 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 22, name: "Professional Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 23, name: "Assigning Jurisdiction", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 24, name: "Assigning Agency or Department", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil, conformanceCondition: nil),
+        ],
+        groupRequirements: [
+            ComponentGroupRequirement(name: "Performing person", components: "1-14,16-24", condition: "15 populated"),
         ]
     )
 

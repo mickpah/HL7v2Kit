@@ -2009,7 +2009,9 @@ public struct Validator: Sendable {
     /// populated when that predicate holds over its sibling components. One level of
     /// nesting is descended, as for the code-table check (the CNN inside NDL). Reported at
     /// the component with ``IssueCode/conditionalComponentMissing`` at
-    /// ``ValidationOptions/requiredComponentSeverity``.
+    /// ``ValidationOptions/requiredComponentSeverity``. A group requirement (``DataTypeGrammar``
+    /// `groupRequirements`, TXA-22's person) is reported once per repetition at the field, or at
+    /// the component one level down.
     private func checkConditionalComponents(
         _ grammar: FieldGrammar,
         field: Field,
@@ -2028,8 +2030,8 @@ public struct Validator: Sendable {
             (HL7TableRegistry.table(number, locale: locale)
                 ?? HL7TableRegistry.table(number, version: version.grammarVersion))?.kind
         }
-        func check(_ entries: [ComponentGrammar], values: [String?], typeName: String,
-                   component: Int?, subcomponent: (Int) -> Int?) {
+        func check(_ entries: [ComponentGrammar], groups: [ComponentGroupRequirement], values: [String?],
+                   typeName: String, repetition: Int, component: Int?, subcomponent: (Int) -> Int?) {
             func populated(_ i: Int) -> Bool {
                 guard i >= 1, i <= values.count, let v = values[i - 1] else { return false }
                 return !v.isEmpty && v != "\"\""
@@ -2054,16 +2056,33 @@ public struct Validator: Sendable {
                     ))
                 }
             }
+            // A group requirement: at least one member when the condition holds, reported once.
+            for group in groups {
+                guard let members = group.members, !members.contains(where: populated),
+                      ComponentCondition.holds(group.condition, populated: populated, repeated: repeated) else { continue }
+                let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
+                                             componentIndex: component)
+                let list = group.components.replacingOccurrences(of: ",", with: ", ")
+                issues.append(ValidationIssue(
+                    severity: options.requiredComponentSeverity,
+                    code: .conditionalComponentMissing,
+                    location: location,
+                    message: "Conditional component group '\(group.name)' (\(typeName) \(list)) in \(location.pathDescription) repetition \(repetition) is empty while its condition holds: \(group.condition)."
+                ))
+            }
         }
-        for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+        for (offset, repetition) in field.repetitions.enumerated() where isRepetitionPopulated(repetition) {
             let values = repetition.components.map(\.stringValue)
-            check(dataType.components, values: values, typeName: grammar.dataType, component: nil, subcomponent: { _ in nil })
+            check(dataType.components, groups: dataType.groupRequirements, values: values, typeName: grammar.dataType,
+                  repetition: offset + 1, component: nil, subcomponent: { _ in nil })
             for entry in dataType.components where repetition.components.count >= entry.index {
                 guard let nested = Self.componentGrammar(entry.dataType, version: version),
-                      nested.components.contains(where: { $0.condition != nil || $0.conformanceCondition != nil }) else { continue }
+                      !nested.groupRequirements.isEmpty
+                        || nested.components.contains(where: { $0.condition != nil || $0.conformanceCondition != nil }) else { continue }
                 let subs = repetition.components[entry.index - 1].subcomponents.map { Optional($0.value) }
-                check(nested.components, values: subs, typeName: "\(grammar.dataType).\(entry.index) (\(entry.dataType))",
-                      component: entry.index, subcomponent: { $0 })
+                check(nested.components, groups: nested.groupRequirements, values: subs,
+                      typeName: "\(grammar.dataType).\(entry.index) (\(entry.dataType))",
+                      repetition: offset + 1, component: entry.index, subcomponent: { $0 })
             }
         }
     }

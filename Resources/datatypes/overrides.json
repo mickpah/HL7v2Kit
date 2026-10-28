@@ -5,6 +5,12 @@
         "optionality": "O",
         "note": "The component table prints NA.1 Value1 as R, but the same section says 'Arrays that have one or more values not present may be transmitted using this data type' and prints |^2^3^4~5^^^8~9^10~~17^18^19^20| with Value1 absent. v2.8.2 corrects the table to O. Treated as O here so the required-component rule does not reject the specification's own example (req #4)."
       }
+    },
+    "PPN": {
+      "15": {
+        "optionality": "C",
+        "note": "Printed O. HL7 v2.5.1 Chapter 2A, PPN.15 (sec 2.A.55.15, p 2-196): 'Note: If this field is not null, both the performing person and the time stamp must be valued.'; Chapter 9, TXA-22 (sec 9.6.1.22, p 9-31): 'If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null.' Read as C so the cited condition can sit on it."
+      }
     }
   },
   "2.6": {
@@ -12,6 +18,28 @@
       "1": {
         "optionality": "O",
         "note": "The component table prints NA.1 Value1 as R, but the same section says 'Arrays that have one or more values not present may be transmitted using this data type' and prints |^2^3^4~5^^^8~9^10~~17^18^19^20| with Value1 absent. v2.8.2 corrects the table to O. Treated as O here so the required-component rule does not reject the specification's own example (req #4)."
+      }
+    },
+    "PPN": {
+      "15": {
+        "optionality": "C",
+        "note": "Printed O. HL7 v2.6 Chapter 2A, PPN.15 (sec 2.A.55.15, p 2-159): 'Note: If this field is not null, both the performing person and the time stamp must be valued.'; Chapter 9, TXA-22 (sec 9.6.1.22, p 9-21): 'If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null.' Read as C so the cited condition can sit on it."
+      }
+    }
+  },
+  "2.7.1": {
+    "PPN": {
+      "15": {
+        "optionality": "C",
+        "note": "Printed O. HL7 v2.7.1 Chapter 2A, PPN.15 (sec 2.A.55.15, p 67): 'Note: If this field is not null, both the performing person and the time stamp must be valued.'; Chapter 9, TXA-22 (sec 9.7.3.22, p 37): 'If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null.' Read as C so the cited condition can sit on it."
+      }
+    }
+  },
+  "2.8.2": {
+    "PPN": {
+      "15": {
+        "optionality": "C",
+        "note": "Printed O. HL7 v2.8.2 Chapter 2A, PPN.15 (sec 2.A.56.15, p 64): 'Note: If this field is not null, both the performing person and the time stamp must be valued.'; Chapter 9, TXA-22 (sec 9.7.3.22, p 37): 'If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null.' Read as C so the cited condition can sit on it."
       }
     }
   }

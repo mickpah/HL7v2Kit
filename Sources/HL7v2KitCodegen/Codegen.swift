@@ -414,6 +414,13 @@ struct ComponentSchema: Decodable {
     let tables: [String]?
 }
 
+/// 3.22.0: a cited "at least one of" requirement (TXA-22's person).
+struct GroupRequirementSchema: Decodable {
+    let name: String
+    let components: String
+    let condition: String
+}
+
 struct DataTypeSchema: Decodable {
     let dataType: String
     let version: String
@@ -421,6 +428,8 @@ struct DataTypeSchema: Decodable {
     let components: [ComponentSchema]
     /// P5: the `SEG-N` of a field-local composite (`Resources/datatypes/v<X>/fields/`); nil for a datatype.
     let field: String?
+    /// 3.22.0: absent for nearly every grammar.
+    let groupRequirements: [GroupRequirementSchema]?
 }
 
 /// One `DataTypeGrammar` constant (M10-B; P5 reuses it for field-local composites).
@@ -432,6 +441,11 @@ func renderDataTypeConstant(_ constant: String, _ t: DataTypeSchema) -> String {
         let conformance = c.conformanceCondition.map { escapeStringLiteral($0) } ?? "nil"
         return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)], length: \(length), condition: \(condition), conformanceCondition: \(conformance)),"
     }.joined(separator: "\n")
+    let groups = (t.groupRequirements ?? []).map { g in
+        "            ComponentGroupRequirement(name: \(escapeStringLiteral(g.name)), components: \(escapeStringLiteral(g.components)), condition: \(escapeStringLiteral(g.condition))),"
+    }.joined(separator: "\n")
+    // Emitted only when present, so every other grammar's generated text is unchanged.
+    let groupArgument = groups.isEmpty ? "" : ",\n        groupRequirements: [\n\(groups)\n        ]"
     return """
         private static let \(constant): DataTypeGrammar = DataTypeGrammar(
             dataType: "\(t.dataType)",
@@ -439,7 +453,7 @@ func renderDataTypeConstant(_ constant: String, _ t: DataTypeSchema) -> String {
             name: \(escapeStringLiteral(t.name)),
             components: [
     \(components)
-            ]
+            ]\(groupArgument)
         )
     """
 }

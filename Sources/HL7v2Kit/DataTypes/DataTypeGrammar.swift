@@ -70,6 +70,26 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     }
 }
 
+/// A cited "at least one of" requirement over a grammar's components: when `condition` holds
+/// over the repetition, at least one of `components` must be populated (TXA-22's person,
+/// 3.22.0). `components` is the list as cited in `conditions.json`, e.g. `"1-14,16-26"`.
+struct ComponentGroupRequirement: Sendable, Equatable, Hashable {
+    let name: String
+    let components: String
+    let condition: String
+
+    /// The member indices, or nil when the list is malformed (the requirement then never fires).
+    var members: [Int]? {
+        var out: [Int] = []
+        for part in components.split(separator: ",", omittingEmptySubsequences: false).map(String.init) {
+            if let range = ComponentCondition.range(part) { out += Array(range) }
+            else if let n = Int(part), n >= 1 { out.append(n) }
+            else { return nil }
+        }
+        return out.isEmpty ? nil : out
+    }
+}
+
 /// An HL7 datatype's component table for one version.
 public struct DataTypeGrammar: Sendable, Equatable, Hashable {
     /// The datatype code, e.g. `"CX"`.
@@ -80,13 +100,22 @@ public struct DataTypeGrammar: Sendable, Equatable, Hashable {
     public let name: String
     /// The components in index order, contiguous from 1.
     public let components: [ComponentGrammar]
+    /// Cited "at least one of" requirements (internal; TXA-22's person, 3.22.0). Empty for
+    /// nearly every grammar.
+    let groupRequirements: [ComponentGroupRequirement]
 
     /// Creates a datatype grammar.
     public init(dataType: String, version: String, name: String, components: [ComponentGrammar]) {
+        self.init(dataType: dataType, version: version, name: name, components: components, groupRequirements: [])
+    }
+
+    init(dataType: String, version: String, name: String, components: [ComponentGrammar],
+         groupRequirements: [ComponentGroupRequirement]) {
         self.dataType = dataType
         self.version = version
         self.name = name
         self.components = components
+        self.groupRequirements = groupRequirements
     }
 
     /// The component at 1-based `index`, or `nil` when the datatype has none there.

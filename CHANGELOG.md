@@ -8,6 +8,13 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+- **Changed:** TXA-22's authentication person and time stamp (PPN) go together on every repetition,
+  v2.5.1 to v2.8.2, as Chapter 2A's PPN.15 note and Chapter 9 say: a person without a time stamp
+  is reported at TXA-22.15, a time stamp without a person at TXA-22, as
+  `conditionalComponentMissing` at `requiredComponentSeverity`. PPN.15's `optionalityCode` reads `C`.
+- **Added:** range terms (`<a>-<b> populated`, `<a>-<b> empty`) and group requirements ("at least one
+  of these components") in the component-condition language.
+
 ## [3.21.0]
 
 - **Added:** 18 opt-in conformance rules that require a coding-system version ID (CNE, CWE, CF and

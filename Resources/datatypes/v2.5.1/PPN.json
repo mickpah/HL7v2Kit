@@ -123,8 +123,9 @@
       "index": 15,
       "name": "Date/Time Action Performed",
       "dataType": "TS",
-      "optionality": "O",
-      "length": "26"
+      "optionality": "C",
+      "length": "26",
+      "condition": "1-14 populated OR 16-24 populated"
     },
     {
       "index": 16,
@@ -197,6 +198,13 @@
       "dataType": "CWE",
       "optionality": "O",
       "length": "705"
+    }
+  ],
+  "groupRequirements": [
+    {
+      "name": "Performing person",
+      "components": "1-14,16-24",
+      "condition": "15 populated"
     }
   ]
 }
