@@ -418,11 +418,14 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 12, name: "Code identifying the check digit scheme employed", dataType: "ID", optionalityCode: "", tables: ["0061"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 13, name: "Identifier type code", dataType: "IS", optionalityCode: "", tables: ["0203"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 14, name: "Assigning facility", dataType: "HD", optionalityCode: "", tables: ["0300"], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 15, name: "Date/time action performed", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 15, name: "Date/time action performed", dataType: "TS", optionalityCode: "C", tables: [], length: nil, condition: "1-10 populated", conformanceCondition: nil),
             ComponentGrammar(index: 16, name: "Name representation code", dataType: "ID", optionalityCode: "", tables: ["0465"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 17, name: "Name context", dataType: "CE", optionalityCode: "", tables: ["0448"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 18, name: "Name validity range", dataType: "DR", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 19, name: "Name assembly order", dataType: "ID", optionalityCode: "", tables: ["0444"], length: nil, condition: nil, conformanceCondition: nil),
+        ],
+        groupRequirements: [
+            ComponentGroupRequirement(name: "Authentication person", components: "1-14,16-19", condition: "15 populated"),
         ]
     )
 

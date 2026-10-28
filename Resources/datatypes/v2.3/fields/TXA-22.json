@@ -93,7 +93,15 @@
       "index": 15,
       "name": "When authenticated",
       "dataType": "TS",
-      "optionality": ""
+      "optionality": "C",
+      "condition": "1-10 populated"
+    }
+  ],
+  "groupRequirements": [
+    {
+      "name": "Authentication person",
+      "components": "1-14",
+      "condition": "15 populated"
     }
   ]
 }

@@ -1115,7 +1115,10 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 12, name: "Code identifying the check digit scheme employed", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 13, name: "Identifier type code", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 14, name: "Assigning facility", dataType: "HD", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 15, name: "When authenticated", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 15, name: "When authenticated", dataType: "TS", optionalityCode: "C", tables: [], length: nil, condition: "1-10 populated", conformanceCondition: nil),
+        ],
+        groupRequirements: [
+            ComponentGroupRequirement(name: "Authentication person", components: "1-14", condition: "15 populated"),
         ]
     )
 

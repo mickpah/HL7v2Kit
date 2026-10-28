@@ -74,9 +74,36 @@ struct AuthenticationPersonTimeTests {
         }
     }
 
+    @Test("v2.3 to v2.4, older wording: 1 to 10 require the time stamp; a time stamp requires the person",
+          arguments: [("2.3", 15), ("2.3.1", 16), ("2.4", 19)] as [(version: String, count: Int)])
+    func olderWording(_ row: (version: String, count: Int)) throws {
+        let time = "19990101"
+        #expect(try Self.paths(Self.ppn([1: "1"]), version: row.version) == ["TXA[1]-22.15"])
+        #expect(try Self.paths(Self.ppn([11: "5"]), version: row.version).isEmpty)
+        #expect(try Self.paths(Self.ppn([15: time]), version: row.version) == ["TXA[1]-22"])
+        #expect(try Self.paths(Self.ppn([1: "1", 15: time]), version: row.version).isEmpty)
+        if row.count > 15 { #expect(try Self.paths(Self.ppn([16: "A"]), version: row.version).isEmpty) }
+    }
+
+    @Test("v2.3 to v2.4: the rule on TXA-22's own grammar (v2.3) or on PPN, TXA-22's only field")
+    func olderCoverage() {
+        let rows: [(DataTypeGrammar?, String)] = [
+            (DataTypeGrammarTable.grammar(segment: "TXA", field: 22, version: .v2_3), "1-14"),
+            (DataTypeGrammarTable.grammar("PPN", version: .v2_3_1), "1-14,16"),
+            (DataTypeGrammarTable.grammar("PPN", version: .v2_4), "1-14,16-19"),
+        ]
+        for (grammar, person) in rows {
+            #expect(grammar?.component(15)?.optionalityCode == "C", "\(person)")
+            #expect(grammar?.component(15)?.condition == "1-10 populated", "\(person)")
+            #expect(grammar?.groupRequirements == [ComponentGroupRequirement(name: "Authentication person", components: person,
+                                                                             condition: "15 populated")])
+        }
+        #expect(DataTypeGrammarTable.grammar("PPN", version: .v2_3)?.component(15)?.condition == nil)
+    }
+
     @Test("No other grammar carries a group requirement")
     func onlyHere() {
-        let expected: [Version: [String]] = [.v2_3: [], .v2_3_1: [], .v2_4: [],
+        let expected: [Version: [String]] = [.v2_3: ["TXA-22"], .v2_3_1: ["PPN"], .v2_4: ["PPN"],
                                              .v2_5_1: ["PPN"], .v2_6: ["PPN"], .v2_7_1: ["PPN"], .v2_8_2: ["PPN"]]
         for (version, carriers) in expected {
             let found = (DataTypeGrammarTable.grammars(for: version).merging(DataTypeGrammarTable.fieldGrammars(for: version)) { a, _ in a })

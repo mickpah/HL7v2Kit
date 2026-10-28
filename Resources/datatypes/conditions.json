@@ -1,5 +1,5 @@
 {
-  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', 'repeated' (the field has more than one populated repetition), '<n> hl7Table' (the value is HL7 and four digits, a Table 0396 HL7 table), '<n> userTable' (such a value whose table is user-defined), NOT, AND, OR, parentheses. '<a>-<b> populated' / '<a>-<b> empty' hold when any / none of components a to b is populated. 'groupRules' (3.22.0) carries cited \"at least one of\" requirements: when 'condition' holds, at least one of 'components' must be populated, reported once per repetition (TXA-22's person, PPN on v2.5.1 to v2.8.2). TXA-17's 'all components are required' (v2.3 to v2.5.1) is read as both parts: the field condition makes TXA-22 required, and this pair makes both its person and its time stamp; not every one of its components, which would contradict those printed O and B. When it holds and the component is empty the Validator reports conditionalComponentMissing. 'conformanceRules' carries the 'as of v2.7' family in the same language, applied as conformanceCondition and checked only on opt-in (M27). CNE.7 / CWE.7 / CF.7 / CSU.8 and the second-alternate CF.13 / CNE.13 / CSU.14 (v2.7.1, v2.8.2), and CNE.7 / CWE.7 on v2.5.1 and v2.6, are modelled in conformanceRules with the hl7Table and userTable terms, each in its own print's wording (CNE in every version, and v2.5.1 CWE, keep the older usage note, which does not name user-defined tables): the opt-in tier, because the specification's own example messages leave the version ID empty 679 times where these rules require it (v2.6 157, v2.7.1 252, v2.8.2 270). Applied by private/scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated). v2.7.1 (P10-2): its Chapter 2A prints the same 72 C components as v2.8.2, and every one's definition was read against the v2.8.2 text: 60 are word for word the same and 12 differ only in a cross-reference (CF.3, CF.6, CSU.4, CNN.8, CNN.9, CNN.11, PPN.9, XCN.9, XCN.10, XCN.13, XCN.22, XCN.23), so the 2.7.1 blocks carry the v2.8.2 rules each re-cited to the v2.7.1 sentence, and the NOT-modelled list above holds for v2.7.1 too.",
+  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', 'repeated' (the field has more than one populated repetition), '<n> hl7Table' (the value is HL7 and four digits, a Table 0396 HL7 table), '<n> userTable' (such a value whose table is user-defined), NOT, AND, OR, parentheses. '<a>-<b> populated' / '<a>-<b> empty' hold when any / none of components a to b is populated. 'groupRules' (3.22.0) carries cited \"at least one of\" requirements: when 'condition' holds, at least one of 'components' must be populated, reported once per repetition (TXA-22's person: PPN on v2.3.1 to v2.8.2, the field-local TXA-22 on v2.3). TXA-17's 'all components are required' (v2.3 to v2.5.1) is read as both parts: the field condition makes TXA-22 required, and this pair makes both its person and its time stamp; not every one of its components, which would contradict those printed O and B. When it holds and the component is empty the Validator reports conditionalComponentMissing. 'conformanceRules' carries the 'as of v2.7' family in the same language, applied as conformanceCondition and checked only on opt-in (M27). CNE.7 / CWE.7 / CF.7 / CSU.8 and the second-alternate CF.13 / CNE.13 / CSU.14 (v2.7.1, v2.8.2), and CNE.7 / CWE.7 on v2.5.1 and v2.6, are modelled in conformanceRules with the hl7Table and userTable terms, each in its own print's wording (CNE in every version, and v2.5.1 CWE, keep the older usage note, which does not name user-defined tables): the opt-in tier, because the specification's own example messages leave the version ID empty 679 times where these rules require it (v2.6 157, v2.7.1 252, v2.8.2 270). Applied by private/scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated). v2.7.1 (P10-2): its Chapter 2A prints the same 72 C components as v2.8.2, and every one's definition was read against the v2.8.2 text: 60 are word for word the same and 12 differ only in a cross-reference (CF.3, CF.6, CSU.4, CNN.8, CNN.9, CNN.11, PPN.9, XCN.9, XCN.10, XCN.13, XCN.22, XCN.23), so the 2.7.1 blocks carry the v2.8.2 rules each re-cited to the v2.7.1 sentence, and the NOT-modelled list above holds for v2.7.1 too.",
   "rules": {
     "2.5.1": {
       "RPT": {
@@ -318,6 +318,30 @@
         "15": {
           "condition": "1-14 populated OR 16-26 populated",
           "citation": "HL7 v2.8.2 Chapter 2A, PPN.15 (sec 2.A.56.15, p 64): 'Note: If this field is not null, both the performing person and the time stamp must be valued.'; Chapter 9, TXA-22 (sec 9.7.3.22, p 37): 'If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null.' The time stamp is .15; the performing person is every other component."
+        }
+      }
+    },
+    "2.3": {
+      "TXA-22": {
+        "15": {
+          "condition": "1-10 populated",
+          "citation": "HL7 v2.3 Chapter 9, TXA-22 (sec 9.5.1.22, p 9-17): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15."
+        }
+      }
+    },
+    "2.3.1": {
+      "PPN": {
+        "15": {
+          "condition": "1-10 populated",
+          "citation": "HL7 v2.3.1 Chapter 9, TXA-22 (sec 9.5.1.22, p 9-17): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. On PPN because TXA-22 is the only field typed PPN; the Chapter 2 PPN states nothing."
+        }
+      }
+    },
+    "2.4": {
+      "PPN": {
+        "15": {
+          "condition": "1-10 populated",
+          "citation": "HL7 v2.4 Chapter 9, TXA-22 (sec 9.6.1.22, p 9-18): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. On PPN because TXA-22 is the only field typed PPN; the Chapter 2 PPN states nothing."
         }
       }
     }
@@ -737,6 +761,36 @@
           "name": "Performing person",
           "condition": "15 populated",
           "citation": "HL7 v2.8.2 Chapter 2A, PPN.15 (sec 2.A.56.15, p 64): 'Note: If this field is not null, both the performing person and the time stamp must be valued.'; Chapter 9, TXA-22 (sec 9.7.3.22, p 37): 'If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null.'"
+        }
+      ]
+    },
+    "2.3": {
+      "TXA-22": [
+        {
+          "components": "1-14",
+          "name": "Authentication person",
+          "condition": "15 populated",
+          "citation": "HL7 v2.3 Chapter 9, TXA-22 (sec 9.5.1.22, p 9-17): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15."
+        }
+      ]
+    },
+    "2.3.1": {
+      "PPN": [
+        {
+          "components": "1-14,16",
+          "name": "Authentication person",
+          "condition": "15 populated",
+          "citation": "HL7 v2.3.1 Chapter 9, TXA-22 (sec 9.5.1.22, p 9-17): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. On PPN because TXA-22 is the only field typed PPN; the Chapter 2 PPN states nothing."
+        }
+      ]
+    },
+    "2.4": {
+      "PPN": [
+        {
+          "components": "1-14,16-19",
+          "name": "Authentication person",
+          "condition": "15 populated",
+          "citation": "HL7 v2.4 Chapter 9, TXA-22 (sec 9.6.1.22, p 9-18): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. On PPN because TXA-22 is the only field typed PPN; the Chapter 2 PPN states nothing."
         }
       ]
     }

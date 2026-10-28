@@ -110,7 +110,8 @@
       "index": 15,
       "name": "Date/time action performed",
       "dataType": "TS",
-      "optionality": ""
+      "optionality": "C",
+      "condition": "1-10 populated"
     },
     {
       "index": 16,
@@ -144,6 +145,13 @@
       "tables": [
         "0444"
       ]
+    }
+  ],
+  "groupRequirements": [
+    {
+      "name": "Authentication person",
+      "components": "1-14,16-19",
+      "condition": "15 populated"
     }
   ]
 }

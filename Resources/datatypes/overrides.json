@@ -42,5 +42,29 @@
         "note": "Printed O. HL7 v2.8.2 Chapter 2A, PPN.15 (sec 2.A.56.15, p 64): 'Note: If this field is not null, both the performing person and the time stamp must be valued.'; Chapter 9, TXA-22 (sec 9.7.3.22, p 37): 'If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null.' Read as C so the cited condition can sit on it."
       }
     }
+  },
+  "2.3": {
+    "TXA-22": {
+      "15": {
+        "optionality": "C",
+        "note": "Printed with no optionality. HL7 v2.3 Chapter 9, TXA-22 (sec 9.5.1.22, p 9-17): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. Read as C so the cited condition can sit on it."
+      }
+    }
+  },
+  "2.3.1": {
+    "PPN": {
+      "15": {
+        "optionality": "C",
+        "note": "Printed with no optionality. HL7 v2.3.1 Chapter 9, TXA-22 (sec 9.5.1.22, p 9-17): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. On PPN because TXA-22 is the only field typed PPN; the Chapter 2 PPN states nothing. Read as C so the cited condition can sit on it."
+      }
+    }
+  },
+  "2.4": {
+    "PPN": {
+      "15": {
+        "optionality": "C",
+        "note": "Printed with no optionality. HL7 v2.4 Chapter 9, TXA-22 (sec 9.6.1.22, p 9-18): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. On PPN because TXA-22 is the only field typed PPN; the Chapter 2 PPN states nothing. Read as C so the cited condition can sit on it."
+      }
+    }
   }
 }
