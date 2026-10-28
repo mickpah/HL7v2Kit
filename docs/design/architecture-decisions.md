@@ -720,6 +720,10 @@ enforced, are enforced for components and subcomponents.
 ships on `conformanceCondition`; the predicate language gains `hl7Table`, `userTable` and `NOT`.
 CNE.20 stays a known limit.
 
+**Amended (3.22.0):** range terms (`<a>-<b> populated`, `<a>-<b> empty`) and group requirements
+("at least one of these components when the condition holds"); TXA-22's person and time stamp on
+every repetition, v2.3 to v2.8.2, with PPN.15 read as C.
+
 ## ADR-018 Supported version set
 
 **Status:** Accepted (Option A, as amended by P10-6). Related: ADR-003, ADR-013, ADR-014,
