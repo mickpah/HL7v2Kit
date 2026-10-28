@@ -418,6 +418,12 @@ demand a conjunction on the last TQ1 of a chain.
 validated by test, with the parse half moved into `ConditionLanguage`; a prohibition may exempt
 the HL7 null (OBX-2 and OBX-5 under OBX-11 = O).
 
+**Amended (3.23.0):** a schema field may carry cited cross-segment correlations (ROL-4 against
+STF-2 and STF-3): the peer comes from the group scoping the DSL's segment atoms use, components
+compare through a cited mapping, and a mismatch is `correlatedValueMismatch` at
+`correlationSeverity`, a warning by default. The v2.8.2 OBR-32 and OBR-35 prohibitions (when
+TXA-22 or TXA-11 is valued) needed no extension: they are written in the existing DSL.
+
 ## ADR-011 Composite value inequality and value-conditional rules
 
 **Status:** Accepted. Related: ADR-007, ADR-009, ADR-010.

@@ -39,8 +39,9 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 
 - **Required.** An `R` field absent or empty: ``IssueCode/requiredFieldMissing``, error. ``ValidationOptions/checkRequiredFields``.
 - **Conditional, required when.** A `C` field whose ``FieldGrammar/condition`` holds and which is empty: ``IssueCode/conditionalFieldMissing``, error. A `C` field with no condition is read as `O`. Conditions are evaluated three-state (true, false, unknown); only a definite true fires, so an unresolvable referent never makes a message non-conformant. ``ValidationOptions/checkConditionalFields``. See <doc:#Conditional-field-DSL>.
-- **Conditional, prohibited when.** A field populated while its prohibition holds ("may only be valued if ..."): ``IssueCode/conditionalFieldProhibited``, at the severity the rule carries (warning for "should" text). ``ValidationOptions/checkConditionalFields``.
+- **Conditional, prohibited when.** A field populated while its prohibition holds ("may only be valued if ..."): ``IssueCode/conditionalFieldProhibited``, at the severity the rule carries (warning for "should" text). On v2.8.2, OBR-32 and OBR-35 are prohibited, as a warning, when the corresponding TXA-22 or TXA-11 is valued. ``ValidationOptions/checkConditionalFields``.
 - **Paired fields.** ORC-2 and OBR-2, ORC-3 and OBR-3, ORC-12 and OBR-16, ORC-8 and OBR-29 (v2.3 to v2.6) or OBR-54 (v2.7.1, v2.8.2), the same data element printed twice, both populated in one order group with different values: ``IssueCode/pairedFieldMismatch(item:)``, error. Always on.
+- **Correlated fields.** ROL-4 against STF-2 and STF-3 (v2.6 to v2.8.2): every component ROL-4 values must equal one repetition of the correlated field, through a mapping read from the Chapter 2A component names (the identifier components to STF-2, the name components to STF-3). The peer STF is the one group scoping finds; with no STF, or an empty STF field, nothing is compared: ``IssueCode/correlatedValueMismatch`` at ``ValidationOptions/correlationSeverity``, a warning by default.
 - **Cardinality.** A single-repeat field with more than one repetition: ``IssueCode/cardinalityExceeded``, error. A repeating field beyond its printed bound: the same code at ``ValidationOptions/repetitionBoundSeverity`` (warning). Both under ``ValidationOptions/checkCardinality``.
 - **Length.** Measured per repetition, separators between components counted, an escape sequence counted by the characters between its delimiters, the HL7 null `""` not counted. Before v2.7 the printed maximum is site-negotiable and follows ``ValidationOptions/fieldLengthSeverity``; from v2.7 a normative length on a primitive-typed field follows ``ValidationOptions/normativeLengthSeverity``. Both report ``IssueCode/fieldLengthOutOfRange(length:actual:)``, warning by default. Where a pre-v2.7 print is shorter than values its own spec defines as valid (v2.4 MSH-9, OBX-2 on v2.3 to v2.5.1, and others), the schema carries the corrected length.
 - **Value format.** Populated NM, SI, DT, TM, DTM and TS values against the format their datatype section prints (an NM is a sign, digits and a decimal point; DT is `YYYY[MM[DD]]` naming a real date; TS and DTM are `YYYY[MM[DD[HH[MM[SS[.S...]]]]]][+/-ZZZZ]`; OBX-5 is read as its OBX-2 type): ``IssueCode/valueFormatInvalid(dataType:)`` at ``ValidationOptions/valueFormatSeverity`` (warning).
@@ -97,7 +98,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 | `checkCodeTables` | on | on | off |
 | `requiredComponentSeverity` | `.error` | `.error` | `.error` (check off) |
 | `conformanceConditionSeverity` | off | off | off |
-| `correlationSeverity` | warning | warning | off |
+| `correlationSeverity` | `.warning` | `.warning` | off |
 | `messageStructureSeverity` | `.warning` | `.error` | off |
 | `batchEnvelopeSeverity` | `.error` | `.error` | off |
 | `fieldLengthSeverity`, `normativeLengthSeverity` | `.warning` | `.warning` | off |
@@ -148,7 +149,6 @@ Each line gives the reason. **Blocking** means the rule is decidable from the wi
 
 - **Three message-structure residuals**: a v2.6 MFR_M01 with MFI-1 OMA to OME (the v2.6 print gives no MFR fragment for them, so it reports not modelled); a no-data query response without QAK on v2.4 to v2.8.2 (without QAK it cannot be told from a cut-off reply, so it keeps the full structure); the v2.3 event replay error example, whose print has no "rest absent" sentence.
 - **RXE-15 on v2.3 to v2.4**: "required ... in pharmacy/treatment messages" is held back so one sentence is not read two ways across versions.
-- **ROL-4 equal to STF-2 and STF-3** (v2.6 to v2.8.2): a cross-segment comparison of composites of different types, which the condition language cannot state.
 - **Blank printed optionality** (150 rows such as NST, NSC, the v2.6 CH17 sterilisation segments, v2.5.1 OBX-20 to 22, and 87 rows on v2.7.1): the spec defines no blank code, so these fields are read as optional.
 - **Repeating TQ fields on v2.3 and v2.3.1** (OBR-27, SCH-11): the repeat delimiter carries both a TQ.6 priority continuation and a new repetition, and the delimiters alone cannot tell them apart. On the single-repeat TQ fields of those versions a wrong second repetition goes unreported for the same reason.
 - **OM2-6 on v2.3 to v2.4**: a repeating tuple with nested subcomponents that no field grammar yet expresses, so its width is not checked.
