@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.23.0]
+
 - **Added:** `IssueCode.correlatedValueMismatch` (3005) and `ValidationOptions.correlationSeverity`
   (`.warning` in default and strict, `nil` in lenient).
 - **Changed:** ROL-4 is checked against STF-2 and STF-3 (v2.6 to v2.8.2): "it must be populated

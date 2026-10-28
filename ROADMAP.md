@@ -38,6 +38,7 @@ not the boundary of the work.
 | 3.20 | Batch envelopes: FHS, BHS, BTS and FTS parsed into typed segments and checked against their attribute tables, BTS-1 and FTS-1 compared with the counts, and an envelope out of order reported |
 | 3.21 | The coding-system version ID: 18 opt-in rules on CNE, CWE, CF and CSU .7 and kin, with HL7-table and user-table terms in the component-condition language |
 | 3.22 | TXA-22's authentication person and time stamp, both or neither on every repetition, v2.3 to v2.8.2; range terms and group requirements in the component-condition language |
+| 3.23 | ROL-4 against STF-2 and STF-3 as a correlation, a default warning (correlatedValueMismatch, correlationSeverity); v2.8.2 OBR-32 and OBR-35 prohibited when TXA-22 or TXA-11 is valued |
 
 ## What remains
 
