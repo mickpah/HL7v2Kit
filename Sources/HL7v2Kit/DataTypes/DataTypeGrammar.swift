@@ -172,7 +172,8 @@ public enum DataTypeGrammarTable {
 }
 
 /// The predicate language of ``ComponentGrammar/condition``: `<n> populated`,
-/// `<n> empty`, `<n> hl7Table` (the value is `HL7` and four digits, a Table 0396 HL7
+/// `<n> empty`, `<a>-<b> populated` and `<a>-<b> empty` (any, or none, of components a to
+/// b; TXA-22's person), `<n> hl7Table` (the value is `HL7` and four digits, a Table 0396 HL7
 /// table), `<n> userTable` (such a value whose table is user-defined in the message's
 /// version), `repeated` (the field has more than one populated repetition; XAD.7), `NOT`
 /// (one atom, binding tighter than `AND`), `AND`, `OR`, parentheses. Fail-safe: an
@@ -213,6 +214,13 @@ enum ComponentCondition {
         guard let value, value.count == 7, value.hasPrefix("HL7") else { return nil }
         let digits = value.dropFirst(3)
         return digits.allSatisfy { $0.isASCII && $0.isNumber } ? String(digits) : nil
+    }
+
+    /// `a...b` for a token `a-b` with 1 <= a <= b; nil for anything else.
+    static func range(_ token: String) -> ClosedRange<Int>? {
+        let ends = token.split(separator: "-", omittingEmptySubsequences: false)
+        guard ends.count == 2, let a = Int(ends[0]), let b = Int(ends[1]), a >= 1, a <= b else { return nil }
+        return a...b
     }
 
     private static func tokenize(_ s: String) -> [String] {
@@ -256,6 +264,16 @@ enum ComponentCondition {
         if first == "REPEATED" {
             t.removeFirst()
             return ask(.repeated)
+        }
+        if let range = range(first) {
+            guard t.count >= 2 else { return nil }
+            let state = t[t.startIndex + 1]
+            t.removeFirst(2)
+            switch state {
+            case "POPULATED": return range.contains { ask(.populated($0)) }
+            case "EMPTY":     return !range.contains { ask(.populated($0)) }
+            default:          return nil
+            }
         }
         guard let index = Int(first), index >= 1, t.count >= 2 else { return nil }
         let state = t[t.startIndex + 1]
