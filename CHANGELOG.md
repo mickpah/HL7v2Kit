@@ -13,6 +13,9 @@ The entries are condensed; the git history carries the detail.
 - **Changed:** ROL-4 is checked against STF-2 and STF-3 (v2.6 to v2.8.2): "it must be populated
   with the same values as the correlated field". Every component ROL-4 values is compared through
   a cited mapping (identifier to CX, name to XPN), and a mismatch is a warning by default.
+- **Changed:** v2.8.2 OBR-32 and OBR-35 draw `conditionalFieldProhibited`, a warning, when the
+  corresponding TXA-22 or TXA-11 is valued (CH09 sec 9.7.3.22 and 9.7.3.11: "OBR-32 must be blank";
+  "OBR-32 shall be ignored").
 
 ## [3.22.0]
 
