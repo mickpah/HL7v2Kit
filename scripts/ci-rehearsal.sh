@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # CI rehearsal: runs the shell steps of .github/workflows/ci.yml on a clean clone of HEAD, job
-# by job and step by step, as the hosted runners would. Run it before pushing.
+# by job and step by step, as the CI runners would. Run it before pushing.
 #
 #   bash scripts/ci-rehearsal.sh [--hide-tmp-binaries] [--keep]
 #
@@ -10,8 +10,9 @@
 # - macOS jobs: DEVELOPER_DIR is set to the newest non-beta /Applications/Xcode*.app, as each
 #   job's "Select the newest Xcode" step does on the runner; that step needs sudo, so it is
 #   skipped. On a host that is not macOS the macOS jobs are skipped.
-# - A job with a `container:` (test-linux) runs each step in that image through Docker; without
-#   a running Docker it is skipped with a message. The job's .build lives in a Docker volume,
+# - A job on a `swift-X.Y` runner label (the Linux jobs) runs each step in swift:X.Y-jammy, the
+#   image the self-hosted Linux runner is built on, through Docker; so does a job with a
+#   `container:`. Without a running Docker it is skipped with a message. The job's .build lives in a Docker volume,
 #   not on the bind-mounted clone: there, clang's module cache intermittently reads one .pcm as
 #   two ("module 'SwiftShims' is defined in both") and the test step fails before any test runs.
 # - --hide-tmp-binaries moves /tmp/extractbin and /tmp/tablesbin (the author's local extractor
@@ -126,6 +127,9 @@ for line in lines:
 finish_step()
 
 for j in jobs:
+    label = re.search(r"\bswift-(\d+\.\d+)\b", j["runner"])
+    if j["container"] == "-" and label:
+        j["container"] = f"swift:{label.group(1)}-jammy"
     for n, s in enumerate(j["steps"], 1):
         path = os.path.join(out, f"{j['id']}-{n:02d}.sh")
         with open(path, "w") as f:
@@ -172,7 +176,7 @@ while IFS=$'\t' read -r job runner container number name script; do
         mkdir -p "$workdir/home" "$workdir/tmp" "$workdir/runner-temp"
         if [ "$container" != "-" ] && [ "$docker_ok" = 0 ]; then
             job_skip="Docker is not available for the $container container"
-        elif [ "${runner#macos}" != "$runner" ] && [ -z "$developer_dir" ]; then
+        elif [[ "$runner" == macos* || "$runner" == *macOS* ]] && [ -z "$developer_dir" ]; then
             job_skip="a macOS job needs macOS with Xcode"
         fi
     fi

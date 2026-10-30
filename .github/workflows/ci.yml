@@ -5,20 +5,30 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# Every job runs on local self-hosted runners: macOS VMs labelled macos-current and
+# macos-previous, and a Linux container built on swift:6.2-jammy. A pull request from a fork
+# runs nothing on them.
 jobs:
   test-macos:
-    name: Test on macOS
-    runs-on: macos-15
+    name: Test on ${{ matrix.os }}
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-current, macos-previous]
+    runs-on: [self-hosted, macOS, ARM64, "${{ matrix.os }}"]
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
 
       - name: Select the newest Xcode
         run: |
+          sw_vers
           sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | command grep -vi beta | sort -V | tail -1)/Contents/Developer"
           echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
           xcodebuild -version
@@ -39,10 +49,10 @@ jobs:
 
   test-linux:
     name: Test on Linux
-    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Linux, ARM64, swift-6.2]
     timeout-minutes: 30
     # Swift 6.2 is the floor: the suite uses exit tests (#expect(processExitsWith:)).
-    container: swift:6.2-jammy
     steps:
       - uses: actions/checkout@v5
 
@@ -60,7 +70,8 @@ jobs:
 
   fixture-safety:
     name: PHI scan
-    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Linux, ARM64, swift-6.2]
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
@@ -72,15 +83,20 @@ jobs:
           bash scripts/scan-fixtures-for-phi.sh
       - name: Scan every committed blob for PHI and licensed content
         run: bash scripts/scan-fixtures-for-phi.sh --history
+      - name: Every job runs on a local runner
+        run: |
+          ! grep -n -e 'runs-on: *ubuntu-' -e 'runs-on: *macos-' -e 'runs-on: *windows-' .github/workflows/*.yml
 
   codegen-drift:
     name: Codegen drift
-    runs-on: macos-15
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, macOS, ARM64, macos-current]
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
       - name: Select the newest Xcode
         run: |
+          sw_vers
           sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | command grep -vi beta | sort -V | tail -1)/Contents/Developer"
           echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
           xcodebuild -version
@@ -104,12 +120,14 @@ jobs:
 
   docc:
     name: DocC
-    runs-on: macos-15
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, macOS, ARM64, macos-current]
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
       - name: Select the newest Xcode
         run: |
+          sw_vers
           sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | command grep -vi beta | sort -V | tail -1)/Contents/Developer"
           echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
           xcodebuild -version

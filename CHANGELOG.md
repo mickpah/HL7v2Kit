@@ -8,6 +8,14 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Changed
+
+- CI runs on self-hosted runners. The macOS tests run on the current and the previous macOS
+  release (27 and 26, both with Xcode 27.1); the Linux tests and the PHI scan run on arm64 Linux
+  with Swift 6.2. Pull requests from forks run no jobs, and a CI step fails if any workflow names
+  a GitHub-hosted runner. `scripts/ci-rehearsal.sh` runs a job on a `swift-X.Y` runner in the
+  `swift:X.Y-jammy` image.
+
 ## [3.23.0]
 
 - **Added:** `IssueCode.correlatedValueMismatch` (3005) and `ValidationOptions.correlationSeverity`
