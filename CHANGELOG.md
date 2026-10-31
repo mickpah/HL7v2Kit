@@ -8,13 +8,15 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.27.0]
+
 ### Added
 
 - `ValidationOptions.zSegmentGrammars`: a caller-supplied `ZSegmentGrammar` for a Z-segment,
   optionally only for some sending applications (MSH-3.1), is applied by the validator like any
-  segment grammar (its LEN cells read in the grammar's declared version), and
-  `zSegmentPolicy` no longer applies to that segment. The package ships no
-  Z-segment grammar; parsing is unchanged.
+  segment grammar (its LEN cells read in the grammar's declared version), and `zSegmentPolicy`
+  no longer applies to that segment. The package ships no Z-segment grammar; parsing is
+  unchanged.
 - Under the AU locale, MSH-27 Security Handling Instructions, which ADRM 2021 pre-adopts from
   v2.9, is validated as CWE, optional and repeating, LEN 250 (MSH attribute table p. 38). In
   orders, results and referrals the AU CWE rules (HL7au:00044.6) now reach it, as they reach
