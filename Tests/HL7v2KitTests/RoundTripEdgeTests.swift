@@ -69,4 +69,71 @@ struct RoundTripEdgeTests {
         let message = try Parser().parse(Self.body + "\r\rNTE|1\r")
         #expect(message.serialize() == Data((Self.body + "\rNTE|1\r").utf8))
     }
+
+    // MARK: - S1-2 the truncation character in MSH-2
+
+    static func wire(msh2: String, version: String) -> String {
+        "MSH|\(msh2)|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|\(version)\r"
+            + "PID|1||SYN-1^^^FAC^MR||Synthetic^Pat\r"
+    }
+
+    static func msh2Issues(_ report: ValidationReport) -> [ValidationIssue] {
+        report.issues.filter { $0.location.segmentID == "MSH" && $0.location.fieldIndex == 2 }
+    }
+
+    @Test("P00 S1-2: a five-character MSH-2 parses, keeps its literal and round-trips",
+          arguments: ["2.7.1", "2.8.2"])
+    func truncationCharacterRoundTrips(_ version: String) throws {
+        let wire = Self.wire(msh2: "^~\\&#", version: version)
+        let message = try Parser().parse(wire)
+        #expect(message["MSH-2"] == "^~\\&#")
+        #expect(message["MSH-3"] == "SND")
+        #expect(message.encodingCharacters == .default)
+        #expect(message.serialize() == Data(wire.utf8))
+    }
+
+    @Test("P00 S1-2: \\P\\ passes through verbatim")
+    func truncationEscapePassesThrough() throws {
+        let wire = Self.wire(msh2: "^~\\&#", version: "2.8.2") + "NTE|1||cut short\\P\\\r"
+        let message = try Parser().parse(wire)
+        #expect(message["NTE-3"] == "cut short\\P\\")
+        #expect(message.serialize() == Data(wire.utf8))
+    }
+
+    @Test("P00 S1-2: v2.7.1 and v2.8.2 print MSH-2 LEN 4..5, so five characters are clean",
+          arguments: ["2.7.1", "2.8.2"])
+    func fiveCharactersCleanFromV27(_ version: String) throws {
+        let report = Validator(options: .strict).validate(try Parser().parse(Self.wire(msh2: "^~\\&#", version: version)))
+        #expect(Self.msh2Issues(report).isEmpty)
+    }
+
+    @Test("P00 S1-2: v2.3 to v2.6 print MSH-2 LEN 4, so a fifth character is a length warning",
+          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6"])
+    func fifthCharacterBeforeV27(_ version: String) throws {
+        let report = Validator().validate(try Parser().parse(Self.wire(msh2: "^~\\&#", version: version)))
+        let found = Self.msh2Issues(report)
+        #expect(found.map(\.code) == [.fieldLengthOutOfRange(length: "4", actual: 5)])
+        #expect(found.first?.severity == .warning)
+    }
+
+    @Test("P00 S1-2: a four-character MSH-2 stays clean on every version",
+          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
+    func fourCharactersClean(_ version: String) throws {
+        let report = Validator(options: .strict).validate(try Parser().parse(Self.wire(msh2: "^~\\&", version: version)))
+        #expect(Self.msh2Issues(report).isEmpty)
+    }
+
+    @Test("P00 S1-2: a fifth character repeating a delimiter is rejected")
+    func duplicateFifthCharacter() {
+        #expect(throws: ParseError.invalidMSH(reason: "encoding characters not distinct")) {
+            try Parser().parse(Self.wire(msh2: "^~\\&^", version: "2.8.2"))
+        }
+    }
+
+    @Test("P00 S1-2: six characters before the field separator are rejected")
+    func sixCharacters() {
+        #expect(throws: ParseError.invalidMSH(reason: "MSH-2 not followed by field separator")) {
+            try Parser().parse(Self.wire(msh2: "^~\\&#X", version: "2.8.2"))
+        }
+    }
 }

@@ -28,8 +28,14 @@ extension Validator {
         profile: Profile? = nil,
         issues: inout [ValidationIssue]
     ) {
-        // MSH-1 / MSH-2 (and the batch and file headers') are the delimiters, not data.
-        if ["MSH", "BHS", "FHS"].contains(segmentID), grammar.index <= 2 { return }
+        // MSH-1 (and the batch and file headers' field 1) is the field separator, not data.
+        if ["MSH", "BHS", "FHS"].contains(segmentID), grammar.index == 1 { return }
+        // BHS-2 and FHS-2 stay exempt: the v2.5.1 BHS grammar prints LEN 3 for four
+        // encoding characters (limitations register). MSH-2 is measured on its literal
+        // characters, so a truncation character on a version printing LEN 4 is reported
+        // (P00 S1-2).
+        if ["BHS", "FHS"].contains(segmentID), grammar.index == 2 { return }
+        let literalMSH2 = segmentID == "MSH" && grammar.index == 2
         let profileLength = profile?.fieldOverrides.first {
             $0.segmentID == segmentID && $0.fieldIndex == grammar.index && $0.length != nil
         }
@@ -71,7 +77,8 @@ extension Validator {
             if let limit, !Self.extraPrimitiveContent(whole, limit: limit).isEmpty {
                 repetition = Self.acceptedPrimitiveContent(whole, limit: limit)
             }
-            guard let length = Self.occupiedLength(repetition, encoding: encoding), !rule.admits(length) else { continue }
+            let measured = literalMSH2 ? whole.stringValue?.count : Self.occupiedLength(repetition, encoding: encoding)
+            guard let length = measured, !rule.admits(length) else { continue }
             issues.append(ValidationIssue(
                 severity: severity,
                 code: .fieldLengthOutOfRange(length: printed, actual: length),

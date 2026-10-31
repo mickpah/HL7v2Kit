@@ -121,9 +121,16 @@ public struct Parser: Sendable {
         let mshChars = Array(mshLine)
         let fieldSep = mshChars[3]
 
-        // MSH-2 is the next four characters: component, repetition, escape, subcomponent.
-        // After "MSH|" we expect 4 encoding chars then another field separator.
-        guard mshChars.count >= 9, mshChars[8] == fieldSep else {
+        // MSH-2 is four encoding characters (component, repetition, escape, subcomponent),
+        // optionally followed by the v2.7+ truncation character, then the field separator
+        // (P00 S1-2). MSH-2 is kept as one literal, so the fifth character round-trips; the
+        // validator reports it where the version prints MSH-2 as four characters.
+        let truncation: Character?
+        if mshChars.count >= 9, mshChars[8] == fieldSep {
+            truncation = nil
+        } else if mshChars.count >= 10, mshChars[9] == fieldSep {
+            truncation = mshChars[8]
+        } else {
             throw ParseError.invalidMSH(reason: "MSH-2 not followed by field separator")
         }
         let encoding = EncodingCharacters(
@@ -133,7 +140,9 @@ public struct Parser: Sendable {
             escapeCharacter: mshChars[6],
             subcomponentSeparator: mshChars[7]
         )
-        guard encoding.isValid else {
+        // The truncation character cannot be the field separator (the branch above), and
+        // must not repeat any of the four.
+        guard encoding.isValid, truncation.map({ !mshChars[4...7].contains($0) }) ?? true else {
             throw ParseError.invalidMSH(reason: "encoding characters not distinct")
         }
 

@@ -58,7 +58,7 @@ A sender that wrote non-canonical hex (separate `\X0D\` and `\X0A\` blocks) will
 
 ## `\Z..\` and unknown bodies
 
-Locally-defined escape sequences (sender-specific extensions like `\Z123\`) and any unrecognised body (such as `\H\` or `\.br\` used in some legacy systems) pass through verbatim. The decoder does not invent semantics, and the encoder does not double-escape the backslashes it encountered.
+Locally-defined escape sequences (sender-specific extensions like `\Z123\`) and any unrecognised body (such as `\H\` or `\.br\` used in some legacy systems) pass through verbatim. The decoder does not invent semantics, and the encoder does not double-escape the backslashes it encountered. The truncation escape `\P\` is one of these: decoding it would make a literal truncation character and its escape indistinguishable on the way back out, so it is kept as written.
 
 ## Customising the escape character
 

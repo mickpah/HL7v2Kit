@@ -23,7 +23,7 @@ The library guarantees byte equality across:
 - **Repetitions, components, and subcomponents.** Every layer of nesting that exists on the wire is preserved as a distinct AST node. See ``Field``, ``Repetition``, ``Component``, ``Subcomponent``.
 - **Escape sequences.** `\F\`, `\S\`, `\T\`, `\R\`, `\E\`, and `\X..\` round-trip exactly. Hex escapes are coalesced canonically (`\X0D0A\`, not `\X0D\\X0A\`). `\Z..\` and unknown escape bodies pass through verbatim. See <doc:EscapeSequences>.
 - **Character set.** MSH-18 is detected on parse; the same charset is used on serialise. UTF-8, ASCII, and ISO-8859-1 are supported. See <doc:CharacterEncodingGuide>.
-- **MSH-2 encoding characters.** Custom delimiter characters (non-default field separator, component separator, etc.) round-trip exactly via ``EncodingCharacters``.
+- **MSH-2 encoding characters.** Custom delimiter characters (non-default field separator, component separator, etc.) round-trip exactly via ``EncodingCharacters``. A fifth MSH-2 character (the v2.7+ truncation character) is kept in MSH-2's literal value and written back unchanged; the validator reports it, as a field length, on versions that print MSH-2 as four characters.
 
 ## What round-trip does not promise
 

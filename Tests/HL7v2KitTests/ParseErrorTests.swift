@@ -43,9 +43,9 @@ struct ParseErrorTests {
 
     @Test("MSH without trailing field separator after MSH-2 throws .invalidMSH")
     func mshMissingFieldSepAfterMSH2() {
-        // MSH-1 is "|", then 4 encoding chars "^~\\&", then we expect "|"
-        // again. Replace the 9th char with something else.
-        let wire = "MSH|^~\\&X|EXTRA|FAC|HOSP|FAC|||ADT^A01|MSG|P|2.5.1\r"
+        // MSH-1 is "|", then four encoding chars, or five with the v2.7+ truncation
+        // character (P00 S1-2), then "|". Six characters cannot be MSH-2.
+        let wire = "MSH|^~\\&XY|EXTRA|FAC|HOSP|FAC|||ADT^A01|MSG|P|2.5.1\r"
         #expect(throws: ParseError.invalidMSH(reason: "MSH-2 not followed by field separator")) {
             try Parser().parse(wire)
         }

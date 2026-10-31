@@ -23,6 +23,10 @@ The entries are condensed; the git history carries the detail.
   (a built message ends with one) and takes no part in equality; the anonymiser keeps it.
 - The round-trip article's line-ending section now says what `.strict` does (an `\n` is data, written back as `\X0A\`)
   and lists lenient line-ending rewriting and dropped blank lines as exceptions.
+- An MSH-2 carrying the v2.7+ truncation character (`MSH|^~\&#|`) now parses and round-trips;
+  it was rejected as `invalidMSH`. On v2.3 to v2.6, which print MSH-2 as four characters, the
+  fifth is reported as `fieldLengthOutOfRange` (a warning by default). `\P\` passes through
+  verbatim.
 
 ## [3.23.0]
 
