@@ -78,4 +78,36 @@ struct BatchEnvelopeFieldTests {
                                           options: .lenient)
         #expect(issues.isEmpty)
     }
+
+    private static func lengthFindings(_ bhs: String?, _ fhs: String?, version: String) throws -> [ValidationIssue] {
+        let lines = [fhs, bhs].compactMap { $0 } + [msh("T1", version: version), "BTS|1"] + (fhs == nil ? [] : ["FTS|1"])
+        return try batchIssues(lines).filter {
+            $0.code.number == IssueCode.fieldLengthOutOfRange(length: "", actual: 0).number
+                && $0.location.fieldIndex == 2
+        }
+    }
+
+    @Test("P00 S1: FHS-2 with a truncation character on v2.5.1 (LEN 4) is one length finding")
+    func fhsFiveCharsV251() throws {
+        let issues = try Self.lengthFindings("BHS|^~\\&|APP", "FHS|^~\\&#|APP", version: "2.5.1")
+        #expect(issues.map(\.code) == [.fieldLengthOutOfRange(length: "4", actual: 5)])
+        #expect(issues.first?.location.segmentID == "FHS")
+    }
+
+    @Test("P00 S1: BHS-2 on v2.5.1 stays exempt (LEN 3 printed for four characters)")
+    func bhsExemptV251() throws {
+        #expect(try Self.lengthFindings("BHS|^~\\&|APP", nil, version: "2.5.1").isEmpty)
+    }
+
+    @Test("P00 S1: BHS-2 with a truncation character on v2.6 (LEN 4) is one length finding")
+    func bhsFiveCharsV26() throws {
+        let issues = try Self.lengthFindings("BHS|^~\\&#|APP", nil, version: "2.6")
+        #expect(issues.map(\.code) == [.fieldLengthOutOfRange(length: "4", actual: 5)])
+        #expect(issues.first?.location.segmentID == "BHS")
+    }
+
+    @Test("P00 S1: BHS-2 and FHS-2 with a truncation character on v2.8.2 draw no length finding")
+    func fiveCharsV282() throws {
+        #expect(try Self.lengthFindings("BHS|^~\\&#|APP", "FHS|^~\\&#|APP", version: "2.8.2").isEmpty)
+    }
 }

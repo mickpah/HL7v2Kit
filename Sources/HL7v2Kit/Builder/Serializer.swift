@@ -46,7 +46,7 @@ enum Serializer {
                 continue
             }
             if isMSH && i == 2 {
-                // MSH-2 is the 4 encoding chars, emitted directly.
+                // MSH-2 is the encoding characters' literal (four, or five with the truncation character), emitted directly.
                 fieldStrings.append(field.stringValue ?? enc.msh2String)
                 continue
             }

@@ -271,7 +271,7 @@ public struct Parser: Sendable {
                 // MSH-1 (BHS-1, FHS-1) is the field separator as a single character.
                 fields.append(.scalar(rawField))
             } else if separatorSegment && i == 2 {
-                // MSH-2 (BHS-2, FHS-2) is the 4 encoding chars as one literal value (no internal split).
+                // MSH-2 (BHS-2, FHS-2) is the encoding characters (four, or five with the truncation character) as one literal value (no internal split).
                 fields.append(.scalar(rawField))
             } else {
                 fields.append(parseField(rawField, encoding: encoding))

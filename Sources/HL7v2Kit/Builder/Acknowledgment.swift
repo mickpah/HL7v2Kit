@@ -129,7 +129,7 @@ public extension MessageBuilder {
         )
         var fields: [Field] = [
             .scalar(String(separators.fieldSeparator)),  // MSH-1
-            .scalar(separators.msh2String),              // MSH-2
+            .scalar(msh.field(2)?.stringValue ?? separators.msh2String), // MSH-2
             echo(5), echo(6),                            // MSH-3/4: the original receiver
             echo(3), echo(4),                            // MSH-5/6: the original sender
             .scalar(dateTime),                           // MSH-7

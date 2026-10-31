@@ -1602,11 +1602,13 @@ public struct Validator: Sendable {
                     )
                     if !gated { continue }
                 }
-                let actual = valueSetScalarValue(
+                var actual = valueSetScalarValue(
                     in: repetition,
                     component: valueSet.component,
                     subcomponent: valueSet.subcomponent
                 )
+                // P00 S1: MSH-2 may carry a fifth (truncation) character; the AU rule reads the four.
+                if segmentID == "MSH", fieldIndex == 2 { actual = String(actual.prefix(4)) }
                 if valueSet.allows(actual) { continue }
                 // P12 S2-2: a table the caller extends locally (0363 vendors).
                 let extended = valueSet.localTableExtension

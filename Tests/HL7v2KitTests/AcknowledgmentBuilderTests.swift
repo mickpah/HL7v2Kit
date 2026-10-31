@@ -227,4 +227,11 @@ struct AcknowledgmentBuilderTests {
         let report = Validator(options: options).validate(try Parser().parse(Data(withERR.serialize())))
         #expect(Self.structureIssues(report).isEmpty, "\(report.issues.map(\.message))")
     }
+
+    @Test("P00 S1: MSH-2 echoes the original literal, truncation character included")
+    func echoesMSH2() throws {
+        let five = Self.original(version: "2.8.2").replacingOccurrences(of: "MSH|^~\\&|", with: "MSH|^~\\&#|")
+        #expect(try Self.ack(five)["MSH-2"] == "^~\\&#")
+        #expect(try Self.ack(Self.original(version: "2.8.2"))["MSH-2"] == "^~\\&")
+    }
 }

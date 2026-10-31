@@ -94,7 +94,11 @@ public struct ParserOptions: Sendable {
     )
 }
 
+/// How the parser reads the line endings between segments.
 public enum LineTerminatorPolicy: Sendable, Equatable, Hashable {
-    case strict          // \r only (per HL7 standard)
-    case lenient         // any of \r, \n, \r\n accepted on parse
+    /// Only `\r` ends a segment, as HL7 v2 specifies. An `\n` is data, and so is a `\r\n` pair
+    /// (see the round-trip article).
+    case strict
+    /// `\r`, `\n` and `\r\n` each end a segment; the serialiser writes `\r`.
+    case lenient
 }

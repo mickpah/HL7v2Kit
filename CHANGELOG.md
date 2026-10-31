@@ -21,12 +21,17 @@ The entries are condensed; the git history carries the detail.
 - A message whose last segment has no terminator now serialises without one, so it
   round-trips byte for byte. `Message.trailingSegmentTerminator` records what the parser read
   (a built message ends with one) and takes no part in equality; the anonymiser keeps it.
-- The round-trip article's line-ending section now says what `.strict` does (an `\n` is data, written back as `\X0A\`)
+- The round-trip article's line-ending section now says what `.strict` does (an `\n` or a `\r\n` pair is data, written back hex-escaped; a CRLF message under `.strict` parses as one segment, a known limitation)
   and lists lenient line-ending rewriting and dropped blank lines as exceptions.
 - An MSH-2 carrying the v2.7+ truncation character (`MSH|^~\&#|`) now parses and round-trips;
   it was rejected as `invalidMSH`. On v2.3 to v2.6, which print MSH-2 as four characters, the
   fifth is reported as `fieldLengthOutOfRange` (a warning by default). `\P\` passes through
   verbatim.
+- The acknowledgement builder echoes the original MSH-2, truncation character included.
+- Under the AU locale the MSH-2 delimiter rule (HL7au:000024) reads the four encoding
+  characters, so a fifth is reported only as a field length.
+- BHS-2 and FHS-2 are measured on their literal characters like MSH-2; BHS-2 stays exempt
+  where v2.3 to v2.5.1 print it as LEN 3.
 
 ## [3.23.0]
 

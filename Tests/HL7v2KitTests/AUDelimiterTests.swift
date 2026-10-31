@@ -100,4 +100,13 @@ struct AUDelimiterTests {
         let adt = "MSH|^~\\&|HIS|FAC|HOSP|FAC|||ADT^A01|M-ADT|P|2.4\rPID|1||1^^^H^MR\r"
         #expect(try batchFindings("BHS|#~\\&|APP\r" + adt + "BTS|1\r").isEmpty)
     }
+
+    @Test("P00 S1: a fifth MSH-2 character draws no HL7au:000024 finding on an ORU or a REF")
+    func fifthCharacterIsNotADelimiterMatter() throws {
+        let oruFive = oru.replacingOccurrences(of: "MSH|^~\\&|", with: "MSH|^~\\&#|")
+        let refFive = ref.replacingOccurrences(of: "MSH|^~\\&|", with: "MSH|^~\\&#|")
+        #expect(try messageFindings(oruFive).isEmpty)
+        #expect(try messageFindings(refFive).isEmpty)
+        #expect(try batchFindings("BHS|^~\\&#|APP\r" + oru + "BTS|1\r").isEmpty)
+    }
 }

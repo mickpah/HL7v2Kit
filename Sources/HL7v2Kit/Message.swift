@@ -11,7 +11,7 @@ public struct Message: Sendable, Equatable, Hashable {
     /// The HL7 version declared in MSH-12.
     public let version: Version
 
-    /// The five encoding characters declared in MSH-1 and MSH-2.
+    /// The field separator (MSH-1) and the four encoding characters (MSH-2). A fifth MSH-2 character, the v2.7+ truncation character, is kept only in MSH-2's literal value.
     public let encodingCharacters: EncodingCharacters
 
     /// The segments in document order. The first segment is always MSH.
@@ -30,6 +30,8 @@ public struct Message: Sendable, Equatable, Hashable {
     /// ``Parser`` records it and ``serialize()`` puts back what it read; a message
     /// built in code ends with one. It takes no part in equality or hashing: two
     /// messages that differ only in the final terminator hold the same segments.
+    /// `BatchParser` and `StreamingBatchParser` frame each message with a final `\r`, so
+    /// their messages report `true`.
     public var trailingSegmentTerminator: Bool = true
 
     /// How group-dependent predicates find a segment's group (P8b-17). The
