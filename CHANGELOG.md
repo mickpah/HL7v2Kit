@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.25.0]
+
 ### Added
 
 - `Path` accepts the alternative path syntax beside the native one: the repetition in
