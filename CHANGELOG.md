@@ -8,14 +8,17 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.26.0]
+
 ### Added
 
 - Path-addressed editing: `Message.set(_:at:)`, `clear(at:)` and `insertRepetition(_:at:)`,
   in either path syntax. A field-level path with no repetition writes the whole field;
   missing nodes are created empty; values are text and are escaped on serialisation; an
   edited segment stays typed. A refused edit throws `MessageEditError` (segment not found,
-  delimiter field, wildcard, not a repetition, invalid path, unsupported character set) and
-  changes nothing; an edit to MSH-12 or MSH-18 re-reads `version` or `characterEncoding`.
+  delimiter field, wildcard, not a repetition, invalid path, unsupported character set, a
+  character the character set cannot encode) and changes nothing; an edit to MSH-12 or
+  MSH-18 re-reads `version` or `characterEncoding`.
 
 ### Changed
 
