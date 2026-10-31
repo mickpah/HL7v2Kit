@@ -15,7 +15,7 @@ The entries are condensed; the git history carries the detail.
   (`\X0D\\X0A\`, `\X41\`, `\XZZ\`) are no longer rewritten. Values that decode alike still
   compare equal.
 - Under the AU locale the escape prohibition (`\X..\`, `\C..\`, `\M..\`) reads escapes as they
-  were sent: escaped text such as `\E\C2842\E\` is no longer reported, and a hex escape of a
+  were sent in a parsed message: escaped text such as `\E\C2842\E\` is no longer reported, and a hex escape of a
   printable character (`\XC3A9\`) now is.
 
 ### Changed
@@ -25,7 +25,11 @@ The entries are condensed; the git history carries the detail.
 - A value built in code or set by an edit writes a `\…\` run as an escape only when the
   standard defines it (`\H\`, `\N\`, `\P\`, `\Z..\`, `\Cxxyy\`, `\Mxxyy(zz)\` and the
   formatting commands); any other run is text, so `C:\Users\me` is written `C:\E\Users\E\me`,
-  and a body such as `\Q\` or a malformed `\C28\` is escaped.
+  and a body such as `\Q\` or a malformed `\C28\` is escaped. `\P\` is copied on every
+  version because the encoder cannot see the message's version; the truncation escape is
+  defined from v2.7. The rule also applies to a parsed value whose wire text cannot be used
+  (a raw control character, a copy into a message with other delimiters or another escape
+  character).
 
 ## [3.27.0]
 

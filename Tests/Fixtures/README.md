@@ -4,7 +4,9 @@ Every fixture in this directory must be **synthetic** v2 data with no real PHI.
 The `scripts/anonymise-fixture.sh` script (Task 7a, 2026-06-13) is the only
 gate by which a real-world-derived fixture could enter the corpus, and even
 then the output must be scanned via `scripts/scan-fixtures-for-phi.sh` before
-commit.
+commit. The scan reads bytes, so it cannot see characters written as hex escapes
+(`\X33\`), and the anonymiser keeps the escapes of fields it does not replace as they were
+written.
 
 Status v0.1.0: 48-fixture synthetic corpus complete (7a starter set +
 7b expansion). Spec § 9.2 fixture target met.

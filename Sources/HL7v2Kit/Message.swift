@@ -7,6 +7,10 @@ import Foundation
 ///
 /// Lossless: round-trips to wire bytes byte-for-byte when the original was
 /// syntactically valid and accepted by the parser. See `serialize()`.
+///
+/// Equality compares decoded values and ignores ``trailingSegmentTerminator``, so two equal
+/// messages can serialise differently, and draw different length or escape findings, when
+/// their escapes were written differently (see ``Subcomponent``).
 public struct Message: Sendable, Equatable, Hashable {
     /// The HL7 version declared in MSH-12. An edit to MSH-12 with ``set(_:at:)`` re-reads it.
     public internal(set) var version: Version

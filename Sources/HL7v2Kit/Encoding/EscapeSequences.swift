@@ -143,14 +143,16 @@ enum EscapeSequences {
     /// text is still a faithful encoding of its value there, otherwise ``encode(_:encoding:)``
     /// of the value (#13). The serialiser and the escape and length checks all read this.
     static func wireForm(of subcomponent: Subcomponent, encoding: EncodingCharacters) -> String {
-        if let wire = subcomponent.wire, isFaithful(wire, to: subcomponent.value, encoding: encoding) {
-            return wire
+        if let wire = subcomponent.wire, wire.escape == encoding.escapeCharacter,
+           isFaithful(wire.text, to: subcomponent.value, encoding: encoding) {
+            return wire.text
         }
         return encode(subcomponent.value, encoding: encoding)
     }
 
-    /// Faithful: holds no delimiter or control character of `encoding` and decodes to `value`.
-    /// A value copied into a message with other delimiters fails this and is encoded.
+    /// Faithful: read under the same escape character, holds none of the four separators and
+    /// no control character, and decodes to `value`. A value copied into a message with other
+    /// delimiters or another escape character fails this and is encoded.
     private static func isFaithful(_ wire: String, to value: String, encoding: EncodingCharacters) -> Bool {
         isPlainBody(ArraySlice(wire), encoding: encoding) && decode(wire, encoding: encoding) == value
     }

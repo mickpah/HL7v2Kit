@@ -77,8 +77,8 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 ### Escapes and encoding
 
 - **Character set.** MSH-18 selects the decoder; an unrecognised value throws ``ParseError/unsupportedCharacterEncoding(declared:)`` at parse, with no lossy fallback. An embedded NUL throws ``ParseError/truncatedMessage(atByte:)``. See <doc:CharacterEncodingGuide>.
-- **Escape sequences.** Decoded on parse; a parsed value is written back as it was read, and a value built in code is encoded; a locally defined (`\Z..\`) or unrecognised body passes through verbatim and is not reported. Escapes count toward length as described above, and an escaped separator never raises an extra-component finding. See <doc:EscapeSequences>.
-- **Under ``HL7Locale/auLocalisation``** the `\X..\`, `\C..\` and `\M..\` escapes, which the ADRM prohibits, and MSH-1 and MSH-2 other than `|^~\&`, are ``IssueCode/profileConstraintViolation(localeRule:)``. The check reads escapes as they were sent, so escaped text such as `\E\C2842\E\` is not reported and a `\X..\` of a printable character is.
+- **Escape sequences.** Decoded on parse; a parsed value is written back as it was read, and a value built in code is encoded; a locally defined (`\Z..\`) or unrecognised body is kept verbatim in a parsed value and is not reported. Escapes count toward length as described above, and an escaped separator never raises an extra-component finding. See <doc:EscapeSequences>.
+- **Under ``HL7Locale/auLocalisation``** the `\X..\`, `\C..\` and `\M..\` escapes, which the ADRM prohibits, and MSH-1 and MSH-2 other than `|^~\&`, are ``IssueCode/profileConstraintViolation(localeRule:)``. The check reads escapes as they were sent, so escaped text such as `\E\C2842\E\` is not reported and a `\X..\` of a printable character is. A raw control character, which no field may hold, is reported as the `\X..\` it would be written as.
 
 ### Batches
 

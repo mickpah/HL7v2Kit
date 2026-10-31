@@ -101,6 +101,12 @@ struct EscapeWireTextTests {
         #expect(try Self.auEscapeFindings(text).count == 1)
     }
 
+    @Test("Under the AU locale a raw control character is reported as the \\X..\\ it would be written as")
+    func auRawControlReportedAsHex() throws {
+        // No field may hold a raw TAB; it is written \X09\, and that is what the check reads.
+        #expect(try Self.auEscapeFindings("a\tb").count == 1)
+    }
+
     @Test("Length counts a non-canonical escape as written (v2.8.2 section 2.7)")
     func lengthAsWritten() throws {
         for (value, expected) in [(#"\X41\"#, 3), (#"\X0D\\X0A\"#, 6), (#"\X0D0A\"#, 5)] {
@@ -120,5 +126,70 @@ struct EscapeWireTextTests {
         let issues = Validator().validate(try Parser().parse(wire)).issues
             .filter { $0.location.segmentID == "MSH" && $0.location.fieldIndex == 10 }
         #expect(issues.contains { $0.code == .fieldLengthOutOfRange(length: "20", actual: 21) })
+    }
+}
+
+// Wire text is trusted only under the escape character it was read under (#13).
+extension EscapeWireTextTests {
+    static let std = EncodingCharacters.default
+
+    /// The NTE segment parsed from `wire`.
+    static func parsedNTE(_ wire: String) throws -> Segment {
+        try #require(Parser().parse(wire).segments.first { $0.segmentID == "NTE" })
+    }
+
+    /// The parsed NTE copied into a bare message under `encoding`, serialised.
+    static func copied(_ nte: Segment, under encoding: EncodingCharacters) -> String {
+        let copy = Message(version: .v2_5_1, encodingCharacters: encoding, segments: [nte])
+        return String(decoding: copy.serialize(), as: UTF8.self)
+    }
+
+    @Test("A copy under another escape character, or other delimiters, is encoded afresh", arguments: [
+        // parsed under `\`, copied under escape `#`
+        (#"a#b#c\H\x\N\"#, "|^~#&", #"NTE|1||a#E#b#E#c\H\x\N\"# + "\r"),
+        (#"p#q\Z1\"#, "|^~#&", #"NTE|1||p#E#q\Z1\"# + "\r"),
+        // parsed under `\`, copied under component separator `#`
+        (#"a#b\F\c"#, "|#~\\&", #"NTE|1||a\S\b\F\c"# + "\r"),
+        // the same encoding as parsed
+        (#"C:\E\Users\E\me"#, #"|^~\&"#, #"NTE|1||C:\E\Users\E\me"# + "\r"),
+    ])
+    func copyUnderOtherEncoding(_ row: (value: String, enc: String, expected: String)) throws {
+        let nte = try Self.parsedNTE(Self.wire(row.value))
+        let chars = Array(row.enc)
+        let enc = EncodingCharacters(fieldSeparator: chars[0], componentSeparator: chars[1],
+                                     repetitionSeparator: chars[2], escapeCharacter: chars[3],
+                                     subcomponentSeparator: chars[4])
+        #expect(Self.copied(nte, under: enc) == row.expected)
+    }
+
+    @Test("Parsed under escape #, copied under backslash: the backslash runs are escaped")
+    func copyFromHashEscape() throws {
+        let wire = #"MSH|^~#&|APP|FAC|||20260101||ADT^A01^ADT_A01|C1|P|2.5.1"# + "\r"
+            + #"NTE|1||C:\scans\a.jpg#.br#"# + "\r"
+        let nte = try Self.parsedNTE(wire)
+        #expect(Self.copied(nte, under: Self.std) == #"NTE|1||C:\E\scans\E\a.jpg#.br#"# + "\r")
+    }
+
+    @Test("MSH-18 encodability reads the text that will be written")
+    func asciiEditKeepsEscapedText() throws {
+        var m = try Parser().parse(Self.wire(#"caf\XC3A9\"#))
+        try m.set("ASCII", at: Path("MSH-18"))
+        let bytes = m.serialize()
+        #expect(bytes.allSatisfy { $0 < 0x80 })
+        #expect(String(decoding: bytes, as: UTF8.self).contains(#"caf\XC3A9\"#))
+
+        var built = try Parser().parse(Self.wire("x"))
+        try built.set("caf\u{E9}", at: Path("NTE-3"))
+        #expect(throws: MessageEditError.characterNotEncodable(.ascii)) {
+            try built.set("ASCII", at: Path("MSH-18"))
+        }
+    }
+
+    @Test("The acknowledgement echoes an escaped MSH-10 as written")
+    func ackEchoesEscapedControlID() throws {
+        let wire = #"MSH|^~\&|APP|FAC|||20260101||ADT^A01^ADT_A01|C\X41\1|P|2.5.1"# + "\r"
+        let ack = try MessageBuilder.acknowledgment(to: Parser().parse(wire), code: .applicationAccept,
+                                                    messageControlID: "ACK1", dateTime: "20260101")
+        #expect(String(decoding: ack.serialize(), as: UTF8.self).contains(#"MSA|AA|C\X41\1"#))
     }
 }

@@ -190,7 +190,9 @@ extension Message {
                 for field in (i == index ? fields : segment.fields) {
                     for repetition in field.repetitions {
                         for component in repetition.components {
-                            for subcomponent in component.subcomponents where !Self.encodable(subcomponent.value, in: encoding) {
+                            // The check reads the text the serialiser will write (#13).
+                            for subcomponent in component.subcomponents
+                            where !Self.encodable(EscapeSequences.wireForm(of: subcomponent, encoding: encodingCharacters), in: encoding) {
                                 throw MessageEditError.characterNotEncodable(encoding)
                             }
                         }

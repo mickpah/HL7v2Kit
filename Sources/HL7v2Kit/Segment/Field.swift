@@ -70,20 +70,26 @@ public struct Component: Sendable, Equatable, Hashable {
 /// (`\F\`, `\S\`, etc.) in the original wire bytes have been resolved. A parsed
 /// value is written back as it was read; a value built in code is encoded
 /// (see <doc:EscapeSequences>).
+///
+/// Equality and hashing compare the decoded ``value`` only, so two values that decode alike
+/// are equal even when they were written differently (`\X41\` and `A`). Equal messages can
+/// therefore serialise differently and draw different length and AU escape findings; set a
+/// value again to have it written canonically.
 public struct Subcomponent: Sendable, Equatable, Hashable {
     public let value: String
 
-    /// The wire text a parsed value was read from, kept only when it holds the escape
-    /// character, so the serialiser and the escape and length checks see escapes as they
-    /// were sent (#13). Not part of equality: values that decode alike are equal.
-    let wire: String?
+    /// The wire text a parsed value was read from and the escape character it was read
+    /// under, kept only when the text holds that escape character, so the serialiser and
+    /// the escape and length checks see escapes as they were sent (#13). Not part of
+    /// equality: values that decode alike are equal.
+    let wire: WireText?
 
     public init(_ value: String) {
         self.value = value
         self.wire = nil
     }
 
-    init(_ value: String, wire: String?) {
+    init(_ value: String, wire: WireText?) {
         self.value = value
         self.wire = wire
     }
@@ -96,6 +102,13 @@ public struct Subcomponent: Sendable, Equatable, Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(value)
     }
+}
+
+/// The text a parsed subcomponent was read from, with the escape character it was read
+/// under (#13). The text is trusted only under that same escape character.
+struct WireText: Sendable {
+    let text: String
+    let escape: Character
 }
 
 // MARK: - Convenience constructors

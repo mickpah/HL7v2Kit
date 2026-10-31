@@ -37,6 +37,13 @@ struct ComponentLengthValidationTests {
         #expect(issue.location.subcomponentIndex == nil)
     }
 
+    @Test("An escape is counted as written: ISO\\X41\\X is seven characters, five decoded")
+    func escapeCountedAsWritten() throws {
+        let issues = try componentLengthIssues(msh("2.8.2", profile: #"PROF^^1.2.3^ISO\X41\X"#))
+        try #require(issues.count == 1)
+        #expect(issues[0].code == .componentLengthOutOfRange(length: "1..6", actual: 7))
+    }
+
     @Test("v2.7.1 EI.4 (1..6) is checked the same way")
     func v271() throws {
         let issues = try componentLengthIssues(msh("2.7.1", profile: "PROF^^1.2.3^ISOXXXX"))
