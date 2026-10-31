@@ -15,6 +15,9 @@ The entries are condensed; the git history carries the detail.
   occurrence or every repetition (`OBX[*]-5[*]`). Mixed forms are malformed.
   `Message.values(at:)` reads a wildcard path; the subscript returns `nil` for one.
   `Path.description` gives the native form.
+- `Message.populatedPaths()` lists every non-empty value with its path, in document order.
+  Each `PathValue` path has every index set, so the same location has the same path in every
+  message.
 
 ## [3.24.0]
 

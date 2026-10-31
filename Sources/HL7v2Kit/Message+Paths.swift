@@ -2,6 +2,22 @@
 // Reads that name more than one location (P00 S2-1) and the populated-path listing
 // (P00 S2-2).
 
+/// One populated leaf of a message: its fully indexed path and its decoded value.
+public struct PathValue: Sendable, Equatable, Hashable {
+    /// The leaf's location, with the segment occurrence, repetition, component and
+    /// subcomponent all set.
+    public let path: Path
+
+    /// The value as the path subscript reads it: decoded, escape sequences resolved.
+    public let value: String
+
+    /// Creates a path and its value.
+    public init(path: Path, value: String) {
+        self.path = path
+        self.value = value
+    }
+}
+
 extension Message {
     /// Every value `path` names, in document order: each matching segment occurrence in
     /// turn and, within it, each matching repetition. A path with no wildcard yields at most
@@ -28,6 +44,34 @@ extension Message {
                 }
             } else if let value = Self.value(in: segment, at: path, repetition: path.repetition ?? 1) {
                 result.append(value)
+            }
+        }
+        return result
+    }
+
+    /// Every non-empty value in the message with its path, in document order: segments in
+    /// turn, then fields, repetitions, components and subcomponents. Each path has every index
+    /// set (`PID[1]-5~1.1.1`), so the same location has the same path in every message; drop
+    /// the indices a use does not need. The HL7 null `""` is a value and is listed. MSH-1 and
+    /// MSH-2 are listed as their literal characters. Calling it twice gives the same list.
+    public func populatedPaths() -> [PathValue] {
+        var result: [PathValue] = []
+        var occurrenceByID: [String: Int] = [:]
+        for segment in segments {
+            let id = segment.segmentID
+            let occurrence = (occurrenceByID[id] ?? 0) + 1
+            occurrenceByID[id] = occurrence
+            // Index 0 is the segment ID's placeholder, not a field.
+            for (fieldIndex, field) in segment.fields.enumerated() where fieldIndex >= 1 {
+                for (r, repetition) in field.repetitions.enumerated() {
+                    for (c, component) in repetition.components.enumerated() {
+                        for (s, subcomponent) in component.subcomponents.enumerated() where !subcomponent.value.isEmpty {
+                            let path = Path(segmentID: id, segmentIndex: occurrence, field: fieldIndex,
+                                            repetition: r + 1, component: c + 1, subcomponent: s + 1)
+                            result.append(PathValue(path: path, value: subcomponent.value))
+                        }
+                    }
+                }
             }
         }
         return result

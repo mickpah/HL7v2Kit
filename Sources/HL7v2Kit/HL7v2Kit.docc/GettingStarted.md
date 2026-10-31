@@ -53,6 +53,8 @@ Paths have two spellings that read the same location: the native `PID-3~2.1` and
 let identifiers = message.values(at: try Path("PID-3[*].1"))
 ```
 
+`populatedPaths()` lists every non-empty value with its fully indexed path (`PID[1]-5~1.1.1`), in document order: the starting point for an index or field statistics.
+
 ## Validate
 
 ```swift

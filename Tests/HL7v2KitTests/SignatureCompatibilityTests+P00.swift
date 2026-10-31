@@ -27,4 +27,14 @@ extension SignatureCompatibilityTests {
         let described: any CustomStringConvertible = try Path("PID-3")
         #expect(described.description == "PID-3")
     }
+
+    @Test("P00 S2-2: PathValue and populatedPaths() keep their signatures")
+    func enumerationSignatures() throws {
+        let populated: (Message) -> () -> [PathValue] = Message.populatedPaths
+        let pair = PathValue(path: try Path("PID-3"), value: "X")
+        let path: KeyPath<PathValue, Path> = \.path
+        let value: KeyPath<PathValue, String> = \.value
+        _ = (populated, path, value)
+        #expect(pair.value == "X")
+    }
 }
