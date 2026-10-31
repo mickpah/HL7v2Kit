@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.24.0]
+
 ### Changed
 
 - CI runs on self-hosted runners. The macOS tests run on the current and the previous macOS
@@ -21,8 +23,9 @@ The entries are condensed; the git history carries the detail.
 - A message whose last segment has no terminator now serialises without one, so it
   round-trips byte for byte. `Message.trailingSegmentTerminator` records what the parser read
   (a built message ends with one) and takes no part in equality; the anonymiser keeps it.
-- The round-trip article's line-ending section now says what `.strict` does (an `\n` inside a line is data, written back as `\X0A\`)
-  and lists lenient line-ending rewriting and dropped blank lines as exceptions.
+- The round-trip article's line-ending section now says what `.strict` does (an `\n` inside a
+  line is data, written back as `\X0A\`) and lists lenient line-ending rewriting and dropped
+  blank lines as exceptions.
 - Under `LineTerminatorPolicy.strict` a message with `\r\n` line endings is rejected with the
   new `ParseError.lineFeedAfterSegmentTerminator(position:)`. It used to parse silently as one
   segment: the parser split on Characters, and `\r\n` is one Character.
