@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.28.0]
+
 ### Fixed
 
 - A parsed value is written back exactly as it was read, escapes included: wire
