@@ -24,10 +24,17 @@ The entries are condensed; the git history carries the detail.
 
 ### Fixed
 
-- The serialiser no longer copies a `\...\` run that holds a delimiter or a control
-  character: it escapes each character, so a value written in code cannot split a field or
-  start a segment. A value the parser read never holds such a run, so round-trip output is
-  unchanged.
+- The serialiser escapes a `\…\` run that holds a delimiter or a control character instead
+  of copying it, so a value written in code cannot split a field or start a segment either.
+  Output changes only for such runs, which earlier releases wrote back broken.
+
+### Security
+
+- Re-serialising a parsed message could split a field or start a new segment. A value whose
+  escapes decode to a `\…\` run holding a delimiter or a carriage return (wire
+  `\E\a\F\b\E\`, or `\E\x\X0D\ZZZ\F\evil\E\`) was written back with the run unescaped, which
+  reached relays, the anonymiser and acknowledgements that echo the original's fields. Affects
+  3.25.0 and earlier.
 
 ## [3.25.0]
 

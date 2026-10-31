@@ -176,6 +176,17 @@ struct AcknowledgmentBuilderTests {
         #expect(try Parser().parse(Data(ack.serialize()))["MSA-2"] == "MSG|01&2")
     }
 
+    @Test("P00 S3: an original MSH-3 whose escapes decode to a run holding a delimiter does not split the ACK")
+    func echoesEscapedRun() throws {
+        let plain = try Self.ack(Self.original())
+        let ack = try Self.ack(Self.original(sender: "\\E\\a\\F\\b\\E\\"))
+        #expect(ack["MSH-5"] == "\\a|b\\")
+        let back = try Parser().parse(ack.serialize())
+        let plainBack = try Parser().parse(plain.serialize())
+        #expect(back.segments[0].fields.count == plainBack.segments[0].fields.count)
+        #expect(back["MSH-5"] == "\\a|b\\")
+    }
+
     @Test("MSH-18 is echoed with the character set, so a Latin-1 ACK round-trips")
     func characterSet() throws {
         let wire = Self.original(msh18: "8859/1", sender: "LABOR\u{00C9}")

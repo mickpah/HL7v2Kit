@@ -71,7 +71,7 @@ try edited.clear(at: Path("PID-13"))
 try edited.insertRepetition("SYN-2", at: Path("PID-3[1]"))
 ```
 
-A path that names no repetition (`PID-13`) writes the whole field. The value is text, so delimiters in it are escaped; write a structure one path at a time. MSH-1 and MSH-2 are not writable, and an edit never adds a segment. Editing MSH-12 or MSH-18 updates `version` or `characterEncoding`.
+A field-level path that names no repetition (`PID-13`) writes the whole field. The value is text, so delimiters in it are escaped; write a structure one path at a time. MSH-1 and MSH-2 are not writable, and an edit never adds a segment. Editing MSH-12 or MSH-18 updates `version` or `characterEncoding`.
 
 ## Serialise
 

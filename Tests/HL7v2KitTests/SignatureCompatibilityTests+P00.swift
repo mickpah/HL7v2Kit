@@ -52,8 +52,9 @@ extension SignatureCompatibilityTests {
             .segmentNotFound(segmentID: "ZZZ", occurrence: 1), .delimiterField(segmentID: "MSH", field: 2),
             .wildcardPath(path), .notARepetition(path), .invalidPath(path),
             .unsupportedCharacterEncoding(declared: "X"),
+            .characterNotEncodable(.ascii),
         ]
-        #expect(errors.count == 6)
+        #expect(errors.count == 7)
         let _: KeyPath<Message, Version> = \.version
         let _: KeyPath<Message, CharacterEncoding> = \.characterEncoding
         #expect(message["PID-3"] == "Y")

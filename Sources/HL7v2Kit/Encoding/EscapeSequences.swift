@@ -230,10 +230,10 @@ enum EscapeSequences {
         }
     }
 
-    /// A body the encoder may copy verbatim holds no delimiter and no control character. The
-    /// parser never produces one that does (it splits on the delimiters and the segment
-    /// terminator first); copying one written in code would split a field or start a segment
-    /// (P00 S3-1).
+    /// A body the encoder may copy verbatim holds no delimiter and no control character. A parsed
+    /// value holds one when its escapes decode to it (`\E\a\F\b\E\` decodes to `\a|b\`), and a
+    /// value written in code can hold one; copying it would split a field or start a segment
+    /// (P00 S3).
     private static func isPlainBody(_ body: ArraySlice<Character>, encoding: EncodingCharacters) -> Bool {
         for c in body {
             if c == encoding.fieldSeparator || c == encoding.componentSeparator

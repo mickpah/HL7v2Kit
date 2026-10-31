@@ -21,8 +21,8 @@ The library guarantees byte equality across:
 - **Segment terminators.** `\r` is preserved exactly, including its absence after the last segment (``Message/trailingSegmentTerminator``). Under `LineTerminatorPolicy.strict` only `\r` ends a segment. A segment that starts with `\n` (a `\r\n` line ending) is rejected with ``ParseError/lineFeedAfterSegmentTerminator(position:)``; an `\n` anywhere else is data and stays in the value it falls in.
 - **Empty trailing fields.** `PID|1|||\r` retains its trailing pipes after a round trip — the parser does not omit empty subsequences.
 - **Repetitions, components, and subcomponents.** Every layer of nesting that exists on the wire is preserved as a distinct AST node. See ``Field``, ``Repetition``, ``Component``, ``Subcomponent``.
-- **Edits.** After ``Message/set(_:at:)``, ``Message/clear(at:)`` or ``Message/insertRepetition(_:at:)``, every segment and field the edit did not touch serialises as it was read; in the edited field, only the named node and any empty nodes created to reach it change.
-- **Escape sequences.** `\F\`, `\S\`, `\T\`, `\R\`, `\E\`, and `\X..\` round-trip exactly. Hex escapes are coalesced canonically (`\X0D0A\`, not `\X0D\\X0A\`). `\Z..\` and unknown escape bodies pass through verbatim. See <doc:EscapeSequences>.
+- **Edits.** After ``Message/set(_:at:)``, ``Message/clear(at:)`` or ``Message/insertRepetition(_:at:)``, every segment and field the edit did not touch serialises as it was read; in the edited field, only the named node and any empty nodes created to reach it change; an edit to MSH-18 re-encodes every segment in the new character set.
+- **Escape sequences.** `\F\`, `\S\`, `\T\`, `\R\`, `\E\`, and `\X..\` round-trip exactly (except as noted below). Hex escapes are coalesced canonically (`\X0D0A\`, not `\X0D\\X0A\`). `\Z..\` and unknown escape bodies pass through verbatim. See <doc:EscapeSequences>.
 - **Character set.** MSH-18 is detected on parse; the same charset is used on serialise. UTF-8, ASCII, and ISO-8859-1 are supported. See <doc:CharacterEncodingGuide>.
 - **MSH-2 encoding characters.** Custom delimiter characters (non-default field separator, component separator, etc.) round-trip exactly via ``EncodingCharacters``. A fifth MSH-2 character (the v2.7+ truncation character) is kept in MSH-2's literal value and written back unchanged; the validator reports it, as a field length, on versions that print MSH-2 as four characters.
 
@@ -36,7 +36,8 @@ The library guarantees byte equality across:
 - **Character-set conversion loss.** If a sender declares MSH-18 = `ASCII` but populates a body byte outside ASCII range, `Parser.parse(_ data:)` throws ``ParseError/unsupportedCharacterEncoding(declared:)`` — there is no "best-effort" lossy decode.
 - **Line endings under `.lenient`.** `LineTerminatorPolicy.lenient` (the parser's default) reads `\r\n` and `\n` as segment terminators and serialises `\r`. Under `.strict` a `\r\n` line ending is rejected, so `.strict` suits input that ends its segments with `\r` alone.
 - **Blank lines.** An empty line between segments (`\r\r`) is skipped on parse and not re-emitted.
-- **Raw control characters.** A control character inside a value, such as an `\n` read under `.strict`, is written back as a hex escape (`\X0A\`); a raw one cannot stand inside a field on the wire. The decoded value is unchanged.
+- **Escaped escape characters that form a clean run.** Text that decodes to a `\…\` run with no delimiter or control character inside is written back as that run, not escaped: wire `C:\E\Users\E\me` comes back as `C:\Users\me`. The decoded value cannot tell such text from a locally defined escape sequence.
+- **Raw control characters.** A control character inside a value, such as an `\n` read under `.strict`, is written back as a hex escape (`\X0A\`); a raw one cannot stand inside a field on the wire. The decoded value is unchanged. This holds inside a locally defined escape too: `\Za<TAB>b\` comes back as `\E\Za\X09\b\E\`, the same text written escaped.
 
 ## How to debug a failed round trip
 

@@ -15,9 +15,11 @@ extension MessageEditError: CustomStringConvertible {
         case .notARepetition(let path):
             return "The path \(path) does not end at a repetition"
         case .invalidPath(let path):
-            return "The path \(path) has an index below 1 or above 9,999, or a subcomponent without a component"
+            return "The path \(path) has an index below 1, a subcomponent without a component, or would create a node above index 9,999"
         case .unsupportedCharacterEncoding(let declared):
             return "MSH-18 '\(declared)' names a character set HL7v2Kit does not support"
+        case .characterNotEncodable(let encoding):
+            return "A value holds a character that \(encoding.wireValue) cannot encode; serialising it would re-encode the whole message"
         }
     }
 }

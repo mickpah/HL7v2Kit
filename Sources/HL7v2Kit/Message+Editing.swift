@@ -25,16 +25,57 @@ public enum MessageEditError: Error, Equatable, Sendable {
     /// ``Message/insertRepetition(_:at:)`` needs a path ending at a repetition
     /// (`PID-3~2` or `PID-3[2]`).
     case notARepetition(Path)
-    /// An index below 1 or above 9,999, or a subcomponent without a component. Only the
-    /// memberwise ``Path`` initialiser can build the last; a string can carry a large index.
+    /// An index below 1, a subcomponent without a component (only the memberwise ``Path``
+    /// initialiser builds one), or an edit that would create a node above index 9,999.
     case invalidPath(Path)
     /// An edit to MSH-18 names a character set HL7v2Kit does not support, so the message could
     /// not be serialised in it.
     case unsupportedCharacterEncoding(declared: String)
+    /// The edit would put a character into the message that its character set cannot encode:
+    /// the new value, or, for an MSH-18 edit, a value already in the message. Serialising it
+    /// would re-encode the whole message. The value is not named, so the error carries no
+    /// message content.
+    case characterNotEncodable(CharacterEncoding)
 }
 
 extension Message {
     static let maxEditIndex = 9_999
+
+    /// Whether `value` can be written in `encoding`.
+    static func encodable(_ value: String, in encoding: CharacterEncoding) -> Bool {
+        let limit: UInt32
+        switch encoding {
+        case .utf8:
+            return true
+        case .ascii:
+            limit = 0x7F
+        case .iso8859_1:
+            limit = 0xFF
+        }
+        for scalar in value.unicodeScalars where scalar.value > limit {
+            return false
+        }
+        return true
+    }
+
+    /// Whether the edit would create a node at an index above `maxEditIndex`. Existing nodes
+    /// stay writable at any index; only padding is capped, since it would otherwise run
+    /// without limit (P00 S3).
+    static func padsPastCap(_ path: Path, in segment: Segment) -> Bool {
+        let cap = maxEditIndex
+        let fields = segment.fields
+        if path.field > cap && path.field >= fields.count { return true }
+        let repetitions = path.field < fields.count ? fields[path.field].repetitions : []
+        let r = path.repetition ?? 1
+        if r > cap && r > repetitions.count { return true }
+        let components = r <= repetitions.count ? repetitions[r - 1].components : []
+        let c = path.component ?? 1
+        if c > cap && c > components.count { return true }
+        let subcomponents = c <= components.count ? components[c - 1].subcomponents : []
+        let s = path.subcomponent ?? 1
+        if s > cap && s > subcomponents.count { return true }
+        return false
+    }
 
     /// Writes `value` at `path`, which may use either path syntax.
     ///
@@ -46,18 +87,22 @@ extension Message {
     ///   the way to the target. Nothing is trimmed.
     /// - `value` is text: delimiters, the escape character and control characters in it are
     ///   escaped when the message is serialised (`A^B` is written `A\S\B`). One exception
-    ///   comes from the decoded-value model: a run between two escape characters with no
-    ///   delimiter or control character inside (`C:\Users\me`) is kept as that escape
-    ///   sequence. Write a structure one path at a time.
+    ///   comes from the decoded-value model: a run between two escape characters, other
+    ///   than the standard escapes (`\F\`, `\X41\` and the rest), with no delimiter or
+    ///   control character inside (`C:\Users\me`) is kept as that escape sequence. Write a structure one path at a time.
     /// - The segment occurrence must exist. A wildcard path is refused, and so are fields 1
-    ///   and 2 of MSH, BHS and FHS, which hold the delimiters. Every index runs from 1 to 9,999.
+    ///   and 2 of MSH, BHS and FHS, which hold the delimiters. An edit may create nodes up to
+    ///   index 9,999; an existing node at any index stays writable.
     /// - An edit to MSH-12 or MSH-18 of the message header re-reads `version` or
-    ///   `characterEncoding`, as the parser does (a version override is not kept); an unknown
-    ///   character set is refused.
+    ///   `characterEncoding`, as the parser does with default options (a version override, or a stricter parser's
+    ///   refusal, is not applied); an unknown character set is refused.
     ///
     /// - Throws: ``MessageEditError``; the message is then unchanged.
     public mutating func set(_ value: String, at path: Path) throws {
         let index = try editTarget(path)
+        guard Self.encodable(value, in: characterEncoding) else {
+            throw MessageEditError.characterNotEncodable(characterEncoding)
+        }
         var fields = segments[index].fields
         fields = padded(fields, to: path.field, segmentID: segments[index].segmentID)
         fields[path.field] = Self.setting(value, in: fields[path.field], at: path)
@@ -82,6 +127,9 @@ extension Message {
         guard let position = path.repetition, path.component == nil else {
             throw MessageEditError.notARepetition(path)
         }
+        guard Self.encodable(value, in: characterEncoding) else {
+            throw MessageEditError.characterNotEncodable(characterEncoding)
+        }
         var fields = segments[index].fields
         fields = padded(fields, to: path.field, segmentID: segments[index].segmentID)
         var repetitions = fields[path.field] == .scalar("") ? [] : fields[path.field].repetitions
@@ -99,8 +147,7 @@ extension Message {
         }
         let indices = [path.field, path.segmentIndex ?? 1, path.repetition ?? 1,
                        path.component ?? 1, path.subcomponent ?? 1]
-        // Indices run from 1 to maxEditIndex: a larger one would pad without limit.
-        for index in indices where index < 1 || index > Self.maxEditIndex {
+        for index in indices where index < 1 {
             throw MessageEditError.invalidPath(path)
         }
         if path.subcomponent != nil && path.component == nil {
@@ -113,7 +160,10 @@ extension Message {
         var seen = 0
         for (index, segment) in segments.enumerated() where segment.segmentID == path.segmentID {
             seen += 1
-            if seen == occurrence { return index }
+            if seen == occurrence {
+                if Self.padsPastCap(path, in: segment) { throw MessageEditError.invalidPath(path) }
+                return index
+            }
         }
         throw MessageEditError.segmentNotFound(segmentID: path.segmentID, occurrence: occurrence)
     }
@@ -126,13 +176,26 @@ extension Message {
         let header = index == 0 && id == "MSH"
         var encoding = characterEncoding
         if header && field == 18 {
-            let declared = fields[18].repetitions.first?.components.first?.subcomponents.first?.value ?? ""
+            // The parser reads MSH-18 as the field's raw text, so the editor does too: a
+            // repeated or structured MSH-18 the parser would reject is refused here.
+            let declared = Serializer.serializeField(fields[18], encoding: encodingCharacters)
             if declared.isEmpty {
                 encoding = .utf8
             } else if let known = CharacterEncoding.from(mshField18: declared) {
                 encoding = known
             } else {
                 throw MessageEditError.unsupportedCharacterEncoding(declared: declared)
+            }
+            for (i, segment) in segments.enumerated() {
+                for field in (i == index ? fields : segment.fields) {
+                    for repetition in field.repetitions {
+                        for component in repetition.components {
+                            for subcomponent in component.subcomponents where !Self.encodable(subcomponent.value, in: encoding) {
+                                throw MessageEditError.characterNotEncodable(encoding)
+                            }
+                        }
+                    }
+                }
             }
         }
         segments[index] = SegmentRegistry.hydrate(UnknownSegment(segmentID: id, fields: fields))

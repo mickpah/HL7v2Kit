@@ -75,7 +75,8 @@ enum Serializer {
         }
     }
 
-    private static func serializeField(_ field: Field, encoding enc: EncodingCharacters) -> String {
+    // Internal: the editor reads MSH-18 as the parser does, from this raw text (P00 S3).
+    static func serializeField(_ field: Field, encoding enc: EncodingCharacters) -> String {
         field.repetitions
             .map { serializeRepetition($0, encoding: enc) }
             .joined(separator: String(enc.repetitionSeparator))

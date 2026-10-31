@@ -217,4 +217,49 @@ struct PathWriteTests {
             }
         }
     }
+
+    @Test("A repeated or structured MSH-18 is refused, as the parser would reject it")
+    func structuredCharacterSet() throws {
+        var m = try Parser().parse(Self.wire)
+        try m.set("UNICODE UTF-8", at: Path("MSH-18"))
+        let before = m.serialize()
+        #expect(throws: MessageEditError.unsupportedCharacterEncoding(declared: "UNICODE UTF-8~8859/1")) {
+            try m.insertRepetition("8859/1", at: Path("MSH-18~2"))
+        }
+        #expect(throws: MessageEditError.unsupportedCharacterEncoding(declared: "UNICODE UTF-8^X")) {
+            try m.set("X", at: Path("MSH-18.2"))
+        }
+        #expect(m.serialize() == before)
+        #expect(try Parser().parse(m.serialize()).characterEncoding == .utf8)
+    }
+
+    @Test("A character the character set cannot encode is refused, so untouched values are not re-encoded")
+    func unencodableCharacter() throws {
+        let latin = "MSH|^~\\&|APP|FAC|||20260101||ADT^A01^ADT_A01|C1|P|2.5.1||||||8859/1\r"
+            + "PID|1||||Ren\u{E9}e\rNTE|1||Zo\u{EB}\r"
+        var m = try Parser().parse(try #require(latin.data(using: .isoLatin1)))
+        let before = m.serialize()
+        #expect(throws: MessageEditError.characterNotEncodable(.iso8859_1)) {
+            try m.set("\u{674E}", at: Path("PID-11"))
+        }
+        #expect(throws: MessageEditError.characterNotEncodable(.ascii)) {
+            try m.set("ASCII", at: Path("MSH-18"))
+        }
+        #expect(m.serialize() == before)
+        #expect(m.characterEncoding == .iso8859_1)
+        try m.set("Zo\u{EB} 2", at: Path("NTE-3"))
+        let back = try Parser().parse(m.serialize())
+        #expect(back["PID-5"] == "Ren\u{E9}e")
+        #expect(back["NTE-3"] == "Zo\u{EB} 2")
+    }
+
+    @Test("An existing node above index 9,999 stays writable; only padding past it is refused")
+    func capLimitsPaddingOnly() throws {
+        let many = (1...10_001).map { "OBX|\($0)|NM|X||v" }.joined(separator: "\r")
+        var m = try Parser().parse(Self.msh + many + "\r")
+        try m.set("w", at: Path("OBX[10001]-5"))
+        #expect(m["OBX[10001]-5"] == "w")
+        let deep = try Path("OBX[1]-5~10000")
+        #expect(throws: MessageEditError.invalidPath(deep)) { try m.set("x", at: deep) }
+    }
 }

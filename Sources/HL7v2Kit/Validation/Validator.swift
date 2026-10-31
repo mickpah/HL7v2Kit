@@ -1297,7 +1297,8 @@ public struct Validator: Sendable {
     /// value cannot be scanned directly — a decoded \E\ next to a
     /// literal X would false-positive, and a decoded \X..\ is
     /// invisible. `EscapeSequences.encode` restores the exact wire form
-    /// (the round-trip is byte-for-byte; verified for all three
+    /// (the round-trip is byte-for-byte, except for text that forms a clean
+    /// `\…\` run (limitations register); verified for all three
     /// families plus \E\-adjacency), so the scan runs on the
     /// RE-ENCODED value. MSH-1 / MSH-2 are exempt (they carry the
     /// delimiter literals).

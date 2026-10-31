@@ -161,4 +161,15 @@ struct RoundTripEdgeTests {
             try Parser().parse(Self.wire(msh2: "^~\\&#X", version: "2.8.2"))
         }
     }
+
+    @Test("P00 S3: a parsed value whose escapes decode to a run holding a delimiter or CR is written back as read",
+          arguments: ["NTE|1||\\E\\a\\F\\b\\E\\", "NTE|1||\\E\\x\\X0D\\ZZZ\\F\\evil\\E\\"])
+    func escapedRunsRoundTrip(_ line: String) throws {
+        let wire = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\r" + line + "\r"
+        let message = try Parser().parse(wire)
+        #expect(message.serialize() == Data(wire.utf8))
+        let back = try Parser().parse(message.serialize())
+        #expect(back.segments.count == 2)
+        #expect(back["NTE-3"] == message["NTE-3"])
+    }
 }
