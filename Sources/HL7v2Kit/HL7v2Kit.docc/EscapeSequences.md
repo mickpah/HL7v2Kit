@@ -21,7 +21,11 @@ HL7v2Kit recognises the following escape bodies (delimited by the configured esc
 | `\E\` | Escape character literal (default `\`) | Atomic |
 | `\Xdd..\` | Hex-encoded UTF-8 bytes (pairs of hex digits) | Hex |
 | `\Z…\` | Locally-defined; passes through verbatim | Passthrough |
-| Anything else | Unrecognised; passes through verbatim | Passthrough |
+| `\H\`, `\N\` | Start and end highlighting; pass through verbatim | Passthrough |
+| `\P\` | Truncation character (v2.7 and later); passes through verbatim | Passthrough |
+| `\Cxxyy\`, `\Mxxyy\`, `\Mxxyyzz\` | Character-set escapes; pass through verbatim | Passthrough |
+| `\.br\`, `\.sp\`, `\.in+4\` and the other formatting commands | FT formatting; pass through verbatim | Passthrough |
+| Anything else | Read: kept verbatim. Written from code: text, escaped as `\E\` | See below |
 
 ## Example
 
@@ -58,7 +62,11 @@ Coalescing applies to values built in code. A parsed value keeps its hex exactly
 
 ## `\Z..\` and unknown bodies
 
-Locally-defined escape sequences (sender-specific extensions like `\Z123\`) and any unrecognised body (such as `\H\` or `\.br\` used in some legacy systems) pass through verbatim. The decoder does not invent semantics, and the encoder does not double-escape the backslashes it encountered. The truncation escape `\P\` (v2.7 and later) is defined by the standard but deliberately not decoded: decoding it would make a literal truncation character and its escape indistinguishable on the way back out. It passes through verbatim, so a decoded value can contain the literal text `\P\`. A body that holds a delimiter or a control character is not kept: the encoder escapes its characters one by one, so a value written in code cannot split a field or start a segment (a parsed value holds one when its escapes decode to it, such as `\E\a\F\b\E\`; earlier releases wrote such a run back unescaped). The converse holds for a value written in code: text that happens to form a clean run (`C:\Users\me`) is written as that run. A parsed value is not affected: wire `C:\E\Users\E\me` is written back as read, and the validator reads escapes from the wire text.
+The decoder keeps every escape it does not resolve verbatim in the value: locally defined sequences (`\Z123\`), highlighting (`\H\`, `\N\`), the formatting commands (`\.br\`), the character-set escapes (`\C2842\`, `\M2442\`), the truncation escape `\P\` (v2.7 and later, deliberately not decoded: a literal truncation character and its escape would become indistinguishable), and any body the standard does not define. A parsed value is written back from the text it was read from, so all of these round-trip exactly.
+
+A value built in code, or set by an edit, has no such text, so the encoder decides. It copies a `\…\` run as an escape only when the standard defines it (v2.5.1 Chapter 2, sections 2.7.1 to 2.7.6): `\H\`, `\N\`, `\P\`, `\Z` followed by one or more characters, `\C` and four hex digits, `\M` and four or six hex digits, and the formatting commands `.br`, `.fi`, `.nf`, `.ce`, `.sp` (optional number), `.in` and `.ti` (signed number) and `.sk` (number). Any other run is text, so `C:\Users\me` is written `C:\E\Users\E\me`. A run that holds a delimiter or a control character is never copied: its characters are escaped one by one, so a value cannot split a field or start a segment.
+
+One ambiguity remains, by design of the decoded-value model: text written in code that spells a defined escape (a literal `\H\` or `\.br\`) is written as the escape, and through ``Subcomponent/value`` a parsed escape `\H\` and parsed literal text `\E\H\E\` both read `\H\`. Round trip and validation read the wire text, so neither is affected.
 
 ## Customising the escape character
 

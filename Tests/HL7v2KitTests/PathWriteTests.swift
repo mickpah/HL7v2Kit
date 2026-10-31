@@ -123,8 +123,8 @@ struct PathWriteTests {
         ("\\a|b\\", "\\E\\a\\F\\b\\E\\"),
         ("\\x\rZZZ|evil\\", "\\E\\x\\X0D\\ZZZ\\F\\evil\\E\\"),
         ("C:\\Users", "C:\\E\\Users"),
-        // A recorded limitation: a clean \\...\\ run reads as an escape sequence and is kept as one.
-        ("C:\\Users\\me", "C:\\Users\\me"),
+        // #13: a run the standard does not define is text.
+        ("C:\\Users\\me", "C:\\E\\Users\\E\\me"),
     ])
     func escapeCharactersInValues(_ value: String, _ wire: String) throws {
         let result = try Self.edited { try $0.set(value, at: Path("NTE[1]-3")) }

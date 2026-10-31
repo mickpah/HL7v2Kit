@@ -29,12 +29,14 @@
 //     E        → escape character literal          (default `\`)
 //     X<hex>   → UTF-8 bytes; pairs of hex digits  (e.g. `\X0D\` → CR)
 //     Z<...>   → locally-defined; passes through verbatim
-//     anything else (`\H\`, `\.br\`, …) → passes through verbatim
+//     anything else (`\H\`, `\.br\`, …) → kept verbatim on decode. On encode a
+//     value with no wire text copies a run only when the standard defines it
+//     (`isRepertoireBody`); any other run is text (#13).
 //
 // - Passthrough means: the literal characters of the escape sequence
 //   (including the surrounding escape characters) remain in the decoded
-//   string. The encoder recognises a passthrough sequence and re-emits it
-//   verbatim rather than double-escaping its backslashes.
+//   string. A parsed value is written back from its wire text; a value built
+//   in code copies a run the standard defines and escapes any other.
 //
 // - Round-trip invariants (covered by tests):
 //     decode(encode(x)) == x   for all plain decoded inputs `x`
@@ -168,13 +170,11 @@ enum EscapeSequences {
         while i < chars.count {
             let c = chars[i]
 
-            // If this `\` is the start of a passthrough sequence (e.g. `\Z…\`),
-            // copy the whole thing verbatim. This is the only way the round
-            // trip works for sequences whose backslashes are themselves part
-            // of the encoded value.
+            // A `\…\` run the standard defines (#13) is copied as the escape it is;
+            // any other run is text and its escape characters are escaped below.
             if c == esc,
                let closingIdx = chars[(i + 1)...].firstIndex(of: esc),
-               isPassthroughBody(chars[(i + 1)..<closingIdx]),
+               isRepertoireBody(chars[(i + 1)..<closingIdx]),
                isPlainBody(chars[(i + 1)..<closingIdx], encoding: encoding) {
                 for k in i...closingIdx { result.append(chars[k]) }
                 i = closingIdx + 1
@@ -270,18 +270,40 @@ enum EscapeSequences {
         return true
     }
 
-    /// A body is "passthrough" if the decoder would have emitted the whole
-    /// `\body\` verbatim rather than substituting a decoded value. That is:
-    /// not one of F/S/T/R/E (atomic) and not a hex `X<hex>` block.
-    private static func isPassthroughBody(_ body: ArraySlice<Character>) -> Bool {
+    /// A body the standard defines as an escape the decoder keeps verbatim (v2.5.1 Chapter 2,
+    /// sections 2.7.1 to 2.7.6; `\P\` from v2.7): highlighting `H` and `N`, the truncation
+    /// character `P`, locally defined `Z…`, the character-set escapes `Cxxyy` and `Mxxyy(zz)`,
+    /// and the formatting commands. Anything else written in code is text (#13). `P` is
+    /// accepted on every version: the encoding characters do not carry MSH-2's fifth character.
+    private static func isRepertoireBody(_ body: ArraySlice<Character>) -> Bool {
         guard let first = body.first else { return false }
-        if body.count == 1 {
-            switch first {
-            case "F", "S", "T", "R", "E": return false
-            default: return true
-            }
+        let rest = body.dropFirst()
+        switch first {
+        case "H", "N", "P": return rest.isEmpty
+        case "Z": return !rest.isEmpty
+        case "C": return rest.count == 4 && rest.allSatisfy { hexDigitValue($0) != nil }
+        case "M": return (rest.count == 4 || rest.count == 6) && rest.allSatisfy { hexDigitValue($0) != nil }
+        case ".": return isFormattingCommand(rest)
+        default: return false
         }
-        if first == "X" { return false }
-        return true
+    }
+
+    /// A formatting command after its period (v2.5.1 section 2.7.6): `br`, `fi`, `nf`, `ce`;
+    /// `sp` with an optional unsigned integer; `in` and `ti` with an optionally signed integer;
+    /// `sk` with an unsigned integer. One space may stand before the number (`.sp <number>`).
+    private static func isFormattingCommand(_ body: ArraySlice<Character>) -> Bool {
+        let name = String(body.prefix(2))
+        var number = body.dropFirst(2)
+        switch name {
+        case "br", "fi", "nf", "ce": return number.isEmpty
+        case "sp": if number.isEmpty { return true }   // `.sp` alone; with a number, checked below
+        case "in", "ti", "sk": break
+        default: return false
+        }
+        if number.first == " ", number.count > 1 { number = number.dropFirst() }
+        if name == "in" || name == "ti", let sign = number.first, sign == "+" || sign == "-" {
+            number = number.dropFirst()
+        }
+        return !number.isEmpty && number.allSatisfy { $0.isASCII && $0.isNumber }
     }
 }

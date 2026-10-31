@@ -99,6 +99,7 @@ struct EscapeSequenceTests {
             "rep1~rep2",
             #"back\slash"#,
             "mixed | ^ & ~ \\ all at once",
+            #"C:\Users\me"#, #"\Q\"#, #"\H\x\N\"#,
         ]
         for value in cases {
             let encoded = EscapeSequences.encode(value, encoding: enc)
@@ -114,6 +115,7 @@ struct EscapeSequenceTests {
             #"\X0D\"#, #"\X0D0A\"#,
             #"a\F\b\S\c"#,
             #"prefix\Z123\suffix"#,
+            #"C:\E\Users\E\me"#, #"\H\240\N\"#, #"\.br\"#, #"\C2842\"#, #"a\E\Q\E\b"#,
         ]
         for wire in cases {
             let decoded = EscapeSequences.decode(wire, encoding: enc)

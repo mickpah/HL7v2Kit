@@ -22,6 +22,10 @@ The entries are condensed; the git history carries the detail.
 
 - Field length counts a non-canonical escape as written: `\X41\` counts 3 characters, not 1
   (v2.8.2 section 2.7).
+- A value built in code or set by an edit writes a `\…\` run as an escape only when the
+  standard defines it (`\H\`, `\N\`, `\P\`, `\Z..\`, `\Cxxyy\`, `\Mxxyy(zz)\` and the
+  formatting commands); any other run is text, so `C:\Users\me` is written `C:\E\Users\E\me`,
+  and a body such as `\Q\` or a malformed `\C28\` is escaped.
 
 ## [3.27.0]
 
