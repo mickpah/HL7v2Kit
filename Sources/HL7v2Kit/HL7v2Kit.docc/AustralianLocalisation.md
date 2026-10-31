@@ -121,7 +121,8 @@ ORC-3, ORC-4, RF1-6 and RF1-11. Under the profile the length check reads the ADR
 ``IssueCode/fieldLengthOutOfRange(length:actual:)`` naming the ADRM length, at
 ``ValidationOptions/fieldLengthSeverity``. MSH-27 Security Handling Instructions, which the ADRM
 pre-adopts from v2.9, is validated under the AU locale as CWE, optional and repeating; the v2.4
-grammar has no MSH-27.
+grammar has no MSH-27. v2.3 defines no CWE, so there the field's length and the AU CWE rules
+are checked but its components are not.
 
 **The MIME tables.** The ADRM prints Table 0191 with the IANA types added (`application`, `image`,
 `text` and others, pp 167 to 168) and Table 0291 with the subtypes `pdf`, `png`, `xml` and `emf`

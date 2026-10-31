@@ -87,7 +87,7 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// (``FieldGrammar/maxRepetitions``) carries more than its printed bound
     /// (`.warning`).
     case cardinalityExceeded
-    /// A Z-segment (or any segment outside the loaded grammar) is present
+    /// A Z-segment with no grammar in ``ValidationOptions/zSegmentGrammars`` is present
     /// and the validator's Z-segment policy is `.warnPresence` or `.reject`.
     case zSegmentPresent
     /// A localisation profile constraint was violated. The associated

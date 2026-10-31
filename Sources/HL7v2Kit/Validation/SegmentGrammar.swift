@@ -460,8 +460,8 @@ public struct SegmentGrammar: Sendable, Equatable, Hashable {
     }
 
     /// Look up a field grammar by 1-based v2 index. Returns nil if the
-    /// segment doesn't define that field (i.e. the field is "excess" — see
-    /// `ParserOptions.preserveExcessFields`).
+    /// segment doesn't define that field (i.e. the field is "excess"; the parser
+    /// keeps an excess field and the validator does not check it).
     public func field(_ index: Int) -> FieldGrammar? {
         fields.first(where: { $0.index == index })
     }

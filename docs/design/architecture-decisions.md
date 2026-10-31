@@ -140,9 +140,10 @@ labelled a Z-segment.
 **Amended (P00):** a caller may supply a grammar for a Z-segment through
 `ValidationOptions.zSegmentGrammars` (`ZSegmentGrammar`), optionally only for some sending
 applications (MSH-3.1). The validator checks the segment as it checks any segment, and
-`zSegmentPolicy` does not apply to it. The package still ships no Z-segment grammar and never
-guesses one. Parsing is unchanged: the segment stays `UnknownSegment` with no typed accessors,
-because typed segments are generated code.
+`zSegmentPolicy` does not apply to it. Its LEN cells are read in the grammar's declared version
+(data types, components and tables in the message's). The package still ships no Z-segment
+grammar and never guesses one. Parsing is unchanged: the segment stays `UnknownSegment` with no
+typed accessors, because typed segments are generated code.
 
 ## ADR-004 Codegen over macros
 
@@ -267,7 +268,7 @@ schema tree per profile and the copies drift.
 - The profile is a set of rule tracks: field overrides (usage, required components, component
   value sets with optional subcomponent and condition, patterns, correspondences, lengths,
   time-zone requirements), composite overrides (required components, pair conditionals,
-  inequalities, value conditionals), grammar extensions (the pre-adopted PID-35 to PID-38 on
+  inequalities, value conditionals), grammar extensions (the pre-adopted MSH-27, from v2.9, on
   v2.4), cardinality extensions, uniqueness rules, escape prohibitions, sub-ID trees, group
   ordering rules and the full-predicate rule (ADR-021).
 - Scope: `.auLocalisation` governs a message of every version. Field-level rules apply on every

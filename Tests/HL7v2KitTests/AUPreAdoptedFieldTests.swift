@@ -10,13 +10,13 @@ import Testing
 @Suite("AU ADRM pre-adopted MSH-27")
 struct AUPreAdoptedFieldTests {
     /// An AU v2.4 ORU header whose MSH-27 is `msh27` (MSH-13 to 26 empty).
-    static func wire(_ msh27: String) -> String {
-        "MSH|^~\\&|LAB|FAC|GP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4"
+    static func wire(_ msh27: String, version: String = "2.4") -> String {
+        "MSH|^~\\&|LAB|FAC|GP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|\(version)"
             + String(repeating: "|", count: 15) + msh27 + "\r"
     }
 
-    static func msh27Issues(_ msh27: String, _ locale: HL7Locale) throws -> [ValidationIssue] {
-        let message = try Parser(locale: locale).parse(wire(msh27))
+    static func msh27Issues(_ msh27: String, _ locale: HL7Locale, version: String = "2.4") throws -> [ValidationIssue] {
+        let message = try Parser(locale: locale).parse(wire(msh27, version: version))
         return Validator(options: .default, locale: locale).validate(message).issues.filter {
             $0.location.segmentID == "MSH" && $0.location.fieldIndex == 27
         }
@@ -50,7 +50,22 @@ struct AUPreAdoptedFieldTests {
     func auCWERulesApply() throws {
         // An identifier with no text and no coding system breaks 00044.6.3 and 00044.6.1.
         let found = try Self.msh27Issues("SH1", .auLocalisation)
-        #expect(found.contains { if case .profileConstraintViolation = $0.code { return true } else { return false } })
+        #expect(found.count == 2)
+        let rules = found.compactMap { issue -> (String, Int?)? in
+            if case .profileConstraintViolation(let rule) = issue.code { return (rule, issue.location.componentIndex) }
+            return nil
+        }
+        #expect(rules.count == 2)
+        #expect(rules.first { $0.0.hasPrefix("HL7au:00044.6.3") }?.1 == 2)
+        #expect(rules.first { $0.0.hasPrefix("HL7au:00044.6.1") }?.1 == 3)
+    }
+
+    @Test("The 251-character length rule holds on v2.3, v2.5.1 and v2.8.2; the international locale checks nothing",
+          arguments: ["2.3", "2.5.1", "2.8.2"])
+    func versionMatrix(version: String) throws {
+        let long = try Self.msh27Issues(Self.textOnly(251), .auLocalisation, version: version)
+        #expect(long.contains { $0.code == .fieldLengthOutOfRange(length: "250", actual: 251) }, "\(version)")
+        #expect(try Self.msh27Issues(Self.textOnly(251), .international, version: version).isEmpty, "\(version)")
     }
 
     @Test("Under the international locale v2.4 has no MSH-27, so nothing checks it")

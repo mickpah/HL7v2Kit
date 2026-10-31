@@ -22,12 +22,16 @@ extension Validator {
         field: Field,
         segmentID: String,
         version: Version,
+        lengthVersion: Version? = nil,
         dataType: String,
         encoding: EncodingCharacters,
         location: IssueLocation,
         profile: Profile? = nil,
         issues: inout [ValidationIssue]
     ) {
+        // P00 S4 fix: a caller's Z grammar reads its LEN cell in its own version; data types
+        // stay in the message's version.
+        let cellVersion = lengthVersion ?? version
         // MSH-1 (and the batch and file headers' field 1) is the field separator, not data.
         if ["MSH", "BHS", "FHS"].contains(segmentID), grammar.index == 1 { return }
         // v2.3 to v2.5.1 print BHS-2 as LEN 3, though it holds four encoding characters, so
@@ -50,10 +54,12 @@ extension Validator {
                 + (profileLength.lengthCitation.map { " (\($0))" } ?? "")
         } else {
             guard let base = grammar.length,
-                  let parsed = FieldLengthRule.parse(base, version: version) else { return }
+                  let parsed = FieldLengthRule.parse(base, version: cellVersion) else { return }
             printed = base
             rule = parsed
-            source = "the v\(version.grammarVersion.rawValue) attribute table prints LEN \(base)"
+            source = segmentID.hasPrefix("Z")
+                ? "the supplied \(segmentID) grammar (v\(cellVersion.grammarVersion.rawValue)) prints LEN \(base)"
+                : "the v\(version.grammarVersion.rawValue) attribute table prints LEN \(base)"
         }
         let severity: IssueSeverity?
         switch rule {

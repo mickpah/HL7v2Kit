@@ -107,9 +107,10 @@ public struct Validator: Sendable {
 
             // v0.5-S5-D: merge the profile's grammar extensions for
             // this segment (if any) onto the base grammar. Used for
-            // AU pre-adoption of v2.5+ PID-35..38 on v2.4 wires under
-            // `.auLocalisation`. v0.11-S3 (ADR-010): also merge the
-            // profile's cardinality extensions.
+            // AU pre-adoption of MSH-27 (from v2.9) on v2.4 wires under
+            // `.auLocalisation` (P00 S4 fix: was PID-35..38 until P4-16).
+            // v0.11-S3 (ADR-010): also merge the profile's cardinality
+            // extensions.
             let segGrammar = mergeGrammarExtension(
                 base: baseGrammar,
                 profileExtension: profile?.grammarExtensions[id],
@@ -179,7 +180,7 @@ public struct Validator: Sendable {
     /// the index does exist. v0.5-S5-D.
     ///
     /// The replacement semantic lets a profile both add new fields
-    /// (typical case — AU PID-35..38 on v2.4) AND override an
+    /// (typical case — AU MSH-27 on v2.4) AND override an
     /// existing field's optionality / condition if needed in the
     /// future. Today only the additive case is exercised.
     func mergeGrammarExtension(
@@ -710,8 +711,10 @@ public struct Validator: Sendable {
 
         // P6-6: LEN, per era (FieldLengthRule).
         if let field, isPopulated {
+            // P00 S4 fix: a caller's Z grammar states LEN in its own declared version.
+            let lengthVersion = grammar.segmentID.hasPrefix("Z") ? Version(rawValue: grammar.version) : nil
             checkFieldLength(fieldGrammar, field: field, segmentID: grammar.segmentID,
-                             version: message.version,
+                             version: message.version, lengthVersion: lengthVersion,
                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
                              encoding: message.encodingCharacters,
                              location: location, profile: profile, issues: &issues)

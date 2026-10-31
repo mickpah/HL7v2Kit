@@ -31,7 +31,16 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 - **Version not recognised.** A populated MSH-12 naming no modelled version (2.1, 2.2, 2.5, 2.8.1, 2.9, or an unreadable VID.1) is validated against the v2.5.1 grammar: ``IssueCode/versionNotRecognised(wireValue:)``, warning. Always on.
 - **Segment not in the version's grammar.** A segment ID that does not begin with `Z` and that the version does not define: ``IssueCode/segmentNotInVersionGrammar``, warning, its fields unchecked. Always on, whatever the Z-segment policy.
 - **Withdrawn segment.** QRD, QRF, URD and URS on v2.7.1 and v2.8.2 (listed as withdrawn or deprecated, still named by structures): ``IssueCode/segmentWithdrawnInVersion``, information, fields unchecked. Always on.
-- **Z-segments.** ``ValidationOptions/zSegmentPolicy``: ``ZSegmentPolicy/ignore`` reports nothing, ``ZSegmentPolicy/warnPresence`` one ``IssueCode/zSegmentPresent`` at information per occurrence, ``ZSegmentPolicy/reject`` the same at error. A Z-segment's fields are never checked. A Z-segment with a grammar in ``ValidationOptions/zSegmentGrammars`` is checked against it like any segment, and the policy does not apply to it.
+- **Z-segments.** ``ValidationOptions/zSegmentPolicy``: ``ZSegmentPolicy/ignore`` reports nothing, ``ZSegmentPolicy/warnPresence`` one ``IssueCode/zSegmentPresent`` at information per occurrence, ``ZSegmentPolicy/reject`` the same at error. A Z-segment with no grammar in ``ValidationOptions/zSegmentGrammars`` has its fields unchecked. One with a grammar is checked against it like any segment, and the policy does not apply to it. Its LEN cells are read as the grammar's own declared version prints LEN (through v2.6 a number is a maximum; from v2.7.1 a range or list), its data types, components and tables in the message's version.
+
+  ```swift
+  let zau = SegmentGrammar(segmentID: "ZAU", version: "2.5.1", fields: [
+      FieldGrammar(index: 2, name: "Account Code", dataType: "ST",
+                   optionality: .required, repeatability: .single, length: "10"),
+  ])
+  var options = ValidationOptions.default
+  options.zSegmentGrammars = [ZSegmentGrammar(zau, sendingApplications: ["LAB"])]
+  ```
 - **Message structure.** Segment order, groups, required segments and repetition against the structure the version prints for the trigger event (1,190 modelled, 183 registered as not modelled with their reason). ``ValidationOptions/messageStructureSeverity`` governs ``IssueCode/messageStructureSegmentMissing(structure:segmentID:group:)``, ``IssueCode/messageStructureSegmentUnexpected(structure:segmentID:)`` and ``IssueCode/messageStructureMismatch(declared:trigger:)`` (an MSH-9.3 naming a structure the trigger is not printed under). When no structure is applied, one ``IssueCode/messageStructureNotModelled(structure:)`` at information says why. Details under <doc:#Message-structures>.
 - **Conditions withheld.** Where the order-number conditions of an OUL, OPU or OPL cannot be scoped to one order group, they are not evaluated, and one ``IssueCode/conditionNotEvaluated(fields:)`` at information names them. Always on.
 
@@ -265,7 +274,7 @@ For example, `PID-37 populated` on PID-36 (v2.4 to v2.7.1): breed is required wh
 - **`=` and `!=`** compare the first subcomponent of the first component of the first repetition.
 - **Three-state evaluation.** True, false or unknown, with Kleene AND and OR; a rule fires only on a definite true, so a malformed or unresolvable atom never makes an accepted message non-conformant.
 
-Conditions live in the schemas under `Resources/schemas/<version>/` and are generated into ``SegmentGrammarTable``. See <doc:AddingASegment>.
+Conditions live in the schemas under `Resources/schemas/<version>/` and are generated into ``SegmentGrammarTable``. See <doc:AddingASegment>. A caller's ``ZSegmentGrammar`` carries its own.
 
 ## Message structures
 
@@ -290,3 +299,4 @@ Look structures up with ``MessageStructureTable``.
 - ``ValidationOptions``
 - ``ValidationIssue``
 - ``ZSegmentPolicy``
+- ``ZSegmentGrammar``

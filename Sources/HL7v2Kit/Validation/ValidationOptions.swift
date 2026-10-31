@@ -8,7 +8,8 @@ import Foundation
 /// whose ID begins with `Z` and has no entry in the loaded grammar. Any
 /// other ID outside the loaded grammar is not a Z-segment (ADR-018) and is
 /// unaffected by this policy — it always produces
-/// ``IssueCode/segmentNotInVersionGrammar``.
+/// ``IssueCode/segmentNotInVersionGrammar``. The policy applies only to a
+/// Z-segment with no grammar in ``ValidationOptions/zSegmentGrammars``.
 public enum ZSegmentPolicy: Sendable, Equatable, Hashable {
     /// Pass silently. No issue is recorded.
     case ignore
@@ -21,7 +22,8 @@ public enum ZSegmentPolicy: Sendable, Equatable, Hashable {
 
 /// Tunable validator behaviour.
 public struct ValidationOptions: Sendable {
-    /// What to do when a `Z`-prefixed segment isn't in the loaded grammar.
+    /// What to do when a `Z`-prefixed segment isn't in the loaded grammar and has no
+    /// grammar in ``zSegmentGrammars``.
     /// A non-Z segment ID outside the loaded grammar always produces
     /// ``IssueCode/segmentNotInVersionGrammar`` instead, whatever this is
     /// set to (ADR-018).

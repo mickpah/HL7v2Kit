@@ -96,4 +96,72 @@ struct ZSegmentGrammarTests {
         #expect(message.serialize() == Data(wire.utf8))
         #expect(message["ZAU-2"] == "ACC1")
     }
+
+    /// ZAU with a single field 2 (ST) of the given LEN, declared in `version`.
+    static func zauLength(_ length: String, version: String) -> SegmentGrammar {
+        SegmentGrammar(segmentID: "ZAU", version: version, fields: [
+            FieldGrammar(index: 2, name: "Account Code", dataType: "ST", optionality: .optional,
+                         repeatability: .single, length: length),
+        ])
+    }
+
+    @Test("P00 S4 fix: LEN is read in the grammar's declared version, not the message's")
+    func lengthReadInDeclaredVersion() throws {
+        let long = "ZAU|1|ACCOUNT0011"
+        let a = try Self.issues(TestWires.wire("ADT^A01^ADT_A01", "2.8.2", "PID|1", long),
+                                Self.options([ZSegmentGrammar(Self.zauLength("10", version: "2.5.1"))]))
+        #expect(a.map(\.code) == [.fieldLengthOutOfRange(length: "10", actual: 11)])
+        #expect(a.first?.message.contains("supplied ZAU grammar") == true)
+        let b = try Self.issues(TestWires.wire("ADT^A01^ADT_A01", "2.4", "PID|1", long),
+                                Self.options([ZSegmentGrammar(Self.zauLength("1..10", version: "2.8.2"))]))
+        #expect(b.map(\.code) == [.fieldLengthOutOfRange(length: "1..10", actual: 11)])
+    }
+
+    @Test("P00 S4 fix: a scoped grammar is not applied when MSH-3 is absent or empty; an unscoped one is")
+    func scopeNeedsSender() throws {
+        let noSender = "MSH|^~\\&||FAC|RCV|FAC|20260930120000||ADT^A01^ADT_A01|MSG1|P|2.5.1\rPID|1\rZAU|1\r"
+        let noMSH3 = "MSH|^~\\&|||RCV|FAC|20260930120000||ADT^A01^ADT_A01|MSG1|P|2.5.1\rPID|1\rZAU|1\r"
+        for wire in [noSender, noMSH3] {
+            #expect(try Self.issues(wire, Self.options([ZSegmentGrammar(Self.zau(), sendingApplications: ["LAB"])])).isEmpty)
+            #expect(try Self.issues(wire, Self.options([ZSegmentGrammar(Self.zau(), sendingApplications: [""])])).isEmpty)
+            #expect(try Self.issues(wire, Self.options([ZSegmentGrammar(Self.zau())])).map(\.code) == [.requiredFieldMissing])
+        }
+    }
+
+    @Test("P00 S4 fix: the structure findings are the same with and without a Z grammar")
+    func structureTransparent() throws {
+        let wire = TestWires.oru("ZAU|1|ACC1", "PID|1")
+        func structure(_ grammars: [ZSegmentGrammar]) throws -> [ValidationIssue] {
+            var options = ValidationOptions.default
+            options.zSegmentGrammars = grammars
+            return Validator(options: options).validate(try Parser().parse(wire)).issues
+                .filter { String(describing: $0.code).hasPrefix("messageStructure") }
+        }
+        let without = try structure([])
+        #expect(!without.isEmpty)
+        #expect(try structure([ZSegmentGrammar(Self.zau())]) == without)
+    }
+
+    @Test("P00 S4 fix: under the AU locale a typed CWE Z field draws the AU CWE rules on an ORU only")
+    func auCWERulesReachZField() throws {
+        let cwe = SegmentGrammar(segmentID: "ZAU", version: "2.4", fields: [
+            FieldGrammar(index: 1, name: "Code", dataType: "CWE", optionality: .optional, repeatability: .single),
+        ])
+        let locale = HL7Locale.auLocalisation
+        func found(_ type: String) throws -> [ValidationIssue] {
+            let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|20240101||\(type)|MSG|P|2.4\rZAU|SH1\r"
+            var options = Self.options([ZSegmentGrammar(cwe)])
+            options.messageStructureSeverity = nil
+            return Validator(options: options, locale: locale).validate(try Parser(locale: locale).parse(wire)).issues
+                .filter { $0.location.segmentID == "ZAU" }
+        }
+        let oru = try found("ORU^R01^ORU_R01")
+        let rules = oru.compactMap { issue -> String? in
+            if case .profileConstraintViolation(let rule) = issue.code { return rule } else { return nil }
+        }
+        #expect(rules.count == 2)
+        #expect(rules.allSatisfy { $0.hasPrefix("HL7au:00044.6") })
+        let adt = try found("ADT^A01^ADT_A01")
+        #expect(adt.isEmpty)
+    }
 }

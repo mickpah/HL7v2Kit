@@ -47,8 +47,7 @@ struct Profile: Sendable, Equatable, Hashable {
     /// (2026-10) removed that use once P4-17 confirmed the base v2.4
     /// PID grammar already carried those fields (see
     /// `Profile+au_adrm_2021.swift` for the history). The AU profile's
-    /// own `grammarExtensions` is `[:]` today — currently unused, kept
-    /// for the next locale-specific grammar addition.
+    /// own `grammarExtensions` carries MSH-27 (P00 S4-2).
     let grammarExtensions: [String: [FieldGrammar]]
 
     /// Per-segment group-scope cardinality rules layered on top of the
