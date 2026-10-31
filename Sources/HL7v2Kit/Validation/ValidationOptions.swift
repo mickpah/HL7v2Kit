@@ -27,6 +27,12 @@ public struct ValidationOptions: Sendable {
     /// set to (ADR-018).
     public var zSegmentPolicy: ZSegmentPolicy
 
+    /// Grammars for Z-segments, supplied by the caller (P00 S4-1). A Z-segment the version
+    /// grammar does not define is checked against the first entry whose ID matches and whose
+    /// sender scope admits MSH-3.1, and ``zSegmentPolicy`` does not apply to it. Empty by
+    /// default: HL7v2Kit ships no Z-segment grammar (ADR-003).
+    public var zSegmentGrammars: [ZSegmentGrammar] = []
+
     /// If true (default), check that fields with optionality `R` are populated.
     public var checkRequiredFields: Bool
 

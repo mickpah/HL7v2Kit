@@ -78,7 +78,7 @@ public struct Validator: Sendable {
             let occurrence = (segmentOccurrence[id] ?? 0) + 1
             segmentOccurrence[id] = occurrence
 
-            guard let baseGrammar = grammar[id] else {
+            guard let baseGrammar = grammar[id] ?? zSegmentGrammar(for: id, in: message) else {
                 // No grammar entry. Only a `Z` ID is a Z-segment (ADR-003);
                 // any other ID is a segment this version does not define
                 // (ADR-018), reported whatever the Z-segment policy.

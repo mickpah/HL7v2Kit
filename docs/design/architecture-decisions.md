@@ -137,6 +137,13 @@ time. Three knobs is more API than one switch; they are documented on `ParserOpt
 Z-segment branch. It is now `segmentNotInVersionGrammar`, so a standard segment is never
 labelled a Z-segment.
 
+**Amended (P00):** a caller may supply a grammar for a Z-segment through
+`ValidationOptions.zSegmentGrammars` (`ZSegmentGrammar`), optionally only for some sending
+applications (MSH-3.1). The validator checks the segment as it checks any segment, and
+`zSegmentPolicy` does not apply to it. The package still ships no Z-segment grammar and never
+guesses one. Parsing is unchanged: the segment stays `UnknownSegment` with no typed accessors,
+because typed segments are generated code.
+
 ## ADR-004 Codegen over macros
 
 **Status:** Accepted. Related: ADR-005, ADR-015, ADR-016, ADR-017, ADR-019, ADR-020.

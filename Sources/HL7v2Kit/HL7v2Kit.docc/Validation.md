@@ -31,7 +31,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 - **Version not recognised.** A populated MSH-12 naming no modelled version (2.1, 2.2, 2.5, 2.8.1, 2.9, or an unreadable VID.1) is validated against the v2.5.1 grammar: ``IssueCode/versionNotRecognised(wireValue:)``, warning. Always on.
 - **Segment not in the version's grammar.** A segment ID that does not begin with `Z` and that the version does not define: ``IssueCode/segmentNotInVersionGrammar``, warning, its fields unchecked. Always on, whatever the Z-segment policy.
 - **Withdrawn segment.** QRD, QRF, URD and URS on v2.7.1 and v2.8.2 (listed as withdrawn or deprecated, still named by structures): ``IssueCode/segmentWithdrawnInVersion``, information, fields unchecked. Always on.
-- **Z-segments.** ``ValidationOptions/zSegmentPolicy``: ``ZSegmentPolicy/ignore`` reports nothing, ``ZSegmentPolicy/warnPresence`` one ``IssueCode/zSegmentPresent`` at information per occurrence, ``ZSegmentPolicy/reject`` the same at error. A Z-segment's fields are never checked.
+- **Z-segments.** ``ValidationOptions/zSegmentPolicy``: ``ZSegmentPolicy/ignore`` reports nothing, ``ZSegmentPolicy/warnPresence`` one ``IssueCode/zSegmentPresent`` at information per occurrence, ``ZSegmentPolicy/reject`` the same at error. A Z-segment's fields are never checked. A Z-segment with a grammar in ``ValidationOptions/zSegmentGrammars`` is checked against it like any segment, and the policy does not apply to it.
 - **Message structure.** Segment order, groups, required segments and repetition against the structure the version prints for the trigger event (1,190 modelled, 183 registered as not modelled with their reason). ``ValidationOptions/messageStructureSeverity`` governs ``IssueCode/messageStructureSegmentMissing(structure:segmentID:group:)``, ``IssueCode/messageStructureSegmentUnexpected(structure:segmentID:)`` and ``IssueCode/messageStructureMismatch(declared:trigger:)`` (an MSH-9.3 naming a structure the trigger is not printed under). When no structure is applied, one ``IssueCode/messageStructureNotModelled(structure:)`` at information says why. Details under <doc:#Message-structures>.
 - **Conditions withheld.** Where the order-number conditions of an OUL, OPU or OPL cannot be scoped to one order group, they are not evaluated, and one ``IssueCode/conditionNotEvaluated(fields:)`` at information names them. Always on.
 
@@ -105,6 +105,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 | `extraComponentsSeverity`, `valueFormatSeverity`, `repetitionBoundSeverity` | `.warning` | `.warning` | off |
 | the four `au` assertions | `false` | `false` | `false` |
 | `localTableExtensions` | empty | empty | empty |
+| `zSegmentGrammars` | empty | empty | empty |
 | `valueExcerpts` | on | on | on |
 
 `default` suits receiving traffic where Z-segments are routine; `strict` suits validating what you send; `lenient` keeps the required-field check and the always-on checks (the version and segment notices, paired fields, withheld conditions) and turns off everything else. `ValidationOptions()` equals `default`. Receivers ignore unexpected segments (v2.5.1 CH02 section 2.6.2), which is why structure findings are warnings in `default` and errors in `strict`.

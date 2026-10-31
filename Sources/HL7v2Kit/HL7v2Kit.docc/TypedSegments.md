@@ -107,7 +107,7 @@ for segment in message.segments {
 }
 ```
 
-This is intentional — HL7v2Kit never invents grammar for Z-segments. See `ADR-003`.
+This is intentional — HL7v2Kit never invents grammar for Z-segments. See `ADR-003`. A caller who knows a Z-segment's layout can have it validated through ``ValidationOptions/zSegmentGrammars``; it still parses as ``UnknownSegment``.
 
 ## Adding a typed segment
 

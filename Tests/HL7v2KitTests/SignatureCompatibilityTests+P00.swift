@@ -59,4 +59,18 @@ extension SignatureCompatibilityTests {
         let _: KeyPath<Message, CharacterEncoding> = \.characterEncoding
         #expect(message["PID-3"] == "Y")
     }
+
+    @Test("P00 S4-1: ZSegmentGrammar and ValidationOptions.zSegmentGrammars keep their signatures")
+    func zSegmentGrammarSignatures() {
+        let grammars: WritableKeyPath<ValidationOptions, [ZSegmentGrammar]> = \.zSegmentGrammars
+        let grammar: KeyPath<ZSegmentGrammar, SegmentGrammar> = \.grammar
+        let scope: KeyPath<ZSegmentGrammar, Set<String>> = \.sendingApplications
+        let empty = SegmentGrammar(segmentID: "ZAU", version: "2.5.1", fields: [])
+        let unscoped = ZSegmentGrammar(empty)
+        let scoped = ZSegmentGrammar(empty, sendingApplications: ["LAB"])
+        _ = (grammars, grammar, scope)
+        #expect(unscoped.sendingApplications.isEmpty)
+        #expect(scoped.sendingApplications == ["LAB"])
+        #expect(ValidationOptions.default.zSegmentGrammars.isEmpty)
+    }
 }

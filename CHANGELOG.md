@@ -8,6 +8,13 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- `ValidationOptions.zSegmentGrammars`: a caller-supplied `ZSegmentGrammar` for a Z-segment,
+  optionally only for some sending applications (MSH-3.1), is applied by the validator like any
+  segment grammar, and `zSegmentPolicy` no longer applies to that segment. The package ships no
+  Z-segment grammar; parsing is unchanged.
+
 ## [3.26.0]
 
 ### Added
