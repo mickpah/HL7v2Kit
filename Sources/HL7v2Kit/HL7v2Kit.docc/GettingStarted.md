@@ -47,6 +47,12 @@ let givenName = message.firstSegment(PID.self)?.patientName?.givenName
 
 Both reach the same AST. Path strings suit one-off scripts; typed accessors give compile-time checking of segment and field names. See <doc:TypedSegments>.
 
+Paths have two spellings that read the same location: the native `PID-3~2.1` and the alternative syntax `PID-3[2].1`, which puts the repetition in brackets after the field. `[*]` stands for every segment occurrence (`OBX[*]-5`) or every repetition (`PID-3[*].1`). Read a wildcard path with `values(at:)`, which returns every match in document order; the subscript returns `nil` for it.
+
+```swift
+let identifiers = message.values(at: try Path("PID-3[*].1"))
+```
+
 ## Validate
 
 ```swift

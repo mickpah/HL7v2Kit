@@ -17,4 +17,14 @@ extension SignatureCompatibilityTests {
         #expect(error == .lineFeedAfterSegmentTerminator(position: 2))
         #expect(error.description.contains("2"))
     }
+
+    @Test("P00 S2-1: the path wildcards, the string form and values(at:) keep their signatures")
+    func pathSyntaxSignatures() throws {
+        let segmentWildcard: KeyPath<Path, Bool> = \.segmentWildcard
+        let repetitionWildcard: KeyPath<Path, Bool> = \.repetitionWildcard
+        let values: (Message) -> (Path) -> [String] = Message.values(at:)
+        _ = (segmentWildcard, repetitionWildcard, values)
+        let described: any CustomStringConvertible = try Path("PID-3")
+        #expect(described.description == "PID-3")
+    }
 }

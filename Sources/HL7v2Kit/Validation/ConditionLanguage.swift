@@ -210,11 +210,12 @@ enum ConditionLanguage {
     }
 
     /// A DSL field-ref (`SEG-f`, `SEG-f.c`, `SEG-f.c.s`) through the shared
-    /// ``Path`` parser, rejecting the Path-only segment-index (`SEG[N]-f`) and
-    /// repetition (`SEG-f~r`) axes the condition grammar excludes. ADR-010
-    /// Extension 3.
+    /// ``Path`` parser, rejecting the Path-only segment-index (`SEG[N]-f`),
+    /// repetition (`SEG-f~r`, `SEG-f[r]`) and wildcard (`[*]`) axes the condition
+    /// grammar excludes. ADR-010 Extension 3; P00 S2-1 added the last two.
     static func fieldRef(_ referent: String) -> Path? {
-        guard let path = try? Path(referent), path.segmentIndex == nil, path.repetition == nil
+        guard let path = try? Path(referent), path.segmentIndex == nil, path.repetition == nil,
+              !path.segmentWildcard, !path.repetitionWildcard
         else { return nil }
         return path
     }

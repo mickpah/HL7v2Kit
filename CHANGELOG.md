@@ -8,6 +8,14 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- `Path` accepts the alternative path syntax beside the native one: the repetition in
+  brackets after the field (`PID-3[2].1` reads as `PID-3~2.1`), and `[*]` for every segment
+  occurrence or every repetition (`OBX[*]-5[*]`). Mixed forms are malformed.
+  `Message.values(at:)` reads a wildcard path; the subscript returns `nil` for one.
+  `Path.description` gives the native form.
+
 ## [3.24.0]
 
 ### Changed
