@@ -23,8 +23,8 @@ enum Serializer {
             lines.append(serializeSegment(segment, encoding: enc, isMSH: isMSH))
         }
 
-        // HL7 spec: segments separated by \r, message terminated by \r.
-        let body = lines.joined(separator: "\r") + "\r"
+        // HL7 spec: segments separated by \r. The final \r is the input's (P00 S1-1).
+        let body = lines.joined(separator: "\r") + (message.trailingSegmentTerminator ? "\r" : "")
         return body.data(using: message.characterEncoding.stringEncoding) ?? Data(body.utf8)
     }
 

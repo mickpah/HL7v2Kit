@@ -58,6 +58,7 @@ but transparently fake). No real-world data sources.
 | File | Category | Purpose | Anonymisation log |
 |---|---|---|---|
 | `adt_a01_minimal.hl7` | ADT^A01 (admit) | MSH + EVN + PID + PV1 — smallest valid admit message (EVN added 2026-10-03, P8b-5) | N/A — synthetic from scratch |
+| `adt_a01_minimal_no_trailing_cr.hl7` | ADT^A01 (admit) | `adt_a01_minimal.hl7` without its final `\r`: the round trip must not add one (P00 S1-1) | N/A — synthetic, derived from `adt_a01_minimal.hl7` |
 | `adt_a01_with_nk1.hl7` | ADT^A01 (admit) | MSH + EVN + PID + NK1 + PV1 — admit with next-of-kin contact (EVN added 2026-10-03, P8b-5) | N/A — synthetic from scratch |
 | `orm_o01_lab_order.hl7` | ORM^O01 (order) | MSH + PID + ORC + OBR — lab order for glucose | N/A — synthetic from scratch |
 | `oru_r01_chemistry.hl7` | ORU^R01 (result) | MSH + PID + OBR + 3 × OBX — chemistry panel results | N/A — synthetic from scratch |

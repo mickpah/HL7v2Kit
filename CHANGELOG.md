@@ -16,6 +16,14 @@ The entries are condensed; the git history carries the detail.
   a GitHub-hosted runner. `scripts/ci-rehearsal.sh` runs a job on a `swift-X.Y` runner in the
   `swift:X.Y-jammy` image.
 
+### Fixed
+
+- A message whose last segment has no terminator now serialises without one, so it
+  round-trips byte for byte. `Message.trailingSegmentTerminator` records what the parser read
+  (a built message ends with one) and takes no part in equality; the anonymiser keeps it.
+- The round-trip article's line-ending section now says what `.strict` does (an `\n` is data, written back as `\X0A\`)
+  and lists lenient line-ending rewriting and dropped blank lines as exceptions.
+
 ## [3.23.0]
 
 - **Added:** `IssueCode.correlatedValueMismatch` (3005) and `ValidationOptions.correlationSeverity`

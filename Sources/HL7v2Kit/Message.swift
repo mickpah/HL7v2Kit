@@ -26,6 +26,12 @@ public struct Message: Sendable, Equatable, Hashable {
     /// know which localisation promises the validator made. See ADR-007.
     public let locale: HL7Locale
 
+    /// Whether the wire ended with a segment terminator after its last segment.
+    /// ``Parser`` records it and ``serialize()`` puts back what it read; a message
+    /// built in code ends with one. It takes no part in equality or hashing: two
+    /// messages that differ only in the final terminator hold the same segments.
+    public var trailingSegmentTerminator: Bool = true
+
     /// How group-dependent predicates find a segment's group (P8b-17). The
     /// Validator sets it on its own copy; it takes no part in equality.
     var groupScoping: GroupScoping = .walk
@@ -44,6 +50,7 @@ public struct Message: Sendable, Equatable, Hashable {
         self.locale = locale
     }
 
+    // groupScoping and trailingSegmentTerminator take no part (see their docs).
     public static func == (lhs: Message, rhs: Message) -> Bool {
         lhs.version == rhs.version && lhs.encodingCharacters == rhs.encodingCharacters
             && lhs.segments == rhs.segments && lhs.characterEncoding == rhs.characterEncoding

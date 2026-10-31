@@ -77,8 +77,10 @@ public struct Anonymiser: Sendable {
             for (index, rule) in Self.coverage[id] ?? [] { apply(rule, to: &fields, at: index) }
             return .unknown(UnknownSegment(segmentID: id, fields: fields))
         }
-        return Message(version: message.version, encodingCharacters: message.encodingCharacters,
-                       segments: segments, characterEncoding: message.characterEncoding,
-                       locale: message.locale)
+        var result = Message(version: message.version, encodingCharacters: message.encodingCharacters,
+                             segments: segments, characterEncoding: message.characterEncoding,
+                             locale: message.locale)
+        result.trailingSegmentTerminator = message.trailingSegmentTerminator
+        return result
     }
 }

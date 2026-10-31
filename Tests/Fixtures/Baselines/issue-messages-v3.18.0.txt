@@ -37,6 +37,8 @@ adt_a01_emergency.hl7|strict-au|EVN[1]-1|Field EVN[1]-1 ('Event Type Code') is d
 adt_a01_emergency.hl7|strict-au|PID[1]-13.1|Component PID[1]-13.1 ('Telephone Number') repetition 1 is kept for backward compatibility only (B) in v2.5.1 but populated
 adt_a01_minimal.hl7|default|PID[1]-13.1|Component PID[1]-13.1 ('Telephone Number') repetition 1 is kept for backward compatibility only (B) in v2.5.1 but populated
 adt_a01_minimal.hl7|strict-au|PID[1]-13.1|Component PID[1]-13.1 ('Telephone Number') repetition 1 is kept for backward compatibility only (B) in v2.5.1 but populated
+adt_a01_minimal_no_trailing_cr.hl7|default|PID[1]-13.1|Component PID[1]-13.1 ('Telephone Number') repetition 1 is kept for backward compatibility only (B) in v2.5.1 but populated
+adt_a01_minimal_no_trailing_cr.hl7|strict-au|PID[1]-13.1|Component PID[1]-13.1 ('Telephone Number') repetition 1 is kept for backward compatibility only (B) in v2.5.1 but populated
 adt_a01_v23.hl7|default|PID[1]-3|Field PID[1]-3 ('Patient ID (Internal ID)') repetition 1 has length 28; the v2.3 attribute table prints LEN 20
 adt_a01_v23.hl7|default|PID[1]-10|Field PID[1]-10 ('Race') repetition 1 has length 6; the v2.3 attribute table prints LEN 1
 adt_a01_v23.hl7|default|PID[1]-10|Field PID[1]-10 ('Race') repetition 1 is IS, a primitive data type, but carries "White", "HL70005" after its first value "2106-3"; a recipient ignores parts it does not expect (v2.3 section 2.10, receiving rule a), and a separator inside a value is escaped as \S\ or \T\

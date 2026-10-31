@@ -96,8 +96,8 @@ public struct Parser: Sendable {
     private func parse(_ raw: String, characterEncoding: CharacterEncoding) throws -> Message {
         guard !raw.isEmpty else { throw ParseError.emptyInput }
 
-        // Normalise line terminators per policy. Always *preserve* trailing
-        // structure so serialise() can put it back.
+        // Normalise line terminators per policy. Whether the input ended with \r is
+        // recorded on the message so serialise() can put it back (P00 S1-1).
         let normalised = normaliseLineTerminators(raw)
 
         // Split by \r (the HL7 segment terminator). Keep empty trailing entries
@@ -179,13 +179,16 @@ public struct Parser: Sendable {
             }
         }
 
-        return Message(
+        var message = Message(
             version: version,
             encodingCharacters: encoding,
             segments: segments,
             characterEncoding: characterEncoding,
             locale: locale
         )
+        // Unicode scalars, not Characters: "\r\n" is one Character in Swift.
+        message.trailingSegmentTerminator = normalised.unicodeScalars.last == "\r"
+        return message
     }
 
     // MARK: - Segment parsing

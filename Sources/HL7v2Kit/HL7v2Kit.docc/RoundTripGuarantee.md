@@ -18,7 +18,7 @@ This is non-negotiable. Failed round-trip is treated as a bug in HL7v2Kit, not i
 
 The library guarantees byte equality across:
 
-- **Segment terminators.** `\r` is preserved exactly; mixed `\r\n` / `\n` inputs are normalised to `\r` only under `LineTerminatorPolicy.lenient` (the default for the parser); under `.strict`, the parser refuses non-`\r` terminators.
+- **Segment terminators.** `\r` is preserved exactly, including its absence after the last segment (``Message/trailingSegmentTerminator``). Under `LineTerminatorPolicy.strict` only `\r` ends a segment: an `\n` is data and stays in the value it falls in.
 - **Empty trailing fields.** `PID|1|||\r` retains its trailing pipes after a round trip — the parser does not omit empty subsequences.
 - **Repetitions, components, and subcomponents.** Every layer of nesting that exists on the wire is preserved as a distinct AST node. See ``Field``, ``Repetition``, ``Component``, ``Subcomponent``.
 - **Escape sequences.** `\F\`, `\S\`, `\T\`, `\R\`, `\E\`, and `\X..\` round-trip exactly. Hex escapes are coalesced canonically (`\X0D0A\`, not `\X0D\\X0A\`). `\Z..\` and unknown escape bodies pass through verbatim. See <doc:EscapeSequences>.
@@ -33,6 +33,9 @@ The library guarantees byte equality across:
 - **Bytes synthesised by ``MessageBuilder``.** Builder-produced messages round-trip if you parse-then-serialise them, but the builder API does not enforce that *every* combination of typed accessor writes produces a byte-equal stream of the user's original bytes (because there were no original bytes to compare to).
 - **Non-canonical escape forms.** A sender that writes `\X0D\\X0A\` (two separate hex-byte escapes for CR LF) round-trips as the canonical coalesced form `\X0D0A\`. The decoded content is identical; the wire bytes are not. Two property tests cover this: `decode(encode(x)) == x` for decoded inputs (canonical round trip), and `encode(decode(y)) == y` for canonical wire inputs (canonical wire stays canonical).
 - **Character-set conversion loss.** If a sender declares MSH-18 = `ASCII` but populates a body byte outside ASCII range, `Parser.parse(_ data:)` throws ``ParseError/unsupportedCharacterEncoding(declared:)`` — there is no "best-effort" lossy decode.
+- **Line endings under `.lenient`.** `LineTerminatorPolicy.lenient` (the parser's default) reads `\r\n` and `\n` as segment terminators and serialises `\r`. Use `.strict` when the bytes must come back unchanged.
+- **Blank lines.** An empty line between segments (`\r\r`) is skipped on parse and not re-emitted.
+- **Raw control characters.** A control character inside a value, such as an `\n` read under `.strict`, is written back as a hex escape (`\X0A\`); a raw one cannot stand inside a field on the wire. The decoded value is unchanged.
 
 ## How to debug a failed round trip
 
