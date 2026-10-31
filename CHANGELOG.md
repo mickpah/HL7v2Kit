@@ -8,6 +8,27 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- Path-addressed editing: `Message.set(_:at:)`, `clear(at:)` and `insertRepetition(_:at:)`,
+  in either path syntax. A field-level path with no repetition writes the whole field;
+  missing nodes are created empty; values are text and are escaped on serialisation; an
+  edited segment stays typed. A refused edit throws `MessageEditError` (segment not found,
+  delimiter field, wildcard, not a repetition, invalid path, unsupported character set) and
+  changes nothing; an edit to MSH-12 or MSH-18 re-reads `version` or `characterEncoding`.
+
+### Changed
+
+- `Message.segments`, `version` and `characterEncoding` are `public internal(set) var` (were
+  `let`); reading them is unchanged.
+
+### Fixed
+
+- The serialiser no longer copies a `\...\` run that holds a delimiter or a control
+  character: it escapes each character, so a value written in code cannot split a field or
+  start a segment. A value the parser read never holds such a run, so round-trip output is
+  unchanged.
+
 ## [3.25.0]
 
 ### Added

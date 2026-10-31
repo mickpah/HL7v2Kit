@@ -37,4 +37,25 @@ extension SignatureCompatibilityTests {
         _ = (populated, path, value)
         #expect(pair.value == "X")
     }
+
+    @Test("P00 S3-1: the editing methods and MessageEditError keep their signatures")
+    func editingSignatures() throws {
+        var message = try Parser().parse("MSH|^~\\&|A|B|C|D|20260101||ADT^A01|M1|P|2.5.1\rPID|1\r")
+        let set: (inout Message, String, Path) throws -> Void = { try $0.set($1, at: $2) }
+        let clear: (inout Message, Path) throws -> Void = { try $0.clear(at: $1) }
+        let insert: (inout Message, String, Path) throws -> Void = { try $0.insertRepetition($1, at: $2) }
+        try set(&message, "X", Path("PID-5"))
+        try clear(&message, Path("PID-5"))
+        try insert(&message, "Y", Path("PID-3~1"))
+        let path = try Path("PID-3")
+        let errors: [MessageEditError] = [
+            .segmentNotFound(segmentID: "ZZZ", occurrence: 1), .delimiterField(segmentID: "MSH", field: 2),
+            .wildcardPath(path), .notARepetition(path), .invalidPath(path),
+            .unsupportedCharacterEncoding(declared: "X"),
+        ]
+        #expect(errors.count == 6)
+        let _: KeyPath<Message, Version> = \.version
+        let _: KeyPath<Message, CharacterEncoding> = \.characterEncoding
+        #expect(message["PID-3"] == "Y")
+    }
 }

@@ -8,18 +8,19 @@ import Foundation
 /// Lossless: round-trips to wire bytes byte-for-byte when the original was
 /// syntactically valid and accepted by the parser. See `serialize()`.
 public struct Message: Sendable, Equatable, Hashable {
-    /// The HL7 version declared in MSH-12.
-    public let version: Version
+    /// The HL7 version declared in MSH-12. An edit to MSH-12 with ``set(_:at:)`` re-reads it.
+    public internal(set) var version: Version
 
     /// The field separator (MSH-1) and the four encoding characters (MSH-2). A fifth MSH-2 character, the v2.7+ truncation character, is kept only in MSH-2's literal value.
     public let encodingCharacters: EncodingCharacters
 
-    /// The segments in document order. The first segment is always MSH.
-    public let segments: [Segment]
+    /// The segments in document order. The first segment is always MSH. Change a value
+    /// with ``set(_:at:)``, ``clear(at:)`` or ``insertRepetition(_:at:)``.
+    public internal(set) var segments: [Segment]
 
     /// The character set declared in MSH-18 (or `.utf8` when absent).
-    /// `serialize()` re-emits bytes in this encoding.
-    public let characterEncoding: CharacterEncoding
+    /// `serialize()` re-emits bytes in this encoding. An edit to MSH-18 with ``set(_:at:)`` re-reads it.
+    public internal(set) var characterEncoding: CharacterEncoding
 
     /// The locale the parser was configured with. Default is `.international`.
     /// Downstream consumers (e.g. a FHIR mapping layer) can read this to

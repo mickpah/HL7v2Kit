@@ -218,8 +218,8 @@ invariant.
   (ADR-002); concurrency annotations never carry logic.
 - Kernel files carry a header comment naming them as kernel and pointing here: `Parser.swift`,
   `ParseError.swift`, `Serializer.swift`, `Field.swift`, `Path.swift`,
-  `EncodingCharacters.swift`, `EscapeSequences.swift`, `Version.swift`, `HL7Locale.swift` and
-  `MLLPCodec.swift`.
+  `EncodingCharacters.swift`, `EscapeSequences.swift`, `Version.swift`, `HL7Locale.swift`,
+  `MLLPCodec.swift` and `Message+Editing.swift` (P00).
 - Stratum 2, the Swift skin: typed-segment protocols and type erasure, `Message` conveniences,
   generated typed segments, and any `Codable` or description conformances. It may use all of
   Swift and must not leak into the kernel.

@@ -149,7 +149,8 @@ enum EscapeSequences {
             // of the encoded value.
             if c == esc,
                let closingIdx = chars[(i + 1)...].firstIndex(of: esc),
-               isPassthroughBody(chars[(i + 1)..<closingIdx]) {
+               isPassthroughBody(chars[(i + 1)..<closingIdx]),
+               isPlainBody(chars[(i + 1)..<closingIdx], encoding: encoding) {
                 for k in i...closingIdx { result.append(chars[k]) }
                 i = closingIdx + 1
                 continue
@@ -227,6 +228,21 @@ enum EscapeSequences {
             result.append(digits[Int(byte >> 4)])
             result.append(digits[Int(byte & 0x0F)])
         }
+    }
+
+    /// A body the encoder may copy verbatim holds no delimiter and no control character. The
+    /// parser never produces one that does (it splits on the delimiters and the segment
+    /// terminator first); copying one written in code would split a field or start a segment
+    /// (P00 S3-1).
+    private static func isPlainBody(_ body: ArraySlice<Character>, encoding: EncodingCharacters) -> Bool {
+        for c in body {
+            if c == encoding.fieldSeparator || c == encoding.componentSeparator
+                || c == encoding.repetitionSeparator || c == encoding.subcomponentSeparator
+                || needsHexEncoding(c) {
+                return false
+            }
+        }
+        return true
     }
 
     /// A body is "passthrough" if the decoder would have emitted the whole
