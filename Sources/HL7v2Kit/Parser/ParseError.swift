@@ -23,6 +23,10 @@ public enum ParseError: Error, Equatable, Sendable, CustomStringConvertible {
     case truncatedMessage(atByte: Int)
     /// A streamed message passed the byte limit it was read under.
     case messageTooLarge(limit: Int)
+    /// Under ``LineTerminatorPolicy/strict``, segment `position` (1-based) starts with a line
+    /// feed: the input ends its segments with `\r\n`, which only
+    /// ``LineTerminatorPolicy/lenient`` reads as a segment terminator.
+    case lineFeedAfterSegmentTerminator(position: Int)
 
     public var description: String {
         switch self {
@@ -42,6 +46,8 @@ public enum ParseError: Error, Equatable, Sendable, CustomStringConvertible {
             return "Message truncated at byte \(byte)"
         case .messageTooLarge(let limit):
             return "Message larger than the \(limit)-byte limit"
+        case .lineFeedAfterSegmentTerminator(let position):
+            return "Segment \(position) starts with a line feed; under the strict line-terminator policy only \\r ends a segment"
         }
     }
 }
@@ -96,8 +102,9 @@ public struct ParserOptions: Sendable {
 
 /// How the parser reads the line endings between segments.
 public enum LineTerminatorPolicy: Sendable, Equatable, Hashable {
-    /// Only `\r` ends a segment, as HL7 v2 specifies. An `\n` is data, and so is a `\r\n` pair
-    /// (see the round-trip article).
+    /// Only `\r` ends a segment, as HL7 v2 specifies. A segment that starts with `\n` (a
+    /// `\r\n` line ending) is rejected with ``ParseError/lineFeedAfterSegmentTerminator(position:)``;
+    /// an `\n` elsewhere is data.
     case strict
     /// `\r`, `\n` and `\r\n` each end a segment; the serialiser writes `\r`.
     case lenient

@@ -10,4 +10,11 @@ extension SignatureCompatibilityTests {
         let flag: WritableKeyPath<Message, Bool> = \.trailingSegmentTerminator
         _ = flag
     }
+
+    @Test("P00 S1-3: ParseError.lineFeedAfterSegmentTerminator keeps its signature")
+    func lineFeedErrorSignature() {
+        let error: ParseError = .lineFeedAfterSegmentTerminator(position: 2)
+        #expect(error == .lineFeedAfterSegmentTerminator(position: 2))
+        #expect(error.description.contains("2"))
+    }
 }

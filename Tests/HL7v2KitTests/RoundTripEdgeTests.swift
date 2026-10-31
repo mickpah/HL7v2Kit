@@ -64,15 +64,29 @@ struct RoundTripEdgeTests {
         #expect(message.serialize() == Data(wire.replacingOccurrences(of: "\n", with: "\\X0A\\").utf8))
     }
 
-    // A recorded limitation, not a promise: the parser splits on Characters and "\r\n" is one
-    // Character, so .strict does not end a segment at a CRLF. Fixing the parser flips this test.
-    @Test("P00 S1: under .strict a CRLF is not a segment terminator, so the next line folds into the value")
-    func strictCRLFFolds() throws {
+    static let crlf = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\r\n"
+        + "PID|1||X\r"
+
+    @Test("P00 S1-3: under .strict a CRLF line ending is rejected, not folded into the value")
+    func strictRejectsCRLF() {
+        #expect(throws: ParseError.lineFeedAfterSegmentTerminator(position: 2)) {
+            try Parser(options: ParserOptions(lineTerminator: .strict)).parse(Self.crlf)
+        }
+    }
+
+    @Test("P00 S1-3: under .strict a CRLF after the last segment is rejected too")
+    func strictRejectsTrailingCRLF() {
         let wire = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\r\n"
-            + "PID|1||X\r"
-        let message = try Parser(options: ParserOptions(lineTerminator: .strict)).parse(wire)
-        #expect(message.segments.count == 1)
-        #expect(message.serialize() == Data(wire.replacingOccurrences(of: "\r\n", with: "\\X0D0A\\").utf8))
+        #expect(throws: ParseError.lineFeedAfterSegmentTerminator(position: 2)) {
+            try Parser(options: ParserOptions(lineTerminator: .strict)).parse(wire)
+        }
+    }
+
+    @Test("P00 S1-3: under .lenient the same CRLF message parses into its segments")
+    func lenientSplitsCRLF() throws {
+        let message = try Parser().parse(Self.crlf)
+        #expect(message.segments.map(\.segmentID) == ["MSH", "PID"])
+        #expect(message["PID-3"] == "X")
     }
 
     @Test("P00 S1-1: a blank line between segments is dropped (a documented exception)")

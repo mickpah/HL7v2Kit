@@ -100,12 +100,23 @@ public struct Parser: Sendable {
         // recorded on the message so serialise() can put it back (P00 S1-1).
         let normalised = normaliseLineTerminators(raw)
 
-        // Split by \r (the HL7 segment terminator). Keep empty trailing entries
+        // Split on the carriage-return scalar (the HL7 segment terminator), not on
+        // Characters: "\r\n" is one Character in Swift, so a Character split would fold a
+        // CRLF line into the segment before it (P00 S1-3). Keep empty trailing entries
         // out — they represent the final \r after the last segment.
-        var segmentStrings = normalised.components(separatedBy: "\r")
+        var segmentStrings = normalised.unicodeScalars
+            .split(separator: "\r", omittingEmptySubsequences: false)
+            .map { String(String.UnicodeScalarView($0)) }
         // Trailing empty string after final \r is expected; drop it for parsing.
         if segmentStrings.last == "" {
             segmentStrings.removeLast()
+        }
+
+        // Under .strict only \r ends a segment, so a line starting with \n is a CRLF line
+        // ending, not a segment (.lenient has already rewritten it).
+        if options.lineTerminator == .strict,
+           let index = segmentStrings.firstIndex(where: { $0.unicodeScalars.first == "\n" }) {
+            throw ParseError.lineFeedAfterSegmentTerminator(position: index + 1)
         }
 
         guard !segmentStrings.isEmpty else { throw ParseError.missingMSH }
