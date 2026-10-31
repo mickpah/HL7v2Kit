@@ -256,8 +256,8 @@ schema tree per profile and the copies drift.
 **Decision.**
 
 - Locale is a first-class public mode. `HL7Locale` has `.international` (the base standard,
-  the default) and `.auLocalisation`. It is passed to `Parser` and `Validator` (or set as
-  `ValidationOptions.locale`) and is reported back on `Message.locale` and
+  the default) and `.auLocalisation`. It is passed to `Parser` and `Validator` (the `locale` argument of
+  `Validator(options:locale:)`) and is reported back on `Message.locale` and
   `ValidationReport.locale`, read-only.
 - The base schemas stay faithful to the standard. AU narrowings live in an internal `Profile`
   value, `Profile.auADRM2021`, hand-curated in compiler-checked Swift and returned by
@@ -769,10 +769,15 @@ read as a scalar and fell back too.
 | 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1, 2.8.2 | Modelled | Its own | none |
 | 2.7 | Substituted | v2.7.1 | `versionGrammarSubstituted` (info) |
 | 2.8 | Substituted | v2.8.2 | `versionGrammarSubstituted` (info) |
-| 2.1, 2.2, 2.5, 2.8.1, 2.9, any other | Excluded | v2.5.1 fallback | `versionNotRecognised` (warning) |
+| 2.1, 2.2, 2.5, 2.8.1, 2.9, 2.9.1, any other | Excluded | v2.5.1 fallback | `versionNotRecognised` (warning) |
 
 - Excluded versions are recorded in the limitations register, section F. Re-opening one needs
   its text, an amendment here, and an ADR-015 extraction cycle.
+
+**Amended (P00):** v2.9's text is now held (the ANSI December 2019 chapters, the January 2020
+technical correction and its errata), so v2.9 can be reopened through its own ADR-015
+extraction cycle, planned separately. v2.9.1 stays excluded until its text is held. ADRM 2021's
+one v2.9 pre-adoption, MSH-27, is carried by the AU profile on its own and needs neither.
 
 **Consequences.** `2.8` and `2.7` messages are checked against the nearest published grammar,
 with the unverified differences stated in the info issue. AU v2.4 traffic meets the v2.4

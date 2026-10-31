@@ -1000,12 +1000,19 @@ extension Profile {
             // prints; the full list is in the permanent-limitations register,
             // section B. OBX-5 ("16 MB", p. 235) is not listed: the v2.4 cell
             // `*` asserts no maximum, and the ADRM lets trading partners agree
-            // other sizes. MSH-27 (LEN 250, p. 38) has no v2.4 grammar field.
+            // other sizes. MSH-27 (LEN 250, p. 38) follows, with the grammar extension that
+            // pre-adopts the field (P00 S4-2).
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 10,
                 length: "199",
                 lengthCitation: "AU ADRM-2021 MSH attribute table p. 37, LEN 199††; p. 38: \"Australian variation to HL7 V2.4 with the length changed from 20 to 199 characters to accommodate a globally unique identifier.\" (the MSH-10 definition note, p. 41, prints 36; the attribute table's LEN is applied)"
+            ),
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 27,
+                length: "250",
+                lengthCitation: "AU ADRM-2021 MSH attribute table p. 38, LEN 250†††††: \"Australian variation to HL7 V2.4, field is pre-adopted from HL7 International v2.9. Length of 250 has been set consistent with the CWE length specified in section 3.6 CWE – coded with exceptions.\""
             ),
             FieldOverride(
                 segmentID: "PV1",
@@ -1073,7 +1080,20 @@ extension Profile {
         // traffic validates identically to `.international` for these four
         // fields. See `LocaleAUProfileTests.v24PID38RepeatsUnderAU` and
         // `v24PIDSpeciesConditionFiresUnderInternational`.
-        grammarExtensions: [:],
+        // P00 S4-2: MSH-27 Security Handling Instructions, pre-adopted from HL7
+        // International v2.9 (MSH attribute table p. 38: SEQ 27, DT CWE, OPT O, RP Y, no
+        // TBL#, item 02430, footnote †††††; definition §2.1.9.27). Its LEN 250 is the
+        // MSH-27 FieldOverride with the other ADRM LEN variations. MSH-22 to MSH-26 print
+        // only "Reserved", with no type, usage or length, so they are not modelled. v2.9's
+        // own binding of MSH-27 to table 0953, and its MSH-26 condition ("Required if MSH-27
+        // or MSH-28 is valued"), are not adopted by the ADRM and do not apply here
+        // (permanent-limitations register).
+        grammarExtensions: [
+            "MSH": [
+                FieldGrammar(index: 27, name: "Security Handling Instructions", dataType: "CWE",
+                             optionality: .optional, repeatability: .multiple),
+            ],
+        ],
         compositeOverrides: [
             // MSG datatype (MSH-9 only) — HL7au:00049.1: "MSH-9 Message
             // type <message type (ID)> component must be valued."

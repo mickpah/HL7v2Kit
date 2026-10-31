@@ -92,7 +92,7 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     case zSegmentPresent
     /// A localisation profile constraint was violated. The associated
     /// `localeRule` identifies the specific profile rule (e.g.
-    /// `"au-adrm-2021:PID-3.4 R"`) so consumers can attribute the
+    /// `"HL7au:00044.2.3 (r2) — …"`, the rule's `specCitation`) so consumers can attribute the
     /// failure to the loaded locale. Scaffolded in v0.4-S5-A; fired
     /// once profile overrides ship in S5-B and later. See ADR-007.
     case profileConstraintViolation(localeRule: String)

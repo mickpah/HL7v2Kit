@@ -115,11 +115,13 @@ AU rules (the per-message acknowledgement of HL7au:000022.1), and reports a REF 
 other message (HL7au:000022.3). Example: `HL7au:000024.1`.
 
 **Field lengths the ADRM varies.** The ADRM's attribute tables print a LEN other than v2.4's for
-15 fields: MSH-10, MSH-12, PV1-10, PV1-21, AL1-1, AL1-5, OBR-2, OBR-3, OBR-9, OBX-18, ORC-2,
+16 fields: MSH-10, MSH-12, MSH-27, PV1-10, PV1-21, AL1-1, AL1-5, OBR-2, OBR-3, OBR-9, OBX-18, ORC-2,
 ORC-3, ORC-4, RF1-6 and RF1-11. Under the profile the length check reads the ADRM's figure, so a
 250-character order number is clean and a five-digit AL1-1 is not. A breach is
 ``IssueCode/fieldLengthOutOfRange(length:actual:)`` naming the ADRM length, at
-``ValidationOptions/fieldLengthSeverity``.
+``ValidationOptions/fieldLengthSeverity``. MSH-27 Security Handling Instructions, which the ADRM
+pre-adopts from v2.9, is validated under the AU locale as CWE, optional and repeating; the v2.4
+grammar has no MSH-27.
 
 **The MIME tables.** The ADRM prints Table 0191 with the IANA types added (`application`, `image`,
 `text` and others, pp 167 to 168) and Table 0291 with the subtypes `pdf`, `png`, `xml` and `emf`
