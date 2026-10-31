@@ -47,13 +47,7 @@ let givenName = message.firstSegment(PID.self)?.patientName?.givenName
 
 Both reach the same AST. Path strings suit one-off scripts; typed accessors give compile-time checking of segment and field names. See <doc:TypedSegments>.
 
-Paths have two spellings that read the same location: the native `PID-3~2.1` and the alternative syntax `PID-3[2].1`, which puts the repetition in brackets after the field. `[*]` stands for every segment occurrence (`OBX[*]-5`) or every repetition (`PID-3[*].1`). Read a wildcard path with `values(at:)`, which returns every match in document order; the subscript returns `nil` for it.
-
-```swift
-let identifiers = message.values(at: try Path("PID-3[*].1"))
-```
-
-`populatedPaths()` lists every non-empty value with its fully indexed path (`PID[1]-5~1.1.1`), in document order: the starting point for an index or field statistics.
+Paths also have an alternative spelling and wildcards; see "Path syntax" below.
 
 ## Validate
 
@@ -113,6 +107,20 @@ MSA|AA|SYN-MSG-0001
 ```
 
 The sixteen AU errors are ADRM-2021 rules a plain v2.4 message does not meet, on MSH-12, MSH-15, MSH-16, MSH-17, MSH-19, OBR-2, OBR-3 and the OBR segment.
+
+## Path syntax
+
+These examples are not part of the QuickStart program.
+
+Paths have two spellings that read the same location: the native `PID-3~2.1` and the alternative syntax `PID-3[2].1`, which puts the repetition in brackets after the field. `[*]` stands for every segment occurrence (`OBX[*]-5`) or every repetition (`PID-3[*].1`). Read a wildcard path with `values(at:)`, which returns every non-empty match in document order; the subscript returns `nil` for it.
+
+```swift
+let identifiers = message.values(at: try Path("PID-3[*].1"))
+```
+
+`populatedPaths()` lists every non-empty value with its fully indexed path (`PID[1]-5~1.1.1`), in document order: the starting point for an index or field statistics.
+
+A whole-field read of a structured value (a CX, an XPN) returns `nil` from the subscript and is skipped by `values(at:)`: read a component (`PID-3[*].1`) or walk `populatedPaths()`.
 
 ## See Also
 

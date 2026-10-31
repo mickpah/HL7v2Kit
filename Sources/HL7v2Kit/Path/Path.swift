@@ -32,18 +32,35 @@
 import Foundation
 
 /// A parsed, structurally validated HL7 v2 path.
+///
+/// A path names a segment, a field and, optionally, a repetition, a component and a
+/// subcomponent, all 1-based. Two spellings parse to the same value: the native one
+/// (`PID-3~2.1`, `OBX[2]-5`) and the alternative path syntax, which puts the repetition in
+/// brackets after the field (`PID-3[2].1`). A path spells its repetition one way or the
+/// other; `PID-3[2]~1` is malformed. `[*]` names every segment occurrence (`OBX[*]-5`) or,
+/// in the alternative syntax only, every repetition (`PID-3[*].1`); read such a path with
+/// ``Message/values(at:)``.
+///
+/// ```
+/// path        := segment-ref "-" field-spec
+/// segment-ref := SEGMENT-ID ( "[" index "]" )?
+/// field-spec  := INT ( "[" index "]" | "~" INT )? ( "." INT ( "." INT )? )?
+/// index       := INT (1 or more) | "*"
+/// SEGMENT-ID  := 2 to 4 letters or digits
+/// ```
 public struct Path: Sendable, Equatable, Hashable {
-    /// The 3-character segment identifier (e.g. "PID").
+    /// The segment identifier (e.g. "PID"): 2 to 4 letters or digits, three by HL7 convention.
     public let segmentID: String
 
-    /// 1-based index when multiple segments of the same type exist.
-    /// `nil` means "the first occurrence" (default).
+    /// 1-based index when multiple segments of the same type exist. `nil` means "the first
+    /// occurrence", unless ``segmentWildcard`` is true, when the path names every occurrence.
     public let segmentIndex: Int?
 
     /// 1-based field index. Always present.
     public let field: Int
 
-    /// 1-based repetition. `nil` means "the first repetition" (default).
+    /// 1-based repetition. `nil` means "the first repetition", unless ``repetitionWildcard`` is
+    /// true, when the path names every repetition.
     public let repetition: Int?
 
     /// 1-based component. `nil` means "the whole field/repetition".
@@ -93,7 +110,7 @@ public struct Path: Sendable, Equatable, Hashable {
         self.subcomponent = subcomponent
     }
 
-    /// Parse a path string. Throws on malformed input.
+    /// Parses a path string in either spelling (see ``Path``). Throws ``PathError`` on malformed input.
     public init(_ string: String) throws {
         let parsed = try Path.parse(string)
         self = parsed
@@ -108,7 +125,7 @@ public struct Path: Sendable, Equatable, Hashable {
 
         var scanner = Scanner(input: input)
 
-        // Segment ID: 3 alphanumeric characters.
+        // Segment ID: 2 to 4 letters or digits.
         guard let segID = scanner.takeWhile({ $0.isLetter || $0.isNumber }),
               segID.count >= 2, segID.count <= 4
         else {

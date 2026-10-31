@@ -12,9 +12,11 @@ The entries are condensed; the git history carries the detail.
 
 - `Path` accepts the alternative path syntax beside the native one: the repetition in
   brackets after the field (`PID-3[2].1` reads as `PID-3~2.1`), and `[*]` for every segment
-  occurrence or every repetition (`OBX[*]-5[*]`). Mixed forms are malformed.
-  `Message.values(at:)` reads a wildcard path; the subscript returns `nil` for one.
-  `Path.description` gives the native form.
+  occurrence or every repetition (`OBX[*]-5[*]`). A path that spells its repetition both
+  ways (`PID-3[2]~1`) is malformed. `Message.values(at:)` reads every non-empty value a path
+  names, wildcards included; the subscript returns `nil` for a wildcard path.
+  `Path.description` gives the native form, keeping `[*]` for a repetition wildcard; as
+  `Path` is now `CustomStringConvertible`, `"\(path)"` prints that form.
 - `Message.populatedPaths()` lists every non-empty value with its path, in document order.
   Each `PathValue` path has every index set, so the same location has the same path in every
   message.

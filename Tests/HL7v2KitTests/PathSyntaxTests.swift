@@ -45,7 +45,7 @@ struct PathSyntaxTests {
     }
 
     @Test("description writes the native form and reads back", arguments: [
-        "PID-5", "PID-5.1", "PID-5.1.2", "PID-3~2.4", "OBX[2]-5", "OBX[*]-5", "PID-3[*].1", "OBX[*]-5[*].3.1",
+        "PID-5", "PID-5.1", "PID-5.1.2", "PID-3~2.4", "OBX[2]-5", "OBX[*]-5", "PID-3[*].1", "OBX[*]-5[*].3.1", "OBX[*]-5[2]",
     ])
     func descriptionRoundTrips(_ input: String) throws {
         let path = try Path(input)
@@ -57,6 +57,8 @@ struct PathSyntaxTests {
         #expect(try Path("PID-3[2].1").description == "PID-3~2.1")
         #expect(try Path("OBX[2]-5[*].3").description == "OBX[2]-5[*].3")
         #expect(try Path("PID-5").description == "PID-5")
+        #expect(try Path("OBX[*]-5[2]").description == "OBX[*]-5~2")
+        #expect(Path(segmentID: "PID", field: 3, subcomponent: 2).description == "PID-3..2")
     }
 
     static let wire = "MSH|^~\\&|APP|FAC|||20260101||ORU^R01|C1|P|2.5.1\r"
@@ -68,11 +70,21 @@ struct PathSyntaxTests {
         #expect(m.values(at: try Path("OBX[*]-5")) == ["1", "2", "4"])
         #expect(m.values(at: try Path("OBX[*]-5[*]")) == ["1", "2", "3", "4"])
         #expect(m.values(at: try Path("OBX[2]-5[*]")) == ["2", "3"])
+        #expect(m.values(at: try Path("OBX[*]-5~2")) == ["3"])
         #expect(m.values(at: try Path("PID-3[*]")) == ["A1", "B2", "C3"])
         #expect(m.values(at: try Path("PID-3[2]")) == ["B2"])
         #expect(m.values(at: try Path("PID-3~2")) == ["B2"])
         #expect(m.values(at: try Path("OBX[4]-5")).isEmpty)
         #expect(m.values(at: try Path("ZZZ[*]-1")).isEmpty)
+    }
+
+    @Test("values(at:) skips empty values, as it skips omitted ones, and keeps the HL7 null")
+    func valuesSkipEmpty() throws {
+        let m = try Parser().parse("MSH|^~\\&|APP|FAC|||20260101||ORU^R01|C1|P|2.5.1\r"
+            + "OBX|1|NM|A||\rOBX|2|NM|B\rOBX|3|NM|C||\"\"\rOBX|4|NM|D||4\r")
+        #expect(m.values(at: try Path("OBX[*]-5")) == ["\"\"", "4"])
+        #expect(m.values(at: try Path("OBX[1]-5")).isEmpty)
+        #expect(m["OBX[1]-5"] == "")
     }
 
     @Test("The subscript reads the alternative form and returns nil for a wildcard")
