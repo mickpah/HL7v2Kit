@@ -158,7 +158,7 @@ extension Validator {
     /// reduced to its first subcomponent. Used to measure length once the rest is reported.
     static func acceptedPrimitiveContent(_ repetition: Repetition, limit: Int) -> Repetition {
         Repetition(components: repetition.components.prefix(limit).map {
-            Component(subcomponents: [Subcomponent($0.subcomponents.first?.value ?? "")])
+            Component(subcomponents: [$0.subcomponents.first ?? Subcomponent("")])
         })
     }
 

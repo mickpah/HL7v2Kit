@@ -270,14 +270,14 @@ extension Validator {
     /// `\X0D0A\` 5 (v2.8.2 section 2.7, "This applies to all the escape
     /// sequences, including the formatting ones"; the pre-v2.7 texts say nothing
     /// on escapes and length, so the v2.8.2 rule applies to every version).
-    /// Values are stored decoded, so the encoded form is the canonical
-    /// re-encoding (`EscapeSequences.encode`); a non-canonical wire
-    /// escape such as `\X41\` for `A` is measured as `A`. `nil` for an empty
+    /// Measured on the wire form (`EscapeSequences.wireForm`): a parsed value as it was
+    /// written, so a non-canonical `\X41\` counts 3 (#13); a value built in code on its
+    /// encoding. `nil` for an empty
     /// repetition or the HL7 null `""`, which has no length (v2.8.2 section
     /// 2.5.5.0 note); a `""` subcomponent inside a composite counts as empty.
     static func occupiedLength(_ repetition: Repetition, encoding: EncodingCharacters) -> Int? {
         let characters = repetition.components.reduce(0) { total, component in
-            total + component.subcomponents.reduce(0) { $0 + encodedLength($1.value, encoding: encoding) }
+            total + component.subcomponents.reduce(0) { $0 + encodedLength($1, encoding: encoding) }
         }
         guard characters > 0 else { return nil }
         let separators = max(repetition.components.count - 1, 0)
@@ -289,17 +289,19 @@ extension Validator {
     /// component, its admitted prefix, or a single subcomponent), without building a
     /// repetition: their characters plus the subcomponent separators between them.
     static func occupiedLength(_ subcomponents: ArraySlice<Subcomponent>, encoding: EncodingCharacters) -> Int? {
-        let characters = subcomponents.reduce(0) { $0 + encodedLength($1.value, encoding: encoding) }
+        let characters = subcomponents.reduce(0) { $0 + encodedLength($1, encoding: encoding) }
         guard characters > 0 else { return nil }
         return characters + max(subcomponents.count - 1, 0)
     }
 
-    /// Characters one value occupies in its encoded form, escape characters not counted;
-    /// 0 for the HL7 null `""`.
-    static func encodedLength(_ value: String, encoding: EncodingCharacters) -> Int {
+    /// Characters one value occupies on the wire, escape characters not counted; 0 for the
+    /// HL7 null `""`. Read from the wire form, so a parsed value counts as written (#13).
+    static func encodedLength(_ subcomponent: Subcomponent, encoding: EncodingCharacters) -> Int {
+        let value = subcomponent.value
         if value.isEmpty || value == "\"\"" { return 0 }
         let escape = encoding.escapeCharacter
-        return EscapeSequences.encode(value, encoding: encoding).reduce(0) { $1 == escape ? $0 : $0 + 1 }
+        return EscapeSequences.wireForm(of: subcomponent, encoding: encoding)
+            .reduce(0) { $1 == escape ? $0 : $0 + 1 }
     }
 
     /// Lexical format of populated primitive values (V251-C10, PrimitiveFormat).

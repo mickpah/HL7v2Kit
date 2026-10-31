@@ -8,6 +8,21 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Fixed
+
+- A parsed value is written back exactly as it was read, escapes included: wire
+  `C:\E\Users\E\me` no longer comes back as `C:\Users\me`, and non-canonical or invalid escapes
+  (`\X0D\\X0A\`, `\X41\`, `\XZZ\`) are no longer rewritten. Values that decode alike still
+  compare equal.
+- Under the AU locale the escape prohibition (`\X..\`, `\C..\`, `\M..\`) reads escapes as they
+  were sent: escaped text such as `\E\C2842\E\` is no longer reported, and a hex escape of a
+  printable character (`\XC3A9\`) now is.
+
+### Changed
+
+- Field length counts a non-canonical escape as written: `\X41\` counts 3 characters, not 1
+  (v2.8.2 section 2.7).
+
 ## [3.27.0]
 
 ### Added

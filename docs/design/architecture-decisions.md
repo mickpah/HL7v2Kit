@@ -72,6 +72,14 @@ the round-trip property test.
 **Amended:** the composite typing the original left for later arrived as composite views
 (ADR-020, epic P10).
 
+**Amended (#13):** a `Subcomponent` parsed from text that holds the escape character also
+keeps that wire text, internally. The serialiser writes it back, and the escape and length
+checks read it, while it is still a faithful encoding under the message's delimiters (it
+holds none of them and no control character, and decodes to the value); otherwise the value
+is encoded. Equality and hashing stay on the decoded `value`, so values that decode alike are
+equal. A parsed escape and parsed literal backslash text, which decode to the same `value`,
+therefore each serialise as they were read.
+
 ## ADR-002 Error strategy
 
 **Status:** Accepted. Related: ADR-001, ADR-003, ADR-014.

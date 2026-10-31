@@ -1291,20 +1291,6 @@ public struct Validator: Sendable {
         return repetitions.isEmpty ? nil : repetitions.joined(separator: "~")
     }
 
-    /// M7-P3: scan every populated subcomponent for prohibited escape
-    /// sequences (ADRM-prose:P-4 — the ADRM's §3.1.1.5/.6 variances
-    /// remove \X...\, \C...\ and \M...\ from the escape repertoire).
-    ///
-    /// The parser DECODES escapes into the stored value (\X0D\ becomes
-    /// a literal CR; \E\ becomes a literal backslash), so the stored
-    /// value cannot be scanned directly — a decoded \E\ next to a
-    /// literal X would false-positive, and a decoded \X..\ is
-    /// invisible. `EscapeSequences.encode` restores the exact wire form
-    /// (the round-trip is byte-for-byte, except for text that forms a clean
-    /// `\…\` run (limitations register); verified for all three
-    /// families plus \E\-adjacency), so the scan runs on the
-    /// RE-ENCODED value. MSH-1 / MSH-2 are exempt (they carry the
-    /// delimiter literals).
     /// OBX-4 sub-ID tree rules (M12; see `SubIDTreeRule`). Per observation group — the
     /// OBX run after each OBR — find the header OBX; without one the group is skipped.
     /// Then every other OBX whose sub-ID is the root or lies under it must instantiate a
@@ -1376,6 +1362,16 @@ public struct Validator: Sendable {
         }
     }
 
+    /// M7-P3: scan every populated subcomponent for prohibited escape
+    /// sequences (ADRM-prose:P-4 — the ADRM's §3.1.1.5/.6 variances
+    /// remove \X...\, \C...\ and \M...\ from the escape repertoire).
+    ///
+    /// The parser DECODES escapes into the stored value, so the stored value cannot be
+    /// scanned directly. The scan runs on the subcomponent's wire form
+    /// (`EscapeSequences.wireForm`): a parsed value's text as it was sent (#13), so
+    /// escaped text such as `\E\C2842\E\` is not reported and a `\X..\` of a printable
+    /// character is; a value built in code on its encoding.
+    /// MSH-1 / MSH-2 are exempt (they carry the delimiter literals).
     private func checkEscapeProhibitions(
         profile: Profile,
         message: Message,
@@ -1400,8 +1396,8 @@ public struct Validator: Sendable {
                 for repetition in field.repetitions {
                     for component in repetition.components {
                         for subcomponent in component.subcomponents {
-                            let wireValue = EscapeSequences.encode(
-                                subcomponent.value,
+                            let wireValue = EscapeSequences.wireForm(
+                                of: subcomponent,
                                 encoding: message.encodingCharacters
                             )
                             let escape = String(message.encodingCharacters.escapeCharacter)

@@ -313,7 +313,12 @@ public struct Parser: Sendable {
     private func parseComponent(_ raw: String, encoding: EncodingCharacters) -> Component {
         let subs = raw.split(separator: encoding.subcomponentSeparator,
                                omittingEmptySubsequences: false)
-                       .map { Subcomponent(EscapeSequences.decode(String($0), encoding: encoding)) }
+                       .map { part -> Subcomponent in
+                           let text = String(part)
+                           // #13: keep the wire text of an escaped value.
+                           let wire = text.contains(encoding.escapeCharacter) ? text : nil
+                           return Subcomponent(EscapeSequences.decode(text, encoding: encoding), wire: wire)
+                       }
         return Component(subcomponents: subs)
     }
 

@@ -11,8 +11,14 @@
 //
 // - `Subcomponent.value` stores the DECODED form. Wire-level escape sequences
 //   (`\F\`, `\S\`, `\T\`, `\R\`, `\E\`, `\X..\`) are resolved at parse time;
-//   the serializer re-emits them at serialize time. Callers therefore see
-//   real text and never have to know about the escape grammar.
+//   on serialize a parsed value is written from its wire text (below) and a
+//   value built in code is encoded. Callers therefore see real text and never
+//   have to know about the escape grammar.
+//
+// - A parsed `Subcomponent` also keeps the wire text it was read from when that
+//   text holds the escape character (#13). `wireForm(of:encoding:)` returns it
+//   while it is still a faithful encoding under the target delimiters, so a parsed
+//   value is written back as read; otherwise the value is encoded below.
 //
 // - The recognised escape bodies, all delimited by the escape character
 //   (default `\`):
@@ -33,8 +39,9 @@
 // - Round-trip invariants (covered by tests):
 //     decode(encode(x)) == x   for all plain decoded inputs `x`
 //     encode(decode(y)) == y   for canonical encoded wire inputs `y`
-//   Non-canonical wire inputs (e.g. `\X41\` for "A") are decoded to the
-//   underlying character and re-emitted in canonical form on serialize.
+//   Non-canonical wire inputs (e.g. `\X41\` for "A") decode to the underlying
+//   character; `encode` writes the canonical form, but a parsed value keeps and
+//   serialises its wire text as sent (#13).
 
 import Foundation
 
@@ -126,6 +133,24 @@ enum EscapeSequences {
     /// are not valid in a wire `\X…\` body, so non-ASCII stays rejected.
     private static func hexDigitValue(_ c: Character) -> Int? {
         c.isASCII ? c.hexDigitValue : nil
+    }
+
+    // MARK: - Wire form
+
+    /// The wire text of `subcomponent` under `encoding`: the text it was parsed from while that
+    /// text is still a faithful encoding of its value there, otherwise ``encode(_:encoding:)``
+    /// of the value (#13). The serialiser and the escape and length checks all read this.
+    static func wireForm(of subcomponent: Subcomponent, encoding: EncodingCharacters) -> String {
+        if let wire = subcomponent.wire, isFaithful(wire, to: subcomponent.value, encoding: encoding) {
+            return wire
+        }
+        return encode(subcomponent.value, encoding: encoding)
+    }
+
+    /// Faithful: holds no delimiter or control character of `encoding` and decodes to `value`.
+    /// A value copied into a message with other delimiters fails this and is encoded.
+    private static func isFaithful(_ wire: String, to value: String, encoding: EncodingCharacters) -> Bool {
+        isPlainBody(ArraySlice(wire), encoding: encoding) && decode(wire, encoding: encoding) == value
     }
 
     // MARK: - Encode

@@ -67,13 +67,34 @@ public struct Component: Sendable, Equatable, Hashable {
 }
 
 /// A leaf scalar value. The string is stored decoded — any escape sequences
-/// (`\F\`, `\S\`, etc.) in the original wire bytes have been resolved. The
-/// builder re-encodes them when serialising.
+/// (`\F\`, `\S\`, etc.) in the original wire bytes have been resolved. A parsed
+/// value is written back as it was read; a value built in code is encoded
+/// (see <doc:EscapeSequences>).
 public struct Subcomponent: Sendable, Equatable, Hashable {
     public let value: String
 
+    /// The wire text a parsed value was read from, kept only when it holds the escape
+    /// character, so the serialiser and the escape and length checks see escapes as they
+    /// were sent (#13). Not part of equality: values that decode alike are equal.
+    let wire: String?
+
     public init(_ value: String) {
         self.value = value
+        self.wire = nil
+    }
+
+    init(_ value: String, wire: String?) {
+        self.value = value
+        self.wire = wire
+    }
+
+    // `wire` takes no part (see its doc).
+    public static func == (lhs: Subcomponent, rhs: Subcomponent) -> Bool {
+        lhs.value == rhs.value
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(value)
     }
 }
 

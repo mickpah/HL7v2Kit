@@ -6,7 +6,7 @@ How HL7v2Kit handles `\F\`, `\S\`, `\T\`, `\R\`, `\E\`, `\X..\` and `\Z..\` — 
 
 HL7 v2 uses backslash-delimited escape sequences to embed delimiter characters inside scalar field values. A patient name containing a literal `^` is encoded `\S\` (because `^` is the component separator); a CR byte inside an observation value is encoded `\X0D\`.
 
-HL7v2Kit decodes these on parse and re-encodes them on serialise. ``Subcomponent/value`` stores the **decoded** text — callers never see `\F\` in a typed accessor result. The serialiser canonicalises the re-emission, so round-trip yields the canonical wire form (not necessarily byte-for-byte the input form for non-canonical encodings — see <doc:RoundTripGuarantee>).
+HL7v2Kit decodes these on parse and re-encodes them on serialise. ``Subcomponent/value`` stores the **decoded** text — callers never see `\F\` in a typed accessor result. A parsed value also keeps the text it was read from, and the serialiser writes that back, so a parsed message round-trips byte for byte, non-canonical escapes included. A value built in code or set by an edit is encoded, as described below.
 
 ## The escape grammar
 
@@ -54,11 +54,11 @@ Two property tests pin this:
 - `decode(encode(x)) == x` for any decoded value (canonical round-trip).
 - `encode(decode(y)) == y` for any canonical encoded wire form (canonical wire stays canonical).
 
-A sender that wrote non-canonical hex (separate `\X0D\` and `\X0A\` blocks) will see them coalesced on round-trip. The decoded content is identical; the wire bytes differ.
+Coalescing applies to values built in code. A parsed value keeps its hex exactly as the sender wrote it, `\X0D\\X0A\` included.
 
 ## `\Z..\` and unknown bodies
 
-Locally-defined escape sequences (sender-specific extensions like `\Z123\`) and any unrecognised body (such as `\H\` or `\.br\` used in some legacy systems) pass through verbatim. The decoder does not invent semantics, and the encoder does not double-escape the backslashes it encountered. The truncation escape `\P\` (v2.7 and later) is defined by the standard but deliberately not decoded: decoding it would make a literal truncation character and its escape indistinguishable on the way back out. It passes through verbatim, so a decoded value can contain the literal text `\P\`. A body that holds a delimiter or a control character is not kept: the encoder escapes its characters one by one, so a value written in code cannot split a field or start a segment (a parsed value holds one when its escapes decode to it, such as `\E\a\F\b\E\`; earlier releases wrote such a run back unescaped). The converse is a limitation of the decoded-value model: text that happens to form a clean run (`C:\Users\me`) is written as that run, so wire `C:\E\Users\E\me` comes back as `C:\Users\me`, and a validator rule on escape sequences can mistake such text for an escape.
+Locally-defined escape sequences (sender-specific extensions like `\Z123\`) and any unrecognised body (such as `\H\` or `\.br\` used in some legacy systems) pass through verbatim. The decoder does not invent semantics, and the encoder does not double-escape the backslashes it encountered. The truncation escape `\P\` (v2.7 and later) is defined by the standard but deliberately not decoded: decoding it would make a literal truncation character and its escape indistinguishable on the way back out. It passes through verbatim, so a decoded value can contain the literal text `\P\`. A body that holds a delimiter or a control character is not kept: the encoder escapes its characters one by one, so a value written in code cannot split a field or start a segment (a parsed value holds one when its escapes decode to it, such as `\E\a\F\b\E\`; earlier releases wrote such a run back unescaped). The converse holds for a value written in code: text that happens to form a clean run (`C:\Users\me`) is written as that run. A parsed value is not affected: wire `C:\E\Users\E\me` is written back as read, and the validator reads escapes from the wire text.
 
 ## Customising the escape character
 

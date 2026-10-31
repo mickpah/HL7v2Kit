@@ -90,7 +90,7 @@ enum Serializer {
 
     private static func serializeComponent(_ comp: Component, encoding enc: EncodingCharacters) -> String {
         comp.subcomponents
-            .map { EscapeSequences.encode($0.value, encoding: enc) }
+            .map { EscapeSequences.wireForm(of: $0, encoding: enc) }
             .joined(separator: String(enc.subcomponentSeparator))
     }
 }
