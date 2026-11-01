@@ -18,7 +18,11 @@ For v0.1.0:
 | `ASCII` / `US-ASCII` | ``CharacterEncoding/ascii`` | `.ascii` |
 | `8859/1` / `ISO-8859-1` / `Latin-1` | ``CharacterEncoding/iso8859_1`` | `.isoLatin1` |
 
-Common aliases are accepted case-insensitively. If MSH-18 is empty or absent, the parser defaults to ``CharacterEncoding/utf8``.
+Common aliases are accepted case-insensitively. If MSH-18 is empty or absent, the parser defaults to ``CharacterEncoding/utf8``. This departs from v2.5.1 section 2.15.9.18, which reads an empty MSH-18 as 7-bit ASCII; UTF-8 contains ASCII, so a conformant message decodes the same, and a message with no MSH-18 that holds non-ASCII text is accepted.
+
+## Repeated MSH-18
+
+MSH-18 repeats. The first repetition names the character set of the whole message; later repetitions name alternate character sets, used only in FT, ST and TX values through the `\C..\` and `\M..\` escapes (v2.5.1 section 2.15.9.18). HL7v2Kit decodes and writes the message in the first repetition's character set, keeps the later repetitions as data, and keeps those escapes verbatim, so `8859/1~ISO IR87` reads as ``CharacterEncoding/iso8859_1``. An empty first repetition (`~ISO IR87`) takes the empty-field default. An unrecognised first repetition throws, naming it. ``CharacterEncoding/from(mshField18:)`` maps one value; a repeated one maps to `nil`.
 
 ## How detection works
 

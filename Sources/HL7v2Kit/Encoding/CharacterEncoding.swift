@@ -45,6 +45,9 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
     ///
     /// The match is case-insensitive and tolerates the common aliases each
     /// charset is known by in real-world AU traffic.
+    ///
+    /// The string is one value: a repeated MSH-18 (`8859/1~ISO IR87`) maps to `nil`.
+    /// ``detect(in:)`` reads the first repetition.
     public static func from(mshField18 raw: String) -> CharacterEncoding? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
@@ -63,11 +66,15 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
     /// Detect the character set declared in MSH-18 of a v2 message header.
     ///
     /// The first MSH line (batch FHS / BHS envelope lines are skipped; lines
-    /// terminate at `\r` or `\n`) is split on the field separator and field
-    /// 18 is mapped via `from(mshField18:)`. If no MSH line exists, or
-    /// MSH-18 is absent or empty, defaults to `.utf8`. If MSH-18 is present
-    /// but names a charset HL7v2Kit does not recognise, throws
-    /// `ParseError.unsupportedCharacterEncoding(declared:)`.
+    /// terminate at `\r` or `\n`) is split on the field separator, and the first
+    /// repetition of field 18 is mapped via `from(mshField18:)`. MSH-18 repeats: the
+    /// first repetition names the message's character set, and later ones name
+    /// alternate sets used through the `\C..\` and `\M..\` escapes, which HL7v2Kit keeps
+    /// verbatim (v2.5.1 section 2.15.9.18). If no MSH line exists, or MSH-18 or its first
+    /// repetition is absent or empty, defaults to `.utf8`; the print reads an empty MSH-18
+    /// as 7-bit ASCII, which UTF-8 contains, so a conformant message decodes the same. If
+    /// the first repetition names a charset HL7v2Kit does not recognise, throws
+    /// `ParseError.unsupportedCharacterEncoding(declared:)` with that repetition.
     ///
     /// The probe is structural — it doesn't require a fully-decoded message,
     /// only enough of the leading bytes to find the field-separator and
@@ -104,7 +111,14 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
                 // So MSH-18 lives at parts[17].
                 let parts = line.split(separator: fieldSep, omittingEmptySubsequences: false)
                 guard parts.count > 17 else { return nil }
-                return String(parts[17])
+                let field = parts[17]
+                // MSH-18 repeats; its first repetition names the message's character set
+                // (v2.5.1 section 2.15.9.18). The repetition separator is MSH-2's second
+                // character (#15).
+                let head = Array(line.prefix(6))
+                guard head.count == 6, head[5] != fieldSep,
+                      let end = field.firstIndex(of: head[5]) else { return String(field) }
+                return String(field[..<end])
             }
             guard lineEnd < probe.endIndex else { return nil }
             lineStart = probe.index(after: lineEnd)

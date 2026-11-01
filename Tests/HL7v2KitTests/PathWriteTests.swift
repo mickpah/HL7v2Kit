@@ -218,19 +218,27 @@ struct PathWriteTests {
         }
     }
 
-    @Test("A repeated or structured MSH-18 is refused, as the parser would reject it")
+    @Test("A repeated MSH-18 is read by its first repetition, as the parser reads it; a structured one is refused")
     func structuredCharacterSet() throws {
         var m = try Parser().parse(Self.wire)
         try m.set("UNICODE UTF-8", at: Path("MSH-18"))
+        try m.insertRepetition("8859/1", at: Path("MSH-18~2"))
+        #expect(m.characterEncoding == .utf8)
+        #expect(String(decoding: m.serialize(), as: UTF8.self).contains("|UNICODE UTF-8~8859/1\r"))
+        #expect(try Parser().parse(m.serialize()).characterEncoding == .utf8)
+        // A new first repetition renames the character set (insertRepetition inserts before
+        // the repetition the path names).
+        try m.insertRepetition("8859/1", at: Path("MSH-18~1"))
+        #expect(m.characterEncoding == .iso8859_1)
         let before = m.serialize()
-        #expect(throws: MessageEditError.unsupportedCharacterEncoding(declared: "UNICODE UTF-8~8859/1")) {
-            try m.insertRepetition("8859/1", at: Path("MSH-18~2"))
+        #expect(throws: MessageEditError.unsupportedCharacterEncoding(declared: "EBCDIC")) {
+            try m.insertRepetition("EBCDIC", at: Path("MSH-18~1"))
         }
-        #expect(throws: MessageEditError.unsupportedCharacterEncoding(declared: "UNICODE UTF-8^X")) {
+        #expect(throws: MessageEditError.unsupportedCharacterEncoding(declared: "8859/1^X")) {
             try m.set("X", at: Path("MSH-18.2"))
         }
         #expect(m.serialize() == before)
-        #expect(try Parser().parse(m.serialize()).characterEncoding == .utf8)
+        #expect(m.characterEncoding == .iso8859_1)
     }
 
     @Test("A character the character set cannot encode is refused, so untouched values are not re-encoded")

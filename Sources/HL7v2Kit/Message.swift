@@ -22,8 +22,9 @@ public struct Message: Sendable, Equatable, Hashable {
     /// with ``set(_:at:)``, ``clear(at:)`` or ``insertRepetition(_:at:)``.
     public internal(set) var segments: [Segment]
 
-    /// The character set declared in MSH-18 (or `.utf8` when absent).
-    /// `serialize()` re-emits bytes in this encoding. An edit to MSH-18 with ``set(_:at:)`` re-reads it.
+    /// The character set MSH-18's first repetition declares (or `.utf8` when it is absent or
+    /// empty). `serialize()` re-emits bytes in this encoding. An edit to MSH-18 with
+    /// ``set(_:at:)`` re-reads it.
     public internal(set) var characterEncoding: CharacterEncoding
 
     /// The locale the parser was configured with. Default is `.international`.

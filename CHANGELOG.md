@@ -8,6 +8,12 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Fixed
+
+- A repeated MSH-18 parses: its first repetition names the message's character set, and later
+  repetitions are kept (v2.5.1 section 2.15.9.18). It threw `unsupportedCharacterEncoding`. An
+  edit to MSH-18 reads it the same way, and under the AU locale each repetition is checked (#15).
+
 ## [3.28.0]
 
 ### Fixed

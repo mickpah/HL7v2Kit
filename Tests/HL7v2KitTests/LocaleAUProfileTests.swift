@@ -715,6 +715,19 @@ struct LocaleAUProfileTests {
         }
     }
 
+    @Test("HL7au:00048.3.1 \u{2014} each repetition of a repeated MSH-18 is checked (#15)")
+    func characterSetRepetitionsChecked() throws {
+        func header(_ msh18: String) -> String {
+            "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|"
+                + "2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|AL|AUS|\(msh18)|en^English^ISO639\r"
+        }
+        let allowed = try mshViolations(header("ASCII~8859/1"))
+        #expect(allowed.isEmpty, "both repetitions are in the AU set; got \(allowed)")
+        let outside = try mshViolations(header("ASCII~ISO IR87"))
+        #expect(outside.contains { $0.contains("HL7au:00048.3.1") },
+                "ISO IR87 is outside the AU set; got \(outside)")
+    }
+
     // MARK: - M6-D1: alternate-identifier pair-rule citations
     //
     // ADRM-2021 Appendix 5 does NOT number the alternate-identifier pair

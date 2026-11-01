@@ -117,4 +117,47 @@ struct CharacterEncodingTests {
         #expect(message.characterEncoding == .utf8)
         #expect(message.serialize() == data)
     }
+
+    // MARK: - Repeated MSH-18 (#15)
+
+    static func header(_ msh18: String) -> String {
+        "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1||||||\(msh18)\r"
+    }
+
+    @Test("The first repetition of MSH-18 names the character set (v2.5.1 section 2.15.9.18)", arguments: [
+        ("8859/1~ISO IR87", CharacterEncoding.iso8859_1),
+        ("UNICODE UTF-8~UNICODE UTF-8", .utf8),
+        ("ASCII~8859/1", .ascii),
+        // An empty first repetition takes the empty-field default, UTF-8 (owner ruling; the
+        // print reads it as ASCII).
+        ("~ISO IR87", .utf8),
+    ])
+    func firstRepetitionNamesCharset(_ row: (msh18: String, expected: CharacterEncoding)) throws {
+        #expect(try CharacterEncoding.detect(in: Self.header(row.msh18)) == row.expected)
+        #expect(try Parser().parse(Self.header(row.msh18)).characterEncoding == row.expected)
+    }
+
+    @Test("An unknown first repetition throws, naming that repetition")
+    func unknownFirstRepetitionThrows() {
+        #expect(throws: ParseError.unsupportedCharacterEncoding(declared: "EBCDIC")) {
+            try Parser().parse(Self.header("EBCDIC~ASCII"))
+        }
+    }
+
+    @Test("A repeated MSH-18 round-trips byte for byte")
+    func repeatedRoundTrips() throws {
+        var bytes = Data(Self.header("8859/1~ISO IR87").utf8)
+        bytes.append(Data("OBX|1|TX|MSG^TEXT||Caf".utf8))
+        bytes.append(0xE9)
+        bytes.append(Data("\r".utf8))
+        let message = try Parser().parse(bytes)
+        #expect(message.characterEncoding == .iso8859_1)
+        #expect(message["OBX-5"] == "Caf\u{E9}")
+        #expect(message.serialize() == bytes)
+    }
+
+    @Test("from(mshField18:) maps one value, so a repeated value is nil")
+    func fromMapsOneValue() {
+        #expect(CharacterEncoding.from(mshField18: "8859/1~ISO IR87") == nil)
+    }
 }

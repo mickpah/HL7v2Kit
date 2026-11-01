@@ -176,9 +176,11 @@ extension Message {
         let header = index == 0 && id == "MSH"
         var encoding = characterEncoding
         if header && field == 18 {
-            // The parser reads MSH-18 as the field's raw text, so the editor does too: a
-            // repeated or structured MSH-18 the parser would reject is refused here.
-            let declared = Serializer.serializeField(fields[18], encoding: encodingCharacters)
+            // The parser reads MSH-18's first repetition as raw text, so the editor does too:
+            // later repetitions are kept, and a structured value the parser would reject is
+            // refused here (#15).
+            let first = fields[18].repetitions.first.map { Field(repetitions: [$0]) } ?? Field(repetitions: [])
+            let declared = Serializer.serializeField(first, encoding: encodingCharacters)
             if declared.isEmpty {
                 encoding = .utf8
             } else if let known = CharacterEncoding.from(mshField18: declared) {
