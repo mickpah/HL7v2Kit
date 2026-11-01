@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.29.0]
+
 ### Fixed
 
 - A repeated MSH-18 parses: its first repetition names the message's character set, and later
