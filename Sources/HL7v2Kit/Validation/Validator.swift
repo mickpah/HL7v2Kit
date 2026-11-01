@@ -159,6 +159,9 @@ public struct Validator: Sendable {
         // are the base standard's own identity assertions.
         checkOrcObrPairEquality(message: message, issues: &issues)
 
+        // 3.29.0 (#16): text the declared character set cannot encode. Always on, an error.
+        checkCharacterSet(message: message, issues: &issues)
+
         // ADR-019: abstract message syntax (segment order, groups, required
         // segments per structure). Opt-in.
         if let severity = options.messageStructureSeverity {

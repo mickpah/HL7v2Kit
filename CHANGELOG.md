@@ -13,6 +13,16 @@ The entries are condensed; the git history carries the detail.
 - A repeated MSH-18 parses: its first repetition names the message's character set, and later
   repetitions are kept (v2.5.1 section 2.15.9.18). It threw `unsupportedCharacterEncoding`. An
   edit to MSH-18 reads it the same way, and under the AU locale each repetition is checked (#15).
+- `Parser.parse(_:)` and `BatchParser.parse(_:)` given a `String` throw
+  `unsupportedCharacterEncoding` for text the declared MSH-18 cannot encode (an `é` under
+  `ASCII`), as the same message given as bytes does. Such text parsed, and `serialize()` then
+  wrote the whole message as UTF-8 (#16).
+
+### Added
+
+- `IssueCode.characterNotEncodable(declared:)` (3006): a field of a message built in code holds a
+  character its character set cannot encode, so `serialize()` would write the whole message as
+  UTF-8. An error in every preset (#16).
 
 ## [3.28.0]
 

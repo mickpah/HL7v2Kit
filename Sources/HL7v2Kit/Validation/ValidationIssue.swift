@@ -160,6 +160,14 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Additive case (3.23.0).
     case correlatedValueMismatch
 
+    /// A field holds a character the message's character set cannot encode, so
+    /// ``Message/serialize()`` would write the whole message as UTF-8 and its bytes would
+    /// contradict MSH-18, "the character set for the entire message" (v2.5.1 section
+    /// 2.15.9.18). Both parse paths refuse such text, so only a message built in code draws it.
+    /// `declared` is the character set's ``CharacterEncoding/wireValue``. Reported once per
+    /// field, as an error in every preset; no value is quoted. Additive case (3.29.0).
+    case characterNotEncodable(declared: String)
+
     /// An `ID`-typed field carries a value that is not in the HL7-defined
     /// table its spec `TBL#` column names, for the message's version.
     /// Fires only for closed tables (``HL7Table/isClosed``): `IS` fields,

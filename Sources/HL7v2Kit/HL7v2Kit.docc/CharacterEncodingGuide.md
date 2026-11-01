@@ -65,7 +65,11 @@ assert(rebuilt == bytes)                                    // byte-perfect, Lat
 
 ## String input
 
-``Parser/parse(_:)-(String)`` still consults MSH-18 even though the input is already decoded text — so ``Message/characterEncoding`` reflects what the wire declared. An unrecognised value throws the same way. If you need to parse a string without MSH-18 validation, the documented v0.1.0 limitation is to decode the bytes yourself and use the byte-input overload (no `Parser.parse(structural:)` exists yet).
+``Parser/parse(_:)-(String)`` still consults MSH-18 even though the input is already decoded text, so ``Message/characterEncoding`` reflects what the wire declared. An unrecognised value throws the same way. So does text the declared character set cannot encode (an `é` under `ASCII`, a `€` under `8859/1`): it throws ``ParseError/unsupportedCharacterEncoding(declared:)`` with the declared set, as the same message given as bytes would. ``BatchParser`` parses each message through it.
+
+## Text the character set cannot encode
+
+Every way into a message refuses a character its character set cannot encode, except building one in code: both parse paths throw, and ``Message/set(_:at:)`` throws ``MessageEditError/characterNotEncodable(_:)``. A message built with ``MessageBuilder`` or ``Message/init(version:encodingCharacters:segments:characterEncoding:locale:)`` can still hold one. ``Validator`` reports each such field as ``IssueCode/characterNotEncodable(declared:)``, an error in every preset, and ``Message/serialize()`` writes that message entirely as UTF-8, so one `€` under `8859/1` turns an `é` from `E9` into `C3 A9`. Validate a built message before sending it.
 
 ## See Also
 

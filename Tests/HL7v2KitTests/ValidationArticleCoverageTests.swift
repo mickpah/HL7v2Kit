@@ -48,7 +48,7 @@ struct ValidationArticleCoverageTests {
         .versionNotRecognised(wireValue: ""), .fieldLengthOutOfRange(length: "", actual: 0),
         .componentLengthOutOfRange(length: "", actual: 0), .componentNotSupported(optionality: ""),
         .extraComponentsInPrimitiveField, .extraComponentsInCompositeField,
-        .valueFormatInvalid(dataType: ""),
+        .valueFormatInvalid(dataType: ""), .characterNotEncodable(declared: ""),
         .messageStructureSegmentMissing(structure: "", segmentID: "", group: nil),
         .messageStructureSegmentUnexpected(structure: "", segmentID: ""),
         .messageStructureMismatch(declared: "", trigger: ""),
@@ -84,6 +84,7 @@ struct ValidationArticleCoverageTests {
         case .extraComponentsInPrimitiveField: "extraComponentsInPrimitiveField"
         case .extraComponentsInCompositeField: "extraComponentsInCompositeField"
         case .valueFormatInvalid: "valueFormatInvalid"
+        case .characterNotEncodable: "characterNotEncodable"
         case .messageStructureSegmentMissing: "messageStructureSegmentMissing"
         case .messageStructureSegmentUnexpected: "messageStructureSegmentUnexpected"
         case .messageStructureMismatch: "messageStructureMismatch"

@@ -76,7 +76,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 
 ### Escapes and encoding
 
-- **Character set.** MSH-18 selects the decoder; an unrecognised value throws ``ParseError/unsupportedCharacterEncoding(declared:)`` at parse, with no lossy fallback. An embedded NUL throws ``ParseError/truncatedMessage(atByte:)``. See <doc:CharacterEncodingGuide>.
+- **Character set.** MSH-18 selects the decoder; an unrecognised value throws ``ParseError/unsupportedCharacterEncoding(declared:)`` at parse, with no lossy fallback. Text the declared character set cannot encode throws the same error from either parse path; in a message built in code it is ``IssueCode/characterNotEncodable(declared:)``, an error in every preset, once per field (``Message/serialize()`` would write that message as UTF-8). An embedded NUL throws ``ParseError/truncatedMessage(atByte:)``. See <doc:CharacterEncodingGuide>.
 - **Escape sequences.** Decoded on parse; a parsed value is written back as it was read, and a value built in code is encoded; a locally defined (`\Z..\`) or unrecognised body is kept verbatim in a parsed value and is not reported. Escapes count toward length as described above, and an escaped separator never raises an extra-component finding. See <doc:EscapeSequences>.
 - **Under ``HL7Locale/auLocalisation``** the `\X..\`, `\C..\` and `\M..\` escapes, which the ADRM prohibits, and MSH-1 and MSH-2 other than `|^~\&`, are ``IssueCode/profileConstraintViolation(localeRule:)``. The check reads escapes as they were sent, so escaped text such as `\E\C2842\E\` is not reported and a `\X..\` of a printable character is. A raw control character, which no field may hold, is reported as the `\X..\` it would be written as.
 
@@ -117,7 +117,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 | `zSegmentGrammars` | empty | empty | empty |
 | `valueExcerpts` | on | on | on |
 
-`default` suits receiving traffic where Z-segments are routine; `strict` suits validating what you send; `lenient` keeps the required-field check and the always-on checks (the version and segment notices, paired fields, withheld conditions) and turns off everything else. `ValidationOptions()` equals `default`. Receivers ignore unexpected segments (v2.5.1 CH02 section 2.6.2), which is why structure findings are warnings in `default` and errors in `strict`.
+`default` suits receiving traffic where Z-segments are routine; `strict` suits validating what you send; `lenient` keeps the required-field check and the always-on checks (the version and segment notices, paired fields, withheld conditions, the character set) and turns off everything else. `ValidationOptions()` equals `default`. Receivers ignore unexpected segments (v2.5.1 CH02 section 2.6.2), which is why structure findings are warnings in `default` and errors in `strict`.
 
 The initialiser takes `zSegmentPolicy`, `checkRequiredFields`, `checkConditionalFields`, `checkComponentGrammar`, `checkCardinality` and `warnDeprecatedFields`; every other property is set by mutation:
 
@@ -243,6 +243,7 @@ Each ``ValidationIssue`` carries:
 | 3003 | ``IssueCode/componentLengthOutOfRange(length:actual:)`` | Primitive and value |
 | 3004 | ``IssueCode/valueFormatInvalid(dataType:)`` | Primitive and value |
 | 3005 | ``IssueCode/correlatedValueMismatch`` | Primitive and value |
+| 3006 | ``IssueCode/characterNotEncodable(declared:)`` | Primitive and value |
 | 4001 | ``IssueCode/valueNotInTable(table:)`` | Binding and terminology |
 | 5001 | ``IssueCode/conditionalFieldMissing`` | Invariant |
 | 5002 | ``IssueCode/conditionalComponentMissing`` | Invariant |

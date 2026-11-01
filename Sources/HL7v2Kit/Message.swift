@@ -267,7 +267,10 @@ public struct Message: Sendable, Equatable, Hashable {
     /// Serialise this message back to wire bytes.
     ///
     /// For messages produced by `Parser`, the output equals the input bytes
-    /// (modulo the documented round-trip exceptions in the spec).
+    /// (modulo the documented round-trip exceptions in the spec). The bytes are in
+    /// ``characterEncoding``. A message built in code that holds a character its character
+    /// set cannot encode is written entirely as UTF-8, so its bytes contradict its MSH-18;
+    /// the validator reports it as ``IssueCode/characterNotEncodable(declared:)`` (#16).
     public func serialize() -> Data {
         Serializer.serialize(self)
     }

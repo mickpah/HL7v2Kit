@@ -39,6 +39,19 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
         }
     }
 
+    /// Whether `text` can be written in this character set: UTF-8 writes every character,
+    /// ASCII the scalars up to 0x7F, ISO 8859-1 those up to 0xFF. Shared by the MSH-18 edit,
+    /// `Parser.parse(_: String)` and the validator (#16).
+    func encodes(_ text: String) -> Bool {
+        let limit: UInt32
+        switch self {
+        case .utf8: return true
+        case .ascii: limit = 0x7F
+        case .iso8859_1: limit = 0xFF
+        }
+        return !text.unicodeScalars.contains { $0.value > limit }
+    }
+
     /// Map an MSH-18 wire string to a known charset. Returns `nil` if the
     /// value is empty (caller should treat as "default to UTF-8") or if it
     /// is non-empty but unrecognised (caller should throw).

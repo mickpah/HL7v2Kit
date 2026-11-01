@@ -41,22 +41,6 @@ public enum MessageEditError: Error, Equatable, Sendable {
 extension Message {
     static let maxEditIndex = 9_999
 
-    /// Whether `value` can be written in `encoding`.
-    static func encodable(_ value: String, in encoding: CharacterEncoding) -> Bool {
-        let limit: UInt32
-        switch encoding {
-        case .utf8:
-            return true
-        case .ascii:
-            limit = 0x7F
-        case .iso8859_1:
-            limit = 0xFF
-        }
-        for scalar in value.unicodeScalars where scalar.value > limit {
-            return false
-        }
-        return true
-    }
 
     /// Whether the edit would create a node at an index above `maxEditIndex`. Existing nodes
     /// stay writable at any index; only padding is capped, since it would otherwise run
@@ -100,7 +84,7 @@ extension Message {
     /// - Throws: ``MessageEditError``; the message is then unchanged.
     public mutating func set(_ value: String, at path: Path) throws {
         let index = try editTarget(path)
-        guard Self.encodable(value, in: characterEncoding) else {
+        guard characterEncoding.encodes(value) else {
             throw MessageEditError.characterNotEncodable(characterEncoding)
         }
         var fields = segments[index].fields
@@ -127,7 +111,7 @@ extension Message {
         guard let position = path.repetition, path.component == nil else {
             throw MessageEditError.notARepetition(path)
         }
-        guard Self.encodable(value, in: characterEncoding) else {
+        guard characterEncoding.encodes(value) else {
             throw MessageEditError.characterNotEncodable(characterEncoding)
         }
         var fields = segments[index].fields
@@ -194,7 +178,7 @@ extension Message {
                         for component in repetition.components {
                             // The check reads the text the serialiser will write (#13).
                             for subcomponent in component.subcomponents
-                            where !Self.encodable(EscapeSequences.wireForm(of: subcomponent, encoding: encodingCharacters), in: encoding) {
+                            where !encoding.encodes(EscapeSequences.wireForm(of: subcomponent, encoding: encodingCharacters)) {
                                 throw MessageEditError.characterNotEncodable(encoding)
                             }
                         }
