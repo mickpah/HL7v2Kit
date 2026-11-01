@@ -41,7 +41,6 @@ public enum MessageEditError: Error, Equatable, Sendable {
 extension Message {
     static let maxEditIndex = 9_999
 
-
     /// Whether the edit would create a node at an index above `maxEditIndex`. Existing nodes
     /// stay writable at any index; only padding is capped, since it would otherwise run
     /// without limit (P00 S3).

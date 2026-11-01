@@ -57,7 +57,7 @@ public struct Parser: Sendable {
     /// via an ISO-8859-1 probe — Latin-1 maps every byte to a code point,
     /// so the probe never fails and the structural ASCII (MSH, `|`, the
     /// encoding chars) survives untouched — then decode with the detected
-    /// charset. Shared by ``Parser`` and ``BatchParser`` so the two Data
+    /// charset, and refuse text the charset cannot encode. Shared by ``Parser`` and ``BatchParser`` so the two Data
     /// entry points cannot drift (pinned by the BatchParserTests R5-C3
     /// rows).
     static func decodeWirePayload(_ data: Data) throws -> (decoded: String, characterEncoding: CharacterEncoding) {
@@ -73,7 +73,10 @@ public struct Parser: Sendable {
         }
         let probe = String(data: payload, encoding: .isoLatin1) ?? ""
         let characterEncoding = try CharacterEncoding.detect(in: probe)
-        guard let decoded = String(data: payload, encoding: characterEncoding.stringEncoding) else {
+        // The fit is checked here, not left to Foundation: its `.ascii` decode accepts a byte
+        // above 0x7F in a binary linked against an older SDK (#16).
+        guard let decoded = String(data: payload, encoding: characterEncoding.stringEncoding),
+              characterEncoding.encodes(decoded) else {
             throw ParseError.unsupportedCharacterEncoding(declared: characterEncoding.wireValue)
         }
         return (decoded, characterEncoding)
@@ -88,9 +91,7 @@ public struct Parser: Sendable {
     /// `parse(_ data: Data)`. So does text the declared character set cannot
     /// encode (an `é` under `ASCII`, a `€` under `8859/1`), with the declared
     /// set's ``CharacterEncoding/wireValue``: as bytes the same message would
-    /// not decode, and serialised it would be written in UTF-8 (#16). If you want
-    /// to parse structurally without MSH-18 validation, decode the bytes yourself
-    /// and call a future `parse(structural:)` overload (not in v0.1.0).
+    /// not decode, and serialised it would be written in UTF-8 (#16).
     public func parse(_ raw: String) throws -> Message {
         let characterEncoding = try CharacterEncoding.detect(in: raw)
         guard characterEncoding.encodes(raw) else {

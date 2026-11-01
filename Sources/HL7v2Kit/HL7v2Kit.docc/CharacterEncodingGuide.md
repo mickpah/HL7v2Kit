@@ -69,7 +69,7 @@ assert(rebuilt == bytes)                                    // byte-perfect, Lat
 
 ## Text the character set cannot encode
 
-Every way into a message refuses a character its character set cannot encode, except building one in code: both parse paths throw, and ``Message/set(_:at:)`` throws ``MessageEditError/characterNotEncodable(_:)``. A message built with ``MessageBuilder`` or ``Message/init(version:encodingCharacters:segments:characterEncoding:locale:)`` can still hold one. ``Validator`` reports each such field as ``IssueCode/characterNotEncodable(declared:)``, an error in every preset, and ``Message/serialize()`` writes that message entirely as UTF-8, so one `€` under `8859/1` turns an `é` from `E9` into `C3 A9`. Validate a built message before sending it.
+Every way into a message refuses a character its character set cannot encode, except building one in code: both parse paths throw, and ``Message/set(_:at:)`` throws ``MessageEditError/characterNotEncodable(_:)``. A message built with ``MessageBuilder`` or ``Message/init(version:encodingCharacters:segments:characterEncoding:locale:)`` can still hold one. ``Validator`` reports each such field as ``IssueCode/characterNotEncodable(declared:)``, an error in every preset (field values only: the delimiters and segment IDs are not checked), and ``Message/serialize()`` writes that message entirely as UTF-8, so one `€` under `8859/1` turns an `é` from `E9` into `C3 A9`. Validate a built message before sending it.
 
 ## See Also
 

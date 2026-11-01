@@ -13,10 +13,16 @@ The entries are condensed; the git history carries the detail.
 - A repeated MSH-18 parses: its first repetition names the message's character set, and later
   repetitions are kept (v2.5.1 section 2.15.9.18). It threw `unsupportedCharacterEncoding`. An
   edit to MSH-18 reads it the same way, and under the AU locale each repetition is checked (#15).
-- `Parser.parse(_:)` and `BatchParser.parse(_:)` given a `String` throw
-  `unsupportedCharacterEncoding` for text the declared MSH-18 cannot encode (an `é` under
-  `ASCII`), as the same message given as bytes does. Such text parsed, and `serialize()` then
-  wrote the whole message as UTF-8 (#16).
+- Text the declared MSH-18 cannot encode (an `é` under `ASCII`) is refused:
+  `Parser.parse(_:)` and `BatchParser.parse(_:)` given a `String` throw
+  `unsupportedCharacterEncoding`, as do both given bytes declared ASCII that hold a byte above
+  0x7F, on every platform (Foundation accepted such bytes in a binary linked against an older
+  SDK). `BatchParser.parse(_:)` given bytes now also throws for a later message whose text its
+  own MSH-18 cannot encode (a batch is decoded under the first message's character set). Such
+  input parsed, and `serialize()` then wrote the whole message as UTF-8 (#16).
+- MSH-18 is found when segments end in `\r\n` (accepted by the default line-terminator
+  policy); a CRLF message whose MSH ends at MSH-18, or a CRLF batch that opens with FHS and
+  BHS, was read with the wrong character set or refused.
 
 ### Added
 

@@ -5,7 +5,7 @@ extension Validator {
     /// Reports ``IssueCode/characterNotEncodable(declared:)``, an error, once for each field
     /// holding a subcomponent whose text, as the serialiser writes it, the message's
     /// character set cannot encode. MSH-1 and MSH-2 (and their BHS and FHS twins) hold the
-    /// delimiters and are skipped. A UTF-8 message returns at once.
+    /// delimiters and are skipped. Segment IDs are not checked. A UTF-8 message returns at once.
     func checkCharacterSet(message: Message, issues: inout [ValidationIssue]) {
         let encoding = message.characterEncoding
         guard encoding != .utf8 else { return }

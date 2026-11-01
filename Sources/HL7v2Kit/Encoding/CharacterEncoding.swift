@@ -111,7 +111,8 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
     private static func probeMSH18(_ probe: String) -> String? {
         var lineStart = probe.startIndex
         while lineStart < probe.endIndex {
-            let lineEnd = probe[lineStart...].firstIndex(where: { $0 == "\r" || $0 == "\n" })
+            // "\r\n" is one Character (#15); isNewline would also take U+0085, Latin-1 byte 0x85.
+            let lineEnd = probe[lineStart...].firstIndex(where: { $0 == "\r" || $0 == "\n" || $0 == "\r\n" })
                 ?? probe.endIndex
             let line = probe[lineStart..<lineEnd]
             if line.hasPrefix("MSH") {

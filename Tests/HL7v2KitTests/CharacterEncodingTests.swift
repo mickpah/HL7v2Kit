@@ -160,4 +160,31 @@ struct CharacterEncodingTests {
     func fromMapsOneValue() {
         #expect(CharacterEncoding.from(mshField18: "8859/1~ISO IR87") == nil)
     }
+
+    @Test("A custom repetition separator ends the first repetition of MSH-18")
+    func customRepetitionSeparator() throws {
+        let raw = "MSH|^#\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1||||||8859/1#ISO IR87\r"
+        #expect(try CharacterEncoding.detect(in: raw) == .iso8859_1)
+    }
+
+    @Test("MSH-18 is found when segments end in CRLF, and MSH ends at MSH-18 (#15)")
+    func crlfMSHEndingAtMSH18() throws {
+        let text = "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1||||||8859/1\r\nPID|1\r\n"
+        #expect(try CharacterEncoding.detect(in: text) == .iso8859_1)
+        var bytes = Data(text.utf8)
+        bytes.append(contentsOf: Data("OBX|1|TX|MSG^TEXT||Caf".utf8))
+        bytes.append(0xE9)
+        bytes.append(contentsOf: Data("\r\n".utf8))
+        #expect(try Parser().parse(bytes).characterEncoding == .iso8859_1)
+    }
+
+    @Test("A Latin-1 batch with CRLF line ends and FHS and BHS ahead of the MSH parses (#15)")
+    func crlfBatch() throws {
+        var bytes = Data("FHS|^~\\&\r\nBHS|^~\\&\r\nMSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1||||||8859/1\r\nOBX|1|TX|MSG^TEXT||Caf".utf8)
+        bytes.append(0xE9)
+        bytes.append(contentsOf: Data("\r\nBTS|1\r\nFTS|1\r\n".utf8))
+        let message = try #require(try BatchParser().parse(bytes).batches.first?.messages.first)
+        #expect(message.characterEncoding == .iso8859_1)
+        #expect(message["OBX-5"] == "Caf\u{E9}")
+    }
 }
