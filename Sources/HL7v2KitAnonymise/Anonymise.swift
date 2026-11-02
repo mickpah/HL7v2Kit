@@ -15,31 +15,39 @@ import HL7v2Kit
 
 @main
 struct Anonymise {
-    static func main() throws {
-        let args = CommandLine.arguments
+    static func main() {
+        exit(run(CommandLine.arguments))
+    }
+
+    /// The tool's work. Returns 0 on success; on any failure writes one line to standard error
+    /// and returns 1. An error thrown out of `main` would trap (exit 133) instead (#18).
+    static func run(_ args: [String]) -> Int32 {
         guard args.count >= 2 else {
             FileHandle.standardError.write(Data("usage: HL7v2KitAnonymise <input.hl7> [output.hl7]\n".utf8))
-            throw ExitCode.failure
+            return 1
         }
         let inputURL = URL(fileURLWithPath: args[1])
         let outputURL = args.count >= 3 ? URL(fileURLWithPath: args[2]) : nil
+        do {
+            let inputData = try Data(contentsOf: inputURL)
+            let message = try Parser().parse(inputData)
+            let salt = deriveSalt(from: message)
+            let scrubbed = scrub(message, salt: salt)
+            let outputData = scrubbed.serialize()
 
-        let inputData = try Data(contentsOf: inputURL)
-        let message = try Parser().parse(inputData)
-        let salt = deriveSalt(from: message)
-        let scrubbed = scrub(message, salt: salt)
-        let outputData = scrubbed.serialize()
-
-        if let outputURL {
-            try outputData.write(to: outputURL)
-            FileHandle.standardError.write(Data("anonymised \(inputURL.lastPathComponent) → \(outputURL.lastPathComponent) (salt=\(salt))\n".utf8))
-        } else {
-            FileHandle.standardOutput.write(outputData)
+            if let outputURL {
+                try outputData.write(to: outputURL)
+                FileHandle.standardError.write(Data("anonymised \(inputURL.lastPathComponent) → \(outputURL.lastPathComponent) (salt=\(salt))\n".utf8))
+            } else {
+                FileHandle.standardOutput.write(outputData)
+            }
+            return 0
+        } catch {
+            FileHandle.standardError.write(Data("HL7v2KitAnonymise: \(error)\n".utf8))
+            return 1
         }
     }
 }
-
-enum ExitCode: Error { case failure }
 
 // MARK: - Salt
 

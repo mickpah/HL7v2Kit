@@ -124,4 +124,30 @@ struct AnonymiseTests {
         let second = try Self.scrubbed(Self.wire).serialize()
         #expect(first == second)
     }
+
+    @Test("The tool returns an exit status instead of trapping (#18)")
+    func exitStatus() throws {
+        let dir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("anonymise-exit-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let tool = "HL7v2KitAnonymise"
+
+        #expect(Anonymise.run([tool]) == 1)                                                   // usage
+        #expect(Anonymise.run([tool, dir.appendingPathComponent("missing.hl7").path]) == 1)   // no file
+
+        // Declared ASCII, holding byte E9: the byte parse path refuses it on every host (3.29.0).
+        var bad = Data(#"MSH|^~\&|APP|FAC|||20260101||ADT^A01^ADT_A01|CTRL1|P|2.5.1||||||ASCII"#.utf8)
+        bad.append(contentsOf: [0x0D] + Array("NTE|1||Caf".utf8) + [0xE9, 0x0D])
+        let badURL = dir.appendingPathComponent("bad.hl7")
+        try bad.write(to: badURL)
+        #expect(Anonymise.run([tool, badURL.path, dir.appendingPathComponent("bad-out.hl7").path]) == 1)
+
+        let goodURL = dir.appendingPathComponent("good.hl7")
+        let outURL = dir.appendingPathComponent("good-out.hl7")
+        try Data("MSH|^~\\&|LAB|FAC|EMR|FAC|20240101120000||ADT^A01^ADT_A01|CTRL1|P|2.4\rPID|1||MRN12345^^^HOSP^MR||MARKERFAM^MARKERGIV\r".utf8)
+            .write(to: goodURL)
+        #expect(Anonymise.run([tool, goodURL.path, outURL.path]) == 0)
+        #expect(FileManager.default.fileExists(atPath: outURL.path))
+    }
 }
