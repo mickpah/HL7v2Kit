@@ -164,7 +164,7 @@ extension Message {
             // refused here (#15).
             let first = fields[18].repetitions.first.map { Field(repetitions: [$0]) } ?? Field(repetitions: [])
             let declared = Serializer.serializeField(first, encoding: encodingCharacters)
-            if declared.isEmpty {
+            if CharacterEncoding.isUnvalued(declared) {
                 encoding = .utf8
             } else if let known = CharacterEncoding.from(mshField18: declared) {
                 encoding = known

@@ -17,6 +17,7 @@ The entries are condensed; the git history carries the detail.
 - A segment ID is read up to the first field separator, so a line comes back as written: `ZABC|1` was split as `ZAB|C|1`, `AB|x` came back as `AB||x`, and `PIDX|1` was read as a PID with PID-1 `X` (#11).
 - `Anonymiser.anonymise(_:)` returns the segments it rewrites typed, so `firstSegment(PID.self)` reads its output without a re-parse, and the output equals its own parse; the serialised output is unchanged (#12).
 - `HL7v2KitAnonymise` exits 1 with one line on standard error when it fails (a usage error, an unreadable file, a parse failure), instead of trapping with exit 133 (#18).
+- An MSH-18 of `""` (the HL7 null), or a first repetition of `""`, reads as UTF-8 like an empty one, on both parse paths and through the MSH-18 edit, so setting MSH-18 to `""` no longer throws (#17). This extends the documented departure from v2.5.1 section 2.15.9.18, which reads an unvalued MSH-18 as 7-bit ASCII.
 
 ## [3.29.0]
 

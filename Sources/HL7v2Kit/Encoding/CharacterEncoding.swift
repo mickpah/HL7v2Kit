@@ -52,6 +52,13 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
         return !text.unicodeScalars.contains { $0.value > limit }
     }
 
+    /// Whether MSH-18's first repetition is unvalued: empty, or the HL7 null `""` (v2.5.1
+    /// section 2.5.3). Either is read as UTF-8 (#17), a documented departure from section
+    /// 2.15.9.18, which reads both as 7-bit ASCII. Shared by ``detect(in:)`` and the MSH-18 edit.
+    static func isUnvalued(_ declared: String) -> Bool {
+        declared.isEmpty || declared == "\"\""
+    }
+
     /// Map an MSH-18 wire string to a known charset. Returns `nil` if the
     /// value is empty (caller should treat as "default to UTF-8") or if it
     /// is non-empty but unrecognised (caller should throw).
@@ -84,17 +91,17 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
     /// first repetition names the message's character set, and later ones name
     /// alternate sets used through the `\C..\` and `\M..\` escapes, which HL7v2Kit keeps
     /// verbatim (v2.5.1 section 2.15.9.18). If no MSH line exists, or MSH-18 or its first
-    /// repetition is absent or empty, defaults to `.utf8`; the print reads an empty MSH-18
-    /// as 7-bit ASCII, which UTF-8 contains, so a conformant message decodes the same. If
-    /// the first repetition names a charset HL7v2Kit does not recognise, throws
-    /// `ParseError.unsupportedCharacterEncoding(declared:)` with that repetition.
+    /// repetition is absent, empty or the HL7 null `""`, defaults to `.utf8`; the print reads
+    /// an unvalued MSH-18 as 7-bit ASCII, which UTF-8 contains, so a conformant message
+    /// decodes the same. If the first repetition names a charset HL7v2Kit does not recognise,
+    /// throws `ParseError.unsupportedCharacterEncoding(declared:)` with that repetition.
     ///
     /// The probe is structural — it doesn't require a fully-decoded message,
     /// only enough of the leading bytes to find the field-separator and
     /// MSH-18 slot. Callers building byte-level workflows can pass a Latin-1
     /// 1:1 decode of the input bytes.
     public static func detect(in raw: String) throws -> CharacterEncoding {
-        guard let declared = probeMSH18(raw), !declared.isEmpty else {
+        guard let declared = probeMSH18(raw), !isUnvalued(declared) else {
             return .utf8
         }
         guard let known = from(mshField18: declared) else {

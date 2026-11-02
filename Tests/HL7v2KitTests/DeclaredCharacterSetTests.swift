@@ -87,4 +87,34 @@ struct DeclaredCharacterSetTests {
         #expect(String(decoding: bytes, as: UTF8.self).contains("PID|1||||Ren\u{E9}e"))
         #expect(!bytes.allSatisfy { $0 < 0x80 })
     }
+
+    @Test("An MSH-18 of the HL7 null reads as UTF-8 on both parse paths (#17)",
+          arguments: ["\"\"", "\"\"~ISO IR87"])
+    func nullReadsAsUTF8(_ msh18: String) throws {
+        let wire = Self.adt(msh18, nte: "Caf\u{E9}")
+        #expect(try Parser().parse(wire).characterEncoding == .utf8)
+        #expect(try Parser().parse(Data(wire.utf8)).characterEncoding == .utf8)
+        #expect(try CharacterEncoding.detect(in: wire) == .utf8)
+    }
+
+    @Test("Clearing MSH-18, or setting it to the HL7 null, leaves the message UTF-8 (#17)")
+    func editToNull() throws {
+        var cleared = try Parser().parse(Self.adt("8859/1", nte: "Caf\u{E9}"))
+        try cleared.clear(at: Path("MSH-18"))
+        #expect(cleared.characterEncoding == .utf8)
+        #expect(cleared["MSH-18"] == "")
+
+        var nulled = try Parser().parse(Self.adt("8859/1", nte: "Caf\u{E9}"))
+        try nulled.set("\"\"", at: Path("MSH-18"))
+        #expect(nulled.characterEncoding == .utf8)
+    }
+
+    @Test("A null MSH-18 draws no issue at MSH-18 (#17)")
+    func nullValidates() throws {
+        let message = try Parser().parse(Self.adt("\"\"", nte: "Caf\u{E9}"))
+        let atMSH18 = Validator().validate(message).issues.filter {
+            $0.location.segmentID == "MSH" && $0.location.fieldIndex == 18
+        }
+        #expect(atMSH18.isEmpty)
+    }
 }

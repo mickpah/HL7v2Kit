@@ -18,7 +18,7 @@ For v0.1.0:
 | `ASCII` / `US-ASCII` | ``CharacterEncoding/ascii`` | `.ascii` |
 | `8859/1` / `ISO-8859-1` / `Latin-1` | ``CharacterEncoding/iso8859_1`` | `.isoLatin1` |
 
-Common aliases are accepted case-insensitively. If MSH-18 is empty or absent, the parser defaults to ``CharacterEncoding/utf8``. This departs from v2.5.1 section 2.15.9.18, which reads an empty MSH-18 as 7-bit ASCII; UTF-8 contains ASCII, so a conformant message decodes the same, and a message with no MSH-18 that holds non-ASCII text is accepted.
+Common aliases are accepted case-insensitively. If MSH-18 is absent, empty or the HL7 null `""` (or its first repetition is empty or `""`), the parser defaults to ``CharacterEncoding/utf8``, and so does an edit that sets it so. This departs from v2.5.1 section 2.15.9.18, which reads an unvalued MSH-18 as 7-bit ASCII; UTF-8 contains ASCII, so a conformant message decodes the same, and a message with no MSH-18 that holds non-ASCII text is accepted.
 
 ## Repeated MSH-18
 
