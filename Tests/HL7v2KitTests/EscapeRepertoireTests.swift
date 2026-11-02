@@ -1,6 +1,6 @@
 // EscapeRepertoireTests.swift
 // #13: a value with no wire text (built in code, set by an edit) writes a `\…\` run as an escape
-// only when the standard defines it (v2.5.1 Chapter 2 sections 2.7.1 to 2.7.6; `\P\` from v2.7).
+// only when the standard defines it (v2.5.1 Chapter 2 sections 2.7.1 to 2.7.6; `\P\` from v2.7.1).
 // Any other run is text, so its escape characters are written `\E\`.
 
 import Testing

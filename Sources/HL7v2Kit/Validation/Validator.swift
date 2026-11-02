@@ -174,6 +174,9 @@ public struct Validator: Sendable {
         // 3.29.0 (#16): text the declared character set cannot encode. Always on, an error.
         checkCharacterSet(message: message, issues: &issues)
 
+        // 3.31.0 (G3): escape sequences the version does not define (v2.5.1 section 2.7).
+        checkEscapeSequences(message: message, issues: &issues)
+
         // ADR-019: abstract message syntax (segment order, groups, required
         // segments per structure). Opt-in.
         if let severity = options.messageStructureSeverity {

@@ -291,6 +291,14 @@ public struct ValidationOptions: Sendable {
     /// names. `nil` (off) in ``lenient``. Not an init parameter.
     public var correlationSeverity: IssueSeverity? = .warning
 
+    /// The severity of ``IssueCode/escapeSequenceUndefined``: a run between two escape
+    /// characters that the message's version does not define, or an escape character with no
+    /// closing one (v2.5.1 section 2.7; v2.3 and v2.3.1 section 2.9, v2.4 section 2.10). The
+    /// print defines the escapes and the forms of their bodies and says nothing of any other
+    /// sequence, so it is a warning in ``default`` and ``strict``; `nil` (off) in ``lenient``.
+    /// Not an init parameter. 3.31.0.
+    public var escapeSequenceSeverity: IssueSeverity? = .warning
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
@@ -344,8 +352,9 @@ public struct ValidationOptions: Sendable {
     /// check (`valueFormatSeverity`) and the repetition-bound check
     /// (`repetitionBoundSeverity`), and it sets `messageStructureSeverity`
     /// to `nil` explicitly (`.warning` in `default`, `.error` in `strict`), as it does the
-    /// batch envelope checks (`batchEnvelopeSeverity`) and the correlation check
-    /// (`correlationSeverity`). `checkCardinality`
+    /// batch envelope checks (`batchEnvelopeSeverity`), the correlation check
+    /// (`correlationSeverity`) and the escape-sequence check
+    /// (`escapeSequenceSeverity`). `checkCardinality`
     /// is already `false` here, which also silences the single-cardinality
     /// error.
     public static let lenient: ValidationOptions = {
@@ -366,6 +375,7 @@ public struct ValidationOptions: Sendable {
         options.messageStructureSeverity = nil
         options.batchEnvelopeSeverity = nil
         options.correlationSeverity = nil
+        options.escapeSequenceSeverity = nil
         return options
     }()
 }

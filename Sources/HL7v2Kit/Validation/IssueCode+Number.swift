@@ -42,6 +42,7 @@ extension IssueCode {
         case .valueFormatInvalid: 3004
         case .correlatedValueMismatch: 3005
         case .characterNotEncodable: 3006
+        case .escapeSequenceUndefined: 3007
         case .valueNotInTable: 4001
         case .conditionalFieldMissing: 5001
         case .conditionalComponentMissing: 5002

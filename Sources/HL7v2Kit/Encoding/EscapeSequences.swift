@@ -91,7 +91,9 @@ enum EscapeSequences {
         return result
     }
 
-    private static func decodeBody(
+    /// The text `body` decodes to: `F`, `S`, `T`, `R` and `E` alone, and `X` with pairs of hex
+    /// digits. Nil for any other body, which the decoder keeps verbatim.
+    static func decodeBody(
         _ body: ArraySlice<Character>,
         encoding: EncodingCharacters
     ) -> String? {
@@ -273,11 +275,12 @@ enum EscapeSequences {
     }
 
     /// A body the standard defines as an escape the decoder keeps verbatim (v2.5.1 Chapter 2,
-    /// sections 2.7.1 to 2.7.6; `\P\` from v2.7): highlighting `H` and `N`, the truncation
-    /// character `P`, locally defined `Z…`, the character-set escapes `Cxxyy` and `Mxxyy(zz)`,
-    /// and the formatting commands. Anything else written in code is text (#13). `P` is
-    /// accepted on every version: the encoding characters do not carry MSH-2's fifth character.
-    private static func isRepertoireBody(_ body: ArraySlice<Character>) -> Bool {
+    /// sections 2.7.1 to 2.7.6; `\P\` from v2.7.1, v2.7.1 section 2.5.5.2 and v2.8.2 sections
+    /// 2.7.1 and 2.7.2): highlighting `H` and `N`, the truncation character `P`, locally defined
+    /// `Z…`, the character-set escapes `Cxxyy` and `Mxxyy(zz)`, and the formatting commands.
+    /// Anything else written in code is text (#13). `P` is accepted on every version: the
+    /// encoding characters do not carry MSH-2's fifth character, nor the message's version.
+    static func isRepertoireBody(_ body: ArraySlice<Character>) -> Bool {
         guard let first = body.first else { return false }
         let rest = body.dropFirst()
         switch first {

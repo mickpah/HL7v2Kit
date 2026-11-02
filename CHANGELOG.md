@@ -8,6 +8,14 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- `IssueCode.escapeSequenceUndefined` (3007) and `ValidationOptions.escapeSequenceSeverity` (a warning
+  in default and strict, off in lenient): a run between two escape characters that the message's
+  version does not define, or an escape character with no closing one (v2.5.1 section 2.7; v2.3 and
+  v2.3.1 section 2.9, v2.4 section 2.10), once per value. `\P\` is defined from v2.7.1. A message
+  carrying one now draws the warning by default (#20).
+
 ### Fixed
 
 - A segment line with no field separator keeps no field and is written back as its ID alone, so
@@ -28,6 +36,8 @@ The entries are condensed; the git history carries the detail.
 - An FHS or BHS whose fifth encoding character (the v2.7+ truncation character) repeats one of the
   four is reported as `batchEnvelopeMalformed` (1013) and read with the message's delimiters, as a
   repeat in MSH-2 already throws `invalidMSH` (#19).
+- The Escape Sequences article dated the truncation escape `\P\` from v2.7; it is defined from v2.7.1
+  (v2.7.1 section 2.5.5.2; v2.8.2 sections 2.7.1 and 2.7.2) (#20).
 
 ## [3.30.0]
 

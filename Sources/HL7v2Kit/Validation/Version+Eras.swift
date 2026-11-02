@@ -45,4 +45,25 @@ extension Version {
         case .v2_3, .v2_3_1, .v2_4: return false
         }
     }
+
+    /// True where the truncation escape `\P\` is defined: v2.7.1 section 2.5.5.2 p12 (the
+    /// truncation character "may be escaped but this is not required") and v2.8.2 sections
+    /// 2.7.1 and 2.7.2, which list `\P\`. v2.3 to v2.6 print no truncation character.
+    var definesTruncationEscape: Bool {
+        switch self {
+        case .v2_7_1, .v2_7, .v2_8_2, .v2_8: return true
+        case .v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6: return false
+        }
+    }
+
+    /// The Chapter 2 section that defines the escape sequences: "Use of escape sequences in
+    /// text fields" is 2.9 in v2.3 and v2.3.1 and 2.10 in v2.4, and 2.7 from v2.5.1 (v2.8.2
+    /// titles it "Use of escape sequences in fields").
+    var escapeSequenceSection: String {
+        switch self {
+        case .v2_3, .v2_3_1: return "2.9"
+        case .v2_4: return "2.10"
+        case .v2_5_1, .v2_6, .v2_7_1, .v2_7, .v2_8_2, .v2_8: return "2.7"
+        }
+    }
 }

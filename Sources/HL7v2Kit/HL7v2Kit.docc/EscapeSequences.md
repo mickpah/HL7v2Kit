@@ -22,10 +22,10 @@ HL7v2Kit recognises the following escape bodies (delimited by the configured esc
 | `\Xdd..\` | Hex-encoded UTF-8 bytes (pairs of hex digits) | Hex |
 | `\Z…\` | Locally-defined; passes through verbatim | Passthrough |
 | `\H\`, `\N\` | Start and end highlighting; pass through verbatim | Passthrough |
-| `\P\` | Truncation character (v2.7 and later); passes through verbatim | Passthrough |
+| `\P\` | Truncation character (v2.7.1 and later); passes through verbatim | Passthrough |
 | `\Cxxyy\`, `\Mxxyy\`, `\Mxxyyzz\` | Character-set escapes; pass through verbatim | Passthrough |
 | `\.br\`, `\.sp\`, `\.in+4\` and the other formatting commands | FT formatting; pass through verbatim | Passthrough |
-| Anything else | Read: kept verbatim. Written from code: text, escaped as `\E\` | See below |
+| Anything else | Read: kept verbatim, and the validator warns. Written from code: text, escaped as `\E\` | See below |
 
 ## Example
 
@@ -62,11 +62,19 @@ Coalescing applies to values built in code. A parsed value keeps its hex exactly
 
 ## `\Z..\` and unknown bodies
 
-The decoder keeps every escape it does not resolve verbatim in the value: locally defined sequences (`\Z123\`), highlighting (`\H\`, `\N\`), the formatting commands (`\.br\`), the character-set escapes (`\C2842\`, `\M2442\`), the truncation escape `\P\` (v2.7 and later, deliberately not decoded: a literal truncation character and its escape would become indistinguishable), and any body the standard does not define. A parsed value is written back from the text it was read from, so all of these round-trip exactly.
+The decoder keeps every escape it does not resolve verbatim in the value: locally defined sequences (`\Z123\`), highlighting (`\H\`, `\N\`), the formatting commands (`\.br\`), the character-set escapes (`\C2842\`, `\M2442\`), the truncation escape `\P\` (v2.7.1 and later, deliberately not decoded: a literal truncation character and its escape would become indistinguishable), and any body the standard does not define. A parsed value is written back from the text it was read from, so all of these round-trip exactly.
 
-A value built in code, or set by an edit, has no such text, so the encoder decides. It copies a `\…\` run as an escape only when the standard defines it (v2.5.1 Chapter 2, sections 2.7.1 to 2.7.6): `\H\`, `\N\`, `\P\` (copied on every version because the encoder cannot see the message's version, though the truncation escape is defined from v2.7), `\Z` followed by one or more characters, `\C` and four hex digits, `\M` and four or six hex digits, and the formatting commands `.br`, `.fi`, `.nf`, `.ce`, `.sp` (optional number), `.in` and `.ti` (optionally signed number) and `.sk` (number). Any other run is text, so `C:\Users\me` is written `C:\E\Users\E\me`. A run that holds a delimiter or a control character is never copied: its characters are escaped one by one, so a value cannot split a field or start a segment.
+A value built in code, or set by an edit, has no such text, so the encoder decides. It copies a `\…\` run as an escape only when the standard defines it (v2.5.1 Chapter 2, sections 2.7.1 to 2.7.6): `\H\`, `\N\`, `\P\` (copied on every version because the encoder cannot see the message's version, though the truncation escape is defined only from v2.7.1), `\Z` followed by one or more characters, `\C` and four hex digits, `\M` and four or six hex digits, and the formatting commands `.br`, `.fi`, `.nf`, `.ce`, `.sp` (optional number), `.in` and `.ti` (optionally signed number) and `.sk` (number). Any other run is text, so `C:\Users\me` is written `C:\E\Users\E\me`. A run that holds a delimiter or a control character is never copied: its characters are escaped one by one, so a value cannot split a field or start a segment.
 
 One ambiguity remains, by design of the decoded-value model: text written in code that spells a defined escape (a literal `\H\` or `\.br\`) is written as the escape, and through ``Subcomponent/value`` a parsed escape `\H\` and parsed literal text `\E\H\E\` both read `\H\`. Round trip and validation read the wire text, so neither is affected.
+
+## Undefined escapes
+
+The truncation escape `\P\` is defined from v2.7.1: the truncation character "may be escaped but this is not required" (v2.7.1 section 2.5.5.2), and v2.8.2 lists `\P\` among the escapes (sections 2.7.1 and 2.7.2). v2.3 to v2.6 have no truncation character. HL7v2Kit has no v2.7 text and reads a `2.7` message as v2.7.1.
+
+The print defines the escapes above and the forms of their bodies, and says nothing of any other sequence (v2.5.1 sections 2.7.1 to 2.7.7). ``Validator`` therefore reports, as ``IssueCode/escapeSequenceUndefined`` (a warning by default, set by ``ValidationOptions/escapeSequenceSeverity``), a value whose text holds a run its version does not define, such as `\Q\`, `\X1\` (an odd hex digit), `\C12\`, `\Z\`, `\.zz\` or `\P\` before v2.7.1, or an escape character with no closing one (`\ABC`). Runs are read from left to right, each from one escape character to the next, so the `\` closing `\E\` opens nothing. MSH-1 and MSH-2, and their BHS and FHS twins, hold the delimiters and are not read; nor is a batch envelope read by ``BatchParser``.
+
+The check reads what the serialiser writes. A parsed value is read as it was sent; a value built in code is read as encoded, and the encoder escapes any run the standard does not define, so only `\P\`, which it copies on every version, can draw the warning. Where a sequence may sit by data type (formatting commands in FT, highlighting and `\X..\` in TX, FT and CF) is not checked.
 
 ## Customising the escape character
 

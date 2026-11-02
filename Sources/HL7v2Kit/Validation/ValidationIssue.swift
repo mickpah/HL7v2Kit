@@ -426,6 +426,20 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// checked and it draws no Z-segment, grammar or withdrawn-segment notice; the
     /// message-structure check still sees it. Additive case (3.30.0).
     case segmentIDMalformed
+
+    /// A run between two escape characters that the message's version does not define, or an
+    /// escape character with no closing one: "An escape sequence consists of the escape
+    /// character followed by an escape code ID of one character, zero (0) or more data
+    /// characters, and another occurrence of the escape character" (v2.5.1 section 2.7.1).
+    /// Defined are `\F\`, `\S\`, `\T\`, `\R\`, `\E\`, `\H\` and `\N\`; `\X` and one or more
+    /// pairs of hex digits (2.7.5); `\Z` and one or more characters (2.7.7); `\C` and two hex
+    /// pairs, `\M` and two or three (2.7.2); the formatting commands of 2.7.6; and `\P\` from
+    /// v2.7.1 (v2.7.1 section 2.5.5.2; v2.8.2 sections 2.7.1 and 2.7.2). Read from each value's
+    /// wire text, in every segment of a message but fields 1 and 2 of MSH, BHS and FHS (a batch
+    /// envelope is not read); reported once per value at
+    /// ``ValidationOptions/escapeSequenceSeverity`` (a warning by default). Where a sequence sits
+    /// by data type is not checked. Additive case (3.31.0).
+    case escapeSequenceUndefined
 }
 
 /// One observation from validation. Always non-fatal: collected into a

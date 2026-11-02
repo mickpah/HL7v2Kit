@@ -54,6 +54,7 @@ struct ValidationArticleCoverageTests {
         .messageStructureMismatch(declared: "", trigger: ""),
         .messageStructureNotModelled(structure: ""), .conditionNotEvaluated(fields: []),
         .batchCountMismatch(declared: "", actual: 0), .batchEnvelopeMalformed(segmentID: ""), .segmentIDMalformed,
+        .escapeSequenceUndefined,
     ]
 
     static func name(of code: IssueCode) -> String {
@@ -93,6 +94,7 @@ struct ValidationArticleCoverageTests {
         case .batchCountMismatch: "batchCountMismatch"
         case .batchEnvelopeMalformed: "batchEnvelopeMalformed"
         case .segmentIDMalformed: "segmentIDMalformed"
+        case .escapeSequenceUndefined: "escapeSequenceUndefined"
         }
     }
 
