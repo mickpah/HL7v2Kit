@@ -15,6 +15,16 @@ The entries are condensed; the git history carries the detail.
   version does not define, or an escape character with no closing one (v2.5.1 section 2.7; v2.3 and
   v2.3.1 section 2.9, v2.4 section 2.10), once per value. `\P\` is defined from v2.7.1. A message
   carrying one now draws the warning by default (#20).
+- `SegmentGrammar.conditionIssues()` and `ConditionIssue`: each atom of a grammar's field conditions
+  (`condition`, `prohibitedWhen`, `additionalProhibitions`) that the condition language cannot read,
+  with its field, source and reason. Such an atom never fires; run it on a `ZSegmentGrammar`'s grammar
+  when building one. Validation is unchanged (#21).
+
+### Changed
+
+- A populated withdrawn (`W`) field of a caller-supplied Z-segment grammar is reported as "marked
+  withdrawn (W) by its caller-supplied grammar", not "withdrawn from the standard (W)"; the code
+  (`fieldNotSupported`) and severity are unchanged (#21).
 
 ### Fixed
 

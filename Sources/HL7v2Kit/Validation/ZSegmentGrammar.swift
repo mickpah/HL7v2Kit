@@ -15,7 +15,9 @@
 /// `x,y,z`, and a plain number is not checked), falling back to the message's version if the
 /// declared one is not modelled. Data types, components and tables are read in the message's
 /// version, and a data type that version does not define is not checked. Conditions use the
-/// condition language in <doc:Validation>; one that does not parse never fires. Under the AU
+/// condition language in <doc:Validation>; an atom that does not parse never fires, so run
+/// ``SegmentGrammar/conditionIssues()`` on ``grammar`` when building one. A populated withdrawn
+/// (`W`) field is reported as marked withdrawn by this grammar, not by the standard. Under the AU
 /// locale the profile's data-type rules reach a Z field of that type, as they reach any field.
 public struct ZSegmentGrammar: Sendable, Equatable, Hashable {
     /// The segment's grammar. Its ``SegmentGrammar/segmentID`` names the Z-segment. Its

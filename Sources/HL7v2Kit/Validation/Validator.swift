@@ -702,6 +702,7 @@ public struct Validator: Sendable {
         if options.warnDeprecatedFields, isPopulated {
             checkDeprecation(
                 fieldGrammar,
+                version: message.version,
                 location: location,
                 issues: &issues
             )
@@ -1784,6 +1785,7 @@ public struct Validator: Sendable {
 
     private func checkDeprecation(
         _ grammar: FieldGrammar,
+        version: Version,
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
@@ -1803,11 +1805,16 @@ public struct Validator: Sendable {
                 message: "Field \(location.pathDescription) ('\(grammar.name)') is not supported (X) but populated"
             ))
         case .withdrawn:
+            // G9: a segment the version grammar lacks was checked against a caller's Z grammar
+            // (ValidationOptions.zSegmentGrammars), so the W is the caller's, not the standard's.
+            let marked = Self.grammarTable(for: version)[location.segmentID] == nil
+                ? "is marked withdrawn (W) by its caller-supplied grammar"
+                : "was withdrawn from the standard (W)"
             issues.append(ValidationIssue(
                 severity: .warning,
                 code: .fieldNotSupported,
                 location: location,
-                message: "Field \(location.pathDescription) ('\(grammar.name)') was withdrawn from the standard (W) but populated"
+                message: "Field \(location.pathDescription) ('\(grammar.name)') \(marked) but populated"
             ))
         default:
             return

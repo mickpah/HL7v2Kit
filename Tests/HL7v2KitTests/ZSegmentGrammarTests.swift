@@ -164,4 +164,20 @@ struct ZSegmentGrammarTests {
         let adt = try found("ADT^A01^ADT_A01")
         #expect(adt.isEmpty)
     }
+
+    @Test("G9: a populated withdrawn field of a caller's grammar names that grammar, not the standard")
+    func withdrawnCallerField() throws {
+        let grammar = SegmentGrammar(segmentID: "ZAU", version: "2.5.1", fields: [
+            FieldGrammar(index: 1, name: "Old Code", dataType: "ST", optionality: .withdrawn, repeatability: .single),
+        ])
+        let found = try Self.issues(TestWires.adt("PID|1", "ZAU|X"), Self.options([ZSegmentGrammar(grammar)]))
+        #expect(found.map(\.code) == [.fieldNotSupported])
+        #expect(found.map(\.severity) == [.warning])
+        #expect(found.map(\.message)
+                == ["Field ZAU[1]-1 ('Old Code') is marked withdrawn (W) by its caller-supplied grammar but populated"])
+        // A field the standard withdrew keeps the standard's wording (v2.7.1 PID-2, printed W).
+        let msh = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.7.1\r"
+        let pid = try Self.issues(msh + "PID|1|X\r", Self.options([]), segment: "PID").filter { $0.code == .fieldNotSupported }
+        #expect(pid.map(\.message) == ["Field PID[1]-2 ('Patient ID') was withdrawn from the standard (W) but populated"])
+    }
 }
