@@ -44,6 +44,16 @@ jobs:
       - name: Test
         run: swift test -v
 
+      # Budgets were set on the current macOS runner, so the previous one skips them. The
+      # rehearsal does not read `if:` and runs the step once.
+      - name: Performance budgets (release build)
+        if: matrix.os == 'macos-current'
+        run: RUN_PERF_TESTS=1 swift test -c release --filter Performance --no-parallel
+
+      # A regression guard for the floor-linked binary, which no in-process test can be.
+      - name: Anonymiser refuses an ASCII message holding byte E9
+        run: bash scripts/check-anonymiser-byte-path.sh
+
       - name: Run the QuickStart example
         run: swift run QuickStart
 
@@ -64,6 +74,10 @@ jobs:
 
       - name: Test
         run: swift test -v
+
+      # Deterministic seed. The rehearsal reads `run:` only, hence the inline variable, not `env:`.
+      - name: Fuzz tests
+        run: RUN_FUZZ_TESTS=1 swift test --filter FuzzTests
 
       - name: Run the QuickStart example
         run: swift run QuickStart

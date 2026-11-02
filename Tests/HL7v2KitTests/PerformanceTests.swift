@@ -61,11 +61,14 @@ struct PerformanceTests {
         for _ in 0..<100 {
             _ = try Self.parser.parse(Self.wireData)
         }
-        let elapsed = try Self.elapsed {
-            _ = try Self.parser.parse(Self.wireData)
+        // An average, so one scheduler pause on a busy runner does not read as a regression.
+        let runs = 200
+        let total = try Self.elapsed {
+            for _ in 0..<runs { _ = try Self.parser.parse(Self.wireData) }
         }
-        #expect(elapsed < 0.001,
-                "Parse took \(elapsed * 1000)ms; budget 1ms (spec § 9.5)")
+        let each = total / Double(runs)
+        #expect(each < 0.001,
+                "Parse took \(each * 1000)ms; budget 1ms (spec § 9.5)")
     }
 
     @Test("Parse 1,000 messages under 5s")
@@ -102,11 +105,14 @@ struct PerformanceTests {
         for _ in 0..<100 {
             _ = Self.validator.validate(message)
         }
-        let elapsed = Self.elapsed {
-            _ = Self.validator.validate(message)
+        // An average, as in parseOneMessageWarm.
+        let runs = 200
+        let total = Self.elapsed {
+            for _ in 0..<runs { _ = Self.validator.validate(message) }
         }
-        #expect(elapsed < 0.002,
-                "Validate took \(elapsed * 1000)ms; budget 2ms (spec § 9.5)")
+        let each = total / Double(runs)
+        #expect(each < 0.002,
+                "Validate took \(each * 1000)ms; budget 2ms (spec § 9.5)")
     }
 
     @Test("Validate 1,000 messages under 10s")

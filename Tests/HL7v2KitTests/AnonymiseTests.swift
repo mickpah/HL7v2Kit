@@ -132,29 +132,49 @@ struct AnonymiseTests {
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: dir) }
         let tool = "HL7v2KitAnonymise"
+        // The tool's status and the lines it sent to standard error.
+        func run(_ args: [String]) -> (status: Int32, lines: [String]) {
+            var lines: [String] = []
+            let status = Anonymise.run(args, standardError: { lines.append($0) })
+            return (status, lines)
+        }
 
-        #expect(Anonymise.run([tool]) == 1)                                                   // usage
-        #expect(Anonymise.run([tool, dir.appendingPathComponent("missing.hl7").path]) == 1)   // no file
+        let usage = run([tool])
+        #expect(usage.status == 1)
+        #expect(usage.lines == ["usage: HL7v2KitAnonymise <input.hl7> [output.hl7]\n"])
+
+        let missing = run([tool, dir.appendingPathComponent("missing.hl7").path])
+        #expect(missing.status == 1)
+        #expect(missing.lines.count == 1)
+        #expect(missing.lines.first?.hasPrefix("HL7v2KitAnonymise: ") == true)
 
         // Declared ASCII, holding byte E9: the byte parse path refuses it on every host (3.29.0).
         var bad = Data(#"MSH|^~\&|APP|FAC|||20260101||ADT^A01^ADT_A01|CTRL1|P|2.5.1||||||ASCII"#.utf8)
         bad.append(contentsOf: [0x0D] + Array("NTE|1||Caf".utf8) + [0xE9, 0x0D])
         let badURL = dir.appendingPathComponent("bad.hl7")
         try bad.write(to: badURL)
-        #expect(Anonymise.run([tool, badURL.path, dir.appendingPathComponent("bad-out.hl7").path]) == 1)
+        let refused = run([tool, badURL.path, dir.appendingPathComponent("bad-out.hl7").path])
+        #expect(refused.status == 1)
+        #expect(refused.lines.count == 1)
+        #expect(refused.lines.first?.hasPrefix("HL7v2KitAnonymise: ") == true)
 
         let oddURL = dir.appendingPathComponent("odd.hl7")
         let oddOut = dir.appendingPathComponent("odd-out.hl7")
         try Data("MSH|^~\\&|LAB|FAC|EMR|FAC|20240101120000||ADT^A01^ADT_A01|CTRL1|P|2.4\rPIDX|1||MRN12345^^^HOSP^MR||MARKERFAM^MARKERGIV\r".utf8)
             .write(to: oddURL)
-        #expect(Anonymise.run([tool, oddURL.path, oddOut.path]) == 1)                    // fails closed
+        let odd = run([tool, oddURL.path, oddOut.path])
+        #expect(odd.status == 1)                                                         // fails closed
+        #expect(odd.lines == ["HL7v2KitAnonymise: segment ID 'PIDX' is not three characters; not anonymised\n"])
         #expect(!FileManager.default.fileExists(atPath: oddOut.path))
 
         let goodURL = dir.appendingPathComponent("good.hl7")
         let outURL = dir.appendingPathComponent("good-out.hl7")
         try Data("MSH|^~\\&|LAB|FAC|EMR|FAC|20240101120000||ADT^A01^ADT_A01|CTRL1|P|2.4\rPID|1||MRN12345^^^HOSP^MR||MARKERFAM^MARKERGIV\r".utf8)
             .write(to: goodURL)
-        #expect(Anonymise.run([tool, goodURL.path, outURL.path]) == 0)
+        let good = run([tool, goodURL.path, outURL.path])
+        #expect(good.status == 0)
+        #expect(good.lines.count == 1)
+        #expect(good.lines.first?.hasPrefix("anonymised good.hl7 \u{2192} good-out.hl7 (salt=") == true)
         #expect(FileManager.default.fileExists(atPath: outURL.path))
     }
 }

@@ -25,6 +25,11 @@ The entries are condensed; the git history carries the detail.
 - A populated withdrawn (`W`) field of a caller-supplied Z-segment grammar is reported as "marked
   withdrawn (W) by its caller-supplied grammar", not "withdrawn from the standard (W)"; the code
   (`fieldNotSupported`) and severity are unchanged (#21).
+- CI runs the fuzz suite on Linux (`RUN_FUZZ_TESTS=1`, a fixed seed, about 15 seconds) and the
+  performance budgets in a release build on the current macOS runner. A macOS step builds
+  `HL7v2KitAnonymise` and checks that it exits 1, writing no file, on a message declared `ASCII`
+  that holds byte E9 (`scripts/check-anonymiser-byte-path.sh`), a regression guard for the binary
+  linked at the macOS floor. `HL7v2KitAnonymise`'s error lines are now covered by tests (#22).
 
 ### Fixed
 
