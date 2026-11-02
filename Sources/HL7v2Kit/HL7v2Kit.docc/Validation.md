@@ -29,6 +29,7 @@ Every check reads the grammar of the message's own version: v2.3, v2.3.1, v2.4, 
 
 - **Version substituted.** MSH-12 `2.7` or `2.8` is validated as v2.7.1 or v2.8.2: ``IssueCode/versionGrammarSubstituted(declared:validatedAs:)``, information, at MSH-12. Always on.
 - **Version not recognised.** A populated MSH-12 naming no modelled version (2.1, 2.2, 2.5, 2.8.1, 2.9, or an unreadable VID.1) is validated against the v2.5.1 grammar: ``IssueCode/versionNotRecognised(wireValue:)``, warning. Always on.
+- **Segment ID.** A segment ID that is not three characters (v2.5.1 section 2.5.2), as the parser keeps it (up to the first field separator) or a message built in code holds it: ``IssueCode/segmentIDMalformed``, error, its fields unchecked and no Z-segment, grammar or withdrawn-segment notice (the message-structure check still sees it). Always on.
 - **Segment not in the version's grammar.** A segment ID that does not begin with `Z` and that the version does not define: ``IssueCode/segmentNotInVersionGrammar``, warning, its fields unchecked. Always on, whatever the Z-segment policy.
 - **Withdrawn segment.** QRD, QRF, URD and URS on v2.7.1 and v2.8.2 (listed as withdrawn or deprecated, still named by structures): ``IssueCode/segmentWithdrawnInVersion``, information, fields unchecked. Always on.
 - **Z-segments.** ``ValidationOptions/zSegmentPolicy``: ``ZSegmentPolicy/ignore`` reports nothing, ``ZSegmentPolicy/warnPresence`` one ``IssueCode/zSegmentPresent`` at information per occurrence, ``ZSegmentPolicy/reject`` the same at error. A Z-segment with no grammar in ``ValidationOptions/zSegmentGrammars`` has its fields unchecked. One with a grammar is checked against it like any segment, and the policy does not apply to it. Its LEN cells are read as the grammar's own declared version prints LEN (through v2.6 a number is a maximum; from v2.7.1 a range or list), its data types, components and tables in the message's version.
@@ -229,6 +230,7 @@ Each ``ValidationIssue`` carries:
 | 1011 | ``IssueCode/messageStructureMismatch(declared:trigger:)`` | Structure and profile |
 | 1012 | ``IssueCode/messageStructureNotModelled(structure:)`` | Structure and profile |
 | 1013 | ``IssueCode/batchEnvelopeMalformed(segmentID:)`` | Structure and profile |
+| 1014 | ``IssueCode/segmentIDMalformed`` | Structure and profile |
 | 2001 | ``IssueCode/requiredFieldMissing`` | Cardinality and type |
 | 2002 | ``IssueCode/requiredComponentMissing`` | Cardinality and type |
 | 2003 | ``IssueCode/cardinalityExceeded`` | Cardinality and type |

@@ -17,7 +17,7 @@ struct IssueCodeNumberTests {
         "versionGrammarSubstituted": 1006, "versionNotRecognised": 1007, "componentNotSupported": 1008,
         "messageStructureSegmentMissing": 1009, "messageStructureSegmentUnexpected": 1010,
         "messageStructureMismatch": 1011, "messageStructureNotModelled": 1012,
-        "batchEnvelopeMalformed": 1013,
+        "batchEnvelopeMalformed": 1013, "segmentIDMalformed": 1014,
         "requiredFieldMissing": 2001, "requiredComponentMissing": 2002, "cardinalityExceeded": 2003,
         "profileMaximumExceeded": 2004, "segmentCardinalityBelowMinimum": 2005,
         "segmentCardinalityAboveMaximum": 2006, "extraComponentsInPrimitiveField": 2007,

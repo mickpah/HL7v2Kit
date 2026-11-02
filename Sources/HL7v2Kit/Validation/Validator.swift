@@ -78,6 +78,18 @@ public struct Validator: Sendable {
             let occurrence = (segmentOccurrence[id] ?? 0) + 1
             segmentOccurrence[id] = occurrence
 
+            // #11: a segment ID is three characters (v2.5.1 section 2.5.2). One that is not
+            // names no segment, so it draws no Z-segment or grammar notice either.
+            guard id.count == 3 else {
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .segmentIDMalformed,
+                    location: IssueLocation(segmentID: id, segmentIndex: occurrence),
+                    message: "Segment ID '\(id)' is not three characters (v2.5.1 section 2.5.2)"
+                ))
+                continue
+            }
+
             guard let baseGrammar = grammar[id] ?? zSegmentGrammar(for: id, in: message) else {
                 // No grammar entry. Only a `Z` ID is a Z-segment (ADR-003);
                 // any other ID is a segment this version does not define

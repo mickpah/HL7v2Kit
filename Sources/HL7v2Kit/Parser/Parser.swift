@@ -238,7 +238,12 @@ public struct Parser: Sendable {
             throw ParseError.invalidMSH(reason: "segment too short: '\(line)'")
         }
 
-        let segmentID = String(chars[0..<3])
+        // #11: outside MSH, BHS and FHS the ID runs to the first field separator (the whole
+        // line when there is none), so a line keeps every character; the validator reports an
+        // ID that is not three characters (1014). A separator segment's fourth character is the
+        // separator, so its ID is the first three.
+        let idEnd = separatorSegment ? 3 : (chars.firstIndex(of: encoding.fieldSeparator) ?? chars.count)
+        let segmentID = String(chars[0..<idEnd])
 
         // Split into raw field strings.
         // MSH / BHS / FHS are special: the field separator IS field 1, so the raw split
@@ -265,17 +270,12 @@ public struct Parser: Sendable {
                 rawFields = [segmentID, String(encoding.fieldSeparator)] + rest
             }
         } else {
-            let afterID = String(chars[3...])
-            // afterID starts with field separator. Remove the leading one then split.
-            let trimmed: String
-            if afterID.first == encoding.fieldSeparator {
-                trimmed = String(afterID.dropFirst())
-            } else {
-                trimmed = afterID
-            }
-            let parts = trimmed.split(separator: encoding.fieldSeparator,
-                                       omittingEmptySubsequences: false)
-                                .map(String.init)
+            // Everything after the ID and its separator. A line with no separator keeps one
+            // empty field, as before.
+            let afterSeparator = String(chars[min(idEnd + 1, chars.count)...])
+            let parts = afterSeparator.split(separator: encoding.fieldSeparator,
+                                              omittingEmptySubsequences: false)
+                                       .map(String.init)
             rawFields = [segmentID] + parts
         }
 

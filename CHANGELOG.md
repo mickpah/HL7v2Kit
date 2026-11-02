@@ -8,6 +8,14 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- `IssueCode.segmentIDMalformed` (1014, an error): a segment ID that is not three characters (v2.5.1 section 2.5.2), in a parsed message or one built in code (#11).
+
+### Fixed
+
+- A segment ID is read up to the first field separator, so a line comes back as written: `ZABC|1` was split as `ZAB|C|1`, `AB|x` came back as `AB||x`, and `PIDX|1` was read as a PID with PID-1 `X` (#11).
+
 ## [3.29.0]
 
 ### Fixed

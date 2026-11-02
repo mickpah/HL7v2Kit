@@ -69,7 +69,7 @@ public enum Segment: Sendable, Equatable, Hashable {
     case typed(AnyTypedSegment)
     case unknown(UnknownSegment)
 
-    /// The 3-character segment identifier.
+    /// The segment identifier: three characters in a conformant message (v2.5.1 section 2.5.2). A parsed line keeps the text before its first field separator.
     public var segmentID: String {
         switch self {
         case .typed(let s): return s.segmentID

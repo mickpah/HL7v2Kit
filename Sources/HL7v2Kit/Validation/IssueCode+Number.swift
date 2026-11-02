@@ -26,6 +26,7 @@ extension IssueCode {
         case .messageStructureMismatch: 1011
         case .messageStructureNotModelled: 1012
         case .batchEnvelopeMalformed: 1013
+        case .segmentIDMalformed: 1014
         case .requiredFieldMissing: 2001
         case .requiredComponentMissing: 2002
         case .cardinalityExceeded: 2003
