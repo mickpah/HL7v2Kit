@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.30.0]
+
 ### Added
 
 - `IssueCode.segmentIDMalformed` (1014, an error): a segment ID that is not three characters (v2.5.1
