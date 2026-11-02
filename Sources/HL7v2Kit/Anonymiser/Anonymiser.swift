@@ -75,7 +75,8 @@ public struct Anonymiser: Sendable {
             default: break
             }
             for (index, rule) in Self.coverage[id] ?? [] { apply(rule, to: &fields, at: index) }
-            return .unknown(UnknownSegment(segmentID: id, fields: fields))
+            // Re-hydrated as the path editor does, so a typed segment stays typed (#12).
+            return SegmentRegistry.hydrate(UnknownSegment(segmentID: id, fields: fields))
         }
         var result = Message(version: message.version, encodingCharacters: message.encodingCharacters,
                              segments: segments, characterEncoding: message.characterEncoding,

@@ -15,6 +15,7 @@ The entries are condensed; the git history carries the detail.
 ### Fixed
 
 - A segment ID is read up to the first field separator, so a line comes back as written: `ZABC|1` was split as `ZAB|C|1`, `AB|x` came back as `AB||x`, and `PIDX|1` was read as a PID with PID-1 `X` (#11).
+- `Anonymiser.anonymise(_:)` returns the segments it rewrites typed, so `firstSegment(PID.self)` reads its output without a re-parse, and the output equals its own parse; the serialised output is unchanged (#12).
 
 ## [3.29.0]
 

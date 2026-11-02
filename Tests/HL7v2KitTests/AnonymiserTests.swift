@@ -37,6 +37,15 @@ struct AnonymiserTests {
         #expect(eight["PID-5.1"] == "Jensen" && eight["PID-5.2"] == "Casey")
     }
 
+    @Test("A covered segment stays typed, so typed access needs no re-parse (#12)")
+    func coveredSegmentStaysTyped() throws {
+        let input = try Parser().parse(Self.wire(control: "CTRL1", Self.pid))
+        let output = Anonymiser(key: 7).anonymise(input)
+        let pid = try #require(output.firstSegment(PID.self))
+        #expect(pid.patientName?.familyName == "Edwards")   // key 7, as in sameValueSameOutputUnderOneKey
+        #expect(output == (try Parser().parse(output.serialize())))
+    }
+
     @Test("The identifier seed is the shared FNV-1a value")
     func seedMatchesSharedLiteral() {
         #expect(anonymiserSeed(key: 42, kind: "identifier", original: "8003608166690503") == 13_496_976_630_852_856_219)
