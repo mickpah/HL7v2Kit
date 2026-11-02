@@ -418,12 +418,13 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     case batchEnvelopeMalformed(segmentID: String)
 
     /// A segment ID that is not three characters: "Each segment is identified by a unique
-    /// three-character code known as the Segment ID" (v2.5.1 section 2.5.2). When a line's fourth
-    /// character is not the field separator, the parser keeps its ID up to the first one, so
-    /// `ZABC|1` has ID `ZABC`; a message built in code can hold any ID. Reported as an error at
-    /// the segment in every preset; the segment's fields are not checked and it draws no
-    /// Z-segment, grammar or withdrawn-segment notice; the message-structure check still sees it.
-    /// Additive case (3.30.0).
+    /// three-character code known as the Segment ID" (v2.5.1 section 2.5.2). The parser keeps a
+    /// line's ID up to its first field separator (with a letter or digit as the separator, the
+    /// first three characters when the fourth is the separator), so `ZABC|1` has ID `ZABC`,
+    /// `A|B|c` has ID `A` and a later `MSHX|1|2` has ID `MSHX`; a message built in code can hold
+    /// any ID. Reported as an error at the segment in every preset; the segment's fields are not
+    /// checked and it draws no Z-segment, grammar or withdrawn-segment notice; the
+    /// message-structure check still sees it. Additive case (3.30.0).
     case segmentIDMalformed
 }
 

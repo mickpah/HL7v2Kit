@@ -168,8 +168,13 @@ public struct Parser: Sendable {
         var segments: [Segment] = []
         for (i, segLine) in segmentStrings.enumerated() {
             if segLine.isEmpty { continue }   // tolerate blank lines mid-message
-            let segment = try parseSegment(segLine, encoding: encoding,
-                                           separatorSegment: i == 0 || Self.isSeparatorSegment(segLine))
+            // A later line starting MSH is a header only when its fourth character is the
+            // message's field separator (MSH-1, v2.5.1 section 2.5.4); `MSHX|1|2` is an ordinary
+            // line. BHS and FHS name their own separator in theirs (BHS-1, FHS-1).
+            let id = String(segLine.prefix(3))
+            let separatorSegment = i == 0 || id == "BHS" || id == "FHS"
+                || id == "MSH" && segLine.dropFirst(3).first == fieldSep
+            let segment = try parseSegment(segLine, encoding: encoding, separatorSegment: separatorSegment)
             // Enforce strict mode: if the registry returned `.unknown`, the
             // segment ID is not in the codegen-emitted typed-segment table.
             // Under `allowUnknownSegments: false` we reject it.
@@ -224,8 +229,8 @@ public struct Parser: Sendable {
     /// (HL7 v2 §2.x: MSH-1/MSH-2, and identically BHS-1/BHS-2 and FHS-1/FHS-2 for the batch
     /// and file envelopes). Sprint 0 §3C: before this, an envelope line inside a message was
     /// numbered plainly, so every BHS/FHS field read one position off the spec.
-    static func isSeparatorSegment(_ line: String) -> Bool {
-        line.hasPrefix("MSH") || line.hasPrefix("BHS") || line.hasPrefix("FHS")
+    static func isSeparatorSegment(_ segmentID: String) -> Bool {
+        segmentID == "MSH" || segmentID == "BHS" || segmentID == "FHS"
     }
 
     func parseSegment(
@@ -238,15 +243,18 @@ public struct Parser: Sendable {
             throw ParseError.invalidMSH(reason: "segment too short: '\(line)'")
         }
 
-        // #11: a segment ID is three characters (v2.5.1 section 2.5.2). When the fourth
-        // character is the field separator, the ID is the first three, even if the separator is a
-        // letter or digit the ID also holds (section 2.5.4 leaves the delimiters to the site), and
-        // a separator segment's fourth character is always its separator. Otherwise the ID runs to
-        // the first field separator (the whole line when there is none), so a malformed line keeps
-        // every character; the validator reports an ID that is not three characters (1014).
+        // A segment ID is three characters (v2.5.1 section 2.5.2, p. 2-6) and the site picks the
+        // delimiters (section 2.5.4, p. 2-11). A separator segment's ID is its first three. With
+        // any other line the ID runs to the first field separator (the whole line when there is
+        // none), so a malformed line keeps every character and the validator reports it (1014).
+        // A letter or digit can stand inside an ID, so with one as the separator the ID is the
+        // first three characters when the line is three long or its fourth is the separator.
+        // ASCII only: Appendix A's IDs are ASCII letters and digits, so `é` cannot stand in one.
+        let separator = encoding.fieldSeparator
+        let alphanumericSeparator = separator.isASCII && (separator.isLetter || separator.isNumber)
         let threeCharacterID = separatorSegment
-            || (chars.count > 3 && chars[3] == encoding.fieldSeparator)
-        let idEnd = threeCharacterID ? 3 : (chars.firstIndex(of: encoding.fieldSeparator) ?? chars.count)
+            || alphanumericSeparator && (chars.count == 3 || chars[3] == separator)
+        let idEnd = threeCharacterID ? 3 : (chars.firstIndex(of: separator) ?? chars.count)
         let segmentID = String(chars[0..<idEnd])
 
         // Split into raw field strings.
@@ -273,10 +281,12 @@ public struct Parser: Sendable {
                 // Build the canonical array:
                 rawFields = [segmentID, String(encoding.fieldSeparator)] + rest
             }
+        } else if idEnd == chars.count {
+            // No field separator after the ID: no field, so the line is written back as its ID.
+            rawFields = [segmentID]
         } else {
-            // Everything after the ID and its separator. A line with no separator keeps one
-            // empty field, as before.
-            let afterSeparator = String(chars[min(idEnd + 1, chars.count)...])
+            // Everything after the ID and its separator.
+            let afterSeparator = String(chars[(idEnd + 1)...])
             let parts = afterSeparator.split(separator: encoding.fieldSeparator,
                                               omittingEmptySubsequences: false)
                                        .map(String.init)
@@ -355,7 +365,8 @@ public struct Parser: Sendable {
 extension Parser {
     /// The delimiters an FHS or BHS line declares, or nil when they cannot be read: the field
     /// separator after the ID, then four distinct encoding characters (a fifth, the v2.7+
-    /// truncation character, is allowed), then the end of the line or the field separator.
+    /// truncation character, is allowed when it repeats none of them, as in MSH-2), then the end
+    /// of the line or the field separator.
     static func headerDelimiters(_ line: String) -> EncodingCharacters? {
         let chars = Array(line)
         guard chars.count >= 8 else { return nil }
@@ -365,7 +376,10 @@ extension Parser {
         let encoding = EncodingCharacters(fieldSeparator: separator, componentSeparator: chars[4],
                                           repetitionSeparator: chars[5], escapeCharacter: chars[6],
                                           subcomponentSeparator: chars[7])
-        return encoding.isValid ? encoding : nil
+        // The truncation character (v2.7.1 section 2.5.5.2) cannot be the separator (above) and
+        // must not repeat any of the four, the check MSH-2 makes.
+        guard encoding.isValid, encodingEnd == 8 || !chars[4...7].contains(chars[8]) else { return nil }
+        return encoding
     }
 
     /// One envelope line as a segment. FHS and BHS use their own delimiters when they can be

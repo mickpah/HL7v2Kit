@@ -199,12 +199,21 @@ public struct BatchParser: Sendable {
         var findings: [EnvelopeOrderFinding] = []
         var occurrences: [String: Int] = [:]
         var afterTrailerReported = false
+        // The field separator in force: MSH-1, BHS-1 or FHS-1 of the last such line.
+        var separator: Character = "|"
 
         for (position, line) in lines.enumerated() {
             // Segment IDs are 3 ASCII characters; anything shorter is
             // malformed — treat it as a body segment so `Parser` can
             // raise the appropriate error when the message closes.
-            let id = line.prefix(3)
+            let prefix = line.prefix(3)
+            let fourth = line.dropFirst(3).first
+            // BTS and FTS name no separator of their own (v2.5.1 section 2.10.3.1): a line starting
+            // with one is a trailer only when it is that ID alone or its fourth character is the
+            // separator in force. Otherwise (`BTSX|1`) it is a body line, under the ID the parser reads.
+            let bodyLine = (prefix == "BTS" || prefix == "FTS") && fourth != nil && fourth != separator
+            let id = bodyLine ? line.prefix { $0 != separator } : prefix
+            if id == "MSH" || id == "BHS" || id == "FHS", let fourth { separator = fourth }
             let occurrence = (occurrences[String(id)] ?? 0) + 1
             occurrences[String(id)] = occurrence
             let reason: EnvelopeOrderFinding.Reason? =

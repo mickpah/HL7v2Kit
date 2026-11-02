@@ -8,6 +8,27 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Fixed
+
+- A segment line with no field separator keeps no field and is written back as its ID alone, so
+  `ZZZ`, `ZABC` and a bare `BHS` or `FHS` come back as written instead of as `ZZZ|` or `BHS|^~\&`.
+  MSH is still always written with MSH-1 and MSH-2 (#19).
+- A segment ID is the text before the first field separator, so `A|B|c` has ID `A` (1014) and
+  comes back as written, where 3.30.0 read ID `A|B`. With a letter or digit as the field separator
+  the ID is the first three characters when the line is three characters long or its fourth is the
+  separator, so under `X` a bare `TXA` has ID `TXA` rather than `T` (v2.5.1 sections 2.5.2 and
+  2.5.4) (#19).
+- A later line starting `MSH` is a message header only when its fourth character is the message's
+  field separator: `MSHX|1|2` is a segment with ID `MSHX` (1014) and comes back as written, instead
+  of a second MSH with the `X` dropped (#19).
+- `BatchParser` and `StreamingBatchParser` read a line starting `BTS` or `FTS` as a trailer only when
+  it is that ID alone or its fourth character is the field separator in force (that of the last MSH,
+  BHS or FHS line). `BTSX|1` and `FTSX|1` stay in the open message, where `BatchParser` closed the
+  batch or file at them and `StreamingBatchParser` discarded them (#19).
+- An FHS or BHS whose fifth encoding character (the v2.7+ truncation character) repeats one of the
+  four is reported as `batchEnvelopeMalformed` (1013) and read with the message's delimiters, as a
+  repeat in MSH-2 already throws `invalidMSH` (#19).
+
 ## [3.30.0]
 
 ### Added

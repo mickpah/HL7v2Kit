@@ -49,6 +49,8 @@ public struct StreamingBatchParser: Sendable {
     /// After a failure inside a message, its remaining lines are dropped
     /// until the next MSH or batch marker.
     private var skippingMessage: Bool
+    /// The field separator in force: the fourth byte of the last MSH, BHS or FHS line.
+    private var fieldSeparator: UInt8
 
     /// Segment IDs that start a new run: a message or a batch / file marker.
     private static let runStarts = ["MSH", "FHS", "FTS", "BHS", "BTS"]
@@ -67,6 +69,7 @@ public struct StreamingBatchParser: Sendable {
         self.unread = []
         self.ready = []
         self.skippingMessage = false
+        self.fieldSeparator = UInt8(ascii: "|")
     }
 
     /// Feed an incremental byte chunk. Returns any messages that
@@ -166,6 +169,9 @@ public struct StreamingBatchParser: Sendable {
     }
 
     private mutating func classify(_ line: [UInt8]) throws -> Message? {
+        if line.count > 3, ["MSH", "BHS", "FHS"].contains(where: { line.starts(with: $0.utf8) }) {
+            fieldSeparator = line[3]
+        }
         if line.starts(with: "MSH".utf8) {
             // Start the new message before parsing the one it closes, so
             // a failure in the old message cannot lose this line.
@@ -231,9 +237,14 @@ public struct StreamingBatchParser: Sendable {
         return messageBytes + segmentBuffer.count > maxMessageBytes
     }
 
-    /// True when `bytes` begins with MSH or a batch / file marker.
+    /// True when `bytes` begins with MSH or a batch / file marker. BTS and FTS name no
+    /// separator of their own (v2.5.1 section 2.10.3.1), so one is a marker only when it is that
+    /// ID alone or its fourth byte is the separator in force; `BTSX|1` is a body line.
     private func startsMessageRun(_ bytes: [UInt8]) -> Bool {
-        Self.runStarts.contains { bytes.starts(with: $0.utf8) }
+        guard let id = Self.runStarts.first(where: { bytes.starts(with: $0.utf8) }) else { return false }
+        // One byte: exact for the 7-bit ASCII delimiters v2.5.1 section 2.15.9.18 asks
+        // for and any single-byte set; a multi-byte UTF-8 separator matches on its lead byte only.
+        return (id != "BTS" && id != "FTS") || bytes.count == 3 || bytes[3] == fieldSeparator
     }
 }
 

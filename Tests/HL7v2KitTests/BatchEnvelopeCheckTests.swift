@@ -76,6 +76,18 @@ struct BatchEnvelopeCheckTests {
         #expect(issues.map(\.code) == [.batchEnvelopeMalformed(segmentID: "BHS")])
     }
 
+    @Test("A fifth encoding character that repeats one of the four is malformed at field 2")
+    func repeatedFifthDelimiter() throws {
+        let issues = try Self.issues(["FHS|^~\\&&|APP", "BHS|^~\\&^|APP", Self.msh("G2"), "BTS|1", "FTS|1"])
+        #expect(issues.map(\.location.pathDescription) == ["FHS[1]-2", "BHS[1]-2"])
+        #expect(issues.map(\.code) == [.batchEnvelopeMalformed(segmentID: "FHS"), .batchEnvelopeMalformed(segmentID: "BHS")])
+        let truncation = ["BHS|^~\\&#|APP", Self.msh("G3"), "BTS|1"]
+        let truncationIssues = try Self.issues(truncation)
+        #expect(truncationIssues.isEmpty)
+        let file = try BatchParser().parse(truncation.joined(separator: "\r") + "\r")
+        #expect(file.batches[0].headerSegment?.field(2)?.stringValue == "^~\\&#")
+    }
+
     @Test("Presets: error in default and strict, off in lenient")
     func presets() throws {
         let lines = ["BHS|^~\\&|APP", Self.msh("H1"), "BTS|5", "FTS|1", "FTS|1"]

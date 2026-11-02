@@ -82,6 +82,8 @@ struct BatchEnvelopeParseTests {
         #expect(Parser.headerDelimiters("BHS|^~\\&|X") == .default)
         #expect(Parser.headerDelimiters("BHS|^~\\&") == .default)
         #expect(Parser.headerDelimiters("BHS|^~\\&#|X") == .default)
+        #expect(Parser.headerDelimiters("BHS|^~\\&^|X") == nil)
+        #expect(Parser.headerDelimiters("FHS|^~\\&\\") == nil)
         #expect(Parser.headerDelimiters("BHS|^^\\&|X") == nil)
         #expect(Parser.headerDelimiters("BHS|^~|X") == nil)
         #expect(Parser.headerDelimiters("BHS") == nil)

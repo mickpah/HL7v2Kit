@@ -57,9 +57,10 @@ enum Serializer {
         if isMSH {
             // "MSH" + sep + (MSH-2 value) + sep + rest...
             // MSH-2 is in fieldStrings[0] now (since we skipped i==1).
-            // Sanity: if MSH-2 missing, default it.
+            // A BHS or FHS that kept no field (a bare line) is written as its ID alone; an MSH
+            // with MSH-2 missing is written with the default.
             if fieldStrings.isEmpty {
-                return id + sep + enc.msh2String
+                return fields.count <= 1 && id != "MSH" ? id : id + sep + enc.msh2String
             }
             let msh2 = fieldStrings[0]
             let rest = fieldStrings.dropFirst()
