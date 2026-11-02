@@ -143,6 +143,13 @@ struct AnonymiseTests {
         try bad.write(to: badURL)
         #expect(Anonymise.run([tool, badURL.path, dir.appendingPathComponent("bad-out.hl7").path]) == 1)
 
+        let oddURL = dir.appendingPathComponent("odd.hl7")
+        let oddOut = dir.appendingPathComponent("odd-out.hl7")
+        try Data("MSH|^~\\&|LAB|FAC|EMR|FAC|20240101120000||ADT^A01^ADT_A01|CTRL1|P|2.4\rPIDX|1||MRN12345^^^HOSP^MR||MARKERFAM^MARKERGIV\r".utf8)
+            .write(to: oddURL)
+        #expect(Anonymise.run([tool, oddURL.path, oddOut.path]) == 1)                    // fails closed
+        #expect(!FileManager.default.fileExists(atPath: oddOut.path))
+
         let goodURL = dir.appendingPathComponent("good.hl7")
         let outURL = dir.appendingPathComponent("good-out.hl7")
         try Data("MSH|^~\\&|LAB|FAC|EMR|FAC|20240101120000||ADT^A01^ADT_A01|CTRL1|P|2.4\rPID|1||MRN12345^^^HOSP^MR||MARKERFAM^MARKERGIV\r".utf8)

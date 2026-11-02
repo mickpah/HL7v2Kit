@@ -29,6 +29,17 @@ struct SegmentIDTests {
         #expect(message.serialize() == Data(wire.utf8))
     }
 
+    @Test("With a letter as the field separator a three-character ID holding it stays whole")
+    func alphanumericSeparator() throws {
+        let wire = #"MSHX^~\&XAPPXFACXXX20260101XXADT^A01^ADT_A01XC1XPX2.5.1"# + "\rTXAX1X2\r"
+        let message = try Parser().parse(wire)
+        let segment = message.segments[1]
+        #expect(segment.segmentID == "TXA")
+        #expect(segment.fields.dropFirst().map { $0.stringValue ?? "" } == ["1", "2"])
+        #expect(message.serialize() == Data(wire.utf8))
+        #expect(!Validator().validate(message).issues.contains { $0.code == .segmentIDMalformed })
+    }
+
     @Test("A line whose ID is not a known one stays unknown, not typed")
     func fourCharacterIDIsUnknown() throws {
         let message = try Parser().parse(Self.wire("PIDX|1"))

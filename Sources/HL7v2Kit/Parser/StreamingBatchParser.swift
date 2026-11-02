@@ -21,7 +21,7 @@ import Foundation
 /// non-streaming ``BatchParser`` instead.
 ///
 /// **Charset**. Each message is decoded by its own MSH-18, as
-/// ``Parser/parse(_:)-(Data)`` decodes it: UTF-8 when MSH-18 is empty,
+/// ``Parser/parse(_:)-(Data)`` decodes it: UTF-8 when MSH-18 is absent, empty or `""`,
 /// ASCII or ISO 8859-1 when declared; an unrecognised value throws
 /// ``ParseError/unsupportedCharacterEncoding(declared:)``.
 public struct StreamingBatchParser: Sendable {

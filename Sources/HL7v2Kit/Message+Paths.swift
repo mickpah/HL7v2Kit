@@ -57,9 +57,8 @@ extension Message {
     /// set (`PID[1]-5~1.1.1`), so the same location has the same path in every message; drop
     /// the indices a use does not need. The HL7 null `""` is a value and is listed. MSH-1 and
     /// MSH-2 are listed as their literal characters. Calling it twice gives the same list.
-    /// A segment whose ID is not three characters (the parser keeps a line's ID up to its first
-    /// field separator, so `ZABC|1` has ID `ZABC`) yields paths that read it but whose
-    /// `description` does not parse back.
+    /// A segment whose ID is not 2 to 4 letters or digits (`|ab` has ID `""`, `Z-1|` has
+    /// `Z-1`) yields paths that read it but whose `description` does not parse back.
     public func populatedPaths() -> [PathValue] {
         var result: [PathValue] = []
         var occurrenceByID: [String: Int] = [:]

@@ -27,7 +27,7 @@ public struct Parser: Sendable {
     }
 
     /// Parse a v2 message from raw bytes. Character encoding is taken from
-    /// MSH-18 if declared; if absent or empty, defaults to UTF-8. If MSH-18
+    /// MSH-18 if declared; if absent, empty or `""`, defaults to UTF-8. If MSH-18
     /// is present but names a charset HL7v2Kit does not recognise, throws
     /// `ParseError.unsupportedCharacterEncoding`.
     ///
@@ -238,11 +238,15 @@ public struct Parser: Sendable {
             throw ParseError.invalidMSH(reason: "segment too short: '\(line)'")
         }
 
-        // #11: outside MSH, BHS and FHS the ID runs to the first field separator (the whole
-        // line when there is none), so a line keeps every character; the validator reports an
-        // ID that is not three characters (1014). A separator segment's fourth character is the
-        // separator, so its ID is the first three.
-        let idEnd = separatorSegment ? 3 : (chars.firstIndex(of: encoding.fieldSeparator) ?? chars.count)
+        // #11: a segment ID is three characters (v2.5.1 section 2.5.2). When the fourth
+        // character is the field separator, the ID is the first three, even if the separator is a
+        // letter or digit the ID also holds (section 2.5.4 leaves the delimiters to the site), and
+        // a separator segment's fourth character is always its separator. Otherwise the ID runs to
+        // the first field separator (the whole line when there is none), so a malformed line keeps
+        // every character; the validator reports an ID that is not three characters (1014).
+        let threeCharacterID = separatorSegment
+            || (chars.count > 3 && chars[3] == encoding.fieldSeparator)
+        let idEnd = threeCharacterID ? 3 : (chars.firstIndex(of: encoding.fieldSeparator) ?? chars.count)
         let segmentID = String(chars[0..<idEnd])
 
         // Split into raw field strings.

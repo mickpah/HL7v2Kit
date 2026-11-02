@@ -10,14 +10,26 @@ The entries are condensed; the git history carries the detail.
 
 ### Added
 
-- `IssueCode.segmentIDMalformed` (1014, an error): a segment ID that is not three characters (v2.5.1 section 2.5.2), in a parsed message or one built in code (#11).
+- `IssueCode.segmentIDMalformed` (1014, an error): a segment ID that is not three characters (v2.5.1
+  section 2.5.2), in a parsed message or one built in code (#11).
 
 ### Fixed
 
-- A segment ID is read up to the first field separator, so a line comes back as written: `ZABC|1` was split as `ZAB|C|1`, `AB|x` came back as `AB||x`, and `PIDX|1` was read as a PID with PID-1 `X` (#11).
-- `Anonymiser.anonymise(_:)` returns the segments it rewrites typed, so `firstSegment(PID.self)` reads its output without a re-parse, and the output equals its own parse; the serialised output is unchanged (#12).
-- `HL7v2KitAnonymise` exits 1 with one line on standard error when it fails (a usage error, an unreadable file, a parse failure), instead of trapping with exit 133 (#18).
-- An MSH-18 of `""` (the HL7 null), or a first repetition of `""`, reads as UTF-8 like an empty one, on both parse paths and through the MSH-18 edit, so setting MSH-18 to `""` no longer throws (#17). This extends the documented departure from v2.5.1 section 2.15.9.18, which reads an unvalued MSH-18 as 7-bit ASCII.
+- A segment ID whose fourth character is not the field separator is read up to the first field
+  separator, so `ZABC|1` comes back as written rather than as `ZAB|C|1`, `AB|x` no longer comes back
+  as `AB||x`, and `PIDX|1` is no longer read as a PID with PID-1 `X` (#11).
+- `Anonymiser.anonymise(_:)` returns the segments it rewrites typed, so `firstSegment(PID.self)`
+  reads its output without a re-parse, and the output equals its own parse; the serialised output is
+  unchanged (#12).
+- `HL7v2KitAnonymise` exits 1 with one line on standard error when it fails (a usage error, an
+  unreadable file, a parse failure), instead of trapping with exit 133 (#18).
+- An MSH-18 of `""` (the HL7 null), or a first repetition of `""`, reads as UTF-8 like an empty one,
+  on both parse paths and through the MSH-18 edit, so setting MSH-18 to `""` no longer throws (#17).
+  This extends the documented departure from v2.5.1 section 2.15.9.18, which reads an unvalued
+  MSH-18 as 7-bit ASCII.
+- `HL7v2KitAnonymise` refuses (exit 1) a message holding a segment whose ID is not three characters,
+  which it would otherwise pass through unscrubbed now that such a line is no longer read as a typed
+  segment.
 
 ## [3.29.0]
 

@@ -31,6 +31,13 @@ struct Anonymise {
         do {
             let inputData = try Data(contentsOf: inputURL)
             let message = try Parser().parse(inputData)
+            // An ID that is not three characters names no segment the anonymiser covers, so its
+            // values would pass through unscrubbed; refuse the file instead (fail closed).
+            if let odd = message.segments.first(where: { $0.segmentID.count != 3 }) {
+                FileHandle.standardError.write(Data(
+                    "HL7v2KitAnonymise: segment ID '\(odd.segmentID)' is not three characters; not anonymised\n".utf8))
+                return 1
+            }
             let salt = deriveSalt(from: message)
             let scrubbed = scrub(message, salt: salt)
             let outputData = scrubbed.serialize()
