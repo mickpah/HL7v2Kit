@@ -31,6 +31,9 @@ struct GroupSpanNestedTests {
         return TestWires.msh("\(trigger)^\(parts[1])", parts[0]) + body.map { $0 + "\r" }.joined()
     }
 
+    /// The keys on v2.4 to v2.6, hoisted: Swift 6.0 crashes on a closure inside `arguments:`.
+    static let childOrderCases = cases.filter { ["2.4", "2.5.1", "2.6"].contains(String($0.prefix { $0 != " " })) }
+
     static func check(_ wire: String, _ key: String) throws -> [String] {
         let all = try GroupSpanPredicateTests.issues(wire, structure: .warning)
         #expect(GroupSpanPredicateTests.structureFindings(all).isEmpty, "\(key) does not conform: \(GroupSpanPredicateTests.structureFindings(all))")
@@ -51,7 +54,7 @@ struct GroupSpanNestedTests {
     /// print ORDER_PRIOR { ORC OBR ... }), and ORC-8 / OBR-29 are conditional
     /// on those versions only.
     @Test("A child order with no parent and a prior result with no ORC: the order's OBR still reads its own ORC",
-          arguments: cases.filter { ["2.4", "2.5.1", "2.6"].contains(String($0.prefix { $0 != " " })) })
+          arguments: Self.childOrderCases)
     func childOrderWithoutPriorORC(_ key: String) throws {
         let wire = Self.wire(key, mainORC: "ORC|CH|PON1", mainOBR: "OBR|1|PON1||X", priorORC: nil, priorOBR: "OBR|2|PON9||X")
         let found = try Self.check(wire, key); #expect(found == ["OBR[1]-29 missing", "ORC[1]-8 missing"], "\(key)")

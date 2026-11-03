@@ -187,4 +187,16 @@ struct CharacterEncodingTests {
         #expect(message.characterEncoding == .iso8859_1)
         #expect(message["OBX-5"] == "Caf\u{E9}")
     }
+
+    // swift-corelibs-foundation 6.0 on Linux answers nil for any ISO Latin 1 text or bytes holding
+    // a CR, which is every HL7 message; `decode(_:)` and `encode(_:)` do the conversion by hand.
+    @Test("ISO 8859-1 text and bytes convert with a CR in them, on every toolchain")
+    func latin1ConvertsByHand() {
+        let bytes = Data([0x61, 0x0D, 0xE9, 0x0D])
+        #expect(CharacterEncoding.iso8859_1.decode(bytes) == "a\r\u{E9}\r")
+        #expect(CharacterEncoding.iso8859_1.encode("a\r\u{E9}\r") == bytes)
+        #expect(CharacterEncoding.iso8859_1.decode(Data("MSH|a\rPID|b\r".utf8)) == "MSH|a\rPID|b\r")
+        #expect(CharacterEncoding.iso8859_1.encode("\u{20AC}") == nil)
+        #expect(CharacterEncoding.utf8.decode(Data([0x61, 0xC3, 0xA9])) == "a\u{E9}")
+    }
 }

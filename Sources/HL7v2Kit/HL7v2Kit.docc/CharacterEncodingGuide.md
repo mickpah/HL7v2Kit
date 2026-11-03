@@ -35,6 +35,8 @@ let charset = try CharacterEncoding.detect(in: probe)       // throws on unrecog
 
 The probe uses ISO-8859-1 because it's a 1:1 byte-to-codepoint mapping — every byte yields a valid String, and the structural ASCII characters (`MSH`, `|`, the encoding chars) survive untouched. Any non-ASCII body bytes show up as arbitrary Latin-1 codepoints but are past MSH-18 so they don't affect the lookup.
 
+The snippet shows the steps; the parser itself converts ISO-8859-1 without `String.Encoding.isoLatin1`, because swift-corelibs-foundation 6.0 on Linux returns `nil` for any ISO Latin 1 text holding a CR.
+
 ``Parser/parse(_:)-(Data)`` uses this internally:
 
 1. ISO-8859-1 probe-decode the bytes.

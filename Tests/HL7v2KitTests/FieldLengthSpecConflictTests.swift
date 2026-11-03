@@ -79,13 +79,16 @@ struct FieldLengthSpecConflictTests {
         return total
     }
 
+    // Hoisted: Swift 6.0 crashes on a closure inside `arguments:`.
+    static let maximumLengthVersions = Version.allCases.filter { $0.printsMaximumLength }
+
     // Guard (G10). Pre-v2.7 only: from v2.7 a field LEN is either a normative length the spec
     // derives from the value domain or a conformance length that bounds storage. The composite
     // half needs a component grammar; v2.3 to v2.4 define MSH-9 (CM) in field prose with no
     // component table, so the three MSH-9 rows above are derived by hand and pinned by
     // `corrected`, not by this guard.
     @Test("Every pre-v2.7 table-bound ID or IS field, and closed-coded composite, admits its longest valid value",
-          arguments: Version.allCases.filter { $0.printsMaximumLength })
+          arguments: Self.maximumLengthVersions)
     func guardAgainstShortLengths(_ version: Version) {
         var short: [String] = []
         for (segmentID, grammar) in Validator.grammarTable(for: version) {

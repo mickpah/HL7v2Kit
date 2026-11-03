@@ -190,7 +190,7 @@ struct AcknowledgmentBuilderTests {
     @Test("MSH-18 is echoed with the character set, so a Latin-1 ACK round-trips")
     func characterSet() throws {
         let wire = Self.original(msh18: "8859/1", sender: "LABOR\u{00C9}")
-        let original = try Parser().parse(try #require(wire.data(using: .isoLatin1)))
+        let original = try Parser().parse(try #require(CharacterEncoding.iso8859_1.encode(wire)))
         #expect(original.characterEncoding == .iso8859_1)
         let ack = try MessageBuilder.acknowledgment(to: original, code: .applicationAccept,
                                                     messageControlID: "ACK00001", dateTime: "20240101120001")

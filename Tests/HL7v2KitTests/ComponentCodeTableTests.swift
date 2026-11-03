@@ -71,7 +71,8 @@ struct ComponentCodeTableTests {
         // closed there too, same as v2.3 above (table 0203 is open, so it cannot demonstrate this).
         let v28Issues = try tableIssues(wire(version: "2.8", pid5: "DOE^JOHN^^^^^QQQ"))
         #expect(v28Issues.map(\.code) == [.valueNotInTable(table: "0200")])
-        #expect(v28Issues == (try tableIssues(wire(version: "2.8.2", pid5: "DOE^JOHN^^^^^QQQ"))))
+        let v282Issues = try tableIssues(wire(version: "2.8.2", pid5: "DOE^JOHN^^^^^QQQ"))
+        #expect(v28Issues == v282Issues)
     }
 
     @Test("A prose misprint never becomes a rule: v2.3 QSC.4 names table 0102 for Relational conjunction")

@@ -53,6 +53,15 @@ The entries are condensed; the git history carries the detail.
   repeat in MSH-2 already throws `invalidMSH` (#19).
 - The Escape Sequences article dated the truncation escape `\P\` from v2.7; it is defined from v2.7.1
   (v2.7.1 section 2.5.5.2; v2.8.2 sections 2.7.1 and 2.7.2) (#20).
+- The test target builds and runs on Swift 6.0: closures inside `@Test(arguments:)`, which crash the
+  6.0 compiler, are hoisted into static properties, a throwing operand inside `#expect` is bound
+  first, and the one exit test is compiled only from Swift 6.2. `scripts/ci-rehearsal.sh` gains a
+  `test-linux-swift60` job that builds and runs the tests in `swift:6.0-jammy` (`--skip-swift60`
+  leaves it out) (#23).
+- On Swift 6.0 on Linux, a message declared ISO 8859-1 (`8859/1`) was misread and misserialised:
+  swift-corelibs-foundation 6.0 returns `nil` when converting ISO Latin 1 text or bytes that hold
+  a CR, so MSH-18 was never detected and a Latin-1 message serialised as UTF-8. The parser and the
+  serialiser now convert ISO 8859-1 themselves, on every platform (#23).
 
 ## [3.30.0]
 

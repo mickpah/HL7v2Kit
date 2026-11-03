@@ -11,9 +11,10 @@ is set out in [SUPPORT.md](SUPPORT.md).
 
 ## Requirements
 
-- Swift 6.0 or later for the library; Swift 6.2 (Xcode 26) for the test suite, which uses
-  exit tests.
-- macOS 12 or later. Linux is built and tested in CI (the `swift:6.2-jammy` image).
+- Swift 6.0 or later for the library and its test suite, both proved on 6.0; one exit test
+  (`#expect(processExitsWith:)`) runs only from Swift 6.2 (Xcode 26), which CI requires.
+- macOS 12 or later. Linux is built and tested in CI (the `swift:6.2-jammy` image), and
+  `scripts/ci-rehearsal.sh` also runs the tests in `swift:6.0-jammy`.
 
 ## Install
 

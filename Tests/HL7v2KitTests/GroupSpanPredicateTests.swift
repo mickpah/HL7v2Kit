@@ -124,10 +124,16 @@ struct GroupSpanPredicateTests {
         }
     }
 
+    // The argument lists below are hoisted: Swift 6.0 crashes on a closure inside `arguments:`.
+    static let printedKeys = printed.map { "\($0.0) \($0.1)" }
+    static let numbersInORCKeys = printed
+        .filter { ["OUL_R21", "OUL_R22", "OUL_R23", "OUL_R24", "OPU_R25", "OPL_O37"].contains($0.1) }
+        .map { "\($0.0) \($0.1)" }
+
     // MARK: - R5 invariant: conformant messages draw nothing the print does not support
 
     @Test("A message conforming to its printed order structure draws no group-dependent finding",
-          arguments: printed.map { "\($0.0) \($0.1)" })
+          arguments: Self.printedKeys)
     func conformantIsSilent(_ key: String) throws {
         let parts = key.split(separator: " ").map(String.init)
         let structure = try #require(MessageStructureTable.structure(parts[1], version: Self.version(parts[0])))
@@ -140,8 +146,7 @@ struct GroupSpanPredicateTests {
     /// The other direction (fix round 1): each order's numbers only in its
     /// ORC, so every OBR must find its own group's ORC.
     @Test("A conforming OBR-first or nested order structure with the numbers only in each ORC draws nothing",
-          arguments: printed.filter { ["OUL_R21", "OUL_R22", "OUL_R23", "OUL_R24", "OPU_R25", "OPL_O37"].contains($0.1) }
-            .map { "\($0.0) \($0.1)" })
+          arguments: Self.numbersInORCKeys)
     func numbersInORCIsSilent(_ key: String) throws {
         let parts = key.split(separator: " ").map(String.init)
         let structure = try #require(MessageStructureTable.structure(parts[1], version: Self.version(parts[0])))

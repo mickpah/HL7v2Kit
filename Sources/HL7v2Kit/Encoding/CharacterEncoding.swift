@@ -30,6 +30,29 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
         }
     }
 
+    /// Message bytes as text in this character set, or nil when they do not fit it. ISO 8859-1 is
+    /// read by hand: swift-corelibs-foundation 6.0 on Linux answers nil for any ISO Latin 1 text or
+    /// bytes holding a CR, which is every HL7 message. Text that is all ASCII reads the same in
+    /// every set, so it takes the UTF-8 path.
+    func decode(_ data: Data) -> String? {
+        guard self == .iso8859_1 else { return String(data: data, encoding: stringEncoding) }
+        if data.allSatisfy({ $0 < 0x80 }) { return String(decoding: data, as: UTF8.self) }
+        return String(String.UnicodeScalarView(data.map { Unicode.Scalar($0) }))
+    }
+
+    /// `text` as bytes in this character set, or nil when it holds a character the set cannot
+    /// write. ISO 8859-1 is written by hand, for the reason `decode(_:)` gives.
+    func encode(_ text: String) -> Data? {
+        guard self == .iso8859_1 else { return text.data(using: stringEncoding) }
+        var bytes: [UInt8] = []
+        bytes.reserveCapacity(text.utf8.count)
+        for scalar in text.unicodeScalars {
+            guard scalar.value <= 0xFF else { return nil }
+            bytes.append(UInt8(scalar.value))
+        }
+        return Data(bytes)
+    }
+
     /// The canonical MSH-18 wire string for this charset.
     public var wireValue: String {
         switch self {

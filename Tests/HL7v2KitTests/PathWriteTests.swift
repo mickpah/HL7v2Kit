@@ -147,7 +147,7 @@ struct PathWriteTests {
     func editCharacterSet() throws {
         let latin = "MSH|^~\\&|APP|FAC|||20260101||ADT^A01^ADT_A01|C1|P|2.5.1||||||8859/1\r"
             + "PID|1||||Ren\u{E9}e\r"
-        var m = try Parser().parse(try #require(latin.data(using: .isoLatin1)))
+        var m = try Parser().parse(try #require(CharacterEncoding.iso8859_1.encode(latin)))
         #expect(m.characterEncoding == .iso8859_1)
         try m.set("UNICODE UTF-8", at: Path("MSH-18"))
         #expect(m.characterEncoding == .utf8)
@@ -245,7 +245,7 @@ struct PathWriteTests {
     func unencodableCharacter() throws {
         let latin = "MSH|^~\\&|APP|FAC|||20260101||ADT^A01^ADT_A01|C1|P|2.5.1||||||8859/1\r"
             + "PID|1||||Ren\u{E9}e\rNTE|1||Zo\u{EB}\r"
-        var m = try Parser().parse(try #require(latin.data(using: .isoLatin1)))
+        var m = try Parser().parse(try #require(CharacterEncoding.iso8859_1.encode(latin)))
         let before = m.serialize()
         #expect(throws: MessageEditError.characterNotEncodable(.iso8859_1)) {
             try m.set("\u{674E}", at: Path("PID-11"))

@@ -2,7 +2,7 @@
 # CI rehearsal: runs the shell steps of .github/workflows/ci.yml on a clean clone of HEAD, job
 # by job and step by step, as the CI runners would. Run it before pushing.
 #
-#   bash scripts/ci-rehearsal.sh [--hide-tmp-binaries] [--keep]
+#   bash scripts/ci-rehearsal.sh [--hide-tmp-binaries] [--keep] [--skip-swift60]
 #
 # - Each job gets its own clean clone of HEAD (committed work only) in a scratch directory, with
 #   HOME, TMPDIR and RUNNER_TEMP pointing into it and a minimal environment. The `uses:` steps
@@ -15,6 +15,10 @@
 #   `container:`. Without a running Docker it is skipped with a message. The job's .build lives in a Docker volume,
 #   not on the bind-mounted clone: there, clang's module cache intermittently reads one .pcm as
 #   two ("module 'SwiftShims' is defined in both") and the test step fails before any test runs.
+# - A job that is not in ci.yml, `test-linux-swift60`, builds the package with its tests and runs
+#   them in swift:6.0-jammy, as the Linux jobs do: CI's runners are on Swift 6.2, so this is the
+#   only proof that the test target still builds and runs on the 6.0 floor. --skip-swift60 leaves
+#   it out.
 # - --hide-tmp-binaries moves /tmp/extractbin and /tmp/tablesbin (the author's local extractor
 #   builds) aside for the run and restores them on exit, proving no step relies on them.
 # - --keep leaves the scratch directory, with each step's log, in place.
@@ -24,11 +28,13 @@ set -uo pipefail
 
 hide_bins=0
 keep=0
+swift60=1
 for arg in "$@"; do
     case "$arg" in
         --hide-tmp-binaries) hide_bins=1 ;;
         --keep) keep=1 ;;
-        *) echo "usage: ci-rehearsal.sh [--hide-tmp-binaries] [--keep]" >&2; exit 2 ;;
+        --skip-swift60) swift60=0 ;;
+        *) echo "usage: ci-rehearsal.sh [--hide-tmp-binaries] [--keep] [--skip-swift60]" >&2; exit 2 ;;
     esac
 done
 
@@ -137,6 +143,18 @@ for j in jobs:
         name = s["name"] or s["run"].split("\n")[0]
         print("\t".join([j["id"], j["runner"], j["container"], str(n), name, path]))
 PY
+
+# The Swift 6.0 job: two steps appended to the manifest, run like any other swift-X.Y job.
+if [ "$swift60" = 1 ]; then
+    printf 'swift build --build-tests\n' > "$scratch/steps/test-linux-swift60-01.sh"
+    printf 'swift test\n' > "$scratch/steps/test-linux-swift60-02.sh"
+    printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+        test-linux-swift60 "[self-hosted, Linux, ARM64, swift-6.0]" swift:6.0-jammy 1 \
+        "Build the package and its tests" "$scratch/steps/test-linux-swift60-01.sh" >> "$scratch/manifest.tsv"
+    printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+        test-linux-swift60 "[self-hosted, Linux, ARM64, swift-6.0]" swift:6.0-jammy 2 \
+        "Test" "$scratch/steps/test-linux-swift60-02.sh" >> "$scratch/manifest.tsv"
+fi
 
 newest_xcode() {
     local app

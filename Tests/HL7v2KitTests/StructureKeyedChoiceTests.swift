@@ -154,7 +154,8 @@ struct StructureKeyedChoiceTests {
             Issue.record("no value does not resolve"); return
         }
         #expect(!open.hasKeyedChoice && open.requiresExactMatch)
-        #expect(m03.resolvingKeyedChoices({ _ in "ZZZ" }) == .unmapped(key: try #require(Self.key(m03)), value: "ZZZ"))
+        let key = try #require(Self.key(m03))
+        #expect(m03.resolvingKeyedChoices({ _ in "ZZZ" }) == .unmapped(key: key, value: "ZZZ"))
     }
 
     static func key(_ structure: MessageStructure) -> StructureChoiceKey? {

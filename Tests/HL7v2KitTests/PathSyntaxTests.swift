@@ -105,6 +105,7 @@ struct PathSyntaxTests {
 
     @Test("A plain condition field reference still resolves")
     func conditionReferenceAccepts() throws {
-        #expect(ConditionLanguage.fieldRef("PID-3.1") == (try Path("PID-3.1")))
+        let path = try Path("PID-3.1")
+        #expect(ConditionLanguage.fieldRef("PID-3.1") == path)
     }
 }

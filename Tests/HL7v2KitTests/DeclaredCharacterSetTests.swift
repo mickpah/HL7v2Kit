@@ -33,7 +33,8 @@ struct DeclaredCharacterSetTests {
         let wire = Self.adt("8859/1", nte: "Caf\u{E9}")
         let latin = try Parser().parse(wire)
         #expect(latin.characterEncoding == .iso8859_1)
-        #expect(latin.serialize() == (try #require(wire.data(using: .isoLatin1))))
+        let latinBytes = try #require(CharacterEncoding.iso8859_1.encode(wire))
+        #expect(latin.serialize() == latinBytes)
         #expect(try Parser().parse(Self.adt("", nte: "\u{20AC}5")).characterEncoding == .utf8)
     }
 

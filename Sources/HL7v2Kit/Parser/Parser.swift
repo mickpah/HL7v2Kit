@@ -71,11 +71,11 @@ public struct Parser: Sendable {
                 atByte: payload.distance(from: payload.startIndex, to: nulIndex)
             )
         }
-        let probe = String(data: payload, encoding: .isoLatin1) ?? ""
+        let probe = CharacterEncoding.iso8859_1.decode(payload) ?? ""
         let characterEncoding = try CharacterEncoding.detect(in: probe)
         // The fit is checked here, not left to Foundation: its `.ascii` decode accepts a byte
         // above 0x7F in a binary linked against an older SDK (#16).
-        guard let decoded = String(data: payload, encoding: characterEncoding.stringEncoding),
+        guard let decoded = characterEncoding.decode(payload),
               characterEncoding.encodes(decoded) else {
             throw ParseError.unsupportedCharacterEncoding(declared: characterEncoding.wireValue)
         }

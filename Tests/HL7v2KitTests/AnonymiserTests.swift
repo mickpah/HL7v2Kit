@@ -43,7 +43,8 @@ struct AnonymiserTests {
         let output = Anonymiser(key: 7).anonymise(input)
         let pid = try #require(output.firstSegment(PID.self))
         #expect(pid.patientName?.familyName == "Edwards")   // key 7, as in sameValueSameOutputUnderOneKey
-        #expect(output == (try Parser().parse(output.serialize())))
+        let reparsed = try Parser().parse(output.serialize())
+        #expect(output == reparsed)
     }
 
     @Test("The identifier seed is the shared FNV-1a value")

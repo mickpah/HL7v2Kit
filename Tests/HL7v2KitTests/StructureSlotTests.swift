@@ -66,12 +66,14 @@ struct StructureSlotTests {
 
     // The routing above makes this unreachable; the one-pass matcher must still stop
     // rather than ignore a slot in a release build, where an assertion is compiled out.
+    #if compiler(>=6.2)   // exit tests need Swift 6.2
     @Test("The one-pass matcher refuses a slot structure in every build")
     func onePassRefusesSlot() async {
         await #expect(processExitsWith: .failure) {
             _ = StructureMatcher(structure: StructureSlotTests.structure(StructureSlotTests.plain))
         }
     }
+    #endif
 
     @Test("A slot has no children and no segment IDs; the structure's IDs exclude it")
     func walkers() {

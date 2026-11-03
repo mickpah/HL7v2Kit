@@ -34,7 +34,8 @@ jobs:
           xcodebuild -version
           swift --version
 
-      # The suite uses exit tests (#expect(processExitsWith:)), which need Swift 6.2.
+      # CI requires 6.2 so the one exit test (#expect(processExitsWith:)) runs; the test target
+      # also builds and runs on 6.0, which the rehearsal proves (test-linux-swift60).
       - name: Require Swift 6.2 or later
         run: bash scripts/check-swift-version.sh 6.2
 
@@ -62,7 +63,8 @@ jobs:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, Linux, ARM64, swift-6.2]
     timeout-minutes: 30
-    # Swift 6.2 is the floor: the suite uses exit tests (#expect(processExitsWith:)).
+    # Swift 6.2 is CI's floor so the exit test runs; scripts/ci-rehearsal.sh also runs the suite
+    # in swift:6.0-jammy.
     steps:
       - uses: actions/checkout@v5
 
