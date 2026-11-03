@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.31.0]
+
 ### Added
 
 - `IssueCode.escapeSequenceUndefined` (3007) and `ValidationOptions.escapeSequenceSeverity` (a warning
