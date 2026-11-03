@@ -1419,8 +1419,8 @@ public struct Validator: Sendable {
                                 of: subcomponent,
                                 encoding: message.encodingCharacters
                             )
-                            let escape = String(message.encodingCharacters.escapeCharacter)
-                            guard wireValue.contains(escape) else { continue }
+                            let escape = message.encodingCharacters.escapeCharacter
+                            guard wireValue.contains(where: { $0.isDelimiter(escape) }) else { continue }
                             for rule in active where containsProhibitedEscape(wireValue, lead: rule.lead, escape: escape) {
                                 let citation = rule.specCitation
                                     ?? "\(profile.locale.rawValue):escape:\\\(rule.lead)"
@@ -1454,8 +1454,8 @@ public struct Validator: Sendable {
     /// CLOSING delimiter of `\E\` and `X` is literal text (req #4). An
     /// odd-indexed part that is also the last part lacks its closing
     /// delimiter — unterminated, skip.
-    private func containsProhibitedEscape(_ value: String, lead: String, escape: String) -> Bool {
-        let parts = value.components(separatedBy: escape)
+    private func containsProhibitedEscape(_ value: String, lead: String, escape: Character) -> Bool {
+        let parts = value.split(omittingEmptySubsequences: false) { $0.isDelimiter(escape) }
         guard parts.count >= 3 else { return false }
         for index in stride(from: 1, to: parts.count - 1, by: 2)
             where parts[index].hasPrefix(lead) {

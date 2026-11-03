@@ -211,8 +211,8 @@ public struct BatchParser: Sendable {
             // BTS and FTS name no separator of their own (v2.5.1 section 2.10.3.1): a line starting
             // with one is a trailer only when it is that ID alone or its fourth character is the
             // separator in force. Otherwise (`BTSX|1`) it is a body line, under the ID the parser reads.
-            let bodyLine = (prefix == "BTS" || prefix == "FTS") && fourth != nil && fourth != separator
-            let id = bodyLine ? line.prefix { $0 != separator } : prefix
+            let bodyLine = (prefix == "BTS" || prefix == "FTS") && fourth?.isDelimiter(separator) == false
+            let id = bodyLine ? line.prefix { !$0.isDelimiter(separator) } : prefix
             if id == "MSH" || id == "BHS" || id == "FHS", let fourth { separator = fourth }
             let occurrence = (occurrences[String(id)] ?? 0) + 1
             occurrences[String(id)] = occurrence

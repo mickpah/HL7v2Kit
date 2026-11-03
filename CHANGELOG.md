@@ -33,7 +33,7 @@ The entries are condensed; the git history carries the detail.
 - Parsing is faster: `Parser` splits each segment into fields, repetitions, components and
   subcomponents over slices of its line, where it copied the line to an array of characters and
   every level to a new string, and it copies each line once. A 2 MB ORU^R01 (400 TX OBX) parses in
-  0.121 s, from 0.285 s, 58 percent faster (release build, median of five). The gain depends on the
+  0.124 s, from 0.285 s, 56 percent faster (release build, median of five). The gain depends on the
   message: a 295-byte ADT gains about 39 percent, and 2 MB of emoji text about 15. Parsed values,
   the wire text kept for escaped values, and serialised output are unchanged (#24).
 
@@ -68,6 +68,12 @@ The entries are condensed; the git history carries the detail.
   swift-corelibs-foundation 6.0 returns `nil` when converting ISO Latin 1 text or bytes that hold
   a CR, so MSH-18 was never detected and a Latin-1 message serialised as UTF-8. The parser and the
   serialiser now convert ISO 8859-1 themselves, on every platform (#23).
+- A delimiter now matches only its own spelling. Swift compares characters by canonical equivalence,
+  so with `e` U+0301 as the field separator, U+00E9 in a value split the field and came back as
+  `e` U+0301, and U+212A under a `K` separator and U+037E under `;` did the same. Values keep such
+  text, the escape checks and encoded length read it as text, and `|^~\&` have no other spelling,
+  so messages using them are unchanged. An MSH-2 that holds a delimiter in two spellings is still
+  refused (#25).
 
 ## [3.30.0]
 

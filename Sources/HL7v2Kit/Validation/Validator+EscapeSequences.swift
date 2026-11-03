@@ -59,11 +59,13 @@ extension Validator {
     /// character with no closing one is undefined from there to the end of the value.
     static func undefinedEscape(in wire: String, encoding: EncodingCharacters, version: Version) -> String? {
         let escape = encoding.escapeCharacter
-        guard wire.contains(escape) else { return nil }
+        guard wire.contains(where: { $0.isDelimiter(escape) }) else { return nil }
         let chars = Array(wire)
         var start = 0
-        while let open = chars[start...].firstIndex(of: escape) {
-            guard let close = chars[(open + 1)...].firstIndex(of: escape) else { return String(chars[open...]) }
+        while let open = chars[start...].firstIndex(where: { $0.isDelimiter(escape) }) {
+            guard let close = chars[(open + 1)...].firstIndex(where: { $0.isDelimiter(escape) }) else {
+                return String(chars[open...])
+            }
             let body = chars[(open + 1)..<close]
             let defined = EscapeSequences.decodeBody(body, encoding: encoding) != nil
                 || (EscapeSequences.isRepertoireBody(body) && (body.first != "P" || version.definesTruncationEscape))

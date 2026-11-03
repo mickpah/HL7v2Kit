@@ -301,7 +301,7 @@ extension Validator {
         if value.isEmpty || value == "\"\"" { return 0 }
         let escape = encoding.escapeCharacter
         return EscapeSequences.wireForm(of: subcomponent, encoding: encoding)
-            .reduce(0) { $1 == escape ? $0 : $0 + 1 }
+            .reduce(0) { $1.isDelimiter(escape) ? $0 : $0 + 1 }
     }
 
     /// Lexical format of populated primitive values (V251-C10, PrimitiveFormat).

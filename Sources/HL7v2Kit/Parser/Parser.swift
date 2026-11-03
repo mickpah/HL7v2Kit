@@ -145,9 +145,9 @@ public struct Parser: Sendable {
         // (P00 S1-2). MSH-2 is kept as one literal, so the fifth character round-trips; the
         // validator reports it where the version prints MSH-2 as four characters.
         let truncation: Character?
-        if mshChars.count >= 9, mshChars[8] == fieldSep {
+        if mshChars.count >= 9, mshChars[8].isDelimiter(fieldSep) {
             truncation = nil
-        } else if mshChars.count >= 10, mshChars[9] == fieldSep {
+        } else if mshChars.count >= 10, mshChars[9].isDelimiter(fieldSep) {
             truncation = mshChars[8]
         } else {
             throw ParseError.invalidMSH(reason: "MSH-2 not followed by field separator")
@@ -159,9 +159,9 @@ public struct Parser: Sendable {
             escapeCharacter: mshChars[6],
             subcomponentSeparator: mshChars[7]
         )
-        // The truncation character cannot be the field separator (the branch above), and
-        // must not repeat any of the four.
-        guard encoding.isValid, truncation.map({ !mshChars[4...7].contains($0) }) ?? true else {
+        // The truncation character cannot be the field separator, under any spelling, and must
+        // not repeat any of the four.
+        guard encoding.isValid, truncation.map({ $0 != fieldSep && !mshChars[4...7].contains($0) }) ?? true else {
             throw ParseError.invalidMSH(reason: "encoding characters not distinct")
         }
 
@@ -174,7 +174,7 @@ public struct Parser: Sendable {
             // line. BHS and FHS name their own separator in theirs (BHS-1, FHS-1).
             let id = String(segLine.prefix(3))
             let separatorSegment = i == 0 || id == "BHS" || id == "FHS"
-                || id == "MSH" && segLine.dropFirst(3).first == fieldSep
+                || id == "MSH" && segLine.dropFirst(3).first?.isDelimiter(fieldSep) == true
             let segment = try parseSegment(segLine, encoding: encoding, separatorSegment: separatorSegment)
             // Enforce strict mode: if the registry returned `.unknown`, the
             // segment ID is not in the codegen-emitted typed-segment table.
@@ -254,8 +254,8 @@ public struct Parser: Sendable {
         let separator = encoding.fieldSeparator
         let alphanumericSeparator = separator.isASCII && (separator.isLetter || separator.isNumber)
         let threeCharacterID = separatorSegment
-            || alphanumericSeparator && (fourth == line.endIndex || line[fourth] == separator)
-        let idEnd = threeCharacterID ? fourth : (line.firstIndex(of: separator) ?? line.endIndex)
+            || alphanumericSeparator && (fourth == line.endIndex || line[fourth].isDelimiter(separator))
+        let idEnd = threeCharacterID ? fourth : (line.firstIndex { $0.isDelimiter(separator) } ?? line.endIndex)
         let segmentID = String(line[..<idEnd])
 
         // Split into raw field strings.
@@ -276,8 +276,7 @@ public struct Parser: Sendable {
                 // Slice off the ID + field separator. Reconstruct fields[1] and [2] manually.
                 // line == "MSH|^~\\&|sendingApp|..."
                 let afterPrefix = line[line.index(after: fourth)...]   // everything after "MSH|"
-                let rest = afterPrefix.split(separator: encoding.fieldSeparator,
-                                              omittingEmptySubsequences: false)
+                let rest = afterPrefix.split(omittingEmptySubsequences: false) { $0.isDelimiter(separator) }
                 // The first element of `rest` is "^~\\&" (field 2), then the actual fields.
                 // Build the canonical array:
                 rawFields = [line[..<idEnd], Substring(String(encoding.fieldSeparator))] + rest
@@ -288,8 +287,7 @@ public struct Parser: Sendable {
         } else {
             // Everything after the ID and its separator.
             let afterSeparator = line[line.index(after: idEnd)...]
-            let parts = afterSeparator.split(separator: encoding.fieldSeparator,
-                                              omittingEmptySubsequences: false)
+            let parts = afterSeparator.split(omittingEmptySubsequences: false) { $0.isDelimiter(separator) }
             rawFields = [line[..<idEnd]] + parts
         }
 
@@ -318,27 +316,24 @@ public struct Parser: Sendable {
         if raw.isEmpty {
             return .scalar("")
         }
-        let reps = raw.split(separator: encoding.repetitionSeparator,
-                              omittingEmptySubsequences: false)
+        let reps = raw.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.repetitionSeparator) }
                        .map { parseRepetition($0, encoding: encoding) }
         return Field(repetitions: reps)
     }
 
     private func parseRepetition(_ raw: Substring, encoding: EncodingCharacters) -> Repetition {
-        let comps = raw.split(separator: encoding.componentSeparator,
-                                omittingEmptySubsequences: false)
+        let comps = raw.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.componentSeparator) }
                         .map { parseComponent($0, encoding: encoding) }
         return Repetition(components: comps)
     }
 
     private func parseComponent(_ raw: Substring, encoding: EncodingCharacters) -> Component {
-        let subs = raw.split(separator: encoding.subcomponentSeparator,
-                               omittingEmptySubsequences: false)
+        let subs = raw.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.subcomponentSeparator) }
                        .map { part -> Subcomponent in
                            let text = String(part)
                            // #13: keep the wire text of an escaped value. One scan finds the escape
                            // character; a value without one is its own decoded form.
-                           guard text.contains(encoding.escapeCharacter) else {
+                           guard text.contains(where: { $0.isDelimiter(encoding.escapeCharacter) }) else {
                                return Subcomponent(text, wire: nil)
                            }
                            return Subcomponent(EscapeSequences.decode(text, encoding: encoding),
@@ -374,14 +369,15 @@ extension Parser {
         let chars = Array(line)
         guard chars.count >= 8 else { return nil }
         let separator = chars[3]
-        let encodingEnd = chars.count > 8 && chars[8] != separator ? 9 : 8
-        guard chars.count == encodingEnd || chars[encodingEnd] == separator else { return nil }
+        let encodingEnd = chars.count > 8 && !chars[8].isDelimiter(separator) ? 9 : 8
+        guard chars.count == encodingEnd || chars[encodingEnd].isDelimiter(separator) else { return nil }
         let encoding = EncodingCharacters(fieldSeparator: separator, componentSeparator: chars[4],
                                           repetitionSeparator: chars[5], escapeCharacter: chars[6],
                                           subcomponentSeparator: chars[7])
-        // The truncation character (v2.7.1 section 2.5.5.2) cannot be the separator (above) and
-        // must not repeat any of the four, the check MSH-2 makes.
-        guard encoding.isValid, encodingEnd == 8 || !chars[4...7].contains(chars[8]) else { return nil }
+        // The truncation character (v2.7.1 section 2.5.5.2) cannot be the separator, under any
+        // spelling, and must not repeat any of the four, the check MSH-2 makes.
+        guard encoding.isValid,
+              encodingEnd == 8 || (chars[8] != separator && !chars[4...7].contains(chars[8])) else { return nil }
         return encoding
     }
 

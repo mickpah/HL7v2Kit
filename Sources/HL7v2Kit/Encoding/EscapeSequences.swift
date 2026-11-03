@@ -55,7 +55,7 @@ enum EscapeSequences {
     static func decode(_ raw: String, encoding: EncodingCharacters) -> String {
         // Fast path: no escape characters → nothing to decode.
         let esc = encoding.escapeCharacter
-        if !raw.contains(esc) { return raw }
+        if !raw.contains(where: { $0.isDelimiter(esc) }) { return raw }
 
         let chars = Array(raw)
         var result = ""
@@ -64,13 +64,13 @@ enum EscapeSequences {
         var i = 0
         while i < chars.count {
             let c = chars[i]
-            if c != esc {
+            if !c.isDelimiter(esc) {
                 result.append(c)
                 i += 1
                 continue
             }
             // Look for the closing escape character.
-            guard let j = chars[(i + 1)...].firstIndex(of: esc) else {
+            guard let j = chars[(i + 1)...].firstIndex(where: { $0.isDelimiter(esc) }) else {
                 // No closing — treat the lone escape char as a literal.
                 result.append(c)
                 i += 1
@@ -145,7 +145,7 @@ enum EscapeSequences {
     /// text is still a faithful encoding of its value there, otherwise ``encode(_:encoding:)``
     /// of the value (#13). The serialiser and the escape and length checks all read this.
     static func wireForm(of subcomponent: Subcomponent, encoding: EncodingCharacters) -> String {
-        if let wire = subcomponent.wire, wire.escape == encoding.escapeCharacter,
+        if let wire = subcomponent.wire, wire.escape.isDelimiter(encoding.escapeCharacter),
            isFaithful(wire.text, to: subcomponent.value, encoding: encoding) {
             return wire.text
         }
@@ -176,8 +176,8 @@ enum EscapeSequences {
 
             // A `\…\` run the standard defines (#13) is copied as the escape it is;
             // any other run is text and its escape characters are escaped below.
-            if c == esc,
-               let closingIdx = chars[(i + 1)...].firstIndex(of: esc),
+            if c.isDelimiter(esc),
+               let closingIdx = chars[(i + 1)...].firstIndex(where: { $0.isDelimiter(esc) }),
                isRepertoireBody(chars[(i + 1)..<closingIdx]),
                isPlainBody(chars[(i + 1)..<closingIdx], encoding: encoding) {
                 for k in i...closingIdx { result.append(chars[k]) }
@@ -185,15 +185,15 @@ enum EscapeSequences {
                 continue
             }
 
-            if c == encoding.fieldSeparator {
+            if c.isDelimiter(encoding.fieldSeparator) {
                 appendAtomicEscape("F", into: &result, escape: esc)
-            } else if c == encoding.componentSeparator {
+            } else if c.isDelimiter(encoding.componentSeparator) {
                 appendAtomicEscape("S", into: &result, escape: esc)
-            } else if c == encoding.subcomponentSeparator {
+            } else if c.isDelimiter(encoding.subcomponentSeparator) {
                 appendAtomicEscape("T", into: &result, escape: esc)
-            } else if c == encoding.repetitionSeparator {
+            } else if c.isDelimiter(encoding.repetitionSeparator) {
                 appendAtomicEscape("R", into: &result, escape: esc)
-            } else if c == esc {
+            } else if c.isDelimiter(esc) {
                 appendAtomicEscape("E", into: &result, escape: esc)
             } else if needsHexEncoding(c) {
                 // Coalesce a run of control characters into a single hex
@@ -218,11 +218,11 @@ enum EscapeSequences {
 
     private static func needsEncoding(_ value: String, encoding: EncodingCharacters) -> Bool {
         value.contains { c in
-            c == encoding.fieldSeparator
-                || c == encoding.componentSeparator
-                || c == encoding.subcomponentSeparator
-                || c == encoding.repetitionSeparator
-                || c == encoding.escapeCharacter
+            c.isDelimiter(encoding.fieldSeparator)
+                || c.isDelimiter(encoding.componentSeparator)
+                || c.isDelimiter(encoding.subcomponentSeparator)
+                || c.isDelimiter(encoding.repetitionSeparator)
+                || c.isDelimiter(encoding.escapeCharacter)
                 || needsHexEncoding(c)
         }
     }
@@ -265,8 +265,8 @@ enum EscapeSequences {
     /// (P00 S3).
     private static func isPlainBody(_ body: ArraySlice<Character>, encoding: EncodingCharacters) -> Bool {
         for c in body {
-            if c == encoding.fieldSeparator || c == encoding.componentSeparator
-                || c == encoding.repetitionSeparator || c == encoding.subcomponentSeparator
+            if c.isDelimiter(encoding.fieldSeparator) || c.isDelimiter(encoding.componentSeparator)
+                || c.isDelimiter(encoding.repetitionSeparator) || c.isDelimiter(encoding.subcomponentSeparator)
                 || needsHexEncoding(c) {
                 return false
             }

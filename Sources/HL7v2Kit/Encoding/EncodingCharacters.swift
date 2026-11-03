@@ -61,3 +61,13 @@ public struct EncodingCharacters: Sendable, Equatable, Hashable {
         return set.count == 5
     }
 }
+
+extension Character {
+    /// Whether this character is `delimiter`, spelled the same. `==` also matches a canonically
+    /// equal spelling (`é` as U+00E9 and as `e` U+0301, U+212A and `K`), which is other bytes on
+    /// the wire: a value holding one must stay a value, or the message would not round-trip.
+    /// `isValid` keeps `==`: two spellings of one character are not distinct delimiters.
+    func isDelimiter(_ delimiter: Character) -> Bool {
+        self == delimiter && unicodeScalars.elementsEqual(delimiter.unicodeScalars)
+    }
+}

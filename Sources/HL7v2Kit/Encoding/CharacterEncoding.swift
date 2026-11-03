@@ -153,15 +153,15 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
                 //   parts[1] = MSH-2 (encoding chars)
                 //   parts[N - 1] = MSH-N for N >= 2
                 // So MSH-18 lives at parts[17].
-                let parts = line.split(separator: fieldSep, omittingEmptySubsequences: false)
+                let parts = line.split(omittingEmptySubsequences: false) { $0.isDelimiter(fieldSep) }
                 guard parts.count > 17 else { return nil }
                 let field = parts[17]
                 // MSH-18 repeats; its first repetition names the message's character set
                 // (v2.5.1 section 2.15.9.18). The repetition separator is MSH-2's second
                 // character (#15).
                 let head = Array(line.prefix(6))
-                guard head.count == 6, head[5] != fieldSep,
-                      let end = field.firstIndex(of: head[5]) else { return String(field) }
+                guard head.count == 6, !head[5].isDelimiter(fieldSep),
+                      let end = field.firstIndex(where: { $0.isDelimiter(head[5]) }) else { return String(field) }
                 return String(field[..<end])
             }
             guard lineEnd < probe.endIndex else { return nil }

@@ -28,6 +28,7 @@ The library guarantees byte equality across:
 - **Escape sequences.** A parsed value is written back exactly as it was read, escapes and all: `\F\`, `\S\`, `\T\`, `\R\`, `\E\`, `\X..\` (non-canonical and invalid forms such as `\X0D\\X0A\`, `\X41\` and `\XZZ\` included), `\Z..\` and any other body. A value set by an edit or built in code is encoded instead. See <doc:EscapeSequences>. Equality compares decoded values, so a message parsed from `\X41\` equals one parsed from `A`, though each serialises as read.
 - **Character set.** MSH-18 is detected on parse; the same charset is used on serialise. UTF-8, ASCII, and ISO-8859-1 are supported. See <doc:CharacterEncodingGuide>.
 - **MSH-2 encoding characters.** Custom delimiter characters (non-default field separator, component separator, etc.) round-trip exactly via ``EncodingCharacters``. A fifth MSH-2 character (the v2.7+ truncation character) is kept in MSH-2's literal value and written back unchanged; the validator reports it, as a field length, on versions that print MSH-2 as four characters.
+- **Delimiter spelling.** A delimiter matches only its own spelling. With `é` as U+00E9 for the field separator, `e` U+0301 in a value stays in the value and comes back as written; the same goes for U+212A under a `K` separator and U+037E under `;`. Two spellings of one character still do not count as distinct delimiters: ``Parser`` refuses an MSH-2 that holds both.
 
 ## What round-trip does not promise
 
