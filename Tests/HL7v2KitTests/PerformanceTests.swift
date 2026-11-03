@@ -156,6 +156,41 @@ struct PerformanceTests {
         #expect(elapsed < 0.5, "Parse took \(elapsed)s; budget 0.5 s (X1 task 1)")
     }
 
+    /// The median of five timed runs of `block`, after one warm-up run.
+    private static func median(_ block: () throws -> Void) rethrows -> TimeInterval {
+        try block()
+        var runs: [TimeInterval] = []
+        for _ in 0..<5 { runs.append(try elapsed(block)) }
+        return runs.sorted()[2]
+    }
+
+    @Test("Parse a 2 MB ORU^R01 by phase: the median of five runs under 0.5 s")
+    func parseLargeORUByPhase() throws {
+        let data = try Self.largeORU()
+        let encoding = EncodingCharacters.default
+        // The lines as `parse` splits them: the message has no line feed and no blank line.
+        let lines = try Parser.decodeWirePayload(data).decoded.split(separator: "\r").map(String.init)
+        let parsed = try lines.enumerated().map { n, line in
+            try Self.parser.parseSegment(line, encoding: encoding, separatorSegment: n == 0)
+        }
+        let unknowns = parsed.map { UnknownSegment(segmentID: $0.segmentID, fields: $0.fields) }
+        #expect(parsed.map(\.segmentID) == ["MSH", "PID", "OBR"] + Array(repeating: "OBX", count: 400))
+
+        let total = try Self.median { _ = try Self.parser.parse(data) }
+        let decode = try Self.median { _ = try Parser.decodeWirePayload(data) }
+        let segments = try Self.median {
+            for (n, line) in lines.enumerated() {
+                _ = try Self.parser.parseSegment(line, encoding: encoding, separatorSegment: n == 0)
+            }
+        }
+        let hydrate = Self.median { for unknown in unknowns { _ = SegmentRegistry.hydrate(unknown) } }
+        let text = { (seconds: TimeInterval) in String(format: "%.4f", seconds) }
+        print("PERF parse-2mb-phases median of 5: total \(text(total)) s, decode \(text(decode)) s, "
+              + "segments \(text(segments)) s (hydrate \(text(hydrate)) s), "
+              + "lines and message \(text(total - decode - segments)) s, \(data.count) bytes")
+        #expect(total < 0.5, "Parse took \(text(total)) s (median of five); budget 0.5 s (X1 task 1)")
+    }
+
     @Test("Validate a 2 MB ORU^R01 under .strict with the AU profile under 1 s")
     func validateLargeORU() throws {
         let message = try Self.parser.parse(try Self.largeORU())

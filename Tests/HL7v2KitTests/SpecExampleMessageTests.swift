@@ -84,6 +84,23 @@ struct SpecExampleMessageTests {
         let out = ProcessInfo.processInfo.environment["SPEC_EXAMPLE_REPORT"] ?? "/tmp/spec-example-report.tsv"
         try lines.joined(separator: "\n").write(toFile: out, atomically: true, encoding: .utf8)
     }
+
+    @Test("Every example message that parses comes back byte for byte")
+    func roundTrip() throws {
+        let path = try #require(ProcessInfo.processInfo.environment["SPEC_EXAMPLE_MESSAGES"])
+        let examples = try JSONDecoder().decode([Example].self, from: Data(contentsOf: URL(fileURLWithPath: path)))
+        var compared = 0
+        var changed: [String] = []
+        for example in examples {
+            let wire = example.segments.joined(separator: "\r") + "\r"
+            // An example that does not parse is a PARSE line in the report above.
+            guard let message = try? Parser(options: Self.parserOptions(for: example)).parse(wire) else { continue }
+            compared += 1
+            if message.serialize() != Data(wire.utf8) { changed.append("\(example.source) #\(example.index)") }
+        }
+        #expect(compared > 0, "No example parsed, so nothing was compared")
+        #expect(changed.isEmpty, "\(changed.count) examples change on a round-trip: \(changed.prefix(5))")
+    }
 }
 
 /// The harness logic that runs without the extracted examples (always enabled).

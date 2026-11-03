@@ -110,10 +110,11 @@ public struct Parser: Sendable {
         // Split on the carriage-return scalar (the HL7 segment terminator), not on
         // Characters: "\r\n" is one Character in Swift, so a Character split would fold a
         // CRLF line into the segment before it (P00 S1-3). Keep empty trailing entries
-        // out — they represent the final \r after the last segment.
+        // out — they represent the final \r after the last segment. Each line is copied
+        // whole through a `Substring`, not rebuilt one scalar at a time.
         var segmentStrings = normalised.unicodeScalars
             .split(separator: "\r", omittingEmptySubsequences: false)
-            .map { String(String.UnicodeScalarView($0)) }
+            .map { String(Substring($0)) }
         // Trailing empty string after final \r is expected; drop it for parsing.
         if segmentStrings.last == "" {
             segmentStrings.removeLast()
@@ -238,8 +239,8 @@ public struct Parser: Sendable {
         encoding: EncodingCharacters,
         separatorSegment: Bool
     ) throws -> Segment {
-        let chars = Array(line)
-        guard chars.count >= 3 else {
+        // The fourth character's index, or the end index when the line is three characters long.
+        guard let fourth = line.index(line.startIndex, offsetBy: 3, limitedBy: line.endIndex) else {
             throw ParseError.invalidMSH(reason: "segment too short: '\(line)'")
         }
 
@@ -253,9 +254,9 @@ public struct Parser: Sendable {
         let separator = encoding.fieldSeparator
         let alphanumericSeparator = separator.isASCII && (separator.isLetter || separator.isNumber)
         let threeCharacterID = separatorSegment
-            || alphanumericSeparator && (chars.count == 3 || chars[3] == separator)
-        let idEnd = threeCharacterID ? 3 : (chars.firstIndex(of: separator) ?? chars.count)
-        let segmentID = String(chars[0..<idEnd])
+            || alphanumericSeparator && (fourth == line.endIndex || line[fourth] == separator)
+        let idEnd = threeCharacterID ? fourth : (line.firstIndex(of: separator) ?? line.endIndex)
+        let segmentID = String(line[..<idEnd])
 
         // Split into raw field strings.
         // MSH / BHS / FHS are special: the field separator IS field 1, so the raw split
@@ -265,32 +266,31 @@ public struct Parser: Sendable {
         //   fields[2] = encoding chars
         //   fields[3] = sending application
         //   ...
-        var rawFields: [String]
+        // Slices of `line`, not copies: each value is copied once, as a subcomponent's String.
+        var rawFields: [Substring]
         if separatorSegment {
-            if chars.count <= 3 {
+            if fourth == line.endIndex {
                 // "BHS" or "FHS" alone: no separator, so no fields.
-                rawFields = [segmentID]
+                rawFields = [line[..<idEnd]]
             } else {
                 // Slice off the ID + field separator. Reconstruct fields[1] and [2] manually.
                 // line == "MSH|^~\\&|sendingApp|..."
-                let afterPrefix = String(chars[4...])   // everything after "MSH|"
+                let afterPrefix = line[line.index(after: fourth)...]   // everything after "MSH|"
                 let rest = afterPrefix.split(separator: encoding.fieldSeparator,
                                               omittingEmptySubsequences: false)
-                                       .map(String.init)
                 // The first element of `rest` is "^~\\&" (field 2), then the actual fields.
                 // Build the canonical array:
-                rawFields = [segmentID, String(encoding.fieldSeparator)] + rest
+                rawFields = [line[..<idEnd], Substring(String(encoding.fieldSeparator))] + rest
             }
-        } else if idEnd == chars.count {
+        } else if idEnd == line.endIndex {
             // No field separator after the ID: no field, so the line is written back as its ID.
-            rawFields = [segmentID]
+            rawFields = [line[..<idEnd]]
         } else {
             // Everything after the ID and its separator.
-            let afterSeparator = String(chars[(idEnd + 1)...])
+            let afterSeparator = line[line.index(after: idEnd)...]
             let parts = afterSeparator.split(separator: encoding.fieldSeparator,
                                               omittingEmptySubsequences: false)
-                                       .map(String.init)
-            rawFields = [segmentID] + parts
+            rawFields = [line[..<idEnd]] + parts
         }
 
         // Parse each field. Index 0 (segment ID) stays as a placeholder empty field.
@@ -301,10 +301,10 @@ public struct Parser: Sendable {
                 fields.append(Field(repetitions: []))
             } else if separatorSegment && i == 1 {
                 // MSH-1 (BHS-1, FHS-1) is the field separator as a single character.
-                fields.append(.scalar(rawField))
+                fields.append(.scalar(String(rawField)))
             } else if separatorSegment && i == 2 {
                 // MSH-2 (BHS-2, FHS-2) is the encoding characters (four, or five with the truncation character) as one literal value (no internal split).
-                fields.append(.scalar(rawField))
+                fields.append(.scalar(String(rawField)))
             } else {
                 fields.append(parseField(rawField, encoding: encoding))
             }
@@ -314,32 +314,35 @@ public struct Parser: Sendable {
         return SegmentRegistry.hydrate(unknown)
     }
 
-    private func parseField(_ raw: String, encoding: EncodingCharacters) -> Field {
+    private func parseField(_ raw: Substring, encoding: EncodingCharacters) -> Field {
         if raw.isEmpty {
             return .scalar("")
         }
         let reps = raw.split(separator: encoding.repetitionSeparator,
                               omittingEmptySubsequences: false)
-                       .map { parseRepetition(String($0), encoding: encoding) }
+                       .map { parseRepetition($0, encoding: encoding) }
         return Field(repetitions: reps)
     }
 
-    private func parseRepetition(_ raw: String, encoding: EncodingCharacters) -> Repetition {
+    private func parseRepetition(_ raw: Substring, encoding: EncodingCharacters) -> Repetition {
         let comps = raw.split(separator: encoding.componentSeparator,
                                 omittingEmptySubsequences: false)
-                        .map { parseComponent(String($0), encoding: encoding) }
+                        .map { parseComponent($0, encoding: encoding) }
         return Repetition(components: comps)
     }
 
-    private func parseComponent(_ raw: String, encoding: EncodingCharacters) -> Component {
+    private func parseComponent(_ raw: Substring, encoding: EncodingCharacters) -> Component {
         let subs = raw.split(separator: encoding.subcomponentSeparator,
                                omittingEmptySubsequences: false)
                        .map { part -> Subcomponent in
                            let text = String(part)
-                           // #13: keep the wire text of an escaped value.
-                           let wire = text.contains(encoding.escapeCharacter)
-                               ? WireText(text: text, escape: encoding.escapeCharacter) : nil
-                           return Subcomponent(EscapeSequences.decode(text, encoding: encoding), wire: wire)
+                           // #13: keep the wire text of an escaped value. One scan finds the escape
+                           // character; a value without one is its own decoded form.
+                           guard text.contains(encoding.escapeCharacter) else {
+                               return Subcomponent(text, wire: nil)
+                           }
+                           return Subcomponent(EscapeSequences.decode(text, encoding: encoding),
+                                               wire: WireText(text: text, escape: encoding.escapeCharacter))
                        }
         return Component(subcomponents: subs)
     }

@@ -30,6 +30,12 @@ The entries are condensed; the git history carries the detail.
   `HL7v2KitAnonymise` and checks that it exits 1, writing no file, on a message declared `ASCII`
   that holds byte E9 (`scripts/check-anonymiser-byte-path.sh`), a regression guard for the binary
   linked at the macOS floor. `HL7v2KitAnonymise`'s error lines are now covered by tests (#22).
+- Parsing is faster: `Parser` splits each segment into fields, repetitions, components and
+  subcomponents over slices of its line, where it copied the line to an array of characters and
+  every level to a new string, and it copies each line once. A 2 MB ORU^R01 (400 TX OBX) parses in
+  0.121 s, from 0.285 s, 58 percent faster (release build, median of five). The gain depends on the
+  message: a 295-byte ADT gains about 39 percent, and 2 MB of emoji text about 15. Parsed values,
+  the wire text kept for escaped values, and serialised output are unchanged (#24).
 
 ### Fixed
 
