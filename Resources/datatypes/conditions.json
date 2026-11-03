@@ -1,5 +1,5 @@
 {
-  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', 'repeated' (the field has more than one populated repetition), '<n> hl7Table' (the value is HL7 and four digits, a Table 0396 HL7 table), '<n> userTable' (such a value whose table is user-defined), NOT, AND, OR, parentheses. '<a>-<b> populated' / '<a>-<b> empty' hold when any / none of components a to b is populated. 'groupRules' (3.22.0) carries cited \"at least one of\" requirements: when 'condition' holds, at least one of 'components' must be populated, reported once per repetition (TXA-22's person: PPN on v2.3.1 to v2.8.2, the field-local TXA-22 on v2.3). TXA-17's 'all components are required' (v2.3 to v2.5.1) is read as both parts: the field condition makes TXA-22 required, and this pair makes both its person and its time stamp; not every one of its components, which would contradict those printed O and B. When it holds and the component is empty the Validator reports conditionalComponentMissing. 'conformanceRules' carries the 'as of v2.7' family in the same language, applied as conformanceCondition and checked only on opt-in (M27). CNE.7 / CWE.7 / CF.7 / CSU.8 and the second-alternate CF.13 / CNE.13 / CSU.14 (v2.7.1, v2.8.2), and CNE.7 / CWE.7 on v2.5.1 and v2.6, are modelled in conformanceRules with the hl7Table and userTable terms, each in its own print's wording (CNE in every version, and v2.5.1 CWE, keep the older usage note, which does not name user-defined tables): the opt-in tier, because the specification's own example messages leave the version ID empty 679 times where these rules require it (v2.6 157, v2.7.1 252, v2.8.2 270). Applied by private/scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated). v2.7.1 (P10-2): its Chapter 2A prints the same 72 C components as v2.8.2, and every one's definition was read against the v2.8.2 text: 60 are word for word the same and 12 differ only in a cross-reference (CF.3, CF.6, CSU.4, CNN.8, CNN.9, CNN.11, PPN.9, XCN.9, XCN.10, XCN.13, XCN.22, XCN.23), so the 2.7.1 blocks carry the v2.8.2 rules each re-cited to the v2.7.1 sentence, and the NOT-modelled list above holds for v2.7.1 too.",
+  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', 'repeated' (the field has more than one populated repetition), '<n> hl7Table' (the value is HL7 and four digits, a Table 0396 HL7 table), '<n> userTable' (such a value whose table is user-defined), NOT, AND, OR, parentheses. '<a>-<b> populated' / '<a>-<b> empty' hold when any / none of components a to b is populated. 'groupRules' (3.22.0) carries cited \"at least one of\" requirements: when 'condition' holds, at least one of 'components' must be populated, reported once per repetition (TXA-22's person: PPN on v2.3.1 to v2.8.2, the field-local TXA-22 on v2.3). TXA-17's 'all components are required' (v2.3 to v2.5.1) is read as both parts: the field condition makes TXA-22 required, and this pair makes both its person and its time stamp; not every one of its components, which would contradict those printed O and B. When it holds and the component is empty the Validator reports conditionalComponentMissing. 'conformanceRules' carries the 'as of v2.7' family in the same language, applied as conformanceCondition and checked only on opt-in (M27). CNE.7 / CWE.7 / CF.7 / CSU.8 and the second-alternate CF.13 / CNE.13 / CSU.14 (v2.7.1, v2.8.2), and CNE.7 / CWE.7 on v2.5.1 and v2.6, are modelled in conformanceRules with the hl7Table and userTable terms, each in its own print's wording (CNE in every version, and v2.5.1 CWE, keep the older usage note, which does not name user-defined tables): the opt-in tier, because the specification's own example messages leave the version ID empty 679 times where these rules require it (v2.6 157, v2.7.1 252, v2.8.2 270). Applied by private/scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated). v2.7.1 (P10-2): its Chapter 2A prints the same 72 C components as v2.8.2, and every one's definition was read against the v2.8.2 text: 60 are word for word the same and 12 differ only in a cross-reference (CF.3, CF.6, CSU.4, CNN.8, CNN.9, CNN.11, PPN.9, XCN.9, XCN.10, XCN.13, XCN.22, XCN.23), so the 2.7.1 blocks carry the v2.8.2 rules each re-cited to the v2.7.1 sentence, and the NOT-modelled list above holds for v2.7.1 too. v2.9 (v2.9-T3): its Chapter 2A (the December 2019 chapters with the technical correction of January 2021; sections 2A.3.N) prints 74 C components, the 73 of v2.8.2 less PPN.15 (printed O in v2.9) plus ERL.3 and ERL.5. Every definition was read against the v2.8.2 text by section: the condition sentences are word for word the same, so the 2.9 blocks carry the v2.8.2 rules each re-cited to the v2.9 sentence and page. New in v2.9: ERL.3 ('conditionally required, when Component Number (ERL-5) is populated') and ERL.5 (same, ERL-6); OSP.2 / OSP.3 ('Either start or stop date or both must be present', printed in the Comments column; v2.8.2 prints the same words and leaves them unmodelled). PPN.15 is printed O, so its 'both the performing person and the time stamp must be valued' note is two group requirements (person given a time stamp, time stamp given a person) rather than a condition on the component. The NOT-modelled list above holds for v2.9: CNE.20 (the sentence still contradicts its own summary), HD.2 / HD.3, PL.1, XTN.8, CNN.9, EI.3 / EI.4, PPN.12 / XCN.12. The 'only allowed if' halves of XTN.4 / XTN.7 / XTN.12 are prohibitions the language cannot state.",
   "rules": {
     "2.5.1": {
       "RPT": {
@@ -342,6 +342,138 @@
         "15": {
           "condition": "1-10 populated",
           "citation": "HL7 v2.4 Chapter 9, TXA-22 (sec 9.6.1.22, p 9-18): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. On PPN because TXA-22 is the only field typed PPN; the Chapter 2 PPN states nothing."
+        }
+      }
+    },
+    "2.9": {
+      "RPT": {
+        "6": {
+          "condition": "5 populated",
+          "citation": "HL7 v2.9 Chapter 2A, RPT.6 Period Units (sec 2A.3.67.6, p 78): 'Condition Rule: This component is required if RPT.5 - Period Quantity is populated.'"
+        },
+        "10": {
+          "condition": "9 populated",
+          "citation": "HL7 v2.9 Chapter 2A, RPT.10 Event Offset Units (sec 2A.3.67.10, p 78): 'Condition Rule: This component is required if RPT.9 - Event Offset Quantity is populated.'"
+        }
+      },
+      "CSU": {
+        "2": {
+          "condition": "3 empty",
+          "citation": "HL7 v2.9 Chapter 2A, CSU.2 Unit of Measure Identifier (sec 2A.3.12.2, p 22): 'This field is required if the unit of measure description is not present.'"
+        },
+        "3": {
+          "condition": "2 empty",
+          "citation": "HL7 v2.9 Chapter 2A, CSU.3 Unit of Measure Description (sec 2A.3.12.3, p 22): 'This field is required if the unit of measure identifier is not present.'"
+        },
+        "17": {
+          "condition": "16 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CSU.17 Unit of Measure Value Set Version ID (sec 2A.3.12.17, p 24): 'Value set version ID is required if CSU.16 is populated.'"
+        },
+        "20": {
+          "condition": "19 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CSU.20 Alternate Unit of Measure Value Set Version ID (sec 2A.3.12.20, p 24): 'Value set version ID is required if CSU.19 is populated.'"
+        },
+        "23": {
+          "condition": "22 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CSU.23 Alternate Unit of Measure Value Set Version ID (sec 2A.3.12.23, p 25): 'Value set version ID is required if CSU.22 is populated.'"
+        }
+      },
+      "CNN": {
+        "8": {
+          "condition": "1 populated AND 9 empty AND (10 empty OR 11 empty)",
+          "citation": "HL7 v2.9 Chapter 2A, CNN.8 Source Table (sec 2A.3.9.8, p 18): 'If component 1 is valued, either CNN.8 or CNN.9, or both CNN.10 and CNN.11, must be valued.' Reported at CNN.8 when none of the alternatives holds."
+        },
+        "10": {
+          "condition": "11 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CNN.10 Assigning Authority - Universal ID (sec 2A.3.9.10, p 18): 'If CNN.11 is valued, this component must be valued.'"
+        },
+        "11": {
+          "condition": "10 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CNN.11 Assigning Authority - Universal ID Type (sec 2A.3.9.11, p 19): 'If CNN.10 is valued, this component must be valued.'"
+        }
+      },
+      "CF": {
+        "16": {
+          "condition": "15 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CF.16 Value Set Version ID (sec 2A.3.7.16, p 11): 'Value set version ID is required if CF.15 is populated.'"
+        },
+        "19": {
+          "condition": "18 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CF.19 Alternate Value Set Version ID (sec 2A.3.7.19, p 11): 'Value set version ID is required if CF.18 is populated.'"
+        },
+        "22": {
+          "condition": "21 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CF.22 Second Alternate Value Set Version ID (sec 2A.3.7.22, p 12): 'Value set version ID is required if CF.21 is populated.'"
+        }
+      },
+      "CNE": {
+        "16": {
+          "condition": "15 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CNE.16 Value Set Version ID (sec 2A.3.8.16, p 16): 'Value set version ID is required if CNE.15 is populated.'"
+        },
+        "19": {
+          "condition": "18 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CNE.19 Alternate Value Set Version ID (sec 2A.3.8.19, p 16): 'Value set version ID is required if CNE.18 is populated.'"
+        },
+        "22": {
+          "condition": "21 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CNE.22 Second Alternate Value Set Version ID (sec 2A.3.8.22, p 17): 'Value set version ID is required if CNE.21 is populated.'"
+        }
+      },
+      "CWE": {
+        "16": {
+          "condition": "15 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CWE.16 Value Set Version ID (sec 2A.3.13.16, p 31): 'Value set version ID is required if CWE.15 is populated.'"
+        },
+        "19": {
+          "condition": "18 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CWE.19 Alternate Value Set Version ID (sec 2A.3.13.19, p 31): 'Value set version ID is required if CWE.18 is populated.'"
+        },
+        "22": {
+          "condition": "21 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CWE.22 Second Alternate Value Set Version ID (sec 2A.3.13.22, p 32): 'Value set version ID is required if CWE.21 is populated.'"
+        }
+      },
+      "CP": {
+        "5": {
+          "condition": "3 populated OR 4 populated",
+          "citation": "HL7 v2.9 Chapter 2A, CP.5 Range Units (sec 2A.3.10.5, p 19): 'This component is required if CP.3 From Value and/or CP.4 To Value are present.'"
+        }
+      },
+      "XCN": {
+        "1": {
+          "condition": "2 empty",
+          "citation": "HL7 v2.9 Chapter 2A, XCN.1 Person Identifier (sec 2A.3.88.1, p 93): 'XCN.1 is required if XCN.2 is not populated.'"
+        },
+        "2": {
+          "condition": "1 empty",
+          "citation": "HL7 v2.9 Chapter 2A, XCN.2 Family Name (sec 2A.3.88.2, p 93): 'XCN.2 is required if XCN.1 is not populated.'"
+        }
+      },
+      "XAD": {
+        "7": {
+          "condition": "repeated",
+          "citation": "HL7 v2.9 Chapter 2A, XAD.7 Address Type (sec 2A.3.87.7, p 90): 'XAD.7 is required if there are multiple occurrences of XAD in a field.' Carried from v2.8.2 (2.A.87.7), where it first appears; the sentence is the same."
+        }
+      },
+      "ERL": {
+        "3": {
+          "condition": "5 populated",
+          "citation": "HL7 v2.9 Chapter 2A, ERL.3 Field Position (sec 2A.3.28.3, p 44): 'This field is conditionally required, when Component Number (ERL-5) is populated..'"
+        },
+        "5": {
+          "condition": "6 populated",
+          "citation": "HL7 v2.9 Chapter 2A, ERL.5 Component Number (sec 2A.3.28.5, p 44): 'This field is conditionally required, when Sub-Component Number (ERL-6) is populated.'"
+        }
+      },
+      "OSP": {
+        "2": {
+          "condition": "3 empty",
+          "citation": "HL7 v2.9 Chapter 2A, OSP.2 (sec 2A.3.52 component table, p 59): Comments column: 'Either start or stop date or both must be present.'"
+        },
+        "3": {
+          "condition": "2 empty",
+          "citation": "HL7 v2.9 Chapter 2A, OSP.3 (sec 2A.3.52 component table, p 59): Comments column: 'Either start or stop date or both must be present.'"
         }
       }
     }
@@ -720,6 +852,172 @@
             "citation": "HL7 v2.8.2 Chapter 2A, XTN.12: 'The Unformatted Telephone number is required when, and allowed only if, XTN.4 and XTN.7 are not populated.' Prohibition half not modelled."
           }
         }
+      },
+      "2.9": {
+        "CSU": {
+          "4": {
+            "condition": "2 populated",
+            "citation": "HL7 v2.9 Chapter 2A, CSU.4 Unit of Measure Coding System (sec 2A.3.12.4, p 22): 'This component is required if the CSU.2 Unit of Measure Identifier is present.'"
+          },
+          "7": {
+            "condition": "5 populated",
+            "citation": "HL7 v2.9 Chapter 2A, CSU.7 Alternate Unit of Measure Coding System (sec 2A.3.12.7, p 22): 'This field is required if the CSU.5 Alternate Unit of Measure Identifier is present.'"
+          },
+          "15": {
+            "condition": "2 populated AND 4 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CSU.15 Unit of Measure Coding System OID (sec 2A.3.12.15, p 23): 'This component is required when CSU.2 is populated and CSU.4 is not populated.'"
+          },
+          "18": {
+            "condition": "5 populated AND 7 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CSU.18 Alternate Unit of Measure Coding System OID (sec 2A.3.12.18, p 24): 'This component is required when CSU.5 is populated and CSU.7 is not populated.'"
+          },
+          "21": {
+            "condition": "11 populated AND 13 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CSU.21 Alternate Unit of Measure Coding System OID (sec 2A.3.12.21, p 24): 'This component is required when CSU.11 is populated and CSU.13 is not populated.'"
+          },
+          "8": {
+            "condition": "4 populated AND (NOT 4 hl7Table OR 4 userTable)",
+            "citation": "HL7 v2.9 Chapter 2A, CSU.8 Unit of Measure Coding System Version ID (sec 2A.3.12.8, p 22): 'If CSU.4 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
+          },
+          "14": {
+            "condition": "13 populated AND (NOT 13 hl7Table OR 13 userTable)",
+            "citation": "HL7 v2.9 Chapter 2A, CSU.14 Second Alternate Unit of Measure Coding System Version ID (sec 2A.3.12.14, p 23): 'Analogous to CSU.8 Unit of Measure Coding System Version ID.'"
+          }
+        },
+        "CF": {
+          "3": {
+            "condition": "1 populated AND 14 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CF.3 Name of Coding System (sec 2A.3.7.3, p 9): 'As of v2.7 this component is required when CF.1 is populated and CF.14 is not populated.'"
+          },
+          "6": {
+            "condition": "4 populated AND 17 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CF.6 Name of Alternate Coding System (sec 2A.3.7.6, p 10): 'required when CF.4 is populated and CF.17 is not populated.'"
+          },
+          "14": {
+            "condition": "1 populated AND 3 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CF.14 Coding System OID (sec 2A.3.7.14, p 11): 'This component is required when CF.1 is populated and CF.3 is not populated.'"
+          },
+          "17": {
+            "condition": "4 populated AND 6 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CF.17 Alternate Coding System OID (sec 2A.3.7.17, p 11): 'This component is required when CF.4 is populated and CF.6 is not populated.'"
+          },
+          "20": {
+            "condition": "10 populated AND 12 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CF.20 Second Alternate Coding System OID (sec 2A.3.7.20, p 12): 'This component is required when CF.10 is populated and CF.12 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND (NOT 3 hl7Table OR 3 userTable)",
+            "citation": "HL7 v2.9 Chapter 2A, CF.7 Coding System Version ID (sec 2A.3.7.7, p 10): 'If CF.3 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
+          },
+          "13": {
+            "condition": "12 populated AND (NOT 12 hl7Table OR 12 userTable)",
+            "citation": "HL7 v2.9 Chapter 2A, CF.13 Second Alternate Coding System Version ID (sec 2A.3.7.13, p 10): 'Analogous To CF.7 Coding System Version ID.'"
+          }
+        },
+        "CNE": {
+          "14": {
+            "condition": "1 populated AND 3 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CNE.14 Coding System OID (sec 2A.3.8.14, p 16): 'This component is required when CNE.1 is populated and CNE.3 is not populated.'"
+          },
+          "17": {
+            "condition": "4 populated AND 6 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CNE.17 Alternate Coding System OID (sec 2A.3.8.17, p 16): 'This component is required when CNE.4 is populated and CNE.6 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND NOT 3 hl7Table",
+            "citation": "HL7 v2.9 Chapter 2A, CNE.7 Coding System Version ID (sec 2A.3.8.7, p 15): 'If the coding system is any system other than an \"HL7 coding system,\" version ID must be valued with an actual version ID.'"
+          },
+          "13": {
+            "condition": "12 populated AND NOT 12 hl7Table",
+            "citation": "HL7 v2.9 Chapter 2A, CNE.13 Second Alternate Coding System Version ID (sec 2A.3.8.13, p 15): 'Analogous to CNE.7 Coding System Version ID.'"
+          }
+        },
+        "CWE": {
+          "3": {
+            "condition": "1 populated AND 14 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CWE.3 Name of Coding System (sec 2A.3.13.3, p 29): 'As of v2.7 this component is required when CWE.1 is populated and CWE.14 is not populated.'"
+          },
+          "6": {
+            "condition": "4 populated AND 17 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CWE.6 Name of Alternate Coding System (sec 2A.3.13.6, p 29): 'required when CWE.4 is populated and CWE.17 is not populated.'"
+          },
+          "12": {
+            "condition": "10 populated AND 20 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CWE.12 Name of Second Alternate Coding System (sec 2A.3.13.12, p 30): 'required when CWE.10 is populated and CWE.20 is not populated.'"
+          },
+          "14": {
+            "condition": "1 populated AND 3 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CWE.14 Coding System OID (sec 2A.3.13.14, p 30): 'This component is required when CWE.1 is populated and CWE.3 is not populated.'"
+          },
+          "17": {
+            "condition": "4 populated AND 6 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CWE.17 Alternate Coding System OID (sec 2A.3.13.17, p 31): 'This component is required when CWE.4 is populated and CWE.6 is not populated.'"
+          },
+          "20": {
+            "condition": "10 populated AND 12 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CWE.20 Second Alternate Coding System OID (sec 2A.3.13.20, p 31): 'This component is required when CWE.10 is populated and CWE.12 is not populated.'"
+          },
+          "7": {
+            "condition": "3 populated AND (NOT 3 hl7Table OR 3 userTable)",
+            "citation": "HL7 v2.9 Chapter 2A, CWE.7 Coding System Version ID (sec 2A.3.13.7, p 30): 'If CWE.3 is populated with a value other than HL7nnnn or is of table type user-defined, version ID must be valued with an actual version ID.'"
+          }
+        },
+        "CX": {
+          "4": {
+            "condition": "9 empty AND 10 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CX.4 Assigning Authority (sec 2A.3.14.4, p 34): 'As of v2.7, CX.4 Assigning Authority is required if neither CX.9 nor CX.10 are populated.'"
+          },
+          "9": {
+            "condition": "4 empty AND 10 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CX.9 Assigning Jurisdiction (sec 2A.3.14.9, p 35): 'As of v2.7, Assigning Jurisdiction is required if neither CX.4 nor CX.10 are populated.'"
+          },
+          "10": {
+            "condition": "4 empty AND 9 empty",
+            "citation": "HL7 v2.9 Chapter 2A, CX.10 Assigning Agency or Department (sec 2A.3.14.10, p 35): 'As of v2.7, Assigning Agency or Department is required if neither CX.4 nor CX.9 are populated.'"
+          }
+        },
+        "PPN": {
+          "9": {
+            "condition": "1 populated AND 23 empty AND 24 empty",
+            "citation": "HL7 v2.9 Chapter 2A, PPN.9 Assigning Authority (sec 2A.3.56.9, p 65): 'It is required if PPN.1 is populated and neither PPN.23 nor PPN.24 are populated.'"
+          }
+        },
+        "XCN": {
+          "9": {
+            "condition": "1 populated AND 22 empty AND 23 empty",
+            "citation": "HL7 v2.9 Chapter 2A, XCN.9 Assigning Authority (sec 2A.3.88.9, p 94): 'It is required if XCN.1 is populated and neither XCN.22 nor XCN.23 are populated.'"
+          },
+          "10": {
+            "condition": "2 populated",
+            "citation": "HL7 v2.9 Chapter 2A, XCN.10 Name Type Code (sec 2A.3.88.10, p 94): 'It is required if XCN.2 is populated.'"
+          },
+          "13": {
+            "condition": "1 populated",
+            "citation": "HL7 v2.9 Chapter 2A, XCN.13 Identifier Type Code (sec 2A.3.88.13, p 95): 'It is required if XCN.1 is populated.'"
+          },
+          "22": {
+            "condition": "1 populated AND 9 empty AND 23 empty",
+            "citation": "HL7 v2.9 Chapter 2A, XCN.22 Assigning Jurisdiction (sec 2A.3.88.22, p 96): 'It is required if XCN.1 is populated and neither XCN.9 nor XCN.23 are populated.'"
+          },
+          "23": {
+            "condition": "1 populated AND 9 empty AND 22 empty",
+            "citation": "HL7 v2.9 Chapter 2A, XCN.23 Assigning Agency or Department (sec 2A.3.88.23, p 96): 'It is required if XCN.1 is populated and neither XCN.9 nor XCN.22 are populated.'"
+          }
+        },
+        "XTN": {
+          "4": {
+            "condition": "7 empty AND 12 empty",
+            "citation": "HL7 v2.9 Chapter 2A, XTN.4 Communication Address (sec 2A.3.91.4, p 106): 'This component is required if, and only allowed if, XTN.7 or XTN.12 are not populated.' Read with XTN.7 and XTN.12, which each say 'and': one of the three must carry the address. The prohibition half ('only allowed if') is not modelled."
+          },
+          "7": {
+            "condition": "4 empty AND 12 empty",
+            "citation": "HL7 v2.9 Chapter 2A, XTN.7 Local Number (sec 2A.3.91.7, p 106): 'The Local Number is required when, and allowed only if, XTN.4 and XTN.12 are not populated.' Prohibition half not modelled."
+          },
+          "12": {
+            "condition": "4 empty AND 7 empty",
+            "citation": "HL7 v2.9 Chapter 2A, XTN.12 Unformatted Telephone Number (sec 2A.3.91.12, p 107): 'The Unformatted Telephone number is required when, and allowed only if, XTN.4 and XTN.7 are not populated.' Prohibition half not modelled."
+          }
+        }
       }
     }
   },
@@ -791,6 +1089,22 @@
           "name": "Authentication person",
           "condition": "15 populated",
           "citation": "HL7 v2.4 Chapter 9, TXA-22 (sec 9.6.1.22, p 9-18): 'Whenever any one of the ID number - Name type code components is valued, the when authenticated component, which is time stamp, must be valued as non-null. If the time component of a set is valued as non-null, the person component becomes required.' ID number to Name type code are components 1 to 10; the person is every component but .15. On PPN because TXA-22 is the only field typed PPN; the Chapter 2 PPN states nothing."
+        }
+      ]
+    },
+    "2.9": {
+      "PPN": [
+        {
+          "components": "1-14,16-26",
+          "name": "Performing person",
+          "condition": "15 populated",
+          "citation": "HL7 v2.9 Chapter 2A, PPN.15 (sec 2A.3.56.15, p 66): 'Note: If this field is not null, both the performing person and the time stamp must be valued.'; Chapter 9, TXA-22 (sec 9.7.3.22, p 40): 'If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null.' The time stamp is .15; the performing person is every other component (1-14 and 16-26), as TXA-22 (p 40) says: 'The remaining components identify the person performing the authentication.'"
+        },
+        {
+          "components": "15",
+          "name": "Time stamp",
+          "condition": "1-14 populated OR 16-26 populated",
+          "citation": "HL7 v2.9 Chapter 2A, PPN.15 (sec 2A.3.56.15, p 66) and Chapter 9, TXA-22 (sec 9.7.3.22, p 40), as above: the other direction of the same sentence. v2.9 prints PPN.15 as O, not C (v2.8.2 printed C), so the direction is a group requirement rather than a condition on the component."
         }
       ]
     }

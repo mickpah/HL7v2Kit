@@ -1,0 +1,32 @@
+{
+  "dataType": "OG",
+  "version": "2.9",
+  "name": "Observation Grouper",
+  "components": [
+    {
+      "index": 1,
+      "name": "Original Sub-Identifier",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20="
+    },
+    {
+      "index": 2,
+      "name": "Group",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Sequence",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Identifier",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}

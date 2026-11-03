@@ -62,4 +62,36 @@ struct V29GrammarTests {
         #expect(version.entries.contains { $0.code == "2.9" })
         #expect(version.permitsLocalExtensions)
     }
+
+    @Test("v2.9 datatypes: 71 composites and 448 components from CH02A")
+    func datatypeInventory() throws {
+        let grammars = DataTypeGrammarTable.v2_9
+        #expect(grammars.count == 71)
+        #expect(grammars.values.reduce(0) { $0 + $1.components.count } == 448)
+        #expect(try #require(grammars["CWE"]).components.count == 22)    // Tables cross page breaks
+        #expect(try #require(grammars["XAD"]).components.count == 23)
+    }
+
+    @Test("v2.9 conditions: ERL and OSP are new, PPN reads both ways, CNE.20 stays unmodelled")
+    func datatypeConditions() throws {
+        let grammars = DataTypeGrammarTable.v2_9
+        func condition(_ type: String, _ index: Int) throws -> String? {
+            try #require(grammars[type]).components.first { $0.index == index }?.condition
+        }
+        #expect(try condition("ERL", 3) == "5 populated")               // 2A.3.28.3, page 44
+        #expect(try condition("ERL", 5) == "6 populated")               // 2A.3.28.5, page 44
+        #expect(try condition("OSP", 2) == "3 empty")                   // 2A.3.52 component table, page 59
+        #expect(try condition("OSP", 3) == "2 empty")
+        #expect(try condition("RPT", 6) == "5 populated")               // 2A.3.67.6, page 78
+        #expect(try condition("CNE", 20) == nil)                        // the print contradicts itself
+        // 2A.3.56.15, page 66: a time stamp needs a person, and a person needs a time stamp.
+        let groups = try #require(grammars["PPN"]).groupRequirements
+        let person = try #require(groups.first { $0.name == "Performing person" })
+        #expect(person.components == "1-14,16-26" && person.condition == "15 populated")
+        let stamp = try #require(groups.first { $0.name == "Time stamp" })
+        #expect(stamp.components == "15" && stamp.condition == "1-14 populated OR 16-26 populated")
+        #expect(groups.count == 2)
+        // PPN.15 is printed O in v2.9, so it carries no component condition.
+        #expect(try condition("PPN", 15) == nil)
+    }
 }
