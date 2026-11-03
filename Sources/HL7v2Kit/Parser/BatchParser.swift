@@ -199,8 +199,8 @@ public struct BatchParser: Sendable {
         var findings: [EnvelopeOrderFinding] = []
         var occurrences: [String: Int] = [:]
         var afterTrailerReported = false
-        // The field separator in force: MSH-1, BHS-1 or FHS-1 of the last such line.
-        var separator: Character = "|"
+        // The field separator of the last MSH, BHS and FHS read, each kept apart.
+        var separators: [String: Character] = [:]
 
         for (position, line) in lines.enumerated() {
             // Segment IDs are 3 ASCII characters; anything shorter is
@@ -208,12 +208,16 @@ public struct BatchParser: Sendable {
             // raise the appropriate error when the message closes.
             let prefix = line.prefix(3)
             let fourth = line.dropFirst(3).first
-            // BTS and FTS name no separator of their own (v2.5.1 section 2.10.3.1): a line starting
-            // with one is a trailer only when it is that ID alone or its fourth character is the
-            // separator in force. Otherwise (`BTSX|1`) it is a body line, under the ID the parser reads.
-            let bodyLine = (prefix == "BTS" || prefix == "FTS") && fourth?.isDelimiter(separator) == false
-            let id = bodyLine ? line.prefix { !$0.isDelimiter(separator) } : prefix
-            if id == "MSH" || id == "BHS" || id == "FHS", let fourth { separator = fourth }
+            // BTS and FTS name no separator of their own (the attribute tables, v2.5.1 sections
+            // 2.15.3 and 2.15.7, print no separator field). A line starting with one is a trailer
+            // when it is that ID alone or its fourth character is the separator of the last MSH,
+            // BHS or FHS read, `|` before any. Otherwise (`BTSX|1`) it is a body line, under the ID
+            // the parser reads: split on the last MSH's separator.
+            let known = separators.isEmpty ? ["|"] : Array(separators.values)
+            let bodyLine = (prefix == "BTS" || prefix == "FTS")
+                && fourth.map { fourth in !known.contains { fourth.isDelimiter($0) } } == true
+            let id = bodyLine ? line.prefix { !$0.isDelimiter(separators["MSH"] ?? "|") } : prefix
+            if id == "MSH" || id == "BHS" || id == "FHS", let fourth { separators[String(id)] = fourth }
             let occurrence = (occurrences[String(id)] ?? 0) + 1
             occurrences[String(id)] = occurrence
             let reason: EnvelopeOrderFinding.Reason? =

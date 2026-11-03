@@ -294,8 +294,10 @@ enum EscapeSequences {
     }
 
     /// A formatting command after its period (v2.5.1 section 2.7.6): `br`, `fi`, `nf`, `ce`;
-    /// `sp` with an optional unsigned integer; `in` and `ti` with an optionally signed integer;
-    /// `sk` with an unsigned integer. One space may stand before the number (`.sp <number>`).
+    /// `sp` with an optional integer that may carry a plus sign but not a minus (section 2.7.6
+    /// says it is "a positive integer or absent", and the CF example in section 2.A.7 prints
+    /// `\.sp+3\`); `in` and `ti` with an optionally signed integer; `sk` with an unsigned
+    /// integer. One space may stand before the number (`.sp <number>`).
     private static func isFormattingCommand(_ body: ArraySlice<Character>) -> Bool {
         let name = String(body.prefix(2))
         var number = body.dropFirst(2)
@@ -306,7 +308,7 @@ enum EscapeSequences {
         default: return false
         }
         if number.first == " ", number.count > 1 { number = number.dropFirst() }
-        if name == "in" || name == "ti", let sign = number.first, sign == "+" || sign == "-" {
+        if let sign = number.first, sign == "+" && name != "sk" || sign == "-" && (name == "in" || name == "ti") {
             number = number.dropFirst()
         }
         return !number.isEmpty && number.allSatisfy { $0.isASCII && $0.isNumber }

@@ -262,7 +262,7 @@ public struct BatchValidator: Sendable {
                    "field separator is \"\(separator)\"")
         }
         // P00 S1: the rule reads the four encoding characters; a fifth is a field-length matter.
-        let encoding = String(header.dropFirst(4).prefix { $0 != separator }.prefix(4))
+        let encoding = String(header.dropFirst(4).prefix { !$0.isDelimiter(separator) }.prefix(4))
         if !codes.isDisjoint(with: ["ORM", "ORU"]) {
             if encoding != "^~\\&" {
                 report(2, "HL7au:000024.2/.3/.4/.5 — \(segmentID)-2 encoding characters must be \"^~\\&\" (component, repeat, escape, sub-component); AU ADRM-2021 Appendix 5 p. 441",

@@ -14,6 +14,17 @@ extension Validator {
         guard let severity = options.escapeSequenceSeverity else { return }
         let encoding = message.encodingCharacters
         let version = message.version
+        // `\P\` is reported only when MSH-12 names a modelled version that does not define it. An
+        // unmodelled one (2.9, 2.8.1) validates as v2.5.1, but its own print may define `\P\`, so
+        // that reading stays quiet and fails safe.
+        let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
+        let reportsTruncation: Bool
+        if case .recognised(let declared) = Version.reading(
+            msh12: msh12, subcomponentSeparator: encoding.subcomponentSeparator) {
+            reportsTruncation = !declared.definesTruncationEscape
+        } else {
+            reportsTruncation = false
+        }
         // Most values hold no escape. A byte scan settles those: `encode` only writes escapes the
         // standard defines, so a value with no wire text and no escape character cannot draw this.
         let escapeByte = encoding.escapeCharacter.asciiValue
@@ -30,7 +41,8 @@ extension Validator {
                             if subcomponent.wire == nil, let escapeByte,
                                !subcomponent.value.utf8.contains(escapeByte) { continue }
                             let wire = EscapeSequences.wireForm(of: subcomponent, encoding: encoding)
-                            guard let sequence = Self.undefinedEscape(in: wire, encoding: encoding, version: version)
+                            guard let sequence = Self.undefinedEscape(in: wire, encoding: encoding,
+                                                                  reportsTruncation: reportsTruncation)
                             else { continue }
                             let single = repetition.components.count == 1 && component.subcomponents.count == 1
                             let location = IssueLocation(
@@ -55,9 +67,10 @@ extension Validator {
     /// nil. Sequences are read left to right, each from an escape character to the next (v2.5.1
     /// section 2.7.1), so the `\` closing `\E\` never opens another. A body is defined when it
     /// decodes (`F`, `S`, `T`, `R`, `E`, `X` and hex pairs) or is one the decoder keeps (`H`, `N`,
-    /// `Z…`, `Cxxyy`, `Mxxyy(zz)`, a formatting command), except `P` before v2.7.1. An escape
+    /// `Z…`, `Cxxyy`, `Mxxyy(zz)`, a formatting command), except `P` where `reportsTruncation`. An escape
     /// character with no closing one is undefined from there to the end of the value.
-    static func undefinedEscape(in wire: String, encoding: EncodingCharacters, version: Version) -> String? {
+    static func undefinedEscape(in wire: String, encoding: EncodingCharacters,
+                                reportsTruncation: Bool) -> String? {
         let escape = encoding.escapeCharacter
         guard wire.contains(where: { $0.isDelimiter(escape) }) else { return nil }
         let chars = Array(wire)
@@ -68,7 +81,7 @@ extension Validator {
             }
             let body = chars[(open + 1)..<close]
             let defined = EscapeSequences.decodeBody(body, encoding: encoding) != nil
-                || (EscapeSequences.isRepertoireBody(body) && (body.first != "P" || version.definesTruncationEscape))
+                || (EscapeSequences.isRepertoireBody(body) && (body.first != "P" || !reportsTruncation))
             if !defined { return String(chars[open...close]) }
             start = close + 1
         }

@@ -49,8 +49,8 @@ public struct StreamingBatchParser: Sendable {
     /// After a failure inside a message, its remaining lines are dropped
     /// until the next MSH or batch marker.
     private var skippingMessage: Bool
-    /// The field separator in force: the fourth byte of the last MSH, BHS or FHS line.
-    private var fieldSeparator: UInt8
+    /// The fourth byte of the last MSH, BHS and FHS line read, each kept apart.
+    private var separators: [UInt8: UInt8]
 
     /// Segment IDs that start a new run: a message or a batch / file marker.
     private static let runStarts = ["MSH", "FHS", "FTS", "BHS", "BTS"]
@@ -69,7 +69,7 @@ public struct StreamingBatchParser: Sendable {
         self.unread = []
         self.ready = []
         self.skippingMessage = false
-        self.fieldSeparator = UInt8(ascii: "|")
+        self.separators = [:]
     }
 
     /// Feed an incremental byte chunk. Returns any messages that
@@ -170,7 +170,7 @@ public struct StreamingBatchParser: Sendable {
 
     private mutating func classify(_ line: [UInt8]) throws -> Message? {
         if line.count > 3, ["MSH", "BHS", "FHS"].contains(where: { line.starts(with: $0.utf8) }) {
-            fieldSeparator = line[3]
+            separators[line[0]] = line[3]
         }
         if line.starts(with: "MSH".utf8) {
             // Start the new message before parsing the one it closes, so
@@ -238,13 +238,15 @@ public struct StreamingBatchParser: Sendable {
     }
 
     /// True when `bytes` begins with MSH or a batch / file marker. BTS and FTS name no
-    /// separator of their own (v2.5.1 section 2.10.3.1), so one is a marker only when it is that
-    /// ID alone or its fourth byte is the separator in force; `BTSX|1` is a body line.
+    /// separator of their own (the attribute tables, v2.5.1 sections 2.15.3 and 2.15.7), so one
+    /// is a marker only when it is that ID alone or its fourth byte is the separator of the last
+    /// MSH, BHS or FHS read (`|` before any); `BTSX|1` is a body line.
     private func startsMessageRun(_ bytes: [UInt8]) -> Bool {
         guard let id = Self.runStarts.first(where: { bytes.starts(with: $0.utf8) }) else { return false }
         // One byte: exact for the 7-bit ASCII delimiters v2.5.1 section 2.15.9.18 asks
         // for and any single-byte set; a multi-byte UTF-8 separator matches on its lead byte only.
-        return (id != "BTS" && id != "FTS") || bytes.count == 3 || bytes[3] == fieldSeparator
+        let known = separators.isEmpty ? [UInt8(ascii: "|")] : Array(separators.values)
+        return (id != "BTS" && id != "FTS") || bytes.count == 3 || known.contains(bytes[3])
     }
 }
 

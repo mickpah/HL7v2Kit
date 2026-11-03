@@ -1,6 +1,7 @@
 # Maintenance tasks. `just` lists them; `just <task>` runs one.
-# Needs: just, Xcode (Swift 6.2 for the test suite), python3 (the scripts are standard library
-# only), uv for the optional virtual environment, Docker for the Linux step of the rehearsal.
+# Needs: just, Xcode (Swift 6.0 or later builds the library and tests; CI requires 6.2), python3
+# (the scripts are standard library only), uv for the optional virtual environment, Docker for the
+# Linux step of the rehearsal.
 
 set shell := ["bash", "-euo", "pipefail", "-c"]
 

@@ -13,8 +13,10 @@ The entries are condensed; the git history carries the detail.
 - `IssueCode.escapeSequenceUndefined` (3007) and `ValidationOptions.escapeSequenceSeverity` (a warning
   in default and strict, off in lenient): a run between two escape characters that the message's
   version does not define, or an escape character with no closing one (v2.5.1 section 2.7; v2.3 and
-  v2.3.1 section 2.9, v2.4 section 2.10), once per value. `\P\` is defined from v2.7.1. A message
-  carrying one now draws the warning by default (#20).
+  v2.3.1 section 2.9, v2.4 section 2.10), once per value. `\P\` is defined from v2.7.1, and is
+  reported only when MSH-12 names a modelled version that lacks it (`2.9` and `2.8.1` draw nothing
+  for it). `\.sp+3\`, as the print writes it, is defined: `.sp` takes an optional plus sign. A
+  message carrying an undefined escape now draws the warning by default (#20).
 - `SegmentGrammar.conditionIssues()` and `ConditionIssue`: each atom of a grammar's field conditions
   (`condition`, `prohibitedWhen`, `additionalProhibitions`) that the condition language cannot read,
   with its field, source and reason. Such an atom never fires; run it on a `ZSegmentGrammar`'s grammar
@@ -30,12 +32,21 @@ The entries are condensed; the git history carries the detail.
   `HL7v2KitAnonymise` and checks that it exits 1, writing no file, on a message declared `ASCII`
   that holds byte E9 (`scripts/check-anonymiser-byte-path.sh`), a regression guard for the binary
   linked at the macOS floor. `HL7v2KitAnonymise`'s error lines are now covered by tests (#22).
+- The segment-line rules also change these: a path read on a field-less line returns nil where it
+  returned `""` (`message["PID-1"]` on a bare `PID`), and `PID` and `PID|` no longer compare equal;
+  with `allowUnknownSegments: false`, `MSHX|1|2` throws `unknownSegment`; a `BTSX|1` line with no
+  open message makes `BatchParser.parse` throw `missingMSH`, as any stray line does; a BHS or FHS
+  built in code holding only its placeholder is written as its ID alone, and a segment built in
+  code with ID `MSHX` is no longer written as a separator segment; `HL7v2KitAnonymise` refuses
+  `A|B|c` and `MSHX|1|2` with exit 1 and no output (#19).
 - Parsing is faster: `Parser` splits each segment into fields, repetitions, components and
   subcomponents over slices of its line, where it copied the line to an array of characters and
-  every level to a new string, and it copies each line once. A 2 MB ORU^R01 (400 TX OBX) parses in
-  0.124 s, from 0.285 s, 56 percent faster (release build, median of five). The gain depends on the
-  message: a 295-byte ADT gains about 39 percent, and 2 MB of emoji text about 15. Parsed values,
-  the wire text kept for escaped values, and serialised output are unchanged (#24).
+  every level to a new string, and it copies each line once. Against 3.30.0 (release build, median
+  of five, `Parser.parse(_: Data)`): a 2 MB ORU^R01 (400 TX OBX) parses in 0.118 s, from 0.261 s,
+  55 percent faster; a 292-byte ADT gains 39 percent (500 parses in 0.021 s, from 0.034 s); 2 MB of
+  UTF-8 emoji text gains 33 percent (0.169 s from 0.250 s); and 2 MB of ISO 8859-1 text gains 35
+  percent (0.425 s from 0.649 s). No message class is slower than 3.30.0. Parsed values, the wire
+  text kept for escaped values, and serialised output are unchanged (#24).
 
 ### Fixed
 
@@ -51,9 +62,11 @@ The entries are condensed; the git history carries the detail.
   field separator: `MSHX|1|2` is a segment with ID `MSHX` (1014) and comes back as written, instead
   of a second MSH with the `X` dropped (#19).
 - `BatchParser` and `StreamingBatchParser` read a line starting `BTS` or `FTS` as a trailer only when
-  it is that ID alone or its fourth character is the field separator in force (that of the last MSH,
-  BHS or FHS line). `BTSX|1` and `FTSX|1` stay in the open message, where `BatchParser` closed the
-  batch or file at them and `StreamingBatchParser` discarded them (#19).
+  it is that ID alone or its fourth character is the field separator of the last MSH, the last BHS
+  or the last FHS read (`|` before any), so an envelope that uses a separator other than its
+  messages' still has its trailers. `BTSX|1` and `FTSX|1` stay in the open message, where
+  `BatchParser` closed the batch or file at them and `StreamingBatchParser` discarded them (#19).
+  `StreamingBatchParser` compares one byte, so a multi-byte UTF-8 separator matches on its lead byte.
 - An FHS or BHS whose fifth encoding character (the v2.7+ truncation character) repeats one of the
   four is reported as `batchEnvelopeMalformed` (1013) and read with the message's delimiters, as a
   repeat in MSH-2 already throws `invalidMSH` (#19).

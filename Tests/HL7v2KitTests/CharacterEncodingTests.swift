@@ -198,5 +198,7 @@ struct CharacterEncodingTests {
         #expect(CharacterEncoding.iso8859_1.decode(Data("MSH|a\rPID|b\r".utf8)) == "MSH|a\rPID|b\r")
         #expect(CharacterEncoding.iso8859_1.encode("\u{20AC}") == nil)
         #expect(CharacterEncoding.utf8.decode(Data([0x61, 0xC3, 0xA9])) == "a\u{E9}")
+        let every = CharacterEncoding.iso8859_1.decode(Data((0...255).map { UInt8($0) }))
+        #expect(every?.unicodeScalars.map(\.value) == Array(0...255))
     }
 }

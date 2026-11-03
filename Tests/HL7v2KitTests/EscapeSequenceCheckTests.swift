@@ -24,7 +24,7 @@ struct EscapeSequenceCheckTests {
     static let defined: [String] = [
         #"\F\"#, #"\S\"#, #"\T\"#, #"\R\"#, #"\E\"#, #"\H\240*\N\"#, #"\X0D\"#, #"\X0D0A\"#,
         #"\XC3A9\"#, #"\Z1\"#, #"\ZLOCAL\"#, #"\C2842\"#, #"\M2442\"#, #"\M242844\"#,
-        #"\.br\"#, #"\.fi\"#, #"\.nf\"#, #"\.ce\"#, #"\.sp\"#, #"\.sp 2\"#, #"\.in+4\"#,
+        #"\.br\"#, #"\.fi\"#, #"\.nf\"#, #"\.ce\"#, #"\.sp\"#, #"\.sp 2\"#, #"\.sp+3\"#, #"\.in+4\"#,
         #"\.ti-4\"#, #"\.sk3\"#, #"\.in+4\\.ti-4\ 1. Text\.br\"#, #"C:\E\Users\E\me"#,
         #"\E\Q\E\"#, "plain text",
     ]
@@ -45,6 +45,7 @@ struct EscapeSequenceCheckTests {
         (#"\.zz\"#, #"\.zz\"#),           // 2.7.6: not a formatting command
         (#"\Z\"#, #"\Z\"#),               // 2.7.7: Z and one or more characters
         (#"\Hx\"#, #"\Hx\"#),             // H takes no data
+        (#"\.sp-3\"#, #"\.sp-3\"#),         // 2.7.6: a positive integer or absent
         (#"\\"#, #"\\"#),                 // 2.7.1: an escape code ID of one character
         (#"\ABC"#, #"\ABC"#),             // 2.7.1: no closing escape character
         (#"C:\Users\me"#, #"\Users\"#),
@@ -68,6 +69,13 @@ struct EscapeSequenceCheckTests {
                       ("2.8", false), ("2.8.2", false)])
     func truncationEscape(_ row: (version: String, warns: Bool)) throws {
         #expect(try !Self.issues([#"NTE|1||abcde\P\"#], version: row.version).isEmpty == row.warns)
+    }
+
+    @Test("\\P\\ on a version this package does not model is not reported (v2.9 section 2.7.1 prints it)",
+          arguments: ["2.9", "2.8.1", "2.2", ""])
+    func truncationEscapeUnmodelled(_ version: String) throws {
+        #expect(try Self.issues([#"NTE|1||abcde\P\"#], version: version).isEmpty)
+        #expect(try Self.issues([#"NTE|1||abcde\Q\"#], version: version).count == 1)
     }
 
     @Test("The message cites the version's own section", arguments: [

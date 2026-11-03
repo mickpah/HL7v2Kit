@@ -37,7 +37,18 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
     func decode(_ data: Data) -> String? {
         guard self == .iso8859_1 else { return String(data: data, encoding: stringEncoding) }
         if data.allSatisfy({ $0 < 0x80 }) { return String(decoding: data, as: UTF8.self) }
-        return String(String.UnicodeScalarView(data.map { Unicode.Scalar($0) }))
+        // Each byte is the scalar of its value: one UTF-8 byte below 0x80, two from there up.
+        var utf8: [UInt8] = []
+        utf8.reserveCapacity(data.count + data.count / 2)
+        for byte in data {
+            if byte < 0x80 {
+                utf8.append(byte)
+            } else {
+                utf8.append(0xC0 | byte >> 6)
+                utf8.append(0x80 | byte & 0x3F)
+            }
+        }
+        return String(decoding: utf8, as: UTF8.self)
     }
 
     /// `text` as bytes in this character set, or nil when it holds a character the set cannot

@@ -1,6 +1,6 @@
 // BatchTrailerLineTests.swift
 // EG-1: a line starting BTS or FTS is a trailer only when it is that ID alone or its fourth
-// character is the field separator in force, the last MSH, BHS or FHS line's (v2.5.1 sections
+// character is the field separator of the last MSH, BHS or FHS read (v2.5.1 sections
 // 2.10.3.1 and 2.15.2.1); otherwise it is a body line of the open message, on both batch parsers.
 
 import Foundation
@@ -70,5 +70,50 @@ struct BatchTrailerLineTests {
         var streaming = StreamingBatchParser()
         let letteredFed = try streaming.feed(Data(lettered.utf8))
         #expect(letteredFed.map(\.segments.count) == [1])
+    }
+
+    // C1: the envelope's separator may differ from its messages'. A trailer is read with the
+    // separator of the last MSH, BHS or FHS (v2.5.1 section 2.15.2.1: BHS-1 is defined as MSH-1).
+    static let envelopeHash = #"FHS#^~\&#A\rBHS#^~\&#A\rMSH|^~\&|APP|FAC|||20260101||ADT^A01^ADT_A01|C1|P|2.5.1\rPID|1\rBTS#99\rFTS#99\r"#
+    static let messageHash = #"FHS|^~\&|A\rBHS|^~\&|A\rMSH#^~\&#APP#FAC###20260101##ADT^A01^ADT_A01#C1#P#2.5.1\rPID#1\rBTS|1\rFTS|1\r"#
+    static let mixed: [(wire: String, bts: String, fts: String, last: String)] = [
+        (envelopeHash.replacingOccurrences(of: #"\r"#, with: "\r"), "BTS#99", "FTS#99", "PID|1\r"),
+        (messageHash.replacingOccurrences(of: #"\r"#, with: "\r"), "BTS|1", "FTS|1", "PID#1\r"),
+    ]
+
+    @Test("BatchParser reads a trailer by the envelope's separator, not only the last MSH's", arguments: mixed)
+    func batchParserMixedSeparators(_ row: (wire: String, bts: String, fts: String, last: String)) throws {
+        let file = try BatchParser().parse(row.wire)
+        #expect(file.batches.map(\.trailer) == [row.bts])
+        #expect(file.fileTrailer == row.fts)
+        let message = try #require(file.allMessages.first)
+        #expect(file.allMessages.count == 1)
+        #expect(message.segments.map(\.segmentID) == ["MSH", "PID"])
+        #expect(message.serialize().suffix(row.last.utf8.count) == Data(row.last.utf8))
+    }
+
+    @Test("BatchValidator counts against a trailer read by the envelope's separator")
+    func validatorMixedSeparators() throws {
+        let file = try BatchParser().parse(Self.mixed[0].wire)
+        let report = BatchValidator().validate(file)
+        let numbers = report.batchIssues.map(\.code.number)
+        #expect(numbers.filter { $0 == 2009 }.count == 2)
+        #expect(!numbers.contains(1014))
+        #expect(report.messageReports.allSatisfy { !$0.issues.map(\.code.number).contains(1014) })
+    }
+
+    @Test("StreamingBatchParser reads a trailer by the envelope's separator, at any chunk size",
+          arguments: [1, 2, 3, 7, 4096])
+    func streamingMixedSeparators(_ size: Int) throws {
+        for row in Self.mixed {
+            var parser = StreamingBatchParser()
+            var messages: [Message] = []
+            let bytes = Array(row.wire.utf8)
+            for start in stride(from: 0, to: bytes.count, by: size) {
+                messages += try parser.feed(Data(bytes[start..<min(start + size, bytes.count)]))
+            }
+            messages += try parser.finish()
+            #expect(messages.map { $0.segments.map(\.segmentID) } == [["MSH", "PID"]], "chunk \(size)")
+        }
     }
 }
