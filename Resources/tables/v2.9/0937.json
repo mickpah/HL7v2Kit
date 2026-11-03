@@ -1,0 +1,66 @@
+{
+  "table": "0937",
+  "version": "2.9",
+  "name": "Observation Sub-Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, Table 0937 - Observation Sub-Type",
+  "entries": [
+    {
+      "code": "AOE",
+      "description": "Ask at Order Entry"
+    },
+    {
+      "code": "ASC",
+      "description": "Ask at Specimen Collection"
+    },
+    {
+      "code": "MCS",
+      "description": "Micro Culture Status"
+    },
+    {
+      "code": "MID",
+      "description": "Micro Isolate Descriptor"
+    },
+    {
+      "code": "MIG",
+      "description": "Micro Isolate Growth Quantity"
+    },
+    {
+      "code": "MIN",
+      "description": "Micro Isolate Name"
+    },
+    {
+      "code": "MIR",
+      "description": "Micro Isolate Related"
+    },
+    {
+      "code": "MIRM",
+      "description": "Micro Isolate Related Modifier"
+    },
+    {
+      "code": "MNIR",
+      "description": "Micro Non-Isolate Related"
+    },
+    {
+      "code": "MOD",
+      "description": "Micro Other Descriptor"
+    },
+    {
+      "code": "MSS",
+      "description": "Micro Sample Stain"
+    },
+    {
+      "code": "SUP",
+      "description": "Supplemental Result"
+    },
+    {
+      "code": "SUR",
+      "description": "Susceptibility Related"
+    },
+    {
+      "code": "UNSP",
+      "description": "Unspecified"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0619",
+  "version": "2.9",
+  "name": "Collector's Comment * (OBR-39)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0619 - Collector's Comment * (OBR-39)",
+  "entries": []
+}

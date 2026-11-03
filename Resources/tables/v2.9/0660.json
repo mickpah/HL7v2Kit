@@ -1,0 +1,9 @@
+{
+  "table": "0660",
+  "version": "2.9",
+  "name": "Specimen (OM4-6)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0660 - Specimen (OM4-6)",
+  "entries": []
+}

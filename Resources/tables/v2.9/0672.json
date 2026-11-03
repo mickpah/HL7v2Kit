@@ -1,0 +1,9 @@
+{
+  "table": "0672",
+  "version": "2.9",
+  "name": "Indication For Product Use (PCR-10)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0672 - Indication For Product Use (PCR-10)",
+  "entries": []
+}

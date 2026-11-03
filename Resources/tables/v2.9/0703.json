@@ -1,0 +1,9 @@
+{
+  "table": "0703",
+  "version": "2.9",
+  "name": "Dispense Units (RXC-11)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0703 - Dispense Units (RXC-11)",
+  "entries": []
+}

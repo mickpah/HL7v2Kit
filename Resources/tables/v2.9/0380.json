@@ -1,0 +1,9 @@
+{
+  "table": "0380",
+  "version": "2.9",
+  "name": "Separator Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0380 - Separator Type",
+  "entries": []
+}

@@ -1,0 +1,65 @@
+// V29GrammarTests.swift
+// HL7 v2.9 through the ADR-015 pipeline. Each pin is a value the v2.9 text prints (ANSI December
+// 2019, technical correction of January 2021); the citation sits beside it.
+
+import Testing
+@testable import HL7v2Kit
+
+@Suite("v2.9 grammar")
+struct V29GrammarTests {
+    private var tables: [String: HL7Table] { HL7TableRegistry.v2_9 }
+
+    @Test("v2.9 tables: one per Table Metadata block of Chapter 2C")
+    func tableInventory() {
+        #expect(tables.count == 789)
+        #expect(tables.values.reduce(0) { $0 + $1.entries.count } == 5448)   // the extractor counts 5449: 0203 NNxxx is a pattern row
+        // Chapter 2C prints 0070 no longer; v2.8.2 had it.
+        #expect(tables["0070"] == nil)
+    }
+
+    @Test("Type HL7 is closed, User is user-defined, HL7-EXT and undefined never close")
+    func tableKinds() throws {
+        let valueType = try #require(tables["0125"])                 // 2C 0125, Type HL7
+        #expect(valueType.kind == .hl7)
+        #expect(!valueType.permitsLocalExtensions)
+        #expect(valueType.entries.contains { $0.code == "CD" })
+        let marital = try #require(tables["0002"])                   // 2C 0002, Type User
+        #expect(marital.kind == .userDefined)
+        let access = try #require(tables["0719"])                    // Appendix A index, HL7-EXT
+        #expect(access.kind == .hl7)
+        #expect(access.permitsLocalExtensions)
+        let provider = try #require(tables["0133"])                  // 2C 0133, Type undefined
+        #expect(provider.kind == .hl7)
+        #expect(provider.permitsLocalExtensions)
+    }
+
+    @Test("A table v2.9 moved to an outside code system prints no rows")
+    func externalisedTable() throws {
+        // 2C 0078 prints a code system OID and no Coded Content block.
+        #expect(try #require(tables["0078"]).entries.isEmpty)
+    }
+
+    @Test("A Value that looks like a heading is a code: Table 0005 prints 1002-5 to 2131-1")
+    func dashedCodes() throws {
+        let race = try #require(tables["0005"])                      // 2C 0005, footer page 37
+        #expect(race.entries.map(\.code) == ["1002-5", "2028-9", "2054-5", "2076-8", "2106-3", "2131-1"])
+    }
+
+    @Test("A Value the page wraps over two lines is one code")
+    func wrappedCodes() throws {
+        let adverse = try #require(tables["0514"])                   // 2C 0514, footer page 435
+        #expect(adverse.entries.contains { $0.code == "ACUTHEHTR" })
+        #expect(adverse.entries.contains { $0.code == "NONHTRREC" })
+        let coding = try #require(tables["0396"])                    // 2C 0396, footer pages 313 to 335
+        #expect(coding.entries.contains { $0.code == "CDCEDACUITY" })
+        #expect(coding.entries.contains { $0.code == "ALPHAID2006" })
+        #expect(!coding.entries.contains { $0.code == "UITY" })
+    }
+
+    @Test("Table 0104 prints 2.9 and stays open to a locally agreed version")
+    func versionId() throws {
+        let version = try #require(tables["0104"])                   // 2C 0104, footer page 75
+        #expect(version.entries.contains { $0.code == "2.9" })
+        #expect(version.permitsLocalExtensions)
+    }
+}

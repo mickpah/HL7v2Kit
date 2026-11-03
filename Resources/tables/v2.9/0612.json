@@ -1,0 +1,9 @@
+{
+  "table": "0612",
+  "version": "2.9",
+  "name": "Universal Service Identifier (OBR-4)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0612 - Universal Service Identifier (OBR-4)",
+  "entries": []
+}

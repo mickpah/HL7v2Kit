@@ -1,0 +1,82 @@
+{
+  "table": "0365",
+  "version": "2.9",
+  "name": "Equipment State",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0365 - Equipment State",
+  "entries": [
+    {
+      "code": "IN",
+      "description": "Initializing"
+    },
+    {
+      "code": "CO",
+      "description": "Configuring"
+    },
+    {
+      "code": "PU",
+      "description": "Powered Up"
+    },
+    {
+      "code": "RS",
+      "description": "Ready to start"
+    },
+    {
+      "code": "ID",
+      "description": "Idle"
+    },
+    {
+      "code": "OP",
+      "description": "Normal Operation"
+    },
+    {
+      "code": "CL",
+      "description": "Clearing"
+    },
+    {
+      "code": "PA",
+      "description": "Pausing"
+    },
+    {
+      "code": "PD",
+      "description": "Paused"
+    },
+    {
+      "code": "ES",
+      "description": "E-stopped"
+    },
+    {
+      "code": "TS",
+      "description": "Transport stopped"
+    },
+    {
+      "code": "SS",
+      "description": "Sampling stopped"
+    },
+    {
+      "code": "SD",
+      "description": "Shutting down"
+    },
+    {
+      "code": "DI",
+      "description": "Diagnose"
+    },
+    {
+      "code": "MA",
+      "description": "Maintenance"
+    },
+    {
+      "code": "FL",
+      "description": "Failure"
+    },
+    {
+      "code": "UNK",
+      "description": "Unknown"
+    },
+    {
+      "code": "LT",
+      "description": "Limited test menu"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "table": "0485",
+  "version": "2.9",
+  "name": "Extended Priority Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0485 - Extended Priority Codes, footer page 398",
+  "entries": [
+    {
+      "code": "S",
+      "description": "Stat"
+    },
+    {
+      "code": "A",
+      "description": "ASAP"
+    },
+    {
+      "code": "R",
+      "description": "Routine"
+    },
+    {
+      "code": "P",
+      "description": "Preop"
+    },
+    {
+      "code": "C",
+      "description": "Callback"
+    },
+    {
+      "code": "T",
+      "description": "Timing critical"
+    },
+    {
+      "code": "TS<integer>",
+      "description": "Timing critical within <integer> seconds."
+    },
+    {
+      "code": "TM<integer>",
+      "description": "Timing critical within <integer> minutes."
+    },
+    {
+      "code": "TH<integer>",
+      "description": "Timing critical within <integer> hours."
+    },
+    {
+      "code": "TD<integer>",
+      "description": "Timing critical within <integer> days."
+    },
+    {
+      "code": "TW<integer>",
+      "description": "Timing critical within <integer> weeks."
+    },
+    {
+      "code": "TL<integer>",
+      "description": "Timing critical within <integer> months."
+    },
+    {
+      "code": "PRN",
+      "description": "As needed"
+    }
+  ]
+}

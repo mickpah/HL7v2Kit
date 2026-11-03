@@ -1,0 +1,9 @@
+{
+  "table": "0671",
+  "version": "2.9",
+  "name": "Product Class (PCR-3)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0671 - Product Class (PCR-3)",
+  "entries": []
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0646",
+  "version": "2.9",
+  "name": "Replacement Producer's Service/Test/Observation ID (OM1-52)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0646 - Replacement Producer's Service/Test/Observation ID (OM1-52)",
+  "entries": []
+}

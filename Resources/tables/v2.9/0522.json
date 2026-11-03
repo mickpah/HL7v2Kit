@@ -1,0 +1,9 @@
+{
+  "table": "0522",
+  "version": "2.9",
+  "name": "Requested Discipline(s) (AUT-11)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0522 - Requested Discipline(s) (AUT-11)",
+  "entries": []
+}

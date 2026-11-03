@@ -1,0 +1,9 @@
+{
+  "table": "0784",
+  "version": "2.9",
+  "name": "Specimen Source Site (SPM-8)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0784 - Specimen Source Site (SPM-8)",
+  "entries": []
+}

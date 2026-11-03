@@ -1,0 +1,30 @@
+{
+  "table": "0942",
+  "version": "2.9",
+  "name": "Equipment State Indicator Type Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0942 - Equipment State Indicator Type Code",
+  "entries": [
+    {
+      "code": "TA",
+      "description": "Current test availability"
+    },
+    {
+      "code": "OB",
+      "description": "Output buffer current capacity"
+    },
+    {
+      "code": "IC",
+      "description": "Instrument current processing capacity"
+    },
+    {
+      "code": "IB",
+      "description": "Input buffer current capacity"
+    },
+    {
+      "code": "EB",
+      "description": "Emergency input buffer current capacity"
+    }
+  ]
+}

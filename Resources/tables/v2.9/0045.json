@@ -1,0 +1,9 @@
+{
+  "table": "0045",
+  "version": "2.9",
+  "name": "Courtesy Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0045 - Courtesy Code",
+  "entries": []
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0133",
+  "version": "2.9",
+  "name": "Procedure practitioner identifier code type",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0133 - Procedure practitioner identifier code type",
+  "entries": []
+}

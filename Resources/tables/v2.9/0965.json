@@ -1,0 +1,9 @@
+{
+  "table": "0965",
+  "version": "2.9",
+  "name": "Contract Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0965 - Contract Type",
+  "entries": []
+}

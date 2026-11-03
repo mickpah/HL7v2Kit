@@ -1,0 +1,9 @@
+{
+  "table": "0690",
+  "version": "2.9",
+  "name": "Administered Dosage Form (RXA-8)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0690 - Administered Dosage Form (RXA-8)",
+  "entries": []
+}

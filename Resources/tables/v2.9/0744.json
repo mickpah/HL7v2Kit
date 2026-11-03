@@ -1,0 +1,9 @@
+{
+  "table": "0744",
+  "version": "2.9",
+  "name": "Give Drug Strength Volume Units (RXG-24)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0744 - Give Drug Strength Volume Units (RXG-24)",
+  "entries": []
+}

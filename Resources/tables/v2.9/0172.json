@@ -1,0 +1,9 @@
+{
+  "table": "0172",
+  "version": "2.9",
+  "name": "Veterans Military Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0172 - Veterans Military Status",
+  "entries": []
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0414",
+  "version": "2.9",
+  "name": "Units of Time",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0414 - Units of Time",
+  "entries": []
+}

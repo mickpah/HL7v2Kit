@@ -1,0 +1,9 @@
+{
+  "table": "0448",
+  "version": "2.9",
+  "name": "Name Context",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0448 - Name Context",
+  "entries": []
+}

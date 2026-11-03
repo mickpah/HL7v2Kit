@@ -1,0 +1,9 @@
+{
+  "table": "0688",
+  "version": "2.9",
+  "name": "Deliver To ID (RQD-9)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0688 - Deliver To ID (RQD-9)",
+  "entries": []
+}

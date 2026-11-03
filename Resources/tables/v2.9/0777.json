@@ -1,0 +1,9 @@
+{
+  "table": "0777",
+  "version": "2.9",
+  "name": "Volume Units (SAC-24)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0777 - Volume Units (SAC-24)",
+  "entries": []
+}

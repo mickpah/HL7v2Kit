@@ -1,0 +1,9 @@
+{
+  "table": "0454",
+  "version": "2.9",
+  "name": "Health Care Provider Area of Specialization",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0454 - Health Care Provider Area of Specialization",
+  "entries": []
+}

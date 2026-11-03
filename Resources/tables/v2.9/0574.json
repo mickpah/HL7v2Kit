@@ -1,0 +1,9 @@
+{
+  "table": "0574",
+  "version": "2.9",
+  "name": "Encounter Type (AUT-21)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0574 - Encounter Type (AUT-21)",
+  "entries": []
+}

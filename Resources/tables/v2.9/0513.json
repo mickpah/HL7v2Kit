@@ -1,0 +1,38 @@
+{
+  "table": "0513",
+  "version": "2.9",
+  "name": "Blood Product Transfusion/Disposition Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0513 - Blood Product Transfusion/Disposition Status",
+  "entries": [
+    {
+      "code": "RA",
+      "description": "Returned unused and unlinked"
+    },
+    {
+      "code": "RL",
+      "description": "Returned unused but linked"
+    },
+    {
+      "code": "WA",
+      "description": "Wasted"
+    },
+    {
+      "code": "TI",
+      "description": "Transfusion Interrupted"
+    },
+    {
+      "code": "TR",
+      "description": "Transfusion Ended with Reactions"
+    },
+    {
+      "code": "TS",
+      "description": "Transfusion Started"
+    },
+    {
+      "code": "TX",
+      "description": "Transfusion Ended"
+    }
+  ]
+}

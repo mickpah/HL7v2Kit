@@ -1,0 +1,9 @@
+{
+  "table": "0342",
+  "version": "2.9",
+  "name": "Military Recipient",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0342 - Military Recipient",
+  "entries": []
+}

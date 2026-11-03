@@ -1,0 +1,9 @@
+{
+  "table": "0795",
+  "version": "2.9",
+  "name": "Implantation Status (DEV-17)",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0795 - Implantation Status (DEV-17)",
+  "entries": []
+}

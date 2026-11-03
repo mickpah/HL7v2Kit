@@ -1,0 +1,9 @@
+{
+  "table": "0592",
+  "version": "2.9",
+  "name": "Stratum for Study Randomization (CSR-13)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0592 - Stratum for Study Randomization (CSR-13)",
+  "entries": []
+}

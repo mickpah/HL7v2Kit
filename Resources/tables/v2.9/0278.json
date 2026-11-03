@@ -1,0 +1,58 @@
+{
+  "table": "0278",
+  "version": "2.9",
+  "name": "Filler status codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0278 - Filler status codes",
+  "entries": [
+    {
+      "code": "Pending",
+      "description": "Pending"
+    },
+    {
+      "code": "Waitlist",
+      "description": "Waitlist"
+    },
+    {
+      "code": "Booked",
+      "description": "Booked"
+    },
+    {
+      "code": "Started",
+      "description": "Started"
+    },
+    {
+      "code": "Complete",
+      "description": "Complete"
+    },
+    {
+      "code": "Cancelled",
+      "description": "Cancelled"
+    },
+    {
+      "code": "DC",
+      "description": "Discontinued"
+    },
+    {
+      "code": "Discontinued",
+      "description": "Discontinued"
+    },
+    {
+      "code": "Deleted",
+      "description": "Deleted"
+    },
+    {
+      "code": "Blocked",
+      "description": "Blocked"
+    },
+    {
+      "code": "Overbook",
+      "description": "Overbook"
+    },
+    {
+      "code": "Noshow",
+      "description": "Noshow"
+    }
+  ]
+}

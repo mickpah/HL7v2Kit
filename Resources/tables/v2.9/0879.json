@@ -1,0 +1,9 @@
+{
+  "table": "0879",
+  "version": "2.9",
+  "name": "Product/Service Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0879 - Product/Service Code",
+  "entries": []
+}

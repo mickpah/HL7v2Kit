@@ -1,0 +1,30 @@
+{
+  "table": "0180",
+  "version": "2.9",
+  "name": "Masterfile Action Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0180 - Masterfile Action Code",
+  "entries": [
+    {
+      "code": "MAD",
+      "description": "Add record to master file"
+    },
+    {
+      "code": "MDL",
+      "description": "Delete record from master file"
+    },
+    {
+      "code": "MUP",
+      "description": "Update record for master file"
+    },
+    {
+      "code": "MDC",
+      "description": "Deactivate: discontinue using record in master file, but do not delete from database"
+    },
+    {
+      "code": "MAC",
+      "description": "Reactivate deactivated record"
+    }
+  ]
+}

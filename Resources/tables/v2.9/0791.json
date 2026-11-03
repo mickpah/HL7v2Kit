@@ -1,0 +1,9 @@
+{
+  "table": "0791",
+  "version": "2.9",
+  "name": "Folder Assignment (TXA-24)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0791 - Folder Assignment (TXA-24)",
+  "entries": []
+}

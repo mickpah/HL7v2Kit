@@ -1,0 +1,9 @@
+{
+  "table": "0580",
+  "version": "2.9",
+  "name": "BC Special Testing (BPX-12)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0580 - BC Special Testing (BPX-12)",
+  "entries": []
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0293",
+  "version": "2.9",
+  "name": "Billing Category",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0293 - Billing Category",
+  "entries": []
+}

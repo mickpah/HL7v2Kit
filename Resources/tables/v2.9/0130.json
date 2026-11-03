@@ -1,0 +1,26 @@
+{
+  "table": "0130",
+  "version": "2.9",
+  "name": "Visit User Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0130 - Visit User Code",
+  "entries": [
+    {
+      "code": "TE",
+      "description": "Teaching"
+    },
+    {
+      "code": "HO",
+      "description": "Home"
+    },
+    {
+      "code": "MO",
+      "description": "Mobile Unit"
+    },
+    {
+      "code": "PH",
+      "description": "Phone"
+    }
+  ]
+}

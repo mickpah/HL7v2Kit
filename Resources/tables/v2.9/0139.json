@@ -1,0 +1,9 @@
+{
+  "table": "0139",
+  "version": "2.9",
+  "name": "Employer Information Data",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0139 - Employer Information Data",
+  "entries": []
+}

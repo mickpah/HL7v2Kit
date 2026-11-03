@@ -1,0 +1,18 @@
+{
+  "table": "0415",
+  "version": "2.9",
+  "name": "Transfer Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0415 - Transfer Type",
+  "entries": [
+    {
+      "code": "N",
+      "description": "DRG Non Exempt"
+    },
+    {
+      "code": "E",
+      "description": "DRG Exempt"
+    }
+  ]
+}

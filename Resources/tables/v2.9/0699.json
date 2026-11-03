@@ -1,0 +1,9 @@
+{
+  "table": "0699",
+  "version": "2.9",
+  "name": "Component Strength Units (RXC-6)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0699 - Component Strength Units (RXC-6)",
+  "entries": []
+}

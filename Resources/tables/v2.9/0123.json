@@ -1,0 +1,62 @@
+{
+  "table": "0123",
+  "version": "2.9",
+  "name": "Result Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0123 - Result Status",
+  "entries": [
+    {
+      "code": "O",
+      "description": "Order received; specimen not yet received"
+    },
+    {
+      "code": "I",
+      "description": "No results available; specimen received, procedure incomplete"
+    },
+    {
+      "code": "S",
+      "description": "No results available; procedure scheduled, but not done"
+    },
+    {
+      "code": "A",
+      "description": "Some, but not all, results available"
+    },
+    {
+      "code": "P",
+      "description": "Preliminary"
+    },
+    {
+      "code": "C",
+      "description": "Corrected, final"
+    },
+    {
+      "code": "R",
+      "description": "Results stored; not yet verified"
+    },
+    {
+      "code": "F",
+      "description": "Final results"
+    },
+    {
+      "code": "X",
+      "description": "No results available; Order canceled"
+    },
+    {
+      "code": "Y",
+      "description": "No order on record for this test"
+    },
+    {
+      "code": "Z",
+      "description": "No record of this patient"
+    },
+    {
+      "code": "M",
+      "description": "Corrected, not final"
+    },
+    {
+      "code": "N",
+      "description": "Procedure completed, No result available; requested results pending"
+    }
+  ]
+}

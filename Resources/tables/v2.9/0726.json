@@ -1,0 +1,9 @@
+{
+  "table": "0726",
+  "version": "2.9",
+  "name": "Dispense Package Size Unit (RXE-29)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0726 - Dispense Package Size Unit (RXE-29)",
+  "entries": []
+}

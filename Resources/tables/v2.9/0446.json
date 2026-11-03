@@ -1,0 +1,9 @@
+{
+  "table": "0446",
+  "version": "2.9",
+  "name": "Species Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0446 - Species Code",
+  "entries": []
+}

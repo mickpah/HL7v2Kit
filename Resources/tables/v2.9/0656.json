@@ -1,0 +1,9 @@
+{
+  "table": "0656",
+  "version": "2.9",
+  "name": "Critical Text/Codes for Categorical Observations (OM3-6)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0656 - Critical Text/Codes for Categorical Observations (OM3-6)",
+  "entries": []
+}

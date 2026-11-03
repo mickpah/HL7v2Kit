@@ -1,0 +1,9 @@
+{
+  "table": "0678",
+  "version": "2.9",
+  "name": "Event Identifiers Used (PEO-1)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0678 - Event Identifiers Used (PEO-1)",
+  "entries": []
+}

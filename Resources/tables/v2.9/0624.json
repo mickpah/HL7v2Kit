@@ -1,0 +1,9 @@
+{
+  "table": "0624",
+  "version": "2.9",
+  "name": "Producer's ID (OBX-15)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0624 - Producer's ID (OBX-15)",
+  "entries": []
+}

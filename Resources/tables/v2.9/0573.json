@@ -1,0 +1,9 @@
+{
+  "table": "0573",
+  "version": "2.9",
+  "name": "Clinical Service (AUT-16)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0573 - Clinical Service (AUT-16)",
+  "entries": []
+}

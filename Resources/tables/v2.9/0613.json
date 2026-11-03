@@ -1,0 +1,9 @@
+{
+  "table": "0613",
+  "version": "2.9",
+  "name": "Danger Code (OBR-12)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0613 - Danger Code (OBR-12)",
+  "entries": []
+}

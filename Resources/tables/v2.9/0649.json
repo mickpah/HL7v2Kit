@@ -1,0 +1,9 @@
+{
+  "table": "0649",
+  "version": "2.9",
+  "name": "Corresponding SI Units of Measure (OM2-4)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0649 - Corresponding SI Units of Measure (OM2-4)",
+  "entries": []
+}

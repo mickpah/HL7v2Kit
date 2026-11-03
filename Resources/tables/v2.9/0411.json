@@ -1,0 +1,18 @@
+{
+  "table": "0411",
+  "version": "2.9",
+  "name": "Supplemental Service Information Values",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0411 - Supplemental Service Information Values",
+  "entries": [
+    {
+      "code": "NDBS",
+      "description": "Observation of type Newborn Dried Blood Screening (NDBS)"
+    },
+    {
+      "code": "CG",
+      "description": "Observation of type Clinical Genomics (CG)"
+    }
+  ]
+}

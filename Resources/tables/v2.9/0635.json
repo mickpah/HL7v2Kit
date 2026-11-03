@@ -1,0 +1,9 @@
+{
+  "table": "0635",
+  "version": "2.9",
+  "name": "Coded Representation of Method (OM1-14)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0635 - Coded Representation of Method (OM1-14)",
+  "entries": []
+}

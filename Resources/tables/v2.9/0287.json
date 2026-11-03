@@ -1,0 +1,42 @@
+{
+  "table": "0287",
+  "version": "2.9",
+  "name": "Problem/Goal Action Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0287 - Problem/Goal Action Code",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "ADD"
+    },
+    {
+      "code": "CO",
+      "description": "CORRECT"
+    },
+    {
+      "code": "DE",
+      "description": "DELETE"
+    },
+    {
+      "code": "LI",
+      "description": "LINK"
+    },
+    {
+      "code": "SP",
+      "description": "Used in Snapshot mode"
+    },
+    {
+      "code": "UC",
+      "description": "UNCHANGED"
+    },
+    {
+      "code": "UN",
+      "description": "UNLINK"
+    },
+    {
+      "code": "UP",
+      "description": "UPDATE"
+    }
+  ]
+}

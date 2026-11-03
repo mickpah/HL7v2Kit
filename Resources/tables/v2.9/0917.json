@@ -1,0 +1,18 @@
+{
+  "table": "0917",
+  "version": "2.9",
+  "name": "Bolus Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0917 - Bolus Type",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Supplemental"
+    },
+    {
+      "code": "L",
+      "description": "Loading"
+    }
+  ]
+}

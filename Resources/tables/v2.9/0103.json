@@ -1,0 +1,30 @@
+{
+  "table": "0103",
+  "version": "2.9",
+  "name": "Processing ID",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0103 - Processing ID",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Debugging"
+    },
+    {
+      "code": "P",
+      "description": "Production"
+    },
+    {
+      "code": "T",
+      "description": "Training"
+    },
+    {
+      "code": "N",
+      "description": "Non-Production Testing"
+    },
+    {
+      "code": "V",
+      "description": "Validation"
+    }
+  ]
+}

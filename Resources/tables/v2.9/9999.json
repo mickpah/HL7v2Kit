@@ -1,0 +1,9 @@
+{
+  "table": "9999",
+  "version": "2.9",
+  "name": "Placeholder Table Representation",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 9999 - Placeholder Table Representation",
+  "entries": []
+}
