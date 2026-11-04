@@ -1,0 +1,64 @@
+{
+  "structure": "ADT_A03",
+  "version": "2.9",
+  "citation": "HL7 v2.9 Chapter 3, section 3.3.3 ADT/ACK - Discharge/End Visit (Event A03), pp 9 to 11.",
+  "triggers": ["ADT^A03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "OH1", "min": 0, "max": null },
+    { "segment": "OH2", "min": 0, "max": null },
+    { "segment": "OH3", "min": 0, "max": 1 },
+    { "segment": "OH4", "min": 0, "max": null },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "segment": "ROL", "min": 0, "max": null },
+    { "segment": "PRT", "min": 0, "max": null },
+    { "group": "NEXT_OF_KIN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "NK1", "min": 1, "max": 1 },
+      { "segment": "OH2", "min": 0, "max": null },
+      { "segment": "OH3", "min": 0, "max": 1 }
+    ]},
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "segment": "ROL", "min": 0, "max": null },
+    { "segment": "PRT", "min": 0, "max": null },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "segment": "IAM", "min": 0, "max": null },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": 1 },
+    { "group": "PROCEDURE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "PR1", "min": 1, "max": 1 },
+      { "segment": "ROL", "min": 0, "max": null },
+      { "segment": "PRT", "min": 0, "max": null }
+    ]},
+    { "group": "OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "OBX", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null }
+    ]},
+    { "segment": "GT1", "min": 0, "max": null },
+    { "group": "INSURANCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "IN1", "min": 1, "max": 1 },
+      { "segment": "IN2", "min": 0, "max": 1 },
+      { "segment": "IN3", "min": 0, "max": null },
+      { "segment": "ROL", "min": 0, "max": null },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "group": "AUTHORIZATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "AUT", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "group": "REFERRAL", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "RF1", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "ACC", "min": 0, "max": 1 },
+    { "segment": "PDA", "min": 0, "max": 1 }
+  ]
+}

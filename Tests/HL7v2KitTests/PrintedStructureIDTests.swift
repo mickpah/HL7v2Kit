@@ -88,13 +88,14 @@ struct PrintedStructureIDTests {
     // v2.3.1, v2.4 and v2.7.1; since S3-3 PPG_PCG is modelled (open slot) and takes PCC among
     // its triggers from the table, so PPG^PCC^PPG_PCG is matched: no mismatch, no information.
     @Test("PPG^PCC^PPG_PCG is matched against PPG_PCG wherever Table 0354 lists PCC under it",
-          arguments: ["2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
+          arguments: ["2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"])
     func goalPathwayPCC(_ version: String) throws {
         let grammar = try #require(Version(rawValue: version))
         let structure = try #require(MessageStructureTable.structure("PPG_PCG", version: grammar))
         #expect(structure.triggers.contains("PPG^PCC"), "v\(version)")
-        #expect(try structureIssues("PPG^PCC^PPG_PCG", version: version, ["PID|1", "PTH|1"]).isEmpty, "v\(version)")
-        let issues = try structureIssues("PPG^PCC^PPG_PCG", version: version, ["PID|1"])
+        let head = version == "2.9" ? ["PID|1", "PRD|1"] : ["PID|1"]     // v2.9 CH12 12.3.4 adds a required PROVIDER group
+        #expect(try structureIssues("PPG^PCC^PPG_PCG", version: version, head + ["PTH|1"]).isEmpty, "v\(version)")
+        let issues = try structureIssues("PPG^PCC^PPG_PCG", version: version, head)
         #expect(issues.map(\.code) == [.messageStructureSegmentMissing(structure: "PPG_PCG", segmentID: "PTH", group: "PATHWAY")],
                 "v\(version): \(issues.map(\.message))")
     }
@@ -143,7 +144,16 @@ struct PrintedStructureIDTests {
     @Test("A query profile's printed ID is information naming the caption's structure",
           arguments: [("QBP^Q33^QBP_Q33", "2.8.2", "QBP_Q33", "QBP_O33"), ("RSP^K33^RSP_K33", "2.8.2", "RSP_K33", "RSP_O33"),
                       ("QBP^Q34^QBP_Q34", "2.8.2", "QBP_Q34", "QBP_O34"), ("RSP^K34^RSP_K34", "2.8.2", "RSP_K34", "RSP_O34"),
-                      ("RSP^K32^RSP_K25", "2.7.1", "RSP_K25", "RSP_K32"), ("RSP^K32^RSP_K25", "2.8.2", "RSP_K25", "RSP_K32")])
+                      ("RSP^K32^RSP_K25", "2.7.1", "RSP_K25", "RSP_K32"), ("RSP^K32^RSP_K25", "2.8.2", "RSP_K25", "RSP_K32"),
+                      // v2.9 CH04 4.16.6 p 163, 4.16.8 p 165, CH03 3.3.63 p 103.
+                      ("QBP^Q33^QBP_Q33", "2.9", "QBP_Q33", "QBP_O33"), ("RSP^K33^RSP_K33", "2.9", "RSP_K33", "RSP_O33"),
+                      ("QBP^Q34^QBP_Q34", "2.9", "QBP_Q34", "QBP_O34"), ("RSP^K34^RSP_K34", "2.9", "RSP_K34", "RSP_O34"),
+                      ("RSP^K32^RSP_K25", "2.9", "RSP_K25", "RSP_K32"),
+                      // v2.9 Acknowledgment Choreography cells: CH03 3.3.59 p 97, CH04A 4A.3.16 p 25,
+                      // CH16 16.3.12 p 27, CH03 3.3.37 p 65, CH10 10.3 p 15.
+                      ("RSP^K24^RSP_K24", "2.9", "RSP_K24", "RSP_K23"), ("RRE^O26^RRE_O26", "2.9", "RRE_O26", "RRE_O12"),
+                      ("RSP^E22^RSP_E03", "2.9", "RSP_E03", "RSP_E22"), ("ADT^A37^ACK", "2.9", "ACK", "ACK^A37^ACK"),
+                      ("ACK^S01^SRR_S01", "2.9", "SRR_S01", "SRR^S01")])
     func queryProfileID(_ c: (String, String, String, String)) throws {
         let issues = try structureIssues(c.0, version: c.1)
         #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: c.2)], "\(c.0) v\(c.1): \(issues.map(\.message))")
@@ -153,16 +163,23 @@ struct PrintedStructureIDTests {
 
     @Test("The printed pair is information for that trigger only; the modelled structures still resolve",
           arguments: [("RSP^K25^RSP_K25", "2.8.2", "RSP_K25"), ("RSP^K32^RSP_K32", "2.8.2", "RSP_K32"),
-                      ("RSP^K32", "2.7.1", "RSP_K32"), ("QBP^Q33^QBP_O33", "2.8.2", "QBP_O33")])
+                      ("RSP^K32", "2.7.1", "RSP_K32"), ("QBP^Q33^QBP_O33", "2.8.2", "QBP_O33"),
+                      ("RSP^K25^RSP_K25", "2.9", "RSP_K25"), ("RSP^K32^RSP_K32", "2.9", "RSP_K32"),
+                      ("QBP^Q33^QBP_O33", "2.9", "QBP_O33"),
+                      ("RSP^K24^RSP_K23", "2.9", "RSP_K23"), ("RRE^O26^RRE_O12", "2.9", "RRE_O12"),
+                      ("RSP^E22^RSP_E22", "2.9", "RSP_E22"), ("ADT^A37^ADT_A37", "2.9", "ADT_A37"),
+                      ("ACK^A37^ACK", "2.9", "ACK"), ("SRR^S01^SRR_S01", "2.9", "SRR_S01")])
     func queryProfileOthers(_ c: (String, String, String)) throws {
         #expect(try resolved(c.0, version: c.1) == c.2, "\(c.0) v\(c.1)")
     }
 
     // M4: v2.7.1 CH02C 2.C.2.175 (p 104) and v2.8.2 CH02C 2.C.2.279 (p 152) print the row
-    // 'ORM_O01  O01  Deprecated'; a bare ORM^O01 resolves to that registration and its reason.
+    // 'ORM_O01  O01  Deprecated', as v2.9 CH02C Table 0354 (p 270); a bare ORM^O01 resolves to
+    // that registration and its reason.
     @Test("A bare trigger of a Deprecated Table 0354 row gets the Deprecated reason (M4)",
           arguments: [("ORM^O01", "2.7.1", "ORM_O01"), ("ORM^O01", "2.8.2", "ORM_O01"),
-                      ("VXQ^V01", "2.7.1", "VXQ_V01"), ("RSP^Q11", "2.8.2", "RSP_Q11")])
+                      ("VXQ^V01", "2.7.1", "VXQ_V01"), ("RSP^Q11", "2.8.2", "RSP_Q11"),
+                      ("ORM^O01", "2.9", "ORM_O01"), ("ORL^O41", "2.9", "ORL_O41")])
     func deprecatedRow(_ c: (String, String, String)) throws {
         let issues = try structureIssues(c.0, version: c.1)
         #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: c.0)], "\(c.0) v\(c.1): \(issues.map(\.message))")

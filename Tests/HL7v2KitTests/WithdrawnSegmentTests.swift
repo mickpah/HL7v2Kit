@@ -119,7 +119,8 @@ struct WithdrawnSegmentTests {
     }
 
     @Test("A withdrawn segment draws one information issue and no segmentNotInVersionGrammar",
-          arguments: [("2.7.1", "QRD"), ("2.7.1", "QRF"), ("2.7", "QRD"), ("2.7.1", "URD"), ("2.8.2", "URS"), ("2.8", "URD")])
+          arguments: [("2.7.1", "QRD"), ("2.7.1", "QRF"), ("2.7", "QRD"), ("2.7.1", "URD"), ("2.8.2", "URS"), ("2.8", "URD"),
+                      ("2.9", "QRD"), ("2.9", "QRF"), ("2.9", "URD"), ("2.9", "URS")])
     func fieldLevel(_ version: String, _ segment: String) throws {
         let all = try issues("QRY^PC4^QRY_PC4", ["\(segment)|1"], version: version)
         #expect(!all.contains { $0.code == .segmentNotInVersionGrammar }, "\(all.map(\.message))")
@@ -137,16 +138,26 @@ struct WithdrawnSegmentTests {
         #expect(findings.contains("unexpected QRD"), "\(findings)")
     }
 
-    @Test("The withdrawn list is QRD, QRF, URD and URS on v2.7.1 and v2.8.2 only, each defined by v2.6")
+    // v2.9 Appendix A (A.4, pp A-10 and A-11) prints 'QRD (added by default)', 'QRF (added by default)',
+    // 'URD withdrawn' and 'URS withdrawn'.
+    static func printed(_ id: String, _ version: Version) -> String {
+        switch version {
+        case .v2_7_1: return "withdrawn"
+        case .v2_9: return ["QRD", "QRF"].contains(id) ? "added by default" : "withdrawn"
+        default: return "deprecated"
+        }
+    }
+
+    @Test("The withdrawn list is QRD, QRF, URD and URS on v2.7.1, v2.8.2 and v2.9 only, each defined by v2.6")
     func withdrawnList() {
         for version in Version.allCases where version.grammarVersion == version {
             let listed = MessageStructureTable.withdrawnSegments(for: version)
-            let expected: Set<String> = [.v2_7_1, .v2_8_2].contains(version) ? ["QRD", "QRF", "URD", "URS"] : []
+            let expected: Set<String> = [.v2_7_1, .v2_8_2, .v2_9].contains(version) ? ["QRD", "QRF", "URD", "URS"] : []
             #expect(Set(listed.keys) == expected, "v\(version.rawValue)")
             for (id, entry) in listed {
                 #expect(Validator.grammarTable(for: version)[id] == nil && Validator.grammarTable(for: .v2_6)[id] != nil)
                 #expect(entry.definedThrough == "2.6" && entry.citation.contains("Appendix A"))
-                #expect(entry.printed == (version == .v2_7_1 ? "withdrawn" : "deprecated"))
+                #expect(entry.printed == Self.printed(id, version))
             }
         }
     }

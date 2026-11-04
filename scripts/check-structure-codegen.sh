@@ -183,8 +183,8 @@ d = load('v2.5.1/ADT_A01.json'); d['triggers'][0] = 'ADT-A01'; save('v2.5.1/ADT_
 reject "version not matching the directory" 'do not match the path' "$PRE
 d = load('v2.5.1/ACK.json'); d['version'] = '2.6'; save('v2.5.1/ACK.json', d)"
 
-reject "completeness entry for an unmodelled version" 'not modelled ["2.9"]' "$PRE
-d = load('completeness.json'); d['versions']['2.9'] = {'complete': False, 'citation': 'x'}; save('completeness.json', d)"
+reject "completeness entry for an unmodelled version" 'not modelled ["9.9"]' "$PRE
+d = load('completeness.json'); d['versions']['9.9'] = {'complete': False, 'citation': 'x'}; save('completeness.json', d)"
 
 reject "completeness missing a modelled version" 'missing ["2.6"]' "$PRE
 d = load('completeness.json'); del d['versions']['2.6']; save('completeness.json', d)"
@@ -211,8 +211,8 @@ save('versions.json', {'versions': {}})"
 reject "stray directory under Resources/structures" 'unexpected entry' "$PRE
 os.mkdir(os.path.join(S, 'drafts'))"
 
-reject "structure directory for an unlisted version" 'unlisted versions ["2.9"]' "$PRE
-os.mkdir(os.path.join(S, 'v2.9'))"
+reject "structure directory for an unlisted version" 'unlisted versions ["9.9"]' "$PRE
+os.mkdir(os.path.join(S, 'v9.9'))"
 
 # P8b-2a: the extractor's overrides.json and the G9 profiles directory are allowed, and only
 # in that form. The codegen reads its sharedTriggers, (P8b-18, for profile names) groupNames and

@@ -222,8 +222,8 @@ func misprintedTableIDs(in root: URL) throws -> [String: Set<String>] {
 }
 
 /// One overrides.json `withdrawnSegments` entry (ADR-019 S2-1 amendment): a
-/// segment the version's Appendix A lists as withdrawn or deprecated with no
-/// definition, which a structure of the version may name.
+/// segment the version's Appendix A lists as withdrawn, deprecated or added by
+/// default, with no definition, which a structure of the version may name.
 struct WithdrawnSegmentEntry {
     let printed: String
     let definedThrough: String
@@ -233,7 +233,8 @@ struct WithdrawnSegmentEntry {
 /// The overrides.json `withdrawnSegments` entries as version to segment ID to
 /// entry, checked against `grammar` (version to the segment IDs its schemas
 /// define): the keys are exactly version, segment, printed, definedThrough
-/// and citation; printed is "withdrawn" or "deprecated"; the citation is one
+/// and citation; printed is "withdrawn", "deprecated" or (v2.9 Appendix A's
+/// QRD and QRF) "added by default"; the citation is one
 /// line naming Appendix A; the version's grammar does not define the segment
 /// and an earlier version's (`definedThrough`) does; no segment is listed
 /// twice for a version. An absent file or key lists none.
@@ -252,7 +253,7 @@ func withdrawnSegments(in root: URL, grammar: [String: Set<String>]) throws -> [
         }
         let label = "withdrawnSegments \(version) \(segment)"
         guard segment.range(of: "^[A-Z][A-Z0-9]{2}$", options: .regularExpression) != nil,
-              ["withdrawn", "deprecated"].contains(printed) else {
+              ["withdrawn", "deprecated", "added by default"].contains(printed) else {
             throw StructureSchemaError(description: "\(label): bad segment ID or printed status \"\(printed)\"")
         }
         guard citation.contains("Appendix A"), !citation.contains(where: \.isNewline) else {
@@ -369,8 +370,8 @@ func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [St
         }
 
         /// The segments `version`'s grammar version lists in Appendix A as
-        /// withdrawn or deprecated with no definition, that its structures may
-        /// name (overrides.json withdrawnSegments, ADR-019 S2-1), keyed by ID.
+        /// withdrawn, deprecated or added by default, with no definition, that its
+        /// structures may name (overrides.json withdrawnSegments, ADR-019 S2-1), keyed by ID.
         static func generatedWithdrawnSegments(for version: Version) -> [String: WithdrawnSegment] {
             switch version.grammarVersion {
     \(withdrawnCases.isEmpty ? "" : withdrawnCases + "\n")        default: return [:]

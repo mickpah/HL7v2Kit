@@ -11,7 +11,7 @@ extension MessageStructureTable {
     //   2.6 (complete): P8b-10: 190 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints; RSP_K21 as the union of its two incomparable prints, overrides.json unionPrints, P8b-11; QRY_Q02 and QCK_Q02 from the one-space direction captions of CH05 section 5.10.3.1, p 96, P8b-13 fix round 1); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 3 Table 0354 rows with no printed syntax (ORU_W01, QRF_W02, RSP_Q11) are registered as not modelled below; P8b-18 classed them by the print: MFR_M01 and MFN_M03 are a capability gap (CH08 gives the staff MFR body in a prose fragment and MFN^M03's segments by an MFI-1-keyed reference to MFN^M08 to M12), and ORU_W01's reason says the CH07 examples send ORU^W01^ORU_R01 against the table; P8b-final (ruling F-I1) folds ORU^W01 onto ORU_R01 through overrides.json referencedTriggers (register section E, v2.6 not-modelled table). S3-3 (v3.15.0): 198 structures, 12 registered; PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5 and PTR_PCF are modelled with the open order-detail slot (ADR-019 S3-1 and S3-3 amendments). S4 (v3.15.0): 199 structures, 11 registered; MFN_M03 is modelled with a choice keyed by MFI-1 (overrides.json keyedChoices, ADR-019 S4). S5 (v3.15.0): 200 structures, 10 registered; MFR_M01 is modelled from hand transcriptions of the CH08 prose fragments, keyed by MFI-1, OMA to OME not mapped (8.8.2 gives no MFR fragment) (overrides.json proseFragments, ADR-019 S5; syntaxSource prose).
     //   2.7.1 (complete): P8b-16: 164 structures extracted from the v2.7.1 chapter prints (ACK from its looser print, overrides.json primaryPrints), 169 since S2-2 modelled UDM_Q05 (URD and URS) and QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and QRF), which print segments v2.7.1 lists as withdrawn and does not define (overrides.json withdrawnSegments; P8b-final had classed them Blocking, ruling F-I2), every Table 0354 v2.7.1 row modelled or registered; the 13 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF and templates QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11), RDR_RDR (no normative print) and the 39 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below; P8b-final recorded the CH03 3.3.63 query profile's RSP^K32^RSP_K25 as a printed pair (ruling F-I1), so it is information, not a mismatch (register section E, v2.7.1 not-modelled table). S3-3 (v3.15.0): 177 structures, 45 registered; PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5 and PTR_PCF are modelled with the open order-detail slot (ADR-019 S3-1 and S3-3 amendments).
     //   2.8.2 (complete): P8b-11: 185 structures extracted from the v2.8.2 chapter prints (ACK from its looser print, overrides.json primaryPrints), 186 since S2-2 modelled UDM_Q05 (URD and URS, which v2.8.2 lists as deprecated and does not define; overrides.json withdrawnSegments; P8b-final had classed it Blocking, ruling F-I2), every Table 0354 v2.8.2 row modelled or registered; the 8 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1 and templates QBP_Q11, QBP_Q15, QVR_Q17, RSP_K11), QBP_Q13 (CH05 5.4.2 refers to 5.3.1.2, a query profile example; a template ID), RDR_RDR (no normative print) and the 47 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below, with (P8b-final, ruling F-I1) the four IDs the CH04 4.16.6 and 4.16.8 query profiles print where the captions give QBP_O33, RSP_O33, QBP_O34 and RSP_O34 (QBP_Q33, RSP_K33, QBP_Q34, RSP_K34), 61 in all, and the CH03 3.2.63 profile's RSP^K32^RSP_K25 recorded as a printed pair (register section E, v2.8.2 not-modelled table). S3-3 (v3.15.0): 190 structures, 57 registered; PGL_PC6, PPG_PCG, PPP_PCB and PPR_PC1 are modelled with the open order-detail slot (ADR-019 S3-1 and S3-3 amendments).
-    //   2.9 (incomplete): v2.9 structures are not modelled yet.
+    //   2.9 (complete): v2.9-T6: 196 structures, 74 registered; extracted from the v2.9 chapter prints (the December 2019 chapters with the technical correction of January 2021), every Table 0354 v2.9 row modelled or registered. Registered: the 54 rows the printed table marks Deprecated with no printed syntax; templates QBP_Q11, QBP_Q15, QVR_Q17 and RSP_K11 (G6 placeholders) and QBP_Q13 (CH05 5.4.2 refers to a query profile example); RDR_RDR and UDM_Q05 (withdrawn, no print); the six SET rows (Status N, no print, no event); the query profile IDs QBP_Q33, RSP_K33, QBP_Q34 and RSP_K34; the IDs CH03 and CH04A print only in Acknowledgment Choreography cells, RSP_K24 and RRE_O26; and the misprint INV_U14. ACK folds onto CH02 2.13.1 (overrides.json triggerFolds). PGL_PC6, PPG_PCG, PPP_PCB and PPR_PC1 are modelled with the open order-detail slot (ADR-019 S3-1 and S3-3 amendments). Printed pairs: CH03 3.3.63's RSP^K32^RSP_K25, and from Acknowledgment Choreography cells RSP^E22^RSP_E03 (CH16 p 27), ADT^A37^ACK (CH03 p 65) and ACK^S01 to ACK^S11 under SRR_S01 (CH10 p 15).
 
     /// Every modelled structure of `version`'s grammar version, keyed by
     /// ID. A version with no structures modelled returns an empty table.
@@ -24,7 +24,7 @@ extension MessageStructureTable {
         case .v2_6:   return v2_6
         case .v2_7_1: return v2_7_1
         case .v2_8_2: return v2_8_2
-        case .v2_9:   return [:]
+        case .v2_9:   return v2_9
         // Only a grammar version missing from completeness.json reaches
         // here, and the codegen rejects that: not modelled.
         default: return [:]
@@ -33,7 +33,7 @@ extension MessageStructureTable {
 
     /// The grammar versions whose every printed structure is modelled
     /// or registered as not modelled.
-    static let completeVersions: Set<Version> = [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2]
+    static let completeVersions: Set<Version> = [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2, .v2_9]
 
     /// The structures `version`'s grammar version prints, or its Table
     /// 0354 lists, that are registered as not modelled (register section
@@ -610,6 +610,231 @@ extension MessageStructureTable {
                     triggers: ["VXX^V02"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXX_V02 (events: V02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
             ]
+        case .v2_9:
+            return [
+                "ADR_A19": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 267) lists ADR_A19 (events: none listed), and the printed table's Comment column marks it 'Deprecated and removed as of V2.7'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ADT_A18": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 267) lists ADT_A18 (events: none listed), and the printed table's Comment column marks it 'Deprecated and removed as of V2.7'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ADT_A30": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 267) lists ADT_A30 (events: none listed), and the printed table's Comment column marks it 'Deprecated and removed as of V2.7'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "DOC_T12": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 268) lists DOC_T12 (events: none listed), and the printed table's Comment column marks it 'Deprecated and removed as of V2.7'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "INV_U14": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 268) prints the row 'INV_U14  Events U14', a misprint of INR_U14 (overrides.json table-0354 erratum: Table 0003, p 35, gives U14 to INR/ACK, Table 0076 lists no message type INV, and Chapter 13 section 13.3.14, p 30, prints INR^U14^INR_U14); INR_U14 is modelled and matched under its corrected ID; a message that copies the printed ID INV_U14 is not structure-checked under it (P8b-final ruling F-I1: a structure ID the version's print gives is never a mismatch). Permanent (misprinted ID): no print gives INV_U14 a syntax (register section E, v2.9 not-modelled table)"),
+                "MFN_M01": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 268) lists MFN_M01 (events: none listed), and the printed table's Comment column marks it 'Deprecated and removed as of V2.7'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "MFN_M03": NotModelledStructure(
+                    triggers: ["MFN^M03"],
+                    reason: "Table 0354 v2.9 (CH02C, p 268) lists MFN_M03 (events: M03), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "MFQ_M01": NotModelledStructure(
+                    triggers: ["MFQ^M01", "MFQ^M02", "MFQ^M03", "MFQ^M04", "MFQ^M05", "MFQ^M06"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists MFQ_M01 (events: M01, M02, M03, M04, M05, M06), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "MFR_M01": NotModelledStructure(
+                    triggers: ["MFR^M01", "MFR^M02", "MFR^M03"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists MFR_M01 (events: M01, M02, M03), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "MFR_M04": NotModelledStructure(
+                    triggers: ["MFR^M04"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists MFR_M04 (events: M04), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "MFR_M05": NotModelledStructure(
+                    triggers: ["MFR^M05"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists MFR_M05 (events: M05), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "MFR_M06": NotModelledStructure(
+                    triggers: ["MFR^M06"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists MFR_M06 (events: M06), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "MFR_M07": NotModelledStructure(
+                    triggers: ["MFR^M07"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists MFR_M07 (events: M07), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "NMQ_N01": NotModelledStructure(
+                    triggers: ["NMQ^N01"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists NMQ_N01 (events: N01), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "NMR_N01": NotModelledStructure(
+                    triggers: ["NMR^N01"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists NMR_N01 (events: N01), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "OMQ_O42": NotModelledStructure(
+                    triggers: ["OMQ^O42"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists OMQ_O42 (events: O42), and the printed table's Comment column marks it 'Deprecated; was added erroneously in 2016'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORF_R04": NotModelledStructure(
+                    triggers: ["ORF^R04"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists ORF_R04 (events: R04), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORL_O41": NotModelledStructure(
+                    triggers: ["ORL^O41"],
+                    reason: "Table 0354 v2.9 (CH02C, p 269) lists ORL_O41 (events: O41), and the printed table's Comment column marks it 'Deprecated; was added erroneously in 2016'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORL_O42": NotModelledStructure(
+                    triggers: ["ORL^O42"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists ORL_O42 (events: O42), and the printed table's Comment column marks it 'Deprecated; was added erroneously in 2016'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORL_O43": NotModelledStructure(
+                    triggers: ["ORL^O43"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists ORL_O43 (events: O43), and the printed table's Comment column marks it 'Deprecated; was added erroneously in 2016'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORL_O44": NotModelledStructure(
+                    triggers: ["ORL^O44"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists ORL_O44 (events: O44), and the printed table's Comment column marks it 'Deprecated; was added erroneously in 2016'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORM_O01": NotModelledStructure(
+                    triggers: ["ORM^O01"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists ORM_O01 (events: O01), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORR_O02": NotModelledStructure(
+                    triggers: ["ORR^O02"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists ORR_O02 (events: O02), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORU_W01": NotModelledStructure(
+                    triggers: ["ORU^W01"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists ORU_W01 (events: W01), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ORX_O43": NotModelledStructure(
+                    triggers: ["ORX^O43"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists ORX_O43 (events: O43), and the printed table's Comment column marks it 'Deprecated; was added erroneously in 2016'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "OSQ_Q06": NotModelledStructure(
+                    triggers: ["OSQ^Q06"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists OSQ_Q06 (events: Q06), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "OSR_Q06": NotModelledStructure(
+                    triggers: ["OSR^Q06"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists OSR_Q06 (events: Q06), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "OSU_O41": NotModelledStructure(
+                    triggers: ["OSU^O41"],
+                    reason: "Table 0354 v2.9 (CH02C, p 270) lists OSU_O41 (events: O41), and the printed table's Comment column marks it 'Deprecated; was added erroneously in 2016'; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "OUL_R21": NotModelledStructure(
+                    triggers: ["OUL^R21"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists OUL_R21 (events: R21), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "PPT_PCL": NotModelledStructure(
+                    triggers: ["PPT^PCL"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists PPT_PCL (events: PCL), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "PPV_PCA": NotModelledStructure(
+                    triggers: ["PPV^PCA"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists PPV_PCA (events: PCA), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "PRR_PC5": NotModelledStructure(
+                    triggers: ["PRR^PC5"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists PRR_PC5 (events: PC5), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "PTR_PCF": NotModelledStructure(
+                    triggers: ["PTR^PCF"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists PTR_PCF (events: PCF), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QBP_Q11": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 38), the structure for any query trigger a query profile assigns (CH04A 4A.3.23, p 27, prints QBP^Q31^QBP_Q11 with the same row and declares 'Query Trigger (= MSH-9): QBP^Q31^QBP_Q11'), prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q11 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 38), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.9 not-modelled table)"),
+                "QBP_Q13": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QBP_Q13 (event Q13). CH05 section 5.4.2 (p 40) says the QBP_Q13 structure 'contains the MSH, RDF, RCP, and DSC segments' and that its message structure 'can be found in 5.3.1.2' (printed QBP^Q13^QPB_Q13); section 5.3.1.2 (pp 15 to 16) is an example query profile, and prints the grammar of the site-defined query Z99 (QBP^Z99^QBP_Q13: MSH [{SFT}] [UAC] QPD [PID] [RDF] RCP [RDF] [DSC]), whose profile says 'neither the PID nor the RDF segments are used' and which disagrees with the 5.4.2 list. The reference gives only a query profile's grammar, so the print fixes no syntax for QBP_Q13 apart from a query profile. Permanent (template ID, ruling G6; the example itself is excluded under ruling G7), not modelled because a conformant QBP^Q13 for another query profile could draw a finding against the Z99 grammar; triggers empty because the print sends this ID under other query events (QBP^Q40^QBP_Q13, 5.3.1.1, p 14; register section E, v2.9 not-modelled table)"),
+                "QBP_Q15": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH05 section 5.4.3 (p 41) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q15 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (5.4, p 38), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.9 not-modelled table)"),
+                "QBP_Q33": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH04 section 4.16.6 QBP - Get Donor Record Candidates (Event Q33) (p 163), a query profile, prints 'Query Trigger: QBP^Q33^QBP_Q33', while the section's caption and Table 0354 v2.9 (CH02C, p 271) give QBP_O33 (QBP^Q33^QBP_O33) (modelled); no v2.9 chapter prints a syntax under QBP_Q33, so a message copying the profile row is not structure-checked under the printed ID and is never a mismatch. Permanent: the print gives no syntax for QBP_Q33 (P8b-final F-I1 d; register section E, v2.9 not-modelled table)"),
+                "QBP_Q34": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH04 section 4.16.8 QBP - Get Donor Record (Event Q34) (p 165), a query profile, prints 'Query Trigger: QBP^Q34^QBP_Q34', while the section's caption and Table 0354 v2.9 (CH02C, p 271) give QBP_O34 (QBP^Q34^QBP_O34) (modelled); no v2.9 chapter prints a syntax under QBP_Q34, so a message copying the profile row is not structure-checked under the printed ID and is never a mismatch. Permanent: the print gives no syntax for QBP_Q34 (P8b-final F-I1 d; register section E, v2.9 not-modelled table)"),
+                "QCK_Q02": NotModelledStructure(
+                    triggers: ["QCK^Q02"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QCK_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QRF_W02": NotModelledStructure(
+                    triggers: ["QRF^W02"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QRF_W02 (events: W02), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QRY_A19": NotModelledStructure(
+                    triggers: ["QRY^A19"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QRY_A19 (events: A19), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QRY_PC4": NotModelledStructure(
+                    triggers: ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QRY_PC4 (events: PC4, PC9, PCE, PCK), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QRY_Q01": NotModelledStructure(
+                    triggers: ["QRY^Q01", "QRY^Q26", "QRY^Q27", "QRY^Q28", "QRY^Q29", "QRY^Q30"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QRY_Q01 (events: Q01, Q26, Q27, Q28, Q29, Q30), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QRY_Q02": NotModelledStructure(
+                    triggers: ["QRY^Q02"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QRY_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QRY_R02": NotModelledStructure(
+                    triggers: ["QRY^R02"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QRY_R02 (events: R02), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QRY_T12": NotModelledStructure(
+                    triggers: ["QRY^T12"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists QRY_T12 (events: T12), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "QVR_Q17": NotModelledStructure(
+                    triggers: ["QVR^Q17"],
+                    reason: "CH05 section 5.4.5 (p 44) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.9 not-modelled table)"),
+                "RAR_RAR": NotModelledStructure(
+                    triggers: ["RAR^RAR"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists RAR_RAR (events: RAR), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "RCI_I05": NotModelledStructure(
+                    triggers: ["RCI^I05"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists RCI_I05 (events: I05), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "RCL_I06": NotModelledStructure(
+                    triggers: ["RCL^I06"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists RCL_I06 (events: I06), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "RDR_RDR": NotModelledStructure(
+                    triggers: ["RDR^RDR"],
+                    reason: "Table 0354 v2.9 (CH02C, p 271) lists RDR_RDR (event RDR), with no Deprecated mark; the CH05 section 5.2.6 chart (p 12) lists 'Pharmacy dispense information (withdrawn)', QRY^Q28 and RDR^RDR, 'Original mode(withdrawn)'; no v2.9 chapter prints its syntax. Permanent: withdrawn, the print gives no syntax (register section E, v2.9 not-modelled table)"),
+                "RER_RER": NotModelledStructure(
+                    triggers: ["RER^RER"],
+                    reason: "Table 0354 v2.9 (CH02C, p 272) lists RER_RER (events: RER), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "RGR_RGR": NotModelledStructure(
+                    triggers: ["RGR^RGR"],
+                    reason: "Table 0354 v2.9 (CH02C, p 272) lists RGR_RGR (events: RGR), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "ROR_ROR": NotModelledStructure(
+                    triggers: ["ROR^ROR"],
+                    reason: "Table 0354 v2.9 (CH02C, p 272) lists ROR_ROR (events: ROR), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "RQC_I05": NotModelledStructure(
+                    triggers: ["RQC^I05", "RQC^I06"],
+                    reason: "Table 0354 v2.9 (CH02C, p 272) lists RQC_I05 (events: I05, I06), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "RRE_O26": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH04A section 4A.3.16 RDE - Pharmacy/Treatment Refill Authorization Request Message (p 25), the Acknowledgement Choreography of RDE^O25^RDE_O11, prints 'RRE^O26^RRE_O26' in its Application Ack row (three cells), while section 4A.3.17's caption (RRE^O26^RRE_O12, p 25) and Table 0354 v2.9 (CH02C, p 272) give RRE_O12 (modelled); no v2.9 chapter prints a syntax under RRE_O26, so a message copying the cell is not structure-checked under the printed ID and is never a mismatch. Permanent (misprinted ID): the print gives no syntax for RRE_O26 (P8b-final F-I1; register section E, v2.9 not-modelled table)"),
+                "RSP_K11": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 39) prints a query template: a '...' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). K11 is its default event only: 'A standard or site-defined response may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 39), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.9 not-modelled table)"),
+                "RSP_K24": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH03 section 3.3.59 QBP/RSP - Allocate Identifiers (QBP) and Response (RSP) (Events Q24 and K24) (p 97), the Acknowledgment Choreography of QBP^Q24^QBP_Q21, prints 'RSP^K24^RSP_K24' in its Application Ack row (three cells), while the caption that follows (RSP^K24^RSP_K23, p 97) and Table 0354 v2.9 (CH02C, p 272) give RSP_K23 (modelled); no v2.9 chapter prints a syntax under RSP_K24, so a message copying the cell is not structure-checked under the printed ID and is never a mismatch. Permanent (misprinted ID): the print gives no syntax for RSP_K24 (P8b-final F-I1; register section E, v2.9 not-modelled table)"),
+                "RSP_K33": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH04 section 4.16.6 QBP - Get Donor Record Candidates (Event Q33) (p 163), a query profile, prints 'Response Trigger: RSP^K33^RSP_K33', while the section's caption and Table 0354 v2.9 (CH02C, p 272) give RSP_O33 (RSP^K33^RSP_O33) (modelled); no v2.9 chapter prints a syntax under RSP_K33, so a message copying the profile row is not structure-checked under the printed ID and is never a mismatch. Permanent: the print gives no syntax for RSP_K33 (P8b-final F-I1 d; register section E, v2.9 not-modelled table)"),
+                "RSP_K34": NotModelledStructure(
+                    triggers: [],
+                    reason: "CH04 section 4.16.8 QBP - Get Donor Record (Event Q34) (p 165), a query profile, prints 'Response Trigger: RSP^K34^RSP_K34', while the section's caption and Table 0354 v2.9 (CH02C, p 272) give RSP_O34 (RSP^K34^RSP_O34) (modelled); no v2.9 chapter prints a syntax under RSP_K34, so a message copying the profile row is not structure-checked under the printed ID and is never a mismatch. Permanent: the print gives no syntax for RSP_K34 (P8b-final F-I1 d; register section E, v2.9 not-modelled table)"),
+                "RSP_Q11": NotModelledStructure(
+                    triggers: ["RSP^Q11"],
+                    reason: "Table 0354 v2.9 (CH02C, p 272) lists RSP_Q11 (events: Q11), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "SET_S38": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 272) lists SET_S38, Status N, under the Display Name 'Specimen Container Preparation and Specimen Collection Event', with no event; Table 0076 lists message type SET (Specimen Event Tracking) and Table 0003 events S38 to S52, but no table says which event takes which SET structure, and no v2.9 chapter prints its syntax (HL7-xml v2.9 has no SET_S38.xsd). Triggers empty because the print maps none. Permanent: the print gives no syntax (register section E, v2.9 not-modelled table)"),
+                "SET_S40": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 272) lists SET_S40, Status N, under the Display Name 'Specimen Collection Event unsuccessful', with no event; Table 0076 lists message type SET (Specimen Event Tracking) and Table 0003 events S38 to S52, but no table says which event takes which SET structure, and no v2.9 chapter prints its syntax (HL7-xml v2.9 has no SET_S40.xsd). Triggers empty because the print maps none. Permanent: the print gives no syntax (register section E, v2.9 not-modelled table)"),
+                "SET_S41": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 272) lists SET_S41, Status N, under the Display Name 'Specimen Movement Event', with no event; Table 0076 lists message type SET (Specimen Event Tracking) and Table 0003 events S38 to S52, but no table says which event takes which SET structure, and no v2.9 chapter prints its syntax (HL7-xml v2.9 has no SET_S41.xsd). Triggers empty because the print maps none. Permanent: the print gives no syntax (register section E, v2.9 not-modelled table)"),
+                "SET_S45": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists SET_S45, Status N, under the Display Name 'Specimen Identification Events', with no event; Table 0076 lists message type SET (Specimen Event Tracking) and Table 0003 events S38 to S52, but no table says which event takes which SET structure, and no v2.9 chapter prints its syntax (HL7-xml v2.9 has no SET_S45.xsd). Triggers empty because the print maps none. Permanent: the print gives no syntax (register section E, v2.9 not-modelled table)"),
+                "SET_S50": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists SET_S50, Status N, under the Display Name 'Specimen Procedure Step successful', with no event; Table 0076 lists message type SET (Specimen Event Tracking) and Table 0003 events S38 to S52, but no table says which event takes which SET structure, and no v2.9 chapter prints its syntax (HL7-xml v2.9 has no SET_S50.xsd). Triggers empty because the print maps none. Permanent: the print gives no syntax (register section E, v2.9 not-modelled table)"),
+                "SET_S52": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists SET_S52, Status N, under the Display Name 'Specimen Procedure Step unsuccessful', with no event; Table 0076 lists message type SET (Specimen Event Tracking) and Table 0003 events S38 to S52, but no table says which event takes which SET structure, and no v2.9 chapter prints its syntax (HL7-xml v2.9 has no SET_S52.xsd). Triggers empty because the print maps none. Permanent: the print gives no syntax (register section E, v2.9 not-modelled table)"),
+                "SQM_S25": NotModelledStructure(
+                    triggers: ["SQM^S25"],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists SQM_S25 (events: S25), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "SQR_S25": NotModelledStructure(
+                    triggers: ["SQR^S25"],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists SQR_S25 (events: S25), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "SUR_P09": NotModelledStructure(
+                    triggers: ["SUR^P09"],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists SUR_P09 (events: P09), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "UDM_Q05": NotModelledStructure(
+                    triggers: ["UDM^Q05"],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists UDM_Q05 (event Q05), with no Deprecated mark; the CH05 section 5.2.6 chart (p 12) lists 'Unsolicited display message (withdrawn)' and section 5.10.1 (p 108) says 'withdrawn as of v 2.7'; the January 2021 technical correction removed section 5.10.1.1, the superseded material that printed it, so no v2.9 chapter prints its syntax. Permanent: withdrawn, the print gives no syntax (register section E, v2.9 not-modelled table)"),
+                "VXQ_V01": NotModelledStructure(
+                    triggers: ["VXQ^V01"],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists VXQ_V01 (events: V01), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "VXR_V03": NotModelledStructure(
+                    triggers: ["VXR^V03"],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists VXR_V03 (events: V03), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+                "VXX_V02": NotModelledStructure(
+                    triggers: ["VXX^V02"],
+                    reason: "Table 0354 v2.9 (CH02C, p 273) lists VXX_V02 (events: V02), and the printed table's Comment column marks it Deprecated; no v2.9 chapter prints its syntax (register section E, v2.9 not-modelled table)"),
+            ]
         default: return [:]
         }
     }
@@ -627,13 +852,30 @@ extension MessageStructureTable {
             return [
                 "RSP^K32 RSP_K25": "CH03 section 3.2.63 QBP/RSP - Find Candidates including Visit Information (p 55), a query profile, prints 'Response Trigger: RSP^K32^RSP_K25', while the profile's own response grammar (RSP^K32^RSP_K32: Segment Pattern Response) and Table 0354 v2.8.2 give RSP_K32 (modelled); RSP_K25 is modelled for RSP^K25 (CH15 15.3.7). A message copying the profile row is not structure-checked under RSP_K25 and is never a mismatch (P8b-final F-I1 d; register section E, v2.8.2 not-modelled table)",
             ]
+        case .v2_9:
+            return [
+                "ACK^S01 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S02 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S03 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S04 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S05 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S06 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S07 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S08 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S09 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S10 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ACK^S11 SRR_S01": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "ADT^A37 ACK": "CH03 section 3.3.37 ADT/ACK - Unlink Patient Information (Event A37) (p 65), the Acknowledgment Choreography of ADT^A37^ADT_A37, prints 'ADT^A37^ACK' in its original mode Application Ack cell and ACK^A37^ACK in the other two, and the section's acknowledgment caption prints ACK^A37^ACK (p 65); ACK is modelled for ACK^*. A message copying the cell is not structure-checked under ACK and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "RSP^E22 RSP_E03": "CH16 section 16.3.12 QBP^E22 - Query Authorization Request Status (event E22) (p 27), the Acknowledgement Choreography of QBP^E22^QBP_E22, prints 'RSP^E22^RSP_E03' in one Application Ack cell and RSP^E22^RSP_E22 in the other two, while section 16.3.13's caption (RSP^E22^RSP_E22, p 28) and Table 0354 v2.9 (CH02C, p 272) give RSP_E22 (modelled); RSP_E03 is modelled for RSP^E03 (16.3.4). A message copying the cell is not structure-checked under RSP_E03 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)",
+                "RSP^K32 RSP_K25": "CH03 section 3.3.63 QBP/RSP - Find Candidates including Visit Information (p 103), a query profile, prints 'Response Trigger: RSP^K32^RSP_K25', while the profile's own response grammar (RSP^K32^RSP_K32: Segment Pattern Response, p 104) and Table 0354 v2.9 give RSP_K32 (modelled); RSP_K25 is modelled for RSP^K25 (CH15 15.3.7). A message copying the profile row is not structure-checked under RSP_K25 and is never a mismatch (P8b-final F-I1 d; register section E, v2.9 not-modelled table)",
+            ]
         default: return [:]
         }
     }
 
     /// The segments `version`'s grammar version lists in Appendix A as
-    /// withdrawn or deprecated with no definition, that its structures may
-    /// name (overrides.json withdrawnSegments, ADR-019 S2-1), keyed by ID.
+    /// withdrawn, deprecated or added by default, with no definition, that its
+    /// structures may name (overrides.json withdrawnSegments, ADR-019 S2-1), keyed by ID.
     static func generatedWithdrawnSegments(for version: Version) -> [String: WithdrawnSegment] {
         switch version.grammarVersion {
         case .v2_7_1:
@@ -665,6 +907,21 @@ extension MessageStructureTable {
                 "URS": WithdrawnSegment(
                     printed: "deprecated", definedThrough: "2.6",
                     citation: "HL7 v2.8.2 Appendix A (p A-11) lists URS as 'deprecated' with no section, and no v2.8.2 chapter defines it; CH05 section 5.10 (p 102) retains UDM_Q05 'for backward compatibility'; CH02 section 2.8.4 (p 26) refers the reader to an earlier version and leaves its use to site agreement; last defined in v2.6 CH05 section 5.10.4.4 (ADR-019 S2-1 amendment)"),
+            ]
+        case .v2_9:
+            return [
+                "QRD": WithdrawnSegment(
+                    printed: "added by default", definedThrough: "2.6",
+                    citation: "HL7 v2.9 Appendix A (section A.4, p A-10) lists 'QRD (added by default)' with no section, and no v2.9 chapter defines it; CH05 section 5.2.6 chart (p 12) lists original mode queries with QRD/QRF as withdrawn, and section 5.10.2 (p 108) says 'withdrawn as of v 2.7'; CH02 section 2.8.4 (p 27) refers the reader to an earlier version and leaves its use to site agreement; last defined in v2.6 CH05 section 5.10.4.1 (ADR-019 S2-1 amendment)"),
+                "QRF": WithdrawnSegment(
+                    printed: "added by default", definedThrough: "2.6",
+                    citation: "HL7 v2.9 Appendix A (section A.4, p A-10) lists 'QRF (added by default)' with no section, and no v2.9 chapter defines it; CH05 section 5.2.6 chart (p 12) lists original mode queries with QRD/QRF as withdrawn, and section 5.10.2 (p 108) says 'withdrawn as of v 2.7'; CH02 section 2.8.4 (p 27) refers the reader to an earlier version and leaves its use to site agreement; last defined in v2.6 CH05 section 5.10.4.2 (ADR-019 S2-1 amendment)"),
+                "URD": WithdrawnSegment(
+                    printed: "withdrawn", definedThrough: "2.6",
+                    citation: "HL7 v2.9 Appendix A (section A.4, p A-11) lists URD as 'withdrawn' with no section, and no v2.9 chapter defines it; CH05 section 5.2.6 chart (p 12) lists 'Unsolicited display message (withdrawn)' with URD/URS, and section 5.10.1 (p 108) says 'withdrawn as of v 2.7'; CH02 section 2.8.4 (p 27) refers the reader to an earlier version and leaves its use to site agreement; last defined in v2.6 CH05 section 5.10.4.3 (ADR-019 S2-1 amendment)"),
+                "URS": WithdrawnSegment(
+                    printed: "withdrawn", definedThrough: "2.6",
+                    citation: "HL7 v2.9 Appendix A (section A.4, p A-11) lists URS as 'withdrawn' with no section, and no v2.9 chapter defines it; CH05 section 5.2.6 chart (p 12) lists 'Unsolicited display message (withdrawn)' with URD/URS, and section 5.10.1 (p 108) says 'withdrawn as of v 2.7'; CH02 section 2.8.4 (p 27) refers the reader to an earlier version and leaves its use to site agreement; last defined in v2.6 CH05 section 5.10.4.4 (ADR-019 S2-1 amendment)"),
             ]
         default: return [:]
         }

@@ -149,23 +149,27 @@ struct StructureSlotProbeTests {
               note: "order with no problem"),
     ] }
 
-    // v2.5.1 to v2.8.2 CH12 print the detail as the choice < OBR | etc. > (the slot); a detail
-    // the choice does not list (RXO) is accepted.
-    static let laterVersions: [Probe] = ["2.5.1", "2.6", "2.7.1", "2.8.2"].flatMap { v in [
-        Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
-              body: ["PID|1", "GOL|1", "ORC|NW", "RXO|1", "RXR|1"], findings: [], note: "detail not listed"),
-        Probe(version: v, msh9: "PPR^PC1^PPR_PC1", structure: "PPR_PC1",
-              body: ["PID|1", "PRB|1", "ORC|NW", "OBR|1", "NTE|1", "VAR|1", "OBX|1"], findings: [],
-              note: "CH12 order detail"),
-        Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
-              body: ["PID|1", "ORC|NW", "OBR|1"], findings: ["unexpected ORC at ORC[1]"], note: "no goal"),
-        Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
-              body: ["PID|1", "NTE|1", "GOL|1", "ORC|NW", "OBR|1"], findings: ["unexpected NTE at NTE[1]"],
-              note: "note before the goal"),
-        Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
-              body: ["PID|1", "GOL|1", "ORC|NW", "OBR|1", msh2], findings: ["unexpected MSH at MSH[2]"],
-              note: "second MSH after the slot"),
-    ] }
+    // v2.5.1 to v2.9 CH12 print the detail as the choice < OBR | etc. > (the slot); a detail
+    // the choice does not list (RXO) is accepted. v2.9 CH12 12.3.1 (p 8) adds a required PROVIDER
+    // group after PID.
+    static let laterVersions: [Probe] = ["2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"].flatMap { v -> [Probe] in
+        let head = v == "2.9" ? ["PID|1", "PRD|1"] : ["PID|1"]
+        return [
+            Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
+                  body: head + ["GOL|1", "ORC|NW", "RXO|1", "RXR|1"], findings: [], note: "detail not listed"),
+            Probe(version: v, msh9: "PPR^PC1^PPR_PC1", structure: "PPR_PC1",
+                  body: head + ["PRB|1", "ORC|NW", "OBR|1", "NTE|1", "VAR|1", "OBX|1"], findings: [],
+                  note: "CH12 order detail"),
+            Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
+                  body: head + ["ORC|NW", "OBR|1"], findings: ["unexpected ORC at ORC[1]"], note: "no goal"),
+            Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
+                  body: head + ["NTE|1", "GOL|1", "ORC|NW", "OBR|1"], findings: ["unexpected NTE at NTE[1]"],
+                  note: "note before the goal"),
+            Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
+                  body: head + ["GOL|1", "ORC|NW", "OBR|1", msh2], findings: ["unexpected MSH at MSH[2]"],
+                  note: "second MSH after the slot"),
+        ]
+    }
 
     @Test("Slot structures: conformant bodies are clean, defects outside the slot are found", arguments: probes)
     func probe(_ p: Probe) throws {
@@ -181,7 +185,7 @@ struct StructureSlotProbeTests {
 
     @Test("Every version that prints the open order detail has a conformant and a defect probe")
     func coverage() {
-        for v in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"] {
+        for v in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"] {
             let mine = Self.probes.filter { $0.version == v }
             #expect(mine.contains { $0.findings.isEmpty } && mine.contains { !$0.findings.isEmpty }, "v\(v)")
         }

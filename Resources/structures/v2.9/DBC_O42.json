@@ -1,0 +1,24 @@
+{
+  "structure": "DBC_O42",
+  "version": "2.9",
+  "citation": "HL7 v2.9 Chapter 4, section 4.16.5 DBU - Update Donor Record Message (Event O42), pp 162 to 163.",
+  "triggers": ["DBU^O42"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "group": "DONOR", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "group": "DONOR_OBSERVATIONS", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "segment": "ARV", "min": 0, "max": null }
+    ]}
+  ]
+}

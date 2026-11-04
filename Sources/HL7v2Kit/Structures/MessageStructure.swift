@@ -255,7 +255,7 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// keeps the compiled matchers of the selections apart.
     let keySelection: String?
     /// The query error response rule of a query response structure (S4-3,
-    /// CH05 5.6.5 on v2.4 to v2.8.2): the MSA-1 values that make the message
+    /// CH05 5.6.5 on v2.4 to v2.9): the MSA-1 values that make the message
     /// an error response, matched against its head; nil for every other
     /// structure and for every v2.3 and v2.3.1 structure.
     let errorResponse: StructureErrorResponse?
@@ -365,8 +365,8 @@ public enum MessageStructureTable {
     }
 
     /// The segments `version`'s grammar version lists in Appendix A as
-    /// withdrawn or deprecated, with no definition, that its structures may
-    /// still name (ADR-019 S2-1 amendment), keyed by segment ID.
+    /// withdrawn, deprecated or added by default, with no definition, that its
+    /// structures may still name (ADR-019 S2-1 amendment), keyed by segment ID.
     static func withdrawnSegments(for version: Version) -> [String: WithdrawnSegment] {
         withdrawnIndex[version.grammarVersion] ?? [:]
     }
@@ -432,8 +432,8 @@ struct NotModelledStructure: Sendable, Equatable {
     }
 }
 
-/// A segment a version lists in Appendix A as withdrawn or deprecated with no
-/// definition (`Resources/structures/overrides.json` withdrawnSegments): the
+/// A segment a version lists in Appendix A as withdrawn, deprecated or added by
+/// default, with no definition (`Resources/structures/overrides.json` withdrawnSegments): the
 /// status as printed, the last version that defines it and the citation. A
 /// structure of the version may name it; it is matched by segment ID and its
 /// fields are not validated (ADR-019 S2-1 amendment).

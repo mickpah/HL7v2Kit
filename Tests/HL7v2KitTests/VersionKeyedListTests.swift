@@ -17,7 +17,7 @@ struct VersionKeyedListTests {
     @Test("Every modelled version has a formerlyGated decision, and the list agrees")
     func formerlyGatedDecided() throws {
         for version in Version.allCases where version.grammarVersion == version {
-            let decided = try #require(Self.formerlyGated[version], "\(version) has no decision")
+            let decided = try #require(Self.formerlyGated[version] as Bool?, "\(version) has no decision")
             #expect((Validator.formerlyGated[version] != nil) == decided, "\(version)")
         }
     }

@@ -1,0 +1,26 @@
+{
+  "structure": "MFN_M19",
+  "version": "2.9",
+  "citation": "HL7 v2.9 Chapter 8, section 8.14.1 MFN/MFK - Contract Master File - [Event M19], pp 119 to 120.",
+  "triggers": ["MFN^M19"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "CONTRACT_RECORD", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "CTR", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "MATERIAL_ITEM_RECORD", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "ITM", "min": 1, "max": 1 },
+        { "group": "PURCHASING_VENDOR", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "VND", "min": 1, "max": 1 },
+          { "group": "PACKAGING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "PKG", "min": 1, "max": 1 }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

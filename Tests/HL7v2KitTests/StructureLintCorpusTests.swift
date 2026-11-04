@@ -65,7 +65,7 @@ struct StructureLintCorpusTests {
 
     /// One run per version, in parallel; each writes `lint-<version>.tsv`.
     @Test("Lint and reference recogniser over every extracted structure",
-          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
+          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"])
     func corpus(_ version: String) throws {
         let env = ProcessInfo.processInfo.environment
         let root = URL(fileURLWithPath: try #require(env["STRUCTURE_LINT_CORPUS"]))

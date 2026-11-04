@@ -198,4 +198,56 @@ struct V29GrammarTests {
         // Stated, but only approximately in this language: a predicate could misfire.
         "OBX-4", "PTH-6", "RXE-15",
     ]
+
+    @Test("v2.9 structures are complete; ADT_A01 is modelled")
+    func structureInventory() throws {
+        #expect(MessageStructureTable.completeVersions.contains(.v2_9))
+        let adt = try #require(MessageStructureTable.structure("ADT_A01", version: .v2_9))
+        #expect(adt.triggers.contains("ADT^A01"))
+    }
+
+    @Test("A well-formed ADT_A01 draws no structure finding")
+    func wellFormedStructure() throws {
+        var options = ValidationOptions.default
+        options.messageStructureSeverity = .error
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9\r"
+            + "EVN||20240301120000\rPID|1||123456^^^HOSP^MR||Smith^John\rPV1|1|I\r"
+        let found = Validator(options: options).validate(try Parser().parse(wire)).issues.filter(\.code.isMessageStructure)
+        #expect(found.isEmpty)
+    }
+
+    @Test("Every Table 0354 row of v2.9 is modelled or registered")
+    func everyRowAccounted() throws {
+        let rows = try #require(HL7TableRegistry.table("0354", version: .v2_9)).entries.map(\.code)
+        #expect(rows.count == 261)
+        let modelled = rows.filter { MessageStructureTable.structure($0, version: .v2_9) != nil }
+        let registered = rows.filter { MessageStructureTable.registration($0, version: .v2_9) != nil }
+        #expect(modelled.count == 193)
+        #expect(registered.count == 68)
+        #expect(Set(modelled).isDisjoint(with: registered))
+    }
+
+    // CH02C Table 0354 p 269: the Display Name 'Laboratory Fulfillment request with REL segment'
+    // holds a segment ID, never an event. p 268: 'INV_U14' for INR^U14^INR_U14 (CH13 13.3.14 p 30).
+    @Test("Table 0354 errata: no event from prose, and the misprinted ID is registered")
+    func table0354Errata() throws {
+        #expect(try #require(MessageStructureTable.structure("OML_O59", version: .v2_9)).triggers == ["OML^O59"])
+        #expect(try #require(MessageStructureTable.structure("INR_U14", version: .v2_9)).triggers == ["INR^U14"])
+        #expect(MessageStructureTable.registration("INV_U14", version: .v2_9) != nil)
+    }
+
+    // Layout the reader had to learn, against the page: CH16 section numbers end in a dot (16.3.1.,
+    // p 5); CH06 footnote marks stand a space from the bracket or over a wrapped ID (DFT_P11 p 16,
+    // 'DG1' under '7'); DRG_O43 closes a group with '--- DONOR_OBSERVATIONS begin' (CH04 p 167).
+    @Test("Chapter 16 headings, Chapter 6 footnote marks and the DRG_O43 mark read as printed")
+    func layoutRules() throws {
+        #expect(try #require(MessageStructureTable.structure("EHC_E01", version: .v2_9)).citation.contains("section 16.3.1 "))
+        let p11 = try #require(MessageStructureTable.structure("DFT_P11", version: .v2_9))
+        #expect(p11.elements.contains(.group("DIAGNOSIS", min: 0, max: nil, elements: [.segment("DG1", min: 1, max: 1)])))
+        // CH11 11.6.1 p 26 prints 'ROL' with no '|'; without the erratum ROL and PRT read as one alternative.
+        #expect(try #require(MessageStructureTable.structure("CCM_I21", version: .v2_9)).citation.contains("ROL_GROUP") == false)
+        let donor = try #require(MessageStructureTable.structure("DRG_O43", version: .v2_9))
+        #expect(donor.citation.contains("section 4.16.10"))
+        #expect(MessageStructureTable.structure("WRQ_Z02", version: .v2_9) == nil)
+    }
 }
