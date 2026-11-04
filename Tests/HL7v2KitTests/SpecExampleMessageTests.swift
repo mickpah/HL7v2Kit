@@ -67,6 +67,8 @@ struct SpecExampleMessageTests {
         var options = ValidationOptions()
         // SPEC_EXAMPLE_CONFORMANCE: report the opt-in conformance tier as errors too (a measurement run).
         if ProcessInfo.processInfo.environment["SPEC_EXAMPLE_CONFORMANCE"] != nil { options.conformanceConditionSeverity = .error }
+        // SPEC_EXAMPLE_STRUCTURE: report the message-structure findings as errors too (a measurement run).
+        if ProcessInfo.processInfo.environment["SPEC_EXAMPLE_STRUCTURE"] != nil { options.messageStructureSeverity = .error }
         for example in examples {
             let wire = example.segments.joined(separator: "\r") + "\r"
             guard let message = try? Parser(options: Self.parserOptions(for: example)).parse(wire) else {
@@ -116,5 +118,6 @@ struct SpecExampleHarnessTests {
         #expect(SpecExampleMessageTests.parserOptions(for: declared).versionOverride == nil)
         #expect(SpecExampleMessageTests.sourceVersion("v2.3.1/Hl7V231.pdf") == .v2_3_1)
         #expect(SpecExampleMessageTests.sourceVersion("v2.8.2/V282_CH02.pdf") == .v2_8_2)
+        #expect(SpecExampleMessageTests.sourceVersion("v2.9/V29_CH02_Control_tc.pdf") == .v2_9)
     }
 }

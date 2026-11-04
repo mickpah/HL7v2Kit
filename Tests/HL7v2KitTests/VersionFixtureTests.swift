@@ -33,6 +33,7 @@ struct VersionFixtureTests {
         Fixture(file: "adt_a01_v282.hl7", version: .v2_8_2, messageCode: "ADT", triggerEvent: "A01"),
         Fixture(file: "oru_r01_v282.hl7", version: .v2_8_2, messageCode: "ORU", triggerEvent: "R01"),
         Fixture(file: "oml_o21_v282.hl7", version: .v2_8_2, messageCode: "OML", triggerEvent: "O21"),
+        Fixture(file: "adt_a01_v29.hl7", version: .v2_9, messageCode: "ADT", triggerEvent: "A01"),
     ]
 
     /// The ORU^R01 fixture of every version from v2.3 on that has one.

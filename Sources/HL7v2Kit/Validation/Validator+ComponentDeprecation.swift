@@ -10,7 +10,8 @@ extension Validator {
     /// v2.8.2 CH02 section 2.5.3.5); v2.3 to v2.4 grammars carry no code, so nothing is
     /// read there. The caller skips a field already reported as `fieldNotSupported`, so
     /// one finding covers the whole field. A component is populated as a field is (any
-    /// non-empty subcomponent, the HL7 null `""` included).
+    /// non-empty subcomponent, the HL7 null `""` included), except a repetition holding only
+    /// the delete indicator on a version that applies it (``Version/appliesDeleteIndicator``).
     ///
     /// A component table binds wherever its type is used ("the optionality, table
     /// references, and lengths of data type components are supplied in component tables
@@ -44,10 +45,13 @@ extension Validator {
                     + " is \(state) in v\(grammarVersion.rawValue) but populated"
             ))
         }
+        let repetitions = field.repetitions.enumerated().filter {
+            !isDeleteIndicator($0.element, segmentID: location.segmentID, version: version)
+        }
         for entry in composite.components {
             let code = entry.optionalityCode
             if let state = Self.componentDeprecationState(optionality: code) {
-                for (offset, repetition) in field.repetitions.enumerated()
+                for (offset, repetition) in repetitions
                 where repetition.components.count >= entry.index
                     && repetition.components[entry.index - 1].subcomponents.contains(where: { !$0.value.isEmpty }) {
                     report(code, state, component: entry.index, subcomponent: nil,
@@ -58,7 +62,7 @@ extension Validator {
             guard let inner = Self.componentGrammar(entry.dataType, version: grammarVersion) else { continue }
             for sub in inner.components {
                 guard let state = Self.componentDeprecationState(optionality: sub.optionalityCode) else { continue }
-                for (offset, repetition) in field.repetitions.enumerated()
+                for (offset, repetition) in repetitions
                 where repetition.components.count >= entry.index {
                     let parts = repetition.components[entry.index - 1].subcomponents
                     guard parts.count >= sub.index, !parts[sub.index - 1].value.isEmpty else { continue }

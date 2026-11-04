@@ -569,6 +569,7 @@ public struct Validator: Sendable {
         profile: Profile?,
         issues: inout [ValidationIssue]
     ) {
+        if isDeleteSegment(segment, version: message.version) { return }
         for fieldGrammar in grammar.fields {
             checkField(
                 fieldGrammar,
@@ -2135,7 +2136,8 @@ public struct Validator: Sendable {
                 ))
             }
         }
-        for (offset, repetition) in field.repetitions.enumerated() where isRepetitionPopulated(repetition) {
+        for (offset, repetition) in field.repetitions.enumerated()
+        where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID, version: version) {
             let values = repetition.components.map(\.stringValue)
             check(dataType.components, groups: dataType.groupRequirements, values: values, typeName: grammar.dataType,
                   repetition: offset + 1, component: nil, subcomponent: { _ in nil })
@@ -2166,7 +2168,8 @@ public struct Validator: Sendable {
                                           fieldIndex: fieldIndex, version: version)
         let requiredSet = requiredComponentSet(forCompositeCode: grammar.dataType)
         guard !required.isEmpty || requiredSet != nil else { return }
-        for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+        for repetition in field.repetitions
+        where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID, version: version) {
             // (1) Flat required-component check.
             for spec in required {
                 if !isComponentPopulated(repetition, componentIndex: spec.index) {
@@ -2272,6 +2275,36 @@ public struct Validator: Sendable {
         repetition.components.contains { component in
             component.subcomponents.contains { !$0.value.isEmpty }
         }
+    }
+
+    /// Segments that carry no data base element, so `""` is no delete indicator there: v2.9 CH02
+    /// 2.5.3.1 p9 defines the state by "the corresponding data base element", and "for other
+    /// purposes is prohibited". The list is what the print gives: CH02 2.14's message control
+    /// segments, and CH05 5.5's query control segments QAK, QPD and RCP. ADD and NTE are left out
+    /// on purpose: an addendum continues data, and a note is data.
+    static let messageControlSegments: Set<String> = [
+        "BHS", "BTS", "DSC", "ERR", "FHS", "FTS", "MSA", "MSH", "OVR", "SFT", "SGH", "SGT", "UAC", // CH02 2.14
+        "QAK", "QPD", "RCP", // CH05 5.5
+    ]
+
+    /// True if `repetition` holds only the delete indicator on a data segment: `""` as its first
+    /// component and nothing after it, so a trailing separator does not change the reading.
+    func isDeleteIndicator(_ repetition: Repetition, segmentID: String, version: Version) -> Bool {
+        guard version.appliesDeleteIndicator, !Self.messageControlSegments.contains(segmentID),
+              repetition.components.first?.stringValue == "\"\"" else { return false }
+        return !repetition.components.dropFirst().contains { $0.subcomponents.contains { !$0.value.isEmpty } }
+    }
+
+    /// True for the print's unconditional delete segment: `""` first and every other field empty or
+    /// `""`. v2.9 CH02 2.10.4.1 p42, "the first field (or all fields)"; p43 `NK1|""|""|""|""`. The other
+    /// signals on p42 are "By agreement ... or Conformance Profile", which a validator cannot know.
+    private func isDeleteSegment(_ segment: Segment, version: Version) -> Bool {
+        let fields = segment.fields.dropFirst() // fields[0] is the segment ID
+        func isDelete(_ repetition: Repetition) -> Bool {
+            isDeleteIndicator(repetition, segmentID: segment.segmentID, version: version)
+        }
+        guard let first = fields.first, first.repetitions.contains(where: isDelete) else { return false }
+        return fields.allSatisfy { $0.repetitions.allSatisfy { !isRepetitionPopulated($0) || isDelete($0) } }
     }
 
     /// True if the 1-based `componentIndex`-th component of `repetition`

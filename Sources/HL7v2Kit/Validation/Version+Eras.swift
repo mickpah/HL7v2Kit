@@ -47,6 +47,20 @@ extension Version {
         }
     }
 
+    /// True where the validator reads the delete indicator on a data segment: a repetition holding
+    /// only `""` has no components to require, and a segment with `""` first and nothing else real has
+    /// no fields to read. v2.9 CH02 2.5.3.1 pp8-9 ("Populated with Delete Indicator") and 2.10.4.1 p42
+    /// ("delete data" indicated "for the first field (or all fields)").
+    ///
+    /// False on the earlier versions as a hold, not because their prints differ: v2.8.2 CH02 pp8, 38, 41
+    /// and v2.7.1 pp7, 36, 40 say the same under the term "Null". Turning them on moves their reports.
+    var appliesDeleteIndicator: Bool {
+        switch self {
+        case .v2_9: return true
+        case .v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_7, .v2_8_2, .v2_8: return false
+        }
+    }
+
     /// True where the truncation escape `\P\` is defined: v2.7.1 section 2.5.5.2 p12 (the
     /// truncation character "may be escaped but this is not required") and v2.8.2 sections
     /// 2.7.1 and 2.7.2, which list `\P\`, and v2.9 sections 2.7.1 and 2.7.2 (p21). v2.3 to v2.6 print no truncation character.

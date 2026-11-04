@@ -13,7 +13,7 @@
     { "index": 8, "swiftName": "bpQuantity", "name": "BP Quantity", "dataType": "NM", "length": "5=", "optionality": "R", "repeatability": "1" },
     { "index": 9, "swiftName": "bpAmount", "name": "BP Amount", "dataType": "NM", "length": "5=", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "bpUnits", "name": "BP Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0584"] },
-    { "index": 11, "swiftName": "bpTransfusionDispositionStatus", "name": "BP Transfusion/Disposition Status", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0513"] },
+    { "index": 11, "swiftName": "bpTransfusionDispositionStatus", "name": "BP Transfusion/Disposition Status", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0513"], "tableOpen": true, "tableOpenCitation": "v2.9 Chapter 4 section 4.14.3.11 BTX-11: \"Refer to HL7 Table 0513 - Blood Product Transfusion/Disposition Status in Chapter 2C, Code Tables, for suggested values.\"" },
     { "index": 12, "swiftName": "bpMessageStatus", "name": "BP Message Status", "dataType": "ID", "table": "0511", "length": "1..1", "optionality": "R", "repeatability": "1", "tables": ["0511"] },
     { "index": 13, "swiftName": "bpDateTimeOfStatus", "name": "BP Date/Time of Status", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 14, "swiftName": "bpTransfusionAdministrator", "name": "BP Transfusion Administrator", "dataType": "XCN", "optionality": "O", "repeatability": "1" },

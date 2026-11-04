@@ -25,7 +25,7 @@
     { "index": 20, "swiftName": "participantDeviceSerialNumber", "name": "Device Serial Number", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 21, "swiftName": "participantDeviceDonationIdentification", "name": "Device Donation Identification", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 22, "swiftName": "participationDeviceType", "name": "Device Type", "dataType": "CNE", "optionality": "C", "repeatability": "1", "tables": ["0961"], "condition": "PRT-5 empty AND PRT-8 empty AND PRT-9 empty AND PRT-10 empty" },
-    { "index": 23, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0185"] },
+    { "index": 23, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0185"], "tableOpen": true, "tableOpenCitation": "v2.9 Chapter 7 section 7.4.4.23 PRT-23: \"Refer to User-defined Table 0185 - Preferred Method of Contact in Chapter 2C, \"Code Tables\", for suggested values.\"" },
     { "index": 24, "swiftName": "contactIdentifiers", "name": "Contact Identifiers", "dataType": "PLN", "optionality": "O", "repeatability": "*", "tables": ["0328"] }
   ]
 }

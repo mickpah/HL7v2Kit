@@ -54,6 +54,19 @@ struct FieldTableOpennessTests {
         Marked(version: "2.7.1", segment: "PSL", index: 47, table: "0136"),
         Marked(version: "2.7.1", segment: "RXD", index: 11, table: "0167"),
         Marked(version: "2.7.1", segment: "PSL", index: 21, table: "0532"),
+        // v2.9, each read on its own page (technical correction text where it holds the chapter):
+        // CH06 6.5.2.24 p45 (DG1-24), CH16 16.4.1.3 p30 (RFI-3), 16.4.2.13 p35 (IVC-13), 16.4.5.4 p44
+        // (PSG-4), 16.4.6.47 p56 (PSL-47), CH04A 4A.4.5.11 p76 (RXD-11), CH16 16.4.6.21 p50 (PSL-21).
+        Marked(version: "2.9", segment: "DG1", index: 24, table: "0136"),
+        Marked(version: "2.9", segment: "RFI", index: 3, table: "0136"),
+        Marked(version: "2.9", segment: "IVC", index: 13, table: "0136"),
+        Marked(version: "2.9", segment: "PSG", index: 4, table: "0136"),
+        Marked(version: "2.9", segment: "PSL", index: 47, table: "0136"),
+        Marked(version: "2.9", segment: "RXD", index: 11, table: "0167"),
+        Marked(version: "2.9", segment: "PSL", index: 21, table: "0532"),
+        // v2.9 CH04A 4A.4.8.2 p101 (RXV-2) and 4A.4.8.7 p102 (RXV-7): "See HL7 Defined Table ... for example values."
+        Marked(version: "2.9", segment: "RXV", index: 2, table: "0917"),
+        Marked(version: "2.9", segment: "RXV", index: 7, table: "0918"),
     ]
 
     /// A minimal message carrying `value` at `segment-index`.
@@ -99,8 +112,8 @@ struct FieldTableOpennessTests {
     }
 
     @Test("On the same wire, an unmarked sibling ID field on a closed table still raises",
-          arguments: [("2.6", "DG1", 24, 18, "0136"), ("2.8.2", "DG1", 24, 18, "0136"),
-                      ("2.4", "RXD", 11, 14, "0136"), ("2.8.2", "RXD", 11, 14, "0136")])
+          arguments: [("2.6", "DG1", 24, 18, "0136"), ("2.8.2", "DG1", 24, 18, "0136"), ("2.9", "DG1", 24, 18, "0136"),
+                      ("2.4", "RXD", 11, 14, "0136"), ("2.8.2", "RXD", 11, 14, "0136"), ("2.9", "RXD", 11, 14, "0136")])
     func siblingStillChecked(version: String, segment: String, marked: Int, sibling: Int, table: String) throws {
         // DG1-18 Confidential Indicator and RXD-14 Needs Human Review cite Table 0136 "for valid values".
         let report = Validator().validate(try Parser().parse(wire(version, segment, values: [marked, sibling])))
@@ -111,7 +124,8 @@ struct FieldTableOpennessTests {
 
     @Test("RFI, IVC, PSG and PSL carry no other closed-table ID field; the same wire still validates the segment",
           arguments: [("2.6", "RFI", 3), ("2.6", "IVC", 13), ("2.6", "PSG", 4), ("2.6", "PSL", 47),
-                      ("2.8.2", "RFI", 3), ("2.8.2", "IVC", 13), ("2.8.2", "PSG", 4), ("2.8.2", "PSL", 21)])
+                      ("2.8.2", "RFI", 3), ("2.8.2", "IVC", 13), ("2.8.2", "PSG", 4), ("2.8.2", "PSL", 21),
+                      ("2.9", "RFI", 3), ("2.9", "IVC", 13), ("2.9", "PSG", 4), ("2.9", "PSL", 21)])
     func segmentStillValidated(version: String, segment: String, marked: Int) throws {
         // No unmarked closed-table ID sibling exists on these segments, so the control is the
         // segment's required fields (index 1 is R on all four), reported on the same wire.
@@ -161,6 +175,30 @@ struct FieldTableOpennessTests {
         Marked(version: "2.6", segment: "SAC", index: 27, table: "0371"),
         Marked(version: "2.8.2", segment: "OM4", index: 7, table: "0371"),
         Marked(version: "2.8.2", segment: "SAC", index: 27, table: "0371"),
+        // v2.9: CH11 11.8.4.6 p75 (CTD-6), 11.8.3.6 p68 (PRD-6), 11.8.3.14 p71 (PRD-14), CH07 7.4.4.23 p96
+        // (PRT-23), 0185 "User-defined Table ... for suggested values"; CH03 3.4.7.6 p172 (IAM-6), 0206; CH08
+        // 8.8.12.7 p55 (OM4-7), CH13 13.4.3.27 pp39-40 (SAC-27), 0371 "can be extended". The rest come from the
+        // sweep, and their prints say "for suggested values":
+        // CH04 4.14.3.11 p153 (BTX-11), 4.5.1.29 and 4.5.1.30 p66 (ORC-29, ORC-30), CH06 6.5.2.23 p44 (DG1-23),
+        // 6.5.2.25 p45 (DG1-25), 6.5.3.11 p48 (DRG-11), 6.5.3.14 p49 (DRG-14),
+        // CH13 13.4.4.2 and 13.4.4.3 p47 (INV-2, INV-3), 13.4.4.21 p51 (INV-21).
+        Marked(version: "2.9", segment: "CTD", index: 6, table: "0185"),
+        Marked(version: "2.9", segment: "PRD", index: 6, table: "0185"),
+        Marked(version: "2.9", segment: "PRD", index: 14, table: "0185"),
+        Marked(version: "2.9", segment: "PRT", index: 23, table: "0185"),
+        Marked(version: "2.9", segment: "IAM", index: 6, table: "0206"),
+        Marked(version: "2.9", segment: "OM4", index: 7, table: "0371"),
+        Marked(version: "2.9", segment: "SAC", index: 27, table: "0371"),
+        Marked(version: "2.9", segment: "BTX", index: 11, table: "0513"),
+        Marked(version: "2.9", segment: "ORC", index: 29, table: "0482"),
+        Marked(version: "2.9", segment: "ORC", index: 30, table: "0483"),
+        Marked(version: "2.9", segment: "DG1", index: 23, table: "0728"),
+        Marked(version: "2.9", segment: "DG1", index: 25, table: "0731"),
+        Marked(version: "2.9", segment: "DRG", index: 11, table: "0415"),
+        Marked(version: "2.9", segment: "DRG", index: 14, table: "0728"),
+        Marked(version: "2.9", segment: "INV", index: 2, table: "0383"),
+        Marked(version: "2.9", segment: "INV", index: 3, table: "0384"),
+        Marked(version: "2.9", segment: "INV", index: 21, table: "0942"),
     ]
 
     @Test("A composite or IS field whose prose opens its table carries the mark", arguments: metadataOnly)
@@ -169,11 +207,40 @@ struct FieldTableOpennessTests {
         let grammar = try #require(grammars(version)[field.segment]?.field(field.index))
         #expect(grammar.tableOpen)
         #expect(grammar.dataType != "ID")
+        #expect(try tableIssues(wire(field.version, field.segment, field.index, "Z"), table: field.table).isEmpty)
+    }
+
+    /// v2.9's marks, whole. A later seeding of the schemas can neither lose one nor gain an unread one.
+    @Test("v2.9 marks exactly the fields its print opens")
+    func v29MarksArePresent() {
+        let marked = SegmentGrammarTable.v2_9.values.flatMap { grammar in
+            grammar.fields.filter(\.tableOpen).map { "\(grammar.segmentID)-\($0.index)" }
+        }
+        let read = (Self.enforced + Self.metadataOnly).filter { $0.version == "2.9" }.map { "\($0.segment)-\($0.index)" }
+        #expect(read.count == 26)
+        #expect(Set(marked) == Set(read))
+    }
+
+    @Test("DPS-5 prints a value set that \"may need to be extended\", then \"for valid values\", on a CNE: not open")
+    func dps5IsNotOpen() {
+        #expect(SegmentGrammarTable.v2_9["DPS"]?.field(5)?.tableOpen == false)
+    }
+
+    @Test("ARV-2 opens its table on v2.8.2 only: v2.9 CH03 3.4.14.2 p200 prints \"for valid values\"")
+    func arv2FollowsEachPrint() {
+        #expect(SegmentGrammarTable.v2_8_2["ARV"]?.field(2)?.tableOpen == true)
+        #expect(SegmentGrammarTable.v2_9["ARV"]?.field(2)?.tableOpen == false)
+    }
+
+    /// Table 0953's four fields print "for suggested values" and are enforced anyway, by the owner's ruling R30.
+    @Test("v2.9's table 0953 fields stay unmarked", arguments: [("ARV", 8), ("BHS", 16), ("FHS", 16), ("MSH", 27)])
+    func table0953FieldsStayUnmarked(segment: String, index: Int) {
+        #expect(SegmentGrammarTable.v2_9[segment]?.field(index)?.tableOpen == false)
     }
 
     @Test("The same table still raises at a field that cites it for valid values",
-          arguments: [("2.4", "PID", 24, "0136"), ("2.6", "PID", 24, "0136"), ("2.8.2", "PID", 24, "0136"),
-                      ("2.3", "RXE", 9, "0167"), ("2.5.1", "RXE", 9, "0167"), ("2.8.2", "RXE", 9, "0167")])
+          arguments: [("2.4", "PID", 24, "0136"), ("2.6", "PID", 24, "0136"), ("2.8.2", "PID", 24, "0136"), ("2.9", "PID", 24, "0136"),
+                      ("2.3", "RXE", 9, "0167"), ("2.5.1", "RXE", 9, "0167"), ("2.8.2", "RXE", 9, "0167"), ("2.9", "RXE", 9, "0167")])
     func validValuesFieldStillClosed(version: String, segment: String, index: Int, table: String) throws {
         let v = try #require(Version(rawValue: version))
         #expect(grammars(v)[segment]?.field(index)?.tableOpen == false)
@@ -215,7 +282,8 @@ struct FieldTableOpennessTests {
                     if open {
                         marked += 1
                         #expect(field.tableOpenCitation?.contains("suggested") == true
-                                    || field.tableOpenCitation?.contains("extended") == true,
+                                    || field.tableOpenCitation?.contains("extended") == true
+                                    || field.tableOpenCitation?.contains("example values") == true,
                                 "v\(version.rawValue) \(schema.segmentID)-\(field.index) cites no prose")
                     }
                 }
