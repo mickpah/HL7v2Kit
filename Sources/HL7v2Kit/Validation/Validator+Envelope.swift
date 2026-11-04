@@ -17,7 +17,8 @@ extension Validator {
             profileCardinalityExtension: profile?.cardinalityExtensions[segment.segmentID]
         )
         // The envelope tables hold no predicate that reads another segment (pinned by
-        // BatchEnvelopeFieldTests), so a one-segment message is all checkSegment reads.
+        // BatchEnvelopeFieldTests and, for v2.9's own-field rules, V29ConditionTests), so a
+        // one-segment message is all checkSegment reads.
         let message = Message(version: version, encodingCharacters: .default, segments: [segment])
         var issues: [ValidationIssue] = []
         checkSegment(segment, segmentIndex: 0, message: message, grammar: grammar,

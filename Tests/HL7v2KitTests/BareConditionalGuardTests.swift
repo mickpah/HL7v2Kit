@@ -147,7 +147,7 @@ struct BareConditionalGuardTests {
             ("v2.3", SegmentGrammarTable.v2_3), ("v2.3.1", SegmentGrammarTable.v2_3_1),
             ("v2.4", SegmentGrammarTable.v2_4), ("v2.5.1", SegmentGrammarTable.v2_5_1),
             ("v2.6", SegmentGrammarTable.v2_6), ("v2.7.1", SegmentGrammarTable.v2_7_1),
-            ("v2.8.2", SegmentGrammarTable.v2_8_2),
+            ("v2.8.2", SegmentGrammarTable.v2_8_2), ("v2.9", SegmentGrammarTable.v2_9),
         ]
         for (version, table) in tables {
             let unnamed = bareConditionals(table).filter { !Self.names(register, $0) }

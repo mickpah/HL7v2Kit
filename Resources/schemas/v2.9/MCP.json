@@ -7,6 +7,6 @@
     { "index": 2, "swiftName": "producerServiceTestObservationId", "name": "Producer's Service/Test/Observation ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "universalServicePriceRangeLowValue", "name": "Universal Service Price Range – Low Value", "dataType": "MO", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "universalServicePriceRangeHighValue", "name": "Universal Service Price Range – High Value", "dataType": "MO", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "reasonForUniversalServiceCostRange", "name": "Reason for Universal Service Cost Range", "dataType": "ST", "optionality": "C", "repeatability": "1" }
+    { "index": 5, "swiftName": "reasonForUniversalServiceCostRange", "name": "Reason for Universal Service Cost Range", "dataType": "ST", "optionality": "C", "repeatability": "1", "condition": "MCP-3 populated" }
   ]
 }

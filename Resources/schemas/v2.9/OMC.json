@@ -4,8 +4,8 @@
   "description": "Supporting Clinical Information",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "length": "4=", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
-    { "index": 3, "swiftName": "segmentUniqueKey", "name": "Segment Unique Key", "dataType": "EI", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0206"], "condition": "OMC-3 populated", "prohibitedWhen": "OMC-3 empty" },
+    { "index": 3, "swiftName": "segmentUniqueKey", "name": "Segment Unique Key", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "OMC-2 populated", "prohibitedWhen": "OMC-2 empty" },
     { "index": 4, "swiftName": "clinicalInformationRequest", "name": "Clinical Information Request", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0664"] },
     { "index": 5, "swiftName": "collectionEventProcessStep", "name": "Collection Event/Process Step", "dataType": "CWE", "optionality": "R", "repeatability": "*", "tables": ["0938"] },
     { "index": 6, "swiftName": "communicationLocation", "name": "Communication Location", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0939"] },

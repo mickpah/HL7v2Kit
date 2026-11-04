@@ -156,4 +156,46 @@ struct V29GrammarTests {
     func truncationEscape() {
         #expect(Version.v2_9.definesTruncationEscape)
     }
+
+    private static func mshWithField27(_ value: String) -> String {
+        "MSH|^~\\&|LAB|FAC|GP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.9"
+            + String(repeating: "|", count: 15) + value + "\r"
+    }
+
+    @Test("MSH-26 is required when MSH-27 or MSH-28 is valued (CH02 2.14.9.26)")
+    func securityClassificationCondition() throws {
+        #expect(grammar["MSH"]?.field(26)?.condition == "MSH-27 populated OR MSH-28 populated")
+        let issues = Validator().validate(try Parser().parse(Self.mshWithField27("SH1"))).issues
+        #expect(issues.contains { $0.location.segmentID == "MSH" && $0.location.fieldIndex == 26 })
+    }
+
+    @Test("MSH-26 is optional when neither is valued")
+    func securityClassificationOptional() throws {
+        let issues = Validator().validate(try Parser().parse(Self.mshWithField27(""))).issues
+        #expect(!issues.contains { $0.location.segmentID == "MSH" && $0.location.fieldIndex == 26 })
+    }
+
+    @Test("Every C field of v2.9 has a condition or a registered reason")
+    func noBareConditionals() {
+        #expect(bareConditionals(grammar) == Self.registeredBareConditionals)      // TestSupport.swift
+    }
+
+    /// Fields printed C whose rule the condition language cannot state, or the print leaves
+    /// unstated. Each has a row in the permanent-limitations register.
+    static let registeredBareConditionals: Set<String> = [
+        // The text states no predicate on the field.
+        "ADJ-7", "AIS-5", "ARQ-24", "BHS-16", "BHS-17", "CSP-4", "DG1-22", "DMI-2", "DMI-3", "DMI-4", "DMI-5",
+        "FHS-16", "FHS-17", "GOL-22", "IVC-23", "OBX-5", "OBX-22", "PRB-28", "PSL-10", "PSL-12", "PSL-13",
+        "PSL-14", "PSL-15", "PSL-16", "PTH-7", "QPD-2", "REL-1", "RXC-10", "RXE-10", "RXE-18", "RXE-19",
+        "RXG-32", "RXO-31", "RXV-20", "RXV-21", "SCH-26", "TXA-22",
+        // The rule turns on what the message cannot show: exchange state, intent, terminology, clinical
+        // data or site policy.
+        "AUT-6", "ARQ-2", "ARQ-3", "CER-12", "IAM-7", "OBR-48", "PRT-1", "RXA-7", "RXA-12",
+        "RXC-11", "RXD-5", "RXD-8", "RXE-11", "RXE-16", "RXE-17", "RXE-22", "RXG-14", "RXG-33", "RXO-5",
+        "RXO-15", "RXO-17", "SAC-3", "SAC-4", "SCH-3", "SCH-24", "SID-1", "SID-2", "SID-3", "SID-4", "TXA-11",
+        // "All updating or modifying trigger events", which Chapter 10 does not list.
+        "AIG-2", "AIL-2", "AIP-2", "AIS-2", "RGS-2",
+        // Stated, but only approximately in this language: a predicate could misfire.
+        "OBX-4", "PTH-6", "RXE-15",
+    ]
 }

@@ -4,8 +4,8 @@
   "description": "Device",
   "fields": [
     { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "length": "2..2", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
-    { "index": 2, "swiftName": "uniqueDeviceIdentifier", "name": "Unique Device Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1" },
-    { "index": 3, "swiftName": "deviceType", "name": "Device Type", "dataType": "CNE", "optionality": "C", "repeatability": "*", "tables": ["0961"] },
+    { "index": 2, "swiftName": "uniqueDeviceIdentifier", "name": "Unique Device Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "DEV-3 empty" },
+    { "index": 3, "swiftName": "deviceType", "name": "Device Type", "dataType": "CNE", "optionality": "C", "repeatability": "*", "tables": ["0961"], "condition": "DEV-2 empty" },
     { "index": 4, "swiftName": "deviceStatus", "name": "Device Status", "dataType": "CNE", "optionality": "O", "repeatability": "*", "tables": ["0962"] },
     { "index": 5, "swiftName": "manufacturerDistributor", "name": "Manufacturer/Distributor", "dataType": "XON", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "brandName", "name": "Brand Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },

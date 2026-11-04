@@ -31,8 +31,8 @@
     { "index": 26, "swiftName": "certificationType", "name": "Certification Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0921"] },
     { "index": 27, "swiftName": "certificationCategory", "name": "Certification Category", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0922"] },
     { "index": 28, "swiftName": "onlineVerificationDateTime", "name": "Online Verification Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 29, "swiftName": "onlineVerificationResult", "name": "Online Verification Result", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0970"] },
-    { "index": 30, "swiftName": "onlineVerificationResultErrorCode", "name": "Online Verification Result Error Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0971"] },
-    { "index": 31, "swiftName": "onlineVerificationResultCheckDigit", "name": "Online Verification Result Check Digit", "dataType": "ST", "optionality": "C", "repeatability": "1" }
+    { "index": 29, "swiftName": "onlineVerificationResult", "name": "Online Verification Result", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0970"], "condition": "IN3-28 populated", "prohibitedWhen": "IN3-28 empty" },
+    { "index": 30, "swiftName": "onlineVerificationResultErrorCode", "name": "Online Verification Result Error Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0971"], "prohibitedWhen": "IN3-28 empty" },
+    { "index": 31, "swiftName": "onlineVerificationResultCheckDigit", "name": "Online Verification Result Check Digit", "dataType": "ST", "optionality": "C", "repeatability": "1", "condition": "IN3-28 populated", "prohibitedWhen": "IN3-28 empty" }
   ]
 }

@@ -12,6 +12,6 @@
     { "index": 7, "swiftName": "securityClassificationTag", "name": "Security Classification Tag", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0952"] },
     { "index": 8, "swiftName": "securityHandlingInstructions", "name": "Security Handling Instructions", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0953"] },
     { "index": 9, "swiftName": "accessRestrictionMessageLocation", "name": "Access Restriction Message Location", "dataType": "ERL", "optionality": "O", "repeatability": "*" },
-    { "index": 10, "swiftName": "accessRestrictionInstanceIdentifier", "name": "Access Restriction Instance Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1" }
+    { "index": 10, "swiftName": "accessRestrictionInstanceIdentifier", "name": "Access Restriction Instance Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "ARV-2 not in (S)" }
   ]
 }

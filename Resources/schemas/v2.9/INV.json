@@ -3,8 +3,8 @@
   "version": "2.9",
   "description": "INV",
   "fields": [
-    { "index": 1, "swiftName": "substanceIdentifier", "name": "Substance Identifier", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0451"] },
-    { "index": 2, "swiftName": "substanceStatus", "name": "Substance Status", "dataType": "CWE", "optionality": "C", "repeatability": "*", "tables": ["0383"] },
+    { "index": 1, "swiftName": "substanceIdentifier", "name": "Substance Identifier", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0451"], "condition": "messageCode != INR OR triggerEvent != U14" },
+    { "index": 2, "swiftName": "substanceStatus", "name": "Substance Status", "dataType": "CWE", "optionality": "C", "repeatability": "*", "tables": ["0383"], "condition": "messageCode != INR OR triggerEvent != U14" },
     { "index": 3, "swiftName": "substanceType", "name": "Substance Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0384"] },
     { "index": 4, "swiftName": "inventoryContainerIdentifier", "name": "Inventory Container Identifier", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0599"] },
     { "index": 5, "swiftName": "containerCarrierIdentifier", "name": "Container Carrier Identifier", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0600"] },
@@ -23,7 +23,7 @@
     { "index": 18, "swiftName": "supplierIdentifier", "name": "Supplier Identifier", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0386"] },
     { "index": 19, "swiftName": "onBoardStabilityTime", "name": "On Board Stability Time", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "targetValue", "name": "Target Value", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
-    { "index": 21, "swiftName": "equipmentStateIndicatorTypeCode", "name": "Equipment State Indicator Type Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0942"] },
-    { "index": 22, "swiftName": "equipmentStateIndicatorValue", "name": "Equipment State Indicator Value", "dataType": "CQ", "optionality": "C", "repeatability": "1" }
+    { "index": 21, "swiftName": "equipmentStateIndicatorTypeCode", "name": "Equipment State Indicator Type Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0942"], "prohibitedWhen": "INV-3 populated" },
+    { "index": 22, "swiftName": "equipmentStateIndicatorValue", "name": "Equipment State Indicator Value", "dataType": "CQ", "optionality": "C", "repeatability": "1", "prohibitedWhen": "INV-21 empty" }
   ]
 }

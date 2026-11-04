@@ -3,8 +3,8 @@
   "version": "2.9",
   "description": "Donation",
   "fields": [
-    { "index": 1, "swiftName": "donationIdentificationNumberDin", "name": "Donation Identification Number - DIN", "dataType": "EI", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "donationType", "name": "Donation Type", "dataType": "CNE", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "donationIdentificationNumberDin", "name": "Donation Identification Number - DIN", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "messageCode = DPR" },
+    { "index": 2, "swiftName": "donationType", "name": "Donation Type", "dataType": "CNE", "optionality": "C", "repeatability": "1", "condition": "messageCode = DPR" },
     { "index": 3, "swiftName": "phlebotomyStartDateTime", "name": "Phlebotomy Start Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "phlebotomyEndDateTime", "name": "Phlebotomy End Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 5, "swiftName": "donationDuration", "name": "Donation Duration", "dataType": "NM", "optionality": "R", "repeatability": "1" },

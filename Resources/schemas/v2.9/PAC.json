@@ -4,7 +4,7 @@
   "description": "Shipment Package",
   "fields": [
     { "index": 1, "swiftName": "setIdPac", "name": "Set Id – PAC", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "packageId", "name": "Package ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "packageId", "name": "Package ID", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "SHP-8 > 1" },
     { "index": 3, "swiftName": "parentPackageId", "name": "Parent Package ID", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "positionInParentPackage", "name": "Position in Parent Package", "dataType": "NA", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "packageType", "name": "Package Type", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0908"] },

@@ -1101,6 +1101,7 @@ struct MultiVersionTests {
             ("2.6", SegmentGrammarTable.v2_6),
             ("2.7.1", SegmentGrammarTable.v2_7_1),
             ("2.8.2", SegmentGrammarTable.v2_8_2),
+            ("2.9", SegmentGrammarTable.v2_9),
         ]
         for (version, table) in tables {
             #expect(table["CSR"]?.field(9)?.condition == "triggerEvent = C01", "CSR-9 on \(version)")

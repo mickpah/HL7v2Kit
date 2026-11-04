@@ -18,7 +18,7 @@
     { "index": 13, "swiftName": "groupPurchasingOrganization", "name": "Group Purchasing Organization", "dataType": "XON", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "maximumMarkup", "name": "Maximum Markup", "dataType": "MOP", "optionality": "O", "repeatability": "1" },
     { "index": 15, "swiftName": "actualMarkup", "name": "Actual Markup", "dataType": "MOP", "optionality": "O", "repeatability": "1" },
-    { "index": 16, "swiftName": "corporation", "name": "Corporation", "dataType": "XON", "optionality": "C", "repeatability": "*" },
+    { "index": 16, "swiftName": "corporation", "name": "Corporation", "dataType": "XON", "optionality": "C", "repeatability": "*", "condition": "CTR-17 populated" },
     { "index": 17, "swiftName": "parentOfCorporation", "name": "Parent of Corporation", "dataType": "XON", "optionality": "O", "repeatability": "1" },
     { "index": 18, "swiftName": "pricingTierLevel", "name": "Pricing Tier Level", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0966"] },
     { "index": 19, "swiftName": "contractPriority", "name": "Contract Priority", "dataType": "ST", "optionality": "O", "repeatability": "1" },

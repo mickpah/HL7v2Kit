@@ -5,13 +5,13 @@
   "fields": [
     { "index": 1, "swiftName": "setIdTq2", "name": "Set ID - TQ2", "dataType": "SI", "length": "1..4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "sequenceResultsFlag", "name": "Sequence/Results Flag", "dataType": "ID", "table": "0503", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0503"] },
-    { "index": 3, "swiftName": "relatedPlacerNumber", "name": "Related Placer Number", "dataType": "EI", "optionality": "C", "repeatability": "*" },
-    { "index": 4, "swiftName": "relatedFillerNumber", "name": "Related Filler Number", "dataType": "EI", "optionality": "C", "repeatability": "*" },
-    { "index": 5, "swiftName": "relatedPlacerGroupNumber", "name": "Related Placer Group Number", "dataType": "EI", "optionality": "C", "repeatability": "*" },
-    { "index": 6, "swiftName": "sequenceConditionCode", "name": "Sequence Condition Code", "dataType": "ID", "table": "0504", "length": "2..", "optionality": "C", "repeatability": "1", "tables": ["0504"] },
-    { "index": 7, "swiftName": "cyclicEntryExitIndicator", "name": "Cyclic Entry/Exit Indicator", "dataType": "ID", "table": "0505", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0505"] },
+    { "index": 3, "swiftName": "relatedPlacerNumber", "name": "Related Placer Number", "dataType": "EI", "optionality": "C", "repeatability": "*", "condition": "TQ2-4 empty AND TQ2-5 empty" },
+    { "index": 4, "swiftName": "relatedFillerNumber", "name": "Related Filler Number", "dataType": "EI", "optionality": "C", "repeatability": "*", "condition": "TQ2-3 empty AND TQ2-5 empty" },
+    { "index": 5, "swiftName": "relatedPlacerGroupNumber", "name": "Related Placer Group Number", "dataType": "EI", "optionality": "C", "repeatability": "*", "condition": "TQ2-3 empty AND TQ2-4 empty" },
+    { "index": 6, "swiftName": "sequenceConditionCode", "name": "Sequence Condition Code", "dataType": "ID", "table": "0504", "length": "2..", "optionality": "C", "repeatability": "1", "tables": ["0504"], "condition": "TQ2-10 empty" },
+    { "index": 7, "swiftName": "cyclicEntryExitIndicator", "name": "Cyclic Entry/Exit Indicator", "dataType": "ID", "table": "0505", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0505"], "prohibitedWhen": "TQ2-2 != C", "prohibitedSeverity": "warning" },
     { "index": 8, "swiftName": "sequenceConditionTimeInterval", "name": "Sequence Condition Time Interval", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "cyclicGroupMaximumNumberOfRepeats", "name": "Cyclic Group Maximum Number of Repeats", "dataType": "NM", "length": "10=", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "specialServiceRequestRelationship", "name": "Special Service Request Relationship", "dataType": "ID", "table": "0506", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0506"] }
+    { "index": 10, "swiftName": "specialServiceRequestRelationship", "name": "Special Service Request Relationship", "dataType": "ID", "table": "0506", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0506"], "condition": "TQ2-6 empty" }
   ]
 }

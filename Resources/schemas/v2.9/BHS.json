@@ -17,7 +17,7 @@
     { "index": 12, "swiftName": "referenceBatchControlId", "name": "Reference Batch Control ID", "dataType": "ST", "length": "20=", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "batchSendingNetworkAddress", "name": "Batch Sending Network Address", "dataType": "HD", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "batchReceivingNetworkAddress", "name": "Batch Receiving Network Address", "dataType": "HD", "optionality": "O", "repeatability": "1" },
-    { "index": 15, "swiftName": "securityClassificationTag", "name": "Security Classification Tag", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0952"] },
+    { "index": 15, "swiftName": "securityClassificationTag", "name": "Security Classification Tag", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0952"], "condition": "BHS-16 populated OR BHS-17 populated" },
     { "index": 16, "swiftName": "securityHandlingInstructions", "name": "Security Handling Instructions", "dataType": "CWE", "optionality": "C", "repeatability": "*", "tables": ["0953"] },
     { "index": 17, "swiftName": "specialAccessRestrictionInstructions", "name": "Special Access Restriction Instructions", "dataType": "ST", "optionality": "C", "repeatability": "*" }
   ]

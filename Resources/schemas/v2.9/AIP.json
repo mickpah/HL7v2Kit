@@ -5,15 +5,15 @@
   "fields": [
     { "index": 1, "swiftName": "setIdAip", "name": "Set ID - AIP", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
-    { "index": 3, "swiftName": "personnelResourceId", "name": "Personnel Resource ID", "dataType": "XCN", "optionality": "C", "repeatability": "*" },
-    { "index": 4, "swiftName": "resourceType", "name": "Resource Type", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0182"] },
+    { "index": 3, "swiftName": "personnelResourceId", "name": "Personnel Resource ID", "dataType": "XCN", "optionality": "C", "repeatability": "*", "condition": "messageCode = SIU" },
+    { "index": 4, "swiftName": "resourceType", "name": "Resource Type", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0182"], "condition": "AIP-3 empty" },
     { "index": 5, "swiftName": "resourceGroup", "name": "Resource Group", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1" },
-    { "index": 7, "swiftName": "startDateTimeOffset", "name": "Start Date/Time Offset", "dataType": "NM", "optionality": "C", "repeatability": "1" },
-    { "index": 8, "swiftName": "startDateTimeOffsetUnits", "name": "Start Date/Time Offset Units", "dataType": "CNE", "optionality": "C", "repeatability": "1" },
+    { "index": 6, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1", "condition": "AIP-7 empty" },
+    { "index": 7, "swiftName": "startDateTimeOffset", "name": "Start Date/Time Offset", "dataType": "NM", "optionality": "C", "repeatability": "1", "condition": "AIP-6 empty" },
+    { "index": 8, "swiftName": "startDateTimeOffsetUnits", "name": "Start Date/Time Offset Units", "dataType": "CNE", "optionality": "C", "repeatability": "1", "condition": "AIP-7 populated" },
     { "index": 9, "swiftName": "duration", "name": "Duration", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "durationUnits", "name": "Duration Units", "dataType": "CNE", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0279"] },
-    { "index": 12, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0278"] }
+    { "index": 11, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0279"], "condition": "messageCode = SRM" },
+    { "index": 12, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0278"], "condition": "messageCode in (SIU, SRR)", "prohibitedWhen": "messageCode = SRM", "prohibitedSeverity": "warning" }
   ]
 }
