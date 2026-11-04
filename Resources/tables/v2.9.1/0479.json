@@ -1,0 +1,9 @@
+{
+  "table": "0479",
+  "version": "2.9.1",
+  "name": "Pharmaceutical Substances",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0479 - Pharmaceutical Substances",
+  "entries": []
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0296",
+  "version": "2.9.1",
+  "name": "Primary Language",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0296 - Primary Language",
+  "entries": []
+}

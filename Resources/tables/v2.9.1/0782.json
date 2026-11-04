@@ -1,0 +1,9 @@
+{
+  "table": "0782",
+  "version": "2.9.1",
+  "name": "Fibrin Index Units (SAC-39)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0782 - Fibrin Index Units (SAC-39)",
+  "entries": []
+}

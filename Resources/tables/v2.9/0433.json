@@ -4,7 +4,7 @@
   "name": "Precaution Code",
   "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0433 - Precaution Code",
+  "citation": "HL7 v2.9 Chapter 2C, Table 0433 - Precaution Code, footer page 360",
   "entries": [
     {
       "code": "A",
@@ -28,7 +28,7 @@
     },
     {
       "code": "N",
-      "description": "Do not resuscitate \"No-code\" (i.e. Do not resuscitate)"
+      "description": "Do not resuscitate"
     },
     {
       "code": "P",

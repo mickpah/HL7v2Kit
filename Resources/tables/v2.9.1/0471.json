@@ -1,0 +1,9 @@
+{
+  "table": "0471",
+  "version": "2.9.1",
+  "name": "Query Name",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0471 - Query Name",
+  "entries": []
+}

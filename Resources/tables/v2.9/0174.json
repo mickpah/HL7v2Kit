@@ -4,7 +4,7 @@
   "name": "Nature of Service/Test/Observation",
   "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.9 Chapter 2C, User-defined Table 0174 - Nature of Service/Test/Observation",
+  "citation": "HL7 v2.9 Chapter 2C, Table 0174 - Nature of Service/Test/Observation, footer page 123",
   "entries": [
     {
       "code": "P",
@@ -20,7 +20,7 @@
     },
     {
       "code": "S",
-      "description": "Superset-a set of batteries or procedures ordered under a single code unit but under a single code unit but segments processed as separate batteries (e.g., routines = CBC, UA, electrolytes) This set indicates that the code being described is used to order multiple service/test/observation b"
+      "description": "Superset-a set of batteries or procedures ordered under a single code unit but processed as separate batteries (e.g., routines = CBC, UA, electrolytes) This set indicates that the code being described is used to order multiple service/test/observation b"
     },
     {
       "code": "C",

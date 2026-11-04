@@ -25,9 +25,18 @@ struct V29GrammarTests {
         #expect(valueType.entries.contains { $0.code == "CD" })
         let marital = try #require(tables["0002"])                   // 2C 0002, Type User
         #expect(marital.kind == .userDefined)
-        let access = try #require(tables["0719"])                    // Appendix A index, HL7-EXT
-        #expect(access.kind == .hl7)
-        #expect(access.permitsLocalExtensions)
+        let identifier = try #require(tables["0954"])                // 2C 0954, Type HL7-EXT
+        #expect(identifier.kind == .hl7)
+        #expect(identifier.permitsLocalExtensions)
+        // ADR-016: field prose calling the table user-defined decides the kind, over Type HL7 or HL7-EXT.
+        let transfer = try #require(tables["0415"])                  // DRG-11, CH06 6.5.3.11 p 48; 2C p 346 Type HL7
+        #expect(transfer.kind == .userDefined && !transfer.isClosed && transfer.entries.map(\.code) == ["N", "E"])
+        let reason = try #require(tables["0719"])                    // ARV-4, CH03 3.4.14.4; 2C Type HL7-EXT
+        #expect(reason.kind == .userDefined && reason.permitsLocalExtensions)
+        let drg = try #require(tables["0731"])                       // DG1-25, CH06 6.5.2.25; 2C Type HL7
+        #expect(drg.kind == .userDefined && !drg.isClosed && drg.entries.count == 5)
+        // TXA-24 (CH09) says "Table 0791 ... for valid values"; "User-defined Table 0791" at IN3-30 is a misprint of 0971.
+        #expect(try #require(tables["0791"]).kind == .hl7)
         let provider = try #require(tables["0133"])                  // 2C 0133, Type undefined
         #expect(provider.kind == .hl7)
         #expect(provider.permitsLocalExtensions)
@@ -54,6 +63,34 @@ struct V29GrammarTests {
         #expect(coding.entries.contains { $0.code == "CDCEDACUITY" })
         #expect(coding.entries.contains { $0.code == "ALPHAID2006" })
         #expect(!coding.entries.contains { $0.code == "UITY" })
+    }
+
+    @Test("Display Names hold no text from the next column or the next row")
+    func displayNames() throws {
+        func description(_ number: String, _ code: String) throws -> String? {
+            try #require(tables[number]).entries.first { $0.code == code }?.description
+        }
+        #expect(try description("0123", "N") == "Procedure completed, results pending")     // p 86
+        #expect(try description("0203", "PA") == "Physician Assistant number")              // p 150
+        #expect(try description("0203", "USID") == "Unique Specimen ID")                    // p 153
+        #expect(try description("0433", "N") == "Do not resuscitate")                       // p 360
+        // p 459 prints a row with the stray glyph `Â` as its Value and "External Jugular"; it names no code.
+        #expect(try description("0550", "ETHMO") == "Ethmoid")
+        let superset = try #require(try description("0174", "S"))                           // p 123
+        #expect(superset.hasPrefix("Superset-a set of batteries or procedures ordered under a single code unit but processed as separate batteries"))
+        #expect(!superset.contains("segments"))
+    }
+
+    /// CH05 5.5.6.7 p 54 and 5.11's note p 108, "an itemization of the segment group names"; CH04 p 161 prints the group DONOR, and no 2C row holds it.
+    @Test("Table 0391: a group name the chapters print is no finding; the rows and other closed tables stand")
+    func segmentGroupStaysOpen() throws {
+        func issues(_ rcp: String) throws -> [ValidationIssue] {
+            let wire = "MSH|^~\\&|A|B|C|D|20240101||QBP^Q21^QBP_Q21|1|P|2.9\rQPD|Q21^x^HL7nnnn|1\r\(rcp)"
+            return Validator().validate(try Parser().parse(wire)).issues
+        }
+        #expect(try !issues("RCP|I||||||DONOR").contains { $0.code == .valueNotInTable(table: "0391") })
+        #expect(try #require(tables["0391"]).entries.count == 132)                          // tc 2C p 306
+        #expect(try issues("RCP|X||||||DONOR").contains { $0.code == .valueNotInTable(table: "0091") })
     }
 
     @Test("Table 0104 prints 2.9 and stays open to a locally agreed version")

@@ -2,9 +2,9 @@
   "table": "0415",
   "version": "2.9",
   "name": "Transfer Type",
-  "kind": "HL7",
+  "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0415 - Transfer Type",
+  "citation": "HL7 v2.9 CH06 sec 6.5.3.11 DRG-11 DRG Transfer Type (p48): 'Refer to User-defined Table 0415 - DRG Transfer Type in Chapter 2C, code Tables, for suggested values' (Chapter 2C p346 prints Type HL7 and 'HL7-defined table of codes', and names DRG-11 as its only use)",
   "entries": [
     {
       "code": "N",

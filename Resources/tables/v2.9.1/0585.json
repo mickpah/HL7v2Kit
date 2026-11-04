@@ -1,0 +1,9 @@
+{
+  "table": "0585",
+  "version": "2.9.1",
+  "name": "Starting Notification Code (CNS-5)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0585 - Starting Notification Code (CNS-5)",
+  "entries": []
+}

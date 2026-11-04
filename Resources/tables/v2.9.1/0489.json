@@ -1,0 +1,54 @@
+{
+  "table": "0489",
+  "version": "2.9.1",
+  "name": "Risk Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0489 - Risk Codes, footer page 522",
+  "entries": [
+    {
+      "code": "BIO",
+      "description": "Biological"
+    },
+    {
+      "code": "COR",
+      "description": "Corrosive"
+    },
+    {
+      "code": "ESC",
+      "description": "Escape Risk"
+    },
+    {
+      "code": "AGG",
+      "description": "Aggressive"
+    },
+    {
+      "code": "IFL",
+      "description": "MaterialDangerInflammable"
+    },
+    {
+      "code": "EXP",
+      "description": "Explosive"
+    },
+    {
+      "code": "INF",
+      "description": "MaterialDangerInfectious"
+    },
+    {
+      "code": "BHZ",
+      "description": "Biohazard"
+    },
+    {
+      "code": "INJ",
+      "description": "Injury Hazard"
+    },
+    {
+      "code": "POI",
+      "description": "Poison"
+    },
+    {
+      "code": "RAD",
+      "description": "Radioactive"
+    }
+  ]
+}

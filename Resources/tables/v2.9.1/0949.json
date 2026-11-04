@@ -1,0 +1,26 @@
+{
+  "table": "0949",
+  "version": "2.9.1",
+  "name": "Order Control Code Reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0949 - Order Control Code Reason",
+  "entries": [
+    {
+      "code": "CO",
+      "description": "Cost"
+    },
+    {
+      "code": "ST",
+      "description": "Specimen Type"
+    },
+    {
+      "code": "SV",
+      "description": "Specimen Volume"
+    },
+    {
+      "code": "UN",
+      "description": "Unavailable test"
+    }
+  ]
+}

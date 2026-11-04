@@ -1,0 +1,9 @@
+{
+  "table": "0729",
+  "version": "2.9.1",
+  "name": "Give Drug Strength Volume Units (RXE-34)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0729 - Give Drug Strength Volume Units (RXE-34)",
+  "entries": []
+}

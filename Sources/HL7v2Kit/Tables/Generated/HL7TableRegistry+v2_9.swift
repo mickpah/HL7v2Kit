@@ -2439,7 +2439,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "Y", description: "No order on record for this test"),
             HL7Table.Entry(code: "Z", description: "No record of this patient"),
             HL7Table.Entry(code: "M", description: "Corrected, not final"),
-            HL7Table.Entry(code: "N", description: "Procedure completed, No result available; requested results pending"),
+            HL7Table.Entry(code: "N", description: "Procedure completed, results pending"),
         ] as [HL7Table.Entry]
     )
 
@@ -3193,7 +3193,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "P", description: "Profile or battery consisting of many independent atomic observations (e.g., SMA12, electrolytes), usually done at one instrument on one specimen"),
             HL7Table.Entry(code: "F", description: "Functional procedure that may consist of one or more interrelated measures (e.g., glucose tolerance test, creatinine clearance), usually done at different times and/or on different specimens"),
             HL7Table.Entry(code: "A", description: "Atomic service/test/observation (test code or treatment code)"),
-            HL7Table.Entry(code: "S", description: "Superset-a set of batteries or procedures ordered under a single code unit but under a single code unit but segments processed as separate batteries (e.g., routines = CBC, UA, electrolytes) This set indicates that the code being described is used to order multiple service/test/observation b"),
+            HL7Table.Entry(code: "S", description: "Superset-a set of batteries or procedures ordered under a single code unit but processed as separate batteries (e.g., routines = CBC, UA, electrolytes) This set indicates that the code being described is used to order multiple service/test/observation b"),
             HL7Table.Entry(code: "C", description: "Single observation calculated via a rule or formula from other independent observations (e.g., Alveolar-arterial ratio, cardiac output)"),
         ] as [HL7Table.Entry]
     )
@@ -3594,7 +3594,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "NPI", description: "National provider identifier"),
             HL7Table.Entry(code: "OBI", description: "Observation Instance Identifier"),
             HL7Table.Entry(code: "OD", description: "Optometrist license number"),
-            HL7Table.Entry(code: "PA", description: "Physician Assistant number assistant within the jurisdiction of a"),
+            HL7Table.Entry(code: "PA", description: "Physician Assistant number"),
             HL7Table.Entry(code: "PC", description: "Parole Card"),
             HL7Table.Entry(code: "PCN", description: "Penitentiary/correctional institution Number"),
             HL7Table.Entry(code: "PE", description: "Living Subject Enterprise Number"),
@@ -3639,7 +3639,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "U", description: "Unspecified identifier"),
             HL7Table.Entry(code: "UDI", description: "Universal Device Identifier"),
             HL7Table.Entry(code: "UPIN", description: "Medicare/CMS (formerly HCFA)'s Universal Physician Identification numbers"),
-            HL7Table.Entry(code: "USID", description: "Unique Specimen A unique identifier for a specimen. ID"),
+            HL7Table.Entry(code: "USID", description: "Unique Specimen ID"),
             HL7Table.Entry(code: "VN", description: "Visit number"),
             HL7Table.Entry(code: "VP", description: "Visitor Permit"),
             HL7Table.Entry(code: "VS", description: "VISA"),
@@ -6584,7 +6584,7 @@ extension HL7TableRegistry {
         number: "0391",
         name: "Segment Group",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ADMINISTRATION", description: ""),
             HL7Table.Entry(code: "ALLERGY", description: ""),
@@ -7162,7 +7162,7 @@ extension HL7TableRegistry {
     static let t0415_v2_9 = HL7Table(
         number: "0415",
         name: "Transfer Type",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "N", description: "DRG Non Exempt"),
@@ -7419,7 +7419,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "C", description: "Confused"),
             HL7Table.Entry(code: "D", description: "Deaf"),
             HL7Table.Entry(code: "I", description: "On IV"),
-            HL7Table.Entry(code: "N", description: "Do not resuscitate \"No-code\" (i.e. Do not resuscitate)"),
+            HL7Table.Entry(code: "N", description: "Do not resuscitate"),
             HL7Table.Entry(code: "P", description: "Paraplegic"),
             HL7Table.Entry(code: "O", description: "Other"),
             HL7Table.Entry(code: "U", description: "Unknown"),
@@ -9595,7 +9595,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "EPIGL", description: "Epiglottis"),
             HL7Table.Entry(code: "ESOPG", description: "Esophageal"),
             HL7Table.Entry(code: "ESO", description: "Esophagus"),
-            HL7Table.Entry(code: "ETHMO", description: "Ethmoid External Jugular"),
+            HL7Table.Entry(code: "ETHMO", description: "Ethmoid"),
             HL7Table.Entry(code: "EYE", description: "Eye"),
             HL7Table.Entry(code: "BROW", description: "Eyebrow"),
             HL7Table.Entry(code: "EYELI", description: "Eyelid"),
@@ -11812,7 +11812,7 @@ extension HL7TableRegistry {
     static let t0719_v2_9 = HL7Table(
         number: "0719",
         name: "Access Restriction Reason Code",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: true,
         entries: [
 
@@ -11944,7 +11944,7 @@ extension HL7TableRegistry {
     static let t0731_v2_9 = HL7Table(
         number: "0731",
         name: "DRG Diagnosis Determination Status",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "0", description: "Valid code"),

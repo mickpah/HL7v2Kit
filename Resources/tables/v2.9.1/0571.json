@@ -1,0 +1,42 @@
+{
+  "table": "0571",
+  "version": "2.9.1",
+  "name": "Invoice Processing Results Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0571 - Invoice Processing Results Status, footer page 617",
+  "entries": [
+    {
+      "code": "ACK",
+      "description": "Acknowledge"
+    },
+    {
+      "code": "REJECT",
+      "description": "Reject"
+    },
+    {
+      "code": "PEND",
+      "description": "Pending"
+    },
+    {
+      "code": "ADJZER",
+      "description": "Adjudicated to Zero"
+    },
+    {
+      "code": "ADJSUB",
+      "description": "Adjudicated as Submitted"
+    },
+    {
+      "code": "ADJ",
+      "description": "Adjudicated with Adjustments"
+    },
+    {
+      "code": "PAID",
+      "description": "Paid"
+    },
+    {
+      "code": "PRED",
+      "description": "Pre-Determination"
+    }
+  ]
+}

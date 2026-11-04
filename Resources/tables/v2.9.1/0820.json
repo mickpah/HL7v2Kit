@@ -1,0 +1,22 @@
+{
+  "table": "0820",
+  "version": "2.9.1",
+  "name": "Sexual Orientation and Gender Identity (SOGI) Concepts",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0820 - Sexual Orientation and Gender Identity (SOGI) Concepts",
+  "entries": [
+    {
+      "code": "76691-5",
+      "description": "Gender Identity"
+    },
+    {
+      "code": "76690-7",
+      "description": "Sexual Orientation"
+    },
+    {
+      "code": "90778-2",
+      "description": "Personal pronouns - Reported"
+    }
+  ]
+}

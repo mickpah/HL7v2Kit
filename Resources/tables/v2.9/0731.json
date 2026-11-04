@@ -2,9 +2,9 @@
   "table": "0731",
   "version": "2.9",
   "name": "DRG Diagnosis Determination Status",
-  "kind": "HL7",
+  "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0731 - DRG Diagnosis Determination Status",
+  "citation": "HL7 v2.9 CH06 sec 6.5.2.25 DG1-25 DRG Diagnosis Determination Status (p45): 'Refer to User-defined Table 0731 – DRG Diagnosis Determination Status in Chapter 2C, Code Tables, for suggested values' (Chapter 2C p574 prints Type HL7 and names DG1-25 as its only use)",
   "entries": [
     {
       "code": "0",

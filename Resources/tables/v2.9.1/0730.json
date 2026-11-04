@@ -1,0 +1,9 @@
+{
+  "table": "0730",
+  "version": "2.9.1",
+  "name": "Pharmaceutical Substance Alternative (RXE-37)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0730 - Pharmaceutical Substance Alternative (RXE-37)",
+  "entries": []
+}

@@ -1,0 +1,26 @@
+{
+  "table": "0207",
+  "version": "2.9.1",
+  "name": "Processing Mode",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0207 - Processing Mode, footer page 202",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Archive"
+    },
+    {
+      "code": "R",
+      "description": "Restore from archive"
+    },
+    {
+      "code": "I",
+      "description": "Initial load"
+    },
+    {
+      "code": "T",
+      "description": "Current processing, transmitted at intervals (scheduled or on demand)"
+    }
+  ]
+}

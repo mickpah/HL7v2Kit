@@ -1,0 +1,18 @@
+{
+  "table": "0393",
+  "version": "2.9.1",
+  "name": "Match Algorithms",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0393 - Match Algorithms, footer pages 395 and 396",
+  "entries": [
+    {
+      "code": "LINKSOFT_2.01",
+      "description": "Proprietary algorithm for LinkSoft v2.01"
+    },
+    {
+      "code": "MATCHWARE_1.2",
+      "description": "Proprietary algorithm for MatchWare v1.2"
+    }
+  ]
+}

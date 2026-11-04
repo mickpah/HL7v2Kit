@@ -1,0 +1,9 @@
+{
+  "table": "0792",
+  "version": "2.9.1",
+  "name": "Creating Specialty (TXA-28)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0792 - Creating Specialty (TXA-28)",
+  "entries": []
+}

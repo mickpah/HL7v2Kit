@@ -1,0 +1,38 @@
+{
+  "table": "0406",
+  "version": "2.9.1",
+  "name": "Participant Organization Unit Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0406 - Participant Organization Unit Type",
+  "entries": [
+    {
+      "code": "H",
+      "description": "Home"
+    },
+    {
+      "code": "O",
+      "description": "Office"
+    },
+    {
+      "code": "1",
+      "description": "Hospital"
+    },
+    {
+      "code": "2",
+      "description": "Physician Clinic"
+    },
+    {
+      "code": "3",
+      "description": "Long Term Care"
+    },
+    {
+      "code": "4",
+      "description": "Acute Care"
+    },
+    {
+      "code": "5",
+      "description": "Other"
+    }
+  ]
+}

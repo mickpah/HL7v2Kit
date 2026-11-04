@@ -1,0 +1,9 @@
+{
+  "table": "0827",
+  "version": "2.9.1",
+  "name": "Source Document Jurisdiction for Recorded Sex or Gender",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0827 - Source Document Jurisdiction for Recorded Sex or Gender",
+  "entries": []
+}

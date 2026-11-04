@@ -1,0 +1,34 @@
+{
+  "table": "0208",
+  "version": "2.9.1",
+  "name": "Query Response Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0208 - Query Response Status",
+  "entries": [
+    {
+      "code": "OK",
+      "description": "Data found, no errors (this is the default)"
+    },
+    {
+      "code": "NF",
+      "description": "No data found, no errors"
+    },
+    {
+      "code": "AE",
+      "description": "Application error"
+    },
+    {
+      "code": "AR",
+      "description": "Application reject"
+    },
+    {
+      "code": "TM",
+      "description": "Too much data found"
+    },
+    {
+      "code": "PD",
+      "description": "Protected data"
+    }
+  ]
+}

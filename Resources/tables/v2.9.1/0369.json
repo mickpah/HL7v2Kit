@@ -1,0 +1,58 @@
+{
+  "table": "0369",
+  "version": "2.9.1",
+  "name": "Specimen Role",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0369 - Specimen Role, footer pages 367 and 368",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Blind Sample"
+    },
+    {
+      "code": "C",
+      "description": "Calibrator"
+    },
+    {
+      "code": "E",
+      "description": "Electronic QC"
+    },
+    {
+      "code": "F",
+      "description": "Filler Organization Proficiency"
+    },
+    {
+      "code": "G",
+      "description": "Group"
+    },
+    {
+      "code": "H",
+      "description": "Historical Specimen"
+    },
+    {
+      "code": "L",
+      "description": "Pool"
+    },
+    {
+      "code": "O",
+      "description": "Operator Proficiency"
+    },
+    {
+      "code": "P",
+      "description": "Patient"
+    },
+    {
+      "code": "Q",
+      "description": "Control specimen"
+    },
+    {
+      "code": "R",
+      "description": "Replicate (of patient sample as a control)"
+    },
+    {
+      "code": "V",
+      "description": "Verifying Calibrator"
+    }
+  ]
+}

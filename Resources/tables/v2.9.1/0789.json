@@ -1,0 +1,9 @@
+{
+  "table": "0789",
+  "version": "2.9.1",
+  "name": "Universal Service Identifier (TCD-1)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0789 - Universal Service Identifier (TCD-1)",
+  "entries": []
+}

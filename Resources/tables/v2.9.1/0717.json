@@ -1,0 +1,314 @@
+{
+  "table": "0717",
+  "version": "2.9.1",
+  "name": "Access Restriction Value",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0717 - Access Restriction Value, footer pages 678 to 728",
+  "entries": [
+    {
+      "code": "PersDEID",
+      "description": "personal de-identified information policy"
+    },
+    {
+      "code": "ALL",
+      "description": "All"
+    },
+    {
+      "code": "DEM",
+      "description": "All demographic data"
+    },
+    {
+      "code": "LOC",
+      "description": "Patient Location"
+    },
+    {
+      "code": "PID-7",
+      "description": "Date of Birth"
+    },
+    {
+      "code": "PID-17",
+      "description": "Religion"
+    },
+    {
+      "code": "HIV",
+      "description": "HIV status and results"
+    },
+    {
+      "code": "STD",
+      "description": "Sexually transmitted diseases"
+    },
+    {
+      "code": "PSY",
+      "description": "Psychiatric Mental health"
+    },
+    {
+      "code": "DRG",
+      "description": "Drug"
+    },
+    {
+      "code": "SMD",
+      "description": "Sensitive medical data"
+    },
+    {
+      "code": "NO",
+      "description": "None"
+    },
+    {
+      "code": "OO",
+      "description": "Opt out all registries (HIPAA)"
+    },
+    {
+      "code": "OI",
+      "description": "Opt in all registries (HIPAA)"
+    },
+    {
+      "code": "JurisIP",
+      "description": "jurisdictional information policy"
+    },
+    {
+      "code": "JurisCUI",
+      "description": "jurisdictional controlled unclassified information policy"
+    },
+    {
+      "code": "JurisDEID",
+      "description": "jurisdictional de-identified information policy"
+    },
+    {
+      "code": "JurisLDS",
+      "description": "jurisdictional limited data set"
+    },
+    {
+      "code": "JurisNSI",
+      "description": "jurisdictional non-sensitive information policy"
+    },
+    {
+      "code": "JurisPI",
+      "description": "jurisdictional public information policy"
+    },
+    {
+      "code": "JurisSP-CUI",
+      "description": "jurisdictional specified controlled unclassified information policy"
+    },
+    {
+      "code": "JurisUUI",
+      "description": "jurisdictional uncontrolled unclassified information policy"
+    },
+    {
+      "code": "OrgIP",
+      "description": "organizational information policy"
+    },
+    {
+      "code": "OrgCUI",
+      "description": "organizational basic controlled unclassified information policy"
+    },
+    {
+      "code": "OrgDEID",
+      "description": "organizational de-identified information policy"
+    },
+    {
+      "code": "OrgLDS",
+      "description": "organizational limited data set information policy"
+    },
+    {
+      "code": "OrgNSI",
+      "description": "organizational non-sensitive information policy"
+    },
+    {
+      "code": "OrgPI",
+      "description": "organizational public information policy"
+    },
+    {
+      "code": "OrgSP-CUI",
+      "description": "organizational specified controlled unclassified information policy"
+    },
+    {
+      "code": "OrgUUI",
+      "description": "organizational uncontrolled unclassified information policy"
+    },
+    {
+      "code": "PersIP",
+      "description": "personal information policy"
+    },
+    {
+      "code": "PersNSI",
+      "description": "personal non-sensitive information policy"
+    },
+    {
+      "code": "PersLDS",
+      "description": "personal limited data set information policy"
+    },
+    {
+      "code": "PersPI",
+      "description": "personal public information policy"
+    },
+    {
+      "code": "GRANTORCHOICE",
+      "description": "grantor choice"
+    },
+    {
+      "code": "IMPLIED",
+      "description": "implied consent"
+    },
+    {
+      "code": "IMPLIEDD",
+      "description": "implied consent with opportunity to dissent"
+    },
+    {
+      "code": "NOCONSENT",
+      "description": "no consent"
+    },
+    {
+      "code": "OPTIN",
+      "description": "opt-in"
+    },
+    {
+      "code": "OPTINR",
+      "description": "opt-in with restrictions"
+    },
+    {
+      "code": "OPTOUT",
+      "description": "opt-out"
+    },
+    {
+      "code": "OPTOUTE",
+      "description": "opt-out with exceptions"
+    },
+    {
+      "code": "EMRGONLY",
+      "description": "opt-in emergency only"
+    },
+    {
+      "code": "NOPP",
+      "description": "notice of privacy practices"
+    },
+    {
+      "code": "OOC",
+      "description": "opt-out of personal information or effect collection in a registry or repository"
+    },
+    {
+      "code": "OOS",
+      "description": "opt-out of personal information or effect sharing via a registry or repository"
+    },
+    {
+      "code": "OIC",
+      "description": "opt-in to personal information or effect collection in a registry or repository"
+    },
+    {
+      "code": "OIS",
+      "description": "opt-in to personal information or effect sharing via a registry or repository"
+    },
+    {
+      "code": "MDHHS-5515",
+      "description": "Michigan Consent to Share Behavioral Health Information for Care Coordination Purposes"
+    },
+    {
+      "code": "GDPRCD",
+      "description": "GDPR Consent Directive"
+    },
+    {
+      "code": "COMMONRULE",
+      "description": "Common Rule"
+    },
+    {
+      "code": "HIPAANOPP",
+      "description": "HIPAA notice of privacy practices"
+    },
+    {
+      "code": "HIPAASelfPay",
+      "description": "HIPAA self-pay"
+    },
+    {
+      "code": "HIPAAConsent",
+      "description": "HIPAA Consent"
+    },
+    {
+      "code": "HIPAAROA",
+      "description": "HIPAA Right of Access"
+    },
+    {
+      "code": "GDPRCONSENT",
+      "description": "GDPR Consent"
+    },
+    {
+      "code": "GDPRCONTRACT",
+      "description": "GDPR contract"
+    },
+    {
+      "code": "GDPRRESEARCH",
+      "description": "GDPR research"
+    },
+    {
+      "code": "42CFRPart2CD",
+      "description": "42 CFR Part 2 consent directive"
+    },
+    {
+      "code": "HIPAAAuthCD",
+      "description": "HIPAA Authorization Consent Directive"
+    },
+    {
+      "code": "HIPAAConsentCD",
+      "description": "HIPAA Consent Directive"
+    },
+    {
+      "code": "HIPAAROACD",
+      "description": "HIPAA Right of Access Consent Directive"
+    },
+    {
+      "code": "HIPAAResearchAuthCD",
+      "description": "HIPAA Authorization for Disclosure for Research Consent Directive"
+    },
+    {
+      "code": "CompoundResearchCD",
+      "description": "Compound HIPAA Research Authorization and Informed Consent for Research"
+    },
+    {
+      "code": "GDPRResearchCD",
+      "description": "GDPR Research Consent Directive"
+    },
+    {
+      "code": "42CFRPart2",
+      "description": "42 CFR Part 2)"
+    },
+    {
+      "code": "HIPAAPsyNotes",
+      "description": "HIPAA psychotherapy notes"
+    },
+    {
+      "code": "Title38Section7332",
+      "description": "Title 38 Section 7332"
+    },
+    {
+      "code": "HIPAAAuth",
+      "description": "HIPAA Authorization for Disclosure"
+    },
+    {
+      "code": "GDPRHLTHSOCSY",
+      "description": "GDPR health or social system management"
+    },
+    {
+      "code": "GDPRLEGALCLAIM",
+      "description": "GDPR legal claim"
+    },
+    {
+      "code": "GDPRLEGALOBL",
+      "description": "GDPR legal obligation"
+    },
+    {
+      "code": "GDPRLEGITINTEREST",
+      "description": "GDPR legitimate interest"
+    },
+    {
+      "code": "GDPRPUBLICHEALTH",
+      "description": "GDPR public health"
+    },
+    {
+      "code": "GDPRPUBLICINTEREST",
+      "description": "GDPR public interest"
+    },
+    {
+      "code": "GDPRVITALINTEREST",
+      "description": "GDPR vital interest"
+    }
+  ]
+}

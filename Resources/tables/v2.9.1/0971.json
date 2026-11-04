@@ -1,0 +1,26 @@
+{
+  "table": "0971",
+  "version": "2.9.1",
+  "name": "Online Verification Result Error Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0971 - Online Verification Result Error Code, footer page 866",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Update technically not possible"
+    },
+    {
+      "code": "2",
+      "description": "Invalid Authentification certificate"
+    },
+    {
+      "code": "3",
+      "description": "Online verification technically not possible"
+    },
+    {
+      "code": "4",
+      "description": "Update technically not possible due to offline time exceeded"
+    }
+  ]
+}

@@ -7,8 +7,8 @@ import Foundation
 
 /// An HL7 code table: its number, printed name, ownership kind and the
 /// value rows the spec prints for one version. M6-O6. The one exception is
-/// v2.9 Table 0953, whose print names a value set and gives no rows: its
-/// rows are that value set's.
+/// Table 0953 on v2.9 and v2.9.1, whose print names a value set and gives no
+/// rows: its rows are that value set's.
 public struct HL7Table: Sendable, Equatable, Hashable {
     /// Who defines the table's values. `ID`-typed fields draw from
     /// `hl7` tables ("the value must be from the table"); `IS`-typed

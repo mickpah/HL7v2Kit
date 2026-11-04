@@ -1,0 +1,9 @@
+{
+  "table": "0594",
+  "version": "2.9.1",
+  "name": "Reason Ended Study (CSR-16)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0594 - Reason Ended Study (CSR-16)",
+  "entries": []
+}

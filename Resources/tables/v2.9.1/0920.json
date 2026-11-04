@@ -1,0 +1,18 @@
+{
+  "table": "0920",
+  "version": "2.9.1",
+  "name": "Preferred Specimen/Attribute Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0920 - Preferred Specimen/Attribute Status (footer page 817); its only governing field, OM4-16 (CH08 sec 8.8.12.16, p58), reads 'Refer to HL7 Table 0920 - Preferred Specimen/Attribute Status in Chapter 2C, Code Tables, for suggested values', so the printed rows are not a closed set",
+  "entries": [
+    {
+      "code": "P",
+      "description": "Preferred"
+    },
+    {
+      "code": "A",
+      "description": "Alternate"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "table": "0948",
+  "version": "2.9.1",
+  "name": "Relationship Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0948 - Relationship Type, footer pages 843 and 844",
+  "entries": [
+    {
+      "code": "CAUS",
+      "description": "Causes/caused"
+    },
+    {
+      "code": "COMP",
+      "description": "Component of"
+    },
+    {
+      "code": "CONCR",
+      "description": "Concurrently"
+    },
+    {
+      "code": "EVID",
+      "description": "Evidence"
+    },
+    {
+      "code": "INTF",
+      "description": "Interferes / interfered"
+    },
+    {
+      "code": "LIMIT",
+      "description": "Limits/limited"
+    },
+    {
+      "code": "SUCCD",
+      "description": "Succeeds"
+    },
+    {
+      "code": "SVTGT",
+      "description": "Service target"
+    },
+    {
+      "code": "TRIG",
+      "description": "Triggers/triggered"
+    }
+  ]
+}

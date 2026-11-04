@@ -1,0 +1,26 @@
+{
+  "table": "0505",
+  "version": "2.9.1",
+  "name": "Cyclic Entry/Exit Indicator",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0505 - Cyclic Entry/Exit Indicator",
+  "entries": [
+    {
+      "code": "F",
+      "description": "First service"
+    },
+    {
+      "code": "L",
+      "description": "Last service"
+    },
+    {
+      "code": "*",
+      "description": "The first service request in a cyclic group"
+    },
+    {
+      "code": "#",
+      "description": "The last service request in a cyclic group."
+    }
+  ]
+}

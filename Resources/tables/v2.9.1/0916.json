@@ -1,0 +1,26 @@
+{
+  "table": "0916",
+  "version": "2.9.1",
+  "name": "Relevant Clinicial Information",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0916 - Relevant Clinicial Information",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Patient was fasting prior to the procedure."
+    },
+    {
+      "code": "NF",
+      "description": "The patient indicated they did not fast prior to the procedure."
+    },
+    {
+      "code": "NG",
+      "description": "Not Given - Patient was not asked at the time of the procedure."
+    },
+    {
+      "code": "FNA",
+      "description": "Fasting not asked of the patient at time of procedure."
+    }
+  ]
+}

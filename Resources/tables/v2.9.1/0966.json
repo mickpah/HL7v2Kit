@@ -1,0 +1,9 @@
+{
+  "table": "0966",
+  "version": "2.9.1",
+  "name": "Pricing Tier Level",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0966 - Pricing Tier Level",
+  "entries": []
+}

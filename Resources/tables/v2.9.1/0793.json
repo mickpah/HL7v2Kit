@@ -1,0 +1,14 @@
+{
+  "table": "0793",
+  "version": "2.9.1",
+  "name": "Ruling Act",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0793 - Ruling Act",
+  "entries": [
+    {
+      "code": "SMDA",
+      "description": "Safe Medical Devices Act"
+    }
+  ]
+}

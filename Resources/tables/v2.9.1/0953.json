@@ -1,0 +1,570 @@
+{
+  "table": "0953",
+  "version": "2.9.1",
+  "name": "Security Label Handling Instructions",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0953 - Security Label Handling Instructions, footer pages 850 and 851, which name the value set SecurityControlObservationValue (OID 2.16.840.1.113883.1.11.20471) and give as its Content Logical Definition 'refer to http://terminology.hl7.org/ValueSet-v3-SecurityControlObservationValue.html'; rows from HL7 Terminology (THO) 7.5.0, value set version 3.1.0, CC0, not re-fetched for this version: the print names no version of the value set",
+  "entries": [
+    {
+      "code": "ACCESSCONSCHEME",
+      "description": "access control scheme"
+    },
+    {
+      "code": "ANONY",
+      "description": "anonymize"
+    },
+    {
+      "code": "AOD",
+      "description": "accounting of disclosure"
+    },
+    {
+      "code": "AUDIT",
+      "description": "audit"
+    },
+    {
+      "code": "AUDTR",
+      "description": "audit trail"
+    },
+    {
+      "code": "AUTHPOL",
+      "description": "authorization policy"
+    },
+    {
+      "code": "BIORCH",
+      "description": "biomedical research"
+    },
+    {
+      "code": "BTG",
+      "description": "break the glass"
+    },
+    {
+      "code": "CAREMGT",
+      "description": "care management"
+    },
+    {
+      "code": "CLINTRCH",
+      "description": "clinical trial research"
+    },
+    {
+      "code": "CLINTRCHNPC",
+      "description": "clinical trial research without patient care"
+    },
+    {
+      "code": "CLINTRCHPC",
+      "description": "clinical trial research with patient care"
+    },
+    {
+      "code": "CLINTRL",
+      "description": "clinical trial"
+    },
+    {
+      "code": "CLMATTCH",
+      "description": "claim attachment"
+    },
+    {
+      "code": "COC",
+      "description": "coordination of care"
+    },
+    {
+      "code": "CONTROLLED",
+      "description": "CONTROLLED"
+    },
+    {
+      "code": "COPYMark",
+      "description": "copy of original mark"
+    },
+    {
+      "code": "COVAUTH",
+      "description": "coverage authorization"
+    },
+    {
+      "code": "COVERAGE",
+      "description": "coverage under policy or program"
+    },
+    {
+      "code": "CPLYCC",
+      "description": "comply with confidentiality code"
+    },
+    {
+      "code": "CPLYCD",
+      "description": "comply with consent directive"
+    },
+    {
+      "code": "CPLYCUI",
+      "description": "comply with controlled unclassified information policy"
+    },
+    {
+      "code": "CPLYJPP",
+      "description": "comply with jurisdictional privacy policy"
+    },
+    {
+      "code": "CPLYJSP",
+      "description": "comply with jurisdictional security policy"
+    },
+    {
+      "code": "CPLYOPP",
+      "description": "comply with organizational privacy policy"
+    },
+    {
+      "code": "CPLYOSP",
+      "description": "comply with organizational security policy"
+    },
+    {
+      "code": "CPLYPOL",
+      "description": "comply with policy"
+    },
+    {
+      "code": "CUI",
+      "description": "CUI"
+    },
+    {
+      "code": "CUIHLTH",
+      "description": "CUI//HLTH"
+    },
+    {
+      "code": "CUIHLTHP",
+      "description": "(CUI//HLTH)"
+    },
+    {
+      "code": "CUIMark",
+      "description": "CUI Mark"
+    },
+    {
+      "code": "CUIP",
+      "description": "(CUI)"
+    },
+    {
+      "code": "CUIPRVCY",
+      "description": "CUI//PRVCY"
+    },
+    {
+      "code": "CUIPRVCYP",
+      "description": "(CUI//PRVCY)"
+    },
+    {
+      "code": "CUISP-HLTH",
+      "description": "CUI//SP-HLTH"
+    },
+    {
+      "code": "CUISP-HLTHP",
+      "description": "(CUI//SP-HLTH)"
+    },
+    {
+      "code": "CUISP-PRVCY",
+      "description": "CUI//SP-PRVCY"
+    },
+    {
+      "code": "CUISP-PRVCYP",
+      "description": "(CUI//SP-PRVCY)"
+    },
+    {
+      "code": "ConfidentialMark",
+      "description": "confidential mark"
+    },
+    {
+      "code": "ControlledUnclassifiedInformation",
+      "description": "ControlledUnclassifiedInformation"
+    },
+    {
+      "code": "DECLASSIFYLABEL",
+      "description": "declassify security label"
+    },
+    {
+      "code": "DEID",
+      "description": "deidentify"
+    },
+    {
+      "code": "DELAU",
+      "description": "delete after use"
+    },
+    {
+      "code": "DELEPOL",
+      "description": "delegation policy"
+    },
+    {
+      "code": "DISASTER",
+      "description": "disaster"
+    },
+    {
+      "code": "DONAT",
+      "description": "donation"
+    },
+    {
+      "code": "DOWNGRDLABEL",
+      "description": "downgrade security label"
+    },
+    {
+      "code": "DRAFTMark",
+      "description": "Draft Mark"
+    },
+    {
+      "code": "DRIVLABEL",
+      "description": "derive security label"
+    },
+    {
+      "code": "DSRCH",
+      "description": "disease specific healthcare research"
+    },
+    {
+      "code": "DeliverToAddresseeOnlyMark",
+      "description": "deliver only to addressee mark"
+    },
+    {
+      "code": "ELIGDTRM",
+      "description": "eligibility determination"
+    },
+    {
+      "code": "ELIGVER",
+      "description": "eligibility verification"
+    },
+    {
+      "code": "ENCRYPT",
+      "description": "encrypt"
+    },
+    {
+      "code": "ENCRYPTR",
+      "description": "encrypt at rest"
+    },
+    {
+      "code": "ENCRYPTT",
+      "description": "encrypt in transit"
+    },
+    {
+      "code": "ENCRYPTU",
+      "description": "encrypt in use"
+    },
+    {
+      "code": "ENROLLM",
+      "description": "enrollment"
+    },
+    {
+      "code": "ERTREAT",
+      "description": "emergency room treatment"
+    },
+    {
+      "code": "ETREAT",
+      "description": "Emergency Treatment"
+    },
+    {
+      "code": "FAMRQT",
+      "description": "family requested"
+    },
+    {
+      "code": "FRAUD",
+      "description": "fraud"
+    },
+    {
+      "code": "GOV",
+      "description": "government"
+    },
+    {
+      "code": "HACCRED",
+      "description": "health accreditation"
+    },
+    {
+      "code": "HCOMPL",
+      "description": "health compliance"
+    },
+    {
+      "code": "HDECD",
+      "description": "decedent"
+    },
+    {
+      "code": "HDIRECT",
+      "description": "directory"
+    },
+    {
+      "code": "HDM",
+      "description": "healthcare delivery management"
+    },
+    {
+      "code": "HLEGAL",
+      "description": "legal"
+    },
+    {
+      "code": "HMARKT",
+      "description": "healthcare marketing"
+    },
+    {
+      "code": "HOPERAT",
+      "description": "healthcare operations"
+    },
+    {
+      "code": "HOUTCOMS",
+      "description": "health outcome measure"
+    },
+    {
+      "code": "HPAYMT",
+      "description": "healthcare payment"
+    },
+    {
+      "code": "HPRGRP",
+      "description": "health program reporting"
+    },
+    {
+      "code": "HQUALIMP",
+      "description": "health quality improvement"
+    },
+    {
+      "code": "HRESCH",
+      "description": "healthcare research"
+    },
+    {
+      "code": "HSYSADMIN",
+      "description": "health system administration"
+    },
+    {
+      "code": "HTEST",
+      "description": "test health data"
+    },
+    {
+      "code": "HUAPRV",
+      "description": "human approval"
+    },
+    {
+      "code": "LABEL",
+      "description": "assign security label"
+    },
+    {
+      "code": "LABELING",
+      "description": "labeling"
+    },
+    {
+      "code": "MASK",
+      "description": "mask"
+    },
+    {
+      "code": "MEMADMIN",
+      "description": "member administration"
+    },
+    {
+      "code": "METAMGT",
+      "description": "metadata management"
+    },
+    {
+      "code": "MILCDM",
+      "description": "military command"
+    },
+    {
+      "code": "MILDCRG",
+      "description": "military discharge"
+    },
+    {
+      "code": "MINEC",
+      "description": "minimum necessary"
+    },
+    {
+      "code": "MLTRAINING",
+      "description": "machine learning training"
+    },
+    {
+      "code": "NOAUTH",
+      "description": "no disclosure without subject authorization"
+    },
+    {
+      "code": "NOCOLLECT",
+      "description": "no collection"
+    },
+    {
+      "code": "NODSCLCD",
+      "description": "no disclosure without consent directive"
+    },
+    {
+      "code": "NODSCLCDS",
+      "description": "no disclosure without information subject's consent directive"
+    },
+    {
+      "code": "NOINTEGRATE",
+      "description": "no integration"
+    },
+    {
+      "code": "NOLIST",
+      "description": "no unlisted entity disclosure"
+    },
+    {
+      "code": "NOMOU",
+      "description": "no disclosure without MOU"
+    },
+    {
+      "code": "NOORGPOL",
+      "description": "no disclosure without organizational authorization"
+    },
+    {
+      "code": "NOPAT",
+      "description": "no disclosure to patient, family or caregivers without attending provider's authorization"
+    },
+    {
+      "code": "NOPERSISTP",
+      "description": "no collection beyond purpose of use"
+    },
+    {
+      "code": "NORDSCLCD",
+      "description": "no redisclosure without consent directive"
+    },
+    {
+      "code": "NORDSCLCDS",
+      "description": "no redisclosure without information subject's consent directive"
+    },
+    {
+      "code": "NORDSCLW",
+      "description": "no disclosure without jurisdictional authorization"
+    },
+    {
+      "code": "NORDSLCD",
+      "description": "no redisclosure without consent directive"
+    },
+    {
+      "code": "NORELINK",
+      "description": "no relinking"
+    },
+    {
+      "code": "NOREUSE",
+      "description": "no reuse beyond purpose of use"
+    },
+    {
+      "code": "NOVIP",
+      "description": "no unauthorized VIP disclosure"
+    },
+    {
+      "code": "ORCON",
+      "description": "no disclosure without originator authorization"
+    },
+    {
+      "code": "ObligationPolicy",
+      "description": "obligation policy"
+    },
+    {
+      "code": "PATADMIN",
+      "description": "patient administration"
+    },
+    {
+      "code": "PATRQT",
+      "description": "patient requested"
+    },
+    {
+      "code": "PATSFTY",
+      "description": "patient safety"
+    },
+    {
+      "code": "PERFMSR",
+      "description": "performance measure"
+    },
+    {
+      "code": "PERSISTLABEL",
+      "description": "persist security label"
+    },
+    {
+      "code": "PMTDS",
+      "description": "decision support assisted payment decision"
+    },
+    {
+      "code": "POARCH",
+      "description": "population origins or ancestry healthcare research"
+    },
+    {
+      "code": "POPHLTH",
+      "description": "population health"
+    },
+    {
+      "code": "PRECLINTRCH",
+      "description": "preclinical trial research"
+    },
+    {
+      "code": "PRIVMARK",
+      "description": "privacy mark"
+    },
+    {
+      "code": "PROCESSINLINELABEL",
+      "description": "process inline security label"
+    },
+    {
+      "code": "PSEUD",
+      "description": "pseudonymize"
+    },
+    {
+      "code": "PUBHLTH",
+      "description": "public health"
+    },
+    {
+      "code": "PWATRNY",
+      "description": "power of attorney"
+    },
+    {
+      "code": "PrivacyMark",
+      "description": "privacy mark"
+    },
+    {
+      "code": "PurposeOfUse",
+      "description": "purpose of use"
+    },
+    {
+      "code": "RECORDMGT",
+      "description": "records management"
+    },
+    {
+      "code": "REDACT",
+      "description": "redact"
+    },
+    {
+      "code": "REMITADV",
+      "description": "remittance advice"
+    },
+    {
+      "code": "RedisclosureProhibitionMark",
+      "description": "prohibition against redisclosure mark"
+    },
+    {
+      "code": "RefrainPolicy",
+      "description": "refrain policy"
+    },
+    {
+      "code": "RestrictedConfidentialityMark",
+      "description": "restricted confidentiality mark"
+    },
+    {
+      "code": "SUPNWK",
+      "description": "support network"
+    },
+    {
+      "code": "SYSDEV",
+      "description": "system development"
+    },
+    {
+      "code": "SecurityLabelMark",
+      "description": "Security Label Mark"
+    },
+    {
+      "code": "SecurityPolicy",
+      "description": "security policy"
+    },
+    {
+      "code": "THREAT",
+      "description": "threat"
+    },
+    {
+      "code": "TRAIN",
+      "description": "training"
+    },
+    {
+      "code": "TRANSRCH",
+      "description": "translational healthcare research"
+    },
+    {
+      "code": "TREAT",
+      "description": "treatment"
+    },
+    {
+      "code": "TREATDS",
+      "description": "decision support assisted treatment decision"
+    },
+    {
+      "code": "UPGRDLABEL",
+      "description": "upgrade security label"
+    },
+    {
+      "code": "UUI",
+      "description": "(U)"
+    }
+  ]
+}

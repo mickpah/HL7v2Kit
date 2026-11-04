@@ -1,0 +1,9 @@
+{
+  "table": "0764",
+  "version": "2.9.1",
+  "name": "Requested Drug Strength Volume Units (RXO-26)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0764 - Requested Drug Strength Volume Units (RXO-26)",
+  "entries": []
+}

@@ -1,0 +1,62 @@
+{
+  "table": "0951",
+  "version": "2.9.1",
+  "name": "Reason for Study",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, Table 0951 - Reason for Study, footer pages 848 and 849",
+  "entries": [
+    {
+      "code": "BS",
+      "description": "Bank residual specimen"
+    },
+    {
+      "code": "CR",
+      "description": "Confirm results value"
+    },
+    {
+      "code": "FP",
+      "description": "Store residual specimen pending follow up"
+    },
+    {
+      "code": "IN",
+      "description": "Interpret results"
+    },
+    {
+      "code": "IR",
+      "description": "Review clinically inconsistent results"
+    },
+    {
+      "code": "IT",
+      "description": "Incorrect test performed"
+    },
+    {
+      "code": "OP",
+      "description": "Test ordering problem"
+    },
+    {
+      "code": "PI",
+      "description": "Patient identification problem"
+    },
+    {
+      "code": "SI",
+      "description": "Suspected interference"
+    },
+    {
+      "code": "SP",
+      "description": "Sampling problem"
+    },
+    {
+      "code": "TP",
+      "description": "Specimen transport problem"
+    },
+    {
+      "code": "TT",
+      "description": "Turnaround time problem"
+    },
+    {
+      "code": "XR",
+      "description": "Incorrect results"
+    }
+  ]
+}

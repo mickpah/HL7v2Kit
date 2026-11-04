@@ -1,0 +1,26 @@
+{
+  "table": "0367",
+  "version": "2.9.1",
+  "name": "Alert Level",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0367 - Alert Level",
+  "entries": [
+    {
+      "code": "N",
+      "description": "Normal"
+    },
+    {
+      "code": "W",
+      "description": "Warning"
+    },
+    {
+      "code": "S",
+      "description": "Serious"
+    },
+    {
+      "code": "C",
+      "description": "Critical"
+    }
+  ]
+}

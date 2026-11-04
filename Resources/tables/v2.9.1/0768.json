@@ -1,0 +1,9 @@
+{
+  "table": "0768",
+  "version": "2.9.1",
+  "name": "Bolus Dose Volume Units (RXV-6)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0768 - Bolus Dose Volume Units (RXV-6)",
+  "entries": []
+}

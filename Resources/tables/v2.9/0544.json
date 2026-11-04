@@ -4,7 +4,7 @@
   "name": "Container Condition",
   "kind": "User",
   "permitsLocalExtensions": true,
-  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0544 - Container Condition; CH07 sec 7.4.3.28 SPM-28 (p84), sec 7.16.2.9 SHP-9 (p174) and sec 7.16.3.6 PAC-6 (p176): 'Refer to HL7 Table 0544 - Container Condition for suggested values', so the printed rows are not a closed set",
+  "citation": "HL7 v2.9 Chapter 2C, Table 0544 - Container Condition (Type User, footer page 453; rows pages 453 and 454); CH07 sec 7.4.3.28 SPM-28 (p84), sec 7.16.2.9 SHP-9 (p173) and sec 7.16.3.6 PAC-6 (p175): 'Refer to HL7 Table 0544 – Container Condition for suggested values', so the printed rows are not a closed set",
   "entries": [
     {
       "code": "XC37",

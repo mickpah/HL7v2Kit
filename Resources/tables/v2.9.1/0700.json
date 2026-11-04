@@ -1,0 +1,9 @@
+{
+  "table": "0700",
+  "version": "2.9.1",
+  "name": "Supplementary Code (RXC-7)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0700 - Supplementary Code (RXC-7)",
+  "entries": []
+}

@@ -1,0 +1,34 @@
+{
+  "dataType": "SN",
+  "version": "2.9.1",
+  "name": "Structured Numeric",
+  "components": [
+    {
+      "index": 1,
+      "name": "Comparator",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "1..2"
+    },
+    {
+      "index": 2,
+      "name": "Num1",
+      "dataType": "NM",
+      "optionality": "C",
+      "condition": "1 populated"
+    },
+    {
+      "index": 3,
+      "name": "Separator/Suffix",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "1..1"
+    },
+    {
+      "index": 4,
+      "name": "Num2",
+      "dataType": "NM",
+      "optionality": "O"
+    }
+  ]
+}

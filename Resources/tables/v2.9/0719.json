@@ -2,8 +2,8 @@
   "table": "0719",
   "version": "2.9",
   "name": "Access Restriction Reason Code",
-  "kind": "HL7",
+  "kind": "User",
   "permitsLocalExtensions": true,
-  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0719 - Access Restriction Reason Code",
+  "citation": "HL7 v2.9 CH03 sec 3.4.14.4 ARV-4 Access Restriction Reason (p200): 'Refer to User-defined Table 0719 – Access Restriction Reason Code in Chapter 2C, Code Tables, for suggested values' (Chapter 2C p569 prints Type HL7-EXT and names ARV-4 as its only use)",
   "entries": []
 }

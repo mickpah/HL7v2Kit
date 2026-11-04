@@ -1,0 +1,9 @@
+{
+  "table": "0746",
+  "version": "2.9.1",
+  "name": "Dispense Units (RXG-33)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0746 - Dispense Units (RXG-33)",
+  "entries": []
+}

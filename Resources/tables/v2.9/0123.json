@@ -4,7 +4,7 @@
   "name": "Result Status",
   "kind": "HL7",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0123 - Result Status",
+  "citation": "HL7 v2.9 Chapter 2C, Table 0123 - Result Status, footer page 86",
   "entries": [
     {
       "code": "O",
@@ -56,7 +56,7 @@
     },
     {
       "code": "N",
-      "description": "Procedure completed, No result available; requested results pending"
+      "description": "Procedure completed, results pending"
     }
   ]
 }

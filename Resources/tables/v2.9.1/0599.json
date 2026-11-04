@@ -1,0 +1,9 @@
+{
+  "table": "0599",
+  "version": "2.9.1",
+  "name": "Inventory Container Identifier (INV-4)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0599 - Inventory Container Identifier (INV-4)",
+  "entries": []
+}

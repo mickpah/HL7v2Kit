@@ -1,0 +1,9 @@
+{
+  "table": "0586",
+  "version": "2.9.1",
+  "name": "Ending Notification Code (CNS-6)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0586 - Ending Notification Code (CNS-6)",
+  "entries": []
+}

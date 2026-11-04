@@ -1,0 +1,9 @@
+{
+  "table": "0463",
+  "version": "2.9.1",
+  "name": "Inventory Number",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0463 - Inventory Number",
+  "entries": []
+}

@@ -3550,6 +3550,20 @@
     "0005": {
       "note": "Parser fix, not an override: the six rows 1002-5 to 2131-1 (footer p37) were being read as the heading of table 1002; the heading rule now needs a spaced dash. The page prints six rows."
     },
+    "0123": {
+      "fixDescriptions": {
+        "N": "Procedure completed, results pending"
+      },
+      "citation": "HL7 v2.9 Chapter 2C, Table 0123 - Result Status, footer page 86",
+      "note": "'Procedure completed,' / 'results pending'. Definition text ran into the Display Name: the print sets it one space away."
+    },
+    "0174": {
+      "fixDescriptions": {
+        "S": "Superset-a set of batteries or procedures ordered under a single code unit but processed as separate batteries (e.g., routines = CBC, UA, electrolytes) This set indicates that the code being described is used to order multiple service/test/observation b"
+      },
+      "citation": "HL7 v2.9 Chapter 2C, Table 0174 - Nature of Service/Test/Observation, footer page 123",
+      "note": "The Definition repeats the Display Name beside it, and the two interleave in the text layer. The cell stops at a stray 'b', as printed."
+    },
     "0211": {
       "renameCodes": {
         "1992": "CNS 11643-1992",
@@ -3619,6 +3633,11 @@
       "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0371 - Additive/Preservative, footer page 291",
       "note": "Four rows print one space between Value and Display Name (MICHTM, MMDTM, PHENOL, THYMOL) and read as prose. FDP's Display Name wraps over three lines; the last, 'Products)', read as a Value."
     },
+    "0391": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0391 - Segment Group (footer pages 306 to 308): 132 rows. CH05 sec 5.5.6.7 RCP-7 (p54) names the table 'for values for Segment Group'; CH05 sec 5.11 (p108) records that 'the usage and naming of segment groups is not clear' and calls the table 'an itemization of the segment group names'; CH04 prints group names that are no row, such as DONOR (p161)",
+      "note": "Chapter 2C's rows stand. The chapters decide openness: enforcing the 132 would reject a group name the chapters themselves print (req #4), as for 0354."
+    },
     "0393": {
       "dropCodes": [
         "LINKSOFTProprietary",
@@ -3675,6 +3694,18 @@
       },
       "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0396 - Coding System, footer page 313 to 335; the table prints the local forms 99zzz and L, so the printed rows are not a closed set",
       "note": "Eight Values wrap with the second line beside more of the Display Name (CDCEDAC / UITY, CDCINDUS / TRY2010, CDCOCCU / PATION20 / 10, CDCPHINV / S, NCPDPnnn / nsss, PHDSCSOP / T, PHINQUES / TION, ROLECLA / SS) and are rejoined here. The page no longer prints the 2010 and 2011 German code sets, GMDC2009, the four UDI systems, IBTnnnn, or the v2.8.2 forms 'ISO' and '3'; they are absent, not dropped. ACTRELSS prints a Display Name that stops mid-word ('filtere'); the extractor keeps it as printed. I10P0 is the text layer's spelling. Display Names set by hand where the print breaks a word at the column edge or after a hyphen or slash and the text layer keeps the break as a space (footer page 323)."
+    },
+    "0415": {
+      "kind": "User",
+      "citation": "HL7 v2.9 CH06 sec 6.5.3.11 DRG-11 DRG Transfer Type (p48): 'Refer to User-defined Table 0415 - DRG Transfer Type in Chapter 2C, code Tables, for suggested values' (Chapter 2C p346 prints Type HL7 and 'HL7-defined table of codes', and names DRG-11 as its only use)",
+      "note": "Under the ADR-016 criterion the chapter prose wins, so the kind is User. The two rows stay as suggestions."
+    },
+    "0433": {
+      "fixDescriptions": {
+        "N": "Do not resuscitate"
+      },
+      "citation": "HL7 v2.9 Chapter 2C, Table 0433 - Precaution Code, footer page 360",
+      "note": "The Definition '\"No-code\" (i.e. Do not resuscitate)' prints one space from the Display Name."
     },
     "0485": {
       "renameCodes": {
@@ -3864,7 +3895,8 @@
     },
     "0104": {
       "permitsLocalExtensions": true,
-      "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0104 - Version ID (the page prints 2.9 as 'Draft 2.9'). CH02 sec 2.14.9.12 MSH-12 (p70) and CH02A sec 2A.3.83.1 VID.1 (p86) both refer to the table 'for valid values'; the table is left open on the cross-version reading recorded for 0104 on v2.3 to v2.8.2 in this file ('MSH-12 may carry a locally agreed version identifier')"
+      "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0104 - Version ID (the page prints 2.9 as 'Draft 2.9'). CH02 sec 2.14.9.12 MSH-12 (p70) and CH02A sec 2A.3.83.1 VID.1 (p86) both refer to the table 'for valid values'; the table is left open on the cross-version reading recorded for 0104 on v2.3 to v2.8.2 in this file ('MSH-12 may carry a locally agreed version identifier')",
+      "note": "The print's words do not open it: 'for valid values' reads as closed under ADR-016. It stays open as a reading carried from v2.3 to v2.8.2, on which closing it would part this version from those for no gain on the wire; 'locally agreed' appears nowhere in this print's CH02 or CH02A."
     },
     "0105": {
       "permitsLocalExtensions": true,
@@ -3883,14 +3915,16 @@
         }
       ],
       "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0203 - Identifier Type; CH02A sec 2A.3.14.5 (CX.5, p34) 'Refer to HL7 Table 0203 - Identifier Type for suggested values', so the printed rows are not a closed set",
-      "note": "The page prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3- character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row, as on v2.3.1 to v2.8.2. The Display Names of AC, DFN, IND, MB and PCN are set by hand: the print breaks a long word mid-word at the column edge ('Accreditation/Cer' / 'tification') or sets the Definition one column off the continuation lines, so the parser cannot place the cut. Display Names set by hand where the print breaks a word at the column edge or after a hyphen or slash and the text layer keeps the break as a space (footer page 153).",
+      "note": "The page prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3- character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row, as on v2.3.1 to v2.8.2. The Display Names of AC, DFN, IND, MB and PCN are set by hand: the print breaks a long word mid-word at the column edge ('Accreditation/Cer' / 'tification') or sets the Definition one column off the continuation lines, so the parser cannot place the cut. Display Names set by hand where the print breaks a word at the column edge or after a hyphen or slash and the text layer keeps the break as a space (footer page 153). PA (p150) and USID (p153): Definition text ran into the Display Name: the print sets it one space away.",
       "fixDescriptions": {
         "AC": "Accreditation/Certification Identifier",
         "DFN": "Drug Furnishing or prescriptive authority Number",
         "IND": "Indigenous/Aboriginal",
         "MB": "Member Number",
         "PCN": "Penitentiary/correctional institution Number",
-        "TN": "Treaty Number/(Canada)"
+        "TN": "Treaty Number/(Canada)",
+        "PA": "Physician Assistant number",
+        "USID": "Unique Specimen ID"
       }
     },
     "0207": {
@@ -3918,12 +3952,22 @@
     },
     "0544": {
       "permitsLocalExtensions": true,
-      "citation": "HL7 v2.9 Chapter 2C, HL7 Table 0544 - Container Condition; CH07 sec 7.4.3.28 SPM-28 (p84), sec 7.16.2.9 SHP-9 (p174) and sec 7.16.3.6 PAC-6 (p176): 'Refer to HL7 Table 0544 - Container Condition for suggested values', so the printed rows are not a closed set"
+      "citation": "HL7 v2.9 Chapter 2C, Table 0544 - Container Condition (Type User, footer page 453; rows pages 453 and 454); CH07 sec 7.4.3.28 SPM-28 (p84), sec 7.16.2.9 SHP-9 (p173) and sec 7.16.3.6 PAC-6 (p175): 'Refer to HL7 Table 0544 – Container Condition for suggested values', so the printed rows are not a closed set"
     },
     "0617": {
       "kind": "User",
       "citation": "HL7 v2.9 CH02A sec 2A.3.87.18 XAD.18 Address Usage (p92), User-defined Table 0617 - Address Usage (Chapter 2C prints Type HL7 and names XAD.18 as its only use)",
       "note": "XAD.18, the only governing field, reads 'Refer to User-defined Table 0617 - Address Usage for valid values'. Under the ADR-016 criterion the chapter prose wins, so the kind is User, as on v2.8.2."
+    },
+    "0719": {
+      "kind": "User",
+      "citation": "HL7 v2.9 CH03 sec 3.4.14.4 ARV-4 Access Restriction Reason (p200): 'Refer to User-defined Table 0719 – Access Restriction Reason Code in Chapter 2C, Code Tables, for suggested values' (Chapter 2C p569 prints Type HL7-EXT and names ARV-4 as its only use)",
+      "note": "Under the ADR-016 criterion the chapter prose wins, so the kind is User. The table prints no rows and stays open."
+    },
+    "0731": {
+      "kind": "User",
+      "citation": "HL7 v2.9 CH06 sec 6.5.2.25 DG1-25 DRG Diagnosis Determination Status (p45): 'Refer to User-defined Table 0731 – DRG Diagnosis Determination Status in Chapter 2C, Code Tables, for suggested values' (Chapter 2C p574 prints Type HL7 and names DG1-25 as its only use)",
+      "note": "Under the ADR-016 criterion the chapter prose wins, so the kind is User. The five rows stay as suggestions."
     },
     "0920": {
       "permitsLocalExtensions": true,
@@ -4091,9 +4135,10 @@
         "SCLAV": "Supraclavicle/Supraclavicular",
         "THORA": "Thorax/Thoracic/Thoracentesis",
         "UMBL": "Umbilicus/Umbilical",
-        "VESTI": "Vestibule(Genital)"
+        "VESTI": "Vestibule(Genital)",
+        "ETHMO": "Ethmoid"
       },
-      "note": "Display Names set by hand where the print breaks a word at the column edge or after a hyphen or slash and the text layer keeps the break as a space (footer page 458, 459, 461, 462, 464, 465).",
+      "note": "Display Names set by hand where the print breaks a word at the column edge or after a hyphen or slash and the text layer keeps the break as a space (footer page 458, 459, 461, 462, 464, 465). ETHMO: p459 prints the next row with a stray glyph, 'Â', as its Value and 'External Jugular' as its Display Name. That names no code, and the row's text had run into ETHMO's; JUGE 'Jugular, External' is a row of its own.",
       "citation": "HL7 v2.9 Chapter 2C, Table 0550 - Body Parts"
     },
     "0553": {
@@ -4712,6 +4757,1258 @@
       "permitsLocalExtensions": false,
       "note": "The print gives no rows, so the extractor reads none. These are the value set's expansion as the source lists it, abstract and retired concepts included. HL7-EXT tables 'function exactly like the HL7 Tables' (2C.4.2), of whose values 2C.4.1 says: 'These values may not be redefined locally; however, the table itself may be extended to accommodate locally defined values.' So it is closed as those tables are: a site declares its extension through ValidationOptions.localTableExtensions, and a code naming another coding system is not read against this table.",
       "citation": "HL7 v2.9 Chapter 2C, Table 0953 - Security Label Handling Instructions, footer pages 804 and 805 (653 in the technical correction), which name the value set SecurityControlObservationValue (OID 2.16.840.1.113883.1.11.20471) and refer to its web rendering for the codes; rows from HL7 Terminology (THO) 7.5.0, value set version 3.1.0, CC0"
+    }
+  },
+  "2.9.1": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0003 - Event (footer pages 32 to 46); CH02 sec 2.4.1 (p8): 'All message types and trigger event codes beginning with the letter \"Z\" are reserved for locally defined messages', so the printed rows are not a closed set"
+    },
+    "0074": {
+      "fixDescriptions": {
+        "MCB": "Mycobacteriology"
+      },
+      "note": "Display Names set by hand against the print (footer page 76): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0074 - Diagnostic Service Section ID, footer page 76"
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0076 - Message Type (footer pages 77 to 82); CH02 sec 2.4.1 (p8): 'All message types and trigger event codes beginning with the letter \"Z\" are reserved for locally defined messages', so the printed rows are not a closed set",
+      "fixDescriptions": {
+        "PPG": "Patient pathway message (goal-oriented)",
+        "PPP": "Patient pathway message (problem-oriented)"
+      },
+      "note": "Display Names set by hand against the print (footer page 80): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash."
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0104 - Version ID (footer pages 96 and 97; the page prints 2.9.1 as 'Draft 2.9.1'). CH02 sec 2.13.9.12 MSH-12 (p71) and CH02A sec 2A.2.83.1 VID.1 (p87) both refer to the table 'for valid values'; the table is left open on the cross-version reading recorded for 0104 on v2.3 to v2.9 in this file ('MSH-12 may carry a locally agreed version identifier')",
+      "note": "The print's words do not open it: 'for valid values' reads as closed under ADR-016. It stays open as a reading carried from v2.3 to v2.8.2, on which closing it would part this version from those for no gain on the wire; 'locally agreed' appears nowhere in this print's CH02 or CH02A."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 CH02 sec 2.13.10.2 NTE-2 Source of Comment (p78), HL7 Table 0105 - Source of Comment: 'This table MAY be extended locally during implementation.'"
+    },
+    "0119": {
+      "fixDescriptions": {
+        "RE": "Observations/Performed Service to follow"
+      },
+      "note": "Display Names set by hand against the print (footer page 106): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0119 - Order Control Codes, footer page 106"
+    },
+    "0123": {
+      "fixDescriptions": {
+        "Y": "No order on record for this test",
+        "M": "Corrected, not final"
+      },
+      "note": "Display Names set by hand against the print (footer page 111): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0123 - Result Status, footer page 111"
+    },
+    "0162": {
+      "fixDescriptions": {
+        "OTH": "Other/Miscellaneous"
+      },
+      "note": "Display Names set by hand against the print (footer page 144): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0162 - Route of Administration, footer page 144"
+    },
+    "0174": {
+      "fixDescriptions": {
+        "S": "Superset-a set of batteries or procedures ordered under a single code unit but processed as separate batteries (e.g., routines = CBC, UA, electrolytes) This set indicates that the code being described is used to order multiple service/test/observation b"
+      },
+      "note": "Display Names set by hand against the print (footer pages 158 and 159): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0174 - Nature of Service/Test/Observation, footer pages 158 and 159"
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 CH08 sec 8.5.1.1 MFI-1 Master File Identifier (p10), HL7 Table 0175 - Master File Identifier Code: 'extended by local agreement during implementation to cover site-specific master files (z-master files).'"
+    },
+    "0200": {
+      "fixDescriptions": {
+        "T": "Indigenous/Tribal"
+      },
+      "note": "Display Names set by hand against the print (footer page 179): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0200 - Name Type, footer page 179"
+    },
+    "0203": {
+      "permitsLocalExtensions": true,
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0203 - Identifier Type (footer pages 183 to 198); CH02A sec 2A.2.14.5 (CX.5, p34): 'Refer to HL7 Table 0203 – Identifier Type for suggested values', and in the same words, with a hyphen, 2A.2.56.13 (PPN.13, p66), 2A.2.88.13 (XCN.13, p95) and 2A.2.89.7 (XON.7, p98), so the printed rows are not a closed set",
+      "note": "The page (p192) prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row, as on v2.3.1 to v2.9. Display Names set by hand against the print (footer pages 183, 187, 188, 192, 193, 194 and 196).",
+      "fixDescriptions": {
+        "AC": "Accreditation/Certification Identifier",
+        "DO": "Osteopathic License number",
+        "DPM": "Podiatrist license number",
+        "ESN": "Staff Enterprise Number",
+        "IND": "Indigenous/Aboriginal",
+        "OD": "Optometrist license number",
+        "PCN": "Penitentiary/correctional institution Number",
+        "PHC": "Public Health Case Identifier",
+        "PN": "Person number",
+        "SRX": "SRA Accession number",
+        "TN": "Treaty Number/(Canada)"
+      }
+    },
+    "0207": {
+      "dropCodes": [
+        "Not",
+        "present"
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0207 - Processing Mode, footer page 202",
+      "note": "The page prints a row 'Not present' (the Value wraps over two lines), Display Name 'Not present (the default, meaning current processing)', Status D. The row denotes an ABSENT field, not a literal value, and the Validator only checks populated values, so it is not a code (as on v2.8.2 and v2.9)."
+    },
+    "0211": {
+      "renameCodes": {
+        "1992": "CNS 11643-1992",
+        "UTF-8": "UNICODE UTF-8"
+      },
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0211 - Alternate Character Sets, footer page 208",
+      "note": "The page wraps two Values: 'CNS 11643-' / '1992' (the first line has a single space before its Display Name and read as a note) and 'UNICODE' / 'UTF-8'. Chapter 2C prints no UTF-16 or UTF-32 row. Appendix A.6 does, and no chapter uses them. CH02 sec 2.13.9.18 MSH-18 (p72) says 'Valid values for this field are specified in HL7 Table 0211 - Alternate Character Sets', so they are not added and the table stays closed. Display Names set by hand against the print (footer pages 208 and 209).",
+      "fixDescriptions": {
+        "CNS 11643-1992": "Code for Taiwanese Character Set (CNS 11643-1992)",
+        "UNICODE": "The world wide character standard from ISO/IEC 10646-1-1993",
+        "UNICODE UTF-8": "UCS Transformation Format, 8-bit form"
+      }
+    },
+    "0235": {
+      "fixDescriptions": {
+        "D": "Database/registry/poison control center",
+        "M": "Manufacturer/marketing authority holder"
+      },
+      "note": "Display Names set by hand against the print (footer page 229): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0235 - Report Source, footer page 229"
+    },
+    "0241": {
+      "fixDescriptions": {
+        "N": "Not recovering/unchanged"
+      },
+      "note": "Display Names set by hand against the print (footer page 236): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0241 - Patient Outcome, footer page 236"
+    },
+    "0248": {
+      "fixDescriptions": {
+        "N": "A product from a controlled/non-related inventory was evaluated"
+      },
+      "note": "Display Names set by hand against the print (footer page 242): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0248 - Product Source, footer page 242"
+    },
+    "0254": {
+      "fixDescriptions": {
+        "IMP": "Impression/interpretation of study",
+        "PRID": "Presence/Identity/Existence"
+      },
+      "note": "Display Names set by hand against the print (footer page 252): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0254 - Kind of Quantity, footer page 252"
+    },
+    "0265": {
+      "fixDescriptions": {
+        "PIN": "Pediatric/neonatal intensive care",
+        "CAR": "Coronary/cardiac care"
+      },
+      "note": "Display Names set by hand against the print (footer pages 265 and 266): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0265 - Specialty Type, footer pages 265 and 266"
+    },
+    "0278": {
+      "renameCodes": {
+        "Discontinue": "Discontinued"
+      },
+      "dropCodes": [
+        "d"
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0278 - Filler status codes, footer pages 278 and 279",
+      "note": "'Discontinue' / 'd' wraps, and the row's Display Name crosses the page break. Display Names set by hand against the print (footer pages 278 and 279).",
+      "fixDescriptions": {
+        "Discontinued": "The indicated appointment was discontinued (DC’ed while in progress, discontinued parent appointment, or discontinued child appointment)"
+      }
+    },
+    "0301": {
+      "dropCodes": [
+        "L,M,N"
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0301 - Universal ID Type (footer page 300)",
+      "note": "The page prints a row whose Value is 'L,M,N' (status D) between the rows L and M, and then M and N as rows of their own, all with the Display Name 'Local'. 'L,M,N' names three codes, not one, and the closed table would otherwise carry a code no HD.3 ever holds. Display Names set by hand against the print (footer page 299).",
+      "fixDescriptions": {
+        "DNS": "Domain Name System",
+        "GUID": "globally unique identifier",
+        "HCD": "CEN Healthcare Coding Identifier"
+      }
+    },
+    "0309": {
+      "fixDescriptions": {
+        "H": "Hospital/institutional",
+        "P": "Physician/professional"
+      },
+      "note": "Display Names set by hand against the print (footer page 305): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0309 - Coverage Type, footer page 305"
+    },
+    "0335": {
+      "renameCodes": {
+        "y#>": "Q<integer>J<day#>",
+        "Meal Related": "Meal Related Timings"
+      },
+      "dropCodes": [
+        "Timings"
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0335 - Repeat Pattern, footer pages 326 and 327",
+      "note": "Two Values wrap. 'Q<integer>J<da' / 'y#>' (its Display Name shares the lines, and the page prints the trailing comma) and 'Meal Related' / 'Timings', whose second line also carries the rest of its Display Name. Display Names set by hand against the print (footer pages 326 and 327).",
+      "fixDescriptions": {
+        "Q<integer>J<day#>": "repeats on a particular day of the week,",
+        "Meal Related Timings": "<timing>C (\"cum\")<meal>"
+      }
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0354 - Message Structure (footer pages 340 to 349). The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. CH08 sec 8.14.1 (p121) defines MFN^M19^MFN_M19, and CH04 sec 4.16.6 (p165) and 4.16.8 (p167) define QBP^Q33^QBP_Q33 and QBP^Q34^QBP_Q34; none of MFN_M19, QBP_Q33 or QBP_Q34 is a row. Enforcing the table would reject messages the specification itself defines (req #4).",
+      "fixDescriptions": {
+        "SET_S41": "Specimen Movement Event",
+        "SET_S50": "Specimen Procedure Step successful",
+        "SET_S52": "Specimen Procedure Step unsuccessful"
+      },
+      "note": "Display Names set by hand against the print (footer page 348): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash."
+    },
+    "0357": {
+      "fixDescriptions": {
+        "198": "Non-Conformant Cardinality"
+      },
+      "note": "Display Names set by hand against the print (footer pages 352 and 353): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0357 - Message Error Condition Codes, footer pages 352 and 353"
+    },
+    "0359": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0359 - Diagnosis Priority (footer pages 354 and 355): its Table Metadata says 'the codes are an unbounded list; additional ranked procedures may be signified by incrementing the code value as needed'; CH06 sec 6.5.2.15 DG1-15 (p45) refers to it 'for suggested values' and 'Values 2-99 convey ranked secondary procedures', so the printed rows are not a closed set"
+    },
+    "0364": {
+      "fixDescriptions": {
+        "DR": "Duplicate/Interaction Reason"
+      },
+      "note": "Display Names set by hand against the print (footer page 360): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0364 - Comment Type, footer page 360"
+    },
+    "0369": {
+      "fixDescriptions": {
+        "H": "Historical Specimen",
+        "R": "Replicate (of patient sample as a control)",
+        "V": "Verifying Calibrator"
+      },
+      "note": "Display Names set by hand against the print (footer pages 367 and 368): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0369 - Specimen Role, footer pages 367 and 368"
+    },
+    "0371": {
+      "addEntries": [
+        [
+          "MICHTM",
+          "Michel's transport medium"
+        ],
+        [
+          "MMDTM",
+          "MMD transport medium"
+        ],
+        [
+          "PHENOL",
+          "Phenol"
+        ],
+        [
+          "THYMOL",
+          "Thymol"
+        ]
+      ],
+      "dropCodes": [
+        "Products)"
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0371 - Additive/Preservative, footer pages 371 and 372",
+      "note": "Four rows print one space between Value and Display Name (MICHTM, MMDTM and PHENOL on p371, THYMOL on p372) and read as prose. FDP's Display Name wraps over three lines; the last, 'Products)', read as a Value. Display Names set by hand against the print (footer page 372).",
+      "fixDescriptions": {
+        "FDP": "Thrombin NIH; soybean trypsin inhibitor (Fibrin Degradation Products)"
+      }
+    },
+    "0391": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0391 - Segment Group (footer pages 390 to 393): 132 rows. CH05 sec 5.4.6.7 RCP-7 (p55) names the table 'for values for Segment Group'; CH05 sec 5.10 (p109) records that 'the usage and naming of segment groups is not clear' and calls the table 'an itemization of the segment group names'; CH04 prints group names that are no row, such as DONOR (p163)",
+      "note": "Chapter 2C's rows stand. The chapters decide openness: enforcing the 132 would reject a group name the chapters themselves print (req #4), as for 0354."
+    },
+    "0393": {
+      "renameCodes": {
+        "MATCHWA": "MATCHWARE_1.2"
+      },
+      "dropCodes": [
+        "RE_1.2"
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0393 - Match Algorithms, footer pages 395 and 396",
+      "note": "Each Value wraps ('LINKSOFT_' / '2.01', 'MATCHWA' / 'RE_1.2'). The first rejoins in the parser; the second has Display Name text beside its tail. Display Names set by hand against the print (footer pages 395 and 396).",
+      "fixDescriptions": {
+        "LINKSOFT_2.01": "Proprietary algorithm for LinkSoft v2.01",
+        "MATCHWARE_1.2": "Proprietary algorithm for MatchWare v1.2"
+      }
+    },
+    "0396": {
+      "renameCodes": {
+        "0": "CDCINDUSTRY2010",
+        "2010": "CDCOCCUPATION2010"
+      },
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0396 - Coding System, footer pages 402 and 403",
+      "note": "Two Values wrap with Display Name text beside the tail: 'CDCINDUSTRY201' / '0' (p402) and 'CDCOCCUPATION' / '2010' (p403). Display Names set by hand against the print (footer pages 402, 403, 411, 412 and 424).",
+      "fixDescriptions": {
+        "CDCINDUSTRY2010": "Industry CDC Census 2010",
+        "CDCM": "CDC Methods/Instruments Codes",
+        "CDCOCCUPATION2010": "Occupation CDC Census 2010",
+        "I10C": "International Classification of Diseases, 10th Revision, Clinical Modification (ICD-10-CM)",
+        "I9C": "International Classification of Diseases, 9th Revision, Clinical Modification (ICD-9-CM)",
+        "IBT0001": "ISBT 128 Standard transfusion/transplantation data items",
+        "RxT-Ingrd": "RxTerms-Ingredients Subset"
+      }
+    },
+    "0415": {
+      "kind": "User",
+      "citation": "HL7 v2.9.1 CH06 sec 6.5.3.11 DRG-11 DRG Transfer Type (p51): 'Refer to User-defined Table 0415 - DRG Transfer Type in Chapter 2C, code Tables, for suggested values' (Chapter 2C p442 prints Type HL7 and 'HL7-defined table of codes', and names DRG-11 as its only use)",
+      "note": "Under the ADR-016 criterion the chapter prose wins, so the kind is User. The two rows stay as suggestions."
+    },
+    "0416": {
+      "fixDescriptions": {
+        "1": "1st non-Operative",
+        "2": "2nd non-Operative"
+      },
+      "note": "Display Names set by hand against the print (footer page 444): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0416 - Procedure DRG Type, footer page 444"
+    },
+    "0417": {
+      "fixDescriptions": {
+        "C": "Carcinoma-unspecified type"
+      },
+      "note": "Display Names set by hand against the print (footer page 445): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0417 - Tissue Type Code, footer page 445"
+    },
+    "0429": {
+      "fixDescriptions": {
+        "BR": "Breeding/genetic stock"
+      },
+      "note": "Display Names set by hand against the print (footer page 456): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0429 - Production Class Code, footer page 456"
+    },
+    "0436": {
+      "fixDescriptions": {
+        "CT": "Contraindication"
+      },
+      "note": "Display Names set by hand against the print (footer page 464): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0436 - Sensitivity to Causative Agent Code, footer page 464"
+    },
+    "0440": {
+      "fixDescriptions": {
+        "IS": "Coded value for user-defined tables"
+      },
+      "note": "Display Names set by hand against the print (footer page 469): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0440 - Data Types, footer page 469"
+    },
+    "0465": {
+      "fixDescriptions": {
+        "A": "Alphabetic (i.e., Default or some single-byte)"
+      },
+      "note": "Display Names set by hand against the print (footer page 490): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0465 - Name/Address Representation, footer page 490"
+    },
+    "0483": {
+      "fixDescriptions": {
+        "VC": "Video-conference"
+      },
+      "note": "Display Names set by hand against the print (footer page 508): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0483 - Authorization Mode, footer page 508"
+    },
+    "0484": {
+      "fixDescriptions": {
+        "Z": "Non-Prescription Fill"
+      },
+      "note": "Display Names set by hand against the print (footer page 509): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0484 - Dispense Type, footer page 509"
+    },
+    "0485": {
+      "renameCodes": {
+        "TM<integer": "TM<integer>",
+        "TH<integer": "TH<integer>",
+        "TD<integer": "TD<integer>",
+        "TW<integer": "TW<integer>"
+      },
+      "dropCodes": [
+        ">"
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0485 - Extended Priority Codes, footer page 511",
+      "note": "TM<integer>, TH<integer>, TD<integer> and TW<integer> print their closing '>' on a second line, beside 'within'. Display Names set by hand against the print (footer page 511).",
+      "fixDescriptions": {
+        "TM<integer>": "Timing critical within <integer> minutes.",
+        "TH<integer>": "Timing critical within <integer> hours.",
+        "TD<integer>": "Timing critical within <integer> days.",
+        "TW<integer>": "Timing critical within <integer> weeks."
+      }
+    },
+    "0489": {
+      "fixDescriptions": {
+        "IFL": "MaterialDangerInflammable",
+        "INF": "MaterialDangerInfectious"
+      },
+      "note": "Display Names set by hand against the print (footer page 522): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0489 - Risk Codes, footer page 522"
+    },
+    "0514": {
+      "renameCodes": {
+        "NONHTRRE": "NONHTRREC"
+      },
+      "dropCodes": [
+        "C"
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0514 - Transfusion Adverse Reaction, footer page 556",
+      "note": "'NONHTRRE' / 'C' wraps with the last words of its Display Name beside the tail; the other wrapped Values in the table rejoin in the parser. Display Names set by hand against the print (footer page 556).",
+      "fixDescriptions": {
+        "NONHTRREC": "Non-Hemolytic Fever Chill Transfusion Reaction - Repeating"
+      }
+    },
+    "0528": {
+      "addEntries": [
+        [
+          "AHS",
+          "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
+        ]
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0528 - Event Related Period (footer page 567); CH02A sec 2A.2.67 (p77)",
+      "note": "Event related period prints HS ('the hour of sleep'); the RPT section's own example (CH02A sec 2A.2.67, p77) is '|QHS&Every day before the hours of sleep&HL7xxx^^^^1^d^^AHS|', whose RPT.8 'AHS' is in no row. Codes are matched exactly, so the closed table rejected the specification's example; the example's spelling is accepted beside the printed rows (as on v2.8.2 and v2.9)."
+    },
+    "0544": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0544 - Container Condition (Type User, footer page 579; rows page 580); CH07 sec 7.4.3.28 SPM-28 (p87), sec 7.16.2.9 SHP-9 (p177) and sec 7.16.3.6 PAC-6 (p179): 'Refer to HL7 Table 0544 – Container Condition for suggested values', so the printed rows are not a closed set"
+    },
+    "0550": {
+      "fixDescriptions": {
+        "BROCH": "Bronchiole/Bronchiolar",
+        "BRONC": "Bronchus/Bronchial",
+        "CLAVI": "Clavicle/Clavicular",
+        "DUODE": "Duodenum/Duodenal",
+        "MANDI": "Mandible/Mandibular",
+        "MAXIL": "Maxilla/Maxillary",
+        "NP": "Nasopharyngeal/Nasopharynx",
+        "NOSE": "Nose/Nose(outside)",
+        "PANAL": "Perianal/Perirectal",
+        "SCAPU": "Scapula/Scapular",
+        "STER": "Sternum/Sternal",
+        "SDP": "Subdiaphramatic",
+        "SCLAV": "Supraclavicle/Supraclavicular",
+        "THORA": "Thorax/Thoracic/Thoracentesis",
+        "TRCHE": "Trachea/Tracheal",
+        "UMBL": "Umbilicus/Umbilical",
+        "VESTI": "Vestibule(Genital)"
+      },
+      "note": "Display Names set by hand against the print (footer pages 585, 586, 587, 590, 591, 592, 593 and 594): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0550 - Body Parts, footer pages 585, 586, 587, 590, 591, 592, 593 and 594"
+    },
+    "0553": {
+      "fixDescriptions": {
+        "PD": "Pre-Determination Invoice",
+        "PA": "Pre-Authorization",
+        "RC": "Referral Pre-Authorization"
+      },
+      "note": "Display Names set by hand against the print (footer pages 596 and 597): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0553 - Invoice Control Code, footer pages 596 and 597"
+    },
+    "0570": {
+      "fixDescriptions": {
+        "SWFT": "Society for Worldwide Interbank Financial Telecommunications (S.W.I.F.T.)"
+      },
+      "note": "Display Names set by hand against the print (footer page 615): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0570 - Payment Method Code, footer page 615"
+    },
+    "0571": {
+      "fixDescriptions": {
+        "PRED": "Pre-Determination"
+      },
+      "note": "Display Names set by hand against the print (footer page 617): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0571 - Invoice Processing Results Status, footer page 617"
+    },
+    "0617": {
+      "kind": "User",
+      "citation": "HL7 v2.9.1 CH02A sec 2A.2.87.18 XAD.18 Address Usage (p92), User-defined Table 0617 - Address Usage (Chapter 2C pp 634 to 636 prints Type HL7 and names XAD.18 as its only use)",
+      "note": "XAD.18, the only governing field, reads 'Refer to User-defined Table 0617 - Address Usage for valid values'. Under the ADR-016 criterion the chapter prose wins, so the kind is User, as on v2.8.2 and v2.9."
+    },
+    "0702": {
+      "fixDescriptions": {
+        "ANR": "Anesthesia/Respiratory",
+        "DEC": "Decontamination"
+      },
+      "note": "Display Names set by hand against the print (footer page 673): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0702 - Cycle Type, footer page 673"
+    },
+    "0717": {
+      "dropCodes": [
+        "uncontrolled",
+        "unclassified",
+        "information",
+        "policy",
+        "sensitive",
+        "exceptions",
+        "42CFRPart2",
+        "CD",
+        "HIPAAAuth",
+        "HIPAACons",
+        "entCD",
+        "HIPAAROAC",
+        "D",
+        "HIPAARese",
+        "Compound",
+        "ResearchC",
+        "GDPRResea",
+        "rchCD",
+        "HIPAAPsyN",
+        "otes",
+        "on7332",
+        "GDPRHLTH",
+        "SOCSY",
+        "management",
+        "GDPRLEGA",
+        "LCLAIM",
+        "LOBL",
+        "GDPRLEGIT",
+        "INTEREST",
+        "GDPRPUBLI",
+        "CHEALTH",
+        "CINTEREST",
+        "GDPRVITALI",
+        "NTEREST"
+      ],
+      "addEntries": [
+        [
+          "42CFRPart2CD",
+          "42 CFR Part 2 consent directive"
+        ],
+        [
+          "HIPAAAuthCD",
+          "HIPAA Authorization Consent Directive"
+        ],
+        [
+          "HIPAAConsentCD",
+          "HIPAA Consent Directive"
+        ],
+        [
+          "HIPAAROACD",
+          "HIPAA Right of Access Consent Directive"
+        ],
+        [
+          "HIPAAResearchAuthCD",
+          "HIPAA Authorization for Disclosure for Research Consent Directive"
+        ],
+        [
+          "CompoundResearchCD",
+          "Compound HIPAA Research Authorization and Informed Consent for Research"
+        ],
+        [
+          "GDPRResearchCD",
+          "GDPR Research Consent Directive"
+        ],
+        [
+          "42CFRPart2",
+          "42 CFR Part 2)"
+        ],
+        [
+          "HIPAAPsyNotes",
+          "HIPAA psychotherapy notes"
+        ],
+        [
+          "Title38Section7332",
+          "Title 38 Section 7332"
+        ],
+        [
+          "HIPAAAuth",
+          "HIPAA Authorization for Disclosure"
+        ],
+        [
+          "GDPRHLTHSOCSY",
+          "GDPR health or social system management"
+        ],
+        [
+          "GDPRLEGALCLAIM",
+          "GDPR legal claim"
+        ],
+        [
+          "GDPRLEGALOBL",
+          "GDPR legal obligation"
+        ],
+        [
+          "GDPRLEGITINTEREST",
+          "GDPR legitimate interest"
+        ],
+        [
+          "GDPRPUBLICHEALTH",
+          "GDPR public health"
+        ],
+        [
+          "GDPRPUBLICINTEREST",
+          "GDPR public interest"
+        ],
+        [
+          "GDPRVITALINTEREST",
+          "GDPR vital interest"
+        ]
+      ],
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0717 - Access Restriction Value, footer pages 678 to 728",
+      "note": "The page prints two groups of consent codes whose Values wrap over two or three lines and share them with the Display Name: the consent directives (42CFRPart2CD p691 to GDPRResearchCD p705) and the legal authorities (42CFRPart2 p706 to GDPRVITALINTEREST p727). The parser keeps each line's first word as a Value, and a Display Name line that starts in the Value column of the row's first line reads as one too; those are dropped and the rows rebuilt from the print. '42 CFR Part 2)' is the page's own text, with its stray bracket. Display Names set by hand against the print (footer pages 678, 679, 683, 684, 685, 687, 688, 689, 690 and 691).",
+      "fixDescriptions": {
+        "PersDEID": "personal de-identified information policy",
+        "OrgUUI": "organizational uncontrolled unclassified information policy",
+        "PersIP": "personal information policy",
+        "PersNSI": "personal non-sensitive information policy",
+        "PersLDS": "personal limited data set information policy",
+        "PersPI": "personal public information policy",
+        "GRANTORCHOICE": "grantor choice",
+        "IMPLIEDD": "implied consent with opportunity to dissent",
+        "OPTOUTE": "opt-out with exceptions",
+        "EMRGONLY": "opt-in emergency only",
+        "OOC": "opt-out of personal information or effect collection in a registry or repository",
+        "OOS": "opt-out of personal information or effect sharing via a registry or repository",
+        "OIC": "opt-in to personal information or effect collection in a registry or repository"
+      }
+    },
+    "0719": {
+      "kind": "User",
+      "citation": "HL7 v2.9.1 CH03 sec 3.4.14.4 ARV-4 Access Restriction Reason (p209): 'Refer to User-defined Table 0719 – Access Restriction Reason Code in Chapter 2C, Code Tables, for suggested values' (Chapter 2C p730 prints Type HL7-EXT and names ARV-4 as its only use)",
+      "note": "Under the ADR-016 criterion the chapter prose wins, so the kind is User. The table prints no rows and stays open."
+    },
+    "0731": {
+      "kind": "User",
+      "citation": "HL7 v2.9.1 CH06 sec 6.5.2.25 DG1-25 DRG Diagnosis Determination Status (p48): 'Refer to User-defined Table 0731 – DRG Diagnosis Determination Status in Chapter 2C, Code Tables, for suggested values' (Chapter 2C p736 prints Type HL7 and names DG1-25 as its only use)",
+      "note": "Under the ADR-016 criterion the chapter prose wins, so the kind is User. The five rows stay as suggestions."
+    },
+    "0906": {
+      "fixDescriptions": {
+        "P": "Preop - Used to indicate that a service is to be performed prior to a scheduled surgery. When ordering a service and using the pre-op priority, a check is done to see the amount of time that must be allowed for performance of the service. When the order"
+      },
+      "note": "Display Names set by hand against the print (footer pages 794 and 795): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0906 - ActPriority, footer pages 794 and 795"
+    },
+    "0907": {
+      "fixDescriptions": {
+        "S": "Sensitive - Information for which the patient seeks heightened confidentiality. Sensitive information is not to be shared with family members. Information reported by the patient about family members is sensitive by default. Flag can be set or cleared"
+      },
+      "note": "Display Names set by hand against the print (footer page 797): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0907 - Confidentiality, footer page 797"
+    },
+    "0912": {
+      "fixDescriptions": {
+        "SC": "Specimen Collector",
+        "VPS": "Verifying Pharmaceutical Supplier (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)",
+        "VTS": "Verifying Treatment Supplier (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"
+      },
+      "note": "Display Names set by hand against the print (footer pages 807 and 808): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0912 - Participation, footer pages 807 and 808"
+    },
+    "0920": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0920 - Preferred Specimen/Attribute Status (footer page 817); its only governing field, OM4-16 (CH08 sec 8.8.12.16, p58), reads 'Refer to HL7 Table 0920 - Preferred Specimen/Attribute Status in Chapter 2C, Code Tables, for suggested values', so the printed rows are not a closed set"
+    },
+    "0937": {
+      "fixDescriptions": {
+        "MNIR": "Micro Non-Isolate Related",
+        "MOD": "Micro Other Descriptor"
+      },
+      "note": "Display Names set by hand against the print (footer pages 833 and 834): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0937 - Observation Sub-Type, footer pages 833 and 834"
+    },
+    "0948": {
+      "fixDescriptions": {
+        "CAUS": "Causes/caused",
+        "CONCR": "Concurrently",
+        "TRIG": "Triggers/triggered"
+      },
+      "note": "Display Names set by hand against the print (footer pages 843 and 844): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0948 - Relationship Type, footer pages 843 and 844"
+    },
+    "0950": {
+      "fixDescriptions": {
+        "EOE": "Expiration on event"
+      },
+      "note": "Display Names set by hand against the print (footer pages 846 and 847): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0950 - Order Status Modifier, footer pages 846 and 847"
+    },
+    "0951": {
+      "fixDescriptions": {
+        "IR": "Review clinically inconsistent results",
+        "PI": "Patient identification problem",
+        "SI": "Suspected interference",
+        "TP": "Specimen transport problem"
+      },
+      "note": "Display Names set by hand against the print (footer pages 848 and 849): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0951 - Reason for Study, footer pages 848 and 849"
+    },
+    "0953": {
+      "addEntries": [
+        [
+          "ACCESSCONSCHEME",
+          "access control scheme"
+        ],
+        [
+          "ANONY",
+          "anonymize"
+        ],
+        [
+          "AOD",
+          "accounting of disclosure"
+        ],
+        [
+          "AUDIT",
+          "audit"
+        ],
+        [
+          "AUDTR",
+          "audit trail"
+        ],
+        [
+          "AUTHPOL",
+          "authorization policy"
+        ],
+        [
+          "BIORCH",
+          "biomedical research"
+        ],
+        [
+          "BTG",
+          "break the glass"
+        ],
+        [
+          "CAREMGT",
+          "care management"
+        ],
+        [
+          "CLINTRCH",
+          "clinical trial research"
+        ],
+        [
+          "CLINTRCHNPC",
+          "clinical trial research without patient care"
+        ],
+        [
+          "CLINTRCHPC",
+          "clinical trial research with patient care"
+        ],
+        [
+          "CLINTRL",
+          "clinical trial"
+        ],
+        [
+          "CLMATTCH",
+          "claim attachment"
+        ],
+        [
+          "COC",
+          "coordination of care"
+        ],
+        [
+          "CONTROLLED",
+          "CONTROLLED"
+        ],
+        [
+          "COPYMark",
+          "copy of original mark"
+        ],
+        [
+          "COVAUTH",
+          "coverage authorization"
+        ],
+        [
+          "COVERAGE",
+          "coverage under policy or program"
+        ],
+        [
+          "CPLYCC",
+          "comply with confidentiality code"
+        ],
+        [
+          "CPLYCD",
+          "comply with consent directive"
+        ],
+        [
+          "CPLYCUI",
+          "comply with controlled unclassified information policy"
+        ],
+        [
+          "CPLYJPP",
+          "comply with jurisdictional privacy policy"
+        ],
+        [
+          "CPLYJSP",
+          "comply with jurisdictional security policy"
+        ],
+        [
+          "CPLYOPP",
+          "comply with organizational privacy policy"
+        ],
+        [
+          "CPLYOSP",
+          "comply with organizational security policy"
+        ],
+        [
+          "CPLYPOL",
+          "comply with policy"
+        ],
+        [
+          "CUI",
+          "CUI"
+        ],
+        [
+          "CUIHLTH",
+          "CUI//HLTH"
+        ],
+        [
+          "CUIHLTHP",
+          "(CUI//HLTH)"
+        ],
+        [
+          "CUIMark",
+          "CUI Mark"
+        ],
+        [
+          "CUIP",
+          "(CUI)"
+        ],
+        [
+          "CUIPRVCY",
+          "CUI//PRVCY"
+        ],
+        [
+          "CUIPRVCYP",
+          "(CUI//PRVCY)"
+        ],
+        [
+          "CUISP-HLTH",
+          "CUI//SP-HLTH"
+        ],
+        [
+          "CUISP-HLTHP",
+          "(CUI//SP-HLTH)"
+        ],
+        [
+          "CUISP-PRVCY",
+          "CUI//SP-PRVCY"
+        ],
+        [
+          "CUISP-PRVCYP",
+          "(CUI//SP-PRVCY)"
+        ],
+        [
+          "ConfidentialMark",
+          "confidential mark"
+        ],
+        [
+          "ControlledUnclassifiedInformation",
+          "ControlledUnclassifiedInformation"
+        ],
+        [
+          "DECLASSIFYLABEL",
+          "declassify security label"
+        ],
+        [
+          "DEID",
+          "deidentify"
+        ],
+        [
+          "DELAU",
+          "delete after use"
+        ],
+        [
+          "DELEPOL",
+          "delegation policy"
+        ],
+        [
+          "DISASTER",
+          "disaster"
+        ],
+        [
+          "DONAT",
+          "donation"
+        ],
+        [
+          "DOWNGRDLABEL",
+          "downgrade security label"
+        ],
+        [
+          "DRAFTMark",
+          "Draft Mark"
+        ],
+        [
+          "DRIVLABEL",
+          "derive security label"
+        ],
+        [
+          "DSRCH",
+          "disease specific healthcare research"
+        ],
+        [
+          "DeliverToAddresseeOnlyMark",
+          "deliver only to addressee mark"
+        ],
+        [
+          "ELIGDTRM",
+          "eligibility determination"
+        ],
+        [
+          "ELIGVER",
+          "eligibility verification"
+        ],
+        [
+          "ENCRYPT",
+          "encrypt"
+        ],
+        [
+          "ENCRYPTR",
+          "encrypt at rest"
+        ],
+        [
+          "ENCRYPTT",
+          "encrypt in transit"
+        ],
+        [
+          "ENCRYPTU",
+          "encrypt in use"
+        ],
+        [
+          "ENROLLM",
+          "enrollment"
+        ],
+        [
+          "ERTREAT",
+          "emergency room treatment"
+        ],
+        [
+          "ETREAT",
+          "Emergency Treatment"
+        ],
+        [
+          "FAMRQT",
+          "family requested"
+        ],
+        [
+          "FRAUD",
+          "fraud"
+        ],
+        [
+          "GOV",
+          "government"
+        ],
+        [
+          "HACCRED",
+          "health accreditation"
+        ],
+        [
+          "HCOMPL",
+          "health compliance"
+        ],
+        [
+          "HDECD",
+          "decedent"
+        ],
+        [
+          "HDIRECT",
+          "directory"
+        ],
+        [
+          "HDM",
+          "healthcare delivery management"
+        ],
+        [
+          "HLEGAL",
+          "legal"
+        ],
+        [
+          "HMARKT",
+          "healthcare marketing"
+        ],
+        [
+          "HOPERAT",
+          "healthcare operations"
+        ],
+        [
+          "HOUTCOMS",
+          "health outcome measure"
+        ],
+        [
+          "HPAYMT",
+          "healthcare payment"
+        ],
+        [
+          "HPRGRP",
+          "health program reporting"
+        ],
+        [
+          "HQUALIMP",
+          "health quality improvement"
+        ],
+        [
+          "HRESCH",
+          "healthcare research"
+        ],
+        [
+          "HSYSADMIN",
+          "health system administration"
+        ],
+        [
+          "HTEST",
+          "test health data"
+        ],
+        [
+          "HUAPRV",
+          "human approval"
+        ],
+        [
+          "LABEL",
+          "assign security label"
+        ],
+        [
+          "LABELING",
+          "labeling"
+        ],
+        [
+          "MASK",
+          "mask"
+        ],
+        [
+          "MEMADMIN",
+          "member administration"
+        ],
+        [
+          "METAMGT",
+          "metadata management"
+        ],
+        [
+          "MILCDM",
+          "military command"
+        ],
+        [
+          "MILDCRG",
+          "military discharge"
+        ],
+        [
+          "MINEC",
+          "minimum necessary"
+        ],
+        [
+          "MLTRAINING",
+          "machine learning training"
+        ],
+        [
+          "NOAUTH",
+          "no disclosure without subject authorization"
+        ],
+        [
+          "NOCOLLECT",
+          "no collection"
+        ],
+        [
+          "NODSCLCD",
+          "no disclosure without consent directive"
+        ],
+        [
+          "NODSCLCDS",
+          "no disclosure without information subject's consent directive"
+        ],
+        [
+          "NOINTEGRATE",
+          "no integration"
+        ],
+        [
+          "NOLIST",
+          "no unlisted entity disclosure"
+        ],
+        [
+          "NOMOU",
+          "no disclosure without MOU"
+        ],
+        [
+          "NOORGPOL",
+          "no disclosure without organizational authorization"
+        ],
+        [
+          "NOPAT",
+          "no disclosure to patient, family or caregivers without attending provider's authorization"
+        ],
+        [
+          "NOPERSISTP",
+          "no collection beyond purpose of use"
+        ],
+        [
+          "NORDSCLCD",
+          "no redisclosure without consent directive"
+        ],
+        [
+          "NORDSCLCDS",
+          "no redisclosure without information subject's consent directive"
+        ],
+        [
+          "NORDSCLW",
+          "no disclosure without jurisdictional authorization"
+        ],
+        [
+          "NORDSLCD",
+          "no redisclosure without consent directive"
+        ],
+        [
+          "NORELINK",
+          "no relinking"
+        ],
+        [
+          "NOREUSE",
+          "no reuse beyond purpose of use"
+        ],
+        [
+          "NOVIP",
+          "no unauthorized VIP disclosure"
+        ],
+        [
+          "ORCON",
+          "no disclosure without originator authorization"
+        ],
+        [
+          "ObligationPolicy",
+          "obligation policy"
+        ],
+        [
+          "PATADMIN",
+          "patient administration"
+        ],
+        [
+          "PATRQT",
+          "patient requested"
+        ],
+        [
+          "PATSFTY",
+          "patient safety"
+        ],
+        [
+          "PERFMSR",
+          "performance measure"
+        ],
+        [
+          "PERSISTLABEL",
+          "persist security label"
+        ],
+        [
+          "PMTDS",
+          "decision support assisted payment decision"
+        ],
+        [
+          "POARCH",
+          "population origins or ancestry healthcare research"
+        ],
+        [
+          "POPHLTH",
+          "population health"
+        ],
+        [
+          "PRECLINTRCH",
+          "preclinical trial research"
+        ],
+        [
+          "PRIVMARK",
+          "privacy mark"
+        ],
+        [
+          "PROCESSINLINELABEL",
+          "process inline security label"
+        ],
+        [
+          "PSEUD",
+          "pseudonymize"
+        ],
+        [
+          "PUBHLTH",
+          "public health"
+        ],
+        [
+          "PWATRNY",
+          "power of attorney"
+        ],
+        [
+          "PrivacyMark",
+          "privacy mark"
+        ],
+        [
+          "PurposeOfUse",
+          "purpose of use"
+        ],
+        [
+          "RECORDMGT",
+          "records management"
+        ],
+        [
+          "REDACT",
+          "redact"
+        ],
+        [
+          "REMITADV",
+          "remittance advice"
+        ],
+        [
+          "RedisclosureProhibitionMark",
+          "prohibition against redisclosure mark"
+        ],
+        [
+          "RefrainPolicy",
+          "refrain policy"
+        ],
+        [
+          "RestrictedConfidentialityMark",
+          "restricted confidentiality mark"
+        ],
+        [
+          "SUPNWK",
+          "support network"
+        ],
+        [
+          "SYSDEV",
+          "system development"
+        ],
+        [
+          "SecurityLabelMark",
+          "Security Label Mark"
+        ],
+        [
+          "SecurityPolicy",
+          "security policy"
+        ],
+        [
+          "THREAT",
+          "threat"
+        ],
+        [
+          "TRAIN",
+          "training"
+        ],
+        [
+          "TRANSRCH",
+          "translational healthcare research"
+        ],
+        [
+          "TREAT",
+          "treatment"
+        ],
+        [
+          "TREATDS",
+          "decision support assisted treatment decision"
+        ],
+        [
+          "UPGRDLABEL",
+          "upgrade security label"
+        ],
+        [
+          "UUI",
+          "(U)"
+        ]
+      ],
+      "permitsLocalExtensions": false,
+      "note": "The print gives no rows, so the extractor reads none. These are the value set's expansion as the source lists it, abstract and retired concepts included. The page names two code systems, ActReason (version 139) and ObservationValue (version 2.1.0), and refers to terminology.hl7.org for the value set's content. HL7-EXT tables 'function exactly like the HL7 Tables' (Chapter 2C p24), of whose values p23 says: 'These values may not be redefined locally; however, the table itself may be extended to accommodate locally defined values.' So it is closed as those tables are, as on v2.9: a site declares its extension through ValidationOptions.localTableExtensions, and a code naming another coding system is not read against this table.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0953 - Security Label Handling Instructions, footer pages 850 and 851, which name the value set SecurityControlObservationValue (OID 2.16.840.1.113883.1.11.20471) and give as its Content Logical Definition 'refer to http://terminology.hl7.org/ValueSet-v3-SecurityControlObservationValue.html'; rows from HL7 Terminology (THO) 7.5.0, value set version 3.1.0, CC0, not re-fetched for this version: the print names no version of the value set"
+    },
+    "0971": {
+      "fixDescriptions": {
+        "4": "Update technically not possible due to offline time exceeded"
+      },
+      "note": "Display Names set by hand against the print (footer page 866): the text layer runs Definition text into the Display Name, or the print breaks a word at the column edge or after a hyphen or slash.",
+      "citation": "HL7 v2.9.1 Chapter 2C, Table 0971 - Online Verification Result Error Code, footer page 866"
     }
   }
 }

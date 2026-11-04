@@ -1,0 +1,82 @@
+{
+  "table": "0301",
+  "version": "2.9.1",
+  "name": "Universal ID Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0301 - Universal ID Type (footer page 300)",
+  "entries": [
+    {
+      "code": "CAP",
+      "description": "College of American Pathologist Accreditation Number"
+    },
+    {
+      "code": "CLIA",
+      "description": "Clinical Laboratory Improvement Amendments"
+    },
+    {
+      "code": "CLIP",
+      "description": "Clinical laboratory Improvement Program"
+    },
+    {
+      "code": "DNS",
+      "description": "Domain Name System"
+    },
+    {
+      "code": "EUI64",
+      "description": "IEEE 64-bit Extended Unique Identifier"
+    },
+    {
+      "code": "GUID",
+      "description": "globally unique identifier"
+    },
+    {
+      "code": "HCD",
+      "description": "CEN Healthcare Coding Identifier"
+    },
+    {
+      "code": "HL7",
+      "description": "HL7 registration schemes"
+    },
+    {
+      "code": "ISO",
+      "description": "ISO Object Identifier"
+    },
+    {
+      "code": "L",
+      "description": "Local"
+    },
+    {
+      "code": "M",
+      "description": "Local"
+    },
+    {
+      "code": "N",
+      "description": "Local"
+    },
+    {
+      "code": "NPI",
+      "description": "US National Provider Identifier"
+    },
+    {
+      "code": "Random",
+      "description": "Random"
+    },
+    {
+      "code": "URI",
+      "description": "Uniform Resource Identifier"
+    },
+    {
+      "code": "UUID",
+      "description": "Universal Unique Identifier"
+    },
+    {
+      "code": "x400",
+      "description": "X.400 MHS identifier"
+    },
+    {
+      "code": "x500",
+      "description": "X500 directory Name"
+    }
+  ]
+}

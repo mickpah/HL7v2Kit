@@ -1,0 +1,51 @@
+{
+  "dataType": "ERL",
+  "version": "2.9.1",
+  "name": "Message Location",
+  "components": [
+    {
+      "index": 1,
+      "name": "Segment ID",
+      "dataType": "ST",
+      "optionality": "R",
+      "length": "3..3"
+    },
+    {
+      "index": 2,
+      "name": "Segment Sequence",
+      "dataType": "SI",
+      "optionality": "R",
+      "length": "="
+    },
+    {
+      "index": 3,
+      "name": "Field Position",
+      "dataType": "SI",
+      "optionality": "C",
+      "length": "=",
+      "condition": "4 populated OR 5 populated"
+    },
+    {
+      "index": 4,
+      "name": "Field Repetition",
+      "dataType": "SI",
+      "optionality": "O",
+      "length": "="
+    },
+    {
+      "index": 5,
+      "name": "Component Number",
+      "dataType": "SI",
+      "optionality": "C",
+      "length": "=",
+      "condition": "6 populated"
+    },
+    {
+      "index": 6,
+      "name": "Sub-Component Number",
+      "dataType": "SI",
+      "optionality": "O",
+      "length": "="
+    }
+  ]
+}

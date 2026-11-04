@@ -1,0 +1,9 @@
+{
+  "table": "0751",
+  "version": "2.9.1",
+  "name": "Provider's Pharmacy/Treatment Instructions (RXO-6)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0751 - Provider's Pharmacy/Treatment Instructions (RXO-6)",
+  "entries": []
+}

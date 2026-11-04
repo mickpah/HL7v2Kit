@@ -1,0 +1,9 @@
+{
+  "table": "0647",
+  "version": "2.9.1",
+  "name": "Observation/Identifier associated with Producer’s Service/Test/Observation ID (OM1-",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0647 - Observation/Identifier associated with Producer’s Service/Test/Observation ID (OM1-",
+  "entries": []
+}

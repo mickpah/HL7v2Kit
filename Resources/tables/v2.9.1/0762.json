@@ -1,0 +1,9 @@
+{
+  "table": "0762",
+  "version": "2.9.1",
+  "name": "Supplementary Code (RXO-24)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0762 - Supplementary Code (RXO-24)",
+  "entries": []
+}

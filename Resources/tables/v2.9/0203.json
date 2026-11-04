@@ -332,7 +332,7 @@
     },
     {
       "code": "PA",
-      "description": "Physician Assistant number assistant within the jurisdiction of a"
+      "description": "Physician Assistant number"
     },
     {
       "code": "PC",
@@ -512,7 +512,7 @@
     },
     {
       "code": "USID",
-      "description": "Unique Specimen A unique identifier for a specimen. ID"
+      "description": "Unique Specimen ID"
     },
     {
       "code": "VN",

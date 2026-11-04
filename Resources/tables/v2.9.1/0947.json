@@ -1,0 +1,9 @@
+{
+  "table": "0947",
+  "version": "2.9.1",
+  "name": "Class of Trade",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, User-defined Table 0947 - Class of Trade",
+  "entries": []
+}

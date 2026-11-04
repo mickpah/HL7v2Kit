@@ -1,0 +1,9 @@
+{
+  "table": "0658",
+  "version": "2.9.1",
+  "name": "Container Units (OM4-5)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0658 - Container Units (OM4-5)",
+  "entries": []
+}

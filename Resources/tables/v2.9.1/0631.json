@@ -1,0 +1,9 @@
+{
+  "table": "0631",
+  "version": "2.9.1",
+  "name": "Producer ID (OM1-5)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0631 - Producer ID (OM1-5)",
+  "entries": []
+}

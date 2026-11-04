@@ -1,0 +1,30 @@
+{
+  "table": "0823",
+  "version": "2.9.1",
+  "name": "Sexual Orientation",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0823 - Sexual Orientation",
+  "entries": [
+    {
+      "code": "89217008",
+      "description": "Lesbian, gay or homosexual"
+    },
+    {
+      "code": "20430005",
+      "description": "heterosexual"
+    },
+    {
+      "code": "42035005",
+      "description": "Bisexual"
+    },
+    {
+      "code": "UNK",
+      "description": "Unknown"
+    },
+    {
+      "code": "asked-declined",
+      "description": "Asked But Declined"
+    }
+  ]
+}
