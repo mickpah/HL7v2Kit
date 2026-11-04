@@ -94,4 +94,66 @@ struct V29GrammarTests {
         // PPN.15 is printed O in v2.9, so it carries no component condition.
         #expect(try condition("PPN", 15) == nil)
     }
+
+    private var grammar: [String: SegmentGrammar] { SegmentGrammarTable.v2_9 }
+
+    @Test("v2.9 segments: v2.8.2's 180 and seven new ones; ZL7 is an example, not a segment")
+    func segmentInventory() {
+        #expect(grammar.count == 187)
+        for id in ["CTR", "DEV", "DST", "OH1", "OH2", "OH3", "OH4"] { #expect(grammar[id] != nil, "\(id)") }
+        #expect(grammar["ZL7"] == nil)      // CH08 8.6.1: "proposed example only"
+        #expect(grammar["QRD"] == nil)      // Appendix A lists it; no chapter defines it
+    }
+
+    @Test("MSH prints 28 fields; MSH-26 and MSH-27 bind tables 0952 and 0953")
+    func mshFields() throws {
+        let msh = try #require(grammar["MSH"])                  // CH02 2.14.9
+        #expect(msh.fields.count == 28)
+        #expect(msh.field(26)?.optionality == .conditional)
+        // CWE fields carry no enforced `table` link (only ID and IS do); the binding to 0952 and
+        // 0953 is the schema's `tables`, which the audit holds to the print.
+        #expect(msh.field(26)?.dataType == "CWE" && msh.field(26)?.table == nil)
+        #expect(msh.field(27)?.dataType == "CWE" && msh.field(27)?.table == nil)
+        #expect(msh.field(27)?.repeatability == .multiple)
+        #expect(msh.field(28)?.dataType == "ST")
+        #expect(msh.field(2)?.length == "4..5")
+    }
+
+    @Test("ROL's printed - reads as B: CH15 15.4.7, retained for backward compatibility")
+    func rolOptionality() throws {
+        let rol = try #require(grammar["ROL"])
+        #expect(rol.fields.count == 14)
+        #expect(rol.fields.allSatisfy { $0.optionality == .backwardCompat })
+    }
+
+    @Test("OH2-5 is printed 54 by mistake, between OH2-4 and OH2-6")
+    func oh2Misprint() throws {
+        let oh2 = try #require(grammar["OH2"])
+        #expect(oh2.field(5)?.name == "Industry")
+        #expect(oh2.field(54) == nil)
+    }
+
+    @Test("ADD and RDT are hand-authored from their 1-n rows (CH02 2.14.1, CH05 5.5.8)")
+    func variableColumnSegments() {
+        #expect(grammar["ADD"]?.field(1)?.variableColumns == true)
+        #expect(grammar["RDT"]?.fields.count == 1)
+        #expect(grammar["RDT"]?.field(1)?.variableColumns == true)
+    }
+
+    @Test("A 2.9 message parses as v2.9 and validates against its own grammar")
+    func dispatch() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9\r"
+            + "EVN||20240301120000\rPID|1||123456^^^HOSP^MR||Smith^John||19800101|M\rPV1|1|I\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_9)
+        #expect(message.version.grammarVersion == .v2_9)
+        let codes = Validator(options: .strict).validate(message).issues.map(\.code)
+        #expect(!codes.contains(.segmentNotInVersionGrammar))
+        #expect(!codes.contains { if case .versionNotRecognised = $0 { return true } else { return false } })
+    }
+
+    @Test("\\P\\ is defined on v2.9: CH02 section 2.7.1")
+    func truncationEscape() {
+        #expect(Version.v2_9.definesTruncationEscape)
+    }
 }

@@ -1,0 +1,11 @@
+{
+  "segmentID": "CTI",
+  "version": "2.9",
+  "description": "Clinical Trial Identification",
+  "fields": [
+    { "index": 1, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0597"] },
+    { "index": 3, "swiftName": "studyScheduledTimePoint", "name": "Study Scheduled Time Point", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0598"] },
+    { "index": 4, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "length": "2..2", "optionality": "O", "repeatability": "1", "tables": ["0206"] }
+  ]
+}

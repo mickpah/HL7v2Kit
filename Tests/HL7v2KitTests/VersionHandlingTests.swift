@@ -239,7 +239,7 @@ struct VersionHandlingTests {
     }
 
     @Test("An MSH-12 version HL7v2Kit does not model yields one warning naming the fallback",
-          arguments: ["2.1", "2.2", "2.5", "2.8.1", "2.9"])
+          arguments: ["2.1", "2.2", "2.5", "2.8.1", "2.9.2"])
     func unrecognisedVersionWarns(_ wireVersion: String) throws {
         let message = try Parser().parse(adt(version: wireVersion))
         #expect(message.version == .v2_5_1)

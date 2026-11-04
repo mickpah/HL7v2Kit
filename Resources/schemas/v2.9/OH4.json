@@ -1,0 +1,13 @@
+{
+  "segmentID": "OH4",
+  "version": "2.9",
+  "description": "Combat Zone Work",
+  "fields": [
+    { "index": 1, "swiftName": "setID", "name": "Set ID", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "length": "2..2", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "combatZoneStartDate", "name": "Combat Zone Start Date", "dataType": "DT", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "combatZoneEndDate", "name": "Combat Zone End Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "enteredDate", "name": "Entered Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "combatZoneUniqueIdentifier", "name": "Combat Zone Unique Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" }
+  ]
+}

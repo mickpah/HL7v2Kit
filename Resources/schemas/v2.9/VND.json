@@ -1,0 +1,18 @@
+{
+  "segmentID": "VND",
+  "version": "2.9",
+  "description": "Purchasing Vendor",
+  "fields": [
+    { "index": 1, "swiftName": "setIdVnd", "name": "Set Id – VND", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "vendorIdentifier", "name": "Vendor Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "vendorName", "name": "Vendor Name", "dataType": "ST", "length": "999=", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "vendorCatalogNumber", "name": "Vendor Catalog Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "primaryVendorIndicator", "name": "Primary Vendor Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
+    { "index": 6, "swiftName": "corporation", "name": "Corporation", "dataType": "EI", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "primaryContact", "name": "Primary Contact", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "contractAdjustment", "name": "Contract Adjustment", "dataType": "MOP", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "associatedContractID", "name": "Associated Contract ID", "dataType": "EI", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "classOfTrade", "name": "Class of Trade", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 11, "swiftName": "pricingTierLevel", "name": "Pricing Tier Level", "dataType": "CWE", "optionality": "O", "repeatability": "1" }
+  ]
+}

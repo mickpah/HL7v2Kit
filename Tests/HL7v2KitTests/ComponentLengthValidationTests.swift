@@ -237,7 +237,7 @@ struct ComponentLengthValidationTests {
     @Test("The parsed-once index selects exactly the components a per-call parse would")
     func indexMatchesParse() {
         let versions = Set(Version.allCases.map(\.grammarVersion))
-        #expect(Set(Validator.componentLengthRules.keys) == [.v2_7_1, .v2_8_2])
+        #expect(Set(Validator.componentLengthRules.keys) == [.v2_7_1, .v2_8_2, .v2_9])
         func parsed(_ entry: ComponentGrammar, _ version: Version) -> FieldLengthRule? {
             guard let printed = entry.length, let rule = FieldLengthRule.parse(printed, version: version) else { return nil }
             if case .maximum = rule { return nil }

@@ -216,6 +216,7 @@
       "printedPairs": [
         {"trigger": "RSP^K32", "structure": "RSP_K25", "reason": "CH03 section 3.2.63 QBP/RSP - Find Candidates including Visit Information (p 55), a query profile, prints 'Response Trigger: RSP^K32^RSP_K25', while the profile's own response grammar (RSP^K32^RSP_K32: Segment Pattern Response) and Table 0354 v2.8.2 give RSP_K32 (modelled); RSP_K25 is modelled for RSP^K25 (CH15 15.3.7). A message copying the profile row is not structure-checked under RSP_K25 and is never a mismatch (P8b-final F-I1 d; register section E, v2.8.2 not-modelled table)"}
       ]
-    }
+    },
+    "2.9": {"complete": false, "citation": "v2.9 structures are not modelled yet.", "notModelled": [], "printedPairs": []}
   }
 }

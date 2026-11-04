@@ -81,6 +81,10 @@ struct SchemaSwiftNameTests {
         for (version, schema) in all where version == "v2.5.1" {
             for field in schema.fields { canonical["\(schema.segmentID)-\(field.index)"] = (field.swiftName, field.name) }
         }
+        var released: [String: String] = [:]
+        for (version, schema) in all where version == "v2.8.2" {
+            for field in schema.fields { released["\(schema.segmentID)-\(field.index)"] = field.swiftName }
+        }
         for (version, schema) in all {
             for field in schema.fields {
                 let slot = "\(version) \(schema.segmentID)-\(field.index): \(field.swiftName) vs \(field.name)"
@@ -92,6 +96,10 @@ struct SchemaSwiftNameTests {
                 // Non-canonical versions inherit the canonical v2.5.1 name by index by design, even
                 // where the element was later renamed (v2.3 PID-8 "Sex" is `administrativeSex`).
                 if base?.swiftName == field.swiftName { continue }
+                // A released accessor name never changes (ADR-014): v2.9 PRT-5 to PRT-22 print "Person",
+                // "Organization" and so on where v2.8.2 printed "Participation Person", and keep the
+                // v2.8.2 name the released PRT struct declares. Mirrors the audit's `released` exemption.
+                if version == "v2.9", released["\(schema.segmentID)-\(field.index)"] == field.swiftName { continue }
                 let words = field.name.lowercased()
                     .components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
                 var name = field.swiftName.lowercased()
@@ -117,7 +125,9 @@ struct SchemaSwiftNameTests {
                 }
                 let slot = "\(version) \(schema.segmentID)-\(field.index) \(field.name.prefix(60))"
                 #expect(words.count <= 11, "\(slot): \(words.count) words")
-                #expect(longest <= 5, "\(slot): \(longest) lowercase words in a row")
+                // v2.9 CH13 section 13.4.1 EQU-6 prints this name in lower case (mirrors ELEMENT_NAME_PRINTED).
+                let printedLowercase = field.name == "Expected date/time of the next status change"
+                #expect(longest <= 5 || printedLowercase, "\(slot): \(longest) lowercase words in a row")
             }
         }
     }

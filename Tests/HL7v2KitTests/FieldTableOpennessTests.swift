@@ -72,6 +72,7 @@ struct FieldTableOpennessTests {
         case .v2_6: SegmentGrammarTable.v2_6
         case .v2_7_1, .v2_7: SegmentGrammarTable.v2_7_1
         case .v2_8_2, .v2_8: SegmentGrammarTable.v2_8_2
+        case .v2_9: SegmentGrammarTable.v2_9
         }
     }
 

@@ -619,7 +619,7 @@ struct MessageStructureValidationTests {
         #expect(try !structureIssues(Self.wire("ORM^O01^ORM_O01", version: "2.4", [Self.pid, "ORC|NW", "OBR|1", "RXO|1"])).isEmpty)
     }
 
-    @Test("An unresolved MSH-12 is not matched, only the info issue", arguments: ["2.8.1", "2.9"])
+    @Test("An unresolved MSH-12 is not matched, only the info issue", arguments: ["2.8.1", "2.9.2"])
     func unresolvedVersion(_ version: String) throws {
         let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: version, [Self.pid]))
         #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])

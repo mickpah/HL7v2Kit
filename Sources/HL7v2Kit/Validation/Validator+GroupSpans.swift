@@ -23,13 +23,17 @@ extension Validator {
     ///   OUL_R23 and OPU_R25 `ORDER { OBR [COMMON_ORDER { ORC ... }] ... }`,
     ///   OUL_R24 `ORDER { OBR [ORC] ... }`; CH04 4.4.16 (pp 35 to 38), OPL_O37
     ///   `ORDER_PRIOR { OBR [ORC] ... }`.
-    /// v2.7.1 and v2.8.2 print ORC-8 and OBR-29 without a group condition, so
+    /// - v2.9 OUL, OPU, OPL: CH07 7.3.8 to 7.3.11 (pp 20 to 31), OUL_R22, OUL_R23, OUL_R24
+    ///   and OPU_R25 `ORDER { OBR [COMMON_ORDER { ORC }] ... }`; CH04 4.4.16 (pp 42 to 44),
+    ///   OPL_O37 `ORDER_PRIOR { OBR [ORC] ... }`: the same OBR-then-optional-ORC groups.
+    /// v2.7.1, v2.8.2 and v2.9 print ORC-8 and OBR-29 without a group condition, so
     /// only the order-number fields were gated there.
     static let formerlyGated: [Version: (codes: Set<String>, fields: Set<String>)] = [
         .v2_5_1: (["OUL"], ["ORC-2", "ORC-3", "ORC-8", "OBR-2", "OBR-3", "OBR-29"]),
         .v2_6: (["OUL", "OPU", "OPL"], ["ORC-2", "ORC-3", "ORC-8", "OBR-2", "OBR-3", "OBR-29"]),
         .v2_7_1: (["OUL", "OPU", "OPL"], ["ORC-2", "ORC-3", "OBR-2", "OBR-3"]),
         .v2_8_2: (["OUL", "OPU", "OPL"], ["ORC-2", "ORC-3", "OBR-2", "OBR-3"]),
+        .v2_9: (["OUL", "OPU", "OPL"], ["ORC-2", "ORC-3", "OBR-2", "OBR-3"]),
     ]
 
     /// The scoping for `message`, already declaring its grammar version: its

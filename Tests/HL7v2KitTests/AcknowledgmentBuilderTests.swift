@@ -203,13 +203,13 @@ struct AcknowledgmentBuilderTests {
 
     @Test("An unrecognised MSH-12 is echoed as received; the Validator reports it, as on the original")
     func unrecognisedVersion() throws {
-        let ack = try Self.ack(Self.original(version: "2.9"))
-        #expect(ack["MSH-12"] == "2.9")
+        let ack = try Self.ack(Self.original(version: "2.8.1"))
+        #expect(ack["MSH-12"] == "2.8.1")
         #expect(ack.version == .v2_5_1)
         #expect(ack["MSH-9.3"] == "ACK")
         let codes = Validator().validate(try Parser().parse(Data(ack.serialize()))).issues.map(\.code)
         // P8b-18: the default preset adds the structure check's info issue (MSH-12 does not resolve).
-        #expect(codes == [.versionNotRecognised(wireValue: "2.9"), .messageStructureNotModelled(structure: "ACK")])
+        #expect(codes == [.versionNotRecognised(wireValue: "2.8.1"), .messageStructureNotModelled(structure: "ACK")])
     }
 
     @Test("An empty MSH-12 is echoed empty; the required-field check reports it, as on the original")

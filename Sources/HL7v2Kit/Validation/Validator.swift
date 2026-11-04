@@ -502,6 +502,7 @@ public struct Validator: Sendable {
         case .v2_7:   return SegmentGrammarTable.v2_7_1   // ADR-018 substitution (G11)
         case .v2_8_2: return SegmentGrammarTable.v2_8_2   // v0.15 (ADR-013)
         case .v2_8:   return SegmentGrammarTable.v2_8_2   // ADR-018 substitution
+        case .v2_9:   return SegmentGrammarTable.v2_9     // ADR-018
         }
     }
 
@@ -1226,6 +1227,14 @@ public struct Validator: Sendable {
     ///   "ORC-8 and OBR-?? Must carry the same value", a text defect
     ///   resolved by §4.5.3.54 and by the "ORC-8/OBR-54 – parent order"
     ///   line both sections print.
+    /// - v2.9 keeps the ORC-8/OBR-54 pair (CH04 §4.5.1.8 p61 and §4.5.3.54 p85: "ORC-8
+    ///   and OBR-54 must carry the same value"; both fields now repeat, which the
+    ///   whole-field comparison already covers) and ORC-2/OBR-2, ORC-3/OBR-3 (§4.5.1.2
+    ///   p59, §4.5.1.3 p60: "if both ORC-2 and OBR-2 are valued then they must be valued
+    ///   the same"). It drops the ORC-12/OBR-16 pair: both fields are withdrawn (W) and
+    ///   §4.5.1.12 p62 and §4.5.3.16 p76 read "retained for backward compatibility only
+    ///   as of v 2.7 and the detail was withdrawn and removed from the standard as of
+    ///   v 2.9", so the pair is limited to the versions that still print the field.
     /// - ORC-7/OBR-27 (TQ) is deliberately ABSENT: the v2.4 prose says
     ///   the pair "should be valued exactly the same" — advisory, not
     ///   normative — and both fields are withdrawn (`W`) from v2.7.
@@ -1234,11 +1243,12 @@ public struct Validator: Sendable {
     private static let orcObrEqualityPairs: [OrcObrPair] = [
         OrcObrPair(orcField: 2, obrField: 2, name: "Placer Order Number", item: "00216", versions: nil),
         OrcObrPair(orcField: 3, obrField: 3, name: "Filler Order Number", item: "00217", versions: nil),
-        OrcObrPair(orcField: 12, obrField: 16, name: "Ordering Provider", item: "00226", versions: nil),
+        OrcObrPair(orcField: 12, obrField: 16, name: "Ordering Provider", item: "00226",
+                   versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2]),
         OrcObrPair(orcField: 8, obrField: 29, name: "Parent", item: "00222",
                    versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6]),
         OrcObrPair(orcField: 8, obrField: 54, name: "Parent Order", item: "00222",
-                   versions: [.v2_7_1, .v2_8_2]),
+                   versions: [.v2_7_1, .v2_8_2, .v2_9]),
     ]
 
     /// M8-B1/B2: within each ORC/OBR group, a paired field populated on

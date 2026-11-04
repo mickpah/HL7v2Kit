@@ -2139,4 +2139,63 @@ struct TypedSegmentTests {
         #expect(itm.itemNaturalAccountCode == message["ITM-19"])
         #expect(itm.itemNaturalAccountCodeAsCWE?.field.stringValue == "ACC-9")
     }
+
+    // v2.9's seven new segments: the typed accessor and the path subscript read the same field.
+    // Table pages: CTR CH08 8.14.2, DEV CH17 17.9.1, DST CH13 13.4.13, OH1 to OH4 CH03 3.4.15 to 3.4.18.
+    private static let v29MSH = "MSH|^~\\&|A|B|C|D|20240101||MFN^M01|1|P|2.9\r"
+
+    @Test("v2.9 CTR: path and typed accessor agree")
+    func v29Contract() throws {
+        let (message, ctr) = try hydratedMessage(CTR.self, from: Self.v29MSH + "CTR|C1^NS|||20240101|20241231|||SUP^Supplier^L\r")
+        #expect(ctr.contractIdentifier?.entityIdentifier == message["CTR-1.1"])
+        #expect(ctr.effectiveDate == message["CTR-4"] && ctr.effectiveDate == "20240101")
+        #expect(ctr.supplierType?.identifier == message["CTR-8.1"])
+    }
+
+    @Test("v2.9 DEV: path and typed accessor agree, and DEV-3 repeats")
+    func v29Device() throws {
+        let (message, dev) = try hydratedMessage(DEV.self, from: Self.v29MSH + "DEV|AU|UDI1^NS|T1^Type^L~T2^Type^L|||Brand\r")
+        #expect(dev.actionCode == message["DEV-1"])
+        #expect(dev.uniqueDeviceIdentifier?.entityIdentifier == message["DEV-2.1"])
+        #expect(dev.deviceTypeAll.map(\.identifier) == ["T1", "T2"])
+        #expect(dev.deviceTypeAll[1].identifier == message["DEV-3~2.1"])
+    }
+
+    @Test("v2.9 DST: path and typed accessor agree, and DST-2 repeats")
+    func v29TransportDestination() throws {
+        let (message, dst) = try hydratedMessage(DST.self, from: Self.v29MSH + "DST|D1^Dest^L|R1^Route^L~R2^Route^L\r")
+        #expect(dst.destination?.identifier == message["DST-1.1"])
+        #expect(dst.routeAll.map(\.identifier) == ["R1", "R2"])
+    }
+
+    @Test("v2.9 OH1: path and typed accessor agree")
+    func v29EmploymentStatus() throws {
+        let (message, oh1) = try hydratedMessage(OH1.self, from: Self.v29MSH + "OH1|1|AD|E^Employed^L|20200101||20240101\r")
+        #expect(oh1.setID == message["OH1-1"])
+        #expect(oh1.employmentStatus?.identifier == message["OH1-3.1"])
+        #expect(oh1.enteredDate == message["OH1-6"] && oh1.enteredDate == "20240101")
+    }
+
+    @Test("v2.9 OH2: Industry is OH2-5 (the print numbers it 54), and the segment ends at OH2-18")
+    func v29PastJob() throws {
+        let (message, oh2) = try hydratedMessage(OH2.self, from: Self.v29MSH + "OH2|1||20240101|OCC^Carpenter^L|IND^Building^L\r")
+        #expect(oh2.occupation?.identifier == message["OH2-4.1"])
+        #expect(oh2.industry?.identifier == message["OH2-5.1"] && oh2.industry?.identifier == "IND")
+        #expect(SegmentGrammarTable.v2_9["OH2"]?.fields.map(\.index) == Array(1...18))
+    }
+
+    @Test("v2.9 OH3: path and typed accessor agree")
+    func v29UsualWork() throws {
+        let (message, oh3) = try hydratedMessage(OH3.self, from: Self.v29MSH + "OH3|1||OCC^Nurse^L|IND^Health^L|20|2001\r")
+        #expect(oh3.occupation?.identifier == message["OH3-3.1"])
+        #expect(oh3.usualOccupationDurationYears == message["OH3-5"] && oh3.usualOccupationDurationYears == "20")
+        #expect(oh3.startYear == message["OH3-6"])
+    }
+
+    @Test("v2.9 OH4: path and typed accessor agree")
+    func v29CombatZone() throws {
+        let (message, oh4) = try hydratedMessage(OH4.self, from: Self.v29MSH + "OH4|1||20100101|20120101\r")
+        #expect(oh4.combatZoneStartDate == message["OH4-3"] && oh4.combatZoneStartDate == "20100101")
+        #expect(oh4.setID == message["OH4-1"])
+    }
 }

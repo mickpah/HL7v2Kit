@@ -1,0 +1,28 @@
+{
+  "segmentID": "CTR",
+  "version": "2.9",
+  "description": "Contract Master Outbound",
+  "fields": [
+    { "index": 1, "swiftName": "contractIdentifier", "name": "Contract Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "contractDescription", "name": "Contract Description", "dataType": "ST", "length": "999#", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "contractStatus", "name": "Contract Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0536"] },
+    { "index": 4, "swiftName": "effectiveDate", "name": "Effective Date", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "expirationDate", "name": "Expiration Date", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 6, "swiftName": "contractOwnerName", "name": "Contract Owner Name", "dataType": "XPN", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "contractOriginatorName", "name": "Contract Originator Name", "dataType": "XPN", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "supplierType", "name": "Supplier Type", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0946"] },
+    { "index": 9, "swiftName": "contractType", "name": "Contract Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0965"] },
+    { "index": 10, "swiftName": "freeOnBoardFreightTerms", "name": "Free On Board Freight Terms", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
+    { "index": 11, "swiftName": "priceProtectionDate", "name": "Price Protection Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "fixedPriceContractIndicator", "name": "Fixed Price Contract Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
+    { "index": 13, "swiftName": "groupPurchasingOrganization", "name": "Group Purchasing Organization", "dataType": "XON", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "maximumMarkup", "name": "Maximum Markup", "dataType": "MOP", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "actualMarkup", "name": "Actual Markup", "dataType": "MOP", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "corporation", "name": "Corporation", "dataType": "XON", "optionality": "C", "repeatability": "*" },
+    { "index": 17, "swiftName": "parentOfCorporation", "name": "Parent of Corporation", "dataType": "XON", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "pricingTierLevel", "name": "Pricing Tier Level", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0966"] },
+    { "index": 19, "swiftName": "contractPriority", "name": "Contract Priority", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "classOfTrade", "name": "Class of Trade", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0947"] },
+    { "index": 21, "swiftName": "associatedContractID", "name": "Associated Contract ID", "dataType": "EI", "optionality": "O", "repeatability": "1" }
+  ]
+}

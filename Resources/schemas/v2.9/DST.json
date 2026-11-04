@@ -1,0 +1,9 @@
+{
+  "segmentID": "DST",
+  "version": "2.9",
+  "description": "Transport Destination",
+  "fields": [
+    { "index": 1, "swiftName": "destination", "name": "Destination", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0943"] },
+    { "index": 2, "swiftName": "route", "name": "Route", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0944"] }
+  ]
+}

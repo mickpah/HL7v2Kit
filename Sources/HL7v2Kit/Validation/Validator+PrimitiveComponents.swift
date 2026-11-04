@@ -26,18 +26,21 @@ extension Validator {
     /// - v2.7.1 CH02A (DT 2.A.21, DTM 2.A.22, FT 2.A.31, GTS 2.A.32, ID 2.A.35, IS 2.A.36,
     ///   NM 2.A.47, SI 2.A.69, SNM 2.A.71, ST 2.A.75, TM 2.A.76, TX 2.A.79; TS withdrawn
     ///   at 2.A.78 p85)
+    /// - v2.9 CH02A (DT 2A.3.21, DTM 2A.3.22, FT 2A.3.31, GTS 2A.3.32, ID 2A.3.35, IS 2A.3.36,
+    ///   NM 2A.3.47, SI 2A.3.70, SNM 2A.3.72, ST 2A.3.76, TM 2A.3.77, TX 2A.3.80: the twelve sections
+    ///   that print no component table, the same set as v2.7.1 to v2.8.2)
     static func primitiveTypes(_ version: Version) -> Set<String> {
         switch version.grammarVersion {
         case .v2_3, .v2_3_1, .v2_4: return primitivesV23ToV24
         case .v2_5_1, .v2_6: return primitivesV251ToV26
-        case .v2_7_1, .v2_7, .v2_8_2, .v2_8: return primitivesV271ToV282
+        case .v2_7_1, .v2_7, .v2_8_2, .v2_8, .v2_9: return primitivesV271ToV29
         }
     }
 
     // Built once: the validator asks for every field and component (S1-fix I2).
     private static let primitivesV23ToV24: Set<String> = ["DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"]
     private static let primitivesV251ToV26: Set<String> = ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "ST", "TM", "TX"]
-    private static let primitivesV271ToV282: Set<String> = ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"]
+    private static let primitivesV271ToV29: Set<String> = ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"]
 
     /// How many parts one level down a primitive `dataType` admits on `version`, or
     /// `nil` when it is not a primitive there. One for every primitive, except:

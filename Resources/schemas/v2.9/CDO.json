@@ -1,0 +1,11 @@
+{
+  "segmentID": "CDO",
+  "version": "2.9",
+  "description": "CDO",
+  "fields": [
+    { "index": 1, "swiftName": "setIdCdo", "name": "Set ID – CDO", "dataType": "SI", "length": "1..4", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "length": "2..2", "optionality": "O", "repeatability": "1", "tables": ["0206"] },
+    { "index": 3, "swiftName": "cumulativeDosageLimit", "name": "Cumulative Dosage Limit", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "cumulativeDosageLimitTimeInterval", "name": "Cumulative Dosage Limit Time Interval", "dataType": "CQ", "optionality": "O", "repeatability": "1", "tables": ["0924"] }
+  ]
+}

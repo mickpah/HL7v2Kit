@@ -108,6 +108,7 @@ struct CellGrid: Equatable, Sendable {
         case .v2_6: return SegmentGrammarTable.v2_6
         case .v2_7, .v2_7_1: return SegmentGrammarTable.v2_7_1
         case .v2_8, .v2_8_2: return SegmentGrammarTable.v2_8_2
+        case .v2_9: return SegmentGrammarTable.v2_9
         }
     }
 
