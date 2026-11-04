@@ -1,7 +1,7 @@
 {
   "structure": "RDE_O11",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 4A, section 4A.3.6 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 7 to 9; the same structure is printed for RDE^O25 (4A.3.16). Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.9 Chapter 4A section 4A.3.6 (RDE^O11^RDE_O11, p 7) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.16 (RDE^O25^RDE_O11, p 23) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.6 print is the default and the 4A.3.16 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for.",
+  "citation": "HL7 v2.9 Chapter 4A, section 4A.3.6 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 7 to 9; the same structure is printed for RDE^O25 (4A.3.16). Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.9 Chapter 4A section 4A.3.6 (RDE^O11^RDE_O11, p 7) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.16 (RDE^O25^RDE_O11, p 23) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.6 print is the default and the 4A.3.16 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["RDE^O11", "RDE^O25"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -14,12 +14,10 @@
       { "segment": "PD1", "min": 0, "max": 1 },
       { "segment": "PRT", "min": 0, "max": null },
       { "segment": "NTE", "min": 0, "max": null },
-      { "segment": "ARV", "min": 0, "max": null },
       { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
         { "segment": "PV1", "min": 1, "max": 1 },
         { "segment": "PV2", "min": 0, "max": 1 },
-        { "segment": "PRT", "min": 0, "max": null },
-        { "segment": "ARV", "min": 0, "max": null }
+        { "segment": "PRT", "min": 0, "max": null }
       ]},
       { "group": "INSURANCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
         { "segment": "IN1", "min": 1, "max": 1 },
@@ -78,7 +76,7 @@
   "variants": [
     {
       "triggers": ["RDE^O25"],
-      "citation": "HL7 v2.9 Chapter 4A, section 4A.3.16 RDE - Pharmacy/Treatment Refill Authorization Request Message, pp 23 to 24. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.9 Chapter 4A section 4A.3.6 (RDE^O11^RDE_O11, p 7) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.16 (RDE^O25^RDE_O11, p 23) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.6 print is the default and the 4A.3.16 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for.",
+      "citation": "HL7 v2.9 Chapter 4A, section 4A.3.16 RDE - Pharmacy/Treatment Refill Authorization Request Message, pp 23 to 24. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.9 Chapter 4A section 4A.3.6 (RDE^O11^RDE_O11, p 7) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.16 (RDE^O25^RDE_O11, p 23) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.6 print is the default and the 4A.3.16 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
       "elements": [
         { "segment": "MSH", "min": 1, "max": 1 },
         { "segment": "ARV", "min": 0, "max": null },
@@ -90,12 +88,10 @@
           { "segment": "PD1", "min": 0, "max": 1 },
           { "segment": "PRT", "min": 0, "max": null },
           { "segment": "NTE", "min": 0, "max": null },
-          { "segment": "ARV", "min": 0, "max": null },
           { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
             { "segment": "PV1", "min": 1, "max": 1 },
             { "segment": "PV2", "min": 0, "max": 1 },
-            { "segment": "PRT", "min": 0, "max": null },
-            { "segment": "ARV", "min": 0, "max": null }
+            { "segment": "PRT", "min": 0, "max": null }
           ]},
           { "group": "INSURANCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
             { "segment": "IN1", "min": 1, "max": 1 },

@@ -1,7 +1,7 @@
 {
   "structure": "ORL_O55",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 4, section 4.4.11.2 Patient Segments Optional, pp 31 to 32.",
+  "citation": "HL7 v2.9 Chapter 4, section 4.4.11.2 Patient Segments Optional, pp 31 to 32. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["ORL^O55"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

@@ -1,10 +1,11 @@
 {
   "structure": "MDM_T01",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 9, section 9.6.1 MDM/ACK - Original Document Notification (Event T01), pp 8 to 9; the same structure is printed for MDM^T03 (9.6.3), MDM^T05 (9.6.5), MDM^T07 (9.6.7), MDM^T09 (9.6.9) and MDM^T11 (9.6.11).",
+  "citation": "HL7 v2.9 Chapter 9, section 9.6.1 MDM/ACK - Original Document Notification (Event T01), pp 8 to 9; the same structure is printed for MDM^T03 (9.6.3), MDM^T05 (9.6.5), MDM^T07 (9.6.7), MDM^T09 (9.6.9) and MDM^T11 (9.6.11). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["MDM^T01", "MDM^T03", "MDM^T05", "MDM^T07", "MDM^T09", "MDM^T11"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "SFT", "min": 0, "max": null },
     { "segment": "UAC", "min": 0, "max": 1 },
     { "segment": "EVN", "min": 1, "max": 1 },

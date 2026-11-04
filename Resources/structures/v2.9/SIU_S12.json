@@ -1,10 +1,11 @@
 {
   "structure": "SIU_S12",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, pp 20 to 21.",
+  "citation": "HL7 v2.9 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, pp 20 to 21. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["SIU^S12", "SIU^S13", "SIU^S14", "SIU^S15", "SIU^S16", "SIU^S17", "SIU^S18", "SIU^S19", "SIU^S20", "SIU^S21", "SIU^S22", "SIU^S23", "SIU^S24", "SIU^S26", "SIU^S27"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "SCH", "min": 1, "max": 1 },
     { "segment": "TQ1", "min": 0, "max": null },
     { "segment": "NTE", "min": 0, "max": null },

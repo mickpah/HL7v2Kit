@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A09",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 3, section 3.3.9 ADT/ACK - Patient Departing - Tracking (Event A09), pp 25 to 26; the same structure is printed for ADT^A10 (3.3.10) and ADT^A11 (3.3.11).",
+  "citation": "HL7 v2.9 Chapter 3, section 3.3.9 ADT/ACK - Patient Departing - Tracking (Event A09), pp 25 to 26; the same structure is printed for ADT^A10 (3.3.10) and ADT^A11 (3.3.11). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["ADT^A09", "ADT^A10", "ADT^A11"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

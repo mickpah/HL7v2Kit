@@ -1,10 +1,11 @@
 {
   "structure": "PPG_PCG",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 12, section 12.3.4 PPG/ACK - Patient Pathway Message (Goal-Oriented) (Events PCG, PCH, PCJ), pp 16 to 18. Triggers Table 0354 v2.9 (Chapter 2C, p 271) maps to PPG_PCG that no caption prints, accepted with the printed ones (P8b-11 ruling): PPG^PCC.",
+  "citation": "HL7 v2.9 Chapter 12, section 12.3.4 PPG/ACK - Patient Pathway Message (Goal-Oriented) (Events PCG, PCH, PCJ), pp 16 to 18. Triggers Table 0354 v2.9 (Chapter 2C, p 271) maps to PPG_PCG that no caption prints, accepted with the printed ones (P8b-11 ruling): PPG^PCC. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "SFT", "min": 0, "max": null },
     { "segment": "UAC", "min": 0, "max": 1 },
     { "segment": "PID", "min": 1, "max": 1 },

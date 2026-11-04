@@ -2,8 +2,8 @@
 // v2.9-T6 (requirement 4 evidence): hand-built v2.9 messages, one compliant with the chapter print
 // and one variant that breaks it, per structure family. Under messageStructureSeverity = .error the
 // compliant message draws no structure issue and the variant draws the expected finding. Bodies are
-// minimal and synthetic, and only structure issues are read. No probe sends ARV: its place in the
-// print is not yet the place the v2.9 rule gives it, so a probe must not depend on it.
+// minimal and synthetic, and only structure issues are read. No probe sends ARV: its place on v2.9 is
+// the CTO letter's rather than the print's, and ARVPlacementTests holds that.
 
 import Testing
 @testable import HL7v2Kit

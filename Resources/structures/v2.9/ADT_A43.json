@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A43",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 3, section 3.3.43 ADT/ACK - Move Patient Information - Patient Identifier List (Event A43), p 72; the same structure is printed for ADT^A49 (3.3.49).",
+  "citation": "HL7 v2.9 Chapter 3, section 3.3.43 ADT/ACK - Move Patient Information - Patient Identifier List (Event A43), p 72; the same structure is printed for ADT^A49 (3.3.49). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["ADT^A43", "ADT^A49"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

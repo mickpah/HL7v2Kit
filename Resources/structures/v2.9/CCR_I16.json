@@ -1,10 +1,11 @@
 {
   "structure": "CCR_I16",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 11, section 11.6.2 CCR/ACK - Collaborative Care Referral (Events I16, I17 and I18), pp 29 to 34. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_ORDER, CLINICAL_ORDER_DETAIL, CLINICAL_ORDER_OBJECT] has first segment OBR and members {OBR, PRT}), RXO_GROUP (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_ORDER, CLINICAL_ORDER_DETAIL, CLINICAL_ORDER_OBJECT] has first segment RXO and members {PRT, RXO}) and OBR_GROUP2 (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}).",
+  "citation": "HL7 v2.9 Chapter 11, section 11.6.2 CCR/ACK - Collaborative Care Referral (Events I16, I17 and I18), pp 29 to 34. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_ORDER, CLINICAL_ORDER_DETAIL, CLINICAL_ORDER_OBJECT] has first segment OBR and members {OBR, PRT}), RXO_GROUP (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_ORDER, CLINICAL_ORDER_DETAIL, CLINICAL_ORDER_OBJECT] has first segment RXO and members {PRT, RXO}) and OBR_GROUP2 (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["CCR^I16", "CCR^I17", "CCR^I18"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "SFT", "min": 0, "max": null },
     { "segment": "UAC", "min": 0, "max": 1 },
     { "segment": "RF1", "min": 1, "max": null },

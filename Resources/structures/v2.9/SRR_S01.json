@@ -1,11 +1,12 @@
 {
   "structure": "SRR_S01",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 15 to 16.",
+  "citation": "HL7 v2.9 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 15 to 16. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["SRR^S01", "SRR^S02", "SRR^S03", "SRR^S04", "SRR^S05", "SRR^S06", "SRR^S07", "SRR^S08", "SRR^S09", "SRR^S10", "SRR^S11"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "ERR", "min": 0, "max": null },
     { "group": "SCHEDULE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
       { "segment": "SCH", "min": 1, "max": 1 },

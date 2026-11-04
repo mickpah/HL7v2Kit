@@ -1,7 +1,7 @@
 {
   "structure": "CRM_C01",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 7, section 7.7.1 CRM - Clinical Study Registration Message (Events C01-C08), p 113.",
+  "citation": "HL7 v2.9 Chapter 7, section 7.7.1 CRM - Clinical Study Registration Message (Events C01-C08), p 113. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["CRM^C01", "CRM^C02", "CRM^C03", "CRM^C04", "CRM^C05", "CRM^C06", "CRM^C07", "CRM^C08"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -11,7 +11,6 @@
     { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
       { "segment": "PID", "min": 1, "max": 1 },
       { "segment": "PRT", "min": 0, "max": null },
-      { "segment": "ARV", "min": 0, "max": null },
       { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
         { "segment": "PV1", "min": 1, "max": 1 },
         { "segment": "PRT", "min": 0, "max": null }

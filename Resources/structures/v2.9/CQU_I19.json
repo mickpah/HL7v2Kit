@@ -1,13 +1,14 @@
 {
   "structure": "CQU_I19",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 11, section 11.7.1 CCQ/CQU - Collaborative Care Query/Collaborative Care Query Update, pp 40 to 44. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CQU_I19.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}).",
+  "citation": "HL7 v2.9 Chapter 11, section 11.7.1 CCQ/CQU - Collaborative Care Query/Collaborative Care Query Update, pp 40 to 44. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CQU_I19.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["CQU^I19"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "SFT", "min": 0, "max": null },
     { "segment": "UAC", "min": 0, "max": 1 },
     { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "ERR", "min": 0, "max": null },
     { "segment": "RF1", "min": 1, "max": 1 },
     { "group": "PROVIDER_CONTACT", "nameSource": "printed", "min": 0, "max": null, "elements": [

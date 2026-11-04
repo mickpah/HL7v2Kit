@@ -245,12 +245,12 @@ extension MessageStructureTable {
         id: "ADT_A01",
         version: "2.9",
         triggers: ["ADT^A01", "ADT^A04", "ADT^A08", "ADT^A13"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 4 to 6; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Two normative prints of ADT_A01 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.1 (ADT^A01^ADT_A01, p 5) prints the first OH3 optional and non-repeating ([ OH3 ]), as do 3.3.4 (A04) and 3.3.8 (A08); section 3.3.13 (ADT^A13^ADT_A01, p 32) prints it [{ OH3 }]; the 3.3.1 print is the default and the 3.3.13 print governs ADT^A13. ADR-019 S6: each print governs the triggers it is printed for.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 4 to 6; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Two normative prints of ADT_A01 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.1 (ADT^A01^ADT_A01, p 5) prints the first OH3 optional and non-repeating ([ OH3 ]), as do 3.3.4 (A04) and 3.3.8 (A08); section 3.3.13 (ADT^A13^ADT_A01, p 32) prints it [{ OH3 }]; the 3.3.1 print is the default and the 3.3.13 print governs ADT^A13. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         variants: [
             StructureVariant(
                 triggers: ["ADT^A13"],
-                citation: "HL7 v2.9 Chapter 3, section 3.3.13 ADT/ACK - Cancel Discharge / End Visit (Event A13), pp 32 to 34. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A01 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.1 (ADT^A01^ADT_A01, p 5) prints the first OH3 optional and non-repeating ([ OH3 ]), as do 3.3.4 (A04) and 3.3.8 (A08); section 3.3.13 (ADT^A13^ADT_A01, p 32) prints it [{ OH3 }]; the 3.3.1 print is the default and the 3.3.13 print governs ADT^A13. ADR-019 S6: each print governs the triggers it is printed for.",
+                citation: "HL7 v2.9 Chapter 3, section 3.3.13 ADT/ACK - Cancel Discharge / End Visit (Event A13), pp 32 to 34. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A01 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.1 (ADT^A01^ADT_A01, p 5) prints the first OH3 optional and non-repeating ([ OH3 ]), as do 3.3.4 (A04) and 3.3.8 (A08); section 3.3.13 (ADT^A13^ADT_A01, p 32) prints it [{ OH3 }]; the 3.3.1 print is the default and the 3.3.13 print governs ADT^A13. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
                 requiresExactMatch: false,
                 elements: [
                     .segment("MSH", min: 1, max: 1),
@@ -264,7 +264,6 @@ extension MessageStructureTable {
                     .segment("OH2", min: 0, max: nil),
                     .segment("OH3", min: 0, max: nil),
                     .segment("OH4", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("ROL", min: 0, max: nil),
                     .segment("PRT", min: 0, max: nil),
                     .group("NEXT_OF_KIN", min: 0, max: nil, elements: [
@@ -274,7 +273,6 @@ extension MessageStructureTable {
                     ]),
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("ROL", min: 0, max: nil),
                     .segment("PRT", min: 0, max: nil),
                     .segment("DB1", min: 0, max: nil),
@@ -325,7 +323,6 @@ extension MessageStructureTable {
             .segment("OH2", min: 0, max: nil),
             .segment("OH3", min: 0, max: 1),
             .segment("OH4", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .group("NEXT_OF_KIN", min: 0, max: nil, elements: [
@@ -335,7 +332,6 @@ extension MessageStructureTable {
             ]),
             .segment("PV1", min: 1, max: 1),
             .segment("PV2", min: 0, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("DB1", min: 0, max: nil),
@@ -379,7 +375,7 @@ extension MessageStructureTable {
         id: "ADT_A02",
         version: "2.9",
         triggers: ["ADT^A02"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.2 ADT/ACK - Transfer a Patient (Event A02), pp 7 to 8.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.2 ADT/ACK - Transfer a Patient (Event A02), pp 7 to 8. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -393,12 +389,10 @@ extension MessageStructureTable {
             .segment("OH2", min: 0, max: nil),
             .segment("OH3", min: 0, max: 1),
             .segment("OH4", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("PV1", min: 1, max: 1),
             .segment("PV2", min: 0, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("DB1", min: 0, max: nil),
@@ -414,7 +408,7 @@ extension MessageStructureTable {
         id: "ADT_A03",
         version: "2.9",
         triggers: ["ADT^A03"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.3 ADT/ACK - Discharge/End Visit (Event A03), pp 9 to 11.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.3 ADT/ACK - Discharge/End Visit (Event A03), pp 9 to 11. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -428,7 +422,6 @@ extension MessageStructureTable {
             .segment("OH2", min: 0, max: nil),
             .segment("OH3", min: 0, max: 1),
             .segment("OH4", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .group("NEXT_OF_KIN", min: 0, max: nil, elements: [
@@ -438,7 +431,6 @@ extension MessageStructureTable {
             ]),
             .segment("PV1", min: 1, max: 1),
             .segment("PV2", min: 0, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("DB1", min: 0, max: nil),
@@ -480,12 +472,12 @@ extension MessageStructureTable {
         id: "ADT_A05",
         version: "2.9",
         triggers: ["ADT^A05", "ADT^A14", "ADT^A28", "ADT^A31"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.5 ADT/ACK - Pre-Admit a Patient (Event A05), pp 15 to 16; the same structure is printed for ADT^A14 (3.3.14), ADT^A28 (3.3.28) and ADT^A31 (3.3.31). Two normative prints of ADT_A05 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.5 (ADT^A05^ADT_A05, p 15) prints NK1 required in the NEXT_OF_KIN group, as do 3.3.14 (A14) and 3.3.31 (A31); section 3.3.28 (ADT^A28^ADT_A05, p 55) prints it [{ NK1 }]; the 3.3.5 print is the default and the 3.3.28 print governs ADT^A28. ADR-019 S6: each print governs the triggers it is printed for.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.5 ADT/ACK - Pre-Admit a Patient (Event A05), pp 15 to 16; the same structure is printed for ADT^A14 (3.3.14), ADT^A28 (3.3.28) and ADT^A31 (3.3.31). Two normative prints of ADT_A05 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.5 (ADT^A05^ADT_A05, p 15) prints NK1 required in the NEXT_OF_KIN group, as do 3.3.14 (A14) and 3.3.31 (A31); section 3.3.28 (ADT^A28^ADT_A05, p 55) prints it [{ NK1 }]; the 3.3.5 print is the default and the 3.3.28 print governs ADT^A28. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         variants: [
             StructureVariant(
                 triggers: ["ADT^A28"],
-                citation: "HL7 v2.9 Chapter 3, section 3.3.28 ADT/ACK - Add Person or Patient Information (Event A28), pp 55 to 56. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A05 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.5 (ADT^A05^ADT_A05, p 15) prints NK1 required in the NEXT_OF_KIN group, as do 3.3.14 (A14) and 3.3.31 (A31); section 3.3.28 (ADT^A28^ADT_A05, p 55) prints it [{ NK1 }]; the 3.3.5 print is the default and the 3.3.28 print governs ADT^A28. ADR-019 S6: each print governs the triggers it is printed for.",
+                citation: "HL7 v2.9 Chapter 3, section 3.3.28 ADT/ACK - Add Person or Patient Information (Event A28), pp 55 to 56. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A05 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.5 (ADT^A05^ADT_A05, p 15) prints NK1 required in the NEXT_OF_KIN group, as do 3.3.14 (A14) and 3.3.31 (A31); section 3.3.28 (ADT^A28^ADT_A05, p 55) prints it [{ NK1 }]; the 3.3.5 print is the default and the 3.3.28 print governs ADT^A28. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
                 requiresExactMatch: true,
                 elements: [
                     .segment("MSH", min: 1, max: 1),
@@ -499,7 +491,6 @@ extension MessageStructureTable {
                     .segment("OH2", min: 0, max: nil),
                     .segment("OH3", min: 0, max: 1),
                     .segment("OH4", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("ROL", min: 0, max: nil),
                     .segment("PRT", min: 0, max: nil),
                     .group("NEXT_OF_KIN", min: 0, max: nil, elements: [
@@ -509,7 +500,6 @@ extension MessageStructureTable {
                     ]),
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("ROL", min: 0, max: nil),
                     .segment("PRT", min: 0, max: nil),
                     .segment("DB1", min: 0, max: nil),
@@ -559,7 +549,6 @@ extension MessageStructureTable {
             .segment("OH2", min: 0, max: nil),
             .segment("OH3", min: 0, max: 1),
             .segment("OH4", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .group("NEXT_OF_KIN", min: 0, max: nil, elements: [
@@ -569,7 +558,6 @@ extension MessageStructureTable {
             ]),
             .segment("PV1", min: 1, max: 1),
             .segment("PV2", min: 0, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("DB1", min: 0, max: nil),
@@ -612,7 +600,7 @@ extension MessageStructureTable {
         id: "ADT_A06",
         version: "2.9",
         triggers: ["ADT^A06", "ADT^A07"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.6 ADT/ACK - Change an Outpatient to an Inpatient (Event A06), pp 17 to 19; the same structure is printed for ADT^A07 (3.3.7).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.6 ADT/ACK - Change an Outpatient to an Inpatient (Event A06), pp 17 to 19; the same structure is printed for ADT^A07 (3.3.7). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -626,7 +614,6 @@ extension MessageStructureTable {
             .segment("OH2", min: 0, max: nil),
             .segment("OH3", min: 0, max: 1),
             .segment("OH4", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("MRG", min: 0, max: 1),
@@ -637,7 +624,6 @@ extension MessageStructureTable {
             ]),
             .segment("PV1", min: 1, max: 1),
             .segment("PV2", min: 0, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("DB1", min: 0, max: nil),
@@ -672,7 +658,7 @@ extension MessageStructureTable {
         id: "ADT_A09",
         version: "2.9",
         triggers: ["ADT^A09", "ADT^A10", "ADT^A11"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.9 ADT/ACK - Patient Departing - Tracking (Event A09), pp 25 to 26; the same structure is printed for ADT^A10 (3.3.10) and ADT^A11 (3.3.11).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.9 ADT/ACK - Patient Departing - Tracking (Event A09), pp 25 to 26; the same structure is printed for ADT^A10 (3.3.10) and ADT^A11 (3.3.11). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -696,7 +682,7 @@ extension MessageStructureTable {
         id: "ADT_A12",
         version: "2.9",
         triggers: ["ADT^A12"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.12 ADT/ACK - Cancel Transfer (Event A12), pp 30 to 31.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.12 ADT/ACK - Cancel Transfer (Event A12), pp 30 to 31. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -720,7 +706,7 @@ extension MessageStructureTable {
         id: "ADT_A15",
         version: "2.9",
         triggers: ["ADT^A15"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.15 ADT/ACK - Pending Transfer (Event A15), pp 37 to 38.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.15 ADT/ACK - Pending Transfer (Event A15), pp 37 to 38. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -730,12 +716,10 @@ extension MessageStructureTable {
             .segment("EVN", min: 1, max: 1),
             .segment("PID", min: 1, max: 1),
             .segment("PD1", min: 0, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("PV1", min: 1, max: 1),
             .segment("PV2", min: 0, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("DB1", min: 0, max: nil),
@@ -750,7 +734,7 @@ extension MessageStructureTable {
         id: "ADT_A16",
         version: "2.9",
         triggers: ["ADT^A16"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.16 ADT/ACK - Pending Discharge (Event A16), pp 39 to 40.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.16 ADT/ACK - Pending Discharge (Event A16), pp 39 to 40. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -764,7 +748,6 @@ extension MessageStructureTable {
             .segment("OH2", min: 0, max: nil),
             .segment("OH3", min: 0, max: 1),
             .segment("OH4", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .group("NEXT_OF_KIN", min: 0, max: nil, elements: [
@@ -774,7 +757,6 @@ extension MessageStructureTable {
             ]),
             .segment("PV1", min: 1, max: 1),
             .segment("PV2", min: 0, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("ROL", min: 0, max: nil),
             .segment("PRT", min: 0, max: nil),
             .segment("DB1", min: 0, max: nil),
@@ -815,7 +797,7 @@ extension MessageStructureTable {
         id: "ADT_A17",
         version: "2.9",
         triggers: ["ADT^A17"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.17 ADT/ACK - Swap Patients (Event A17), pp 41 to 42.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.17 ADT/ACK - Swap Patients (Event A17), pp 41 to 42. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -863,7 +845,7 @@ extension MessageStructureTable {
         id: "ADT_A21",
         version: "2.9",
         triggers: ["ADT^A21", "ADT^A22", "ADT^A23", "ADT^A25", "ADT^A26", "ADT^A27", "ADT^A29", "ADT^A32", "ADT^A33"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.21 ADT/ACK - Patient Goes on a Leave of Absence (Event A21), pp 44 to 45; the same structure is printed for ADT^A22 (3.3.22), ADT^A23 (3.3.23), ADT^A25 (3.3.25), ADT^A26 (3.3.26), ADT^A27 (3.3.27), ADT^A29 (3.3.29), ADT^A32 (3.3.32) and ADT^A33 (3.3.33).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.21 ADT/ACK - Patient Goes on a Leave of Absence (Event A21), pp 44 to 45; the same structure is printed for ADT^A22 (3.3.22), ADT^A23 (3.3.23), ADT^A25 (3.3.25), ADT^A26 (3.3.26), ADT^A27 (3.3.27), ADT^A29 (3.3.29), ADT^A32 (3.3.32) and ADT^A33 (3.3.33). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -887,7 +869,7 @@ extension MessageStructureTable {
         id: "ADT_A24",
         version: "2.9",
         triggers: ["ADT^A24"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.24 ADT/ACK - Link Patient Information (Event A24), pp 48 to 49.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.24 ADT/ACK - Link Patient Information (Event A24), pp 48 to 49. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -910,7 +892,7 @@ extension MessageStructureTable {
         id: "ADT_A37",
         version: "2.9",
         triggers: ["ADT^A37"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.37 ADT/ACK - Unlink Patient Information (Event A37), pp 64 to 65.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.37 ADT/ACK - Unlink Patient Information (Event A37), pp 64 to 65. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -933,7 +915,7 @@ extension MessageStructureTable {
         id: "ADT_A38",
         version: "2.9",
         triggers: ["ADT^A38"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.38 ADT/ACK - Cancel Pre-Admit (Event A38), pp 65 to 66.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.38 ADT/ACK - Cancel Pre-Admit (Event A38), pp 65 to 66. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -959,7 +941,7 @@ extension MessageStructureTable {
         id: "ADT_A39",
         version: "2.9",
         triggers: ["ADT^A40", "ADT^A41", "ADT^A42", "ADT^A39"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.40 ADT/ACK - Merge Patient - Patient Identifier List (Event A40), pp 67 to 68; the same structure is printed for ADT^A41 (3.3.41) and ADT^A42 (3.3.42). Triggers Table 0354 v2.9 (Chapter 2C, p 267) maps to ADT_A39 that no caption prints, accepted with the printed ones (P8b-11 ruling): ADT^A39.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.40 ADT/ACK - Merge Patient - Patient Identifier List (Event A40), pp 67 to 68; the same structure is printed for ADT^A41 (3.3.41) and ADT^A42 (3.3.42). Triggers Table 0354 v2.9 (Chapter 2C, p 267) maps to ADT_A39 that no caption prints, accepted with the printed ones (P8b-11 ruling): ADT^A39. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -980,7 +962,7 @@ extension MessageStructureTable {
         id: "ADT_A43",
         version: "2.9",
         triggers: ["ADT^A43", "ADT^A49"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.43 ADT/ACK - Move Patient Information - Patient Identifier List (Event A43), p 72; the same structure is printed for ADT^A49 (3.3.49).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.43 ADT/ACK - Move Patient Information - Patient Identifier List (Event A43), p 72; the same structure is printed for ADT^A49 (3.3.49). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1000,7 +982,7 @@ extension MessageStructureTable {
         id: "ADT_A44",
         version: "2.9",
         triggers: ["ADT^A44", "ADT^A47"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.44 ADT/ACK - Move Account Information - Patient Account Number (Event A44), pp 73 to 74; the same structure is printed for ADT^A47 (3.3.47).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.44 ADT/ACK - Move Account Information - Patient Account Number (Event A44), pp 73 to 74; the same structure is printed for ADT^A47 (3.3.47). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1011,7 +993,6 @@ extension MessageStructureTable {
             .group("PATIENT", min: 1, max: nil, elements: [
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
-                .segment("ARV", min: 0, max: nil),
                 .segment("MRG", min: 1, max: 1),
             ]),
         ]
@@ -1021,7 +1002,7 @@ extension MessageStructureTable {
         id: "ADT_A45",
         version: "2.9",
         triggers: ["ADT^A45"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.45 ADT/ACK - Move Visit Information - Visit Number (Event A45), p 75.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.45 ADT/ACK - Move Visit Information - Visit Number (Event A45), p 75. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1042,7 +1023,7 @@ extension MessageStructureTable {
         id: "ADT_A50",
         version: "2.9",
         triggers: ["ADT^A50", "ADT^A51"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.50 ADT/ACK - Change Visit Number (Event A50), p 80; the same structure is printed for ADT^A51 (3.3.51).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.50 ADT/ACK - Change Visit Number (Event A50), p 80; the same structure is printed for ADT^A51 (3.3.51). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1061,7 +1042,7 @@ extension MessageStructureTable {
         id: "ADT_A52",
         version: "2.9",
         triggers: ["ADT^A52", "ADT^A53"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.52 ADT/ACK- Cancel Leave of Absence for a Patient (Event A52), pp 82 to 83; the same structure is printed for ADT^A53 (3.3.53).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.52 ADT/ACK- Cancel Leave of Absence for a Patient (Event A52), pp 82 to 83; the same structure is printed for ADT^A53 (3.3.53). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1080,7 +1061,7 @@ extension MessageStructureTable {
         id: "ADT_A54",
         version: "2.9",
         triggers: ["ADT^A54", "ADT^A55"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.54 ADT/ACK - Change Attending Doctor (Event A54), p 85; the same structure is printed for ADT^A55 (3.3.55).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.54 ADT/ACK - Change Attending Doctor (Event A54), p 85; the same structure is printed for ADT^A55 (3.3.55). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1103,7 +1084,7 @@ extension MessageStructureTable {
         id: "ADT_A60",
         version: "2.9",
         triggers: ["ADT^A60"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.60 ADT/ACK - Update Adverse Reaction Information (Event A60), pp 98 to 99.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.60 ADT/ACK - Update Adverse Reaction Information (Event A60), pp 98 to 99. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1112,11 +1093,9 @@ extension MessageStructureTable {
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
             .segment("PID", min: 1, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .group("VISIT_GROUP", min: 0, max: 1, elements: [
                 .segment("PV1", min: 1, max: 1),
                 .segment("PV2", min: 0, max: 1),
-                .segment("ARV", min: 0, max: nil),
             ]),
             .group("ADVERSE_REACTION_GROUP", min: 0, max: nil, elements: [
                 .segment("IAM", min: 1, max: 1),
@@ -1130,7 +1109,7 @@ extension MessageStructureTable {
         id: "ADT_A61",
         version: "2.9",
         triggers: ["ADT^A61", "ADT^A62"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.61 ADT/ACK - Change Consulting Doctor (Event A61), p 100; the same structure is printed for ADT^A62 (3.3.62).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.61 ADT/ACK - Change Consulting Doctor (Event A61), p 100; the same structure is printed for ADT^A62 (3.3.62). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1153,10 +1132,11 @@ extension MessageStructureTable {
         id: "BAR_P01",
         version: "2.9",
         triggers: ["BAR^P01"],
-        citation: "HL7 v2.9 Chapter 6, section 6.4.1 BAR/ACK - Add Patient Account (Event P01), pp 3 to 4.",
+        citation: "HL7 v2.9 Chapter 6, section 6.4.1 BAR/ACK - Add Patient Account (Event P01), pp 3 to 4. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -1202,10 +1182,11 @@ extension MessageStructureTable {
         id: "BAR_P02",
         version: "2.9",
         triggers: ["BAR^P02"],
-        citation: "HL7 v2.9 Chapter 6, section 6.4.2 BAR/ACK - Purge Patient Accounts (Event P02), p 5.",
+        citation: "HL7 v2.9 Chapter 6, section 6.4.2 BAR/ACK - Purge Patient Accounts (Event P02), p 5. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -1223,10 +1204,11 @@ extension MessageStructureTable {
         id: "BAR_P05",
         version: "2.9",
         triggers: ["BAR^P05"],
-        citation: "HL7 v2.9 Chapter 6, section 6.4.5 BAR/ACK - Update Account (Event P05), pp 10 to 11.",
+        citation: "HL7 v2.9 Chapter 6, section 6.4.5 BAR/ACK - Update Account (Event P05), pp 10 to 11. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -1275,10 +1257,11 @@ extension MessageStructureTable {
         id: "BAR_P06",
         version: "2.9",
         triggers: ["BAR^P06"],
-        citation: "HL7 v2.9 Chapter 6, section 6.4.6 BAR/ACK - End Account (event P06), pp 12 to 13.",
+        citation: "HL7 v2.9 Chapter 6, section 6.4.6 BAR/ACK - End Account (event P06), pp 12 to 13. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -1294,10 +1277,11 @@ extension MessageStructureTable {
         id: "BAR_P10",
         version: "2.9",
         triggers: ["BAR^P10"],
-        citation: "HL7 v2.9 Chapter 6, section 6.4.7 BAR/ACK - Transmit Ambulatory Payment Classification (APC) Groups, p 14.",
+        citation: "HL7 v2.9 Chapter 6, section 6.4.7 BAR/ACK - Transmit Ambulatory Payment Classification (APC) Groups, p 14. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -1319,10 +1303,11 @@ extension MessageStructureTable {
         id: "BAR_P12",
         version: "2.9",
         triggers: ["BAR^P12"],
-        citation: "HL7 v2.9 Chapter 6, section 6.4.9 BAR/ACK - Update Diagnosis/Procedure (Event P12), pp 19 to 20.",
+        citation: "HL7 v2.9 Chapter 6, section 6.4.9 BAR/ACK - Update Diagnosis/Procedure (Event P12), pp 19 to 20. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -1347,7 +1332,7 @@ extension MessageStructureTable {
         id: "BPS_O29",
         version: "2.9",
         triggers: ["BPS^O29"],
-        citation: "HL7 v2.9 Chapter 4, section 4.13.4 BPS - Blood Product Dispense Status Message (Event O29), pp 130 to 131.",
+        citation: "HL7 v2.9 Chapter 4, section 4.13.4 BPS - Blood Product Dispense Status Message (Event O29), pp 130 to 131. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1359,7 +1344,6 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
@@ -1388,7 +1372,7 @@ extension MessageStructureTable {
         id: "BRP_O30",
         version: "2.9",
         triggers: ["BRP^O30"],
-        citation: "HL7 v2.9 Chapter 4, section 4.13.5 BRP - Blood Product Dispense Status Acknowledgment (Event O30), pp 131 to 132.",
+        citation: "HL7 v2.9 Chapter 4, section 4.13.5 BRP - Blood Product Dispense Status Acknowledgment (Event O30), pp 131 to 132. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1402,7 +1386,6 @@ extension MessageStructureTable {
                 .group("PATIENT", min: 0, max: 1, elements: [
                     .segment("PID", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .group("ORDER", min: 0, max: nil, elements: [
                         .segment("ORC", min: 1, max: 1),
                         .segment("PRT", min: 0, max: nil),
@@ -1422,7 +1405,7 @@ extension MessageStructureTable {
         id: "BRT_O32",
         version: "2.9",
         triggers: ["BRT^O32"],
-        citation: "HL7 v2.9 Chapter 4, section 4.13.7 BRT - Blood Product Transfusion/Disposition Acknowledgment (Event O32), pp 133 to 134.",
+        citation: "HL7 v2.9 Chapter 4, section 4.13.7 BRT - Blood Product Transfusion/Disposition Acknowledgment (Event O32), pp 133 to 134. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1436,7 +1419,6 @@ extension MessageStructureTable {
                 .group("PATIENT", min: 0, max: 1, elements: [
                     .segment("PID", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                 ]),
                 .group("ORDER", min: 0, max: nil, elements: [
                     .segment("ORC", min: 1, max: 1),
@@ -1456,7 +1438,7 @@ extension MessageStructureTable {
         id: "BTS_O31",
         version: "2.9",
         triggers: ["BTS^O31"],
-        citation: "HL7 v2.9 Chapter 4, section 4.13.6 BTS - Blood Product Transfusion/Disposition Message (Event O31), pp 132 to 133.",
+        citation: "HL7 v2.9 Chapter 4, section 4.13.6 BTS - Blood Product Transfusion/Disposition Message (Event O31), pp 132 to 133. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1496,10 +1478,11 @@ extension MessageStructureTable {
         id: "CCF_I22",
         version: "2.9",
         triggers: ["CCF^I22"],
-        citation: "HL7 v2.9 Chapter 11, section 11.7.2 CCF/CCI - Collaborative Care Fetch / Collaborative Care Information, p 44.",
+        citation: "HL7 v2.9 Chapter 11, section 11.7.2 CCF/CCI - Collaborative Care Fetch / Collaborative Care Information, p 44. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("PID", min: 1, max: 1),
@@ -1510,13 +1493,14 @@ extension MessageStructureTable {
         id: "CCI_I22",
         version: "2.9",
         triggers: ["CCI^I22"],
-        citation: "HL7 v2.9 Chapter 11, section 11.7.2 CCF/CCI - Collaborative Care Fetch / Collaborative Care Information, pp 45 to 49. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCI_I22.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}).",
+        citation: "HL7 v2.9 Chapter 11, section 11.7.2 CCF/CCI - Collaborative Care Fetch / Collaborative Care Information, pp 45 to 49. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCI_I22.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("PID", min: 1, max: 1),
             .segment("PD1", min: 0, max: 1),
@@ -1672,10 +1656,11 @@ extension MessageStructureTable {
         id: "CCM_I21",
         version: "2.9",
         triggers: ["CCM^I21"],
-        citation: "HL7 v2.9 Chapter 11, section 11.6.1 CCM/ACK - Collaborative Care Message (Event I21), pp 25 to 28. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCM_I21.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}).",
+        citation: "HL7 v2.9 Chapter 11, section 11.6.1 CCM/ACK - Collaborative Care Message (Event I21), pp 25 to 28. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCM_I21.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("PID", min: 1, max: 1),
@@ -1847,10 +1832,11 @@ extension MessageStructureTable {
         id: "CCR_I16",
         version: "2.9",
         triggers: ["CCR^I16", "CCR^I17", "CCR^I18"],
-        citation: "HL7 v2.9 Chapter 11, section 11.6.2 CCR/ACK - Collaborative Care Referral (Events I16, I17 and I18), pp 29 to 34. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_ORDER, CLINICAL_ORDER_DETAIL, CLINICAL_ORDER_OBJECT] has first segment OBR and members {OBR, PRT}), RXO_GROUP (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_ORDER, CLINICAL_ORDER_DETAIL, CLINICAL_ORDER_OBJECT] has first segment RXO and members {PRT, RXO}) and OBR_GROUP2 (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}).",
+        citation: "HL7 v2.9 Chapter 11, section 11.6.2 CCR/ACK - Collaborative Care Referral (Events I16, I17 and I18), pp 29 to 34. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_ORDER, CLINICAL_ORDER_DETAIL, CLINICAL_ORDER_OBJECT] has first segment OBR and members {OBR, PRT}), RXO_GROUP (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_ORDER, CLINICAL_ORDER_DETAIL, CLINICAL_ORDER_OBJECT] has first segment RXO and members {PRT, RXO}) and OBR_GROUP2 (synthesised: no HL7-xml v2.9/CCR_I16.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("RF1", min: 1, max: nil),
@@ -2039,10 +2025,11 @@ extension MessageStructureTable {
         id: "CCU_I20",
         version: "2.9",
         triggers: ["CCU^I20"],
-        citation: "HL7 v2.9 Chapter 11, section 11.6.6 CCU/ACK - Asynchronous Collaborative Care Update (Event I20), pp 35 to 39. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCU_I20.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}).",
+        citation: "HL7 v2.9 Chapter 11, section 11.6.6 CCU/ACK - Asynchronous Collaborative Care Update (Event I20), pp 35 to 39. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CCU_I20.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("RF1", min: 1, max: 1),
@@ -2206,13 +2193,14 @@ extension MessageStructureTable {
         id: "CQU_I19",
         version: "2.9",
         triggers: ["CQU^I19"],
-        citation: "HL7 v2.9 Chapter 11, section 11.7.1 CCQ/CQU - Collaborative Care Query/Collaborative Care Query Update, pp 40 to 44. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CQU_I19.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}).",
+        citation: "HL7 v2.9 Chapter 11, section 11.7.1 CCQ/CQU - Collaborative Care Query/Collaborative Care Query Update, pp 40 to 44. Unprinted group names (ADR-019 decision 3): OBR_GROUP (synthesised: no HL7-xml v2.9/CQU_I19.xsd group under [CLINICAL_HISTORY, CLINICAL_HISTORY_DETAIL, CLINICAL_HISTORY_OBJECT] has first segment OBR and members {OBR, PRT}). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("RF1", min: 1, max: 1),
             .group("PROVIDER_CONTACT", min: 0, max: nil, elements: [
@@ -2375,7 +2363,7 @@ extension MessageStructureTable {
         id: "CRM_C01",
         version: "2.9",
         triggers: ["CRM^C01", "CRM^C02", "CRM^C03", "CRM^C04", "CRM^C05", "CRM^C06", "CRM^C07", "CRM^C08"],
-        citation: "HL7 v2.9 Chapter 7, section 7.7.1 CRM - Clinical Study Registration Message (Events C01-C08), p 113.",
+        citation: "HL7 v2.9 Chapter 7, section 7.7.1 CRM - Clinical Study Registration Message (Events C01-C08), p 113. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2385,7 +2373,6 @@ extension MessageStructureTable {
             .group("PATIENT", min: 1, max: nil, elements: [
                 .segment("PID", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
@@ -2400,7 +2387,7 @@ extension MessageStructureTable {
         id: "CSU_C09",
         version: "2.9",
         triggers: ["CSU^C09", "CSU^C10", "CSU^C11", "CSU^C12"],
-        citation: "HL7 v2.9 Chapter 7, section 7.7.2 CSU - Unsolicited Study Data Message (Events C09-C12), pp 115 to 117. Unprinted group names (ADR-019 decision 3): STUDY_OBSERVATION_ORDER (HL7-xml v2.9/CSU_C09.xsd, CSU_C09.STUDY_OBSERVATION_ORDER.CONTENT).",
+        citation: "HL7 v2.9 Chapter 7, section 7.7.2 CSU - Unsolicited Study Data Message (Events C09-C12), pp 115 to 117. Unprinted group names (ADR-019 decision 3): STUDY_OBSERVATION_ORDER (HL7-xml v2.9/CSU_C09.xsd, CSU_C09.STUDY_OBSERVATION_ORDER.CONTENT). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2411,7 +2398,6 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
@@ -2458,7 +2444,7 @@ extension MessageStructureTable {
         id: "DBC_O41",
         version: "2.9",
         triggers: ["DBC^O41"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.4 DBC - Create Donor Record Message (Event O41 ), pp 161 to 162.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.4 DBC - Create Donor Record Message (Event O41 ), pp 161 to 162. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2474,7 +2460,6 @@ extension MessageStructureTable {
                     .segment("PRT", min: 0, max: nil),
                 ]),
                 .segment("NTE", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
             ]),
         ]
@@ -2484,7 +2469,7 @@ extension MessageStructureTable {
         id: "DBC_O42",
         version: "2.9",
         triggers: ["DBU^O42"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.5 DBU - Update Donor Record Message (Event O42), pp 162 to 163.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.5 DBU - Update Donor Record Message (Event O42), pp 162 to 163. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2501,7 +2486,6 @@ extension MessageStructureTable {
                 ]),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
             ]),
         ]
     )
@@ -2510,7 +2494,7 @@ extension MessageStructureTable {
         id: "DEL_O46",
         version: "2.9",
         triggers: ["DEL^O46"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.13 DEL - Donor Eligibility (Event O46), p 170.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.13 DEL - Donor Eligibility (Event O46), p 170. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2527,7 +2511,6 @@ extension MessageStructureTable {
                 ]),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("DONOR_REGISTRATION", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
@@ -2543,7 +2526,7 @@ extension MessageStructureTable {
         id: "DEO_O45",
         version: "2.9",
         triggers: ["DEO^O45"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.12 DEO - Donor Eligibility Observations (Event O45), p 169.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.12 DEO - Donor Eligibility Observations (Event O45), p 169. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2557,7 +2540,6 @@ extension MessageStructureTable {
                     .segment("OBX", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
                 ]),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("DONOR_REGISTRATION", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
@@ -2582,7 +2564,7 @@ extension MessageStructureTable {
         id: "DER_O44",
         version: "2.9",
         triggers: ["DER^O44"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.11 DER - Donor Eligibility Request (Event O44), p 168.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.11 DER - Donor Eligibility Request (Event O44), p 168. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2599,7 +2581,6 @@ extension MessageStructureTable {
                 ]),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("DONOR_REGISTRATION", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
@@ -2618,10 +2599,11 @@ extension MessageStructureTable {
         id: "DFT_P03",
         version: "2.9",
         triggers: ["DFT^P03"],
-        citation: "HL7 v2.9 Chapter 6, section 6.4.3 DFT/ACK - Post Detail Financial Transactions (Event P03), pp 7 to 9.",
+        citation: "HL7 v2.9 Chapter 6, section 6.4.3 DFT/ACK - Post Detail Financial Transactions (Event P03), pp 7 to 9. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -2718,10 +2700,11 @@ extension MessageStructureTable {
         id: "DFT_P11",
         version: "2.9",
         triggers: ["DFT^P11"],
-        citation: "HL7 v2.9 Chapter 6, section 6.4.8 DFT/ACK - Post Detail Financial Transactions - Expanded (Event P11), pp 15 to 18.",
+        citation: "HL7 v2.9 Chapter 6, section 6.4.8 DFT/ACK - Post Detail Financial Transactions - Expanded (Event P11), pp 15 to 18. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -2830,7 +2813,7 @@ extension MessageStructureTable {
         id: "DPR_O48",
         version: "2.9",
         triggers: ["DPR^O48"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.15 DPR - Donation Procedure (Event O48), pp 172 to 173.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.15 DPR - Donation Procedure (Event O48), pp 172 to 173. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2847,7 +2830,6 @@ extension MessageStructureTable {
                 ]),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("DONOR_REGISTRATION", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
@@ -2878,7 +2860,7 @@ extension MessageStructureTable {
         id: "DRC_O47",
         version: "2.9",
         triggers: ["DRC^O47"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.14 DRC - Donor Request to Collect (Event O47), p 171.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.14 DRC - Donor Request to Collect (Event O47), p 171. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2895,7 +2877,6 @@ extension MessageStructureTable {
                 ]),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("DONOR_REGISTRATION", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
@@ -2914,10 +2895,11 @@ extension MessageStructureTable {
         id: "DRG_O43",
         version: "2.9",
         triggers: ["DRG^O43"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.10 DRG - Donor Registration (Event O43), p 167.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.10 DRG - Donor Registration (Event O43), p 167. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .group("DONOR", min: 0, max: 1, elements: [
@@ -2930,7 +2912,6 @@ extension MessageStructureTable {
                 ]),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("DONOR_REGISTRATION", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
@@ -3015,10 +2996,11 @@ extension MessageStructureTable {
         id: "EHC_E01",
         version: "2.9",
         triggers: ["EHC^E01"],
-        citation: "HL7 v2.9 Chapter 16, section 16.3.1 EHC^E01 - Submit HealthCare Services Invoice (event E01), pp 5 to 6.",
+        citation: "HL7 v2.9 Chapter 16, section 16.3.1 EHC^E01 - Submit HealthCare Services Invoice (event E01), pp 5 to 6. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: nil),
             .group("INVOICE_INFORMATION_SUBMIT", min: 1, max: 1, elements: [
@@ -3162,10 +3144,11 @@ extension MessageStructureTable {
         id: "EHC_E12",
         version: "2.9",
         triggers: ["EHC^E12"],
-        citation: "HL7 v2.9 Chapter 16, section 16.3.7 EHC^E12 - Request Additional Information (event E12), pp 16 to 17.",
+        citation: "HL7 v2.9 Chapter 16, section 16.3.7 EHC^E12 - Request Additional Information (event E12), pp 16 to 17. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: nil),
             .segment("RFI", min: 1, max: 1),
@@ -3191,13 +3174,14 @@ extension MessageStructureTable {
         id: "EHC_E13",
         version: "2.9",
         triggers: ["EHC^E13"],
-        citation: "HL7 v2.9 Chapter 16, section 16.3.8 EHC^E13 - Additional Information Response (event E13), p 19.",
+        citation: "HL7 v2.9 Chapter 16, section 16.3.8 EHC^E13 - Additional Information Response (event E13), p 19. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: nil),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("RFI", min: 1, max: 1),
             .segment("CTD", min: 0, max: nil),
@@ -3262,10 +3246,11 @@ extension MessageStructureTable {
         id: "EHC_E20",
         version: "2.9",
         triggers: ["EHC^E20"],
-        citation: "HL7 v2.9 Chapter 16, section 16.3.10 EHC^E20 - Submit Authorization Request (event E20), pp 23 to 24.",
+        citation: "HL7 v2.9 Chapter 16, section 16.3.10 EHC^E20 - Submit Authorization Request (event E20), pp 23 to 24. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: nil),
             .group("AUTHORIZATION_REQUEST", min: 1, max: 1, elements: [
@@ -3442,10 +3427,11 @@ extension MessageStructureTable {
         id: "MDM_T01",
         version: "2.9",
         triggers: ["MDM^T01", "MDM^T03", "MDM^T05", "MDM^T07", "MDM^T09", "MDM^T11"],
-        citation: "HL7 v2.9 Chapter 9, section 9.6.1 MDM/ACK - Original Document Notification (Event T01), pp 8 to 9; the same structure is printed for MDM^T03 (9.6.3), MDM^T05 (9.6.5), MDM^T07 (9.6.7), MDM^T09 (9.6.9) and MDM^T11 (9.6.11).",
+        citation: "HL7 v2.9 Chapter 9, section 9.6.1 MDM/ACK - Original Document Notification (Event T01), pp 8 to 9; the same structure is printed for MDM^T03 (9.6.3), MDM^T05 (9.6.5), MDM^T07 (9.6.7), MDM^T09 (9.6.9) and MDM^T11 (9.6.11). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -3473,10 +3459,11 @@ extension MessageStructureTable {
         id: "MDM_T02",
         version: "2.9",
         triggers: ["MDM^T02", "MDM^T04", "MDM^T06", "MDM^T08", "MDM^T10"],
-        citation: "HL7 v2.9 Chapter 9, section 9.6.2 MDM/ACK - Original Document Notification and Content (Event T02), p 10; the same structure is printed for MDM^T04 (9.6.4), MDM^T06 (9.6.6), MDM^T08 (9.6.8) and MDM^T10 (9.6.10). Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.9/MDM_T02.xsd, MDM_T02.OBSERVATION.CONTENT).",
+        citation: "HL7 v2.9 Chapter 9, section 9.6.2 MDM/ACK - Original Document Notification and Content (Event T02), p 10; the same structure is printed for MDM^T04 (9.6.4), MDM^T06 (9.6.6), MDM^T08 (9.6.8) and MDM^T10 (9.6.10). Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.9/MDM_T02.xsd, MDM_T02.OBSERVATION.CONTENT). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("EVN", min: 1, max: 1),
@@ -3922,7 +3909,7 @@ extension MessageStructureTable {
         id: "OMB_O27",
         version: "2.9",
         triggers: ["OMB^O27"],
-        citation: "HL7 v2.9 Chapter 4, section 4.13.2 OMB - Blood Product Order Message (Event O27), pp 127 to 128.",
+        citation: "HL7 v2.9 Chapter 4, section 4.13.2 OMB - Blood Product Order Message (Event O27), pp 127 to 128. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3934,7 +3921,6 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
@@ -3975,7 +3961,7 @@ extension MessageStructureTable {
         id: "OMD_O03",
         version: "2.9",
         triggers: ["OMD^O03"],
-        citation: "HL7 v2.9 Chapter 4, section 4.7.1 OMD - Dietary Order (Event O03), pp 107 to 108.",
+        citation: "HL7 v2.9 Chapter 4, section 4.7.1 OMD - Dietary Order (Event O03), pp 107 to 108. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3987,7 +3973,6 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
@@ -4036,7 +4021,7 @@ extension MessageStructureTable {
         id: "OMG_O19",
         version: "2.9",
         triggers: ["OMG^O19"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.4 OMG - general clinical order message (event O19), pp 7 to 10.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.4 OMG - general clinical order message (event O19), pp 7 to 10. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4060,7 +4045,6 @@ extension MessageStructureTable {
                     .segment("OH2", min: 0, max: nil),
                     .segment("OH3", min: 0, max: 1),
                 ]),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
@@ -4114,7 +4098,6 @@ extension MessageStructureTable {
                     .group("PATIENT_PRIOR", min: 0, max: 1, elements: [
                         .segment("PID", min: 1, max: 1),
                         .segment("PD1", min: 0, max: 1),
-                        .segment("ARV", min: 0, max: nil),
                         .segment("PRT", min: 0, max: nil),
                     ]),
                     .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
@@ -4160,7 +4143,7 @@ extension MessageStructureTable {
         id: "OMI_O23",
         version: "2.9",
         triggers: ["OMI^O23"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.14 OMI - Imaging Order Message (Event O23), pp 39 to 40.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.14 OMI - Imaging Order Message (Event O23), pp 39 to 40. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4178,7 +4161,6 @@ extension MessageStructureTable {
                     .segment("OH3", min: 0, max: 1),
                     .segment("OH4", min: 0, max: nil),
                 ]),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
@@ -4224,7 +4206,7 @@ extension MessageStructureTable {
         id: "OML_O21",
         version: "2.9",
         triggers: ["OML^O21"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.6 OML - laboratory order message (event O21), pp 13 to 16.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.6 OML - laboratory order message (event O21), pp 13 to 16. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4248,7 +4230,6 @@ extension MessageStructureTable {
                     .segment("OH2", min: 0, max: nil),
                     .segment("OH3", min: 0, max: 1),
                 ]),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
@@ -4307,7 +4288,6 @@ extension MessageStructureTable {
                             .segment("PID", min: 1, max: 1),
                             .segment("PD1", min: 0, max: 1),
                             .segment("PRT", min: 0, max: nil),
-                            .segment("ARV", min: 0, max: nil),
                         ]),
                         .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
                             .segment("PV1", min: 1, max: 1),
@@ -4352,7 +4332,7 @@ extension MessageStructureTable {
         id: "OML_O33",
         version: "2.9",
         triggers: ["OML^O33"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.8 OML - Laboratory order for multiple orders related to a single specimen, pp 19 to 22.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.8 OML - Laboratory order for multiple orders related to a single specimen, pp 19 to 22. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4376,7 +4356,6 @@ extension MessageStructureTable {
                     .segment("OH2", min: 0, max: nil),
                     .segment("OH3", min: 0, max: 1),
                 ]),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
@@ -4429,7 +4408,6 @@ extension MessageStructureTable {
                                 .segment("PID", min: 1, max: 1),
                                 .segment("PD1", min: 0, max: 1),
                                 .segment("PRT", min: 0, max: nil),
-                                .segment("ARV", min: 0, max: nil),
                             ]),
                             .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
                                 .segment("PV1", min: 1, max: 1),
@@ -4475,7 +4453,7 @@ extension MessageStructureTable {
         id: "OML_O35",
         version: "2.9",
         triggers: ["OML^O35"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.10 OML - Laboratory order for multiple orders related to a single container of, pp 26 to 29.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.10 OML - Laboratory order for multiple orders related to a single container of, pp 26 to 29. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4499,7 +4477,6 @@ extension MessageStructureTable {
                     .segment("OH2", min: 0, max: nil),
                     .segment("OH3", min: 0, max: 1),
                 ]),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
@@ -4551,7 +4528,6 @@ extension MessageStructureTable {
                                     .segment("PID", min: 1, max: 1),
                                     .segment("PD1", min: 0, max: 1),
                                     .segment("PRT", min: 0, max: nil),
-                                    .segment("ARV", min: 0, max: nil),
                                 ]),
                                 .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
                                     .segment("PV1", min: 1, max: 1),
@@ -4598,7 +4574,7 @@ extension MessageStructureTable {
         id: "OML_O39",
         version: "2.9",
         triggers: ["OML^O39"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.12 OML - Specimen shipment centric laboratory order (event O39), pp 32 to 35.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.12 OML - Specimen shipment centric laboratory order (event O39), pp 32 to 35. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4622,7 +4598,6 @@ extension MessageStructureTable {
                     .segment("OH2", min: 0, max: nil),
                     .segment("OH3", min: 0, max: 1),
                 ]),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
@@ -4700,7 +4675,7 @@ extension MessageStructureTable {
         id: "OML_O59",
         version: "2.9",
         triggers: ["OML^O59"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.22 OML - Laboratory Result Interpretation Request Message (Event O59), pp 53 to 55.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.22 OML - Laboratory Result Interpretation Request Message (Event O59), pp 53 to 55. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4812,7 +4787,7 @@ extension MessageStructureTable {
         id: "OMN_O07",
         version: "2.9",
         triggers: ["OMN^O07"],
-        citation: "HL7 v2.9 Chapter 4, section 4.10.3 OMN - non-stock requisition order message (event O07), pp 119 to 120.",
+        citation: "HL7 v2.9 Chapter 4, section 4.10.3 OMN - non-stock requisition order message (event O07), pp 119 to 120. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4824,7 +4799,6 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
@@ -4863,7 +4837,7 @@ extension MessageStructureTable {
         id: "OMP_O09",
         version: "2.9",
         triggers: ["OMP^O09"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.3 OMP - Pharmacy/Treatment Order Message (Event O09), pp 4 to 6.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.3 OMP - Pharmacy/Treatment Order Message (Event O09), pp 4 to 6. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4878,12 +4852,10 @@ extension MessageStructureTable {
                     .segment("PRT", min: 0, max: nil),
                 ]),
                 .segment("NTE", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                 ]),
                 .group("INSURANCE", min: 0, max: nil, elements: [
                     .segment("IN1", min: 1, max: 1),
@@ -4923,7 +4895,7 @@ extension MessageStructureTable {
         id: "OMQ_O57",
         version: "2.9",
         triggers: ["OMQ^O57"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.20 OMQ - General Order Message with Document Payload (Event O57), pp 49 to 51.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.20 OMQ - General Order Message with Document Payload (Event O57), pp 49 to 51. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4937,7 +4909,6 @@ extension MessageStructureTable {
                 .segment("PRT", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .segment("NK1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
@@ -4969,7 +4940,6 @@ extension MessageStructureTable {
                         .segment("PID", min: 1, max: 1),
                         .segment("PD1", min: 0, max: 1),
                         .segment("PRT", min: 0, max: nil),
-                        .segment("ARV", min: 0, max: nil),
                     ]),
                     .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
                         .segment("PV1", min: 1, max: 1),
@@ -5009,7 +4979,7 @@ extension MessageStructureTable {
         id: "OMS_O05",
         version: "2.9",
         triggers: ["OMS^O05"],
-        citation: "HL7 v2.9 Chapter 4, section 4.10.1 OMS - stock requisition order message (event O05), pp 116 to 117.",
+        citation: "HL7 v2.9 Chapter 4, section 4.10.1 OMS - stock requisition order message (event O05), pp 116 to 117. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5021,7 +4991,6 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
@@ -5060,7 +5029,7 @@ extension MessageStructureTable {
         id: "OPL_O37",
         version: "2.9",
         triggers: ["OPL^O37"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.16 OPL - Population/Location-Based Laboratory Order Message (Event O37), pp 42 to 44.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.16 OPL - Population/Location-Based Laboratory Order Message (Event O37), pp 42 to 44. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5079,7 +5048,6 @@ extension MessageStructureTable {
                     .segment("PID", min: 1, max: 1),
                     .segment("PD1", min: 0, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .group("OBSERVATIONS_ON_PATIENT", min: 0, max: nil, elements: [
                         .segment("OBX", min: 1, max: 1),
                         .segment("PRT", min: 0, max: nil),
@@ -5128,7 +5096,6 @@ extension MessageStructureTable {
                         .segment("PID", min: 1, max: 1),
                         .segment("PD1", min: 0, max: 1),
                         .segment("PRT", min: 0, max: nil),
-                        .segment("ARV", min: 0, max: nil),
                     ]),
                     .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
                         .segment("PV1", min: 1, max: 1),
@@ -5165,7 +5132,7 @@ extension MessageStructureTable {
         id: "OPR_O38",
         version: "2.9",
         triggers: ["OPR^O38"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.17 OPR - Population/Location-Based Laboratory Order Acknowledgment, pp 45 to 46.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.17 OPR - Population/Location-Based Laboratory Order Acknowledgment, pp 45 to 46. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5181,7 +5148,6 @@ extension MessageStructureTable {
                     .group("PATIENT", min: 0, max: 1, elements: [
                         .segment("PID", min: 1, max: 1),
                         .segment("PRT", min: 0, max: nil),
-                        .segment("ARV", min: 0, max: nil),
                     ]),
                     .group("SPECIMEN", min: 0, max: nil, elements: [
                         .segment("SPM", min: 1, max: 1),
@@ -5210,7 +5176,7 @@ extension MessageStructureTable {
         id: "OPU_R25",
         version: "2.9",
         triggers: ["OPU^R25"],
-        citation: "HL7 v2.9 Chapter 7, section 7.3.11 OPU - Unsolicited Population/Location-Based Laboratory Observation, pp 29 to 31.",
+        citation: "HL7 v2.9 Chapter 7, section 7.3.11 OPU - Unsolicited Population/Location-Based Laboratory Observation, pp 29 to 31. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5236,7 +5202,6 @@ extension MessageStructureTable {
                     .segment("OH2", min: 0, max: nil),
                     .segment("OH3", min: 0, max: 1),
                     .segment("OH4", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .group("PATIENT_OBSERVATION", min: 0, max: nil, elements: [
                         .segment("OBX", min: 1, max: 1),
                         .segment("PRT", min: 0, max: nil),
@@ -5317,7 +5282,7 @@ extension MessageStructureTable {
         id: "ORB_O28",
         version: "2.9",
         triggers: ["ORB^O28"],
-        citation: "HL7 v2.9 Chapter 4, section 4.13.3 ORB - Blood Product Order Acknowledgment (Event O28), p 129.",
+        citation: "HL7 v2.9 Chapter 4, section 4.13.3 ORB - Blood Product Order Acknowledgment (Event O28), p 129. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5331,7 +5296,6 @@ extension MessageStructureTable {
                 .group("PATIENT", min: 0, max: 1, elements: [
                     .segment("PID", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .group("ORDER", min: 0, max: nil, elements: [
                         .segment("ORC", min: 1, max: 1),
                         .segment("PRT", min: 0, max: nil),
@@ -5350,7 +5314,7 @@ extension MessageStructureTable {
         id: "ORD_O04",
         version: "2.9",
         triggers: ["ORD^O04"],
-        citation: "HL7 v2.9 Chapter 4, section 4.7.2 ORD - dietary order acknowledgment (Event O04), pp 109 to 110.",
+        citation: "HL7 v2.9 Chapter 4, section 4.7.2 ORD - dietary order acknowledgment (Event O04), pp 109 to 110. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5364,7 +5328,6 @@ extension MessageStructureTable {
                 .group("PATIENT", min: 0, max: 1, elements: [
                     .segment("PID", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("NTE", min: 0, max: nil),
                 ]),
                 .group("ORDER_DIET", min: 1, max: nil, elements: [
@@ -5395,7 +5358,7 @@ extension MessageStructureTable {
         id: "ORG_O20",
         version: "2.9",
         triggers: ["ORG^O20"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.5 ORG - general clinical order acknowledgement message (event O20), pp 11 to 12.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.5 ORG - general clinical order acknowledgement message (event O20), pp 11 to 12. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5410,7 +5373,6 @@ extension MessageStructureTable {
                     .segment("PID", min: 1, max: 1),
                     .segment("NTE", min: 0, max: nil),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                 ]),
                 .group("ORDER", min: 1, max: nil, elements: [
                     .segment("ORC", min: 1, max: 1),
@@ -5438,7 +5400,7 @@ extension MessageStructureTable {
         id: "ORI_O24",
         version: "2.9",
         triggers: ["ORI^O24"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.15 ORI - Imaging Order Response Message to Any OMI (Event O24), pp 41 to 42.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.15 ORI - Imaging Order Response Message to Any OMI (Event O24), pp 41 to 42. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5451,7 +5413,6 @@ extension MessageStructureTable {
             .group("RESPONSE", min: 0, max: 1, elements: [
                 .group("PATIENT", min: 0, max: 1, elements: [
                     .segment("PID", min: 1, max: 1),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("NTE", min: 0, max: nil),
                     .segment("PRT", min: 0, max: nil),
                 ]),
@@ -5475,7 +5436,7 @@ extension MessageStructureTable {
         id: "ORL_O22",
         version: "2.9",
         triggers: ["ORL^O22"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.7.1 Patient Segments Required, pp 16 to 17.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.7.1 Patient Segments Required, pp 16 to 17. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5488,7 +5449,6 @@ extension MessageStructureTable {
             .group("RESPONSE", min: 0, max: 1, elements: [
                 .segment("PID", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("ORDER", min: 0, max: nil, elements: [
                     .segment("ORC", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
@@ -5513,7 +5473,7 @@ extension MessageStructureTable {
         id: "ORL_O34",
         version: "2.9",
         triggers: ["ORL^O34"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.9.1 Patient Segments Required, pp 23 to 24.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.9.1 Patient Segments Required, pp 23 to 24. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5526,7 +5486,6 @@ extension MessageStructureTable {
             .group("RESPONSE", min: 0, max: 1, elements: [
                 .segment("PID", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("SPECIMEN", min: 1, max: nil, elements: [
                     .segment("SPM", min: 1, max: 1),
                     .group("SPECIMEN_OBSERVATION", min: 0, max: nil, elements: [
@@ -5555,7 +5514,7 @@ extension MessageStructureTable {
         id: "ORL_O36",
         version: "2.9",
         triggers: ["ORL^O36"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.11.1 Patient Segments Required, p 30.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.11.1 Patient Segments Required, p 30. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5568,7 +5527,6 @@ extension MessageStructureTable {
             .group("RESPONSE", min: 0, max: 1, elements: [
                 .segment("PID", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("SPECIMEN", min: 1, max: nil, elements: [
                     .segment("SPM", min: 1, max: 1),
                     .group("SPECIMEN_OBSERVATION", min: 0, max: nil, elements: [
@@ -5600,7 +5558,7 @@ extension MessageStructureTable {
         id: "ORL_O40",
         version: "2.9",
         triggers: ["ORL^O40"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.13.1 Patient Segments Required, pp 35 to 36.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.13.1 Patient Segments Required, pp 35 to 36. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5614,7 +5572,6 @@ extension MessageStructureTable {
                 .group("PATIENT", min: 0, max: 1, elements: [
                     .segment("PID", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .group("ORDER", min: 0, max: nil, elements: [
                         .segment("ORC", min: 1, max: 1),
                         .segment("PRT", min: 0, max: nil),
@@ -5648,7 +5605,7 @@ extension MessageStructureTable {
         id: "ORL_O53",
         version: "2.9",
         triggers: ["ORL^O53"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.7.2 Patient Segments Optional, p 18.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.7.2 Patient Segments Optional, p 18. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5687,7 +5644,7 @@ extension MessageStructureTable {
         id: "ORL_O54",
         version: "2.9",
         triggers: ["ORL^O54"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.9.2 Patient Segments Optional, pp 24 to 25.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.9.2 Patient Segments Optional, pp 24 to 25. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5730,7 +5687,7 @@ extension MessageStructureTable {
         id: "ORL_O55",
         version: "2.9",
         triggers: ["ORL^O55"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.11.2 Patient Segments Optional, pp 31 to 32.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.11.2 Patient Segments Optional, pp 31 to 32. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5776,7 +5733,7 @@ extension MessageStructureTable {
         id: "ORL_O56",
         version: "2.9",
         triggers: ["ORL^O56"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.13.2 Patient Segments Optional, pp 37 to 38.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.13.2 Patient Segments Optional, pp 37 to 38. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5823,7 +5780,7 @@ extension MessageStructureTable {
         id: "ORN_O08",
         version: "2.9",
         triggers: ["ORN^O08"],
-        citation: "HL7 v2.9 Chapter 4, section 4.10.4 ORN - non-stock requisition order acknowledgment message (event O08), pp 120 to 121.",
+        citation: "HL7 v2.9 Chapter 4, section 4.10.4 ORN - non-stock requisition order acknowledgment message (event O08), pp 120 to 121. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5837,7 +5794,6 @@ extension MessageStructureTable {
                 .group("PATIENT", min: 0, max: 1, elements: [
                     .segment("PID", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("NTE", min: 0, max: nil),
                 ]),
                 .group("ORDER", min: 1, max: nil, elements: [
@@ -5859,11 +5815,12 @@ extension MessageStructureTable {
         id: "ORP_O10",
         version: "2.9",
         triggers: ["ORP^O10"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.4 ORP - Pharmacy/Treatment Order Acknowledgment (Event O10), pp 6 to 7.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.4 ORP - Pharmacy/Treatment Order Acknowledgment (Event O10), pp 6 to 7. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
@@ -5900,7 +5857,7 @@ extension MessageStructureTable {
         id: "ORS_O06",
         version: "2.9",
         triggers: ["ORS^O06"],
-        citation: "HL7 v2.9 Chapter 4, section 4.10.2 ORS - stock requisition order acknowledgment message (event O06), pp 117 to 118.",
+        citation: "HL7 v2.9 Chapter 4, section 4.10.2 ORS - stock requisition order acknowledgment message (event O06), pp 117 to 118. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5914,7 +5871,6 @@ extension MessageStructureTable {
                 .group("PATIENT", min: 0, max: 1, elements: [
                     .segment("PID", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("NTE", min: 0, max: nil),
                 ]),
                 .group("ORDER", min: 1, max: nil, elements: [
@@ -5936,12 +5892,12 @@ extension MessageStructureTable {
         id: "ORU_R01",
         version: "2.9",
         triggers: ["ORU^R01", "ORU^R40", "ORU^R42", "ORU^R43"],
-        citation: "HL7 v2.9 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), pp 8 to 11; the same structure is printed for ORU^R40 (7.3.12), ORU^R42 (7.3.14) and ORU^R43 (7.3.15). Two normative prints of ORU_R01 differ by trigger: HL7 v2.9 Chapter 7 section 7.3.1 (ORU^R01^ORU_R01, pp 8 to 11) prints PRT required in the OBSERVATION_PARTICIPATION group, as do 7.3.14 (R42) and 7.3.15 (R43); section 7.3.12 (ORU^R40^ORU_R01, pp 32 to 34) prints it [{PRT}]; the 7.3.1 print is the default and the 7.3.12 print governs ORU^R40. ADR-019 S6: each print governs the triggers it is printed for.",
+        citation: "HL7 v2.9 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), pp 8 to 11; the same structure is printed for ORU^R40 (7.3.12), ORU^R42 (7.3.14) and ORU^R43 (7.3.15). Two normative prints of ORU_R01 differ by trigger: HL7 v2.9 Chapter 7 section 7.3.1 (ORU^R01^ORU_R01, pp 8 to 11) prints PRT required in the OBSERVATION_PARTICIPATION group, as do 7.3.14 (R42) and 7.3.15 (R43); section 7.3.12 (ORU^R40^ORU_R01, pp 32 to 34) prints it [{PRT}]; the 7.3.1 print is the default and the 7.3.12 print governs ORU^R40. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         variants: [
             StructureVariant(
                 triggers: ["ORU^R40"],
-                citation: "HL7 v2.9 Chapter 7, section 7.3.12 ORU - Unsolicited Alert Observation Message (Event R40), pp 32 to 34. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ORU_R01 differ by trigger: HL7 v2.9 Chapter 7 section 7.3.1 (ORU^R01^ORU_R01, pp 8 to 11) prints PRT required in the OBSERVATION_PARTICIPATION group, as do 7.3.14 (R42) and 7.3.15 (R43); section 7.3.12 (ORU^R40^ORU_R01, pp 32 to 34) prints it [{PRT}]; the 7.3.1 print is the default and the 7.3.12 print governs ORU^R40. ADR-019 S6: each print governs the triggers it is printed for.",
+                citation: "HL7 v2.9 Chapter 7, section 7.3.12 ORU - Unsolicited Alert Observation Message (Event R40), pp 32 to 34. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ORU_R01 differ by trigger: HL7 v2.9 Chapter 7 section 7.3.1 (ORU^R01^ORU_R01, pp 8 to 11) prints PRT required in the OBSERVATION_PARTICIPATION group, as do 7.3.14 (R42) and 7.3.15 (R43); section 7.3.12 (ORU^R40^ORU_R01, pp 32 to 34) prints it [{PRT}]; the 7.3.1 print is the default and the 7.3.12 print governs ORU^R40. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
                 requiresExactMatch: true,
                 elements: [
                     .segment("MSH", min: 1, max: 1),
@@ -5963,7 +5919,6 @@ extension MessageStructureTable {
                                 .segment("OH2", min: 0, max: nil),
                                 .segment("OH3", min: 0, max: 1),
                             ]),
-                            .segment("ARV", min: 0, max: nil),
                             .group("PATIENT_OBSERVATION", min: 0, max: nil, elements: [
                                 .segment("OBX", min: 1, max: 1),
                                 .segment("PRT", min: 0, max: nil),
@@ -6043,7 +5998,6 @@ extension MessageStructureTable {
                         .segment("OH2", min: 0, max: nil),
                         .segment("OH3", min: 0, max: 1),
                     ]),
-                    .segment("ARV", min: 0, max: nil),
                     .group("PATIENT_OBSERVATION", min: 0, max: nil, elements: [
                         .segment("OBX", min: 1, max: 1),
                         .segment("PRT", min: 0, max: nil),
@@ -6108,7 +6062,7 @@ extension MessageStructureTable {
         id: "ORU_R30",
         version: "2.9",
         triggers: ["ORU^R30", "ORU^R31", "ORU^R32"],
-        citation: "HL7 v2.9 Chapter 7, section 7.3.4 ORU - Unsolicited Point-Of-Care Observation Message without Existing, pp 12 to 14; the same structure is printed for ORU^R31 (7.3.5) and ORU^R32 (7.3.6).",
+        citation: "HL7 v2.9 Chapter 7, section 7.3.4 ORU - Unsolicited Point-Of-Care Observation Message without Existing, pp 12 to 14; the same structure is printed for ORU^R31 (7.3.5) and ORU^R32 (7.3.6). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6122,7 +6076,6 @@ extension MessageStructureTable {
             .segment("OH2", min: 0, max: nil),
             .segment("OH3", min: 0, max: 1),
             .segment("OH4", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .group("PATIENT_OBSERVATION", min: 0, max: nil, elements: [
                 .segment("OBX", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
@@ -6157,7 +6110,7 @@ extension MessageStructureTable {
         id: "ORX_O58",
         version: "2.9",
         triggers: ["ORX^O58"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.21 ORX - General Order Message with Document Payload Acknowledgement, p 52.",
+        citation: "HL7 v2.9 Chapter 4, section 4.4.21 ORX - General Order Message with Document Payload Acknowledgement, p 52. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6172,7 +6125,6 @@ extension MessageStructureTable {
                     .segment("PID", min: 1, max: 1),
                     .segment("NTE", min: 0, max: nil),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                 ]),
                 .group("ORDER", min: 1, max: nil, elements: [
                     .segment("ORC", min: 1, max: 1),
@@ -6188,7 +6140,7 @@ extension MessageStructureTable {
         id: "OSM_R26",
         version: "2.9",
         triggers: ["OSM^R26"],
-        citation: "HL7 v2.9 Chapter 7, section 7.16.1 OSM - Unsolicited Specimen Shipment Manifest Message (Event R26), pp 167 to 169. Unprinted group names (ADR-019 decision 3): SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION (HL7-xml v2.9/OSM_R26.xsd, OSM_R26.SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION.CONTENT) and SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION (HL7-xml v2.9/OSM_R26.xsd, OSM_R26.SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION.CONTENT).",
+        citation: "HL7 v2.9 Chapter 7, section 7.16.1 OSM - Unsolicited Specimen Shipment Manifest Message (Event R26), pp 167 to 169. Unprinted group names (ADR-019 decision 3): SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION (HL7-xml v2.9/OSM_R26.xsd, OSM_R26.SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION.CONTENT) and SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION (HL7-xml v2.9/OSM_R26.xsd, OSM_R26.SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION.CONTENT). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6222,7 +6174,6 @@ extension MessageStructureTable {
                         .group("SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION", min: 0, max: 1, elements: [
                             .segment("PID", min: 1, max: 1),
                             .segment("PRT", min: 0, max: nil),
-                            .segment("ARV", min: 0, max: nil),
                             .group("PATIENT_OBSERVATION", min: 0, max: nil, elements: [
                                 .segment("OBX", min: 1, max: 1),
                                 .segment("PRT", min: 0, max: nil),
@@ -6250,8 +6201,8 @@ extension MessageStructureTable {
         id: "OSU_O51",
         version: "2.9",
         triggers: ["OSU^O51"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.18 Order Status Update (Event O51), p 47.",
-        requiresExactMatch: true,
+        citation: "HL7 v2.9 Chapter 4, section 4.4.18 Order Status Update (Event O51), p 47. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
+        requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("ARV", min: 0, max: nil),
@@ -6260,7 +6211,6 @@ extension MessageStructureTable {
             .segment("NTE", min: 0, max: nil),
             .segment("PID", min: 0, max: 1),
             .segment("PRT", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .group("ORDER_STATUS", min: 1, max: nil, elements: [
                 .segment("ORC", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
@@ -6272,8 +6222,8 @@ extension MessageStructureTable {
         id: "OSU_O52",
         version: "2.9",
         triggers: ["OSU^O52"],
-        citation: "HL7 v2.9 Chapter 4, section 4.4.19 OSU - Order Status Update Acknowledgement (Event O52), p 48.",
-        requiresExactMatch: true,
+        citation: "HL7 v2.9 Chapter 4, section 4.4.19 OSU - Order Status Update Acknowledgement (Event O52), p 48. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
+        requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
@@ -6286,7 +6236,6 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
             ]),
-            .segment("ARV", min: 0, max: nil),
             .group("ORDER_STATUS", min: 1, max: nil, elements: [
                 .segment("ORC", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
@@ -6298,7 +6247,7 @@ extension MessageStructureTable {
         id: "OUL_R22",
         version: "2.9",
         triggers: ["OUL^R22"],
-        citation: "HL7 v2.9 Chapter 7, section 7.3.8 OUL - Unsolicited Specimen Oriented Observation Message (Event R22 ), pp 21 to 23.",
+        citation: "HL7 v2.9 Chapter 7, section 7.3.8 OUL - Unsolicited Specimen Oriented Observation Message (Event R22 ), pp 21 to 23. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6310,7 +6259,6 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_OBSERVATION", min: 0, max: nil, elements: [
                     .segment("OBX", min: 1, max: 1),
@@ -6374,7 +6322,7 @@ extension MessageStructureTable {
         id: "OUL_R23",
         version: "2.9",
         triggers: ["OUL^R23"],
-        citation: "HL7 v2.9 Chapter 7, section 7.3.9 OUL - Unsolicited Specimen Container Oriented Observation Message, pp 23 to 26.",
+        citation: "HL7 v2.9 Chapter 7, section 7.3.9 OUL - Unsolicited Specimen Container Oriented Observation Message, pp 23 to 26. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6390,7 +6338,6 @@ extension MessageStructureTable {
                 .segment("OH2", min: 0, max: nil),
                 .segment("OH3", min: 0, max: 1),
                 .segment("OH4", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_OBSERVATION", min: 0, max: nil, elements: [
                     .segment("OBX", min: 1, max: 1),
@@ -6454,7 +6401,7 @@ extension MessageStructureTable {
         id: "OUL_R24",
         version: "2.9",
         triggers: ["OUL^R24"],
-        citation: "HL7 v2.9 Chapter 7, section 7.3.10 OUL - Unsolicited Order Oriented Observation Message (Event R24), pp 26 to 29.",
+        citation: "HL7 v2.9 Chapter 7, section 7.3.10 OUL - Unsolicited Order Oriented Observation Message (Event R24), pp 26 to 29. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6470,7 +6417,6 @@ extension MessageStructureTable {
                 .segment("OH2", min: 0, max: nil),
                 .segment("OH3", min: 0, max: 1),
                 .segment("OH4", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .group("PATIENT_OBSERVATION", min: 0, max: nil, elements: [
                     .segment("OBX", min: 1, max: 1),
@@ -6534,7 +6480,7 @@ extension MessageStructureTable {
         id: "PEX_P07",
         version: "2.9",
         triggers: ["PEX^P07", "PEX^P08"],
-        citation: "HL7 v2.9 Chapter 7, section 7.11.1 PEX - Product Experience Message (Events P07, P08), pp 135 to 137.",
+        citation: "HL7 v2.9 Chapter 7, section 7.11.1 PEX - Product Experience Message (Events P07, P08), pp 135 to 137. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6545,7 +6491,6 @@ extension MessageStructureTable {
             .segment("PID", min: 1, max: 1),
             .segment("PD1", min: 0, max: 1),
             .segment("PRT", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .segment("NTE", min: 0, max: nil),
             .group("VISIT", min: 0, max: 1, elements: [
                 .segment("PV1", min: 1, max: 1),
@@ -6614,10 +6559,11 @@ extension MessageStructureTable {
         id: "PGL_PC6",
         version: "2.9",
         triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
-        citation: "HL7 v2.9 Chapter 12, section 12.3.1 PGL/ACK - Patient Goal Message (Events PC6, PC7, PC8), pp 8 to 9.",
+        citation: "HL7 v2.9 Chapter 12, section 12.3.1 PGL/ACK - Patient Goal Message (Events PC6, PC7, PC8), pp 8 to 9. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("PID", min: 1, max: 1),
@@ -6778,10 +6724,11 @@ extension MessageStructureTable {
         id: "PPG_PCG",
         version: "2.9",
         triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ", "PPG^PCC"],
-        citation: "HL7 v2.9 Chapter 12, section 12.3.4 PPG/ACK - Patient Pathway Message (Goal-Oriented) (Events PCG, PCH, PCJ), pp 16 to 18. Triggers Table 0354 v2.9 (Chapter 2C, p 271) maps to PPG_PCG that no caption prints, accepted with the printed ones (P8b-11 ruling): PPG^PCC.",
+        citation: "HL7 v2.9 Chapter 12, section 12.3.4 PPG/ACK - Patient Pathway Message (Goal-Oriented) (Events PCG, PCH, PCJ), pp 16 to 18. Triggers Table 0354 v2.9 (Chapter 2C, p 271) maps to PPG_PCG that no caption prints, accepted with the printed ones (P8b-11 ruling): PPG^PCC. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("PID", min: 1, max: 1),
@@ -6854,10 +6801,11 @@ extension MessageStructureTable {
         id: "PPP_PCB",
         version: "2.9",
         triggers: ["PPP^PCB", "PPP^PCC", "PPP^PCD"],
-        citation: "HL7 v2.9 Chapter 12, section 12.3.3 PPP/ACK - Patient Pathway Message (Problem-Oriented) (Events PCB, PCC, PCD), pp 13 to 15.",
+        citation: "HL7 v2.9 Chapter 12, section 12.3.3 PPP/ACK - Patient Pathway Message (Problem-Oriented) (Events PCB, PCC, PCD), pp 13 to 15. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("PID", min: 1, max: 1),
@@ -6930,10 +6878,11 @@ extension MessageStructureTable {
         id: "PPR_PC1",
         version: "2.9",
         triggers: ["PPR^PC1", "PPR^PC2", "PPR^PC3"],
-        citation: "HL7 v2.9 Chapter 12, section 12.3.2 PPR/ACK - Patient Problem Message (Events PC1, PC2, PC3), pp 10 to 12.",
+        citation: "HL7 v2.9 Chapter 12, section 12.3.2 PPR/ACK - Patient Problem Message (Events PC1, PC2, PC3), pp 10 to 12. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("PID", min: 1, max: 1),
@@ -7110,7 +7059,7 @@ extension MessageStructureTable {
         id: "RAS_O17",
         version: "2.9",
         triggers: ["RAS^O17"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.14 RAS - Pharmacy/Treatment Administration Message (Event O17), pp 20 to 21.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.14 RAS - Pharmacy/Treatment Administration Message (Event O17), pp 20 to 21. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -7123,13 +7072,11 @@ extension MessageStructureTable {
                 .segment("PD1", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                 ]),
             ]),
             .group("ORDER", min: 1, max: nil, elements: [
@@ -7182,10 +7129,11 @@ extension MessageStructureTable {
         id: "RCV_O59",
         version: "2.9",
         triggers: ["RCV^O59"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.26 RCV - Pharmacy/Treatment Dispense Message (Event O59), pp 35 to 37.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.26 RCV - Pharmacy/Treatment Dispense Message (Event O59), pp 35 to 37. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("NTE", min: 0, max: nil),
@@ -7249,12 +7197,12 @@ extension MessageStructureTable {
         id: "RDE_O11",
         version: "2.9",
         triggers: ["RDE^O11", "RDE^O25"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.6 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 7 to 9; the same structure is printed for RDE^O25 (4A.3.16). Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.9 Chapter 4A section 4A.3.6 (RDE^O11^RDE_O11, p 7) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.16 (RDE^O25^RDE_O11, p 23) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.6 print is the default and the 4A.3.16 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.6 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 7 to 9; the same structure is printed for RDE^O25 (4A.3.16). Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.9 Chapter 4A section 4A.3.6 (RDE^O11^RDE_O11, p 7) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.16 (RDE^O25^RDE_O11, p 23) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.6 print is the default and the 4A.3.16 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         variants: [
             StructureVariant(
                 triggers: ["RDE^O25"],
-                citation: "HL7 v2.9 Chapter 4A, section 4A.3.16 RDE - Pharmacy/Treatment Refill Authorization Request Message, pp 23 to 24. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.9 Chapter 4A section 4A.3.6 (RDE^O11^RDE_O11, p 7) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.16 (RDE^O25^RDE_O11, p 23) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.6 print is the default and the 4A.3.16 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for.",
+                citation: "HL7 v2.9 Chapter 4A, section 4A.3.16 RDE - Pharmacy/Treatment Refill Authorization Request Message, pp 23 to 24. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of RDE_O11 differ by trigger in a group name only: HL7 v2.9 Chapter 4A section 4A.3.6 (RDE^O11^RDE_O11, p 7) names the RXC group in ORDER_DETAIL COMPONENT, section 4A.3.16 (RDE^O25^RDE_O11, p 23) names it COMPONENTS; the segments and cardinalities agree; the 4A.3.6 print is the default and the 4A.3.16 print governs RDE^O25. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
                 requiresExactMatch: false,
                 elements: [
                     .segment("MSH", min: 1, max: 1),
@@ -7267,12 +7215,10 @@ extension MessageStructureTable {
                         .segment("PD1", min: 0, max: 1),
                         .segment("PRT", min: 0, max: nil),
                         .segment("NTE", min: 0, max: nil),
-                        .segment("ARV", min: 0, max: nil),
                         .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                             .segment("PV1", min: 1, max: 1),
                             .segment("PV2", min: 0, max: 1),
                             .segment("PRT", min: 0, max: nil),
-                            .segment("ARV", min: 0, max: nil),
                         ]),
                         .group("INSURANCE", min: 0, max: nil, elements: [
                             .segment("IN1", min: 1, max: 1),
@@ -7340,12 +7286,10 @@ extension MessageStructureTable {
                 .segment("PD1", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                 ]),
                 .group("INSURANCE", min: 0, max: nil, elements: [
                     .segment("IN1", min: 1, max: 1),
@@ -7407,10 +7351,11 @@ extension MessageStructureTable {
         id: "RDE_O49",
         version: "2.9",
         triggers: ["RDE^O49"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.24 RDE - Pharmacy/Treatment Dispense Request Message (Event O49), pp 32 to 33.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.24 RDE - Pharmacy/Treatment Dispense Request Message (Event O49), pp 32 to 33. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("NTE", min: 0, max: nil),
@@ -7475,7 +7420,7 @@ extension MessageStructureTable {
         id: "RDS_O13",
         version: "2.9",
         triggers: ["RDS^O13"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.8 RDS - Pharmacy/Treatment Dispense Message (Event O13), pp 12 to 14.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.8 RDS - Pharmacy/Treatment Dispense Message (Event O13), pp 12 to 14. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -7487,14 +7432,12 @@ extension MessageStructureTable {
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                 ]),
             ]),
             .group("ORDER", min: 1, max: nil, elements: [
@@ -7571,10 +7514,11 @@ extension MessageStructureTable {
         id: "REF_I12",
         version: "2.9",
         triggers: ["REF^I12", "REF^I13", "REF^I14", "REF^I15"],
-        citation: "HL7 v2.9 Chapter 11, section 11.5.1 REF/RRI - Patient Referral Message, pp 21 to 22.",
+        citation: "HL7 v2.9 Chapter 11, section 11.5.1 REF/RRI - Patient Referral Message, pp 21 to 22. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("RF1", min: 0, max: 1),
@@ -7627,7 +7571,7 @@ extension MessageStructureTable {
         id: "RGV_O15",
         version: "2.9",
         triggers: ["RGV^O15"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.11 RGV - Pharmacy/Treatment Give Message (Event O15), pp 16 to 18.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.11 RGV - Pharmacy/Treatment Give Message (Event O15), pp 16 to 18. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -7640,12 +7584,10 @@ extension MessageStructureTable {
                 .segment("PRT", min: 0, max: nil),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PV2", min: 0, max: 1),
                     .segment("PRT", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                 ]),
             ]),
             .group("ORDER", min: 1, max: nil, elements: [
@@ -7702,13 +7644,14 @@ extension MessageStructureTable {
         id: "RPA_I08",
         version: "2.9",
         triggers: ["RPA^I08", "RPA^I09", "RPA^I10", "RPA^I11"],
-        citation: "HL7 v2.9 Chapter 11, section 11.4.1 RQA/RPA - Request Patient Authorization Message (Event I08), pp 19 to 20.",
+        citation: "HL7 v2.9 Chapter 11, section 11.4.1 RQA/RPA - Request Patient Authorization Message (Event I08), pp 19 to 20. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("RF1", min: 0, max: 1),
             .group("AUTHORIZATION", min: 0, max: 1, elements: [
                 .segment("AUT", min: 1, max: 1),
@@ -7759,13 +7702,14 @@ extension MessageStructureTable {
         id: "RPI_I01",
         version: "2.9",
         triggers: ["RPI^I01", "RPI^I04"],
-        citation: "HL7 v2.9 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 10. Triggers Table 0354 v2.9 (Chapter 2C, p 272) maps to RPI_I01 that no caption prints, accepted with the printed ones (P8b-11 ruling): RPI^I04.",
+        citation: "HL7 v2.9 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 10. Triggers Table 0354 v2.9 (Chapter 2C, p 272) maps to RPI_I01 that no caption prints, accepted with the printed ones (P8b-11 ruling): RPI^I04. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .group("PROVIDER", min: 1, max: nil, elements: [
                 .segment("PRD", min: 1, max: 1),
                 .segment("CTD", min: 0, max: nil),
@@ -7788,13 +7732,14 @@ extension MessageStructureTable {
         id: "RPI_I04",
         version: "2.9",
         triggers: ["RPI^I04"],
-        citation: "HL7 v2.9 Chapter 11, section 11.3.4 RQP/RPI - request for patient demographic data (Event I04), pp 14 to 15.",
+        citation: "HL7 v2.9 Chapter 11, section 11.3.4 RQP/RPI - request for patient demographic data (Event I04), pp 14 to 15. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .group("PROVIDER", min: 1, max: nil, elements: [
                 .segment("PRD", min: 1, max: 1),
                 .segment("CTD", min: 0, max: nil),
@@ -7838,13 +7783,14 @@ extension MessageStructureTable {
         id: "RPR_I03",
         version: "2.9",
         triggers: ["RPR^I03"],
-        citation: "HL7 v2.9 Chapter 11, section 11.3.3 RQI/RPR - Request/Receipt of Patient Selection List (Event I03), p 13.",
+        citation: "HL7 v2.9 Chapter 11, section 11.3.3 RQI/RPR - Request/Receipt of Patient Selection List (Event I03), p 13. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .group("PROVIDER", min: 1, max: nil, elements: [
                 .segment("PRD", min: 1, max: 1),
                 .segment("CTD", min: 0, max: nil),
@@ -7858,10 +7804,11 @@ extension MessageStructureTable {
         id: "RQA_I08",
         version: "2.9",
         triggers: ["RQA^I08", "RQA^I09", "RQA^I10", "RQA^I11"],
-        citation: "HL7 v2.9 Chapter 11, section 11.4.1 RQA/RPA - Request Patient Authorization Message (Event I08), pp 17 to 18.",
+        citation: "HL7 v2.9 Chapter 11, section 11.4.1 RQA/RPA - Request Patient Authorization Message (Event I08), pp 17 to 18. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("RF1", min: 0, max: 1),
@@ -7916,10 +7863,11 @@ extension MessageStructureTable {
         id: "RQI_I01",
         version: "2.9",
         triggers: ["RQI^I01", "RQI^I02", "RQI^I03", "PIN^I07"],
-        citation: "HL7 v2.9 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 9; the same structure is printed for RQI^I02 (11.3.2), RQI^I03 (11.3.3) and PIN^I07 (11.3.7).",
+        citation: "HL7 v2.9 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 9; the same structure is printed for RQI^I02 (11.3.2), RQI^I03 (11.3.3) and PIN^I07 (11.3.7). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .group("PROVIDER", min: 1, max: nil, elements: [
@@ -7944,10 +7892,11 @@ extension MessageStructureTable {
         id: "RQP_I04",
         version: "2.9",
         triggers: ["RQP^I04"],
-        citation: "HL7 v2.9 Chapter 11, section 11.3.4 RQP/RPI - request for patient demographic data (Event I04), p 14.",
+        citation: "HL7 v2.9 Chapter 11, section 11.3.4 RQP/RPI - request for patient demographic data (Event I04), p 14. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .group("PROVIDER", min: 1, max: nil, elements: [
@@ -7965,11 +7914,12 @@ extension MessageStructureTable {
         id: "RRA_O18",
         version: "2.9",
         triggers: ["RRA^O18"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.15 RRA - Pharmacy/Treatment Administration Acknowledgment, pp 21 to 22.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.15 RRA - Pharmacy/Treatment Administration Acknowledgment, pp 21 to 22. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
@@ -8003,11 +7953,12 @@ extension MessageStructureTable {
         id: "RRD_O14",
         version: "2.9",
         triggers: ["RRD^O14"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.9 RRD - Pharmacy/Treatment Dispense Acknowledgement Message, pp 14 to 15.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.9 RRD - Pharmacy/Treatment Dispense Acknowledgement Message, pp 14 to 15. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
@@ -8041,11 +7992,12 @@ extension MessageStructureTable {
         id: "RRE_O12",
         version: "2.9",
         triggers: ["RRE^O12", "RRE^O26"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.7 RRE - Pharmacy/Treatment Encoded Order Acknowledgment (Event O12), pp 10 to 11; the same structure is printed for RRE^O26 (4A.3.17).",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.7 RRE - Pharmacy/Treatment Encoded Order Acknowledgment (Event O12), pp 10 to 11; the same structure is printed for RRE^O26 (4A.3.17). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
@@ -8083,11 +8035,12 @@ extension MessageStructureTable {
         id: "RRE_O50",
         version: "2.9",
         triggers: ["RRE^O50"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.25 RRE - Pharmacy/Treatment Encoded Order Acknowledgment (Event O50), pp 34 to 35.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.25 RRE - Pharmacy/Treatment Encoded Order Acknowledgment (Event O50), pp 34 to 35. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
@@ -8126,11 +8079,12 @@ extension MessageStructureTable {
         id: "RRG_O16",
         version: "2.9",
         triggers: ["RRG^O16"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.12 RRG - Pharmacy/Treatment Give Acknowledgment Message (Event O16), pp 18 to 19.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.12 RRG - Pharmacy/Treatment Give Acknowledgment Message (Event O16), pp 18 to 19. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
@@ -8167,13 +8121,17 @@ extension MessageStructureTable {
         id: "RRI_I12",
         version: "2.9",
         triggers: ["RRI^I12", "RRI^I13", "RRI^I14", "RRI^I15"],
-        citation: "HL7 v2.9 Chapter 11, section 11.5.1 REF/RRI - Patient Referral Message, pp 22 to 23.",
+        citation: "HL7 v2.9 Chapter 11, section 11.5.1 REF/RRI - Patient Referral Message, pp 22 to 23. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted. Unprinted group names (ADR-019 decision 3): MSA_GROUP (synthesised: the print's MSA is optional and the letter decides on the message, so ARV may follow MSH or, in this group, MSA).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
-            .segment("MSA", min: 0, max: 1),
+            .group("MSA_GROUP", min: 0, max: 1, elements: [
+                .segment("MSA", min: 1, max: 1),
+                .segment("ARV", min: 0, max: nil),
+            ]),
             .segment("RF1", min: 0, max: 1),
             .group("AUTHORIZATION_CONTACT2", min: 0, max: 1, elements: [
                 .segment("AUT", min: 1, max: 1),
@@ -8273,7 +8231,7 @@ extension MessageStructureTable {
         id: "RSP_K21",
         version: "2.9",
         triggers: ["RSP^K21"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.56 QBP/RSP - Get Person Demographics (QBP) and Response (RSP), p 89.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.56 QBP/RSP - Get Person Demographics (QBP) and Response (RSP), p 89. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
@@ -8282,17 +8240,16 @@ extension MessageStructureTable {
             citation: "HL7 v2.9 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 62 to 63: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 63): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: 1),
             .segment("QAK", min: 1, max: 1),
             .segment("QPD", min: 1, max: 1),
             .group("QUERY_RESPONSE", min: 0, max: 1, elements: [
                 .segment("PID", min: 1, max: 1),
                 .segment("PD1", min: 0, max: 1),
-                .segment("ARV", min: 0, max: nil),
                 .segment("NK1", min: 0, max: nil),
                 .segment("QRI", min: 1, max: 1),
             ]),
@@ -8304,7 +8261,7 @@ extension MessageStructureTable {
         id: "RSP_K22",
         version: "2.9",
         triggers: ["RSP^K22"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.57 QBP/RSP - Find Candidates (QBP) and Response (RSP) (Events Q22 and K22), pp 91 to 92.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.57 QBP/RSP - Find Candidates (QBP) and Response (RSP) (Events Q22 and K22), pp 91 to 92. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
@@ -8316,6 +8273,7 @@ extension MessageStructureTable {
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: 1),
             .segment("QAK", min: 1, max: 1),
             .segment("QPD", min: 1, max: 1),
@@ -8333,7 +8291,7 @@ extension MessageStructureTable {
         id: "RSP_K23",
         version: "2.9",
         triggers: ["RSP^K23", "RSP^K24"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.58 QBP/RSP - Get Corresponding Identifiers (QBP) and Response (RSP), p 94; the same structure is printed for RSP^K24 (3.3.59).",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.58 QBP/RSP - Get Corresponding Identifiers (QBP) and Response (RSP), p 94; the same structure is printed for RSP^K24 (3.3.59). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
@@ -8345,6 +8303,7 @@ extension MessageStructureTable {
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: 1),
             .segment("QAK", min: 1, max: 1),
             .segment("QPD", min: 1, max: 1),
@@ -8395,7 +8354,7 @@ extension MessageStructureTable {
         id: "RSP_K31",
         version: "2.9",
         triggers: ["RSP^K31"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.3.23 Pharmacy Query/Response Message Pair, pp 27 to 29.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.3.23 Pharmacy Query/Response Message Pair, pp 27 to 29. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
@@ -8405,6 +8364,7 @@ extension MessageStructureTable {
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
@@ -8417,13 +8377,11 @@ extension MessageStructureTable {
                     .segment("PD1", min: 0, max: 1),
                     .segment("PRT", min: 0, max: nil),
                     .segment("NTE", min: 0, max: nil),
-                    .segment("ARV", min: 0, max: nil),
                     .segment("AL1", min: 0, max: nil),
                     .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                         .segment("PV1", min: 1, max: 1),
                         .segment("PV2", min: 0, max: 1),
                         .segment("PRT", min: 0, max: nil),
-                        .segment("ARV", min: 0, max: nil),
                     ]),
                 ]),
                 .group("ORDER", min: 1, max: nil, elements: [
@@ -8474,7 +8432,7 @@ extension MessageStructureTable {
         id: "RSP_K32",
         version: "2.9",
         triggers: ["RSP^K32"],
-        citation: "HL7 v2.9 Chapter 3, section 3.3.63 QBP/RSP - Find Candidates including Visit Information (QBP) and, p 104.",
+        citation: "HL7 v2.9 Chapter 3, section 3.3.63 QBP/RSP - Find Candidates including Visit Information (QBP) and, p 104. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
@@ -8485,6 +8443,7 @@ extension MessageStructureTable {
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: 1),
             .segment("QAK", min: 1, max: 1),
             .segment("QPD", min: 1, max: 1),
@@ -8504,7 +8463,7 @@ extension MessageStructureTable {
         id: "RSP_O33",
         version: "2.9",
         triggers: ["RSP^K33", "RSP^O33"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.7 RSP - Get Donor Record Candidates Response (K33), p 164. Triggers Table 0354 v2.9 (Chapter 2C, p 272) maps to RSP_O33 that no caption prints, accepted with the printed ones (P8b-11 ruling): RSP^O33.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.7 RSP - Get Donor Record Candidates Response (K33), p 164. Triggers Table 0354 v2.9 (Chapter 2C, p 272) maps to RSP_O33 that no caption prints, accepted with the printed ones (P8b-11 ruling): RSP^O33. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
@@ -8513,17 +8472,16 @@ extension MessageStructureTable {
             citation: "HL7 v2.9 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 62 to 63: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 63): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: 1),
             .segment("QAK", min: 1, max: 1),
             .segment("QPD", min: 1, max: 1),
             .group("DONOR", min: 0, max: 1, elements: [
                 .segment("PID", min: 1, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
             ]),
         ]
     )
@@ -8532,7 +8490,7 @@ extension MessageStructureTable {
         id: "RSP_O34",
         version: "2.9",
         triggers: ["RSP^K34", "RSP^O34"],
-        citation: "HL7 v2.9 Chapter 4, section 4.16.9 RSP - Get Donor Record Response (K34), pp 165 to 166. Triggers Table 0354 v2.9 (Chapter 2C, p 272) maps to RSP_O34 that no caption prints, accepted with the printed ones (P8b-11 ruling): RSP^O34.",
+        citation: "HL7 v2.9 Chapter 4, section 4.16.9 RSP - Get Donor Record Response (K34), pp 165 to 166. Triggers Table 0354 v2.9 (Chapter 2C, p 272) maps to RSP_O34 that no caption prints, accepted with the printed ones (P8b-11 ruling): RSP^O34. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
             acknowledgmentCodes: ["AE", "AR"],
@@ -8541,10 +8499,10 @@ extension MessageStructureTable {
             citation: "HL7 v2.9 Chapter 5, section 5.6.5 Query error response (Situations 1 and 2), pp 62 to 63: an error is returned as AE or AR in MSA-1 'of the applicable query response message'; the AR response (Situation 1) is 'a negative ACK message containing the MSH, MSA and the ERR'; the AE response (Situation 2) 'contains the MSH, MSA, ERR, QAK and the query defining segment if available' and 'The rest of the message is absent'; the DSC 'is not sent or, if it is, its continuation pointer field' is null. Situation 3 (no data found, p 63): the responder 'returns an Application Accept (AA)', QAK-2 'is valued with NF', and 'The Response message contains MSH, MSA, QAK, and query defining segment' with the rest absent (no ERR named). Each query response the version prints (a structure with MSA and QAK, QRD, QPD or ERQ) is listed with the query defining segments its own print carries, none where it echoes no query segment (ADR-019 S4-3)."),
         elements: [
             .segment("MSH", min: 1, max: 1),
-            .segment("ARV", min: 0, max: nil),
             .segment("SFT", min: 0, max: nil),
             .segment("UAC", min: 0, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: 1),
             .segment("QAK", min: 1, max: 1),
             .segment("QPD", min: 1, max: 1),
@@ -8558,7 +8516,6 @@ extension MessageStructureTable {
                 ]),
                 .segment("NTE", min: 0, max: nil),
                 .segment("AL1", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
                 .group("DONOR_REGISTRATION", min: 0, max: 1, elements: [
                     .segment("PV1", min: 1, max: 1),
                     .segment("PRT", min: 0, max: nil),
@@ -8641,10 +8598,11 @@ extension MessageStructureTable {
         id: "SIU_S12",
         version: "2.9",
         triggers: ["SIU^S12", "SIU^S13", "SIU^S14", "SIU^S15", "SIU^S16", "SIU^S17", "SIU^S18", "SIU^S19", "SIU^S20", "SIU^S21", "SIU^S22", "SIU^S23", "SIU^S24", "SIU^S26", "SIU^S27"],
-        citation: "HL7 v2.9 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, pp 20 to 21.",
+        citation: "HL7 v2.9 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, pp 20 to 21. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("SCH", min: 1, max: 1),
             .segment("TQ1", min: 0, max: nil),
             .segment("NTE", min: 0, max: nil),
@@ -8699,10 +8657,11 @@ extension MessageStructureTable {
         id: "SRM_S01",
         version: "2.9",
         triggers: ["SRM^S01", "SRM^S02", "SRM^S03", "SRM^S04", "SRM^S05", "SRM^S06", "SRM^S07", "SRM^S08", "SRM^S09", "SRM^S10", "SRM^S11"],
-        citation: "HL7 v2.9 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 13 to 14. Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.9/SRM_S01.xsd, SRM_S01.OBSERVATION.CONTENT).",
+        citation: "HL7 v2.9 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 13 to 14. Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.9/SRM_S01.xsd, SRM_S01.OBSERVATION.CONTENT). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ARQ", min: 1, max: 1),
             .segment("APR", min: 0, max: 1),
             .segment("NTE", min: 0, max: nil),
@@ -8748,11 +8707,12 @@ extension MessageStructureTable {
         id: "SRR_S01",
         version: "2.9",
         triggers: ["SRR^S01", "SRR^S02", "SRR^S03", "SRR^S04", "SRR^S05", "SRR^S06", "SRR^S07", "SRR^S08", "SRR^S09", "SRR^S10", "SRR^S11"],
-        citation: "HL7 v2.9 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 15 to 16.",
+        citation: "HL7 v2.9 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 15 to 16. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("MSA", min: 1, max: 1),
+            .segment("ARV", min: 0, max: nil),
             .segment("ERR", min: 0, max: nil),
             .group("SCHEDULE", min: 0, max: 1, elements: [
                 .segment("SCH", min: 1, max: 1),
@@ -8871,7 +8831,7 @@ extension MessageStructureTable {
         id: "VXU_V04",
         version: "2.9",
         triggers: ["VXU^V04"],
-        citation: "HL7 v2.9 Chapter 4A, section 4A.7.6 VXU - Unsolicited Vaccination Record Update (Event V04), pp 117 to 118.",
+        citation: "HL7 v2.9 Chapter 4A, section 4A.7.6 VXU - Unsolicited Vaccination Record Update (Event V04), pp 117 to 118. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -8882,12 +8842,10 @@ extension MessageStructureTable {
             .segment("PD1", min: 0, max: 1),
             .segment("PRT", min: 0, max: nil),
             .segment("NK1", min: 0, max: nil),
-            .segment("ARV", min: 0, max: nil),
             .group("PATIENT_VISIT", min: 0, max: 1, elements: [
                 .segment("PV1", min: 1, max: 1),
                 .segment("PV2", min: 0, max: 1),
                 .segment("PRT", min: 0, max: nil),
-                .segment("ARV", min: 0, max: nil),
             ]),
             .segment("GT1", min: 0, max: nil),
             .group("INSURANCE", min: 0, max: nil, elements: [

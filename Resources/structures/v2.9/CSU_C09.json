@@ -1,7 +1,7 @@
 {
   "structure": "CSU_C09",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 7, section 7.7.2 CSU - Unsolicited Study Data Message (Events C09-C12), pp 115 to 117. Unprinted group names (ADR-019 decision 3): STUDY_OBSERVATION_ORDER (HL7-xml v2.9/CSU_C09.xsd, CSU_C09.STUDY_OBSERVATION_ORDER.CONTENT).",
+  "citation": "HL7 v2.9 Chapter 7, section 7.7.2 CSU - Unsolicited Study Data Message (Events C09-C12), pp 115 to 117. Unprinted group names (ADR-019 decision 3): STUDY_OBSERVATION_ORDER (HL7-xml v2.9/CSU_C09.xsd, CSU_C09.STUDY_OBSERVATION_ORDER.CONTENT). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["CSU^C09", "CSU^C10", "CSU^C11", "CSU^C12"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -12,7 +12,6 @@
       { "segment": "PID", "min": 1, "max": 1 },
       { "segment": "PD1", "min": 0, "max": 1 },
       { "segment": "PRT", "min": 0, "max": null },
-      { "segment": "ARV", "min": 0, "max": null },
       { "segment": "NTE", "min": 0, "max": null },
       { "group": "VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
         { "segment": "PV1", "min": 1, "max": 1 },

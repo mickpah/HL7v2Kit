@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A38",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 3, section 3.3.38 ADT/ACK - Cancel Pre-Admit (Event A38), pp 65 to 66.",
+  "citation": "HL7 v2.9 Chapter 3, section 3.3.38 ADT/ACK - Cancel Pre-Admit (Event A38), pp 65 to 66. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["ADT^A38"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A05",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 3, section 3.3.5 ADT/ACK - Pre-Admit a Patient (Event A05), pp 15 to 16; the same structure is printed for ADT^A14 (3.3.14), ADT^A28 (3.3.28) and ADT^A31 (3.3.31). Two normative prints of ADT_A05 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.5 (ADT^A05^ADT_A05, p 15) prints NK1 required in the NEXT_OF_KIN group, as do 3.3.14 (A14) and 3.3.31 (A31); section 3.3.28 (ADT^A28^ADT_A05, p 55) prints it [{ NK1 }]; the 3.3.5 print is the default and the 3.3.28 print governs ADT^A28. ADR-019 S6: each print governs the triggers it is printed for.",
+  "citation": "HL7 v2.9 Chapter 3, section 3.3.5 ADT/ACK - Pre-Admit a Patient (Event A05), pp 15 to 16; the same structure is printed for ADT^A14 (3.3.14), ADT^A28 (3.3.28) and ADT^A31 (3.3.31). Two normative prints of ADT_A05 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.5 (ADT^A05^ADT_A05, p 15) prints NK1 required in the NEXT_OF_KIN group, as do 3.3.14 (A14) and 3.3.31 (A31); section 3.3.28 (ADT^A28^ADT_A05, p 55) prints it [{ NK1 }]; the 3.3.5 print is the default and the 3.3.28 print governs ADT^A28. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["ADT^A05", "ADT^A14", "ADT^A28", "ADT^A31"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -15,7 +15,6 @@
     { "segment": "OH2", "min": 0, "max": null },
     { "segment": "OH3", "min": 0, "max": 1 },
     { "segment": "OH4", "min": 0, "max": null },
-    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "ROL", "min": 0, "max": null },
     { "segment": "PRT", "min": 0, "max": null },
     { "group": "NEXT_OF_KIN", "nameSource": "printed", "min": 0, "max": null, "elements": [
@@ -25,7 +24,6 @@
     ]},
     { "segment": "PV1", "min": 1, "max": 1 },
     { "segment": "PV2", "min": 0, "max": 1 },
-    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "ROL", "min": 0, "max": null },
     { "segment": "PRT", "min": 0, "max": null },
     { "segment": "DB1", "min": 0, "max": null },
@@ -65,7 +63,7 @@
   "variants": [
     {
       "triggers": ["ADT^A28"],
-      "citation": "HL7 v2.9 Chapter 3, section 3.3.28 ADT/ACK - Add Person or Patient Information (Event A28), pp 55 to 56. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A05 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.5 (ADT^A05^ADT_A05, p 15) prints NK1 required in the NEXT_OF_KIN group, as do 3.3.14 (A14) and 3.3.31 (A31); section 3.3.28 (ADT^A28^ADT_A05, p 55) prints it [{ NK1 }]; the 3.3.5 print is the default and the 3.3.28 print governs ADT^A28. ADR-019 S6: each print governs the triggers it is printed for.",
+      "citation": "HL7 v2.9 Chapter 3, section 3.3.28 ADT/ACK - Add Person or Patient Information (Event A28), pp 55 to 56. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ADT_A05 differ by trigger: HL7 v2.9 Chapter 3 section 3.3.5 (ADT^A05^ADT_A05, p 15) prints NK1 required in the NEXT_OF_KIN group, as do 3.3.14 (A14) and 3.3.31 (A31); section 3.3.28 (ADT^A28^ADT_A05, p 55) prints it [{ NK1 }]; the 3.3.5 print is the default and the 3.3.28 print governs ADT^A28. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
       "elements": [
         { "segment": "MSH", "min": 1, "max": 1 },
         { "segment": "ARV", "min": 0, "max": null },
@@ -78,7 +76,6 @@
         { "segment": "OH2", "min": 0, "max": null },
         { "segment": "OH3", "min": 0, "max": 1 },
         { "segment": "OH4", "min": 0, "max": null },
-        { "segment": "ARV", "min": 0, "max": null },
         { "segment": "ROL", "min": 0, "max": null },
         { "segment": "PRT", "min": 0, "max": null },
         { "group": "NEXT_OF_KIN", "nameSource": "printed", "min": 0, "max": null, "elements": [
@@ -88,7 +85,6 @@
         ]},
         { "segment": "PV1", "min": 1, "max": 1 },
         { "segment": "PV2", "min": 0, "max": 1 },
-        { "segment": "ARV", "min": 0, "max": null },
         { "segment": "ROL", "min": 0, "max": null },
         { "segment": "PRT", "min": 0, "max": null },
         { "segment": "DB1", "min": 0, "max": null },

@@ -1,10 +1,11 @@
 {
   "structure": "RCV_O59",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 4A, section 4A.3.26 RCV - Pharmacy/Treatment Dispense Message (Event O59), pp 35 to 37.",
+  "citation": "HL7 v2.9 Chapter 4A, section 4A.3.26 RCV - Pharmacy/Treatment Dispense Message (Event O59), pp 35 to 37. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["RCV^O59"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "SFT", "min": 0, "max": null },
     { "segment": "UAC", "min": 0, "max": 1 },
     { "segment": "NTE", "min": 0, "max": null },

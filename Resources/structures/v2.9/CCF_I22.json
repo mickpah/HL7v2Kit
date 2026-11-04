@@ -1,10 +1,11 @@
 {
   "structure": "CCF_I22",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 11, section 11.7.2 CCF/CCI - Collaborative Care Fetch / Collaborative Care Information, p 44.",
+  "citation": "HL7 v2.9 Chapter 11, section 11.7.2 CCF/CCI - Collaborative Care Fetch / Collaborative Care Information, p 44. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["CCF^I22"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "SFT", "min": 0, "max": null },
     { "segment": "UAC", "min": 0, "max": 1 },
     { "segment": "PID", "min": 1, "max": 1 }

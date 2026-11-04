@@ -1,7 +1,7 @@
 {
   "structure": "DPR_O48",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 4, section 4.16.15 DPR - Donation Procedure (Event O48), pp 172 to 173.",
+  "citation": "HL7 v2.9 Chapter 4, section 4.16.15 DPR - Donation Procedure (Event O48), pp 172 to 173. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["DPR^O48"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -18,7 +18,6 @@
       ]},
       { "segment": "NTE", "min": 0, "max": null },
       { "segment": "AL1", "min": 0, "max": null },
-      { "segment": "ARV", "min": 0, "max": null },
       { "group": "DONOR_REGISTRATION", "nameSource": "printed", "min": 0, "max": 1, "elements": [
         { "segment": "PV1", "min": 1, "max": 1 },
         { "segment": "PRT", "min": 0, "max": null },

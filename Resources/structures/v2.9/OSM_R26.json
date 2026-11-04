@@ -1,7 +1,7 @@
 {
   "structure": "OSM_R26",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 7, section 7.16.1 OSM - Unsolicited Specimen Shipment Manifest Message (Event R26), pp 167 to 169. Unprinted group names (ADR-019 decision 3): SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION (HL7-xml v2.9/OSM_R26.xsd, OSM_R26.SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION.CONTENT) and SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION (HL7-xml v2.9/OSM_R26.xsd, OSM_R26.SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION.CONTENT).",
+  "citation": "HL7 v2.9 Chapter 7, section 7.16.1 OSM - Unsolicited Specimen Shipment Manifest Message (Event R26), pp 167 to 169. Unprinted group names (ADR-019 decision 3): SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION (HL7-xml v2.9/OSM_R26.xsd, OSM_R26.SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION.CONTENT) and SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION (HL7-xml v2.9/OSM_R26.xsd, OSM_R26.SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION.CONTENT). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["OSM^R26"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -35,7 +35,6 @@
           { "group": "SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
             { "segment": "PID", "min": 1, "max": 1 },
             { "segment": "PRT", "min": 0, "max": null },
-            { "segment": "ARV", "min": 0, "max": null },
             { "group": "PATIENT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
               { "segment": "OBX", "min": 1, "max": 1 },
               { "segment": "PRT", "min": 0, "max": null }

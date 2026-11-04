@@ -1,7 +1,7 @@
 {
   "structure": "ORU_R01",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), pp 8 to 11; the same structure is printed for ORU^R40 (7.3.12), ORU^R42 (7.3.14) and ORU^R43 (7.3.15). Two normative prints of ORU_R01 differ by trigger: HL7 v2.9 Chapter 7 section 7.3.1 (ORU^R01^ORU_R01, pp 8 to 11) prints PRT required in the OBSERVATION_PARTICIPATION group, as do 7.3.14 (R42) and 7.3.15 (R43); section 7.3.12 (ORU^R40^ORU_R01, pp 32 to 34) prints it [{PRT}]; the 7.3.1 print is the default and the 7.3.12 print governs ORU^R40. ADR-019 S6: each print governs the triggers it is printed for.",
+  "citation": "HL7 v2.9 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), pp 8 to 11; the same structure is printed for ORU^R40 (7.3.12), ORU^R42 (7.3.14) and ORU^R43 (7.3.15). Two normative prints of ORU_R01 differ by trigger: HL7 v2.9 Chapter 7 section 7.3.1 (ORU^R01^ORU_R01, pp 8 to 11) prints PRT required in the OBSERVATION_PARTICIPATION group, as do 7.3.14 (R42) and 7.3.15 (R43); section 7.3.12 (ORU^R40^ORU_R01, pp 32 to 34) prints it [{PRT}]; the 7.3.1 print is the default and the 7.3.12 print governs ORU^R40. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["ORU^R01", "ORU^R40", "ORU^R42", "ORU^R43"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -23,7 +23,6 @@
           { "segment": "OH2", "min": 0, "max": null },
           { "segment": "OH3", "min": 0, "max": 1 }
         ]},
-        { "segment": "ARV", "min": 0, "max": null },
         { "group": "PATIENT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
           { "segment": "OBX", "min": 1, "max": 1 },
           { "segment": "PRT", "min": 0, "max": null }
@@ -85,7 +84,7 @@
   "variants": [
     {
       "triggers": ["ORU^R40"],
-      "citation": "HL7 v2.9 Chapter 7, section 7.3.12 ORU - Unsolicited Alert Observation Message (Event R40), pp 32 to 34. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ORU_R01 differ by trigger: HL7 v2.9 Chapter 7 section 7.3.1 (ORU^R01^ORU_R01, pp 8 to 11) prints PRT required in the OBSERVATION_PARTICIPATION group, as do 7.3.14 (R42) and 7.3.15 (R43); section 7.3.12 (ORU^R40^ORU_R01, pp 32 to 34) prints it [{PRT}]; the 7.3.1 print is the default and the 7.3.12 print governs ORU^R40. ADR-019 S6: each print governs the triggers it is printed for.",
+      "citation": "HL7 v2.9 Chapter 7, section 7.3.12 ORU - Unsolicited Alert Observation Message (Event R40), pp 32 to 34. Per-trigger print (overrides.json variantPrints, ADR-019 S6): Two normative prints of ORU_R01 differ by trigger: HL7 v2.9 Chapter 7 section 7.3.1 (ORU^R01^ORU_R01, pp 8 to 11) prints PRT required in the OBSERVATION_PARTICIPATION group, as do 7.3.14 (R42) and 7.3.15 (R43); section 7.3.12 (ORU^R40^ORU_R01, pp 32 to 34) prints it [{PRT}]; the 7.3.1 print is the default and the 7.3.12 print governs ORU^R40. ADR-019 S6: each print governs the triggers it is printed for. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
       "elements": [
         { "segment": "MSH", "min": 1, "max": 1 },
         { "segment": "ARV", "min": 0, "max": null },
@@ -106,7 +105,6 @@
               { "segment": "OH2", "min": 0, "max": null },
               { "segment": "OH3", "min": 0, "max": 1 }
             ]},
-            { "segment": "ARV", "min": 0, "max": null },
             { "group": "PATIENT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
               { "segment": "OBX", "min": 1, "max": 1 },
               { "segment": "PRT", "min": 0, "max": null }

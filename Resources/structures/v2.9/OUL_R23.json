@@ -1,7 +1,7 @@
 {
   "structure": "OUL_R23",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 7, section 7.3.9 OUL - Unsolicited Specimen Container Oriented Observation Message, pp 23 to 26.",
+  "citation": "HL7 v2.9 Chapter 7, section 7.3.9 OUL - Unsolicited Specimen Container Oriented Observation Message, pp 23 to 26. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["OUL^R23"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -17,7 +17,6 @@
       { "segment": "OH2", "min": 0, "max": null },
       { "segment": "OH3", "min": 0, "max": 1 },
       { "segment": "OH4", "min": 0, "max": null },
-      { "segment": "ARV", "min": 0, "max": null },
       { "segment": "NTE", "min": 0, "max": null },
       { "group": "PATIENT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
         { "segment": "OBX", "min": 1, "max": 1 },

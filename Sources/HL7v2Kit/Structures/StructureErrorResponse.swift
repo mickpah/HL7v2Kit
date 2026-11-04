@@ -33,8 +33,11 @@ struct StructureErrorResponse: Sendable, Equatable, Hashable {
 
 extension MessageStructure {
     /// The segments 5.6.5 names besides the query defining ones; SFT and UAC sit in the
-    /// message header that the structures print after MSH (v2.5 on, v2.6 on).
-    private static let errorResponseSegments: Set<String> = ["MSH", "SFT", "UAC", "MSA", "ERR", "QAK", "DSC"]
+    /// message header that the structures print after MSH (v2.5 on, v2.6 on). ARV is taken only
+    /// from the structure's top level: the HL7 CTO's letter of 29 March 2021 places it "at the
+    /// top of the messages" in "any message definition containing" PID, while a body ARV (v2.6 to
+    /// v2.8.2) belongs to the rest of the message 5.6.5 says is absent.
+    private static let errorResponseSegments: Set<String> = ["MSH", "SFT", "UAC", "MSA", "ARV", "ERR", "QAK", "DSC"]
 
     /// The MSA-1 value of a no-data response: "returns an Application Accept (AA)" (5.6.5
     /// Situation 3 note).
@@ -47,9 +50,9 @@ extension MessageStructure {
     /// the key. Situation 3 names no ERR, but the no-data head allows an optional one (ruling 6,
     /// owner, 2026-10-07): an AA reply may carry a warning or informational ERR (ERR-4 severity
     /// W or I). The segments named are each taken once at their first place in the print (so
-    /// ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required and the rest optional; ERR and
-    /// SFT keep their printed repetition. An ERR the structure does not print goes after MSA, a
-    /// QAK after ERR, as 5.6.5 Situation 2 lists them.
+    /// ORF_R04 keeps ERR and QAK after QRD), MSH and MSA required and the rest optional; ERR, SFT
+    /// and ARV keep their printed repetition. An ERR the structure does not print goes after MSA,
+    /// or after an ARV directly following MSA, and a QAK after ERR, as 5.6.5 Situation 2 lists them.
     /// Slots are not entered.
     func errorResponseHead(acknowledgmentCode: String?, queryResponseStatus: String? = nil) -> MessageStructure? {
         guard let rule = errorResponse, let code = acknowledgmentCode else { return nil }
@@ -65,28 +68,29 @@ extension MessageStructure {
         let named = Self.errorResponseSegments.union(rule.querySegments)
         var head: [StructureElement] = []
         var seen: Set<String> = []
-        func walk(_ elements: [StructureElement]) {
+        func walk(_ elements: [StructureElement], topLevel: Bool) {
             for element in elements {
                 switch element {
-                case .segment(let id, _, let max) where named.contains(id) && !seen.contains(id):
+                case .segment(let id, _, let max) where named.contains(id) && !seen.contains(id) && (topLevel || id != "ARV"):
                     seen.insert(id)
                     let required = id == "MSH" || id == "MSA" || (noData && id == "QAK")
-                    let repeats = id == "SFT" || id == "ERR"
+                    let repeats = id == "SFT" || id == "ERR" || id == "ARV"
                     head.append(.segment(id, min: required ? 1 : 0, max: repeats ? max : 1))
                 case .slot:
                     continue
                 default:
-                    walk(element.children)
+                    walk(element.children, topLevel: false)
                 }
             }
         }
-        walk(elements)
+        walk(elements, topLevel: true)
         func insert(_ id: String, after previous: String, min: Int = 0) {
             guard !seen.contains(id), let at = head.firstIndex(where: { $0.label == previous }) else { return }
             head.insert(.segment(id, min: min, max: 1), at: at + 1)
             seen.insert(id)
         }
-        insert("ERR", after: "MSA")
+        let arvFollowsMSA = zip(head, head.dropFirst()).contains { $0.label == "MSA" && $1.label == "ARV" }
+        insert("ERR", after: arvFollowsMSA ? "ARV" : "MSA")
         insert("QAK", after: "ERR", min: noData ? 1 : 0)
         let shape = head.map { element -> String in
             guard case .segment(let id, let min, let max) = element else { return element.label }

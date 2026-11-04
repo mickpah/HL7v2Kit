@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A06",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 3, section 3.3.6 ADT/ACK - Change an Outpatient to an Inpatient (Event A06), pp 17 to 19; the same structure is printed for ADT^A07 (3.3.7).",
+  "citation": "HL7 v2.9 Chapter 3, section 3.3.6 ADT/ACK - Change an Outpatient to an Inpatient (Event A06), pp 17 to 19; the same structure is printed for ADT^A07 (3.3.7). HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["ADT^A06", "ADT^A07"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -15,7 +15,6 @@
     { "segment": "OH2", "min": 0, "max": null },
     { "segment": "OH3", "min": 0, "max": 1 },
     { "segment": "OH4", "min": 0, "max": null },
-    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "ROL", "min": 0, "max": null },
     { "segment": "PRT", "min": 0, "max": null },
     { "segment": "MRG", "min": 0, "max": 1 },
@@ -26,7 +25,6 @@
     ]},
     { "segment": "PV1", "min": 1, "max": 1 },
     { "segment": "PV2", "min": 0, "max": 1 },
-    { "segment": "ARV", "min": 0, "max": null },
     { "segment": "ROL", "min": 0, "max": null },
     { "segment": "PRT", "min": 0, "max": null },
     { "segment": "DB1", "min": 0, "max": null },

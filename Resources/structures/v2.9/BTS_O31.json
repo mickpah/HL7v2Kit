@@ -1,7 +1,7 @@
 {
   "structure": "BTS_O31",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 4, section 4.13.6 BTS - Blood Product Transfusion/Disposition Message (Event O31), pp 132 to 133.",
+  "citation": "HL7 v2.9 Chapter 4, section 4.13.6 BTS - Blood Product Transfusion/Disposition Message (Event O31), pp 132 to 133. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["BTS^O31"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

@@ -1,7 +1,7 @@
 {
   "structure": "BRT_O32",
   "version": "2.9",
-  "citation": "HL7 v2.9 Chapter 4, section 4.13.7 BRT - Blood Product Transfusion/Disposition Acknowledgment (Event O32), pp 133 to 134.",
+  "citation": "HL7 v2.9 Chapter 4, section 4.13.7 BRT - Blood Product Transfusion/Disposition Acknowledgment (Event O32), pp 133 to 134. HL7 CTO letter of 29 March 2021, on behalf of the v2 Management Group, correcting HL7 v2.9: in any message definition containing PID, ARV SHALL immediately follow MSH as [{ARV}], or MSA when present; placement anywhere else is not permitted.",
   "triggers": ["BRT^O32"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -14,8 +14,7 @@
     { "group": "RESPONSE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
       { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
         { "segment": "PID", "min": 1, "max": 1 },
-        { "segment": "PRT", "min": 0, "max": null },
-        { "segment": "ARV", "min": 0, "max": null }
+        { "segment": "PRT", "min": 0, "max": null }
       ]},
       { "group": "ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
         { "segment": "ORC", "min": 1, "max": 1 },
