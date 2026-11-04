@@ -12,12 +12,12 @@ struct V29GrammarTests {
     @Test("v2.9 tables: one per Table Metadata block of Chapter 2C")
     func tableInventory() {
         #expect(tables.count == 789)
-        #expect(tables.values.reduce(0) { $0 + $1.entries.count } == 5448)   // the extractor counts 5449: 0203 NNxxx is a pattern row
+        #expect(tables.values.reduce(0) { $0 + $1.entries.count } == 5588)   // the extractor counts 5589: 0203 NNxxx is a pattern row. 140 of them are 0953's, from its value set
         // Chapter 2C prints 0070 no longer; v2.8.2 had it.
         #expect(tables["0070"] == nil)
     }
 
-    @Test("Type HL7 is closed, User is user-defined, HL7-EXT and undefined never close")
+    @Test("Type HL7 is closed, User is user-defined, HL7-EXT (0953 apart, by override) and undefined stay open")
     func tableKinds() throws {
         let valueType = try #require(tables["0125"])                 // 2C 0125, Type HL7
         #expect(valueType.kind == .hl7)

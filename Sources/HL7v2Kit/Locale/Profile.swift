@@ -40,9 +40,9 @@ struct Profile: Sendable, Equatable, Hashable {
 
     /// Per-segment grammar extensions. Each entry's `[FieldGrammar]`
     /// is appended to the base-spec grammar for that segment when the
-    /// profile is loaded (merging over any base field of the same
-    /// index) — the mechanism for a locale to carry fields or
-    /// narrowings the base version grammar does not state. v0.5-S5-D
+    /// profile is loaded; a base field of the same index stands. It is the
+    /// mechanism for a locale to carry fields the base version grammar does
+    /// not state. v0.5-S5-D
     /// introduced it to pre-adopt v2.5+ PID-35..38 on v2.4 wires; P4-16
     /// (2026-10) removed that use once P4-17 confirmed the base v2.4
     /// PID grammar already carried those fields (see

@@ -192,15 +192,10 @@ public struct Validator: Sendable {
 
     // MARK: - Internals
 
-    /// Merge a profile's grammar extension into a base segment
-    /// grammar. The extension's fields APPEND to the base when their
-    /// index doesn't already exist; they REPLACE the base field when
-    /// the index does exist. v0.5-S5-D.
-    ///
-    /// The replacement semantic lets a profile both add new fields
-    /// (typical case — AU MSH-27 on v2.4) AND override an
-    /// existing field's optionality / condition if needed in the
-    /// future. Today only the additive case is exercised.
+    /// Merge a profile's grammar extension into a base segment grammar. A field the
+    /// version already defines stands; the extension only adds what the version lacks.
+    /// AU MSH-27 is added to the versions before v2.9. On v2.9 the version's own MSH-27
+    /// stands, with its MSH-26 condition and table 0953; the extension touches none of them.
     func mergeGrammarExtension(
         base: SegmentGrammar,
         profileExtension: [FieldGrammar]?,
@@ -211,19 +206,14 @@ public struct Validator: Sendable {
         if (profileExtension?.isEmpty ?? true) && profileCardinality.isEmpty {
             return base
         }
-        // Field merge (v0.5-S5-D behaviour).
+        // Field merge: add-only (v2.9-T8).
         let mergedFields: [FieldGrammar]
         if let profileExtension, !profileExtension.isEmpty {
-            let extensionByIndex = Dictionary(
-                uniqueKeysWithValues: profileExtension.map { ($0.index, $0) }
-            )
-            var merged = base.fields.map { extensionByIndex[$0.index] ?? $0 }
             let baseIndices = Set(base.fields.map(\.index))
             let added = profileExtension
                 .filter { !baseIndices.contains($0.index) }
                 .sorted(by: { $0.index < $1.index })
-            merged.append(contentsOf: added)
-            mergedFields = merged
+            mergedFields = base.fields + added
         } else {
             mergedFields = base.fields
         }
@@ -1942,6 +1932,31 @@ public struct Validator: Sendable {
             ))
         }
 
+        // Table 0953 on a CWE, where the version gives it rows. HL7-EXT tables "function exactly
+        // like the HL7 Tables" (v2.9 CH02C 2C.4.2), and a receiver "should always examine the
+        // codingSystem as specified in CWE.3 and/or CWE.14" (CH02A 2A.3.13.3), so each tuple is
+        // judged by what it names. A claim of HL70953 is read, whichever tuple holds it. So is a
+        // first tuple naming nothing, where CWE.3 is required. Another system is left alone: the
+        // values are "suggested" (CH02 2.14.9.27) and an HL7 table may be extended locally (2C.4.1).
+        if let index = location.fieldIndex, Self.table0953Fields[location.segmentID] == index,
+           let table = HL7TableRegistry.table("0953", version: version), table.isClosed {
+            for (offset, repetition) in field.repetitions.enumerated() {
+                // A null names nothing, as in the component conditions.
+                func part(_ i: Int) -> String {
+                    let value = repetition.components.count >= i ? repetition.components[i - 1].subcomponents.first?.value ?? "" : ""
+                    return value == "\"\"" ? "" : value
+                }
+                for (identifier, system, oid, name) in [(1, 3, 14, "Identifier"), (4, 6, 17, "Alternate Identifier"),
+                                                        (10, 12, 20, "Second Alternate Identifier")] {
+                    let claimed = part(system).caseInsensitiveCompare("HL7\(table.number)") == .orderedSame
+                    let unnamed = identifier == 1 && part(system).isEmpty && part(oid).isEmpty
+                    guard claimed || unnamed else { continue }
+                    report(part(identifier), table: table, name: name, component: identifier, subcomponent: nil,
+                           repetition: offset + 1)
+                }
+            }
+        }
+
         for (offset, repetition) in field.repetitions.enumerated() {
             for entry in grammar.components where repetition.components.count >= entry.index {
                 let component = repetition.components[entry.index - 1]
@@ -1980,6 +1995,11 @@ public struct Validator: Sendable {
             }
         }
     }
+
+    /// The field bound to table 0953 in each segment that has one. A CWE carries no
+    /// ``FieldGrammar/table``, so this list stands in for it; SecurityLabelTableTests holds it
+    /// to the v2.9 schemas.
+    static let table0953Fields: [String: Int] = ["ARV": 8, "BHS": 16, "FHS": 16, "MSH": 27]
 
     /// Whether a locale's own rendering of `table` admits `value`: the value is one of
     /// its rows, or the rendering is open (it permits local extensions). The AU ADRM-2021

@@ -4145,6 +4145,573 @@
       },
       "note": "Display Names set by hand where the print breaks a word at the column edge or after a hyphen or slash and the text layer keeps the break as a space (footer page 651).",
       "citation": "HL7 v2.9 Chapter 2C, Table 0951 - Reason for Study"
+    },
+    "0953": {
+      "addEntries": [
+        [
+          "ACCESSCONSCHEME",
+          "access control scheme"
+        ],
+        [
+          "ANONY",
+          "anonymize"
+        ],
+        [
+          "AOD",
+          "accounting of disclosure"
+        ],
+        [
+          "AUDIT",
+          "audit"
+        ],
+        [
+          "AUDTR",
+          "audit trail"
+        ],
+        [
+          "AUTHPOL",
+          "authorization policy"
+        ],
+        [
+          "BIORCH",
+          "biomedical research"
+        ],
+        [
+          "BTG",
+          "break the glass"
+        ],
+        [
+          "CAREMGT",
+          "care management"
+        ],
+        [
+          "CLINTRCH",
+          "clinical trial research"
+        ],
+        [
+          "CLINTRCHNPC",
+          "clinical trial research without patient care"
+        ],
+        [
+          "CLINTRCHPC",
+          "clinical trial research with patient care"
+        ],
+        [
+          "CLINTRL",
+          "clinical trial"
+        ],
+        [
+          "CLMATTCH",
+          "claim attachment"
+        ],
+        [
+          "COC",
+          "coordination of care"
+        ],
+        [
+          "CONTROLLED",
+          "CONTROLLED"
+        ],
+        [
+          "COPYMark",
+          "copy of original mark"
+        ],
+        [
+          "COVAUTH",
+          "coverage authorization"
+        ],
+        [
+          "COVERAGE",
+          "coverage under policy or program"
+        ],
+        [
+          "CPLYCC",
+          "comply with confidentiality code"
+        ],
+        [
+          "CPLYCD",
+          "comply with consent directive"
+        ],
+        [
+          "CPLYCUI",
+          "comply with controlled unclassified information policy"
+        ],
+        [
+          "CPLYJPP",
+          "comply with jurisdictional privacy policy"
+        ],
+        [
+          "CPLYJSP",
+          "comply with jurisdictional security policy"
+        ],
+        [
+          "CPLYOPP",
+          "comply with organizational privacy policy"
+        ],
+        [
+          "CPLYOSP",
+          "comply with organizational security policy"
+        ],
+        [
+          "CPLYPOL",
+          "comply with policy"
+        ],
+        [
+          "CUI",
+          "CUI"
+        ],
+        [
+          "CUIHLTH",
+          "CUI//HLTH"
+        ],
+        [
+          "CUIHLTHP",
+          "(CUI//HLTH)"
+        ],
+        [
+          "CUIMark",
+          "CUI Mark"
+        ],
+        [
+          "CUIP",
+          "(CUI)"
+        ],
+        [
+          "CUIPRVCY",
+          "CUI//PRVCY"
+        ],
+        [
+          "CUIPRVCYP",
+          "(CUI//PRVCY)"
+        ],
+        [
+          "CUISP-HLTH",
+          "CUI//SP-HLTH"
+        ],
+        [
+          "CUISP-HLTHP",
+          "(CUI//SP-HLTH)"
+        ],
+        [
+          "CUISP-PRVCY",
+          "CUI//SP-PRVCY"
+        ],
+        [
+          "CUISP-PRVCYP",
+          "(CUI//SP-PRVCY)"
+        ],
+        [
+          "ConfidentialMark",
+          "confidential mark"
+        ],
+        [
+          "ControlledUnclassifiedInformation",
+          "ControlledUnclassifiedInformation"
+        ],
+        [
+          "DECLASSIFYLABEL",
+          "declassify security label"
+        ],
+        [
+          "DEID",
+          "deidentify"
+        ],
+        [
+          "DELAU",
+          "delete after use"
+        ],
+        [
+          "DELEPOL",
+          "delegation policy"
+        ],
+        [
+          "DISASTER",
+          "disaster"
+        ],
+        [
+          "DONAT",
+          "donation"
+        ],
+        [
+          "DOWNGRDLABEL",
+          "downgrade security label"
+        ],
+        [
+          "DRAFTMark",
+          "Draft Mark"
+        ],
+        [
+          "DRIVLABEL",
+          "derive security label"
+        ],
+        [
+          "DSRCH",
+          "disease specific healthcare research"
+        ],
+        [
+          "DeliverToAddresseeOnlyMark",
+          "deliver only to addressee mark"
+        ],
+        [
+          "ELIGDTRM",
+          "eligibility determination"
+        ],
+        [
+          "ELIGVER",
+          "eligibility verification"
+        ],
+        [
+          "ENCRYPT",
+          "encrypt"
+        ],
+        [
+          "ENCRYPTR",
+          "encrypt at rest"
+        ],
+        [
+          "ENCRYPTT",
+          "encrypt in transit"
+        ],
+        [
+          "ENCRYPTU",
+          "encrypt in use"
+        ],
+        [
+          "ENROLLM",
+          "enrollment"
+        ],
+        [
+          "ERTREAT",
+          "emergency room treatment"
+        ],
+        [
+          "ETREAT",
+          "Emergency Treatment"
+        ],
+        [
+          "FAMRQT",
+          "family requested"
+        ],
+        [
+          "FRAUD",
+          "fraud"
+        ],
+        [
+          "GOV",
+          "government"
+        ],
+        [
+          "HACCRED",
+          "health accreditation"
+        ],
+        [
+          "HCOMPL",
+          "health compliance"
+        ],
+        [
+          "HDECD",
+          "decedent"
+        ],
+        [
+          "HDIRECT",
+          "directory"
+        ],
+        [
+          "HDM",
+          "healthcare delivery management"
+        ],
+        [
+          "HLEGAL",
+          "legal"
+        ],
+        [
+          "HMARKT",
+          "healthcare marketing"
+        ],
+        [
+          "HOPERAT",
+          "healthcare operations"
+        ],
+        [
+          "HOUTCOMS",
+          "health outcome measure"
+        ],
+        [
+          "HPAYMT",
+          "healthcare payment"
+        ],
+        [
+          "HPRGRP",
+          "health program reporting"
+        ],
+        [
+          "HQUALIMP",
+          "health quality improvement"
+        ],
+        [
+          "HRESCH",
+          "healthcare research"
+        ],
+        [
+          "HSYSADMIN",
+          "health system administration"
+        ],
+        [
+          "HTEST",
+          "test health data"
+        ],
+        [
+          "HUAPRV",
+          "human approval"
+        ],
+        [
+          "LABEL",
+          "assign security label"
+        ],
+        [
+          "LABELING",
+          "labeling"
+        ],
+        [
+          "MASK",
+          "mask"
+        ],
+        [
+          "MEMADMIN",
+          "member administration"
+        ],
+        [
+          "METAMGT",
+          "metadata management"
+        ],
+        [
+          "MILCDM",
+          "military command"
+        ],
+        [
+          "MILDCRG",
+          "military discharge"
+        ],
+        [
+          "MINEC",
+          "minimum necessary"
+        ],
+        [
+          "MLTRAINING",
+          "machine learning training"
+        ],
+        [
+          "NOAUTH",
+          "no disclosure without subject authorization"
+        ],
+        [
+          "NOCOLLECT",
+          "no collection"
+        ],
+        [
+          "NODSCLCD",
+          "no disclosure without consent directive"
+        ],
+        [
+          "NODSCLCDS",
+          "no disclosure without information subject's consent directive"
+        ],
+        [
+          "NOINTEGRATE",
+          "no integration"
+        ],
+        [
+          "NOLIST",
+          "no unlisted entity disclosure"
+        ],
+        [
+          "NOMOU",
+          "no disclosure without MOU"
+        ],
+        [
+          "NOORGPOL",
+          "no disclosure without organizational authorization"
+        ],
+        [
+          "NOPAT",
+          "no disclosure to patient, family or caregivers without attending provider's authorization"
+        ],
+        [
+          "NOPERSISTP",
+          "no collection beyond purpose of use"
+        ],
+        [
+          "NORDSCLCD",
+          "no redisclosure without consent directive"
+        ],
+        [
+          "NORDSCLCDS",
+          "no redisclosure without information subject's consent directive"
+        ],
+        [
+          "NORDSCLW",
+          "no disclosure without jurisdictional authorization"
+        ],
+        [
+          "NORDSLCD",
+          "no redisclosure without consent directive"
+        ],
+        [
+          "NORELINK",
+          "no relinking"
+        ],
+        [
+          "NOREUSE",
+          "no reuse beyond purpose of use"
+        ],
+        [
+          "NOVIP",
+          "no unauthorized VIP disclosure"
+        ],
+        [
+          "ORCON",
+          "no disclosure without originator authorization"
+        ],
+        [
+          "ObligationPolicy",
+          "obligation policy"
+        ],
+        [
+          "PATADMIN",
+          "patient administration"
+        ],
+        [
+          "PATRQT",
+          "patient requested"
+        ],
+        [
+          "PATSFTY",
+          "patient safety"
+        ],
+        [
+          "PERFMSR",
+          "performance measure"
+        ],
+        [
+          "PERSISTLABEL",
+          "persist security label"
+        ],
+        [
+          "PMTDS",
+          "decision support assisted payment decision"
+        ],
+        [
+          "POARCH",
+          "population origins or ancestry healthcare research"
+        ],
+        [
+          "POPHLTH",
+          "population health"
+        ],
+        [
+          "PRECLINTRCH",
+          "preclinical trial research"
+        ],
+        [
+          "PRIVMARK",
+          "privacy mark"
+        ],
+        [
+          "PROCESSINLINELABEL",
+          "process inline security label"
+        ],
+        [
+          "PSEUD",
+          "pseudonymize"
+        ],
+        [
+          "PUBHLTH",
+          "public health"
+        ],
+        [
+          "PWATRNY",
+          "power of attorney"
+        ],
+        [
+          "PrivacyMark",
+          "privacy mark"
+        ],
+        [
+          "PurposeOfUse",
+          "purpose of use"
+        ],
+        [
+          "RECORDMGT",
+          "records management"
+        ],
+        [
+          "REDACT",
+          "redact"
+        ],
+        [
+          "REMITADV",
+          "remittance advice"
+        ],
+        [
+          "RedisclosureProhibitionMark",
+          "prohibition against redisclosure mark"
+        ],
+        [
+          "RefrainPolicy",
+          "refrain policy"
+        ],
+        [
+          "RestrictedConfidentialityMark",
+          "restricted confidentiality mark"
+        ],
+        [
+          "SUPNWK",
+          "support network"
+        ],
+        [
+          "SYSDEV",
+          "system development"
+        ],
+        [
+          "SecurityLabelMark",
+          "Security Label Mark"
+        ],
+        [
+          "SecurityPolicy",
+          "security policy"
+        ],
+        [
+          "THREAT",
+          "threat"
+        ],
+        [
+          "TRAIN",
+          "training"
+        ],
+        [
+          "TRANSRCH",
+          "translational healthcare research"
+        ],
+        [
+          "TREAT",
+          "treatment"
+        ],
+        [
+          "TREATDS",
+          "decision support assisted treatment decision"
+        ],
+        [
+          "UPGRDLABEL",
+          "upgrade security label"
+        ],
+        [
+          "UUI",
+          "(U)"
+        ]
+      ],
+      "permitsLocalExtensions": false,
+      "note": "The print gives no rows, so the extractor reads none. These are the value set's expansion as the source lists it, abstract and retired concepts included. HL7-EXT tables 'function exactly like the HL7 Tables' (2C.4.2), of whose values 2C.4.1 says: 'These values may not be redefined locally; however, the table itself may be extended to accommodate locally defined values.' So it is closed as those tables are: a site declares its extension through ValidationOptions.localTableExtensions, and a code naming another coding system is not read against this table.",
+      "citation": "HL7 v2.9 Chapter 2C, Table 0953 - Security Label Handling Instructions, footer pages 804 and 805 (653 in the technical correction), which name the value set SecurityControlObservationValue (OID 2.16.840.1.113883.1.11.20471) and refer to its web rendering for the codes; rows from HL7 Terminology (THO) 7.5.0, value set version 3.1.0, CC0"
     }
   }
 }

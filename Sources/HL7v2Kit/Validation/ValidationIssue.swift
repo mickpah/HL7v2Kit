@@ -170,10 +170,12 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     case characterNotEncodable(declared: String)
 
     /// An `ID`-typed field carries a value that is not in the HL7-defined
-    /// table its spec `TBL#` column names, for the message's version.
+    /// table its spec `TBL#` column names, for the message's version; or a
+    /// `CWE` field bound to Table 0953 does, in a tuple that claims `HL70953`
+    /// or a first tuple naming no system.
     /// Fires only for closed tables (``HL7Table/isClosed``): `IS` fields,
     /// user-defined tables, tables the spec opens to local codes, and
-    /// tables with no printed rows are never enforced (req #4). The
+    /// tables with no rows are never enforced (req #4). The
     /// payload is the four-digit table number. Additive case introduced
     /// in M6-O6; the enum is open per ADR-014, so this is a minor bump.
     case valueNotInTable(table: String)

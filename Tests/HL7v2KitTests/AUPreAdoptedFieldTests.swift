@@ -83,4 +83,51 @@ struct AUPreAdoptedFieldTests {
         #expect(fields.first?.repeatability == .multiple)
         #expect(fields.first?.table == nil)
     }
+
+    // CWE fields carry no `table` link (V29GrammarTests.mshFields), so 0953 is not visible on
+    // the merged field. The base's own field standing is: AU's MSH-27 is equal to v2.9's, so a
+    // differing extension on the same index is what tells replace from add-only.
+    @Test("On v2.9 under the AU locale, v2.9's own MSH-27 stands")
+    func versionOwnFieldWins() throws {
+        let base = try #require(SegmentGrammarTable.v2_9["MSH"])
+        let validator = Validator(options: .default, locale: .auLocalisation)
+        let merged = validator.mergeGrammarExtension(
+            base: base, profileExtension: Profile.auADRM2021.grammarExtensions["MSH"])
+        #expect(merged.fields == base.fields)
+        let differing = FieldGrammar(index: 27, name: "Other", dataType: "ST",
+                                     optionality: .required, repeatability: .single)
+        let kept = validator.mergeGrammarExtension(base: base, profileExtension: [differing])
+        #expect(kept.field(27) == base.field(27))
+        #expect(kept.fields.filter { $0.index == 27 }.count == 1)
+    }
+
+    @Test("The ADRM's LEN 250 still applies on v2.9 under the AU locale")
+    func adrmLengthOnV29() throws {
+        let found = try Self.msh27Issues(Self.textOnly(251), .auLocalisation, version: "2.9")
+        #expect(found.map(\.code).contains(.fieldLengthOutOfRange(length: "250", actual: 251)))
+    }
+
+    @Test("v2.9's MSH-26 condition fires under the AU locale, though the ADRM prints it Reserved")
+    func securityTagConditionOnV29() throws {
+        let message = try Parser(locale: .auLocalisation).parse(Self.wire("SH1", version: "2.9"))
+        let issues = Validator(options: .default, locale: .auLocalisation).validate(message).issues
+        #expect(issues.contains {
+            $0.code == .conditionalFieldMissing
+                && $0.location.segmentID == "MSH" && $0.location.fieldIndex == 26
+        })
+    }
+
+    @Test("The AU CWE rules reach v2.9's own MSH-27 on an ORU: SH1 draws both, SH1^text^L neither")
+    func auCWERulesOnV29() throws {
+        func rules(_ value: String) throws -> [(String, Int?)] {
+            try Self.msh27Issues(value, .auLocalisation, version: "2.9").compactMap { issue in
+                if case .profileConstraintViolation(let rule) = issue.code { return (rule, issue.location.componentIndex) }
+                return nil
+            }
+        }
+        let bad = try rules("SH1")
+        #expect(bad.first { $0.0.hasPrefix("HL7au:00044.6.3") }?.1 == 2)
+        #expect(bad.first { $0.0.hasPrefix("HL7au:00044.6.1") }?.1 == 3)
+        #expect(try rules("SH1^text^L").isEmpty)
+    }
 }

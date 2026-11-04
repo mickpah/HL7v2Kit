@@ -1085,8 +1085,9 @@ extension Profile {
         // TBL#, item 02430, footnote †††††; definition §2.1.9.27). Its LEN 250 is the
         // MSH-27 FieldOverride with the other ADRM LEN variations. MSH-22 to MSH-26 print
         // only "Reserved", with no type, usage or length, so they are not modelled. v2.9's
-        // own binding of MSH-27 to table 0953, and its MSH-26 condition ("Required if MSH-27
-        // or MSH-28 is valued"), are not adopted by the ADRM and do not apply here
+        // own MSH-26 condition ("Required if MSH-27 or MSH-28 is valued") and table 0953 are
+        // not adopted by the ADRM and do not apply to a v2.4 message; on v2.9 both apply,
+        // because the merge only adds a field the version lacks and the table is v2.9's
         // (permanent-limitations register). §2.1.9.27's "Name of Coding System <IS> must
         // indicate the scheme for the retrieval repository" (when the Identifier holds a
         // retrieval token) is not modelled: whether a value is a retrieval token is not on

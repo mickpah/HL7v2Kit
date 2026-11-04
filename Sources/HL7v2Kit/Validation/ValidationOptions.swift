@@ -68,7 +68,8 @@ public struct ValidationOptions: Sendable {
     public var warnDeprecatedFields: Bool
 
     /// If true (default), check populated `ID`-typed fields against the
-    /// closed HL7 table their grammar names (``FieldGrammar/table``) and
+    /// closed HL7 table their grammar names (``FieldGrammar/table``), and
+    /// `CWE` fields bound to a closed Table 0953 against it, and
     /// emit ``IssueCode/valueNotInTable(table:)`` on a miss. Not an init
     /// parameter: set it by mutation. M6-O6.
     public var checkCodeTables: Bool = true

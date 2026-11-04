@@ -96,6 +96,9 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// Resolve it with ``HL7TableRegistry/table(_:version:)``. Only an
     /// `ID`-typed field whose table ``HL7Table/isClosed`` is enforced;
     /// `IS` fields and open tables are informational (req #4). M6-O6.
+    /// A `CWE` field carries `nil` here. The exception to the sentence above
+    /// is the `CWE` fields bound to a closed Table 0953 (MSH-27, ARV-8, BHS-16,
+    /// FHS-16), which are enforced although this is `nil`.
     public let table: String?
     /// The LEN cell the version's attribute table prints, verbatim, or `nil`
     /// when the table prints none. Before v2.7 it is a maximum length: the
