@@ -1,0 +1,20 @@
+{
+  "structure": "OSU_O51",
+  "version": "2.9.1",
+  "citation": "HL7 v2.9.1 Chapter 4, section 4.4.18 Order Status Update (Event O51), pp 47 to 48.",
+  "triggers": ["OSU^O51"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "segment": "PID", "min": 0, "max": 1 },
+    { "segment": "PRT", "min": 0, "max": null },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "group": "ORDER_STATUS", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null }
+    ]}
+  ]
+}

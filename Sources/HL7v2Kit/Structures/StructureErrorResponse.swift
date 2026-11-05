@@ -1,6 +1,6 @@
 // StructureErrorResponse.swift
 // S4-3 (ADR-019 amendment "S4-3 error responses"): the short query responses of CH05 5.6.5
-// "Query error response" on v2.4 to v2.9. Situations 1 and 2: an error is AE or AR in MSA-1
+// "Query error response" on v2.4 to v2.9 (5.5.5 on 2.9.1). Situations 1 and 2: an error is AE or AR in MSA-1
 // "of the applicable query response message"; the response "contains the MSH, MSA, ERR, QAK and
 // the query defining segment if available" and "The rest of the message is absent" (v2.5.1
 // p 5-61). Situation 3 (no data found): MSA-1 AA and QAK-2 NF; "The Response message contains

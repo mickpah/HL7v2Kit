@@ -1,0 +1,24 @@
+{
+  "structure": "DBC_O41",
+  "version": "2.9.1",
+  "citation": "HL7 v2.9.1 Chapter 4, section 4.16.4 DBC - Create Donor Record Message (Event O41 ), pp 163 to 164.",
+  "triggers": ["DBC^O41"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "group": "DONOR", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "group": "DONOR_OBSERVATIONS", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "ARV", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]}
+  ]
+}

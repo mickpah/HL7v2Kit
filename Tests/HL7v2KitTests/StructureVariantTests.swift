@@ -42,6 +42,7 @@ struct StructureVariantTests {
         "2.7.1": ["ACK", "RDE_O11", "RQC_I05"],
         "2.8.2": ["ACK", "RDE_O11"],
         "2.9": ["ACK", "ADT_A01", "ADT_A05", "ORU_R01", "RDE_O11"],
+        "2.9.1": ["RDE_O11"],   // 2.9.1's ACK, ADT^A13, ADT^A28 and ORU^R40 prints agree with their defaults (CH01 p 4, the v2.9 errata)
     ]
 
     @Test("Every variant is cited, exact, accepted by its structure and differs from the default print")

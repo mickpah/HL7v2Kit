@@ -82,8 +82,8 @@ struct MessageStructureDataTests {
             return nil
         }
         #expect(Set(object.keys) == Self.groupKeys, "\(path): keys \(object.keys.sorted())")
-        // ADR-019 decision 3 as amended by P8b-2b and P8b-15: the six accepted name sources.
-        #expect(["printed", "override", "v2xml", "v2xml-v2.3.1", "v2xml-v2.4", "synthesised"].contains(object["nameSource"] as? String ?? ""),
+        // ADR-019 decision 3 as amended by P8b-2b, P8b-15 and v2.9-T12: the seven accepted name sources.
+        #expect(["printed", "override", "v2xml", "v2xml-v2.3.1", "v2xml-v2.4", "v2xml-v2.9", "synthesised"].contains(object["nameSource"] as? String ?? ""),
                 "\(path): nameSource")
         #expect(name.range(of: "^[A-Z][A-Z0-9_]*$", options: .regularExpression) != nil, "\(path): group \(name)")
         #expect(!children.isEmpty, "\(path): empty group")

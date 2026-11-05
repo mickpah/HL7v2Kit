@@ -149,11 +149,11 @@ struct StructureSlotProbeTests {
               note: "order with no problem"),
     ] }
 
-    // v2.5.1 to v2.9 CH12 print the detail as the choice < OBR | etc. > (the slot); a detail
-    // the choice does not list (RXO) is accepted. v2.9 CH12 12.3.1 (p 8) adds a required PROVIDER
-    // group after PID.
-    static let laterVersions: [Probe] = ["2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"].flatMap { v -> [Probe] in
-        let head = v == "2.9" ? ["PID|1", "PRD|1"] : ["PID|1"]
+    // v2.5.1 to 2.9.1 CH12 print the detail as the choice < OBR | etc. > (the slot); a detail
+    // the choice does not list (RXO) is accepted. v2.9 and 2.9.1 CH12 12.3.1 (pp 8 and 9) add a
+    // required PROVIDER group after PID.
+    static let laterVersions: [Probe] = ["2.5.1", "2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"].flatMap { v -> [Probe] in
+        let head = v.hasPrefix("2.9") ? ["PID|1", "PRD|1"] : ["PID|1"]
         return [
             Probe(version: v, msh9: "PGL^PC6^PGL_PC6", structure: "PGL_PC6",
                   body: head + ["GOL|1", "ORC|NW", "RXO|1", "RXR|1"], findings: [], note: "detail not listed"),
@@ -185,7 +185,7 @@ struct StructureSlotProbeTests {
 
     @Test("Every version that prints the open order detail has a conformant and a defect probe")
     func coverage() {
-        for v in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"] {
+        for v in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"] {
             let mine = Self.probes.filter { $0.version == v }
             #expect(mine.contains { $0.findings.isEmpty } && mine.contains { !$0.findings.isEmpty }, "v\(v)")
         }

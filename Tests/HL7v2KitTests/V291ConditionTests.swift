@@ -84,7 +84,8 @@ struct V291ConditionTests {
                       "GSP|3|S||90778-2^Personal pronouns – Reported^LN|LA29518-0^he/him/his/his/himself^LN|20210101^20210630",
                       "GSP|5|S||76690-7^Sexual orientation^LN|42035005^Bisexual^SCT|20210101"])
     func printedGSPLines(line: String) throws {
-        let found = try issues("ADT^A01^ADT_A01", line).filter { $0.location.segmentID == "GSP" }
+        let found = try issues("ADT^A01^ADT_A01", "EVN||20240101", "PID|1||SYN-0291^^^TESTFAC^MR||Testpatient^Sample", line, "PV1|1|I")
+            .filter { $0.location.segmentID == "GSP" }
         #expect(found.isEmpty, "\(found.map(\.message))")
     }
 

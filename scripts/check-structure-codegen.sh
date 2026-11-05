@@ -108,10 +108,12 @@ def oru(source, fragment, version="2.5.1"):
     # another version the bundle names become v2.4-derived ones.
     d = load("v2.5.1/ORU_R01.json"); d["version"] = version
     if version != "2.5.1":
-        d["citation"] = d["citation"].replace("HL7-xml v2.5.1/", "HL7-xml v2.4/")
+        base = "v2.9" if version == "2.9.1" else "v2.4"  # the bundle a bundle-less version derives through
+        if version == "2.9.1": d["triggers"] = load("v2.9.1/ORU_R01.json")["triggers"]  # W01 is a registered row there
+        d["citation"] = d["citation"].replace("HL7-xml v2.5.1/", "HL7-xml %s/" % base)
         def derive(es):
             for e in es:
-                if e.get("nameSource") == "v2xml": e["nameSource"] = "v2xml-v2.4"
+                if e.get("nameSource") == "v2xml": e["nameSource"] = "v2xml-%s" % base
                 derive(e.get("elements", []))
         derive(d["elements"])
         os.makedirs(os.path.join(S, "v" + version), exist_ok=True)
@@ -173,6 +175,16 @@ oru('v2xml-v2.3.1', 'PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_
 
 reject "nameSource v2xml-v2.3.1 cited to a folder that does not exist" 'is not cited' "$PRE
 oru('v2xml-v2.3.1', 'PATIENT_RESULT (HL7-xml v2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, derived for v2.3 ORU_R01).', '2.3')"
+
+# v2.9-T12: 2.9.1 has no bundle, so its names derive through v2.9's, cited to it, and on 2.9.1 alone.
+accept "nameSource v2xml-v2.9 on 2.9.1, cited through the HL7-xml v2.9 bundle" "$PRE
+oru('v2xml-v2.9', 'PATIENT_RESULT (HL7-xml v2.9/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, derived for v2.9.1 ORU_R01).', '2.9.1')"
+
+reject "nameSource v2xml-v2.9 outside 2.9.1" 'v2xml-v2.9 for 2.9.1 only' "$PRE
+oru('v2xml-v2.9', 'PATIENT_RESULT (HL7-xml v2.9/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).')"
+
+reject "nameSource v2xml on 2.9.1 (no bundle)" '2.9.1 have no v2xml bundle' "$PRE
+oru('v2xml', 'PATIENT_RESULT (HL7-xml v2.9.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).', '2.9.1')"
 
 reject "max below min" 'bad occurrence bounds' "$PRE
 d = load('v2.5.1/ACK.json'); d['elements'][0]['min'] = 2; save('v2.5.1/ACK.json', d)"

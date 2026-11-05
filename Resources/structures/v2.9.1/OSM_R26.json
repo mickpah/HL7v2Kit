@@ -1,0 +1,68 @@
+{
+  "structure": "OSM_R26",
+  "version": "2.9.1",
+  "citation": "HL7 v2.9.1 Chapter 7, section 7.16.1 OSM - Unsolicited Specimen Shipment Manifest Message (Event R26), pp 171 to 173. Unprinted group names (ADR-019 decision 3): SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION (overrides.json: HL7 v2.9.1 Chapter 7, section 7.16.1 OSM - Unsolicited Specimen Shipment Manifest Message (Event R26), p 172: the mark prints over three lines, '---', 'SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION', 'begin', and is closed the same way, so the print names the group; the row-by-row reader takes one line per mark.) and SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION (overrides.json: HL7 v2.9.1 Chapter 7, section 7.16.1 OSM - Unsolicited Specimen Shipment Manifest Message (Event R26), pp 172 to 173: the mark prints over three lines, '---', 'SUBJECT_POPULATION_OR_LOCATION_IDENTIFICAT', 'ION begin', so the print names the group; the row-by-row reader takes one line per mark.).",
+  "triggers": ["OSM^R26"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "group": "SHIPMENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "SHP", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 1, "max": null },
+      { "group": "SHIPPING_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "group": "PACKAGE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PAC", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null },
+        { "group": "SPECIMEN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "SPM", "min": 1, "max": 1 },
+          { "segment": "PRT", "min": 0, "max": null },
+          { "group": "SPECIMEN_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null }
+          ]},
+          { "group": "CONTAINER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "SAC", "min": 1, "max": 1 },
+            { "group": "CONTAINER_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]}
+          ]},
+          { "group": "SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION", "nameSource": "override", "min": 0, "max": 1, "elements": [
+            { "segment": "PID", "min": 1, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "segment": "ARV", "min": 0, "max": null },
+            { "group": "PATIENT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]},
+            { "group": "NEXT_OF_KIN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "NK1", "min": 1, "max": 1 },
+              { "segment": "GSP", "min": 0, "max": null },
+              { "segment": "GSR", "min": 0, "max": null }
+            ]}
+          ]},
+          { "group": "SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION", "nameSource": "override", "min": 0, "max": 1, "elements": [
+            { "segment": "PV1", "min": 1, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "group": "PATIENT_VISIT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]},
+            { "segment": "PID", "min": 0, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "group": "NEXT_OF_KIN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "NK1", "min": 1, "max": 1 },
+              { "segment": "GSP", "min": 0, "max": null },
+              { "segment": "GSR", "min": 0, "max": null }
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

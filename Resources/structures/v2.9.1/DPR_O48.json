@@ -1,0 +1,46 @@
+{
+  "structure": "DPR_O48",
+  "version": "2.9.1",
+  "citation": "HL7 v2.9.1 Chapter 4, section 4.16.15 DPR - Donation Procedure (Event O48), pp 174 to 175.",
+  "triggers": ["DPR^O48"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "group": "DONOR", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "group": "DONOR_OBSERVATIONS", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "segment": "ARV", "min": 0, "max": null },
+      { "group": "DONOR_REGISTRATION", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]},
+    { "group": "DONATION_ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]},
+    { "group": "DONATION", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "DON", "min": 1, "max": 1 },
+      { "group": "DONATION_OBSERVATIONS", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "BLOOD_UNIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "BUI", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

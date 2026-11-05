@@ -164,7 +164,7 @@ enum StructureJSONDecoder {
         }
     }
 
-    static let nameSources = ["printed", "override", "v2xml", "v2xml-v2.3.1", "v2xml-v2.4", "synthesised"]
+    static let nameSources = ["printed", "override", "v2xml", "v2xml-v2.3.1", "v2xml-v2.4", "v2xml-v2.9", "synthesised"]
 
     private static func matches(_ value: String, _ pattern: String) -> Bool {
         value.range(of: pattern, options: .regularExpression) != nil
@@ -319,14 +319,15 @@ enum StructureJSONDecoder {
             throw Rejected(description: "\(kind) \(name) needs nameSource one of \(nameSources)")
         }
         guard !(source == "v2xml-v2.4" && !["2.3", "2.3.1"].contains(version)), !(source == "v2xml-v2.3.1" && version != "2.3"),
-              !(source == "v2xml" && version == "2.3") else {
-            throw Rejected(description: "\(kind) \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, v2xml-v2.3.1 for v2.3 only, and v2.3 has no v2xml bundle")
+              !(source == "v2xml-v2.9" && version != "2.9.1"), !(source == "v2xml" && ["2.3", "2.9.1"].contains(version)) else {
+            throw Rejected(description: "\(kind) \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, v2xml-v2.3.1 for v2.3 only, v2xml-v2.9 for 2.9.1 only, and v2.3 and 2.9.1 have no v2xml bundle")
         }
         let marker: String? = switch source {
         case "override": "overrides.json"
         case "v2xml": version == "2.3.1" ? "HL7-xml 2.3.1/" : "HL7-xml v\(version)/"
         case "v2xml-v2.3.1": "HL7-xml 2.3.1/"
         case "v2xml-v2.4": "HL7-xml v2.4/"
+        case "v2xml-v2.9": "HL7-xml v2.9/"
         case "synthesised": "synthesised"
         default: nil
         }

@@ -255,7 +255,7 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// keeps the compiled matchers of the selections apart.
     let keySelection: String?
     /// The query error response rule of a query response structure (S4-3,
-    /// CH05 5.6.5 on v2.4 to v2.9): the MSA-1 values that make the message
+    /// CH05 5.6.5 on v2.4 to v2.9, 5.5.5 on 2.9.1): the MSA-1 values that make the message
     /// an error response, matched against its head; nil for every other
     /// structure and for every v2.3 and v2.3.1 structure.
     let errorResponse: StructureErrorResponse?

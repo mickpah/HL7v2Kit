@@ -177,4 +177,87 @@ struct ARVPlacementTests {
         // will follow. A missed finding, not a false one; the register carries it.
         #expect(try structureIssues([Self.rri, Self.arv, "SFT|1", "MSA|AA|1"] + Self.referral).isEmpty)
     }
+
+    static let header291 = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9.1"
+
+    @Test("2.9.1 follows its own print: an ARV after PID is accepted, printed with status B")
+    func bodyARVOnV291() throws {
+        #expect(try structureIssues([Self.header291, Self.evn, Self.pid, Self.arv, Self.pv1]).isEmpty)
+    }
+
+    @Test("2.9.1 keeps structures as printed: CCU_I20 gains no ARV, unlike v2.9")
+    func letterNotApplied() throws {
+        let tables = MessageStructureTable.structures(for: .v2_9_1)
+        let adt = try #require(tables["ADT_A01"])
+        #expect(Self.ordered(adt.elements).filter { $0 == "ARV" }.count > 1)
+        // CH11 11.6.6 pp 38 to 40 holds PID and prints no ARV.
+        let ccu = try #require(tables["CCU_I20"])
+        #expect(Self.ordered(ccu.elements).contains("PID"))
+        #expect(!Self.ordered(ccu.elements).contains("ARV"))
+        let ccuV29 = try #require(MessageStructureTable.structures(for: .v2_9)["CCU_I20"])
+        #expect(Self.ordered(ccuV29.elements).contains("ARV"))
+    }
+
+    // D4: the same wire, on both sides of the letter.
+    @Test("The same body ARV draws the finding on v2.9 and none on 2.9.1")
+    func sameWireEachWay() throws {
+        let body = [Self.evn, Self.pid, Self.arv, Self.pv1]
+        #expect(try structureIssues([Self.header291] + body).isEmpty)
+        #expect(try structureIssues([Self.header] + body).map(\.code) == [.messageStructureSegmentUnexpected(structure: "ADT_A01", segmentID: "ARV")])
+    }
+
+    @Test("An ARV where 2.9.1 prints none stays a finding")
+    func unprintedPlaceOnV291() throws {
+        // CH03 3.3.1 pp 6 to 8 prints ARV after MSH, PD1 and PV2, not between EVN and PID. The matcher reads this
+        // ARV as the one after PD1, so the finding names PID, missing and then misplaced.
+        #expect(try structureIssues([Self.header291, Self.evn, Self.arv, Self.pid, Self.pv1]).map(\.code) == [
+            .messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "PID", group: nil),
+            .messageStructureSegmentUnexpected(structure: "ADT_A01", segmentID: "PID"),
+        ])
+    }
+
+    static func msh291(_ type: String) -> String { "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||\(type)|MSG00001|P|2.9.1" }
+
+    // R27 on 2.9.1: the head takes the print's own top-level ARV, so RSP_K21's follows MSH (CH03 3.3.56 p 97).
+    @Test("A 2.9.1 RSP_K21 error response takes ARV after MSH, where the print has it")
+    func headFollowsThePrint() throws {
+        let k21 = Self.msh291("RSP^K21^RSP_K21"), tail = [Self.err, "QAK|Q1|AE", Self.qpd]
+        #expect(try structureIssues([k21, Self.arv, "MSA|AE|1"] + tail).isEmpty)
+        #expect(try structureIssues([k21, Self.arv, Self.arv, "MSA|AE|1"] + tail).isEmpty)
+        #expect(try !structureIssues([k21, "MSA|AE|1", Self.arv] + tail).isEmpty)
+        #expect(try structureIssues([k21, Self.arv, "MSA|AA|1", "QAK|Q1|NF", Self.qpd]).isEmpty)
+        let rule = try #require(MessageStructureTable.structure("RSP_K21", version: .v2_9_1))
+        let head = try #require(rule.errorResponseHead(acknowledgmentCode: "AE"))
+        #expect(head.elements == [.segment("MSH", min: 1, max: 1), .segment("ARV", min: 0, max: nil), .segment("SFT", min: 0, max: nil),
+                                  .segment("UAC", min: 0, max: 1), .segment("MSA", min: 1, max: 1), .segment("ERR", min: 0, max: 1),
+                                  .segment("QAK", min: 0, max: 1), .segment("QPD", min: 0, max: 1), .segment("DSC", min: 0, max: 1)])
+    }
+
+    // CH04A 4A.3.23 pp 29 to 30 prints RSP_K31's ARV only in its body, and 5.5.5 pp 63 to 64 says the rest of the message is absent.
+    @Test("A 2.9.1 RSP_K31 error response admits no ARV: the print has none at its top")
+    func k31Head() throws {
+        let k31 = Self.msh291("RSP^K31^RSP_K31"), tail = [Self.err, "QAK|Q1|AE", Self.qpd]
+        #expect(try structureIssues([k31, "MSA|AE|1"] + tail).isEmpty)
+        let found = try structureIssues([k31, "MSA|AE|1", Self.arv] + tail)
+        #expect(found.map(\.code) == [.messageStructureSegmentUnexpected(structure: "RSP_K31", segmentID: "ARV")], "\(found.map(\.message))")
+    }
+
+    // CH04 4.13.5 p 133 prints MSH MSA [{ARV}]. It is no query response, so no head cuts it short.
+    @Test("A 2.9.1 BRP_O30 keeps its printed ARV after MSA, and an AE response is not cut to a head")
+    func brpHead() throws {
+        let brp = try #require(MessageStructureTable.structure("BRP_O30", version: .v2_9_1))
+        #expect(Array(Self.ordered(brp.elements).prefix(3)) == ["MSH", "MSA", "ARV"])
+        #expect(brp.errorResponseHead(acknowledgmentCode: "AE") == nil)
+    }
+
+    // The ERR-after-ARV branch of the head: no 2.9.1 query response leaves ERR out, so the print does not reach it.
+    @Test("Every 2.9.1 query response prints ERR, so its head keeps the printed order")
+    func noInsertedERR() throws {
+        for (id, structure) in MessageStructureTable.structures(for: .v2_9_1) where structure.errorResponse != nil {
+            let printed = Self.ordered(structure.elements)
+            #expect(printed.contains("ERR"), "\(id)")
+            let head = try #require(structure.errorResponseHead(acknowledgmentCode: "AE")).elements.map(\.label)
+            #expect(head == head.sorted { printed.firstIndex(of: $0)! < printed.firstIndex(of: $1)! }, "\(id)")
+        }
+    }
 }

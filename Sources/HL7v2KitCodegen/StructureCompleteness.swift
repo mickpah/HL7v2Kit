@@ -233,7 +233,7 @@ struct WithdrawnSegmentEntry {
 /// The overrides.json `withdrawnSegments` entries as version to segment ID to
 /// entry, checked against `grammar` (version to the segment IDs its schemas
 /// define): the keys are exactly version, segment, printed, definedThrough
-/// and citation; printed is "withdrawn", "deprecated" or (v2.9 Appendix A's
+/// and citation; printed is "withdrawn", "deprecated" or (v2.9 and 2.9.1 Appendix A's
 /// QRD and QRF) "added by default"; the citation is one
 /// line naming Appendix A; the version's grammar does not define the segment
 /// and an earlier version's (`definedThrough`) does; no segment is listed

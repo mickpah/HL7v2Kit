@@ -65,6 +65,15 @@ struct StructureErrorResponseTests {
               body: ["MSA|AE|1", "ERR||QPD^1^3^1&&HL70357|207^Application internal error^HL70357|E",
                      "QAK|Q1|AE", "QPD|Q22^Find Candidates^HL70471|Q1", "PID|1"],
               findings: ["unexpected PID at PID[1]"], note: "v2.9 RSP_K21 error response with a patient"),
+        // 2.9.1 CH05 5.5.5 (pp 63 to 64) says the same.
+        Probe(version: "2.9.1", msh9: "RSP^K21^RSP_K21", structure: "RSP_K21",
+              body: ["MSA|AE|1", "ERR||QPD^1^3^1&&HL70357|207^Application internal error^HL70357|E",
+                     "QAK|Q1|AE", "QPD|Q22^Find Candidates^HL70471|Q1"],
+              findings: [], note: "2.9.1 RSP_K21 error response"),
+        Probe(version: "2.9.1", msh9: "RSP^K21^RSP_K21", structure: "RSP_K21",
+              body: ["MSA|AE|1", "ERR||QPD^1^3^1&&HL70357|207^Application internal error^HL70357|E",
+                     "QAK|Q1|AE", "QPD|Q22^Find Candidates^HL70471|Q1", "PID|1"],
+              findings: ["unexpected PID at PID[1]"], note: "2.9.1 RSP_K21 error response with a patient"),
         // v2.3 and v2.3.1 print no "rest of the message is absent" sentence (CH02 2.22): unchanged.
         Probe(version: "2.3", msh9: "ERP^R09", structure: "ERP",
               body: ["MSA|AE|MSG00004", "ERR|MSH^^9^201", "QAK|TAG0002|AE"],
@@ -115,6 +124,9 @@ struct StructureErrorResponseTests {
         Probe(version: "2.9", msh9: "RSP^K21^RSP_K21", structure: "RSP_K21",
               body: ["MSA|AA|1", "QAK|Q1|NF", "QPD|Q22^Find Candidates^HL70471|Q1", "DSC|"],
               findings: [], note: "v2.9 no data found, RSP_K21"),
+        Probe(version: "2.9.1", msh9: "RSP^K21^RSP_K21", structure: "RSP_K21",
+              body: ["MSA|AA|1", "QAK|Q1|NF", "QPD|Q22^Find Candidates^HL70471|Q1", "DSC|"],
+              findings: [], note: "2.9.1 no data found, RSP_K21"),
         Probe(version: "2.3", msh9: "TBR^R08", structure: "TBR",
               body: ["MSA|AA|MSG00001", "QAK|TAG0001|NF"],
               findings: ["missing RDF at the end", "missing RDT at the end"], note: "v2.3 no data keeps the full structure"),
@@ -142,7 +154,7 @@ struct StructureErrorResponseTests {
         #expect(issue.message.contains("MSA-1 is AE") && issue.message.contains("5.6.5"), "\(issue.message)")
     }
 
-    @Test("The generated tables carry the rule on v2.4 to v2.9 query responses only")
+    @Test("The generated tables carry the rule on v2.4 to 2.9.1 query responses only")
     func tables() throws {
         let tbr = try #require(MessageStructureTable.structure("TBR_R08", version: .v2_4))
         #expect(tbr.errorResponse?.acknowledgmentCodes == ["AE", "AR"])
@@ -154,6 +166,7 @@ struct StructureErrorResponseTests {
         let rsp = try #require(MessageStructureTable.structure("RSP_K21", version: .v2_8_2))
         #expect(rsp.errorResponse?.querySegments == ["QPD"])
         #expect(try #require(MessageStructureTable.structure("RSP_K21", version: .v2_9)).errorResponse?.querySegments == ["QPD"])
+        #expect(try #require(MessageStructureTable.structure("RSP_K21", version: .v2_9_1)).errorResponse?.querySegments == ["QPD"])
         for (id, version) in [("ERP", Version.v2_3), ("TBR_R08", .v2_3_1), ("ADT_A01", .v2_5_1), ("ACK", .v2_5_1)] {
             let s = try #require(MessageStructureTable.structure(id, version: version), "\(id) v\(version.rawValue)")
             #expect(s.errorResponse == nil, "\(id) v\(version.rawValue)")

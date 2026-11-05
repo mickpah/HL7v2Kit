@@ -90,6 +90,28 @@ struct TrailingBlankComparisonTests {
         #expect(earlier.issues.map(\.code) == [.messageStructureMismatch(declared: "ACK ", trigger: "ACK^A01")])
     }
 
+    // The owner's ruling of 5 November, on 2.9.1's structures: Task 11 had none to pin it against.
+    @Test("ACK with a trailing blank in MSH-9.3 resolves on 2.9.1 and is matched against the body")
+    func paddedStructureOn291() throws {
+        let padded = try Parser().parse(wire("2.9.1", type: "ACK^A01^ACK ", "MSA|AA|MSG0"))
+        let resolved = Validator().resolveStructure(padded, severity: .warning)
+        #expect(resolved.structure?.id == "ACK")
+        #expect(resolved.issues.isEmpty)
+        var options = ValidationOptions.default
+        options.messageStructureSeverity = .error
+        let validator = Validator(options: options)
+        #expect(validator.validate(padded).issues.filter(\.code.isMessageStructure).isEmpty)
+        let noMSA = try Parser().parse(wire("2.9.1", type: "ACK^A01^ACK ", "ERR|1"))
+        #expect(validator.validate(noMSA).issues.map(\.code).contains(.messageStructureSegmentMissing(structure: "ACK", segmentID: "MSA", group: nil)))
+    }
+
+    @Test("A padded structure ID that names no structure still draws the mismatch on 2.9.1")
+    func paddedUnknownStructureOn291() throws {
+        let resolved = Validator().resolveStructure(try Parser().parse(wire("2.9.1", type: "ADT^A01^ADT_A99 ", "EVN||20240101")), severity: .warning)
+        #expect(resolved.structure == nil)
+        #expect(resolved.issues.map(\.code) == [.messageStructureMismatch(declared: "ADT_A99", trigger: "ADT^A01")])
+    }
+
     @Test("A padded message code and trigger event select the structure on v2.9")
     func paddedTrigger() throws {
         let resolved = Validator().resolveStructure(try Parser().parse(wire("2.9", type: "ACK ^A01 ^ACK", "MSA|AA|MSG0")), severity: .warning)

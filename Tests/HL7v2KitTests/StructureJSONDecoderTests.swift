@@ -56,11 +56,12 @@ struct StructureJSONDecoderTests {
         d["version"] = version
         var elements = try #require(d["elements"] as? [JSON])
         if version != "2.5.1" {
-            d["citation"] = (d["citation"] as? String ?? "").replacingOccurrences(of: "HL7-xml v2.5.1/", with: "HL7-xml v2.4/")
+            let base = version == "2.9.1" ? "v2.9" : "v2.4"     // the bundle a bundle-less version derives through
+            d["citation"] = (d["citation"] as? String ?? "").replacingOccurrences(of: "HL7-xml v2.5.1/", with: "HL7-xml \(base)/")
             func derive(_ list: [JSON]) -> [JSON] {
                 list.map { item in
                     var e = item
-                    if e["nameSource"] as? String == "v2xml" { e["nameSource"] = "v2xml-v2.4" }
+                    if e["nameSource"] as? String == "v2xml" { e["nameSource"] = "v2xml-\(base)" }
                     if let children = e["elements"] as? [JSON] { e["elements"] = derive(children) }
                     return e
                 }
@@ -173,6 +174,11 @@ struct StructureJSONDecoderTests {
         try accept("nameSource v2xml-v2.3.1 on v2.3", try Self.oru("v2xml-v2.3.1", "PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator HL7-Database, derived for v2.3 ORU_R01).", version: "2.3"), "ORU_R01", version: "2.3")
         try reject("nameSource v2xml-v2.3.1 outside v2.3", "v2xml-v2.3.1 for v2.3 only", try Self.oru("v2xml-v2.3.1", "PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator HL7-Database).", version: "2.3.1"), "ORU_R01", version: "2.3.1")
         try reject("nameSource v2xml-v2.3.1 cited to a folder that does not exist", "is not cited", try Self.oru("v2xml-v2.3.1", "PATIENT_RESULT (HL7-xml v2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, derived for v2.3 ORU_R01).", version: "2.3"), "ORU_R01", version: "2.3")
+        // v2.9-T12: 2.9.1 has no bundle, so its names derive through v2.9's, cited to it, and on 2.9.1 alone.
+        try accept("nameSource v2xml-v2.9 on 2.9.1", try Self.oru("v2xml-v2.9", "PATIENT_RESULT (HL7-xml v2.9/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, derived for v2.9.1 ORU_R01).", version: "2.9.1"), "ORU_R01", version: "2.9.1")
+        try reject("nameSource v2xml-v2.9 outside 2.9.1", "v2xml-v2.9 for 2.9.1 only", try Self.oru("v2xml-v2.9", "PATIENT_RESULT (HL7-xml v2.9/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT)."), "ORU_R01")
+        try reject("nameSource v2xml on 2.9.1, which has no bundle", "2.9.1 have no v2xml bundle", try Self.oru("v2xml", "PATIENT_RESULT (HL7-xml v2.9.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).", version: "2.9.1"), "ORU_R01", version: "2.9.1")
+        try reject("nameSource v2xml-v2.9 cited to another bundle", "is not cited", try Self.oru("v2xml-v2.9", "PATIENT_RESULT (HL7-xml v2.8.2/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).", version: "2.9.1"), "ORU_R01", version: "2.9.1")
         try reject("max below min", "bad occurrence bounds", Self.element(try Self.load("ACK"), 0) { $0["min"] = 2 }, "ACK")
         adt = try Self.load("ADT_A01"); adt["triggers"] = ["ADT-A01"] + ((adt["triggers"] as? [String] ?? []).dropFirst())
         try reject("malformed trigger", "triggers must be", adt, "ADT_A01")
@@ -273,7 +279,7 @@ struct StructureJSONDecoderTests {
         prose["syntaxSource"] = "table"
         try reject("a syntaxSource other than prose", "syntaxSource must be \"prose\"", prose, "ADT_A01")
 
-        #expect(cases.count == 57)
+        #expect(cases.count == 61)
         for c in cases {
             if let expected = c.expected {
                 #expect(c.verdict?.contains(expected) == true, "\(c.label): \(c.verdict ?? "accepted")")

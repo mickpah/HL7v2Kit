@@ -325,4 +325,60 @@ struct V291GrammarTests {
         #expect(Validator.primitiveTypes(version) == ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"])
         #expect(Version.v2_9.table0953OID == nil)
     }
+
+    @Test("2.9.1 structures are complete and carry the new gender and sex segments")
+    func structureInventory() throws {
+        #expect(MessageStructureTable.completeVersions.contains(.v2_9_1))
+        let adt = try #require(MessageStructureTable.structure("ADT_A01", version: .v2_9_1))
+        let ids = adt.elements.flatMap(\.segmentIDs)
+        for id in ["GSP", "GSR", "GSC"] { #expect(ids.contains(id), "\(id)") }
+    }
+
+    @Test("A well-formed ADT_A01 draws no structure finding")
+    func wellFormedStructure() throws {
+        var options = ValidationOptions.default
+        options.messageStructureSeverity = .error
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9.1\r"
+            + "EVN||20240301120000\rPID|1||SYN-0291^^^TESTFAC^MR||Testpatient^Sample\rPV1|1|I\r"
+        let found = Validator(options: options).validate(try Parser().parse(wire)).issues.filter(\.code.isMessageStructure)
+        #expect(found.isEmpty)
+    }
+
+    @Test("Every Table 0354 row of 2.9.1 is modelled or registered")
+    func everyRowAccounted() throws {
+        let rows = try #require(HL7TableRegistry.table("0354", version: .v2_9_1)).entries.map(\.code)
+        #expect(rows.count == 261)
+        let modelled = rows.filter { MessageStructureTable.structure($0, version: .v2_9_1) != nil }
+        let registered = rows.filter { MessageStructureTable.registration($0, version: .v2_9_1) != nil }
+        #expect(modelled.count == 193)
+        #expect(registered.count == 68)
+        #expect(Set(modelled).isDisjoint(with: registered))
+    }
+
+    // CH02C Table 0354 p 343: the Display Name 'Laboratory Fulfillment request with REL segment'
+    // holds a segment ID, never an event. p 342: 'INV_U14' for INR^U14^INR_U14 (CH13 13.2.14 p 31).
+    @Test("Table 0354 errata: no event from prose, and the misprinted ID is registered")
+    func table0354Errata() throws {
+        #expect(try #require(MessageStructureTable.structure("OML_O59", version: .v2_9_1)).triggers == ["OML^O59"])
+        #expect(try #require(MessageStructureTable.structure("INR_U14", version: .v2_9_1)).triggers == ["INR^U14"])
+        #expect(MessageStructureTable.registration("INV_U14", version: .v2_9_1) != nil)
+    }
+
+    // CH06 6.4.3 pp 9 and 10 and 6.4.8 pp 18 and 20 set a footnote mark a line above its row, which read as prose would end
+    // the table at DB1; every print is checked against a required group after it.
+    @Test("DFT_P03 and DFT_P11 read to the end of their tables")
+    func footnoteAboveItsRow() throws {
+        for id in ["DFT_P03", "DFT_P11"] {
+            let ids = try #require(MessageStructureTable.structure(id, version: .v2_9_1)).elements.flatMap(\.segmentIDs)
+            for segment in ["ORC", "FT1", "DG1", "DRG", "GT1", "IN1", "ACC"] { #expect(ids.contains(segment), "\(id) \(segment)") }
+        }
+    }
+
+    // CH02 2.11.1 p 51 and CH05 5.2 to 5.8 print these as examples and templates on site-defined events (ruling G7).
+    @Test("The widget and the Z-event examples are not structures of 2.9.1")
+    func examplesExcluded() {
+        for id in ["WRQ_Z02", "RSP_Z82", "RSP_Z84", "RSP_Z86", "RSP_Z88", "RSP_Z90", "RDY_Z80", "QBP_Z73", "RTB_Z74", "MFN_Znn"] {
+            #expect(MessageStructureTable.structure(id, version: .v2_9_1) == nil, "\(id)")
+        }
+    }
 }
