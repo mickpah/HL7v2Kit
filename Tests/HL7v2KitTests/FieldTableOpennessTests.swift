@@ -44,6 +44,9 @@ struct FieldTableOpennessTests {
         // v2.6 / v2.8.2 CH16 PSL-21: "Refer to User-defined Table 0532 ... for suggested values."
         Marked(version: "2.6", segment: "PSL", index: 21, table: "0532"),
         Marked(version: "2.8.2", segment: "PSL", index: 21, table: "0532"),
+        // v2.8.2 CH04A 4A.4.8.2 p95 (RXV-2) and 4A.4.8.7 p96 (RXV-7): "See HL7 Defined Table ... for example values."
+        Marked(version: "2.8.2", segment: "RXV", index: 2, table: "0917"),
+        Marked(version: "2.8.2", segment: "RXV", index: 7, table: "0918"),
         // v2.7.1 prints the same sentences: CH06 sec 6.5.2.24 p36 (DG1-24), CH16 RFI-3,
         // IVC-13, PSG-4, PSL-47 ("Refer to HL7 Table 0136 ... for suggested values"),
         // CH04A RXD-11 p70 (Table 0167), CH16 PSL-21 p49 (User-defined Table 0532).
@@ -127,9 +130,12 @@ struct FieldTableOpennessTests {
     @Test("On the same wire, an unmarked sibling ID field on a closed table still raises",
           arguments: [("2.6", "DG1", 24, 18, "0136"), ("2.8.2", "DG1", 24, 18, "0136"), ("2.9", "DG1", 24, 18, "0136"),
                       ("2.9.1", "DG1", 24, 18, "0136"), ("2.4", "RXD", 11, 14, "0136"), ("2.8.2", "RXD", 11, 14, "0136"),
-                      ("2.9", "RXD", 11, 14, "0136"), ("2.9.1", "RXD", 11, 14, "0136")])
+                      ("2.9", "RXD", 11, 14, "0136"), ("2.9.1", "RXD", 11, 14, "0136"),
+                      ("2.8.2", "RXV", 2, 22, "0206"), ("2.8.2", "RXV", 7, 22, "0206"),
+                      ("2.8", "RXV", 2, 22, "0206"), ("2.8", "RXV", 7, 22, "0206")])
     func siblingStillChecked(version: String, segment: String, marked: Int, sibling: Int, table: String) throws {
-        // DG1-18 Confidential Indicator and RXD-14 Needs Human Review cite Table 0136 "for valid values".
+        // DG1-18 Confidential Indicator and RXD-14 Needs Human Review cite Table 0136 "for valid values";
+        // RXV-22 Action Code cites Table 0206 "for valid values" (v2.8.2 CH04A 4A.4.8.22 p100).
         let report = Validator().validate(try Parser().parse(wire(version, segment, values: [marked, sibling])))
         let hits = report.issues.filter { if case .valueNotInTable = $0.code { return true } else { return false } }
         #expect(hits.map(\.location.fieldIndex) == [sibling])

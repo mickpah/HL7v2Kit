@@ -1,5 +1,21 @@
 {
   "2.3": {
+    "0291": {
+      "addEntries": [
+        [
+          "Zxxx",
+          "Private, non-standard subtype, defined by agreement between cooperating parties"
+        ]
+      ],
+      "patterns": [
+        {
+          "code": "Zxxx",
+          "regex": "^Z.*$"
+        }
+      ],
+      "citation": "HL7 v2.3 Appendix A, HL7 Table 0291 - Subtype of Referenced Data. RP.4, CH02 sec 2.8.34.4 (p2-39), refers to the table 'for valid values'; sec 2.8.34.5 (p2-40): 'private, non-standard subtypes may be defined by agreement between cooperating parties. All private, non-standard subtypes should begin with the letter Z to distinguish them from the standard subtypes'",
+      "note": "Not a printed row: it names the prefix the print reserves, as 0203's NNxxx names a family (ruling R55). The table stays closed, since 'for valid values' stands and this sentence reserves a prefix, not an open list."
+    },
     "0174": {
       "kind": "User",
       "citation": "HL7 v2.3 Chapter 8 sec 8.7.3.18 OM1-18 Nature of test/observation (IS), User-defined Table 0174 - Nature of test/observation (p. 8-27)",
@@ -1248,6 +1264,22 @@
     }
   },
   "2.3.1": {
+    "0291": {
+      "addEntries": [
+        [
+          "Zxxx",
+          "Private, non-standard subtype, defined by agreement between cooperating parties"
+        ]
+      ],
+      "patterns": [
+        {
+          "code": "Zxxx",
+          "regex": "^Z.*$"
+        }
+      ],
+      "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0291 - Subtype of referenced data. RP.4, CH02 sec 2.8.36.4 (p2-46), refers to the table 'for valid values'; sec 2.8.36.5 (p2-47): 'private, non-standard subtypes may be defined by agreement between cooperating parties. All private, non-standard subtypes should begin with the letter Z to distinguish them from the standard subtypes'",
+      "note": "Not a printed row: it names the prefix the print reserves, as 0203's NNxxx names a family (ruling R55). The table stays closed, since 'for valid values' stands and this sentence reserves a prefix, not an open list."
+    },
     "0003": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
@@ -1706,6 +1738,22 @@
     }
   },
   "2.4": {
+    "0291": {
+      "addEntries": [
+        [
+          "Zxxx",
+          "Private, non-standard subtype, defined by agreement between cooperating parties"
+        ]
+      ],
+      "patterns": [
+        {
+          "code": "Zxxx",
+          "regex": "^Z.*$"
+        }
+      ],
+      "citation": "HL7 v2.4 Appendix A, HL7 Table 0291 - Subtype of referenced data. RP.4, CH02 sec 2.9.37.4 (p2-62), refers to the table 'for valid values'; sec 2.9.37.5 (p2-62): 'private, non-standard subtypes may be defined by agreement between cooperating parties. All private, non-standard subtypes should begin with the letter Z to distinguish them from the standard subtypes'",
+      "note": "Not a printed row: it names the prefix the print reserves, as 0203's NNxxx names a family (ruling R55). The table stays closed, since 'for valid values' stands and this sentence reserves a prefix, not an open list."
+    },
     "0392": {
       "kind": "User",
       "citation": "HL7 v2.4 Chapter 5 sec 5.5.4.2 QRI-2 Match reason code (IS): 'Refer to User-defined Table 0392 - Match reason for suggested values'; User-defined Table 0392 - Match reason (p. 5-50)",
@@ -2157,6 +2205,22 @@
     }
   },
   "2.5.1": {
+    "0291": {
+      "addEntries": [
+        [
+          "Zxxx",
+          "Private, non-standard subtype, defined by agreement between cooperating parties"
+        ]
+      ],
+      "patterns": [
+        {
+          "code": "Zxxx",
+          "regex": "^Z.*$"
+        }
+      ],
+      "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0291 - Subtype of referenced data. RP.4, CH02A sec 2.A.65.4 (p2-208), refers to the table 'for valid values'; sec 2.A.65.5 (p2-209): 'private, non-standard subtypes may be defined by agreement between cooperating parties. All private, non-standard subtypes should begin with the letter Z to distinguish them from the standard subtypes'",
+      "note": "Not a printed row: it names the prefix the print reserves, as 0203's NNxxx names a family (ruling R55). The table stays closed, since 'for valid values' stands and this sentence reserves a prefix, not an open list."
+    },
     "0003": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
@@ -2573,6 +2637,8 @@
       "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
     },
     "0391": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Appendix A, HL7 Table 0391 - Segment group. Open: Chapter 5 sec 5.5.6.7 RCP-7 (p41) names the table 'for values for Segment Group'; sec 5.11 (p106) records that 'the usage and naming of segment groups is not clear' and calls the table 'an itemization of the segment group names'; Chapter 4 prints group names that are no row, such as GUARANTOR in OPL_O37 (p4-22)",
       "note": "v2.6 Appendix A prints the Segment group name FINANCIAL_COMMON_ORDER with a space in place of the second underscore, and wraps it (text lines 5852-5853), so it is the one artifact in this table with no correctly-spelled sibling for the separator-variant rule to prefer. Corrected against the v2.8.2 printing (text line 10358), which spells it FINANCIAL_COMMON_ORDER.",
       "renameCodes": {
         "FINANCIAL_COMMON ORDER": "FINANCIAL_COMMON_ORDER"
@@ -3006,6 +3072,11 @@
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
     },
+    "0391": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.315, HL7 Table 0391 - Segment Group (footer pages 169 to 172): 132 rows. Chapter 5 sec 5.5.6.7 RCP-7 (p46) names the table 'for values for Segment Group'; sec 5.11 (p104) records that 'the usage and naming of segment groups is not clear' and calls the table 'an itemization of the segment group names'; Chapter 4 prints group names that are no row, such as DONOR (p156)",
+      "note": "Chapter 2C's rows stand. The chapters decide openness: enforcing the 132 would reject a group name the chapters themselves print (req #4), as on v2.9."
+    },
     "0211": {
       "note": "v2.8.2 Chapter 2C runs a footnote marker and its URL through the Value column of Alternate character sets (text lines 6030-6033). Verified against v2.5.1 and v2.6, which print the same table without either.",
       "dropCodes": [
@@ -3330,7 +3401,8 @@
           ""
         ]
       ],
-      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.209 (pp119-120), HL7 Table 0391 - Segment Group; Chapter 14 sec 14.3.2 NMD^N02^NMD_N02 (p2)",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.209 (pp119-120), HL7 Table 0391 - Segment Group; Chapter 14 sec 14.3.2 NMD^N02^NMD_N02 (p2). Open: Chapter 5 sec 5.5.6.7 RCP-7 (p47) names the table 'for values for Segment Group'; sec 5.11 (p108) records that 'the usage and naming of segment groups is not clear' and calls the table 'an itemization of the segment group names'; Chapter 4 prints group names that are no row, such as GUARANTOR in OPL_O37 (p28)",
       "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p117) prints CLOCK_AND_STATS_WITH_NOTE; Chapter 2C prints CLOCK_AND_STATS_WITH_NOTES and CLOCK_AND_STATS_WITH_NOTES_ALT, and the defining chapter's NMD_N02 structure names the group CLOCK_AND_STATS_WITH_NOTES. Chapter 2C governs."
     },
     "0347": {

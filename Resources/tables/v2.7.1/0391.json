@@ -3,8 +3,8 @@
   "version": "2.7.1",
   "name": "Segment Group",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.209 (pp119-120), HL7 Table 0391 - Segment Group; Chapter 14 sec 14.3.2 NMD^N02^NMD_N02 (p2)",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.209 (pp119-120), HL7 Table 0391 - Segment Group; Chapter 14 sec 14.3.2 NMD^N02^NMD_N02 (p2). Open: Chapter 5 sec 5.5.6.7 RCP-7 (p47) names the table 'for values for Segment Group'; sec 5.11 (p108) records that 'the usage and naming of segment groups is not clear' and calls the table 'an itemization of the segment group names'; Chapter 4 prints group names that are no row, such as GUARANTOR in OPL_O37 (p28)",
   "entries": [
     {
       "code": "ADMINISTRATION",

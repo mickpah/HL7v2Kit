@@ -4488,7 +4488,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "SGML", description: "Structured General Markup Language (HL7 V2.3.1 and later)"),
             HL7Table.Entry(code: "XML", description: "Extensible Markup Language (HL7 V2.3.1 and later)"),
             HL7Table.Entry(code: "RTF", description: "Rich Text Format"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "Zxxx", description: "Private, non-standard subtype, defined by agreement between cooperating parties", regex: "^Z.*$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0292_v2_3_1 = HL7Table(

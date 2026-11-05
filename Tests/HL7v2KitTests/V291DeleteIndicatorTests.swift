@@ -144,7 +144,7 @@ struct V291DeleteIndicatorTests {
     func deleteIndicatorBySegment(id: String, reads: Bool) throws {
         let message = try Parser().parse("MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9.1\rPID|\(delete)\r")
         let repetition = try #require(message.segments.last?.field(1)?.repetitions.first)
-        #expect(Validator().isDeleteIndicator(repetition, segmentID: id, version: .v2_9_1) == reads)
+        #expect(Validator().isDeleteIndicator(repetition, segmentID: id) == reads)
     }
 
     // MARK: - (c) the print's delete segment

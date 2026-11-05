@@ -369,7 +369,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "AUSNATA", description: "National Association of Testing Authorities, Australia"),
             HL7Table.Entry(code: "AUSLINK", description: "Australian CentreLink"),
             HL7Table.Entry(code: "AUSHICPR", description: "Medicare Australia provider number"),
-            HL7Table.Entry(code: "IHI", description: "Accommodation carried from the M6 seed: Individual Healthcare Identifier; not printed in ADRM Table 0363 (p. 310)"),
         ] as [HL7Table.Entry]
     )
 

@@ -143,7 +143,7 @@ struct V29DeleteIndicatorTests {
     func deleteIndicatorBySegment(id: String, reads: Bool) throws {
         let message = try Parser().parse("MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9\rPID|\(delete)\r")
         let repetition = try #require(message.segments.last?.field(1)?.repetitions.first)
-        #expect(Validator().isDeleteIndicator(repetition, segmentID: id, version: .v2_9) == reads)
+        #expect(Validator().isDeleteIndicator(repetition, segmentID: id) == reads)
     }
 
     // MARK: - (c) the print's delete segment
@@ -202,18 +202,5 @@ struct V29DeleteIndicatorTests {
         let populated = try obr24("OBR|1")
         #expect(populated.count == 1)
         #expect(populated.first?.message.contains("profile-required") == true)
-    }
-
-    // MARK: - Earlier versions
-
-    /// A hold, not a difference in the print: v2.8.2 says the same under "Null" (CH02 pp8, 38, 41). This work
-    /// may not move an earlier version's rows.
-    @Test("v2.8.2 still reports the same wires")
-    func earlierVersionUnchanged() throws {
-        #expect(try issues("2.8.2", "IN1|2|\(delete)|\(delete)").filter { $0.code == .requiredComponentMissing }
-            .map(\.location.componentIndex) == [5])
-        #expect(try issues("2.8.2", "IN1|\(delete)|\(delete)").contains {
-            $0.code == .requiredFieldMissing && $0.location.fieldIndex == 3
-        })
     }
 }

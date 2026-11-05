@@ -570,7 +570,7 @@ public struct Validator: Sendable {
         profile: Profile?,
         issues: inout [ValidationIssue]
     ) {
-        if isDeleteSegment(segment, version: message.version) { return }
+        if isDeleteSegment(segment, grammar: grammar, version: message.version) { return }
         for fieldGrammar in grammar.fields {
             checkField(
                 fieldGrammar,
@@ -2141,7 +2141,7 @@ public struct Validator: Sendable {
             }
         }
         for (offset, repetition) in field.repetitions.enumerated()
-        where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID, version: version) {
+        where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID) {
             let values = repetition.components.map(\.stringValue)
             check(dataType.components, groups: dataType.groupRequirements, values: values, typeName: grammar.dataType,
                   repetition: offset + 1, component: nil, subcomponent: { _ in nil })
@@ -2173,7 +2173,7 @@ public struct Validator: Sendable {
         let requiredSet = requiredComponentSet(forCompositeCode: grammar.dataType)
         guard !required.isEmpty || requiredSet != nil else { return }
         for repetition in field.repetitions
-        where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID, version: version) {
+        where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID) {
             // (1) Flat required-component check.
             for spec in required {
                 if !isComponentPopulated(repetition, componentIndex: spec.index) {
@@ -2290,28 +2290,45 @@ public struct Validator: Sendable {
     /// p50), and RDF, which "defines the content of the row data segments" (5.5.7 p54). DSP, QRI and
     /// RDT carry data and stay off. v2.9.1 prints the same sections as CH02 2.13 (Figure 2-8, p54) and
     /// CH05 5.4 (5.4.3 p51, 5.4.7 p55), and defines GSP, GSR and GSC in CH03, as data.
+    ///
+    /// v2.6 2.5.3 p7, v2.7.1 2.5.3.0 p7 and v2.8.2 2.5.3.0 p8 print the same sentences. v2.3 to v2.5.1 print no prohibition, and
+    /// tie the null value to updating "a record in a database", so these segments keep their findings there too. Earlier versions
+    /// hold fewer of these (no OVR or SFT before v2.5.1, no UAC before v2.6, no SGH or SGT before v2.8.2, no QID, QPD or RCP before
+    /// v2.4) and these eight more, each defining or issuing a query: v2.3 and v2.3.1 CH02 2.24, v2.4 and v2.5.1 CH05 5.10.5, v2.6
+    /// 5.10.4 (QRD, QRF, URD and URS only). No later version has a grammar for them.
     static let messageControlSegments: Set<String> = [
         "BHS", "BTS", "DSC", "ERR", "FHS", "FTS", "MSA", "MSH", "OVR", "SFT", "SGH", "SGT", "UAC", // CH02 2.14
         "QAK", "QID", "QPD", "RCP", "RDF", // CH05 5.5
+        "QRD", "QRF", "URD", "URS", "EQL", "VTQ", "SPR", "ERQ", // v2.3 to v2.6
     ]
 
     /// True if `repetition` holds only the delete indicator on a data segment: `""` as its first
-    /// component and nothing after it, so a trailing separator does not change the reading.
-    func isDeleteIndicator(_ repetition: Repetition, segmentID: String, version: Version) -> Bool {
-        guard version.appliesDeleteIndicator, !Self.messageControlSegments.contains(segmentID),
+    /// component and nothing after it, so a trailing separator does not change the reading. That
+    /// field is null, so it has no components to require, and every print says so. v2.3 CH02 2.6 p2-5,
+    /// v2.3.1 2.6 p2-5, v2.4 2.7 p2-12 and v2.5.1 2.5.3 pp2-7, 2-8: "Except where noted, HL7 data fields
+    /// may take on the null value", and CH06 says "send a null value" in GT1-3, a composite. v2.6 2.5.3
+    /// p7, v2.7.1 2.5.3.0 p7 and v2.8.2 2.5.3.0 p8 define "Null" by "the corresponding data base
+    /// element", and v2.9 CH02 2.5.3.1 pp8-9 and v2.9.1 2.4.3.1 pp9-10 as "Populated with Delete Indicator".
+    func isDeleteIndicator(_ repetition: Repetition, segmentID: String) -> Bool {
+        guard !Self.messageControlSegments.contains(segmentID),
               repetition.components.first?.stringValue == "\"\"" else { return false }
         return !repetition.components.dropFirst().contains { $0.subcomponents.contains { !$0.value.isEmpty } }
     }
 
-    /// True for the print's unconditional delete segment: `""` first and every other field empty or
-    /// `""`. v2.9 CH02 2.10.4.1 p42, "the first field (or all fields)"; p43 `NK1|""|""|""|""`. The other
-    /// signals on p42 are "By agreement ... or Conformance Profile", which a validator cannot know.
-    private func isDeleteSegment(_ segment: Segment, version: Version) -> Bool {
+    /// True for the print's delete segment. From v2.6, `""` first and every other field empty or `""`: v2.9 CH02 2.10.4.1
+    /// p42, "the first field (or all fields)"; p43 `NK1|""|""|""|""`. On v2.3 to v2.5.1, `""` in every field the segment
+    /// defines, the print's "all fields" (``Version/readsFirstFieldAsDeleteSegment``). The other signals are "By agreement
+    /// ... or Conformance Profile", and read as any segment does: `IN1||""` cannot be told from a defective segment.
+    private func isDeleteSegment(_ segment: Segment, grammar: SegmentGrammar, version: Version) -> Bool {
         let fields = segment.fields.dropFirst() // fields[0] is the segment ID
         func isDelete(_ repetition: Repetition) -> Bool {
-            isDeleteIndicator(repetition, segmentID: segment.segmentID, version: version)
+            isDeleteIndicator(repetition, segmentID: segment.segmentID)
         }
         guard let first = fields.first, first.repetitions.contains(where: isDelete) else { return false }
+        guard version.readsFirstFieldAsDeleteSegment else {
+            return fields.count >= grammar.fields.map(\.index).max() ?? .max
+                && fields.allSatisfy { $0.repetitions.allSatisfy(isDelete) }
+        }
         return fields.allSatisfy { $0.repetitions.allSatisfy { !isRepetitionPopulated($0) || isDelete($0) } }
     }
 

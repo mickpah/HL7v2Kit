@@ -54,6 +54,14 @@ struct AUAssigningAuthorityTableTests {
         #expect(issues.count == 1, "got \(issues.map(\.message))")
     }
 
+    /// The owner's ruling: p 310 does not print IHI, so it passes only as a caller's declared authority.
+    @Test("Asserted: IHI fires at PRD-7.2, and a caller's localTableExtensions[\"0363\"] admits it")
+    func ihiNeedsDeclaring() throws {
+        let issues = try findings(identifiers: "12345^IHI^VDI", asserted: true)
+        #expect(issues.map(\.location) == [IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, componentIndex: 2)])
+        #expect(try findings(identifiers: "12345^IHI^VDI", asserted: true, extensions: ["IHI"]).isEmpty)
+    }
+
     @Test("Not asserted: an undeclared vendor authority is silent")
     func unassertedSilent() throws {
         #expect(try findings(identifiers: "X0012345^Argus^VDI", asserted: false, extensions: []).isEmpty)

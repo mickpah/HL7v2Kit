@@ -3,8 +3,8 @@
   "version": "2.8.2",
   "name": "Segment Group",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0391 - Segment Group",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.315, HL7 Table 0391 - Segment Group (footer pages 169 to 172): 132 rows. Chapter 5 sec 5.5.6.7 RCP-7 (p46) names the table 'for values for Segment Group'; sec 5.11 (p104) records that 'the usage and naming of segment groups is not clear' and calls the table 'an itemization of the segment group names'; Chapter 4 prints group names that are no row, such as DONOR (p156)",
   "entries": [
     {
       "code": "ADMINISTRATION",

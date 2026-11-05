@@ -11,7 +11,7 @@ extension Validator {
     /// read there. The caller skips a field already reported as `fieldNotSupported`, so
     /// one finding covers the whole field. A component is populated as a field is (any
     /// non-empty subcomponent, the HL7 null `""` included), except a repetition holding only
-    /// the delete indicator on a version that applies it (``Version/appliesDeleteIndicator``).
+    /// the delete indicator on a data segment.
     ///
     /// A component table binds wherever its type is used ("the optionality, table
     /// references, and lengths of data type components are supplied in component tables
@@ -46,7 +46,7 @@ extension Validator {
             ))
         }
         let repetitions = field.repetitions.enumerated().filter {
-            !isDeleteIndicator($0.element, segmentID: location.segmentID, version: version)
+            !isDeleteIndicator($0.element, segmentID: location.segmentID)
         }
         for entry in composite.components {
             let code = entry.optionalityCode

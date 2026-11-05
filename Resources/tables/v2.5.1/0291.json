@@ -4,7 +4,7 @@
   "name": "Subtype of referenced data",
   "kind": "HL7",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0291 - Subtype of referenced data",
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0291 - Subtype of referenced data. RP.4, CH02A sec 2.A.65.4 (p2-208), refers to the table 'for valid values'; sec 2.A.65.5 (p2-209): 'private, non-standard subtypes may be defined by agreement between cooperating parties. All private, non-standard subtypes should begin with the letter Z to distinguish them from the standard subtypes'",
   "entries": [
     {
       "code": "BASIC",
@@ -65,6 +65,13 @@
     {
       "code": "XML",
       "description": "Extensible Markup Language (HL7 V2.3.1 and later)"
+    }
+  ],
+  "patterns": [
+    {
+      "code": "Zxxx",
+      "description": "Private, non-standard subtype, defined by agreement between cooperating parties",
+      "regex": "^Z.*$"
     }
   ]
 }

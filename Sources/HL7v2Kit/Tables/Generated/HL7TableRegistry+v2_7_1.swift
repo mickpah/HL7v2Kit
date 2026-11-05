@@ -6325,7 +6325,7 @@ extension HL7TableRegistry {
         number: "0391",
         name: "Segment Group",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ADMINISTRATION", description: ""),
             HL7Table.Entry(code: "ALLERGY", description: ""),

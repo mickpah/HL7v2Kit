@@ -5,7 +5,7 @@
 // vendor allocated identifiers must use "VDI" as the value for <other
 // qualifying info (ST)>." The point (Appendix 5 p 473): "For a PRD-7 <ID
 // number (ST)> the correct matching <type of ID number (IS)> and <other
-// qualifying info (ST)> must be used as per table". A PRD-7.2 outside the six
+// qualifying info (ST)> must be used as per table". A PRD-7.2 outside the five
 // printed Table 0363 values (p 310) is a vendor authority, so PRD-7.3 = VDI.
 
 import Testing
@@ -50,9 +50,19 @@ struct AUPRDVendorIdentifierTests {
 
     @Test("Printed 0363 authorities with no printed pair skip")
     func unpairedPrintedAuthoritiesSkip() throws {
-        for authority in ["AUSDVA", "AUSNATA", "AUSLINK", "IHI"] {
+        for authority in ["AUSDVA", "AUSNATA", "AUSLINK"] {
             #expect(try findings(identifiers: "12345^\(authority)^NPI").isEmpty, "\(authority)")
         }
+    }
+
+    /// The owner's ruling: p 310 prints five rows, AUSHIC, AUSDVA, AUSNATA, AUSLINK and AUSHICPR, and no IHI. So IHI is an
+    /// authority outside the printed table, and p 334 asks `VDI` of it as of any other.
+    @Test("IHI is no printed authority, so it requires VDI at PRD-7.3")
+    func ihiRequiresVDI() throws {
+        #expect(HL7CodeTables.table0363 == ["AUSHIC", "AUSDVA", "AUSNATA", "AUSLINK", "AUSHICPR"])
+        let issues = try findings(identifiers: "12345^IHI^NPI")
+        #expect(issues.map(\.location) == [IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, componentIndex: 3)])
+        #expect(try findings(identifiers: "12345^IHI^VDI").isEmpty)
     }
 
     @Test("The printed pairs still hold")

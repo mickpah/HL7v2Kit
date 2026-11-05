@@ -4233,7 +4233,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "GIF", description: "Needs formal description"),
             HL7Table.Entry(code: "HTML", description: "Hypertext Markup Language"),
             HL7Table.Entry(code: "RTF", description: "Rich Te xt Format"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "Zxxx", description: "Private, non-standard subtype, defined by agreement between cooperating parties", regex: "^Z.*$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0292_v2_3 = HL7Table(

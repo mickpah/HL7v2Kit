@@ -4,7 +4,7 @@
   "name": "Subtype of Referenced Data",
   "kind": "HL7",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.3 Appendix A, HL7 Table 0291 - Subtype of Referenced Data",
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0291 - Subtype of Referenced Data. RP.4, CH02 sec 2.8.34.4 (p2-39), refers to the table 'for valid values'; sec 2.8.34.5 (p2-40): 'private, non-standard subtypes may be defined by agreement between cooperating parties. All private, non-standard subtypes should begin with the letter Z to distinguish them from the standard subtypes'",
   "entries": [
     {
       "code": "TIFF",
@@ -53,6 +53,13 @@
     {
       "code": "RTF",
       "description": "Rich Te xt Format"
+    }
+  ],
+  "patterns": [
+    {
+      "code": "Zxxx",
+      "description": "Private, non-standard subtype, defined by agreement between cooperating parties",
+      "regex": "^Z.*$"
     }
   ]
 }

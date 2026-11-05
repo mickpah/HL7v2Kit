@@ -25,10 +25,6 @@
     {
       "code": "AUSHICPR",
       "description": "Medicare Australia provider number"
-    },
-    {
-      "code": "IHI",
-      "description": "Accommodation carried from the M6 seed: Individual Healthcare Identifier; not printed in ADRM Table 0363 (p. 310)"
     }
   ]
 }

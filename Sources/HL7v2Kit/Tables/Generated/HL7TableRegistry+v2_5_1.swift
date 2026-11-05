@@ -5103,7 +5103,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "TIFF", description: "TIFF image data"),
             HL7Table.Entry(code: "x-hl7-cda-level-one", description: "HL7 Clinical Document Architecture Level One document"),
             HL7Table.Entry(code: "XML", description: "Extensible Markup Language (HL7 V2.3.1 and later)"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "Zxxx", description: "Private, non-standard subtype, defined by agreement between cooperating parties", regex: "^Z.*$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0292_v2_5_1 = HL7Table(

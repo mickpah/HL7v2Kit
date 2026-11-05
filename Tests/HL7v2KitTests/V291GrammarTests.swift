@@ -319,7 +319,7 @@ struct V291GrammarTests {
         #expect(version.boundsSequenceID)                           // CH02A 2A.2.70 p80
         #expect(version.definesTruncationEscape)                    // CH02 2.6.2 p23
         #expect(version.escapeSequenceSection == "2.6")             // CH02 2.6 p22, not v2.9's 2.7
-        #expect(version.appliesDeleteIndicator)                     // CH02 2.4.3.1 pp9-10, 2.9.4.1 p43
+        #expect(version.readsFirstFieldAsDeleteSegment)             // CH02 2.9.4.1 p43
         #expect(version.table0953OID == "2.16.840.1.113883.12.953") // CH02C p851
         // CH02A 2A.2.21 to 2A.2.80: the twelve sections with no numbered component row. SNM (2A.2.72) separates this era from v2.6's.
         #expect(Validator.primitiveTypes(version) == ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"])

@@ -79,6 +79,52 @@ struct CodeTableOpennessTests {
         #expect(try issues(wire, table: "0291").isEmpty)
     }
 
+    // MARK: - Table 0291 on v2.3 to v2.5.1: closed, and the print's Z subtypes admitted
+
+    /// RP.4 says "for valid values" (v2.3 CH02 2.8.34.4 p2-39, v2.3.1 2.8.36.4 p2-46, v2.4 2.9.37.4 p2-62, v2.5.1 CH02A 2.A.65.4
+    /// p2-208) and none of these prints R44's sentence, "All subtypes registered by IANA may be used". What they print next is
+    /// narrower: "private, non-standard subtypes may be defined by agreement between cooperating parties ... should begin with
+    /// the letter Z" (pp 2-40, 2-47, 2-62, 2-209). So the rows stand and a pattern row admits the reserved prefix (ruling R55).
+    @Test("Table 0291 stays closed on v2.3 to v2.5.1, and admits the print's Z subtypes through a pattern row",
+          arguments: [("2.3", Version.v2_3, 12), ("2.3.1", .v2_3_1, 14), ("2.4", .v2_4, 15), ("2.5.1", .v2_5_1, 15)])
+    func table0291ClosedEarlier(wireVersion: String, version: Version, rows: Int) throws {
+        let t = try #require(HL7TableRegistry.table("0291", version: version))
+        #expect(t.isClosed && !t.permitsLocalExtensions && t.entries.count == rows)
+        #expect(t.patterns.map(\.code) == ["Zxxx"] && !t.codes.contains("Zxxx"))
+        for (subtype, count) in [("pdf", 1), ("ZLOCAL", 0), ("JPEG", 0), ("zlocal", 1), ("LOCALZ", 1)] {
+            let wire = oru(obx5: "POINTER^^application^\(subtype)", type: "RP", wireVersion)
+            #expect(try issues(wire, table: "0291").count == count, "\(subtype)")
+        }
+    }
+
+    @Test("v2.3.1 to v2.5.1 reject ^application^pdf at ED.3 as well", arguments: ["2.3.1", "2.4", "2.5.1"])
+    func edSubtypeEarlier(wireVersion: String) throws {
+        let wire = oru(obx5: "^application^pdf^Base64^JVBERi0xLjQK", type: "ED", wireVersion)
+        #expect(try issues(wire, table: "0291").count == 1)
+    }
+
+    // MARK: - Table 0391 (RCP-7) on v2.6, v2.7.1 and v2.8.2: the chapters print names no row holds
+
+    /// R36, on each version's own print: chapters decide openness, Appendix A neither. CH04 prints `--- GUARANTOR begin` in OPL_O37
+    /// (v2.6 p4-22, v2.7.1 p28) and `--- DONOR begin` (v2.8.2 p156), and no row holds either name. RCP-7 reads "for values for
+    /// Segment Group" (5.5.6.7: v2.6 CH05 p41, v2.7.1 p47, v2.8.2 p46), and 5.11 calls the table "an itemization of the segment
+    /// group names" (v2.6 p106, v2.7.1 p108, v2.8.2 p104). The cost: a bad group name passes.
+    @Test("Table 0391 is open on v2.6, v2.7.1 and v2.8.2, and its rows stand",
+          arguments: [(Version.v2_6, 131, "GUARANTOR"), (.v2_7_1, 132, "GUARANTOR"), (.v2_8_2, 132, "DONOR")])
+    func table0391Open(version: Version, rows: Int, printedName: String) throws {
+        let t = try #require(HL7TableRegistry.table("0391", version: version))
+        #expect(t.permitsLocalExtensions && !t.isClosed && t.entries.count == rows)
+        #expect(!t.codes.contains(printedName))
+    }
+
+    @Test("RCP-7 with a printed group name draws no 0391; RCP-1 with X still draws 0091 on the same wire",
+          arguments: [("2.6", "GUARANTOR"), ("2.7", "GUARANTOR"), ("2.7.1", "GUARANTOR"), ("2.8", "DONOR"), ("2.8.2", "DONOR")])
+    func segmentGroupOnTheWire(wireVersion: String, group: String) throws {
+        let wire = TestWires.msh("QBP^Q11^QBP_Q11", wireVersion) + "RCP|X||||||\(group)\r"
+        #expect(try issues(wire, table: "0391").isEmpty)
+        #expect(try issues(wire, table: "0091").count == 1)
+    }
+
     // MARK: - Table 0104 (VID.1): closed on v2.9 and v2.9.1
 
     /// The owner's ruling. v2.9 CH02 2.14.9.12 p70 and CH02A 2A.3.83.1 p86, v2.9.1 CH02 2.13.9.12 p71 and CH02A 2A.2.83.1 p87:

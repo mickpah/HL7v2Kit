@@ -867,7 +867,8 @@ extension Profile {
                 // the value for <other qualifying info (ST)>" (p. 334): a
                 // PRD-7.2 outside the printed Table 0363 (p. 310) requires
                 // VDI. The printed authorities without a printed pair
-                // (AUSDVA, AUSNATA, AUSLINK, IHI) still skip.
+                // (AUSDVA, AUSNATA, AUSLINK) still skip. IHI, which p. 310
+                // does not print, is one of the others (owner's ruling).
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 2,

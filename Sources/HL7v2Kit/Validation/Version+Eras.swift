@@ -47,18 +47,17 @@ extension Version {
         }
     }
 
-    /// True where the validator reads the delete indicator on a data segment: a repetition holding
-    /// only `""` has no components to require, and a segment with `""` first and nothing else real has
-    /// no fields to read. v2.9 CH02 2.5.3.1 pp8-9 ("Populated with Delete Indicator") and 2.10.4.1 p42
-    /// ("delete data" indicated "for the first field (or all fields)"). v2.9.1 prints the same words at
-    /// CH02 2.4.3.1 pp9-10 and 2.9.4.1 p43.
-    ///
-    /// False on the earlier versions as a hold, not because their prints differ: v2.8.2 CH02 pp8, 38, 41
-    /// and v2.7.1 pp7, 36, 40 say the same under the term "Null". Turning them on moves their reports.
-    var appliesDeleteIndicator: Bool {
+    /// True where `""` in the first field, every other field empty or `""`, is itself the delete segment. v2.8.2 CH02
+    /// 2.10.4.1 p38, v2.9 p42, v2.9.1 2.9.4.1 p43: "a single segment with "delete data" indicated for the first field (or
+    /// all fields)". v2.6 p33 and v2.7.1 p36 lead with "in all fields" and give the first field "By agreement among
+    /// messaging partners or Conformance Profile"; pp34-35 and pp37-38 print `NK1|""|` and `IN1|""|""`. A validator cannot
+    /// see an agreement and cannot say none exists, and the wire says delete on its face, so it stays silent there too
+    /// (ruling R54). v2.3 2.23.4.1 p2-86, v2.3.1 pp2-92, 2-93, v2.4 2.15.4.1 p2-104 and v2.5.1 2.10.4.1 p2-36 print "for
+    /// all fields" and nothing on the first field.
+    var readsFirstFieldAsDeleteSegment: Bool {
         switch self {
-        case .v2_9, .v2_9_1: return true
-        case .v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_7, .v2_8_2, .v2_8: return false
+        case .v2_6, .v2_7_1, .v2_7, .v2_8_2, .v2_8, .v2_9, .v2_9_1: return true
+        case .v2_3, .v2_3_1, .v2_4, .v2_5_1: return false
         }
     }
 
