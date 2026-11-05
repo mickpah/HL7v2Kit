@@ -69,13 +69,19 @@ struct SpecExampleMessageTests {
         if ProcessInfo.processInfo.environment["SPEC_EXAMPLE_CONFORMANCE"] != nil { options.conformanceConditionSeverity = .error }
         // SPEC_EXAMPLE_STRUCTURE: report the message-structure findings as errors too (a measurement run).
         if ProcessInfo.processInfo.environment["SPEC_EXAMPLE_STRUCTURE"] != nil { options.messageStructureSeverity = .error }
+        let includeNotModelled = ProcessInfo.processInfo.environment["SPEC_EXAMPLE_NOT_MODELLED"] != nil
         for example in examples {
             let wire = example.segments.joined(separator: "\r") + "\r"
             guard let message = try? Parser(options: Self.parserOptions(for: example)).parse(wire) else {
                 lines.append("SPECEX\t\(example.source)\t\(example.index)\tPARSE\t-\t-")
                 continue
             }
-            for issue in Validator(options: options).validate(message).errors {
+            let found = Validator(options: options).validate(message).issues.filter {
+                // SPEC_EXAMPLE_NOT_MODELLED: report the structure check's "not modelled" notes too (a measurement run).
+                if case .messageStructureNotModelled = $0.code, includeNotModelled { return true }
+                return $0.severity == .error
+            }
+            for issue in found {
                 var line = "SPECEX\t\(example.source)\t\(example.index)\t\(issue.code)\t\(issue.location.pathDescription)\t\(issue.message)"
                 if isElisionOnly(issue.location.pathDescription, truncatedSegments: example.truncatedSegments) {
                     line += "\tELIDED"
@@ -119,5 +125,6 @@ struct SpecExampleHarnessTests {
         #expect(SpecExampleMessageTests.sourceVersion("v2.3.1/Hl7V231.pdf") == .v2_3_1)
         #expect(SpecExampleMessageTests.sourceVersion("v2.8.2/V282_CH02.pdf") == .v2_8_2)
         #expect(SpecExampleMessageTests.sourceVersion("v2.9/V29_CH02_Control_tc.pdf") == .v2_9)
+        #expect(SpecExampleMessageTests.sourceVersion("v2.9.1/V291_CH02_Control_2024SEP.pdf") == .v2_9_1)
     }
 }

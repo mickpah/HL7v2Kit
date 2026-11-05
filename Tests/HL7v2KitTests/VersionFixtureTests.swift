@@ -34,6 +34,7 @@ struct VersionFixtureTests {
         Fixture(file: "oru_r01_v282.hl7", version: .v2_8_2, messageCode: "ORU", triggerEvent: "R01"),
         Fixture(file: "oml_o21_v282.hl7", version: .v2_8_2, messageCode: "OML", triggerEvent: "O21"),
         Fixture(file: "adt_a01_v29.hl7", version: .v2_9, messageCode: "ADT", triggerEvent: "A01"),
+        Fixture(file: "adt_a01_v291.hl7", version: .v2_9_1, messageCode: "ADT", triggerEvent: "A01"),
     ]
 
     /// The ORU^R01 fixture of every version from v2.3 on that has one.
@@ -136,6 +137,15 @@ struct VersionFixtureTests {
         #expect(try Self.reports(wire, .conditionalFieldMissing, "DG1", 20) == false)
         let p12 = Self.setting(wire, "MSH", 9, to: "BAR^P12^BAR_P12")
         #expect(try Self.reports(p12, .conditionalFieldMissing, "DG1", 20))
+    }
+
+    @Test("GSP-3 is silent as shipped, fires when emptied under action A, and not under action S (CH03 3.4.19.3)")
+    func gsp3ConditionOnTheFixture() throws {
+        let wire = try Self.load("adt_a01_v291.hl7")
+        #expect(try Self.reports(wire, .conditionalFieldMissing, "GSP", 3) == false)
+        let emptied = Self.setting(wire, "GSP", 3, to: "")
+        #expect(try Self.reports(emptied, .conditionalFieldMissing, "GSP", 3))
+        #expect(try Self.reports(Self.setting(emptied, "GSP", 2, to: "S"), .conditionalFieldMissing, "GSP", 3) == false)
     }
 
     @Test("PRT one-of rule and PRT-7 prohibition on the wire (PRT-7 may only be valued with PRT-5)",
