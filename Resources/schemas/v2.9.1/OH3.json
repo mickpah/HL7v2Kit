@@ -1,0 +1,15 @@
+{
+  "segmentID": "OH3",
+  "version": "2.9.1",
+  "description": "Usual Work",
+  "fields": [
+    { "index": 1, "swiftName": "setID", "name": "Set ID", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0206"] },
+    { "index": 3, "swiftName": "occupation", "name": "Occupation", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0958"] },
+    { "index": 4, "swiftName": "industry", "name": "Industry", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0955"] },
+    { "index": 5, "swiftName": "usualOccupationDurationYears", "name": "Usual Occupation Duration (years)", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "startYear", "name": "Start year", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "enteredDate", "name": "Entered Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "workUniqueIdentifier", "name": "Work Unique Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" }
+  ]
+}

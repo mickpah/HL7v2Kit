@@ -57,6 +57,8 @@ struct VersionMatrixTests {
         VersionRow(wire: "^AUS&Australia&ISO3166_1", resolved: .v2_5_1, outcome: .unresolved("")),
         VersionRow(wire: "2.9", resolved: .v2_9, outcome: .quiet),
         VersionRow(wire: "2.9^AUS", resolved: .v2_9, outcome: .quiet),
+        VersionRow(wire: "2.9.1", resolved: .v2_9_1, outcome: .quiet),
+        VersionRow(wire: "2.9.1^AUS", resolved: .v2_9_1, outcome: .quiet),
         VersionRow(wire: "2.4~2.5", resolved: .v2_4, outcome: .repeated),
     ]
 

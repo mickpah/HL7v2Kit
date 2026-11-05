@@ -3,8 +3,8 @@
   "version": "2.9.1",
   "name": "Version ID",
   "kind": "HL7",
-  "permitsLocalExtensions": true,
-  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0104 - Version ID (footer pages 96 and 97; the page prints 2.9.1 as 'Draft 2.9.1'). CH02 sec 2.13.9.12 MSH-12 (p71) and CH02A sec 2A.2.83.1 VID.1 (p87) both refer to the table 'for valid values'; the table is left open on the cross-version reading recorded for 0104 on v2.3 to v2.9 in this file ('MSH-12 may carry a locally agreed version identifier')",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0104 - Version ID (footer pages 96 and 97; the page prints 2.9.1 as 'Draft 2.9.1'). CH02 sec 2.13.9.12 MSH-12 (p71) and CH02A sec 2A.2.83.1 VID.1 (p87) both refer to the table 'for valid values'",
   "entries": [
     {
       "code": "2.0",

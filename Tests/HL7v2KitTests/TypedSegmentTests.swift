@@ -2198,4 +2198,41 @@ struct TypedSegmentTests {
         #expect(oh4.combatZoneStartDate == message["OH4-3"] && oh4.combatZoneStartDate == "20100101")
         #expect(oh4.setID == message["OH4-1"])
     }
+
+    // 2.9.1's three new segments, CH03 3.4.19 to 3.4.21 pp 221 to 228. The wires hold the print's own values (3.4.19.7 p223).
+    private static let v291MSH = "MSH|^~\\&|A|B|C|D|20240101||ADT^A01^ADT_A01|1|P|2.9.1\r"
+
+    @Test("v2.9.1 GSP: path and typed accessor agree")
+    func v291PersonGenderAndSex() throws {
+        let (message, gsp) = try hydratedMessage(GSP.self, from: Self.v291MSH + "GSP|1|S||76691-5^Gender identity^LN|446151000124109^Identifies as male gender^SCT|20210101\r")
+        #expect(gsp.setID == message["GSP-1"] && gsp.setID == "1")
+        #expect(gsp.actionCode == message["GSP-2"] && gsp.actionCode == "S")
+        #expect(gsp.sogiConcept?.identifier == message["GSP-4.1"] && gsp.sogiConcept?.identifier == "76691-5")
+        #expect(gsp.sogiConceptValue?.identifier == message["GSP-5.1"])
+    }
+
+    @Test("v2.9.1 GSR: path and typed accessor agree")
+    func v291RecordedGenderAndSex() throws {
+        let (message, gsr) = try hydratedMessage(GSR.self, from: Self.v291MSH + "GSR|1|S||F^Female^HL70001|||||20210101\r")
+        #expect(gsr.recordedGenderOrSex?.identifier == message["GSR-4.1"] && gsr.recordedGenderOrSex?.identifier == "F")
+        #expect(gsr.setID == message["GSR-1"])
+    }
+
+    @Test("v2.9.1 GSC: path and typed accessor agree, and GSC-6 repeats")
+    func v291SexParameter() throws {
+        let (message, gsc) = try hydratedMessage(GSC.self, from: Self.v291MSH + "GSC|1|S||specified^Specified^L||PR1^1~ORC^1\r")
+        #expect(gsc.sexParameterForClinicalUse?.identifier == message["GSC-4.1"])
+        #expect(gsc.contextAll.count == 2)
+        #expect(gsc.context != nil)
+        #expect(gsc.actionCode == message["GSC-2"])
+    }
+
+    @Test("v2.9.1's added fields read the same through the path and the accessor: IN1-56, TXA-29 to 31")
+    func v291AddedFields() throws {
+        let (message, txa) = try hydratedMessage(TXA.self, from: Self.v291MSH + "TXA|1" + String(repeating: "|", count: 28) + "11^Report^L|D1^Colonoscopy^L~D2^Appendectomy^L|F1^NS\r")
+        #expect(txa.documentClassAll.count == 1 && txa.documentEventAll.count == 2)
+        #expect(txa.folderInstanceAssociationAll.first?.entityIdentifier == message["TXA-31.1"])
+        let (path, in1) = try hydratedMessage(IN1.self, from: Self.v291MSH + "IN1|1" + String(repeating: "|", count: 55) + "B123^^^AUTH^MA\r")
+        #expect(in1.subsidizedHealthProgramBeneficiaryIdentifier?.id == path["IN1-56.1"])
+    }
 }

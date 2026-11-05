@@ -11,7 +11,7 @@ struct VersionKeyedListTests {
     /// Validator+GroupSpans.swift `formerlyGated`). A missing row fails.
     static let formerlyGated: [Version: Bool] = [
         .v2_3: false, .v2_3_1: false, .v2_4: false, .v2_5_1: true, .v2_6: true,
-        .v2_7_1: true, .v2_8_2: true, .v2_9: true,
+        .v2_7_1: true, .v2_8_2: true, .v2_9: true, .v2_9_1: true,
     ]
 
     @Test("Every modelled version has a formerlyGated decision, and the list agrees")
@@ -22,9 +22,10 @@ struct VersionKeyedListTests {
         }
     }
 
-    @Test("ORC-8 pairs with OBR-54 on every modelled version from v2.7.1")
-    func parentOrderPair() throws {
-        let wire = "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01^ORU_R01|MSG1|P|2.9\r"
+    // V291 CH04 4.5.3.54 p85 and CH07 7.4.1.54 p60: "ORC-8 and OBR-54 must carry the same value".
+    @Test("ORC-8 pairs with OBR-54 on v2.9 and v2.9.1", arguments: ["2.9", "2.9.1"])
+    func parentOrderPair(version: String) throws {
+        let wire = "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01^ORU_R01|MSG1|P|\(version)\r"
             + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
             + "ORC|RE|P1|F1|||||PARENT1\r"
             + "OBR|1|P1|F1|93000^EKG^C4" + String(repeating: "|", count: 50) + "OTHER\r"
@@ -53,9 +54,10 @@ struct VersionKeyedListTests {
         #expect(issues.contains { Self.isPair($0, obrField: 16) })
     }
 
-    @Test("ORC-12 is withdrawn on v2.9, so it no longer pairs with OBR-16")
-    func withdrawnOrderingProvider() throws {
-        let issues = Validator().validate(try Parser().parse(Self.orderingProviderWire(version: "2.9"))).issues
+    // V291 CH04 4.5.1.12 p62 and 4.5.3.16 p77: "withdrawn and removed from the standard as of v 2.9".
+    @Test("ORC-12 is withdrawn on v2.9 and v2.9.1, so it no longer pairs with OBR-16", arguments: ["2.9", "2.9.1"])
+    func withdrawnOrderingProvider(version: String) throws {
+        let issues = Validator().validate(try Parser().parse(Self.orderingProviderWire(version: version))).issues
         #expect(!issues.contains { Self.isPair($0, obrField: 16) })
         // The withdrawn field itself is still reported, as fieldNotSupported, at the same place.
         #expect(issues.contains { $0.location.segmentID == "OBR" && $0.location.fieldIndex == 16 })

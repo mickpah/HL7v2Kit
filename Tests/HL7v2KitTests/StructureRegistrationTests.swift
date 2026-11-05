@@ -43,7 +43,7 @@ struct StructureRegistrationTests {
         // register section E); they are pinned so a change is seen.
         let expected: [(Version, Int)] = [
             (.v2_3, 8), (.v2_3_1, 21), (.v2_4, 22), (.v2_5_1, 20),
-            (.v2_6, 10), (.v2_7_1, 45), (.v2_8_2, 57), (.v2_9, 74),
+            (.v2_6, 10), (.v2_7_1, 45), (.v2_8_2, 57), (.v2_9, 74), (.v2_9_1, 0),
         ]
         for (version, count) in expected {
             let list = MessageStructureTable.registrations(for: version)

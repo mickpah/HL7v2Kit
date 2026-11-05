@@ -2,6 +2,7 @@
 // HL7 v2.9.1 (ANSI/HL7 V2.9.1-2024) through the ADR-015 pipeline. Each pin is a value the
 // September 2024 print states. No XSD is held for this version.
 
+import Foundation
 import Testing
 @testable import HL7v2Kit
 
@@ -153,8 +154,8 @@ struct V291GrammarTests {
             let table = try #require(tables[number])
             #expect(table.kind == .userDefined && table.permitsLocalExtensions, "\(number)")
         }
-        // Not the print's words: CH02 p71 and CH02A p87 say "for valid values". A reading carried from v2.3 to v2.8.2.
-        #expect(try #require(tables["0104"]).permitsLocalExtensions)
+        // CH02 p71 and CH02A p87 say "for valid values", so closed, by the owner's ruling. v2.3 to v2.8.2 stay open.
+        #expect(try #require(tables["0104"]).isClosed)
         #expect(try #require(tables["0391"]).entries.count == 132)      // Chapter 2C's rows stand, pp 389-393
         #expect(try #require(tables["0617"]).kind == .userDefined)   // XAD.18, CH02A p 92
         // 0203 NNxxx names a family of codes (p 192).
@@ -214,5 +215,114 @@ struct V291GrammarTests {
         let sex = try #require(try component("RFR", 2))                 // 2A.2.63 p 72
         #expect(sex.name == "Sex")
         #expect(sex.tables == ["0001", "0828"])
+    }
+
+    private var grammar: [String: SegmentGrammar] { SegmentGrammarTable.v2_9_1 }
+
+    @Test("2.9.1 segments: v2.9's 187 and GSP, GSR, GSC (CH03 3.4.19 to 3.4.21)")
+    func segmentInventory() {
+        #expect(grammar.count == 190)
+        for id in ["GSP", "GSR", "GSC"] { #expect(grammar[id] != nil, "\(id)") }
+        #expect(SegmentGrammarTable.v2_9["GSP"] == nil)
+    }
+
+    @Test("2.9.1 adds IN1-56 and TXA-29 to 31, and prints OH2-5 correctly")
+    func fieldGrowth() {
+        #expect(grammar["IN1"]?.field(56) != nil)
+        #expect(SegmentGrammarTable.v2_9["IN1"]?.field(56) == nil)
+        for index in [29, 30, 31] { #expect(grammar["TXA"]?.field(index) != nil, "TXA-\(index)") }
+        #expect(grammar["OH2"]?.field(5)?.name == "Industry")
+    }
+
+    @Test("A 2.9.1 message parses as v2.9.1 and validates against its own grammar")
+    func dispatch() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9.1\r"
+            + "EVN||20240301120000\rPID|1||SYN-0291^^^TESTFAC^MR||Testpatient^Sample||19800101|M\rPV1|1|I\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_9_1)
+        #expect(message.version.grammarVersion == .v2_9_1)
+        let codes = Validator(options: .strict).validate(message).issues.map(\.code)
+        #expect(!codes.contains(.segmentNotInVersionGrammar))
+        #expect(!codes.contains { if case .versionNotRecognised = $0 { return true } else { return false } })
+    }
+
+    @Test("MSH-26 is required when MSH-27 or MSH-28 is valued (CH02 2.13.9.26)")
+    func securityClassificationCondition() {
+        #expect(grammar["MSH"]?.field(26)?.condition == "MSH-27 populated OR MSH-28 populated")
+    }
+
+    @Test("2.9.1 prints no ROL requirement: - reads as B")
+    func rolOptionality() throws {
+        #expect(try #require(grammar["ROL"]).fields.allSatisfy { $0.optionality == .backwardCompat })
+    }
+
+    @Test("2.9.1 fixes MSH-6's repetition, and prints the action code as 1..1")
+    func cellsThatDifferFromV29() throws {
+        // CH01 p5, "Fix repetition of MSH-6"; CH02 MSH table p68 prints no Y. v2.9's p67 prints Y.
+        #expect(grammar["MSH"]?.field(6)?.repeatability == .single)
+        #expect(SegmentGrammarTable.v2_9["MSH"]?.field(6)?.repeatability == .multiple)
+        // CH01 p5, "Address technical corrections for the OH* segments"; CH03 p220 prints 1..1 and 0206. v2.9's p211 prints 2..2 and no table.
+        #expect(grammar["OH4"]?.field(2)?.length == "1..1")
+        #expect(grammar["OH4"]?.field(2)?.table == "0206")
+        #expect(SegmentGrammarTable.v2_9["OH4"]?.field(2)?.table == nil)
+        // Others with an Action Code: CH04 pp 72, 142, 151, 186, 57; CH07 pp 62, 80, 122.
+        for (id, index) in [("OBR", 55), ("BPX", 22), ("BTX", 21), ("BUI", 13), ("OBX", 31), ("SPM", 35), ("ORC", 35), ("CSR", 17)] {
+            #expect(grammar[id]?.field(index)?.length == "1..1", "\(id)-\(index)")
+        }
+        #expect(grammar["ARV"]?.field(2)?.length == "1..1")     // CH03 p208; v2.9's p199 prints none
+        #expect(grammar["IAM"]?.field(6)?.length == "1..1")     // CH03 p180
+        // CH08 pp 31 and 32: a corrected name, and one the print sets with its suffix in both the table and the heading.
+        #expect(grammar["OM1"]?.field(53)?.name == "Prior Results Instructions")
+        #expect(grammar["OM1"]?.field(57)?.name == "Typical Turn-Around Time – (2)")
+        #expect(grammar["IN3"]?.field(30)?.optionality == .conditional)     // CH06 p122, C(RE/ over X)
+        // Not a difference, read for itself: CH02 pp 68 and 69 print 28 MSH fields, and 4..5 at MSH-2, BHS-2 (p55) and FHS-2 (p63).
+        #expect(grammar["MSH"]?.fields.count == 28)
+        for id in ["MSH", "BHS", "FHS"] { #expect(grammar[id]?.field(2)?.length == "4..5", "\(id)-2") }
+    }
+
+    /// A CWE carries no `table` in the grammar, so the binding is read from the schema.
+    private func tables(_ segment: String, _ index: Int) throws -> [String] {
+        let url = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Resources/schemas/v2.9.1/\(segment).json")
+        let schema = try #require(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
+        let fields = try #require(schema["fields"] as? [[String: Any]])
+        let field = try #require(fields.first { $0["index"] as? Int == index })
+        return field["tables"] as? [String] ?? []
+    }
+
+    @Test("Bindings the 2.9.1 page prints, each on its own row")
+    func tableBindings() throws {
+        #expect(try tables("GSP", 5) == ["0821", "0822", "0823"])   // CH03 p221, the cell runs over three lines; 3.4.19.5 p222
+        #expect(try tables("GSR", 4) == ["0001"])                   // CH03 p224
+        #expect(try tables("GSC", 4) == ["0828"])                   // CH03 p227
+        #expect(try tables("OM1", 50) == ["0661"])                  // CH08 p31; 8.8.9.50 p45; v2.9 prints 0446
+        #expect(try tables("OM1", 58) == ["0001", "0828"])          // CH08 p32, the cell runs over two lines; 8.8.9.58 p47
+        #expect(try tables("PRT", 24) == [])                        // CH07 p90; v2.9 prints 0328
+        #expect(try tables("RXE", 2) == ["0292", "0479"])           // CH04A p59, `0292/0` over `479`; 4A.4.4.2
+        #expect(try tables("RXA", 17) == ["0227"])                  // CH04A p122 and 4A.8.1.2; the main table p95 prints none
+        #expect(try tables("TXA", 29) == ["0832"] && tables("TXA", 30) == ["0833"])  // CH09 p32
+    }
+
+    @Test("ADD and RDT are hand-authored from their 1-n rows (CH02 2.13.1 p55, CH05 5.4.8 p56)")
+    func variableColumnSegments() {
+        #expect(grammar["ADD"]?.field(1)?.variableColumns == true)
+        #expect(grammar["RDT"]?.fields.count == 1)
+        #expect(grammar["RDT"]?.field(1)?.variableColumns == true)
+    }
+
+    @Test("Each era read from the 2.9.1 print")
+    func eras() {
+        let version = Version.v2_9_1
+        #expect(!version.printsMaximumLength)                       // CH02 2.4.5.0 p13, Normative Length
+        #expect(!version.printsLengthSymbols)                       // CH02 2.4.5 defines neither symbol
+        #expect(version.boundsSequenceID)                           // CH02A 2A.2.70 p80
+        #expect(version.definesTruncationEscape)                    // CH02 2.6.2 p23
+        #expect(version.escapeSequenceSection == "2.6")             // CH02 2.6 p22, not v2.9's 2.7
+        #expect(version.appliesDeleteIndicator)                     // CH02 2.4.3.1 pp9-10, 2.9.4.1 p43
+        #expect(version.table0953OID == "2.16.840.1.113883.12.953") // CH02C p851
+        // CH02A 2A.2.21 to 2A.2.80: the twelve sections with no numbered component row. SNM (2A.2.72) separates this era from v2.6's.
+        #expect(Validator.primitiveTypes(version) == ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"])
+        #expect(Version.v2_9.table0953OID == nil)
     }
 }

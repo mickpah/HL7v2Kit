@@ -74,10 +74,10 @@ extension Validator {
                           structures: [String: MessageStructure]? = nil,
                           complete: Set<Version>? = nil,
                           gaps: [String: NotModelledStructure]? = nil) -> (structure: MessageStructure?, issues: [ValidationIssue]) {
-        let code = message.messageCode ?? ""
-        let event = message.triggerEvent ?? ""
+        let code = message.version.comparisonValue(message.messageCode ?? "")
+        let event = message.version.comparisonValue(message.triggerEvent ?? "")
         let trigger = event.isEmpty ? code : "\(code)^\(event)"
-        let printedID = message.messageStructure ?? ""
+        let printedID = message.version.comparisonValue(message.messageStructure ?? "")
         let name = printedID.isEmpty ? trigger : printedID
 
         let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
@@ -141,7 +141,7 @@ extension Validator {
         }
         guard let structure = table[declared] else {
             // An ID that matches a loaded structure once trimmed and
-            // upper-cased is named as such; IDs still match exactly.
+            // upper-cased is named as such; IDs still match exactly, but for the trailing blanks a version ignores.
             let near = String(declared.drop(while: \.isWhitespace).reversed()
                 .drop(while: \.isWhitespace).reversed()).uppercased()
             let isNear = near != declared && table[near] != nil

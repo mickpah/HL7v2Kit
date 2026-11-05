@@ -64,9 +64,9 @@ struct EscapeSequenceCheckTests {
         #expect(issue.message == "Escape sequence \"\(row.sequence)\" is not defined by HL7 v2.5.1 (section 2.7)")
     }
 
-    @Test("\\P\\ is defined from v2.7.1 (v2.7.1 section 2.5.5.2; v2.8.2 and v2.9 sections 2.7.1 and 2.7.2)",
+    @Test("\\P\\ is defined from v2.7.1 (v2.7.1 section 2.5.5.2; v2.8.2 and v2.9 sections 2.7.1 and 2.7.2; v2.9.1 sections 2.6.1 and 2.6.2)",
           arguments: [("2.3", true), ("2.5.1", true), ("2.6", true), ("2.7", false), ("2.7.1", false),
-                      ("2.8", false), ("2.8.2", false), ("2.9", false)])
+                      ("2.8", false), ("2.8.2", false), ("2.9", false), ("2.9.1", false)])
     func truncationEscape(_ row: (version: String, warns: Bool)) throws {
         #expect(try !Self.issues([#"NTE|1||abcde\P\"#], version: row.version).isEmpty == row.warns)
     }
@@ -81,7 +81,7 @@ struct EscapeSequenceCheckTests {
     @Test("The message cites the version's own section", arguments: [
         ("2.3", "2.3", "2.9"), ("2.3.1", "2.3.1", "2.9"), ("2.4", "2.4", "2.10"), ("2.5.1", "2.5.1", "2.7"),
         ("2.6", "2.6", "2.7"), ("2.7.1", "2.7.1", "2.7"), ("2.7", "2.7.1", "2.7"), ("2.8.2", "2.8.2", "2.7"),
-        ("2.9", "2.9", "2.7"),
+        ("2.9", "2.9", "2.7"), ("2.9.1", "2.9.1", "2.6"),   // V291 CH02 section 2.6, p22
     ])
     func sectionPerVersion(_ row: (declared: String, validatedAs: String, section: String)) throws {
         let issues = try Self.issues([#"NTE|1||\Q\"#], version: row.declared)

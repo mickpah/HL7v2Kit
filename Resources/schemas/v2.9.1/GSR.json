@@ -1,0 +1,17 @@
+{
+  "segmentID": "GSR",
+  "version": "2.9.1",
+  "description": "Recorded Gender and Sex",
+  "fields": [
+    { "index": 1, "swiftName": "setID", "name": "Set ID", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "R", "repeatability": "1", "tables": ["0206"] },
+    { "index": 3, "swiftName": "gsrInstanceIdentifier", "name": "GSR Instance Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "GSR-2 not in (S)" },
+    { "index": 4, "swiftName": "recordedGenderOrSex", "name": "Recorded Gender or Sex", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0001"] },
+    { "index": 5, "swiftName": "sourceDocumentFieldLabel", "name": "Source Document Field Label", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0824"] },
+    { "index": 6, "swiftName": "sourceDocumentTypeForRecordedSexOrGender", "name": "Source Document Type for Recorded Sex or Gender", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0826"] },
+    { "index": 7, "swiftName": "sourceDocumentJurisdictionForRecordedSexOrGender", "name": "Source Document Jurisdiction for Recorded Sex or Gender", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0827"] },
+    { "index": 8, "swiftName": "acquisitionDate", "name": "Acquisition Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "validityPeriod", "name": "Validity Period", "dataType": "DR", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "comment", "name": "Comment", "dataType": "TX", "optionality": "O", "repeatability": "1" }
+  ]
+}

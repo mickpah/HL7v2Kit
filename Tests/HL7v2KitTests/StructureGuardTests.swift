@@ -221,7 +221,7 @@ struct StructureGuardTests {
 
     @Test("Every grammar version is guarded, and the tables are not empty")
     func notEmpty() {
-        #expect(Self.grammarVersions.count == 8)
+        #expect(Self.grammarVersions.count == 9)
         #expect(!Self.keys.isEmpty)
     }
 }

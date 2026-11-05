@@ -172,8 +172,8 @@ struct RepeatingFieldAccessorTests {
         // later element names (fields past the base maximum, positions the base reserves,
         // and renames whose Swift type differs), plus 28 at v2.9 (the repeating fields of the seven new
         // segments and the fields v2.9 first repeats: ADJ, ARV, BHS, FHS, FT1, MSH, NTE, OBR, OBX, ORC, PRT,
-        // VND). Plus 32 `<name>As<T>All`.
-        #expect(total == 625)
+        // VND), plus 5 at v2.9.1 (GSC-6, GSC-7, TXA-29 to 31). Plus 32 `<name>As<T>All`.
+        #expect(total == 630)
         #expect(asTotal == 32)
         let pid = try String(contentsOf: generated.appendingPathComponent("PID.swift"), encoding: .utf8)
         #expect(pid.contains("Repeating field: this accessor reads the first repetition; `patientIdentifierListAll` returns every repetition."))

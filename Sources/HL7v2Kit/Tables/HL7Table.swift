@@ -73,7 +73,7 @@ public struct HL7Table: Sendable, Equatable, Hashable {
     public let kind: Kind
     /// `true` when the spec text explicitly permits values outside the
     /// printed rows (0003 / 0076 Z-codes, 0396 `99zzz` local coding
-    /// systems, 0399 ISO 3166 by reference, 0104 local version IDs).
+    /// systems, 0399 ISO 3166 by reference, 0104 on v2.3 to v2.8.2).
     /// Such a table is never enforced as a closed set.
     public let permitsLocalExtensions: Bool
     /// Value rows in printed order. Pattern rows are not here; see ``patterns``.

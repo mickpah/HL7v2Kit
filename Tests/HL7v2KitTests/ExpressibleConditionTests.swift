@@ -7,7 +7,7 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
-private let allSixVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"]
+private let allSixVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"]
 
 @Suite("Expressible conditions (P4)")
 struct ExpressibleConditionTests {
@@ -39,7 +39,7 @@ struct ExpressibleConditionTests {
         #expect(try missing(silent, "ORC", 26).isEmpty, "v\(version)")
     }
 
-    @Test("PV2-45 is required when PV2-50 is valued", arguments: ["2.6", "2.7.1", "2.8.2", "2.9"])
+    @Test("PV2-45 is required when PV2-50 is valued", arguments: ["2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"])
     func pv245(version: String) throws {
         let fires = TestWires.wire("ADT^A01^ADT_A01", version, TestWires.segment("PV2", [50: "20260101"]))
         #expect(try missing(fires, "PV2", 45).count == 1, "v\(version)")
@@ -47,7 +47,7 @@ struct ExpressibleConditionTests {
         #expect(try missing(silent, "PV2", 45).isEmpty, "v\(version)")
     }
 
-    @Test("OBR-22 is required whenever OBR-25 is valued", arguments: ["2.8.2", "2.9"])
+    @Test("OBR-22 is required whenever OBR-25 is valued", arguments: ["2.8.2", "2.9", "2.9.1"])
     func obr22(version: String) throws {
         func oru(_ reported: String) -> String {
             TestWires.wire("ORU^R01^ORU_R01", version, "ORC|RE|PON1|FON1",
@@ -73,7 +73,7 @@ struct ExpressibleConditionTests {
 
     /// An order message for `version` (ORM is withdrawn on v2.8.2).
     private func orderType(_ version: String) -> String {
-        ["2.8.2", "2.9"].contains(version) ? "OML^O21^OML_O21" : "ORM^O01"
+        ["2.8.2", "2.9", "2.9.1"].contains(version) ? "OML^O21^OML_O21" : "ORM^O01"
     }
 
     /// OBR with the report fields X-C07 and P4-6 require, plus `ids`.
@@ -119,7 +119,7 @@ struct ExpressibleConditionTests {
     @Test("Send Number with no id: exempt from v2.8.2", arguments: allSixVersions)
     func sendNumberWithNoID(version: String) throws {
         let wire = TestWires.wire(orderType(version), version, "ORC|SN", obr([:]))
-        let expected: [String] = ["2.8.2", "2.9"].contains(version) ? [] : ["OBR-2", "OBR-3", "ORC-2", "ORC-3"]
+        let expected: [String] = ["2.8.2", "2.9", "2.9.1"].contains(version) ? [] : ["OBR-2", "OBR-3", "ORC-2", "ORC-3"]
         #expect(try idHits(wire) == expected, "v\(version)")
     }
 
@@ -136,16 +136,16 @@ struct ExpressibleConditionTests {
         let oru = { (ids: [Int: String]) in TestWires.wire("ORU^R01^ORU_R01", version, self.obr(ids)) }
         // Placer may be blank when the filler initiates the order: v2.3 and
         // v2.3.1 CH07 §7.3.1.0, v2.4 CH07 §7.4.1.0 (dropped from v2.5.1).
-        let placerOptional = ["2.3", "2.3.1", "2.4", "2.8.2", "2.9"].contains(version)
+        let placerOptional = ["2.3", "2.3.1", "2.4", "2.8.2", "2.9", "2.9.1"].contains(version)
         #expect(try idHits(oru([3: "FON1"])) == (placerOptional ? [] : ["OBR-2"]), "v\(version) filler only")
         // v2.3 to v2.6: "the identifying filler order number must be present
         // in the OBR segments"; v2.8.2 and v2.9: either id suffices.
-        #expect(try idHits(oru([2: "PON1"])) == (["2.8.2", "2.9"].contains(version) ? [] : ["OBR-3"]), "v\(version) placer only")
+        #expect(try idHits(oru([2: "PON1"])) == (["2.8.2", "2.9", "2.9.1"].contains(version) ? [] : ["OBR-3"]), "v\(version) placer only")
         #expect(try idHits(oru([:])) == ["OBR-2", "OBR-3"], "v\(version) no id")
     }
 
     @Test("OUL R22: an ORC after its OBR is not read as an ORC with no OBR",
-          arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"])
+          arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"])
     func oulR22TrailingORC(version: String) throws {
         let wire = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
                                   obr([2: "PON1", 3: "FON1"]), "ORC|SC")
@@ -154,7 +154,7 @@ struct ExpressibleConditionTests {
 
     /// OPL^O37 ORDER_PRIOR prints `{ OBR [ORC] ... }` (v2.6 and v2.8.2 CH04):
     /// the prior-result ORC follows the OBR that carries the numbers.
-    @Test("OPL O37: a prior-result ORC after its OBR stays silent", arguments: ["2.6", "2.7.1", "2.8.2", "2.9"])
+    @Test("OPL O37: a prior-result ORC after its OBR stays silent", arguments: ["2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"])
     func oplPriorResultORC(version: String) throws {
         // Two prior results: the first is a CH child whose parent is in
         // OBR-29 (ORC-8 empty, per the XOR); the second OBR would pair
@@ -171,7 +171,7 @@ struct ExpressibleConditionTests {
     /// only in its ORC. The ORC-delimited group would pair order 1's ORC
     /// with order 2's OBR, and order 2's OBR with order 1's ORC.
     @Test("OUL R22 with two orders does not cross-resolve peers",
-          arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"])
+          arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"])
     func oulR22TwoOrders(version: String) throws {
         let wire = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
                                   obr([2: "PON1", 3: "FON1", 29: "PAR1&PL"]), "ORC|CH",
@@ -181,7 +181,7 @@ struct ExpressibleConditionTests {
         #expect(try missing(wire, "OBR", 29).isEmpty, "v\(version) OBR-29")
     }
 
-    @Test("A Send Number ORC with no OBR is exempt", arguments: ["2.8.2", "2.9"])
+    @Test("A Send Number ORC with no OBR is exempt", arguments: ["2.8.2", "2.9", "2.9.1"])
     func sendNumberWithoutOBR(version: String) throws {
         let wire = TestWires.wire("OML^O21^OML_O21", version, "ORC|SN")
         #expect(try idHits(wire).isEmpty)
@@ -212,7 +212,7 @@ struct ExpressibleConditionTests {
 
     // MARK: - PV2 trigger events (V231-C11, V251-C03)
 
-    @Test("PV2-1 is required for cancel pending transfer (A26)", arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"])
+    @Test("PV2-1 is required for cancel pending transfer (A26)", arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"])
     func pv21(version: String) throws {
         let pv2 = TestWires.segment("PV2", [3: "RSN^Reason"])
         #expect(try missing(TestWires.wire("ADT^A26^ADT_A21", version, pv2), "PV2", 1).count == 1, "v\(version)")
@@ -223,7 +223,7 @@ struct ExpressibleConditionTests {
         #expect(try missing(TestWires.wire("ADT^A27^ADT_A21", version, pv2), "PV2", 1).isEmpty, "v\(version) A27")
     }
 
-    @Test("PV2-47 is required for A21 (patient goes on LOA)", arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9"])
+    @Test("PV2-47 is required for A21 (patient goes on LOA)", arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"])
     func pv247(version: String) throws {
         let pv2 = TestWires.segment("PV2", [3: "RSN^Reason"])
         #expect(try missing(TestWires.wire("ADT^A21^ADT_A21", version, pv2), "PV2", 47).count == 1, "v\(version)")

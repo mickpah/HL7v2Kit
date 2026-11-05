@@ -1,0 +1,9 @@
+{
+  "segmentID": "SGT",
+  "version": "2.9.1",
+  "description": "Segment Group Trailer",
+  "fields": [
+    { "index": 1, "swiftName": "setIdSgt", "name": "Set ID – SGT", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentGroupName", "name": "Segment Group Name", "dataType": "ST", "length": "60#", "optionality": "O", "repeatability": "1" }
+  ]
+}

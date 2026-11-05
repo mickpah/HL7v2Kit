@@ -3,8 +3,8 @@
   "version": "2.9.1",
   "name": "Subtype of Referenced Data",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0291 - Subtype of Referenced Data",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.9.1 Chapter 2C, HL7 Table 0291 - Subtype of Referenced Data, footer pages 289 and 290: 'it was recommended that the IANA media types be used instead of this short list of HL7-defined codes'; CH02A sec 2A.2.66.4 RP.4 (p76): 'All subtypes registered by IANA may be used by implementation agreement between cooperating parties. In addition, private, non-standard subtypes may be defined by agreement between cooperating parties', so the printed rows are not a closed set",
   "entries": [
     {
       "code": "BASIC",

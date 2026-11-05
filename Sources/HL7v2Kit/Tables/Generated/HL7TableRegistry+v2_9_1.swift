@@ -2216,7 +2216,7 @@ extension HL7TableRegistry {
         number: "0104",
         name: "Version ID",
         kind: .hl7,
-        permitsLocalExtensions: true,
+        permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "2.0", description: "Release 2.0"),
             HL7Table.Entry(code: "2.0D", description: "Demo 2.0"),
@@ -4991,7 +4991,7 @@ extension HL7TableRegistry {
         number: "0291",
         name: "Subtype of Referenced Data",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "BASIC", description: "ISDN PCM audio data"),
             HL7Table.Entry(code: "DICOM", description: "Digital Imaging and Communications in Medicine"),

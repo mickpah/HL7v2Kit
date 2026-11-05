@@ -1,0 +1,25 @@
+{
+  "segmentID": "OH2",
+  "version": "2.9.1",
+  "description": "Past or Present Job",
+  "fields": [
+    { "index": 1, "swiftName": "setID", "name": "Set ID", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0206"] },
+    { "index": 3, "swiftName": "enteredDate", "name": "Entered Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "occupation", "name": "Occupation", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0958"] },
+    { "index": 5, "swiftName": "industry", "name": "Industry", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0955"] },
+    { "index": 6, "swiftName": "workClassification", "name": "Work Classification", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0959"] },
+    { "index": 7, "swiftName": "jobStartDate", "name": "Job Start Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "jobEndDate", "name": "Job End Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "workSchedule", "name": "Work Schedule", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0954"] },
+    { "index": 10, "swiftName": "averageHoursWorkedPerDay", "name": "Average Hours worked per Day", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "averageDaysWorkedPerWeek", "name": "Average Days Worked per Week", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "employerOrganization", "name": "Employer Organization", "dataType": "XON", "length": "48", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "employerAddress", "name": "Employer Address", "dataType": "XAD", "length": "106", "optionality": "O", "repeatability": "*" },
+    { "index": 14, "swiftName": "supervisoryLevel", "name": "Supervisory Level", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0956"] },
+    { "index": 15, "swiftName": "jobDuties", "name": "Job Duties", "dataType": "ST", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 16, "swiftName": "occupationalHazards", "name": "Occupational Hazards", "dataType": "FT", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 17, "swiftName": "jobUniqueIdentifier", "name": "Job Unique Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "currentJobIndicator", "name": "Current Job Indicator", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
+  ]
+}

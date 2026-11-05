@@ -92,7 +92,7 @@ struct V29DeleteIndicatorTests {
     }
 
     @Test("A control segment with \"\" first is not a delete segment",
-          arguments: [("MSA", 2), ("ERR", 3), ("SFT", 2), ("UAC", 2)])
+          arguments: [("MSA", 2), ("ERR", 3), ("SFT", 2), ("UAC", 2), ("QID", 2), ("RDF", 2)])
     func controlSegmentIsNotADeleteSegment(id: String, requiredField: Int) throws {
         let found = try issues("2.9", "\(id)|\(delete)").filter {
             $0.code == .requiredFieldMissing && $0.location.segmentID == id && $0.location.fieldIndex == requiredField
@@ -119,10 +119,25 @@ struct V29DeleteIndicatorTests {
         }
     }
 
-    @Test("\"\" is a delete indicator on a data segment and not on a control segment; CH02 2.14 and CH05 5.5 give the list",
+    /// CH05 5.5 prints eight segments and no list of control segments. QID "contains the information necessary to uniquely
+    /// identify a query" (5.5.3 p50) and RDF "defines the content of the row data segments" (5.5.7 p54), so neither has a data base
+    /// element. DSP carries data, and DSP-3 is R (5.5.1 p47): as a delete segment it is the control.
+    @Test("In the query section QID and RDF keep their findings, and DSP, a data segment, reads as deleted")
+    func querySectionReading() throws {
+        func required(_ line: String, _ id: String) throws -> [Int?] {
+            try issues("2.9", line).filter { $0.code == .requiredFieldMissing && $0.location.segmentID == id }.map(\.location.fieldIndex)
+        }
+        #expect(try required("QID|\(delete)", "QID") == [2])
+        #expect(try required("RDF|\(delete)", "RDF") == [2])
+        #expect(try required("DSP|\(delete)", "DSP").isEmpty)
+        #expect(try required("DSP|1", "DSP") == [3])
+    }
+
+    @Test("\"\" is a delete indicator on a data segment and not on a control segment; the list is a reading of CH02 2.14 and CH05 5.5",
           arguments: [("PID", true), ("NTE", true), ("ADD", true),
                       ("DSC", false), ("SGH", false), ("SGT", false), ("OVR", false),
-                      ("QAK", false), ("QPD", false), ("RCP", false),
+                      ("QAK", false), ("QID", false), ("QPD", false), ("RCP", false), ("RDF", false),
+                      ("DSP", true), ("QRI", true), ("RDT", true),
                       ("MSH", false), ("BHS", false), ("FHS", false), ("BTS", false), ("FTS", false),
                       ("MSA", false), ("ERR", false), ("SFT", false), ("UAC", false)])
     func deleteIndicatorBySegment(id: String, reads: Bool) throws {

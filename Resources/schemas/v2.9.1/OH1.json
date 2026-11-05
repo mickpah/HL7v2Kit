@@ -1,0 +1,14 @@
+{
+  "segmentID": "OH1",
+  "version": "2.9.1",
+  "description": "Person Employment Status",
+  "fields": [
+    { "index": 1, "swiftName": "setID", "name": "Set ID", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0206"] },
+    { "index": 3, "swiftName": "employmentStatus", "name": "Employment Status", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0957"] },
+    { "index": 4, "swiftName": "employmentStatusStartDate", "name": "Employment Status Start Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "employmentStatusEndDate", "name": "Employment Status End Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "enteredDate", "name": "Entered Date", "dataType": "DT", "optionality": "R", "repeatability": "1" },
+    { "index": 7, "swiftName": "employmentStatusUniqueIdentifier", "name": "Employment Status Unique Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" }
+  ]
+}

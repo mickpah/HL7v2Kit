@@ -98,8 +98,8 @@ struct SchemaSwiftNameTests {
                 if base?.swiftName == field.swiftName { continue }
                 // A released accessor name never changes (ADR-014): v2.9 PRT-5 to PRT-22 print "Person",
                 // "Organization" and so on where v2.8.2 printed "Participation Person", and keep the
-                // v2.8.2 name the released PRT struct declares. Mirrors the audit's `released` exemption.
-                if version == "v2.9", released["\(schema.segmentID)-\(field.index)"] == field.swiftName { continue }
+                // v2.8.2 name the released PRT struct declares, and v2.9.1 prints the same. Mirrors the audit's `released` exemption.
+                if version == "v2.9" || version == "v2.9.1", released["\(schema.segmentID)-\(field.index)"] == field.swiftName { continue }
                 let words = field.name.lowercased()
                     .components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
                 var name = field.swiftName.lowercased()
@@ -128,6 +128,9 @@ struct SchemaSwiftNameTests {
                 // v2.9 CH13 section 13.4.1 EQU-6 prints this name in lower case (mirrors ELEMENT_NAME_PRINTED).
                 let printedLowercase = field.name == "Expected date/time of the next status change"
                 #expect(longest <= 5 || printedLowercase, "\(slot): \(longest) lowercase words in a row")
+                // v2.9-T4: the seed path leaked " December 2019" from the page footer into 10 names. Mirrors element_name_findings.
+                #expect(field.name.range(of: #"\b[A-Z][a-z]+ (19|20)\d\d\b|Normative Publication|Health Level Seven|\bPage \d+"#,
+                                         options: .regularExpression) == nil, "\(slot): page-footer text")
             }
         }
     }

@@ -493,6 +493,7 @@ public struct Validator: Sendable {
         case .v2_8_2: return SegmentGrammarTable.v2_8_2   // v0.15 (ADR-013)
         case .v2_8:   return SegmentGrammarTable.v2_8_2   // ADR-018 substitution
         case .v2_9:   return SegmentGrammarTable.v2_9     // ADR-018
+        case .v2_9_1: return SegmentGrammarTable.v2_9_1   // ADR-018
         }
     }
 
@@ -636,7 +637,7 @@ public struct Validator: Sendable {
         // TQ.6 Priority repeat, not field repetitions (priorityContinuationTrimmed).
         let field = parsedField.map {
             Self.priorityContinuationTrimmed($0, grammar: fieldGrammar,
-                                             dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                             dataType: effectiveDataType(of: fieldGrammar, in: segment, version: message.version),
                                              version: message.version)
         }
 
@@ -705,7 +706,7 @@ public struct Validator: Sendable {
             default:
                 if let field {
                     checkComponentDeprecation(field: field, version: message.version,
-                                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                              dataType: effectiveDataType(of: fieldGrammar, in: segment, version: message.version),
                                               location: location, issues: &issues)
                 }
             }
@@ -726,21 +727,21 @@ public struct Validator: Sendable {
             let lengthVersion = grammar.segmentID.hasPrefix("Z") ? Version(rawValue: grammar.version) : nil
             checkFieldLength(fieldGrammar, field: field, segmentID: grammar.segmentID,
                              version: message.version, lengthVersion: lengthVersion,
-                             dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                             dataType: effectiveDataType(of: fieldGrammar, in: segment, version: message.version),
                              encoding: message.encodingCharacters,
                              location: location, profile: profile, issues: &issues)
             // S1-1: v2.7+ normative length on each primitive component.
             checkComponentLength(field: field, version: message.version,
-                                 dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                 dataType: effectiveDataType(of: fieldGrammar, in: segment, version: message.version),
                                  encoding: message.encodingCharacters,
                                  location: location, issues: &issues)
             // P6-13 / P6-14: content after the value of a primitive field or component.
             checkExtraPrimitiveComponents(fieldGrammar, field: field,
-                                          dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                          dataType: effectiveDataType(of: fieldGrammar, in: segment, version: message.version),
                                           version: message.version,
                                           location: location, issues: &issues)
             // P6-7: primitive lexical rules (PrimitiveFormat).
-            checkValueFormat(dataType: effectiveDataType(of: fieldGrammar, in: segment), field: field,
+            checkValueFormat(dataType: effectiveDataType(of: fieldGrammar, in: segment, version: message.version), field: field,
                              version: message.version, location: location, issues: &issues)
         }
 
@@ -749,7 +750,7 @@ public struct Validator: Sendable {
                            version: message.version, location: location, issues: &issues)
         }
         if options.checkCodeTables, let field, isPopulated {
-            checkComponentCodeTables(dataType: effectiveDataType(of: fieldGrammar, in: segment),
+            checkComponentCodeTables(dataType: effectiveDataType(of: fieldGrammar, in: segment, version: message.version),
                                      field: field, version: message.version,
                                      location: location, issues: &issues)
         }
@@ -876,7 +877,7 @@ public struct Validator: Sendable {
         // it here is what makes the ED/RP datatype points
         // (HL7au:00044.10/.11) reachable at all: no field declares ED
         // or RP statically except CER-6.
-        let effectiveDataType = effectiveDataType(of: fieldGrammar, in: segment)
+        let effectiveDataType = effectiveDataType(of: fieldGrammar, in: segment, version: message.version)
         guard let composite = profile.compositeOverrides.first(where: {
             $0.dataType == effectiveDataType
         }) else { return }
@@ -1239,7 +1240,7 @@ public struct Validator: Sendable {
         OrcObrPair(orcField: 8, obrField: 29, name: "Parent", item: "00222",
                    versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6]),
         OrcObrPair(orcField: 8, obrField: 54, name: "Parent Order", item: "00222",
-                   versions: [.v2_7_1, .v2_8_2, .v2_9]),
+                   versions: [.v2_7_1, .v2_8_2, .v2_9, .v2_9_1]),
     ]
 
     /// M8-B1/B2: within each ORC/OBR group, a paired field populated on
@@ -1267,8 +1268,8 @@ public struct Validator: Sendable {
             let obr = message.segments[obrIndex]
             for pair in Self.orcObrEqualityPairs {
                 if let versions = pair.versions, !versions.contains(message.version.grammarVersion) { continue }
-                guard let orcValue = flattenedField(segment.field(pair.orcField)),
-                      let obrValue = flattenedField(obr.field(pair.obrField)),
+                guard let orcValue = flattenedField(segment.field(pair.orcField), version: message.version),
+                      let obrValue = flattenedField(obr.field(pair.obrField), version: message.version),
                       orcValue != obrValue
                 else { continue }
                 let location = IssueLocation(
@@ -1296,11 +1297,11 @@ public struct Validator: Sendable {
     /// values. Repetition-aware since M8-B2: the XCN pair
     /// (ORC-12/OBR-16) repeats, and "both must contain the same value"
     /// covers every repetition. M8-B1/B2.
-    private func flattenedField(_ field: Field?) -> String? {
+    private func flattenedField(_ field: Field?, version: Version) -> String? {
         guard let field else { return nil }
         let repetitions = field.repetitions.compactMap { rep -> String? in
             var components = rep.components.map { component -> String in
-                var subs = component.subcomponents.map(\.value)
+                var subs = component.subcomponents.map { version.comparisonValue($0.value) }
                 while subs.count > 1, subs.last?.isEmpty == true { subs.removeLast() }
                 return subs.joined(separator: "&")
             }
@@ -1859,11 +1860,11 @@ public struct Validator: Sendable {
     /// The datatype a field actually carries. OBX-5's grammar datatype is the variable
     /// placeholder (`varies` from v2.5.1, `*` on the pre-v2.5 tables); its effective type
     /// is whatever OBX-2 names at runtime (M6-B-7). Every other field carries its own.
-    private func effectiveDataType(of grammar: FieldGrammar, in segment: Segment) -> String {
+    private func effectiveDataType(of grammar: FieldGrammar, in segment: Segment, version: Version) -> String {
         guard segment.segmentID == "OBX", grammar.index == 5,
               ["varies", "*", "Variable"].contains(grammar.dataType),
               let declared = segment.field(2)?.stringValue, !declared.isEmpty else { return grammar.dataType }
-        return declared
+        return version.comparisonValue(declared)
     }
 
     /// Component-level code-table check (M10-C / M11, ADR-017). For a field whose datatype
@@ -1919,9 +1920,9 @@ public struct Validator: Sendable {
             return table
         }
         func report(_ value: String?, table: HL7Table, name: String, component: Int, subcomponent: Int?, repetition: Int) {
-            guard let value, !value.isEmpty, value != "\"\"", !table.contains(value),
-                  !Self.localeAdmits(value, table: table.number, locale: locale),
-                  options.localTableExtensions[table.number]?.contains(value) != true else { return }
+            guard let value, !value.isEmpty, value != "\"\"", case let compared = version.comparisonValue(value),
+                  !table.contains(compared), !Self.localeAdmits(compared, table: table.number, locale: locale),
+                  options.localTableExtensions[table.number]?.contains(compared) != true else { return }
             let where_ = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                        fieldIndex: location.fieldIndex, componentIndex: component,
                                        subcomponentIndex: subcomponent)
@@ -1939,6 +1940,7 @@ public struct Validator: Sendable {
         // judged by what it names. A claim of HL70953 is read, whichever tuple holds it. So is a
         // first tuple naming nothing, where CWE.3 is required. Another system is left alone: the
         // values are "suggested" (CH02 2.14.9.27) and an HL7 table may be extended locally (2C.4.1).
+        // A tuple's OID names the table where the print gives the table one (``Version/table0953OID``).
         if let index = location.fieldIndex, Self.table0953Fields[location.segmentID] == index,
            let table = HL7TableRegistry.table("0953", version: version), table.isClosed {
             for (offset, repetition) in field.repetitions.enumerated() {
@@ -1949,7 +1951,8 @@ public struct Validator: Sendable {
                 }
                 for (identifier, system, oid, name) in [(1, 3, 14, "Identifier"), (4, 6, 17, "Alternate Identifier"),
                                                         (10, 12, 20, "Second Alternate Identifier")] {
-                    let claimed = part(system).caseInsensitiveCompare("HL7\(table.number)") == .orderedSame
+                    let claimed = version.comparisonValue(part(system)).caseInsensitiveCompare("HL7\(table.number)") == .orderedSame
+                        || version.comparisonValue(part(oid)) == version.table0953OID
                     let unnamed = identifier == 1 && part(system).isEmpty && part(oid).isEmpty
                     guard claimed || unnamed else { continue }
                     report(part(identifier), table: table, name: name, component: identifier, subcomponent: nil,
@@ -1998,8 +2001,9 @@ public struct Validator: Sendable {
     }
 
     /// The field bound to table 0953 in each segment that has one. A CWE carries no
-    /// ``FieldGrammar/table``, so this list stands in for it; SecurityLabelTableTests holds it
-    /// to the v2.9 schemas.
+    /// ``FieldGrammar/table``, so this list stands in for it; SecurityLabelTableTests holds it to
+    /// the v2.9 and v2.9.1 schemas, which print the same four (V291 CH02 pp55, 64, 69; CH03 p208),
+    /// though V291 CH02C p851's `where used` names only MSH-27 and ARV-8.
     static let table0953Fields: [String: Int] = ["ARV": 8, "BHS": 16, "FHS": 16, "MSH": 27]
 
     /// Whether a locale's own rendering of `table` admits `value`: the value is one of
@@ -2028,18 +2032,18 @@ public struct Validator: Sendable {
             // P6-13: a primitive field's value is its first component (a recipient ignores
             // the rest, v2.5.1 / v2.8.2 section 2.6.2 a); the extras are reported apart.
             guard let value = Self.primitiveValue(repetition), !value.isEmpty, value != "\"\"",
-                  !table.contains(value) else { continue }
+                  case let compared = version.comparisonValue(value), !table.contains(compared) else { continue }
             let partial = Self.hasExtraPrimitiveContent(repetition)
             // A localisation may print its own rendering of the table (AU ADRM-2021 back-ports
             // UNICODE UTF-8 into v2.4 Table 0211). It WIDENS the check as a union with the base
             // version's rows, so it can never reject what the message's own version prints;
             // narrowing is the profile's job, not this rule's.
-            if Self.localeAdmits(value, table: tableNumber, locale: locale) { continue }
+            if Self.localeAdmits(compared, table: tableNumber, locale: locale) { continue }
             // A caller-declared local extension (ValidationOptions.localTableExtensions) also
             // widens the check, same as a locale rendering: every supported version allows an
             // HL7 table to be extended locally (v2.3 / v2.3.1 CH2 sec 2.6.6, v2.4 CH02 sec 2.7.6,
             // v2.5.1 / v2.6 CH02 sec 2.5.3.6, v2.8.2 CH02C 2.C.1.2).
-            if options.localTableExtensions[tableNumber]?.contains(value) == true { continue }
+            if options.localTableExtensions[tableNumber]?.contains(compared) == true { continue }
             issues.append(ValidationIssue(
                 severity: .error,
                 code: .valueNotInTable(table: table.number),
@@ -2108,7 +2112,7 @@ public struct Validator: Sendable {
                 ] {
                     guard let condition, let severity, !populated(entry.index),
                           ComponentCondition.holds(condition, populated: populated, repeated: repeated,
-                                                   value: { $0 >= 1 && $0 <= values.count ? values[$0 - 1] : nil },
+                                                   value: { $0 >= 1 && $0 <= values.count ? values[$0 - 1].map(version.comparisonValue) : nil },
                                                    tableKind: tableKind) else { continue }
                     let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
                                                  componentIndex: component ?? entry.index,
@@ -2279,12 +2283,16 @@ public struct Validator: Sendable {
 
     /// Segments that carry no data base element, so `""` is no delete indicator there: v2.9 CH02
     /// 2.5.3.1 p9 defines the state by "the corresponding data base element", and "for other
-    /// purposes is prohibited". The list is what the print gives: CH02 2.14's message control
-    /// segments, and CH05 5.5's query control segments QAK, QPD and RCP. ADD and NTE are left out
-    /// on purpose: an addendum continues data, and a note is data.
+    /// purposes is prohibited". The print gives no such list; this is a reading of its sections.
+    /// From CH02 2.14 (message control segments), all but ADD and NTE: an addendum continues data,
+    /// and a note is data. From CH05 5.5, which prints eight segments under one heading, QAK, QPD and
+    /// RCP, and QID, which "contains the information necessary to uniquely identify a query" (5.5.3
+    /// p50), and RDF, which "defines the content of the row data segments" (5.5.7 p54). DSP, QRI and
+    /// RDT carry data and stay off. v2.9.1 prints the same sections as CH02 2.13 (Figure 2-8, p54) and
+    /// CH05 5.4 (5.4.3 p51, 5.4.7 p55), and defines GSP, GSR and GSC in CH03, as data.
     static let messageControlSegments: Set<String> = [
         "BHS", "BTS", "DSC", "ERR", "FHS", "FTS", "MSA", "MSH", "OVR", "SFT", "SGH", "SGT", "UAC", // CH02 2.14
-        "QAK", "QPD", "RCP", // CH05 5.5
+        "QAK", "QID", "QPD", "RCP", "RDF", // CH05 5.5
     ]
 
     /// True if `repetition` holds only the delete indicator on a data segment: `""` as its first
@@ -2610,7 +2618,7 @@ public struct Validator: Sendable {
                 message: message,
                 currentSegmentID: currentSegmentID
             ) else { return .unknown }
-            let found = ConditionTruth.any(slots.map { applyPredicate(predicate, to: $0) })
+            let found = ConditionTruth.any(slots.map { applyPredicate(predicate, to: $0, version: message.version) })
             guard found == .true || slots.contains(where: { $0.isPopulated }) else { return .unknown }
             return found
 
@@ -2631,7 +2639,7 @@ public struct Validator: Sendable {
                 message: message,
                 currentSegmentID: currentSegmentID
             ), slots.contains(where: { $0.isPopulated }) else { return .unknown }
-            return ConditionTruth(!slots.contains { applyPredicate(predicate, to: $0) == .true })
+            return ConditionTruth(!slots.contains { applyPredicate(predicate, to: $0, version: message.version) == .true })
 
         case .value(let referent, let predicate):
             guard let resolved = resolveReferent(
@@ -2641,7 +2649,7 @@ public struct Validator: Sendable {
                 message: message,
                 currentSegmentID: currentSegmentID
             ) else { return .unknown }
-            return applyPredicate(predicate, to: resolved)
+            return applyPredicate(predicate, to: resolved, version: message.version)
         }
     }
 
@@ -2803,12 +2811,14 @@ public struct Validator: Sendable {
     /// Apply a classified predicate to a resolved referent. A predicate
     /// that cannot judge the referent (the fail-safe cases below) is
     /// `.unknown` (P4-31, ADR-021).
-    private func applyPredicate(_ predicate: ConditionPredicate, to resolved: ResolvedReferent) -> ConditionTruth {
+    private func applyPredicate(_ predicate: ConditionPredicate, to resolved: ResolvedReferent, version: Version) -> ConditionTruth {
+        // `""` is the delete indicator, a state and not a value (CH02 2.4.3.1), so it is compared as sent.
+        func compared(with literal: String) -> String { literal == "\"\"" ? resolved.raw : version.comparisonValue(resolved.raw) }
         switch predicate {
         case .populated: return ConditionTruth(resolved.isPopulated)
         case .empty: return ConditionTruth(!resolved.isPopulated)
-        case .equals(let v): return ConditionTruth(resolved.raw == v)
-        case .notEquals(let v): return ConditionTruth(resolved.raw != v)
+        case .equals(let v): return ConditionTruth(compared(with: v) == v)
+        case .notEquals(let v): return ConditionTruth(compared(with: v) != v)
         case .greaterThan(let threshold):
             // M8-D: PAC-2's "If SHP-8 Number of Packages in Shipment is
             // greater than 1". A non-numeric or empty referent fails safe.
@@ -2823,14 +2833,14 @@ public struct Validator: Sendable {
         case .notStartsWith(let prefix):
             guard resolved.isPopulated else { return .unknown }
             return ConditionTruth(!resolved.raw.hasPrefix(prefix))
-        case .isIn(let values): return ConditionTruth(values.contains(resolved.raw))
+        case .isIn(let values): return ConditionTruth(values.contains(version.comparisonValue(resolved.raw)))
         case .notIn(let values):
             // not-in fires only if the referent is actually populated —
             // an empty referent is not a meaningful "non-member"
             // assertion, so the conditional only requires the dependent
             // field when the referent carries a definite excluded value.
             guard resolved.isPopulated else { return .unknown }
-            return ConditionTruth(!values.contains(resolved.raw))
+            return ConditionTruth(!values.contains(version.comparisonValue(resolved.raw)))
         }
     }
 

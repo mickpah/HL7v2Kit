@@ -39,6 +39,7 @@ struct MultiVersionTests {
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.7.1\r", .v2_7_1),
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.8.2\r", .v2_8_2),
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9\r", .v2_9),
+        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.9.1\r", .v2_9_1),
         // A bare "2.7" wire resolves to .v2_7 (validated as v2.7.1, G11, ADR-018).
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.7\r", .v2_7),
         // A bare "2.8" wire still resolves to .v2_8 (validated as v2.8.2, ADR-018).
@@ -1102,6 +1103,7 @@ struct MultiVersionTests {
             ("2.7.1", SegmentGrammarTable.v2_7_1),
             ("2.8.2", SegmentGrammarTable.v2_8_2),
             ("2.9", SegmentGrammarTable.v2_9),
+            ("2.9.1", SegmentGrammarTable.v2_9_1),
         ]
         for (version, table) in tables {
             #expect(table["CSR"]?.field(9)?.condition == "triggerEvent = C01", "CSR-9 on \(version)")

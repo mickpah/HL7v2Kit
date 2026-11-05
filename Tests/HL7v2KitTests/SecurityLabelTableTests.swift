@@ -197,11 +197,11 @@ struct SecurityLabelTableTests {
         }
     }
 
-    @Test("The validator's list of fields bound to 0953 is the v2.9 schemas' list")
-    func boundFields() throws {
+    @Test("The validator's list of fields bound to 0953 is each version's schema list", arguments: ["v2.9", "v2.9.1"])
+    func boundFields(version: String) throws {
         let directory = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-            .appendingPathComponent("Resources/schemas/v2.9")
+            .appendingPathComponent("Resources/schemas/\(version)")
         var bound: Set<String> = []
         for url in try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
         where url.pathExtension == "json" {
@@ -213,5 +213,83 @@ struct SecurityLabelTableTests {
             }
         }
         #expect(bound == Set(Validator.table0953Fields.map { "\($0.key)-\($0.value)" }))
+    }
+
+    // MARK: - v2.9.1 (R35, R43)
+
+    /// V291 CH02C p851 prints `Table OID 2.16.840.1.113883.12.953`. v2.9's Chapter 2C prints no Table OID at all.
+    static let tableOID = "2.16.840.1.113883.12.953"
+
+    static func findings291(_ msh27: String, locale: HL7Locale = .international) throws -> [ValidationIssue] {
+        try findings(msh(msh27, version: "2.9.1"), locale: locale)
+    }
+
+    @Test("v2.9.1's table holds the same 140 rows, closed")
+    func table291() throws {
+        let table = try #require(HL7TableRegistry.table("0953", version: .v2_9_1))
+        #expect(table.isClosed && table.entries.count == 140)
+    }
+
+    @Test("On v2.9.1 a tuple carrying the printed Table OID names the table, at its own OID component")
+    func tableOIDNamesTheTable() throws {
+        let first = try Self.findings291(Self.cwe([1: "BOGUS", 14: Self.tableOID]))
+        #expect(first.map(\.location.componentIndex) == [1])
+        #expect(first.first?.code == .valueNotInTable(table: "0953"))
+        #expect(try Self.findings291(Self.cwe([1: "A", 3: "L", 4: "BOGUS", 17: Self.tableOID])).map(\.location.componentIndex) == [4])
+        #expect(try Self.findings291(Self.cwe([1: "A", 3: "L", 10: "BOGUS", 20: Self.tableOID])).map(\.location.componentIndex) == [10])
+        #expect(try Self.findings291(Self.cwe([1: "NODSCLCD", 14: Self.tableOID])).isEmpty)
+    }
+
+    @Test("On v2.9 that OID names nothing the print gives, so the tuple is another system's")
+    func tableOIDOnV29() throws {
+        #expect(try Self.findings(Self.msh(Self.cwe([1: "BOGUS", 14: Self.tableOID]))).isEmpty)
+        #expect(try Self.findings(Self.msh(Self.cwe([1: "A", 3: "L", 4: "BOGUS", 17: Self.tableOID]))).isEmpty)
+    }
+
+    @Test("On v2.9.1 another OID, a local system and a later tuple naming nothing stay unread; HL70953 and a bare code are read")
+    func otherTuples291() throws {
+        #expect(try Self.findings291(Self.cwe([1: "BOGUS", 14: "1.2.3"])).isEmpty)
+        #expect(try Self.findings291("SH1^x^L").isEmpty)
+        #expect(try Self.findings291("A^a^L^BOGUS").isEmpty)
+        #expect(try Self.findings291("BOGUS^x^HL70953").map(\.location.componentIndex) == [1])
+        #expect(try Self.findings291("BOGUS").map(\.location.componentIndex) == [1])
+    }
+
+    /// R35's cost, pinned. p851 names code system ObservationValue 2.1.0 under the table and the rows hold none of its
+    /// codes; the same page's value set description names the five sets the rows hold. Both sides are in the register.
+    @Test("R35's cost on v2.9.1: A0^x^HL70953 draws valueNotInTable")
+    func observationValueCost() throws {
+        #expect(HL7TableRegistry.table("0953", version: .v2_9_1)?.contains("A0") == false)
+        #expect(try Self.findings291("A0^x^HL70953").map(\.code) == [.valueNotInTable(table: "0953")])
+        // The way a site admits a code, by the owner's ruling.
+        var options = ValidationOptions.default
+        options.localTableExtensions["0953"] = ["A0"]
+        #expect(try Self.findings(Self.msh("A0^x^HL70953", version: "2.9.1"), options: options).isEmpty)
+    }
+
+    @Test("ARV-8 on v2.9.1 is read the same, and under the AU locale so is MSH-27")
+    func otherFields291() throws {
+        let arv = "MSH|^~\\&|SYN|FAC|HOSP|FAC|20240101120000||ADT^A01^ADT_A01|M1|P|2.9.1\r"
+            + "ARV|1|S^Scope^HL70206|ALL^All^HL70717||||R^Restricted^HL70952|BOGUS^x^HL70953\r"
+        let found = try Self.findings(arv)
+        #expect(found.map(\.code) == [.valueNotInTable(table: "0953")])
+        #expect(found.first?.location.segmentID == "ARV" && found.first?.location.fieldIndex == 8)
+        #expect(try Self.findings291("BOGUS^x^HL70953", locale: .auLocalisation).map(\.code) == [.valueNotInTable(table: "0953")])
+        #expect(try Self.findings291("SH1^x^L", locale: .auLocalisation).isEmpty)
+    }
+
+    /// V291 CH02 p55 (BHS-16), p64 (FHS-16): the row binds 0953, though CH02C p851's `where used` names only MSH-27 and ARV-8.
+    @Test("BHS-16 and FHS-16 are read on v2.9.1", arguments: [("BHS", "BTS"), ("FHS", "FTS")])
+    func envelopeField291(id: String, trailer: String) throws {
+        func findings(_ value: String) throws -> [ValidationIssue] {
+            let message = "MSH|^~\\&|SYN|FAC|HOSP|FAC|20240101120000||ADT^A01^ADT_A01|M1|P|2.9.1\rPID|1"
+            let header = "\(id)|^~\\&" + String(repeating: "|", count: 14) + value
+            let file = [header, message, "\(trailer)|1"].joined(separator: "\r") + "\r"
+            return try BatchValidator().validate(BatchParser().parse(file)).batchIssues.filter {
+                $0.location.segmentID == id && $0.code == .valueNotInTable(table: "0953")
+            }
+        }
+        #expect(try findings("NODSCLCD^x^HL70953").isEmpty)
+        #expect(try findings("BOGUS^x^HL70953").map(\.location.fieldIndex) == [16])
     }
 }

@@ -109,9 +109,9 @@ struct VersionUnionAccessorTests {
         let (message, typed) = try hydratedMessage(MRG.self, from: msh("2.8.2") + mrg)
         #expect(typed.priorAlternateVisitIdAll.map(\.id) == ["V1", "V2"])
         #expect(typed.priorAlternateVisitIdAll[1].id == message["MRG-6~2.1"])
-        #expect(try doc("MRG", "priorAlternateVisitId").contains("Repeats in v2.8.2, v2.9 only"))
-        #expect(try doc("MRG", "priorAlternateVisitIdAll").contains("Repeats in v2.8.2, v2.9 only"))
-        #expect(try doc("AIL", "locationResourceIdAll").contains("Repeats in v2.5.1, v2.6, v2.7.1, v2.8.2, v2.9 only"))
+        #expect(try doc("MRG", "priorAlternateVisitId").contains("Repeats in v2.8.2, v2.9, v2.9.1 only"))
+        #expect(try doc("MRG", "priorAlternateVisitIdAll").contains("Repeats in v2.8.2, v2.9, v2.9.1 only"))
+        #expect(try doc("AIL", "locationResourceIdAll").contains("Repeats in v2.5.1, v2.6, v2.7.1, v2.8.2, v2.9, v2.9.1 only"))
     }
 
     @Test("A reserved v2.5.1 position later defined as an element gets its own accessor (OBX-20 Observation Site)")
@@ -121,22 +121,22 @@ struct VersionUnionAccessorTests {
         #expect(typed.observationSite?.identifier == message["OBX-20.1"])
         #expect(typed.observationSiteAll.map(\.identifier) == ["S1", "S2"])
         let reserved = try doc("OBX", "reservedForHarmonization20")
-        #expect(reserved.contains("v2.6, v2.7.1, v2.8.2, v2.9 define OBX-20 as `Observation Site`: use `observationSite`."))
+        #expect(reserved.contains("v2.6, v2.7.1, v2.8.2, v2.9, v2.9.1 define OBX-20 as `Observation Site`: use `observationSite`."))
         #expect(try doc("OBX", "observationSite").contains("v2.5.1 defines OBX-20 as `Reserved for harmonization with V2.6`: use `reservedForHarmonization20`."))
     }
 
     @Test("DocC names the versions each accessor applies to")
     func versionDocC() throws {
         let observationType = try doc("OBX", "observationType")
-        #expect(observationType.contains("Defined in v2.8.2, v2.9."))
+        #expect(observationType.contains("Defined in v2.8.2, v2.9, v2.9.1."))
         #expect(observationType.contains("On a message of another version this returns whatever OBX-29 holds on the wire"))
         #expect(try doc("OBX", "abnormalFlags").contains("Renamed `Interpretation Codes` in v2.7.1, which types it `CWE`: use `interpretationCodes`."))
-        #expect(try doc("OBX", "observationIdentifier").contains("v2.6, v2.7.1, v2.8.2, v2.9 print `CWE`: use `viewed(as: CWE.self)`."))
-        #expect(try doc("CON", "languageTranslatedTo").contains("v2.6, v2.7.1, v2.8.2, v2.9 print `CWE`: use `languageTranslatedToAsCWE`."))
+        #expect(try doc("OBX", "observationIdentifier").contains("v2.6, v2.7.1, v2.8.2, v2.9, v2.9.1 print `CWE`: use `viewed(as: CWE.self)`."))
+        #expect(try doc("CON", "languageTranslatedTo").contains("v2.6, v2.7.1, v2.8.2, v2.9, v2.9.1 print `CWE`: use `languageTranslatedToAsCWE`."))
         #expect(try doc("PV1", "bedStatus").contains("Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6."))
         #expect(try doc("IN2", "militaryIdNumber").contains("v2.3 prints this element as `Champus ID Number`."))
         let text = try String(contentsOf: Self.generated.appendingPathComponent("PRT.swift"), encoding: .utf8)
-        #expect(text.contains("/// Defined in HL7 v2.7.1, v2.8.2, v2.9."))
+        #expect(text.contains("/// Defined in HL7 v2.7.1, v2.8.2, v2.9, v2.9.1."))
         let reserved = try doc("OBX", "reservedForHarmonization21")
         #expect(reserved.hasPrefix("OBX-21: Reserved for harmonization with V2.6. No data type: reserved position in v2.5.1."))
     }
@@ -174,7 +174,7 @@ struct VersionUnionAccessorTests {
     func renameWording() throws {
         let db1 = try String(contentsOf: Self.generated.appendingPathComponent("DB1.swift"), encoding: .utf8)
         #expect(!db1.contains("public var disabilityIndicator"))
-        #expect(try doc("DB1", "disabledIndicator").contains("v2.4, v2.6, v2.7.1, v2.8.2, v2.9 print this element as `Disability Indicator`."))
+        #expect(try doc("DB1", "disabledIndicator").contains("v2.4, v2.6, v2.7.1, v2.8.2, v2.9, v2.9.1 print this element as `Disability Indicator`."))
         let producersID = try doc("OBX", "producersID")
         #expect(producersID.contains("Same element as `producersReference`, renamed in v2.6; typed as v2.6 prints it."))
         #expect(producersID.contains("v2.3, v2.3.1, v2.4 print this element as `Producer's ID` (`CE`): use `producersReference`."))
@@ -191,7 +191,7 @@ struct VersionUnionAccessorTests {
         // and an All accessor's array type never equals its singular's, so both pass.
         let files = try FileManager.default.contentsOfDirectory(atPath: Self.generated.path)
             .filter { $0.count == 9 && $0.hasSuffix(".swift") }
-        #expect(files.count == 195)
+        #expect(files.count == 198)
         var duplicates: [String] = []
         for file in files.sorted() {
             let text = try String(contentsOf: Self.generated.appendingPathComponent(file), encoding: .utf8)

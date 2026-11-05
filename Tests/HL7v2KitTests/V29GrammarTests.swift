@@ -93,11 +93,12 @@ struct V29GrammarTests {
         #expect(try issues("RCP|X||||||DONOR").contains { $0.code == .valueNotInTable(table: "0091") })
     }
 
-    @Test("Table 0104 prints 2.9 and stays open to a locally agreed version")
+    // CodeTableOpennessTests reads it on the wire.
+    @Test("Table 0104 prints 2.9 and is closed: CH02 2.14.9.12 p70 and CH02A 2A.3.83.1 p86 say \"for valid values\"")
     func versionId() throws {
         let version = try #require(tables["0104"])                   // 2C 0104, footer page 75
         #expect(version.entries.contains { $0.code == "2.9" })
-        #expect(version.permitsLocalExtensions)
+        #expect(version.isClosed)
     }
 
     @Test("v2.9 datatypes: 71 composites and 448 components from CH02A")

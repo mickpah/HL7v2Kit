@@ -26,7 +26,9 @@ extension Validator {
     /// - v2.9 OUL, OPU, OPL: CH07 7.3.8 to 7.3.11 (pp 20 to 31), OUL_R22, OUL_R23, OUL_R24
     ///   and OPU_R25 `ORDER { OBR [COMMON_ORDER { ORC }] ... }`; CH04 4.4.16 (pp 42 to 44),
     ///   OPL_O37 `ORDER_PRIOR { OBR [ORC] ... }`: the same OBR-then-optional-ORC groups.
-    /// v2.7.1, v2.8.2 and v2.9 print ORC-8 and OBR-29 without a group condition, so
+    /// - v2.9.1 OUL, OPU, OPL: CH07 7.3.8 to 7.3.11 (pp 22 to 31), the same `ORDER` groups;
+    ///   CH04 4.4.16 (p 42), OPL_O37 `ORDER_PRIOR { OBR [ORC] ... }`.
+    /// v2.7.1, v2.8.2, v2.9 and v2.9.1 print ORC-8 and OBR-29 without a group condition, so
     /// only the order-number fields were gated there.
     static let formerlyGated: [Version: (codes: Set<String>, fields: Set<String>)] = [
         .v2_5_1: (["OUL"], ["ORC-2", "ORC-3", "ORC-8", "OBR-2", "OBR-3", "OBR-29"]),
@@ -34,6 +36,7 @@ extension Validator {
         .v2_7_1: (["OUL", "OPU", "OPL"], ["ORC-2", "ORC-3", "OBR-2", "OBR-3"]),
         .v2_8_2: (["OUL", "OPU", "OPL"], ["ORC-2", "ORC-3", "OBR-2", "OBR-3"]),
         .v2_9: (["OUL", "OPU", "OPL"], ["ORC-2", "ORC-3", "OBR-2", "OBR-3"]),
+        .v2_9_1: (["OUL", "OPU", "OPL"], ["ORC-2", "ORC-3", "OBR-2", "OBR-3"]),
     ]
 
     /// The scoping for `message`, already declaring its grammar version: its
@@ -51,7 +54,7 @@ extension Validator {
     static func fallbackScoping(version: Version, messageCode: String?) -> GroupScoping {
         guard let gate = formerlyGated[version] else { return .walk }
         let code = messageCode ?? ""
-        return code.isEmpty || gate.codes.contains(code) ? .gated(gate.fields) : .walk
+        return code.isEmpty || gate.codes.contains(version.comparisonValue(code)) ? .gated(gate.fields) : .walk
     }
 
     /// The group spans of a clean match: the version's structures are

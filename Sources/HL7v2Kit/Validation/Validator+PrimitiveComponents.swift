@@ -29,11 +29,12 @@ extension Validator {
     /// - v2.9 CH02A (DT 2A.3.21, DTM 2A.3.22, FT 2A.3.31, GTS 2A.3.32, ID 2A.3.35, IS 2A.3.36,
     ///   NM 2A.3.47, SI 2A.3.70, SNM 2A.3.72, ST 2A.3.76, TM 2A.3.77, TX 2A.3.80: the twelve sections
     ///   that print no component table, the same set as v2.7.1 to v2.8.2)
+    /// - v2.9.1 CH02A (the same twelve, numbered 2A.2.N: DT 2A.2.21 to TX 2A.2.80)
     static func primitiveTypes(_ version: Version) -> Set<String> {
         switch version.grammarVersion {
         case .v2_3, .v2_3_1, .v2_4: return primitivesV23ToV24
         case .v2_5_1, .v2_6: return primitivesV251ToV26
-        case .v2_7_1, .v2_7, .v2_8_2, .v2_8, .v2_9: return primitivesV271ToV29
+        case .v2_7_1, .v2_7, .v2_8_2, .v2_8, .v2_9, .v2_9_1: return primitivesV271ToV29
         }
     }
 

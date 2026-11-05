@@ -117,6 +117,37 @@ struct AUPreAdoptedFieldTests {
         })
     }
 
+    // 2.9.1 prints its own MSH-27 and MSH-26 (CH02 2.13.9.26 and 27 pp 76 and 77; MSH table p69), so the merge is v2.9's.
+    @Test("On 2.9.1 under the AU locale, 2.9.1's own MSH-27 stands")
+    func versionOwnFieldWinsOn291() throws {
+        let base = try #require(SegmentGrammarTable.v2_9_1["MSH"])
+        let validator = Validator(options: .default, locale: .auLocalisation)
+        let merged = validator.mergeGrammarExtension(
+            base: base, profileExtension: Profile.auADRM2021.grammarExtensions["MSH"])
+        #expect(merged.fields == base.fields)
+        let differing = FieldGrammar(index: 27, name: "Other", dataType: "ST",
+                                     optionality: .required, repeatability: .single)
+        #expect(validator.mergeGrammarExtension(base: base, profileExtension: [differing]).field(27) == base.field(27))
+    }
+
+    @Test("The ADRM's LEN 250 still applies on 2.9.1 under the AU locale")
+    func adrmLengthOn291() throws {
+        let found = try Self.msh27Issues(Self.textOnly(251), .auLocalisation, version: "2.9.1")
+        #expect(found.map(\.code).contains(.fieldLengthOutOfRange(length: "250", actual: 251)))
+        #expect(try !Self.msh27Issues(Self.textOnly(250), .auLocalisation, version: "2.9.1").map(\.code)
+            .contains(.fieldLengthOutOfRange(length: "250", actual: 250)))
+    }
+
+    @Test("2.9.1's MSH-26 condition fires under the AU locale, though the ADRM prints it Reserved")
+    func securityTagConditionOn291() throws {
+        let message = try Parser(locale: .auLocalisation).parse(Self.wire("SH1", version: "2.9.1"))
+        let issues = Validator(options: .default, locale: .auLocalisation).validate(message).issues
+        #expect(issues.contains {
+            $0.code == .conditionalFieldMissing
+                && $0.location.segmentID == "MSH" && $0.location.fieldIndex == 26
+        })
+    }
+
     @Test("The AU CWE rules reach v2.9's own MSH-27 on an ORU: SH1 draws both, SH1^text^L neither")
     func auCWERulesOnV29() throws {
         func rules(_ value: String) throws -> [(String, Int?)] {

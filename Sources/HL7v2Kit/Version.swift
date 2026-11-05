@@ -32,6 +32,8 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
     /// HL7 v2.9, modelled from its own text: the ANSI December 2019 chapters with the
     /// technical correction of January 2021 (ADR-018).
     case v2_9   = "2.9"
+    /// HL7 v2.9.1, modelled from its own text: ANSI/HL7 V2.9.1-2024 (ADR-018).
+    case v2_9_1 = "2.9.1"
 
     /// Parse a wire-format MSH-12 string into a `Version`, if recognised.
     public init?(wireValue: String) {

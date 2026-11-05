@@ -1,0 +1,9 @@
+{
+  "segmentID": "SGH",
+  "version": "2.9.1",
+  "description": "Segment Group Header",
+  "fields": [
+    { "index": 1, "swiftName": "setIdSgh", "name": "Set ID – SGH", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentGroupName", "name": "Segment Group Name", "dataType": "ST", "length": "60#", "optionality": "O", "repeatability": "1" }
+  ]
+}

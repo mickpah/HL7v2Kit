@@ -310,6 +310,7 @@
         {"trigger": "ACK^S10", "structure": "SRR_S01", "reason": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)"},
         {"trigger": "ACK^S11", "structure": "SRR_S01", "reason": "CH10 section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS (p 15), the Acknowledgment Choreography of SRM^S01-S11^SRM_S01, prints 'ACK^S01-S11^SRR_S01' in all three Application Ack cells, while the caption that follows (SRR^S01-S11^SRR_S01, p 15) and Table 0354 v2.9 (CH02C, p 273) give the message code SRR; SRR_S01 is modelled for SRR^S01 to SRR^S11. A message copying the cell is not structure-checked under SRR_S01 and is never a mismatch (P8b-final F-I1; register section E, v2.9 not-modelled table)"}
       ]
-    }
+    },
+    "2.9.1": { "complete": false, "citation": "v2.9.1 structures are not modelled yet.", "notModelled": [], "printedPairs": [] }
   }
 }

@@ -1,0 +1,15 @@
+{
+  "segmentID": "GSC",
+  "version": "2.9.1",
+  "description": "Sex Parameter for Clinical Use",
+  "fields": [
+    { "index": 1, "swiftName": "setID", "name": "Set ID", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "R", "repeatability": "1", "tables": ["0206"] },
+    { "index": 3, "swiftName": "gscInstanceIdentifier", "name": "GSC Instance Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "GSC-2 not in (S)" },
+    { "index": 4, "swiftName": "sexParameterForClinicalUse", "name": "Sex Parameter for Clinical Use", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0828"] },
+    { "index": 5, "swiftName": "validityPeriod", "name": "Validity Period", "dataType": "DR", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "context", "name": "Context", "dataType": "ERL", "optionality": "R", "repeatability": "*" },
+    { "index": 7, "swiftName": "evidence", "name": "Evidence", "dataType": "ERL", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "comment", "name": "Comment", "dataType": "TX", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -8,7 +8,9 @@
 // sec 2.6; v2.6 / v2.8.2 sec 2.5.3 "Null ... |""|" against "Not populated
 // ... empty, not present"), and v2.8.2 Chapter 2B adds "A required element
 // can have a null value". So R stands: `""` satisfies it, an empty RXA-4
-// does not.
+// does not. v2.9 and v2.9.1 part from this, by the owner's ruling: CH02 prints
+// "HL7 v2.x does not have an explicit concept for null values", so "If null"
+// can only mean empty, and both model O, each citing its own print.
 //
 // MFI-6: "Required for MFN-Master File Notification message" (all six), so
 // it is C with `messageCode = MFN`. CSR-8: "This field is required for the
@@ -61,6 +63,34 @@ struct SegmentTableDefinitionConflictTests {
         #expect(hits.count == 1, "v\(version)")
         #expect(hits.first?.code == .requiredFieldMissing, "v\(version)")
         #expect(grammarTables[version]?["RXA"]?.field(4)?.optionality == .required, "v\(version)")
+    }
+
+    /// `line` under `version`, every required-field finding at RXA.
+    private func rxaRequired(_ version: String, _ line: String) throws -> [Int?] {
+        let wire = TestWires.msh("RAS^O17^RAS_O17", version) + line + "\r"
+        return Validator().validate(try Parser().parse(wire)).issues.filter {
+            $0.code == .requiredFieldMissing && $0.location.segmentID == "RXA"
+        }.map(\.location.fieldIndex)
+    }
+
+    /// The print's two lines that leave RXA-4 empty: CH04A p109 on v2.9, p111 on v2.9.1; CH12 p39 and p41, shifted one
+    /// field left, so RXA-3 is empty too.
+    @Test("An empty RXA-4 draws no finding on v2.9 and v2.9.1, RXA-3 still does, and v2.8.2 keeps its R",
+          arguments: ["2.9", "2.9.1"])
+    func rxa4OptionalFromV29(version: String) throws {
+        let code = "0047-0402-30^Ampicillin 250 MG TAB^NDC|2|TAB"
+        #expect(try rxaRequired(version, "RXA|1|1|200612100615||\(code)").isEmpty, "v\(version)")
+        #expect(try rxaRequired(version, "RXA|1|1|||\(code)") == [3], "v\(version)")
+        #expect(try rxaRequired(version, "RXA|1|199505011200|||\(code)") == [3], "v\(version)")
+        #expect(try rxaRequired("2.8.2", "RXA|1|1|200612100615||\(code)") == [4])
+    }
+
+    @Test("v2.9 and v2.9.1 model RXA-4 O and RXA-3 R")
+    func rxa4Grammar() {
+        for table in [SegmentGrammarTable.v2_9, SegmentGrammarTable.v2_9_1] {
+            #expect(table["RXA"]?.field(3)?.optionality == .required)
+            #expect(table["RXA"]?.field(4)?.optionality == .optional)
+        }
     }
 
     // MARK: - MFI-6
