@@ -893,7 +893,10 @@ public struct Validator: Sendable {
             ) else { return }
         }
 
-        for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+        // A lone `""` is the null, which has no components: these rules skip it, as the base grammar's `checkComponents`
+        // does (the owner's ruling; ADRM p274 prints OBR-12 = "" on a delete message).
+        for repetition in field.repetitions
+        where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID) {
             // Track 1: required-components (v0.5-S5-B-3).
             for requirement in composite.requiredComponents {
                 if let gate = requirement.condition, !gate.isEmpty,
@@ -1569,7 +1572,7 @@ public struct Validator: Sendable {
             $0.segmentID == segmentID && $0.fieldIndex == fieldGrammar.index
         }) else { return }
         guard !override.requiredComponents.isEmpty || !override.componentValueSets.isEmpty
-                || !override.componentPatterns.isEmpty else { return }
+                || !override.componentPatterns.isEmpty || !override.componentCorrespondences.isEmpty else { return }
         // M6-D3: `requiredComponents` shares the override-level gate with
         // `profileUsage`. `componentValueSets` are gated individually
         // below — they can be scoped more narrowly than their field.
@@ -1582,11 +1585,13 @@ public struct Validator: Sendable {
         } else {
             requiredComponents = override.requiredComponents
         }
-        guard !requiredComponents.isEmpty || !override.componentValueSets.isEmpty else { return }
 
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+            // A lone `""` is the null, which has no components: of these rules, only a value set on the field's own
+            // value (`constrainsField`) reads it (the owner's ruling).
+            let isNull = isDeleteIndicator(repetition, segmentID: segmentID)
             // Track 1 (v0.5-S5-B-1): required-component narrowings.
-            for componentIndex in requiredComponents {
+            for componentIndex in requiredComponents where !isNull {
                 if isComponentPopulated(repetition, componentIndex: componentIndex) {
                     continue
                 }
@@ -1609,7 +1614,7 @@ public struct Validator: Sendable {
             // v0.8 (ADR-009): each value-set may declare an optional
             // condition gating its application + an optional
             // subcomponent index for granular reads.
-            for valueSet in override.componentValueSets {
+            for valueSet in override.componentValueSets where !isNull || valueSet.constrainsField {
                 // Conditional gating (ADR-009). If the predicate is
                 // false (or unresolvable — fail-safe per ADR-008),
                 // skip this value-set entirely.
@@ -1652,6 +1657,7 @@ public struct Validator: Sendable {
                     into: &issues
                 )
             }
+            guard !isNull else { continue }
             // Track 2b (M32): literal-shape restrictions. An EMPTY
             // component fails, unlike the composite value-set track: a
             // pattern states a shape the spec requires, and the rules that

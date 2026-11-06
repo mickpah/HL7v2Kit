@@ -309,20 +309,152 @@ struct EarlierDeleteIndicatorTests {
         #expect(found.isEmpty, "\(found.map(\.message))")
     }
 
-    /// Pins a registered misfire as it stands, for the owner's ruling, not the behaviour wanted. ADRM p274 prints OBR-12 = "" on a
-    /// delete message. A lone "" takes no gate on the AU profile's own rules, so HL7au:00044.4.1 reads it as a CE with no CE-3. The
-    /// identifiers of the printed line are left out; only OBR-4 and OBR-12 matter here.
-    @Test("Registered: ADRM p274's OBR-12 = \"\" still draws HL7au:00044.4.1 at OBR-12.3 under the locale, and nothing without it")
+    /// The AU rules reported at one field, as `localeRule` citations.
+    private static func profileRules(_ issues: [ValidationIssue], _ id: String, _ field: Int) -> [String] {
+        issues.compactMap {
+            guard $0.location.segmentID == id, $0.location.fieldIndex == field,
+                  case .profileConstraintViolation(let rule) = $0.code else { return nil }
+            return rule
+        }
+    }
+
+    /// ADRM p274 prints OBR-12 = "" on a delete message. A lone "" is the null, which has no components, so the profile's
+    /// component rules skip it, as the base grammar does (the owner's ruling). The identifiers of the printed line are left out;
+    /// only OBR-4 and OBR-12 matter here.
+    @Test("ADRM p274's OBR-12 = \"\" draws no finding at OBR-12, under the locale or without it")
     func auPrintedOBR12() throws {
         let line = "OBR|1|||ALL^ALL^NATA2623||||||||\(delete)"
         let found = try auIssues("2.4", line).filter { $0.location.segmentID == "OBR" && $0.location.fieldIndex == 12 }
-        #expect(found.map(\.location.componentIndex) == [3])
-        #expect(found.first?.severity == .error)
-        if case .profileConstraintViolation(let rule)? = found.first?.code {
-            #expect(rule.hasPrefix("HL7au:00044.4.1"))
-        } else {
-            Issue.record("expected a profile finding, got \(found.map(\.code))")
-        }
+        #expect(found.isEmpty, "\(found.map(\.message))")
         #expect(try issues("2.4", line).filter { $0.location.segmentID == "OBR" && $0.location.fieldIndex == 12 }.isEmpty)
+    }
+
+    /// Each row is a component rule, from a composite override (CE, XCN, CX) or a field override (EI completeness, PRD-7.3),
+    /// and a real value that breaks it. The ADRM states each of a component: p451 "the <name of the coding system> must also be
+    /// specified", p455 "XCN <assigning authority (HD)> component must be valued", p449 "CX <assigning authority (HD)>
+    /// component must be valued", p419 the EI's "Namespace ID (second component) ... must be populated", p473 "<other
+    /// qualifying info (ST)> must be a valued from HL7 Table 0203".
+    @Test("Under the AU locale a lone \"\" draws no component rule, and a real value still does",
+          arguments: [("ORU^R01^ORU_R01", "OBR", 12, "X^Danger", "HL7au:00044.4.1"),
+                      ("ORU^R01^ORU_R01", "OBR", 16, "123^Smith", "HL7au:00044.7.2"),
+                      ("ORU^R01^ORU_R01", "PID", 3, "123", "HL7au:00044.1.2"),
+                      ("ORU^R01^ORU_R01", "ORC", 2, "123", "HL7au:000005"),
+                      ("REF^I12^REF_I12", "PRD", 7, "123^AUSHICPR", "HL7au:00104.7.3.1")])
+    func auComponentRulesSkipTheNull(type: String, id: String, field: Int, real: String, rule: String) throws {
+        for null in [delete, delete + "^"] {
+            let found = Self.profileRules(try auIssues("2.4", type: type, segment(id, field, null)), id, field)
+            #expect(found.isEmpty, "\(null): \(found)")
+        }
+        let once = Self.profileRules(try auIssues("2.4", type: type, segment(id, field, real)), id, field)
+        #expect(once.contains { $0.hasPrefix(rule) }, "\(once)")
+        // The gate reads each repetition, as the base grammar's does: beside the null, the real value draws its rules once.
+        for value in ["\(delete)~\(real)", "\(real)~\(delete)"] {
+            let found = Self.profileRules(try auIssues("2.4", type: type, segment(id, field, value)), id, field)
+            #expect(found == once, "\(value): \(found)")
+        }
+    }
+
+    /// Each row is a rule whose text speaks of the field's own value, and so keeps reading the null: ADRM p396 warns that
+    /// implementations "incorrectly use null ("") values, sometimes even as a dummy empty value for Required fields". p443 "the
+    /// field OBR-24 ... must be valued and must have values from HL7 table 0074"; p421 "the OBX-2 Value Type field must match its
+    /// corresponding display format"; p490 "OBX-5 must be valued as" the VMR header's literal.
+    @Test("Under the AU locale a rule on the field's own value still reads a lone \"\"",
+          arguments: [("ORU^R01^ORU_R01", "OBR|1" + String(repeating: "|", count: 23) + "@", "OBR", 24, "HL7au:000032 "),
+                      ("ORU^R01^ORU_R01", "OBX|1|@|HTML^Display format in HTML^AUSPDI||x", "OBX", 2, "HL7au:000008.1.3"),
+                      ("REF^I12^REF_I12", "OBX|1|RP|74028-2^Report template ID^LN|1|@", "OBX", 5, "ADRM-prose:P-6")])
+    func auFieldRulesReadTheNull(type: String, line: String, id: String, field: Int, rule: String) throws {
+        for null in [delete, delete + "^"] {
+            let found = Self.profileRules(try auIssues("2.4", type: type, line.replacingOccurrences(of: "@", with: null)), id, field)
+            #expect(found.contains { $0.hasPrefix(rule) }, "\(null): \(found)")
+        }
+    }
+
+    /// A field override's shapes and correspondences are component rules too. The shipped profile holds shapes on MSH only, a
+    /// control segment, and every shipped override with either also holds a value set, so test profiles put them on OBR-12
+    /// alone, and behind a required-component list whose gate is false.
+    @Test("A field override's shapes and correspondences are read on their own, and skip a lone \"\"")
+    func auFieldOverrideTracksSkipTheNull() throws {
+        let shape = ComponentPattern(component: 1, prefix: "X", specCitation: "test-only:shape")
+        let pair = ComponentCorrespondence(keyComponent: 1, valueComponent: 3, map: ["y": ["L"]], specCitation: "test-only:pair")
+        let overrides = [
+            (FieldOverride(segmentID: "OBR", fieldIndex: 12, componentPatterns: [shape]), "test-only:shape"),
+            (FieldOverride(segmentID: "OBR", fieldIndex: 12, componentCorrespondences: [pair]), "test-only:pair"),
+            (FieldOverride(segmentID: "OBR", fieldIndex: 12, condition: "messageCode = ADT", requiredComponents: [2],
+                           componentPatterns: [shape]), "test-only:shape"),
+        ]
+        for (override, rule) in overrides {
+            let profile = Profile(locale: .auLocalisation, fieldOverrides: [override])
+            func found(_ value: String) throws -> [String] {
+                let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4\r\(segment("OBR", 12, value))\r"
+                return Self.profileRules(Validator(locale: .auLocalisation, testProfileOverride: profile)
+                    .validate(try Parser(locale: .auLocalisation).parse(wire)).issues, "OBR", 12)
+            }
+            #expect(try found("Y^text^Q") == [rule])
+            #expect(try found(delete).isEmpty, "\(rule)")
+            #expect(try found(delete + "^").isEmpty, "\(rule)")
+        }
+    }
+
+    /// Every value set a field override holds on a data segment, by side. A new one fails this list, so its author decides
+    /// whether its text speaks of the field (`constrainsField`: it reads a lone "") or of a component (it skips one). The flag
+    /// is not read on a composite override's value set, since every composite rule is a component rule, so none sets it.
+    @Test("Each AU field-override value set on a data segment is on a decided side")
+    func auValueSetSides() {
+        var sides: [Bool: [String]] = [:]
+        for override in Profile.auADRM2021.fieldOverrides
+        where !Validator.messageControlSegments.contains(override.segmentID) {
+            for set in override.componentValueSets {
+                let at = "\(override.segmentID)-\(override.fieldIndex).\(set.component)" + (set.subcomponent.map { ".\($0)" } ?? "")
+                sides[set.constrainsField, default: []].append(at + " " + String(set.specCitation?.prefix { $0 != " " } ?? "-"))
+            }
+        }
+        #expect(sides[true, default: []].sorted() == [
+            "OBR-24.1 HL7au:000032", "OBR-24.1 HL7au:000032.2",
+            "OBX-2.1 HL7au:000008.1.3", "OBX-2.1 HL7au:000008.1.3", "OBX-2.1 HL7au:000008.1.3", "OBX-2.1 HL7au:000008.1.3",
+            "OBX-2.1 HL7au:000008.1.3", "OBX-2.1 ADRM-prose:P-6",
+            "OBX-5.1 ADRM-prose:P-6", "OBX-5.2.1 ADRM-prose:P-6", "OBX-5.2.2 ADRM-prose:P-6", "OBX-5.2.3 ADRM-prose:P-6",
+            "OBX-5.3 ADRM-prose:P-6", "OBX-5.4 ADRM-prose:P-6",
+        ].sorted())
+        #expect(sides[false, default: []].sorted() == [
+            "OBX-3.1 HL7au:000008.1", "OBX-6.3 HL7au:00050.1.5", "PRD-7.2 HL7au:00104.7.2.1", "PRD-7.3 HL7au:00104.7.3.1",
+        ].sorted())
+        #expect(Profile.auADRM2021.compositeOverrides.allSatisfy { $0.componentValueSets.allSatisfy { !$0.constrainsField } })
+    }
+
+    /// Registered, Blocking: pins a misfire as it stands, for a later fix to move. `carriesNonNullValue` reads only `""` as the
+    /// null, while `isDeleteIndicator` reads `""^` too (v2.3 p2-57 "are equivalent", v2.5.1 2.6.2 p2-17). So `""^` draws the
+    /// AU "not used" warnings (ADRM pp228, 229, 343), and the base OBX-2 and OBX-5 prohibitions under OBX-11 = O on both
+    /// locales, where `""` draws neither.
+    @Test("Registered: \"\"^ still draws the prohibitions that exempt \"\"")
+    func caretNullProhibitions() throws {
+        for (type, id, field, rule) in [("ORU^R01^ORU_R01", "OBR", 26, "ADRM-prose:P-11"),
+                                         ("ORU^R01^ORU_R01", "OBR", 29, "ADRM-prose:P-13"),
+                                         ("REF^I12^REF_I12", "ORC", 24, "ADRM-prose:P-12")] {
+            #expect(Self.profileRules(try auIssues("2.4", type: type, segment(id, field, delete)), id, field).isEmpty)
+            let found = Self.profileRules(try auIssues("2.4", type: type, segment(id, field, delete + "^")), id, field)
+            #expect(found.count == 1 && found[0].hasPrefix(rule), "\(found)")
+        }
+        for field in [2, 5] {
+            var fields = ["OBX", "1", "ST", "X^Y^L", "", "", "", "", "", "", "", "O"]
+            if field == 2 { fields[2] = "@" } else { fields[5] = "@" }
+            func prohibited(_ null: String) throws -> [ValidationIssue] {
+                let line = fields.joined(separator: "|").replacingOccurrences(of: "@", with: null)
+                return try (issues("2.4", line) + auIssues("2.4", line)).filter {
+                    $0.location.segmentID == "OBX" && $0.location.fieldIndex == field && $0.code == .conditionalFieldProhibited
+                }
+            }
+            #expect(try prohibited(delete).isEmpty)
+            #expect(try prohibited(delete + "^").map(\.severity) == [.error, .error], "OBX-\(field)")
+        }
+    }
+
+    /// MSH is a message control segment, where "" is no delete indicator (`Validator.isDeleteIndicator`), so the CE rule still
+    /// reads MSH-19 = "" as a code with no coding system.
+    @Test("Under the AU locale a control segment's component rule still reads \"\"", arguments: ["\"\"", "\"\"^"])
+    func auControlSegmentKeepsItsRules(null: String) throws {
+        let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4|||||||\(null)\r"
+        let found = Self.profileRules(Validator(options: .default, locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(wire)).issues, "MSH", 19)
+        #expect(found.contains { $0.hasPrefix("HL7au:00044.4.1") }, "\(found)")
     }
 }

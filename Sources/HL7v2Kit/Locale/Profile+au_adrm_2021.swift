@@ -750,11 +750,13 @@ extension Profile {
                     // TX^Octet-stream'" — the full RP literal, pinned
                     // per component/subcomponent like the 000040.3
                     // literal pins. Gated on the header's own OBX-3
-                    // discriminator (74028-2, Report template ID).
+                    // discriminator (74028-2, Report template ID). The
+                    // text pins the field, so a lone "" is read too.
                     ComponentValueSet(
                         component: 1,
                         allowedValues: ["HL7V2-VMR.v1"],
                         condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        constrainsField: true,
                         specCitation: "ADRM-prose:P-6 — VMR header OBX-5.1 (pointer) must be \"HL7V2-VMR.v1\"; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                     ComponentValueSet(
@@ -762,6 +764,7 @@ extension Profile {
                         subcomponent: 1,
                         allowedValues: ["HL7V2 VMR"],
                         condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        constrainsField: true,
                         specCitation: "ADRM-prose:P-6 — VMR header OBX-5.2.1 (application namespace) must be \"HL7V2 VMR\"; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                     ComponentValueSet(
@@ -769,6 +772,7 @@ extension Profile {
                         subcomponent: 2,
                         allowedValues: ["99A-9AAC5A649D18B6F2"],
                         condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        constrainsField: true,
                         specCitation: "ADRM-prose:P-6 — VMR header OBX-5.2.2 (universal ID) must be \"99A-9AAC5A649D18B6F2\"; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                     ComponentValueSet(
@@ -776,18 +780,21 @@ extension Profile {
                         subcomponent: 3,
                         allowedValues: ["L"],
                         condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        constrainsField: true,
                         specCitation: "ADRM-prose:P-6 — VMR header OBX-5.2.3 (universal ID type) must be \"L\"; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                     ComponentValueSet(
                         component: 3,
                         allowedValues: ["TX"],
                         condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        constrainsField: true,
                         specCitation: "ADRM-prose:P-6 — VMR header OBX-5.3 (type of data) must be \"TX\"; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                     ComponentValueSet(
                         component: 4,
                         allowedValues: ["Octet-stream"],
                         condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        constrainsField: true,
                         specCitation: "ADRM-prose:P-6 — VMR header OBX-5.4 (data subtype) must be \"Octet-stream\"; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                 ],
@@ -903,6 +910,7 @@ extension Profile {
                         allowedValues: HL7CodeTables.table0074,
                         localTableExtension: "0074",
                         condition: "messageCode = ORU",
+                        constrainsField: true,
                         specCitation: "HL7au:000032 — OBR-24 must be valued from HL7 Table 0074 (Diagnostic Service Section) on Senders Results; AU ADRM-2021 Appendix 5 p. 444, table pp. 225-226"
                     ),
                     ComponentValueSet(
@@ -910,6 +918,7 @@ extension Profile {
                         allowedValues: HL7CodeTables.table0074,
                         localTableExtension: "0074",
                         condition: "messageCode = REF",
+                        constrainsField: true,
                         specCitation: "HL7au:000032.2 — OBR-24 must be valued from HL7 Table 0074 on Senders Referrals (content-appropriateness half not machine-checkable); AU ADRM-2021 Appendix 5 p. 444"
                     ),
                 ],
@@ -949,30 +958,35 @@ extension Profile {
                         component: 1,
                         allowedValues: ["ED"],
                         condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = RTF",
+                        constrainsField: true,
                         specCitation: "HL7au:000008.1.3 — an RTF display segment's OBX-2 must be ED; AU ADRM-2021 Display Format codes p. 247"
                     ),
                     ComponentValueSet(
                         component: 1,
                         allowedValues: ["ED"],
                         condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = HTML",
+                        constrainsField: true,
                         specCitation: "HL7au:000008.1.3 — an HTML display segment's OBX-2 must be ED; AU ADRM-2021 Display Format codes p. 247"
                     ),
                     ComponentValueSet(
                         component: 1,
                         allowedValues: ["ED"],
                         condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = PDF",
+                        constrainsField: true,
                         specCitation: "HL7au:000008.1.3 — a PDF display segment's OBX-2 must be ED; AU ADRM-2021 Display Format codes p. 247"
                     ),
                     ComponentValueSet(
                         component: 1,
                         allowedValues: ["FT"],
                         condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = TXT",
+                        constrainsField: true,
                         specCitation: "HL7au:000008.1.3 — a TXT display segment's OBX-2 must be FT; AU ADRM-2021 Display Format codes p. 247"
                     ),
                     ComponentValueSet(
                         component: 1,
                         allowedValues: ["FT"],
                         condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = PIT",
+                        constrainsField: true,
                         specCitation: "HL7au:000008.1.3 — a PIT display segment's OBX-2 must be FT; AU ADRM-2021 Display Format codes p. 247"
                     ),
                     // M7-P4 / ADRM-prose:P-6 — the VMR header OBX
@@ -985,6 +999,7 @@ extension Profile {
                         component: 1,
                         allowedValues: ["RP"],
                         condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        constrainsField: true,
                         specCitation: "ADRM-prose:P-6 — the VMR header OBX (OBX-3.1 = 74028-2) must have OBX-2 = RP; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                 ],

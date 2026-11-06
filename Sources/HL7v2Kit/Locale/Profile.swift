@@ -606,6 +606,14 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// `nil` (default): the caller's extensions do not apply.
     let localTableExtension: String?
 
+    /// `true` when the rule's text constrains the field's own value, not one of its components, as HL7au:000032 does ("the
+    /// field OBR-24 ... must be valued and must have values from HL7 table 0074", ADRM p443). Such a rule reads a lone `""`
+    /// as the field's value: ADRM p396 warns against `""` "as a dummy empty value for Required fields". `false` (default):
+    /// a component rule, which skips a lone `""` on a data segment (`Validator.isDeleteIndicator`), since
+    /// the null has no components (the owner's ruling). Read by the field-override track only; every composite rule is a
+    /// component rule.
+    let constrainsField: Bool
+
     init(
         component: Int,
         subcomponent: Int? = nil,
@@ -613,6 +621,7 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
         allowedPatterns: [HL7Table.CodePattern] = [],
         localTableExtension: String? = nil,
         condition: String? = nil,
+        constrainsField: Bool = false,
         specCitation: String? = nil
     ) {
         self.component = component
@@ -621,6 +630,7 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
         self.allowedPatterns = allowedPatterns
         self.localTableExtension = localTableExtension
         self.condition = condition
+        self.constrainsField = constrainsField
         self.specCitation = specCitation
     }
 
