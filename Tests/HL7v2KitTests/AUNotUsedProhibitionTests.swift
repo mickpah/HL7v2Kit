@@ -10,7 +10,7 @@
 // (not X), so per the documented severity convention this is a warning,
 // not an error (fix round 1).
 //
-// AU ADRM-2021 §7.3.11.24, p. 343 (ORC-24 Ordering Provider Address):
+// AU ADRM-2021 §7.3.11.24, p. 344 (ORC-24 Ordering Provider Address):
 // "This field should not be used. Use ORC-22 for the address of the
 // prescriber's facility." AU-specific (base v2.4 and the ADRM's own
 // Observation Ordering chapter carry no such note) and scoped to

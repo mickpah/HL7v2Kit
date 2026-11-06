@@ -421,31 +421,65 @@ struct EarlierDeleteIndicatorTests {
         #expect(Profile.auADRM2021.compositeOverrides.allSatisfy { $0.componentValueSets.allSatisfy { !$0.constrainsField } })
     }
 
-    /// Registered, Blocking: pins a misfire as it stands, for a later fix to move. `carriesNonNullValue` reads only `""` as the
-    /// null, while `isDeleteIndicator` reads `""^` too (v2.3 p2-57 "are equivalent", v2.5.1 2.6.2 p2-17). So `""^` draws the
-    /// AU "not used" warnings (ADRM pp228, 229, 343), and the base OBX-2 and OBX-5 prohibitions under OBX-11 = O on both
-    /// locales, where `""` draws neither.
-    @Test("Registered: \"\"^ still draws the prohibitions that exempt \"\"")
+    /// `""^` is the null, as `""` is: a component left off the end is not present. v2.3 p2-57, v2.3.1 p2-69, v2.4 p2-87:
+    /// |ABC^DEF^^| and |ABC^DEF| "are equivalent". v2.5.1 pp2-16, 2-17, v2.6 pp15-16, v2.7.1 pp17-18, v2.8.2 pp19-20, v2.9
+    /// pp20-21, v2.9.1 pp21-22: a separator goes only before a populated component, and a component "not included" is "not
+    /// present". So `""^`, `""^^` and `""~""^` draw no AU "not used" warning (ADRM pp228, 229, 344), no full-predicate
+    /// rule, and no base OBX-2 (v2.3.1 to v2.8.2) or OBX-5 (v2.3.1 to v2.9.1) prohibition under OBX-11 = O on either
+    /// locale. A real value draws each, and so does one beside the null: `""^X` holds X in its second component, `""~X`
+    /// in its second repetition.
+    @Test("\"\"^ is the null to the prohibitions, as \"\" is, and a real value still draws each")
     func caretNullProhibitions() throws {
+        let nulls = [delete, delete + "^", delete + "^^", delete + "~" + delete + "^"]
+        let values = ["X", delete + "^X", delete + "~X"]
         for (type, id, field, rule) in [("ORU^R01^ORU_R01", "OBR", 26, "ADRM-prose:P-11"),
                                          ("ORU^R01^ORU_R01", "OBR", 29, "ADRM-prose:P-13"),
                                          ("REF^I12^REF_I12", "ORC", 24, "ADRM-prose:P-12")] {
-            #expect(Self.profileRules(try auIssues("2.4", type: type, segment(id, field, delete)), id, field).isEmpty)
-            let found = Self.profileRules(try auIssues("2.4", type: type, segment(id, field, delete + "^")), id, field)
-            #expect(found.count == 1 && found[0].hasPrefix(rule), "\(found)")
+            for value in nulls + values {
+                let found = Self.profileRules(try auIssues("2.4", type: type, segment(id, field, value)), id, field)
+                #expect(found.map { $0.hasPrefix(rule) } == (nulls.contains(value) ? [] : [true]), "\(value) \(found)")
+            }
         }
-        for field in [2, 5] {
-            var fields = ["OBX", "1", "ST", "X^Y^L", "", "", "", "", "", "", "", "O"]
-            if field == 2 { fields[2] = "@" } else { fields[5] = "@" }
-            func prohibited(_ null: String) throws -> [ValidationIssue] {
-                let line = fields.joined(separator: "|").replacingOccurrences(of: "@", with: null)
-                return try (issues("2.4", line) + auIssues("2.4", line)).filter {
-                    $0.location.segmentID == "OBX" && $0.location.fieldIndex == field && $0.code == .conditionalFieldProhibited
+        for value in nulls + values {
+            let found = Self.profileRules(try auIssues("2.4", "OBX|1|\(value)|X^Y^L||||||||X"), "OBX", 2)
+            #expect(found.filter { $0.hasPrefix("HL7au:00060.4") }.count == (nulls.contains(value) ? 0 : 1), "\(value) \(found)")
+        }
+        for (version, fields) in [("2.3.1", [2, 5]), ("2.4", [2, 5]), ("2.5.1", [2, 5]), ("2.6", [2, 5]), ("2.7.1", [2, 5]),
+                                  ("2.8.2", [2, 5]), ("2.9", [5]), ("2.9.1", [5])] {
+            for field in fields {
+                for value in nulls + values {
+                    var line = ["OBX", "1", "ST", "X^Y^L", "", "", "", "", "", "", "", "O"]
+                    line[field] = value
+                    let found = try (issues(version, line.joined(separator: "|")) + auIssues(version, line.joined(separator: "|")))
+                        .filter { $0.location.segmentID == "OBX" && $0.location.fieldIndex == field
+                            && $0.code == .conditionalFieldProhibited }
+                    #expect(found.map(\.severity) == (nulls.contains(value) ? [] : [.error, .error]), "\(version) OBX-\(field) \(value)")
                 }
             }
-            #expect(try prohibited(delete).isEmpty)
-            #expect(try prohibited(delete + "^").map(\.severity) == [.error, .error], "OBX-\(field)")
         }
+    }
+
+    /// On a control segment "" is no delete indicator (`Validator.isDeleteIndicator`), so `""` and `""^` are values there, and
+    /// a prohibition reads them as it reads X, in a profile and in the base grammar alike.
+    @Test("A control segment's prohibitions read \"\" and \"\"^ as values", arguments: ["\"\"", "\"\"^", "X"])
+    func controlSegmentProhibitionsReadTheNull(value: String) throws {
+        let rule = ProfileFieldProhibition(condition: "messageCode = ORU", severity: .warning, specCitation: "test-only:control")
+        let profile = Profile(locale: .auLocalisation,
+                              fieldOverrides: [FieldOverride(segmentID: "MSH", fieldIndex: 19, prohibitions: [rule])])
+        let message = try Parser(locale: .auLocalisation)
+            .parse("MSH|^~\\&|LAB|FAC|GP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4|||||||\(value)\r")
+        let found = Self.profileRules(Validator(locale: .auLocalisation, testProfileOverride: profile).validate(message).issues,
+                                      "MSH", 19)
+        #expect(found == ["test-only:control"])
+        let grammar = FieldGrammar(index: 19, name: "Principal Language Of Message", dataType: "CE", optionality: .optional,
+                                   repeatability: .single, additionalProhibitions: [
+                                       FieldProhibition(condition: "MSH-9.1 = ORU", severity: .error, permitsNull: true),
+                                   ])
+        var issues: [ValidationIssue] = []
+        Validator().checkProhibition(grammar, segment: message.segments[0], segmentIndex: 0, message: message,
+                                     isPopulated: true, field: message.segments[0].field(19),
+                                     location: IssueLocation(segmentID: "MSH", segmentIndex: 0, fieldIndex: 19), issues: &issues)
+        #expect(issues.map(\.code) == [.conditionalFieldProhibited])
     }
 
     /// MSH is a message control segment, where "" is no delete indicator (`Validator.isDeleteIndicator`), so the CE rule still

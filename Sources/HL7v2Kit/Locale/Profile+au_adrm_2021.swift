@@ -661,7 +661,7 @@ extension Profile {
                 length: "250",
                 lengthCitation: "AU ADRM-2021 ORC attribute table p. 282, LEN 250**; p. 283: \"The field length of ORC-2, ORC-3 and ORC-4 of 250 characters for Australian usage is a variance to the HL7 V 2.4 field length of 22 characters.\""
             ),
-            // ADRM-prose:P-12 (P4-27) — ADRM-2021 §7.3.11.24, p. 343:
+            // ADRM-prose:P-12 (P4-27) — ADRM-2021 §7.3.11.24, p. 344:
             // "This field should not be used. Use ORC-22 for the address
             // of the prescriber's facility." Unconditional, no Appendix 5
             // HL7au ID. Base v2.4 CH04 §4.5.1.24 has no such note (ADRM
@@ -679,7 +679,7 @@ extension Profile {
                     ProfileFieldProhibition(
                         condition: "messageCode = REF",
                         severity: .warning,
-                        specCitation: "ADRM-prose:P-12 — ORC-24 (Ordering Provider Address) should not be used in Referrals; use ORC-22 for the prescriber's facility address instead; AU ADRM-2021 §7.3.11.24 p. 343"
+                        specCitation: "ADRM-prose:P-12 — ORC-24 (Ordering Provider Address) should not be used in Referrals; use ORC-22 for the prescriber's facility address instead; AU ADRM-2021 §7.3.11.24 p. 344"
                     ),
                 ],
                 specCitation: "ADRM-prose:P-12 — ORC-24 should not be used in Referrals"

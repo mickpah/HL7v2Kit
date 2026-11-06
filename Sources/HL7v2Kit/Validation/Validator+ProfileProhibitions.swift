@@ -6,7 +6,7 @@
 extension Validator {
     /// Report every `ProfileFieldProhibition` on the matching field
     /// overrides whose condition holds while the field carries a value
-    /// other than the HL7 null (`""`). The null is always exempt here,
+    /// other than the HL7 null (`carriesNonNullValue`). The null is exempt here,
     /// unconditionally — unlike the base `FieldProhibition`, which only
     /// exempts it when `permitsNull` is set — because every profile
     /// prohibition is a "not used" rule and the null is a delete
@@ -32,7 +32,7 @@ extension Validator {
         let rules = profile.fieldOverrides
             .filter { $0.segmentID == location.segmentID && $0.fieldIndex == location.fieldIndex }
             .flatMap(\.prohibitions)
-        guard !rules.isEmpty, carriesNonNullValue(field) else { return }
+        guard !rules.isEmpty, carriesNonNullValue(field, segmentID: location.segmentID) else { return }
         for rule in rules where conditionTriggers(
             rule.condition,
             in: segment,
@@ -71,7 +71,7 @@ extension Validator {
               let condition = fieldGrammar.condition, !condition.isEmpty,
               rule.marked.contains(FullPredicateConditions.key(
                 version: grammarVersion, segmentID: location.segmentID, fieldIndex: fieldGrammar.index)),
-              carriesNonNullValue(field)
+              carriesNonNullValue(field, segmentID: location.segmentID)
         else { return }
         func truth(_ c: String) -> ConditionTruth {
             conditionTruth(c, in: segment, segmentIndex: segmentArrayIndex,
@@ -93,16 +93,13 @@ extension Validator {
         ))
     }
 
-    /// True when some repetition holds content other than a lone HL7
-    /// null (`""`). Shared by the profile prohibitions above and by the
-    /// base `FieldProhibition.permitsNull` rules (P4-26), so both treat
-    /// the null the same way.
-    func carriesNonNullValue(_ field: Field) -> Bool {
-        field.repetitions.contains { repetition in
-            if repetition.stringValue == "\"\"" { return false }
-            return repetition.components.contains { component in
-                component.subcomponents.contains { !$0.value.isEmpty }
-            }
-        }
+    /// True when some repetition holds content other than the HL7 null,
+    /// as `isDeleteIndicator` reads it in each repetition: `""` first and
+    /// nothing after it, on a data segment; a control segment has no
+    /// null. Shared by the profile prohibitions above and by the base
+    /// `FieldProhibition.permitsNull` rules (P4-26), so both read the
+    /// null as the component rules do.
+    func carriesNonNullValue(_ field: Field, segmentID: String) -> Bool {
+        field.repetitions.contains { isRepetitionPopulated($0) && !isDeleteIndicator($0, segmentID: segmentID) }
     }
 }

@@ -2423,7 +2423,7 @@ public struct Validator: Sendable {
             rules.insert(FieldProhibition(condition: prohibition, severity: grammar.prohibitedSeverity), at: 0)
         }
         let hasNonNullValue = !rules.contains(where: \.permitsNull)
-            || field.map { carriesNonNullValue($0) } ?? false
+            || field.map { carriesNonNullValue($0, segmentID: location.segmentID) } ?? false
         for rule in rules where !rule.condition.isEmpty
             && (hasNonNullValue || !rule.permitsNull)
             && conditionTriggers(
