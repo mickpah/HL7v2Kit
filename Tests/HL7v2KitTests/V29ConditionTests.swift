@@ -150,6 +150,15 @@ struct V29ConditionTests {
         // A lone indicator is the rule's whole exception: one real repetition is still a value.
         #expect(try Self.reported(wire(status: "F", value: "\"\"~5"), "OBX", 2, .missing))
         #expect(try Self.reported(wire(status: "F", value: "\"\"~5", absentReason: "A"), "OBX", 32, .prohibited))
+        // An empty repetition adds no value: `""~` and `~""` read as `""`, and `5~` as `5`.
+        for value in ["\"\"~", "~\"\""] {
+            #expect(try !Self.reported(wire(status: "F", value: value), "OBX", 2, .missing), "\(value)")
+            #expect(try !Self.reported(wire(status: "F", value: value, absentReason: "A"), "OBX", 32, .prohibited), "\(value)")
+        }
+        for value in ["5", "5~"] {
+            #expect(try Self.reported(wire(status: "F", value: value), "OBX", 2, .missing), "\(value)")
+            #expect(try Self.reported(wire(status: "F", value: value, absentReason: "A"), "OBX", 32, .prohibited), "\(value)")
+        }
     }
 
     /// CH07 7.4.3.13 p81: "would only be valued if SPM-11 Specimen Role has the value "G" or "L"".

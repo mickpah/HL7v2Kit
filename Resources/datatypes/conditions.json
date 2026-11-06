@@ -453,7 +453,7 @@
       "XAD": {
         "7": {
           "condition": "repeated",
-          "citation": "HL7 v2.9 Chapter 2A, XAD.7 Address Type (sec 2A.3.87.7, p 90): 'XAD.7 is required if there are multiple occurrences of XAD in a field.' Carried from v2.8.2 (2.A.87.7), where it first appears; the sentence is the same."
+          "citation": "HL7 v2.9 Chapter 2A, XAD.7 Address Type (sec 2A.3.87.7, p 90): 'XAD.7 is required if there are multiple occurrences of XAD in a field.' It first appears in v2.7.1 (2.A.86.7, p 90) and is carried through v2.8.2 (2.A.87.7); the sentence is the same."
         }
       },
       "ERL": {

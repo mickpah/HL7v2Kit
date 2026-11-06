@@ -74,6 +74,9 @@ The entries are condensed; the git history carries the detail.
   P-13 (OBR-29) or HL7au:00060.4 at OBX-2. A value beside the null (`""^X`, `""~X`) still draws
   each. On a message-control segment a prohibition reads `""` as a value; no shipped rule is
   affected. ADRM-prose:P-12 cites p. 344, which changes the text of every P-12 issue (#31).
+- `anyRepeat(X) != v` judges populated repetitions only, as `not in` does, so an empty repetition
+  no longer satisfies it: on v2.9 and 2.9.1 an OBX-5 of `""~` draws neither OBX-2's
+  `conditionalFieldMissing` nor OBX-32's `conditionalFieldProhibited`, as `""` draws neither (#32).
 - `IHI` is out of the AU Table 0363, which never printed it: a Referral's PRD-7.2 `IHI` needs `VDI`
   at PRD-7.3, and under `auAssigningAuthorityTable` draws HL7au:00104.7.2.1 unless listed in
   `localTableExtensions["0363"]` (#31).
@@ -81,10 +84,15 @@ The entries are condensed; the git history carries the detail.
 ### Security
 
 - The anonymiser replaced no date given only to the month, so a month of birth passed through in
-  clear; it now moves (see Changed). A date value that is not a valid DTM now becomes `[REDACTED]`
-  at any length, under the tool and under a key: 3.31.0 kept one under eight characters in clear,
-  and read a longer one as a date from its first eight characters, keeping the rest, so
-  `1980-06-15` became `1979121515` with the day of birth kept. The HL7 null `""` is kept (#31).
+  clear; it now moves (see Changed). A date repetition now moves only in the shape its type
+  defines, under the tool and under a key: component 1 a valid DTM and, on a TS (v2.3 to v2.5.1),
+  TS.2 empty or one of its six codes, which is kept. Any other repetition becomes `[REDACTED]` whole,
+  at any length. 3.31.0 kept a value under eight characters in clear, read a longer one as a date
+  from its first eight characters, keeping the rest, so `1980-06-15` became `1979121515` with the
+  day of birth kept, and read only component 1's first subcomponent, so `19800615&1200` and
+  `^19800615` passed unchanged and `19800615^19800615` kept its second copy. A range (GSP-6, GSR-9,
+  GSC-5) becomes `[REDACTED]` whole when an end is not a DTM, `""` or empty, or when it holds a third
+  component. The HL7 null `""` is kept (#31, #32).
 
 ## [3.31.0]
 

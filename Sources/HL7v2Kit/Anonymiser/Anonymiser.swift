@@ -30,10 +30,15 @@ import Foundation
 /// included, is kept as it is.
 ///
 /// A date moves by one to four whole weeks, or as many whole months when given only to the
-/// month; one given only to the year is kept, and a value of any length that is not a date
-/// becomes `[REDACTED]`. A range moves both ends at its coarser end's precision, so it keeps
-/// its order: beside a year, the finer end is cut to its year. Under a key, a range's end moves
-/// by its start's shift, so it may not map as the same date elsewhere does.
+/// month; one given only to the year is kept, and so is the HL7 null `""`. A date moves only in
+/// the shape its type defines: its first component a date and, where the version types the field
+/// TS (v2.3 to v2.5.1), a degree of precision that is empty or one of its codes, which is kept.
+/// Any other repetition becomes `[REDACTED]` whole: a value of any length that is not a date, and
+/// one with a subcomponent or a further component. A range moves both ends at its coarser end's
+/// precision, so it keeps its order: beside a year, the finer end is cut to its year. A range
+/// with an end that is not a date, or more than its two components, becomes `[REDACTED]` whole.
+/// Under a key, a range's end moves by its start's shift, so it may not map as the same date
+/// elsewhere does.
 public struct Anonymiser: Sendable {
     /// What a caller-supplied replacement sees for one identifier: a CX, or an identifier
     /// held as text (PID-19).
@@ -74,6 +79,7 @@ public struct Anonymiser: Sendable {
 
     /// `message` with its covered fields replaced; see the type's discussion.
     public func anonymise(_ message: Message) -> Message {
+        let grammar = Validator.grammarTable(for: message.version)
         let segments = message.segments.map { segment -> Segment in
             let id = segment.segmentID
             guard id == "MSH" || id == "NTE" || Self.coverage[id] != nil else { return segment }
@@ -84,7 +90,9 @@ public struct Anonymiser: Sendable {
             case "OBX": redactObservationValue(&fields, valueType: segment.field(2)?.stringValue)
             default: break
             }
-            for (index, rule) in Self.coverage[id] ?? [] { apply(rule, to: &fields, at: index) }
+            for (index, rule) in Self.coverage[id] ?? [] {
+                apply(rule, to: &fields, at: index, ts: grammar[id]?.field(index)?.dataType == "TS")
+            }
             // Re-hydrated as the path editor does, so a typed segment stays typed (#12).
             return SegmentRegistry.hydrate(UnknownSegment(segmentID: id, fields: fields))
         }

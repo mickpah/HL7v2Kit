@@ -247,8 +247,8 @@ struct AnonymiserTests {
         for (range, keyed, tool) in [
             ("20210101", "20201218", "20210115"),                               // no end: the start moves
             ("^20210630", "^20210707", "^20210714"),                            // no start: the end, by its own shift
-            ("20210101^2021XX30", "20201218^[REDACTED]", "20210115^[REDACTED]"), // no DTM, whatever its length:
-            ("20210101^SYNTEXT", "20201218^[REDACTED]", "20210115^[REDACTED]"),  // replaced
+            ("20210101^2021XX30", "[REDACTED]", "[REDACTED]"),                  // an end no DTM, whatever its length:
+            ("20210101^SYNTEXT", "[REDACTED]", "[REDACTED]"),                   // the range replaced whole
         ] {
             #expect(try Self.validityPeriod(range, keyed: true) == keyed, "\(range), keyed")
             #expect(try Self.validityPeriod(range, keyed: false) == tool, "\(range), tool")

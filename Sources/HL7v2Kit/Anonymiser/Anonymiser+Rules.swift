@@ -10,10 +10,13 @@ extension Anonymiser {
         /// XPN: family and given names replaced, the middle name emptied.
         case name
         /// TS or DTM: moved by one to four whole weeks, or whole months when given to the month; a
-        /// year is kept, and a value that is not a DTM, of any length, becomes `[REDACTED]`.
+        /// year is kept. A repetition moves only in the shape its type defines: component 1 a DTM,
+        /// and on a TS a TS.2 that is empty or one of its codes, which is kept. Any other repetition,
+        /// a value that is no DTM included, becomes `[REDACTED]` whole.
         case date
         /// DR: both ends moved as by `date`, by one shift at the coarser end's precision, so the range
-        /// keeps its order; beside a year end, a finer end is cut to its year.
+        /// keeps its order; beside a year end, a finer end is cut to its year. A repetition whose ends
+        /// are not both a DTM, `""` or empty, or that holds more than two components, becomes `[REDACTED]`.
         case dateRange
         /// EI: the entity identifier (component 1) replaced; components 2 to 4, its assigning
         /// authority (CH02A 2A.2.25), kept. No CX, so the caller's identifier closure is not asked.
@@ -127,17 +130,29 @@ extension Anonymiser {
         redactEach(&fields, 3) { _ in .scalar("[REDACTED]") }
     }
 
-    /// Field `index` replaced under `rule`, when populated; an empty or absent field is kept.
-    func apply(_ rule: Rule, to fields: inout [Field], at index: Int) {
+    /// Field `index` replaced under `rule`, when populated; an empty or absent field is kept. `ts` is
+    /// true when the message's version types the field TS, so a date may carry TS.2.
+    func apply(_ rule: Rule, to fields: inout [Field], at index: Int, ts: Bool) {
         guard fields.indices.contains(index), isPopulated(fields[index]) else { return }
         let original = fields[index]
         fields[index] = Field(repetitions: original.repetitions.enumerated().map { i, repetition in
-            replaced(repetition, under: rule, repetition: i)
+            replaced(repetition, under: rule, repetition: i, ts: ts)
         })
     }
 
+    /// What TS.2, the degree of precision, may hold and be kept: nothing, or a code of Table 0529
+    /// (v2.5.1 2.A.77.2 p 2-225; v2.3 2.8.42 p 2-45, v2.3.1 2.8.44 p 2-52 and v2.4 2.9.47 p 2-69 list
+    /// the same six). A code names a precision and holds no part of the date; TS.1's digits decide
+    /// how the date moves.
+    static let degreesOfPrecision: Set<String> = ["", "Y", "L", "D", "H", "M", "S"]
+
+    /// True for a DTM, the HL7 null `""` or nothing: what a date component may hold and be kept or moved.
+    static func isDate(_ raw: String) -> Bool {
+        raw.isEmpty || raw == "\"\"" || datePrecision(raw) != nil
+    }
+
     /// One repetition of a covered field; `i` is its index in the field.
-    func replaced(_ repetition: Repetition, under rule: Rule, repetition i: Int) -> Repetition {
+    func replaced(_ repetition: Repetition, under rule: Rule, repetition i: Int, ts: Bool) -> Repetition {
         switch rule {
         case .identifier:
             guard case .keyed(let key) = source else {
@@ -181,12 +196,17 @@ extension Anonymiser {
                 ? setting(repetition, [0: id, 1: name.family, 2: name.given, 3: "", 10: ""])
                 : .components([id, name.family, name.given])
         case .date:
-            let raw = repetition.components.first?.stringValue ?? ""
+            // Components as text, so a subcomponent makes component 1 no DTM and TS.2 no code.
+            let parts = repetition.components.map(Self.text), raw = parts.first ?? ""
+            let defined = parts.count <= 1 || (ts && parts.count == 2 && Self.degreesOfPrecision.contains(parts[1]))
+            guard defined, Self.isDate(raw) else { return .scalar("[REDACTED]") }
             return raw.isEmpty ? repetition : setting(repetition, [0: scrubDOB(raw, salt: source.pick("date", raw).salt)])
         case .dateRange:
+            let ends = repetition.components.map(Self.text)
+            guard ends.count <= 2, ends.allSatisfy(Self.isDate) else { return .scalar("[REDACTED]") }
             // One shift, chosen from the start (or the end when it stands alone), at the coarser end's
             // precision, keeps the range in order.
-            let start = Self.value(repetition, 0) ?? "", end = Self.value(repetition, 1) ?? ""
+            let start = ends.first ?? "", end = ends.count == 2 ? ends[1] : ""
             let salt = source.pick("date", start.isEmpty ? end : start).salt
             let coarser = [start, end].compactMap(datePrecision).min() ?? .day
             return setting(repetition, [0: scrubDOB(start, salt: salt, at: coarser),

@@ -120,6 +120,11 @@ struct V291ConditionTests {
         }
         #expect(try found("\"\"", reason: "A").isEmpty)
         #expect(try found("\"\"~5", reason: "A").map(\.location.fieldIndex).sorted { ($0 ?? 0) < ($1 ?? 0) } == [2, 32])
+        // An empty repetition adds no value: `""~` and `~""` read as `""`, and `5~` as `5`.
+        for value in ["\"\"~", "~\"\""] { #expect(try found(value, reason: "A").isEmpty, "\(value)") }
+        for value in ["5", "5~"] {
+            #expect(try found(value, reason: "A").map(\.location.fieldIndex).sorted { ($0 ?? 0) < ($1 ?? 0) } == [2, 32], "\(value)")
+        }
     }
 
     // MARK: - SN.2 and ERL.3, which Task 10 could not run on the wire

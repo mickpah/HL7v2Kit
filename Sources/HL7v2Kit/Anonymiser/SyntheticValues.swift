@@ -74,14 +74,15 @@ package func scrubDOB(_ raw: String, salt: Int, at coarsest: DatePrecision = .da
     components.month = mm
     components.day = dd
     let calendar = Calendar(identifier: .gregorian)
-    guard let date = calendar.date(from: components) else { return raw }
+    guard let date = calendar.date(from: components) else { return "[REDACTED]" }
     // Shift by one to four whole weeks, or as many whole months, either way: the age stays about
     // right and the shift is never zero. By weeks the day of the week holds; by months the day of
     // the month is kept where the month has it, so the 31st becomes a shorter month's last day.
     let weeks = salt % 4 + 1
     let shift = salt & 4 == 0 ? weeks : -weeks
     guard let shifted = precision == .month ? calendar.date(byAdding: .month, value: shift, to: date)
-                                            : calendar.date(byAdding: .day, value: 7 * shift, to: date) else { return raw }
+                                            : calendar.date(byAdding: .day, value: 7 * shift, to: date)
+    else { return "[REDACTED]" }
     let shiftedComponents = calendar.dateComponents([.year, .month, .day], from: shifted)
     if own == .month {
         return String(format: "%04d%02d%@", shiftedComponents.year ?? yyyy, shiftedComponents.month ?? mm, tail)

@@ -103,7 +103,7 @@ public struct Validator: Sendable {
                         severity: .info,
                         code: .segmentWithdrawnInVersion,
                         location: IssueLocation(segmentID: id, segmentIndex: occurrence),
-                        message: "Segment '\(id)' is listed as \(withdrawn.printed) by HL7 v\(message.version.grammarVersion.rawValue) "
+                        message: "Segment '\(id)' is listed as '\(withdrawn.printed)' in HL7 v\(message.version.grammarVersion.rawValue) "
                             + "Appendix A and defined through v\(withdrawn.definedThrough); its fields were not validated"
                     ))
                 } else {
@@ -2641,7 +2641,11 @@ public struct Validator: Sendable {
                 message: message,
                 currentSegmentID: currentSegmentID
             ) else { return .unknown }
-            let found = ConditionTruth.any(slots.map { applyPredicate(predicate, to: $0, version: message.version) })
+            // `!=` judges populated slots only, as `not in` does: an empty repetition adds no value, so
+            // `""~` reads as `""` (OBX-2 and OBX-32 on v2.9 and 2.9.1).
+            var judged = slots
+            if case .notEquals = predicate { judged = slots.filter(\.isPopulated) }
+            let found = ConditionTruth.any(judged.map { applyPredicate(predicate, to: $0, version: message.version) })
             guard found == .true || slots.contains(where: { $0.isPopulated }) else { return .unknown }
             return found
 
