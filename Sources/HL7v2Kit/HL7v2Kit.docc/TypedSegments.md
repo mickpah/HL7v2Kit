@@ -4,16 +4,16 @@ How to read a v2 message via compile-time-checked segment / field accessors inst
 
 ## Overview
 
-HL7v2Kit ships typed Swift structs for the most common HL7 v2.5.1 segments. These are **generated** from JSON schemas under `Resources/schemas/v2.5.1/` by the `HL7v2KitCodegen` executable (per `ADR-004`); the generated Swift lives at `Sources/HL7v2Kit/Segment/Generated/` (one file per segment, version-agnostic names) and is committed to the repository so reviewers can see exactly what the typed surface is. The struct surface is shared across every supported HL7 v2 version — older wires (v2.3 / v2.3.1 / v2.4) get nil from any accessor whose field doesn't exist at their version. Per-version `SegmentGrammar+vX_Y_Z.swift` tables (also at `Generated/`) carry the per-version field sets that the `Validator` dispatches on.
+HL7v2Kit ships typed Swift structs for every segment a supported version defines. These are **generated** from the JSON schemas under `Resources/schemas/<version>/` by the `HL7v2KitCodegen` executable (per `ADR-004`): each struct starts from one version's schema (v2.5.1 where it defines the segment, else the earliest version that does, unless `Resources/struct-bases.json` pins another) and gains the fields the other versions add (ADR-020); the generated Swift lives at `Sources/HL7v2Kit/Segment/Generated/` (one file per segment, version-agnostic names) and is committed to the repository so reviewers can see exactly what the typed surface is. The struct surface is shared across every supported HL7 v2 version — older wires (v2.3 / v2.3.1 / v2.4) get nil from any accessor whose field doesn't exist at their version. Per-version `SegmentGrammar+vX_Y_Z.swift` tables (also at `Generated/`) carry the per-version field sets that the `Validator` dispatches on.
 
-**188 typed segments ship today**, each at its version's full field depth — the ADT/ORU core
+**198 typed segments ship today**, each at its version's full field depth — the ADT/ORU core
 (`MSH`, `PID`, `OBX`, `OBR`, …), orders and pharmacy, scheduling, financial, master files,
 personnel management, clinical trials, lab automation, the query family, and the batch
-envelopes (`BHS`/`FHS`/`BTS`/`FTS`). The authoritative list is the schema directory
-(`Resources/schemas/v2.5.1/` — one JSON file per segment), and every schema is verified
+envelopes (`BHS`/`FHS`/`BTS`/`FTS`). The authoritative list is the schema directories
+(`Resources/schemas/<version>/` — one JSON file per segment), and every schema is verified
 against its version's own attribute table by the private schema audit (depth *and*
-presence). On v2.3 / v2.3.1 / v2.4 **no segment the spec defines is missing**; v2.6 / v2.8.2
-grammar coverage is deliberately partial (a private backlog records the rest).
+presence). On every supported version, v2.3 to v2.9.1, **no segment the spec defines is
+missing**.
 
 Segments outside this list parse as ``UnknownSegment`` and remain accessible via path strings — see <doc:#Unknown-segments> below.
 
@@ -47,7 +47,7 @@ The accessor's return type encodes the field's HL7 datatype:
 
 Every component that any supported version defines has a named accessor on its composite
 view, and each typed segment struct reaches every field, name and repetition through
-v2.8.2 (ADR-020). The examples below are compiled in `TypedSegmentsArticleExamplesTests`.
+v2.9.1 (ADR-020). The examples below are compiled in `TypedSegmentsArticleExamplesTests`.
 
 ```swift
 // A named accessor for every component, and a sub-composite view by position.

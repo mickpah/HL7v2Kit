@@ -4,7 +4,7 @@
   "name": "Extended Priority Codes",
   "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0485 - Extended Priority Codes, footer page 398",
+  "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0485 - Extended Priority Codes, footer page 398",
   "entries": [
     {
       "code": "S",

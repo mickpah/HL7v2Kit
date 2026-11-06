@@ -4,7 +4,7 @@
   "name": "Repeat Pattern",
   "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0335 - Repeat Pattern, footer page 254",
+  "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0335 - Repeat Pattern, footer page 254",
   "entries": [
     {
       "code": "Q<integer>S",

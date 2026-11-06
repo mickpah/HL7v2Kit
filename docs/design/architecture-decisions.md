@@ -615,10 +615,11 @@ base table. Tables also change between versions, so one merged set would be wron
 
 - Contents: per-version JSON, `Resources/tables/v<version>/NNNN.json` (kind `HL7` or `User`,
   name, `permitsLocalExtensions`, citation, entries, optional `patterns`), written only by the
-  extractor from Appendix A (v2.3 to v2.7.1) or Chapter 2C (v2.8.2), and generated into
+  extractor from Appendix A (v2.3 to v2.7.1) or Chapter 2C (v2.8.2 to v2.9.1), and generated into
   `HL7TableRegistry`; `HL7TableRegistry.table(_:version:)` is the lookup.
-- Rows are kept as the source prints them (Appendix A; Chapter 2C on v2.8.2), misprints included. A Table 0354 misprint is
-  corrected only on the message-structure side, by a cited erratum (ADR-019).
+- Rows are kept as the source prints them (Appendix A; Chapter 2C from v2.8.2), misprints
+  included. A Table 0354 misprint is corrected only on the message-structure side, by a cited
+  erratum (ADR-019).
 - Corrections are never hand edits: they go in `Resources/tables/overrides.json`, version-scoped
   and cited, and the table is re-extracted. Print-versus-prose binding conflicts are resolved in
   the private table-repairs record with a citation.
@@ -635,7 +636,7 @@ base table. Tables also change between versions, so one merged set would be wron
   where the field prose calls an HL7 table user-defined, the chapter wins and the kind becomes
   `User`. Where governing fields disagree, the table stays as printed and individual fields are
   opened with `tableOpen` plus a quoted `tableOpenCitation`. Table 0203 is open on v2.4 to
-  v2.8.2 (owner gate G5).
+  v2.9.1 (owner gate G5).
 - Pattern rows naming a family of codes (0203 `NNxxx`) are declared as `patterns` and matched in
   full.
 - Locale axis: `Resources/tables/locale/<locale-id>/` holds a localisation's own rendering, curated by hand from the localisation's print with the page cited (the locale axis has no extractor);
@@ -666,6 +667,19 @@ kind.
 `NNxxx` row), 0191 and 0291 (open, because the ADRM imports them from the IANA media-type
 registry).
 
+**Amended (v2.9 cycle):** v2.9 and v2.9.1 print Chapter 2C as Table Metadata and Coded Content
+blocks, read by a parser of their own; a row's status (deprecated, backward compatible) is not
+kept, so such a row stays a valid code. Type `HL7` and `User` map as before; `External`,
+`Imported` and `HL7-EXT` are kind `HL7` with local extensions permitted, so they never validate
+as a closed set. HL7-EXT tables "function exactly like the HL7 Tables" (v2.9.1 CH02C p 24), so
+leaving them open is a gap, registered as blocking. The one exception is Table 0953 on MSH-27,
+ARV-8, BHS-16 and FHS-16, CWE fields: by ruling, its rows come from the value set's web
+rendering the print points to (140 codes), and a tuple naming `HL70953` (or, on v2.9.1, the
+Table OID p 851 prints), or a first tuple naming no coding system, draws `valueNotInTable`.
+Table 0104 is closed on v2.9 and v2.9.1 (their MSH-12 and VID.1 say "for valid values") and
+stays open on v2.3 to v2.8.2. On v2.9 and v2.9.1 a comparison ignores a value's trailing blanks,
+as ST's definition says (CH02A 2A.3.76 p 82 on v2.9); a length still counts them.
+
 ## ADR-017 Datatype component grammar
 
 **Status:** Accepted. Related: ADR-014, ADR-015, ADR-016, ADR-020.
@@ -680,7 +694,7 @@ v2.5.1 and later print regular component tables; v2.3 to v2.4 define components 
   printed optionality, bound tables), written only by the extractors and generated into
   `DataTypeGrammarTable`; `grammar(_:version:)` is the lookup and `optionalityCode` is the
   printed code verbatim (`RE` has no `FieldOptionality` equivalent).
-- Sources: the printed component tables on v2.5.1, v2.6, v2.7.1 and v2.8.2. On v2.3 to v2.4,
+- Sources: the printed component tables on v2.5.1 to v2.9.1. On v2.3 to v2.4,
   numbered section headings (`"source": "prose"`), completed by the printed "Components:" line,
   which ranks below the headings and never binds a table; line-only composites (CD, CF, TS);
   field-local composites for `CM` fields (`fields/<SEG>-<N>.json`, `"source": "prose-field"`).
@@ -772,19 +786,19 @@ read as a scalar and fell back too.
   (warning); under `ParserOptions.rejectUnknownVersion` (set by `.strict`) it throws
   `ParseError.unsupportedVersion(found:)`. An empty MSH-12 is reported by the required-field
   check.
-- The version table today (pinned by `VersionHandlingTests.versionMatrix`):
+- The version table today (pinned by `VersionMatrixTests.versionMatrix`):
 
 | MSH-12 (VID.1) | Status | Grammar applied | Issue raised |
 |---|---|---|---|
-| 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1, 2.8.2 | Modelled | Its own | none |
+| 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1, 2.8.2, 2.9, 2.9.1 | Modelled | Its own | none |
 | 2.7 | Substituted | v2.7.1 | `versionGrammarSubstituted` (info) |
 | 2.8 | Substituted | v2.8.2 | `versionGrammarSubstituted` (info) |
-| 2.1, 2.2, 2.5, 2.8.1, 2.9, 2.9.1, any other | Excluded | v2.5.1 fallback | `versionNotRecognised` (warning) |
+| 2.1, 2.2, 2.5, 2.8.1, any other | Excluded | v2.5.1 fallback | `versionNotRecognised` (warning) |
 
 - Excluded versions are recorded in the limitations register, section F. Re-opening one needs
   its text, an amendment here, and an ADR-015 extraction cycle.
 
-**Amended (P00):** v2.9's text is now held (the ANSI December 2019 chapters, the January 2020
+**Amended (P00):** v2.9's text is now held (the ANSI December 2019 chapters, the January 2021
 technical correction and its errata), so v2.9 can be reopened through its own ADR-015
 extraction cycle, planned separately. v2.9.1 stays excluded until its text is held. ADRM 2021's
 one v2.9 pre-adoption, MSH-27, is carried by the AU profile on its own and needs neither.
@@ -802,9 +816,25 @@ falls back silently.
 **Amended (P10-6):** v2.7.1 modelled; `2.7` substituted by v2.7.1 (owner gate G11), so
 `Version` has nine cases, seven modelled and two substituted.
 
+**Amended (v2.9 cycle):** v2.9 and v2.9.1 modelled, each from its own text through an ADR-015
+cycle: v2.9 from the ANSI December 2019 chapters with the technical correction of January 2021,
+v2.9.1 from ANSI/HL7 V2.9.1-2024. `Version` has eleven cases, nine modelled and two substituted;
+`v2_9` and `v2_9_1` follow `v2_8` in `allCases`, and `grammarVersion` maps each to itself. `2.8.1`
+stays excluded, as the Consequences above explain. Two points where the versions part:
+
+- ARV. The HL7 CTO's letter of 29 March 2021 corrects v2.9: in a message definition containing
+  PID, ARV directly follows MSA, or MSH when there is no MSA, and "placement anywhere else in the
+  message is not permitted". One cited `relocatedSegments` entry applies it to every v2.9
+  structure holding PID. v2.9.1, a normative publication of 2024, keeps ARV where its own print
+  puts it, the body included. So a body ARV draws a structure finding on v2.9 and none on v2.9.1.
+- Grammar extensions only add. A profile's grammar extension adds a field the version lacks and
+  never replaces one the version defines: the AU MSH-27 is added on v2.3 to v2.8.2, and on v2.9
+  and v2.9.1 the version's own MSH-27, its MSH-26 condition and Table 0953 stand, with the
+  ADRM's LEN 250 and the AU CWE rules applied on top.
+
 ## ADR-019 Message-structure grammar
 
-**Status:** Accepted (owner gate G2, Option C hybrid). Rollout complete on all seven modelled
+**Status:** Accepted (owner gate G2, Option C hybrid). Rollout complete on all nine modelled
 versions; the check is on in the default and strict presets. Related: ADR-003, ADR-007, ADR-008,
 ADR-010, ADR-014, ADR-015, ADR-016, ADR-017, ADR-018.
 
@@ -825,19 +855,22 @@ by walking the flat segment list back to the nearest ORC.
 - `Resources/structures/overrides.json` holds everything the print does not give cleanly, each
   entry cited: unprinted group names, citation notes, trigger folds (`ACK^*`), exclusions of
   non-normative prints (ruling G7), errata for print typos, shared and referenced triggers,
-  withdrawn segments, keyed choices, error responses, prose fragments, variant prints and the two
-  remaining primary prints. A stale or unmatched entry fails the extractor.
+  withdrawn segments, keyed choices, error responses, prose fragments, variant prints, the two
+  remaining primary prints and relocated segments (ARV on v2.9, ADR-018's v2.9 amendment). A
+  stale or unmatched entry fails the extractor.
 - `Resources/structures/completeness.json` marks each modelled grammar version complete (all
-  seven are) and registers the structures a version prints that cannot be modelled, each with a
+  nine are) and registers the structures a version prints that cannot be modelled, each with a
   one-line reason pointing at limitations register section E. The registrations are public:
   `MessageStructureTable.registration(_:version:)` and `registrations(for:)` return
   `StructureRegistration` (ID, grammar version, triggers, reason).
 - Group names (decision 3): the printed name; else the name the version's HL7 v2.xml schema bundle
   gives the group with the same parent path, first segment and member set (`v2xml`), derived from
-  the v2.4 bundle for v2.3 and v2.3.1 (`v2xml-v2.4`); else a cited override; else synthesised as
+  another version's bundle where the version's own lacks it: the v2.3.1 bundle for v2.3
+  (`v2xml-v2.3.1`), the v2.4 bundle for v2.3 and v2.3.1 (`v2xml-v2.4`) and the v2.9 bundle for
+  v2.9.1, which has none (`v2xml-v2.9`); else a cited override; else synthesised as
   `<FIRSTSEG>_GROUP`. Each non-printed name is cited inside the structure's `citation`. Bundles
   are names-only: the print stays normative, and no bundle text is committed.
-- Caption forms per era: `CODE^EVT^STRUCT` (v2.4 to v2.6), `CODE^EVT^STRUCT:` (v2.7.1, v2.8.2),
+- Caption forms per era: `CODE^EVT^STRUCT` (v2.4 to v2.6), `CODE^EVT^STRUCT:` (v2.7.1 to v2.9.1),
   `CODE^EVT` with the ID from the version's Table 0354 (v2.3.1), and the message code alone with
   events from the section title on v2.3, whose structure IDs are synthesised as `CODE_EVT`. An ID
   the table cannot resolve is reported, never guessed.
@@ -883,8 +916,9 @@ initialiser.
 - `MessageStructure.aliasOf` names the structure whose syntax a structure takes when its print
   gives it an ID and trigger of its own and refers its syntax elsewhere (v2.4 and v2.5.1
   QRY_P04, alias of QRY_Q01). It keeps its own ID and triggers.
-- Withdrawn segments: on v2.7.1 and v2.8.2, QRD, QRF, URD and URS are listed with their
-  Appendix A status ("withdrawn" or "deprecated") and last defining version (v2.6). They are
+- Withdrawn segments: on v2.7.1 to v2.9.1, QRD, QRF, URD and URS are listed with their
+  Appendix A status ("withdrawn", "deprecated" or, for QRD and QRF on v2.9 and v2.9.1, "added by
+  default") and last defining version (v2.6). They are
   matched where a structure names them, and each occurrence draws one info
   `segmentWithdrawnInVersion` saying its fields were not validated; no earlier version's
   attribute table is borrowed.

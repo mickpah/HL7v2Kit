@@ -39,6 +39,7 @@ not the boundary of the work.
 | 3.21 | The coding-system version ID: 18 opt-in rules on CNE, CWE, CF and CSU .7 and kin, with HL7-table and user-table terms in the component-condition language |
 | 3.22 | TXA-22's authentication person and time stamp, both or neither on every repetition, v2.3 to v2.8.2; range terms and group requirements in the component-condition language |
 | 3.23 | ROL-4 against STF-2 and STF-3 as a correlation, a default warning (correlatedValueMismatch, correlationSeverity); v2.8.2 OBR-32 and OBR-35 prohibited when TXA-22 or TXA-11 is valued |
+| 3.32 | HL7 v2.9 and v2.9.1 added, each from its own text, with ten new typed segments; the null and the delete segment read from each version's print; the anonymiser covers GSP, GSR and GSC and moves dates given to the month |
 
 ## What remains
 
@@ -49,13 +50,17 @@ The Blocking items, in brief:
 - **Message structures:** v2.6 MFR_M01 with MFI-1 OMA to OME, a no-data query response without
   QAK, and the v2.3 event replay error example (register section E).
 - **Conditions awaiting a ruling:** RXE-15 on v2.3 to v2.4 (section A).
+- **Found in the v2.9 reading:** DON-3 to DON-33, the null in `populated` conditions, CON-20,
+  TXA-14, TXA-15, OMC-12 and IPR-8, rules not yet read on earlier versions, the CH12
+  participation groups, the other HL7-EXT tables, printed status, and character sets the
+  parser cannot decode (sections A, C and E).
 - **Grammar gaps:** repeating TQ fields on v2.3 and v2.3.1, OM2-6 on v2.3 to v2.4, field-local
   table mentions on v2.3 to v2.4, blank printed optionality (sections A, C and D).
 - **The AU profile:** RXO, ODS or ODT in place of OBR in ORR^O02 and OSR^Q06 (HL7au:00060.1,
   section B).
 
 The Permanent items (terminology membership, timezones, certificates and directories,
-cross-message history, the excluded versions v2.1, v2.2, v2.5, v2.8.1 and v2.9) stay out of
+cross-message history, the excluded versions v2.1, v2.2, v2.5 and v2.8.1) stay out of
 the portable core by design (ADR-006).
 
 ## Possible directions (not commitments)

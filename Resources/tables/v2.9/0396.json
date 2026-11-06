@@ -4,7 +4,7 @@
   "name": "Coding System",
   "kind": "HL7",
   "permitsLocalExtensions": true,
-  "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0396 - Coding System, footer page 313 to 335; the table prints the local forms 99zzz and L, so the printed rows are not a closed set",
+  "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0396 - Coding System, footer page 313 to 335; the table prints the local forms 99zzz and L, so the printed rows are not a closed set",
   "entries": [
     {
       "code": "99zzz",

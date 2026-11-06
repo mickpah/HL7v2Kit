@@ -3646,7 +3646,7 @@
         "CNS 11643-1992": "Code for Taiwanese Character Set (CNS 11643-1992)",
         "UNICODE UTF-8": "UCS Transformation Format, 8-bit form"
       },
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0211 - Alternate Character Sets, footer page 161 and 162",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0211 - Alternate Character Sets, footer page 161 and 162",
       "note": "The page wraps two Values: 'CNS 11643-' / '1992' (the first line has a single space before its Display Name and read as a note) and 'UNICODE' / 'UTF-8' (printed on two lines, the rejoined Value is 'UNICODE UTF-8', as v2.7.1 and v2.8.2 print it). v2.9 prints no UTF-16 or UTF-32 row."
     },
     "0291": {
@@ -3660,7 +3660,7 @@
         "x-hl7-cda-level-one": "HL7 Clinical Document Architecture Level One document"
       },
       "permitsLocalExtensions": true,
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0291 - Subtype of Referenced Data, footer pages 225 and 226: 'it was recommended that the IANA media types be used instead of this short list of HL7-defined codes'; CH02A sec 2A.3.66.4 RP.4 (p76): 'All subtypes registered by IANA may be used by implementation agreement between cooperating parties. In addition, private, non-standard subtypes may be defined by agreement between cooperating parties', so the printed rows are not a closed set",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0291 - Subtype of Referenced Data, footer pages 225 and 226: 'it was recommended that the IANA media types be used instead of this short list of HL7-defined codes'; CH02A sec 2A.3.66.4 RP.4 (p76): 'All subtypes registered by IANA may be used by implementation agreement between cooperating parties. In addition, private, non-standard subtypes may be defined by agreement between cooperating parties', so the printed rows are not a closed set",
       "note": "The Value 'Octet-stream' fills its column and sits one space from its Display Name, so the row read as prose. The Display Name of x-hl7-cda-level-one is printed on two lines ('HL7 Clinical Document Architecture' / 'Level One document')."
     },
     "0335": {
@@ -3675,7 +3675,7 @@
         "Q<integer>J<day#>": "repeats on a particular day of the week,",
         "Meal Related Timings": "<timing>C (\"cum\")<meal>"
       },
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0335 - Repeat Pattern, footer page 254",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0335 - Repeat Pattern, footer page 254",
       "note": "Two Values wrap. 'Q<integer>J<day' / '#>' (its Display Name 'repeats on a particular' / 'day of the week,' shares the two lines; the page prints the trailing comma) and 'Meal Related' / 'Timings', whose second line also carries the rest of its Display Name."
     },
     "0371": {
@@ -3703,7 +3703,7 @@
       "fixDescriptions": {
         "FDP": "Thrombin NIH; soybean trypsin inhibitor (Fibrin Degradation Products)"
       },
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0371 - Additive/Preservative, footer page 291",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0371 - Additive/Preservative, footer page 291",
       "note": "Four rows print one space between Value and Display Name (MICHTM, MMDTM, PHENOL, THYMOL) and read as prose. FDP's Display Name wraps over three lines; the last, 'Products)', read as a Value."
     },
     "0391": {
@@ -3728,7 +3728,7 @@
           "Proprietary algorithm for MatchWare v1.2"
         ]
       ],
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0393 - Match Algorithms, footer page 310",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0393 - Match Algorithms, footer page 310",
       "note": "Each Value wraps ('LINKSOFT' / '_2.01', 'MATCHWA' / 'RE_1.2') and the text layer runs the first line into the Display Name; both rows are rebuilt from the print, as v2.8.2 prints them."
     },
     "0396": {
@@ -3765,7 +3765,7 @@
         "I10C": "International Classification of Diseases, 10th Revision, Clinical Modification (ICD-10-CM)",
         "I9C": "International Classification of Diseases, 9th Revision, Clinical Modification (ICD-9-CM)"
       },
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0396 - Coding System, footer page 313 to 335; the table prints the local forms 99zzz and L, so the printed rows are not a closed set",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0396 - Coding System, footer page 313 to 335; the table prints the local forms 99zzz and L, so the printed rows are not a closed set",
       "note": "Eight Values wrap with the second line beside more of the Display Name (CDCEDAC / UITY, CDCINDUS / TRY2010, CDCOCCU / PATION20 / 10, CDCPHINV / S, NCPDPnnn / nsss, PHDSCSOP / T, PHINQUES / TION, ROLECLA / SS) and are rejoined here. The page no longer prints the 2010 and 2011 German code sets, GMDC2009, the four UDI systems, IBTnnnn, or the v2.8.2 forms 'ISO' and '3'; they are absent, not dropped. ACTRELSS prints a Display Name that stops mid-word ('filtere'); the extractor keeps it as printed. I10P0 is the text layer's spelling. Display Names set by hand where the print breaks a word at the column edge or after a hyphen or slash and the text layer keeps the break as a space (footer page 323)."
     },
     "0415": {
@@ -3792,7 +3792,7 @@
         "TM<integer>": "Timing critical within <integer> minutes.",
         "TW<integer>": "Timing critical within <integer> weeks."
       },
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0485 - Extended Priority Codes, footer page 398",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0485 - Extended Priority Codes, footer page 398",
       "note": "TM<integer> and TW<integer> print their closing '>' on a second line, beside 'within <integer> minutes.' and 'within <integer> weeks.'."
     },
     "0514": {
@@ -3805,7 +3805,7 @@
       "fixDescriptions": {
         "NONHTRREC": "Non-Hemolytic Fever Chill Transfusion Reaction - Repeating"
       },
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0514 - Transfusion Adverse Reaction, footer page 435",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0514 - Transfusion Adverse Reaction, footer page 435",
       "note": "'NONHTRR' / 'EC' wraps with the last word of its Display Name beside the tail; the other wrapped Values in the table rejoin."
     },
     "0562": {
@@ -3818,7 +3818,7 @@
       "fixDescriptions": {
         "PYRDELAY": "Delayed by a Previous Payer"
       },
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0562 - Processing Consideration Codes, footer page 475",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0562 - Processing Consideration Codes, footer page 475",
       "note": "'PYRDELA' / 'Y' wraps with the last word of its Display Name beside the tail."
     },
     "0717": {
@@ -3951,7 +3951,7 @@
         "OIS": "opt-in to personal information or effect sharing via a registry or repository",
         "MDHHS-5515": "Michigan Consent to Share Behavioral Health Information for Care Coordination Purposes"
       },
-      "citation": "HL7 v2.9 Chapter 2C (technical correction, January 2020 text), Table 0717 - Access Restriction Value, footer page 528 to 567",
+      "citation": "HL7 v2.9 Chapter 2C (technical correction of January 2021), Table 0717 - Access Restriction Value, footer page 528 to 567",
       "note": "The page prints two groups of consent codes whose Values wrap over two or three lines and share them with the Display Name: the consent directives (42CFRPart2CD, HIPAAAuthCD, HIPAAConsentCD, HIPAAROACD, HIPAAResearchAuthCD, CompoundResearchCD, GDPRCD, GDPRResearchCD) and the legal authorities (42CFRPart2, HIPAAConsent, HIPAAAuth, HIPAAROA, GDPR...), which repeat four Value heads. The extractor cannot tell a wrapped tail from a new row there, so every affected row is dropped and rebuilt from the print. Rows are listed in page order within each group; the added rows follow the extracted ones."
     },
     "0003": {

@@ -8,6 +8,80 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- HL7 v2.9 and v2.9.1 as the eighth and ninth versions, each modelled from its own text (ADR-018):
+  `Version.v2_9` (`"2.9"`) and `Version.v2_9_1` (`"2.9.1"`), with `HL7TableRegistry.v2_9`,
+  `HL7TableRegistry.v2_9_1`, `SegmentGrammarTable.v2_9` and `SegmentGrammarTable.v2_9_1`. v2.9 is
+  read from the December 2019 chapters with the technical correction of January 2021, v2.9.1 from
+  ANSI/HL7 V2.9.1-2024. From the extractors: v2.9 has 187 segments, 789 code tables (5,588 rows),
+  71 datatypes, and 196 message structures modelled with 74 registered; v2.9.1 has 190, 799
+  (5,675 rows), 71, 196 and 74 (#26 to #31).
+- Typed segments `CTR`, `DEV`, `DST`, `OH1`, `OH2`, `OH3` and `OH4` (v2.9 and v2.9.1) and `GSC`,
+  `GSP` and `GSR` (v2.9.1), 198 in all, and accessors for the fields the two versions add to
+  existing segments (#28, #31).
+- On v2.9, the HL7 CTO's correction of 29 March 2021: in any structure holding PID, ARV directly
+  follows MSA, or MSH when there is no MSA, and a body ARV draws a structure finding. v2.9.1 keeps
+  ARV where its print puts it (#29, #31).
+- Table 0953 on v2.9 and v2.9.1, which prints no rows, takes the 140 codes of the value set the
+  print names: MSH-27, ARV-8, BHS-16 and FHS-16 draw `valueNotInTable` for a tuple naming `HL70953`
+  (on v2.9.1 also by the table's OID) or a first tuple naming no coding system (#30, #31).
+- The anonymiser covers GSP, GSR and GSC: every field but the set ID, the action code and GSC's
+  context and evidence, a coded value becoming `[REDACTED]` whole, its coding system included. A
+  date range moves both ends by one shift at the coarser end's precision, so it keeps its order.
+  PRT and ROL stay uncovered. Library and tool alike (#31).
+
+### Changed
+
+- A message whose MSH-12 declares `2.9` or `2.9.1` is validated against its own version, where it
+  fell back to v2.5.1 with `versionNotRecognised`; `ParserOptions.strict` no longer throws
+  `unsupportedVersion` for it (#28, #31).
+- On v2.9 and v2.9.1, as their prints read: Table 0104 is closed (it stays open on v2.3 to v2.8.2);
+  a value comparison ignores trailing blanks, by ST's own sentence, and a length still counts them;
+  RXA-4 is optional ("If null ... is assumed"); 26 fields whose own words open a table carry
+  `tableOpen`, nine of them `ID` fields; Tables 0291 and 0391 are open (#30, #31).
+- A profile's grammar extension only adds a field the version lacks. Under the AU locale on v2.9
+  and v2.9.1 the version's own MSH-27, its MSH-26 condition and Table 0953 stand, with the ADRM's
+  LEN 250 and CWE rules on top. No earlier version's output changes (#30).
+- `RTB_K13` and `RDY_K15` take any query event but a Z event or none, on v2.4 to v2.9.1, as CH05
+  allows ("may specify a unique trigger event value"), so `RTB^K42^RTB_K13` is matched where it drew
+  `messageStructureMismatch`, and a bare `RTB^K42` with a bad body now draws structure findings,
+  errors under `.strict`. `QBP_Q11`, `QBP_Q13`, `QBP_Q15` and `RSP_K11` list no events on v2.4 to
+  v2.8.2, as on v2.9 (#31).
+- The anonymiser moves a date of month precision by one to four whole months, from the same salt or
+  key as the week shift, keeping its precision and offset; a year is kept, as before, and a year or
+  month with an offset (`2021+1000`) is read as such. Under the same key or salt, every valid date
+  of day precision or finer outside a mixed-precision range comes out as in 3.31.0 (#31).
+
+### Fixed
+
+- Released versions read again against their prints (#31). A lone `""` in a data field, or `""^`,
+  draws no component finding on v2.3 to v2.8.2, as on v2.9; message-control segments keep theirs.
+  A delete segment draws no field-level finding: from v2.6, `""` first and every other field empty
+  or `""`; on v2.3 to v2.5.1, `""` in every field the segment defines. Table 0391 is open on v2.6,
+  v2.7.1 and v2.8.2, RXV-2 and RXV-7 on v2.8.2, and Table 0291 admits a private subtype beginning
+  with `Z` on v2.3 to v2.5.1. Over the printed examples, error rows fall from 7,431 to 7,419.
+- Under the AU locale, the profile's component rules skip a lone `""`, as the base grammar does;
+  a rule on the field's own value still reads it. Over every field of every v2.4 segment but MSH,
+  under nine message types, AU errors fall from 2,469 to 68 (#31).
+- `""^` is the HL7 null to the prohibitions, as `""` is, on every version: with OBX-11 = `O` it no
+  longer draws `conditionalFieldProhibited` at OBX-2 (v2.3.1 to v2.8.2) or OBX-5 (v2.3.1 to
+  v2.9.1), and under the AU locale it no longer draws ADRM-prose:P-11 (OBR-26), P-12 (ORC-24),
+  P-13 (OBR-29) or HL7au:00060.4 at OBX-2. A value beside the null (`""^X`, `""~X`) still draws
+  each. On a message-control segment a prohibition reads `""` as a value; no shipped rule is
+  affected. ADRM-prose:P-12 cites p. 344, which changes the text of every P-12 issue (#31).
+- `IHI` is out of the AU Table 0363, which never printed it: a Referral's PRD-7.2 `IHI` needs `VDI`
+  at PRD-7.3, and under `auAssigningAuthorityTable` draws HL7au:00104.7.2.1 unless listed in
+  `localTableExtensions["0363"]` (#31).
+
+### Security
+
+- The anonymiser replaced no date given only to the month, so a month of birth passed through in
+  clear; it now moves (see Changed). A date value that is not a valid DTM now becomes `[REDACTED]`
+  at any length, under the tool and under a key: 3.31.0 kept one under eight characters in clear,
+  and read a longer one as a date from its first eight characters, keeping the rest, so
+  `1980-06-15` became `1979121515` with the day of birth kept. The HL7 null `""` is kept (#31).
+
 ## [3.31.0]
 
 ### Added

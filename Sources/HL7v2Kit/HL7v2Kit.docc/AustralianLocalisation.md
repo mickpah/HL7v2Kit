@@ -74,6 +74,11 @@ A broken field-level rule is reported as ``IssueCode/profileConstraintViolation(
 `.error`; `localeRule` opens with the conformance point (for example `"HL7au:000024.1 — ..."`),
 so match it with `hasPrefix`. The groups below follow the ADRM's own sections.
 
+A field holding only the HL7 null on a data segment (`""`, or `""^`) draws no AU component rule,
+and the ADRM's "not used" rules and HL7au:00060.4 skip it. A rule on the field's own value still
+reads it, so OBR-24 = `""` on an ORU draws HL7au:000032. On v2.4, a segment holding `""` in every
+field draws no AU field rule either.
+
 **Message addressing and NASH.** MSH-6 must be valued on an order (HL7au:000001, p 417: an order
 "is addressed using MSH-6 Receiving facility"). MSH-12 must declare `2.4^AUS&Australia&ISO3166_1`
 and the profile in MSH-12.3 (HL7au:000040.1 to .4): `HL7AU-OO-201701&&L` on Orders and Results,
@@ -122,7 +127,8 @@ ORC-3, ORC-4, RF1-6 and RF1-11. Under the profile the length check reads the ADR
 ``ValidationOptions/fieldLengthSeverity``. MSH-27 Security Handling Instructions, which the ADRM
 pre-adopts from v2.9, is validated under the AU locale as CWE, optional and repeating; the v2.4
 grammar has no MSH-27. v2.3 defines no CWE, so there the field's length and the AU CWE rules
-are checked but its components are not.
+are checked but its components are not. On v2.9 and v2.9.1 the version's own MSH-27 stands,
+with its MSH-26 condition and Table 0953, and the ADRM's length and CWE rules apply on top.
 
 **The MIME tables.** The ADRM prints Table 0191 with the IANA types added (`application`, `image`,
 `text` and others, pp 167 to 168) and Table 0291 with the subtypes `pdf`, `png`, `xml` and `emf`
@@ -133,7 +139,7 @@ Because the profile governs every version (G-AU1), the open AU Table 0191 also a
 the message's own version rejects: a TXA-3 of `PDF` on a v2.7.1 or v2.8.2 message is clean under
 the AU locale though the base Table 0191 of those versions does not list it (four rows of the
 validation digest over the v2.7.1 and v2.8.2 Chapter 9 examples). That is the ruling's effect,
-recorded as an open owner item below.
+kept by decision (below).
 
 ## Coverage
 
@@ -155,9 +161,11 @@ for 263 points, reconciled with the shipped state) classes every point:
 - **HL7au:00060.1, one residual.** RXO, ODS or ODT in place of OBR in an ORR^O02 or OSR^Q06
   response is accepted: p 280 prints that replacement for ORM^O01 only, and the print does not
   settle whether it carries over to the responses. RQD and RQ1 there are reported.
-- **IHI as a PRD-7 authority.** HL7au:00104.7.1.4 and 00104.7.2.1 accept `IHI` in PRD-7.2,
-  an accommodation row the AU Table 0363 keeps though p 310 does not print it: an under-report
-  kept by ruling. Check IHI-qualified PRD-7 values yourself if your trading partners forbid them.
+- **PRD-7 component matches.** HL7au:00104.7.1.4 checks the pairs p 334 prints, and `VDI` for an
+  authority outside the printed Table 0363; AUSDVA, AUSNATA and AUSLINK have no printed pair and
+  are not checked. `IHI` is not in the AU Table 0363, which prints five rows (p 310), so a PRD-7.2
+  of `IHI` needs `VDI` at PRD-7.3, and under `auAssigningAuthorityTable` draws HL7au:00104.7.2.1
+  unless you list it in ``ValidationOptions/localTableExtensions`` under `"0363"`.
 - **Terminology halves.** HL7au:000034.1/.2 skip a public system outside the printed Table 0396
   and a local system spelt other than `L` or `99zzz`. The presence halves of 00044.1.1, 00044.3.1
   and 00044.7.1 ship; whether the identifier is valid for its scheme does not.
@@ -190,18 +198,18 @@ summarises them.
   (OBX-3 identifier starting `AUSETAV`, coding system `L`); the signature content HB 308-2011
   defines is not reproduced in the ADRM and is not checked.
 
-### Open owner items
+### Decided readings
 
 - **Level 1 of the simplified referral.** A8.2.1.1 (p 482) describes Level 1 as "baseline
   receiving capability of a single OBR observation group". The `-L1` identifier selects the same
-  structure as Level 2, with no cap on the OBR group; whether to cap it is open.
+  structure as Level 2, and the OBR group stays uncapped.
 - **HL7au:000040.4 on a Chapter 7 REF.** The point requires every Referral to declare an Appendix 8
   identifier in MSH-12.3, and Table 0104x (p 43) gives none for a referral that follows the
-  Chapter 7 structure, so such a REF^I12 draws 000040.4. That is the print's rule; whether it
-  should reach a Chapter 7 REF is open.
+  Chapter 7 structure, so such a REF^I12 draws 000040.4. That is the print's rule, and it stays.
 - **Tables 0191 and 0291 open on every version.** The AU locale's open MIME tables admit a
-  value the base table of a later version rejects (a TXA-3 `PDF` on v2.7.1 and v2.8.2); whether
-  the AU tables should narrow to the base table off v2.4 is open.
+  value the base table of a later version rejects (a TXA-3 `PDF` on v2.7.1 and v2.8.2). Each
+  locale applies its own tables on every version, the base table under the international locale
+  and the AU table under ``HL7Locale/auLocalisation``, and that stays.
 
 ## Worked examples
 
@@ -218,7 +226,7 @@ family by changing one field.
 | `au_orm_o01.hl7` | an order addressed by MSH-6 (000001) |
 | `au_orr_o02.hl7` | the ORR^O02 print with PID (G-AU2) |
 | `au_osr_q06.hl7` | the AU OSR^Q06 structure with QRD |
-| `au_ref_i12.hl7` | a Chapter 7 referral; it draws HL7au:000040.4 (see the owner items) |
+| `au_ref_i12.hl7` | a Chapter 7 referral; it draws HL7au:000040.4 (see the decided readings) |
 | `au_ref_i12_simplified.hl7` | a Level 2 Appendix 8 referral selected by MSH-12.3 |
 | `au_rri_i12.hl7` | MSA with the echoed RF1, PRD and PID |
 | `Batches/au_batch_oru_r01.hl7` | two results in FHS/BHS through ``BatchValidator`` |

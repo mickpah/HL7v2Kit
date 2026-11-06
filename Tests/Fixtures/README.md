@@ -177,6 +177,8 @@ The `anonymise-fixture.sh` script is deterministic but **one-shot**:
 
 - **Deterministic:** same input file → byte-identical output. The per-file salt is derived from MSH-10, so two runs on the same input produce the same output.
 - **One-shot:** running anonymise on an already-anonymised file produces *different* output. Each date of day precision or finer moves by one to four whole weeks, earlier or later, and each date of month precision by as many whole months, by one shift for the whole file (from its salt), and a second pass moves it again: PID-7, PID-29, NK1-16, IN1-18, GT1-8, GT1-24 and GSR-8, and both ends of GSP-6, GSR-9 and GSC-5, at the coarser end's precision. A date of year precision is not moved on any pass, and a range end the first pass cut to its year (beside a year end) stays so. A value of any length that is no date (`SYNTEXT`, `1980-06-15`) becomes `[REDACTED]` and stays so. All other fields (names, addresses, phones, IDs, facilities, `[REDACTED]` text) come out the same on a second pass; only those dates drift.
+- **One value per form:** under the tool's per-file salt, every GSP-3, GSR-3 and GSC-3 of all digits and the same length, or holding anything but digits only, becomes the same synthetic value, so a file holding several GSP segments in update mode loses which declaration each one targets.
+- **Coded fields lose their coding system:** a redacted coded field (GSP-4 and GSP-5, for example) becomes `[REDACTED]` whole, its coding system included.
 
 The expected workflow is one anonymise pass per real-world input, then commit. If you accidentally re-anonymise, revert to the input and try again.
 
@@ -184,7 +186,7 @@ The expected workflow is one anonymise pass per real-world input, then commit. I
 
 If you have a real-world v2 message you want to add to the corpus:
 
-1. Run it through `bash scripts/anonymise-fixture.sh <input>.hl7 anonymised.hl7`. The script applies spec § 10's scrubbing rules deterministically (per-file salt derived from MSH-10).
+1. Run it through `bash scripts/anonymise-fixture.sh <input>.hl7 anonymised.hl7`. The script applies the scrubbing rules the `Anonymiser` documentation lists, GSP, GSR and GSC among them, deterministically (per-file salt derived from MSH-10). A segment it does not list, PRT, ROL and Z-segments among them, passes through unchanged.
 2. Manually diff the output to confirm no real names / addresses / IDs survived.
 3. Run `bash scripts/scan-fixtures-for-phi.sh` to confirm no AU-identifier patterns leak.
 4. Add the file under `Tests/Fixtures/` with a `\r` line terminator.
