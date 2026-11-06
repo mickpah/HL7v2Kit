@@ -1017,7 +1017,8 @@ transport concern (permanent).
   profile narrows below the base's is reported once per occurrence as info
   `profileMaximumExceeded(localeRule:)`.
 - ORR_O02's unclosed `[PID` cell is read as the base v2.4 reading, PID optional (G-AU2).
-  HL7au:00060.1 stays partial: the OSR^Q06 and ORR^O02 order detail is the named residual.
+- ORR_O02 and OSR_Q06 take OBR alone after ORC, as printed (pp 280 to 281); the p 280
+  replacement by RXO, ODS or ODT is read for ORM_O01 only (owner decision, v2.9 cycle).
 
 ### Acknowledgments (decision 9)
 
@@ -1085,6 +1086,10 @@ and version provenance re-classed permanent (S6-4).
 
 **Amended (P12):** owner ruling 6 allowed an optional ERR in the no-data head; the ADRM ORR_O02
 and the Appendix 8 simplified REF variant completed the AU profile structures (S1).
+
+**Amended (v2.9 cycle):** by the owner's decision, the AU ORR_O02 and OSR_Q06 take OBR alone after
+ORC, as printed, so RXO, ODS or ODT there is a 00060.1 finding as RQD and RQ1 are; ORM_O01 keeps
+the p 280 replacement, and HL7au:00060.1 has no residual left.
 
 ## ADR-020 Composite views and version-union accessors
 

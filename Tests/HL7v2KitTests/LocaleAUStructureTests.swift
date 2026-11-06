@@ -333,10 +333,14 @@ struct LocaleAUStructureTests {
                 "\(intl.map(\.message))")
     }
 
-    @Test("An AU order status response with RXO in place of OBR raises no 00060.1 (the base choice is kept)")
+    @Test("An AU order status response with RXO in place of OBR draws 00060.1 (p 281 prints OBR alone; the base accepts it)")
     func osrWithRXO() throws {
         let all = try issues("OSR^Q06^OSR_Q06", Self.osrHead + ["ORC|SC", "RXO|1"])
-        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        let found = au(all)
+        try #require(found.count == 1, "\(found.map(\.message))")
+        #expect(found[0].severity == .warning)
+        #expect(found[0].message.contains("requires OBR in group ORDER after ORC[1] "), "\(found[0].message)")
+        #expect(found[0].location.pathDescription == "RXO[1]")
         #expect(base(all).isEmpty, "\(base(all).map(\.message))")
     }
 

@@ -60,7 +60,7 @@ extension MessageStructureTable {
         id: "ORR_O02",
         version: "2.4",
         triggers: ["ORR^O02"],
-        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.2 ORM - general order message (event O01), Order Response Message, ORR^O02^ORR_O02 General Order Acknowledgment, pp 280 to 281: MSH, MSA, [ERR], [ [PID { ORC OBR } ]. Print erratum (P12 S1-2, owner ruling G-AU2 of 2026-10-07): the cell '[PID' (p 280) opens a bracket that is never closed, so the print alone leaves PID's optionality undecided; it is read as [PID], the base v2.4 reading (HL7 v2.4 Chapter 4, section 4.4.2, p 4-20, prints the patient group optional), since the localisation narrows the base and does not widen it; p 280 also says 'The ORC/OBR segments are optional however', which the optional outer group carries. Constrains HL7 v2.4 Chapter 4, section 4.4.2: NTE and CTI segments are omitted, which is not a finding (ADR-019 decision 7). Order detail: the print gives OBR, as the ORM^O01 print does (p 279); the only ADRM text that lets another segment replace OBR is p 280, 'The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (RXO, ODS, ODT), and no ADRM print or prose names RQD or RQ1, so the place is the choice of OBR, RXO, ODS or ODT, the same as ORM_O01, and the requisition detail the base admits is excluded. Whether the p 280 replacement carries over to the response the print does not settle; RXO, ODS and ODT are accepted, a residual of 00060.1 (permanent-limitations register, section E addendum). Unprinted group names (ADR-019 decision 3), the base v2.4 ORR_O02 groups with the same head segment: RESPONSE (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.RESPONSE.CONTENT) and ORDER (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.ORDER.CONTENT). PID is printed as a bare segment, not the base PATIENT group.",
+        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.2 ORM - general order message (event O01), Order Response Message, ORR^O02^ORR_O02 General Order Acknowledgment, pp 280 to 281: MSH, MSA, [ERR], [ [PID { ORC OBR } ]. Print erratum (P12 S1-2, owner ruling G-AU2 of 2026-10-07): the cell '[PID' (p 280) opens a bracket that is never closed, so the print alone leaves PID's optionality undecided; it is read as [PID], the base v2.4 reading (HL7 v2.4 Chapter 4, section 4.4.2, p 4-20, prints the patient group optional), since the localisation narrows the base and does not widen it; p 280 also says 'The ORC/OBR segments are optional however', which the optional outer group carries. Constrains HL7 v2.4 Chapter 4, section 4.4.2: NTE and CTI segments are omitted, which is not a finding (ADR-019 decision 7). Order detail: the print gives OBR alone after ORC (pp 280 to 281). The only ADRM text that lets another segment replace OBR is p 280, for ORM^O01: 'The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (RXO, ODS, ODT); that replacement is not carried over to the response (owner decision of 2026-11-06), and no ADRM print or prose names RQD or RQ1, so the place is OBR alone, and the RQD, RQ1, RXO, ODS and ODT the base admits are excluded. Unprinted group names (ADR-019 decision 3), the base v2.4 ORR_O02 groups with the same head segment: RESPONSE (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.RESPONSE.CONTENT) and ORDER (HL7-xml v2.4/ORR_O02.xsd, ORR_O02.ORDER.CONTENT). PID is printed as a bare segment, not the base PATIENT group.",
         profile: "au-adrm-2021",
         baseVersion: "2.4",
         rule: "HL7au:00060.1",
@@ -73,12 +73,7 @@ extension MessageStructureTable {
                 .segment("PID", min: 0, max: 1),
                 .group("ORDER", min: 1, max: nil, elements: [
                     .segment("ORC", min: 1, max: 1),
-                    .choice(nil, min: 1, max: 1, alternatives: [
-                        .segment("OBR", min: 1, max: 1),
-                        .segment("RXO", min: 1, max: 1),
-                        .segment("ODS", min: 1, max: 1),
-                        .segment("ODT", min: 1, max: 1),
-                    ]),
+                    .segment("OBR", min: 1, max: 1),
                 ]),
             ]),
         ]
@@ -118,7 +113,7 @@ extension MessageStructureTable {
         id: "OSR_Q06",
         version: "2.4",
         triggers: ["OSR^Q06"],
-        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.3 OSQ/OSR- query response for order status (event Q06), Query Response, p 281: MSH, MSA, [ERR], QRD, [QRF], [ [PID] { ORC OBR [{OBX}] [{CTI}] } ], [DSC]. Caption erratum: the response's caption prints 'OSQ^Q06^OSQ_Q06 Order Status Response', the same as the query's; the section title ('OSQ/OSR- query response') and base v2.4 section 4.4.3 give the response as OSR^Q06^OSR_Q06. Constrains HL7 v2.4 Chapter 4, section 4.4.3, p 4-21: OBX, which the base order does not have, is matched here only; NTE segments are omitted, which is not a finding (ADR-019 decision 7). Order detail (P12 S1-3): the p 281 print says only 'OBR Order Detail', with no prose on this message. The only ADRM text that lets another segment stand in OBR's place is p 280, for ORM^O01: 'The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (RXO, ODS, ODT); no print or prose of the ADRM names RQD or RQ1, so under every reading of p 281 the requisition detail is excluded and the place is the choice of OBR, RXO, ODS or ODT, the same as ORM_O01. Whether the p 280 replacement carries over to the response, so that RXO, ODS or ODT (and an OBX after one, p 287: 'An order detail segment (e.g., OBR) can be followed by one or more observation segments (OBX)') may stand there, the print does not settle; they are accepted, a residual of 00060.1 (permanent-limitations register, section E addendum). Unprinted group names (ADR-019 decision 3), the base v2.4 OSR_Q06 groups with the same head segment, whose names the base takes through overrides.json from HL7-xml v2.5.1/OSR_Q06.xsd (P8b-13 ruling 1): RESPONSE (overrides.json, the base OSR_Q06 RESPONSE) and ORDER (overrides.json, the base OSR_Q06 ORDER). PID is printed as a bare optional segment, not the base PATIENT group.",
+        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.3 OSQ/OSR- query response for order status (event Q06), Query Response, p 281: MSH, MSA, [ERR], QRD, [QRF], [ [PID] { ORC OBR [{OBX}] [{CTI}] } ], [DSC]. Caption erratum: the response's caption prints 'OSQ^Q06^OSQ_Q06 Order Status Response', the same as the query's; the section title ('OSQ/OSR- query response') and base v2.4 section 4.4.3 give the response as OSR^Q06^OSR_Q06. Constrains HL7 v2.4 Chapter 4, section 4.4.3, p 4-21: OBX, which the base order does not have, is matched here only; NTE segments are omitted, which is not a finding (ADR-019 decision 7). Order detail (P12 S1-3): the p 281 print gives OBR alone ('OBR Order Detail'), with no prose on this message. The only ADRM text that lets another segment stand in OBR's place is p 280, for ORM^O01: 'The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (RXO, ODS, ODT); that replacement is not carried over to the response (owner decision of 2026-11-06), and no print or prose of the ADRM names RQD or RQ1, so the place is OBR alone, the RQD, RQ1, RXO, ODS and ODT the base admits are excluded, and an OBX follows OBR only. Unprinted group names (ADR-019 decision 3), the base v2.4 OSR_Q06 groups with the same head segment, whose names the base takes through overrides.json from HL7-xml v2.5.1/OSR_Q06.xsd (P8b-13 ruling 1): RESPONSE (overrides.json, the base OSR_Q06 RESPONSE) and ORDER (overrides.json, the base OSR_Q06 ORDER). PID is printed as a bare optional segment, not the base PATIENT group.",
         profile: "au-adrm-2021",
         baseVersion: "2.4",
         rule: "HL7au:00060.1",
@@ -133,12 +128,7 @@ extension MessageStructureTable {
                 .segment("PID", min: 0, max: 1),
                 .group("ORDER", min: 1, max: nil, elements: [
                     .segment("ORC", min: 1, max: 1),
-                    .choice(nil, min: 1, max: 1, alternatives: [
-                        .segment("OBR", min: 1, max: 1),
-                        .segment("RXO", min: 1, max: 1),
-                        .segment("ODS", min: 1, max: 1),
-                        .segment("ODT", min: 1, max: 1),
-                    ]),
+                    .segment("OBR", min: 1, max: 1),
                     .segment("OBX", min: 0, max: nil),
                     .segment("CTI", min: 0, max: nil),
                 ]),

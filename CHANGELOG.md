@@ -52,6 +52,10 @@ The entries are condensed; the git history carries the detail.
   key as the week shift, keeping its precision and offset; a year is kept, as before, and a year or
   month with an offset (`2021+1000`) is read as such. Under the same key or salt, every valid date
   of day precision or finer outside a mixed-precision range comes out as in 3.31.0 (#31).
+- Under the AU locale, ORR^O02 and OSR^Q06 take OBR alone after ORC, as the ADRM prints them
+  (pp 280 to 281): an RXO, ODS or ODT in OBR's place, accepted before, draws HL7au:00060.1, as RQD
+  and RQ1 do. ORM^O01 keeps the p 280 replacement for medication and diet orders, and HL7au:00060.1
+  has no residual left (#32).
 
 ### Fixed
 

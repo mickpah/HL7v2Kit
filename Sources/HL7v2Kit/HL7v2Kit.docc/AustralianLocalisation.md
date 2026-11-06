@@ -148,8 +148,8 @@ for 263 points, reconciled with the shipped state) classes every point:
 
 | Class | Points | Meaning |
 | --- | ---: | --- |
-| SHIPPED | 79 | enforced in full |
-| PARTIAL | 17 | the wire-decidable half enforced; the rest stated per point |
+| SHIPPED | 80 | enforced in full |
+| PARTIAL | 16 | the wire-decidable half enforced; the rest stated per point |
 | REGISTERED | 5 | a known limitation, registered with its citation |
 | BASE | 9 | already enforced by the base v2.4 checks; the profile adds nothing |
 | RECEIVER | 74 | what a receiver must do, not what a message must contain |
@@ -158,9 +158,6 @@ for 263 points, reconciled with the shipped state) classes every point:
 
 ### What is partial, and what you can check yourself
 
-- **HL7au:00060.1, one residual.** RXO, ODS or ODT in place of OBR in an ORR^O02 or OSR^Q06
-  response is accepted: p 280 prints that replacement for ORM^O01 only, and the print does not
-  settle whether it carries over to the responses. RQD and RQ1 there are reported.
 - **PRD-7 component matches.** HL7au:00104.7.1.4 checks the pairs p 334 prints, and `VDI` for an
   authority outside the printed Table 0363; AUSDVA, AUSNATA and AUSLINK have no printed pair and
   are not checked. `IHI` is not in the AU Table 0363, which prints five rows (p 310), so a PRD-7.2
@@ -210,6 +207,10 @@ summarises them.
   value the base table of a later version rejects (a TXA-3 `PDF` on v2.7.1 and v2.8.2). Each
   locale applies its own tables on every version, the base table under the international locale
   and the AU table under ``HL7Locale/auLocalisation``, and that stays.
+- **The order detail of ORR^O02 and OSR^Q06.** Both responses print OBR alone after ORC (pp 280
+  to 281). On p 280 another order detail segment replaces OBR "for medication and diet orders"
+  in ORM^O01, and that replacement is not carried over to the responses: an RXO, ODS or ODT in
+  OBR's place there draws HL7au:00060.1, as RQD and RQ1 do. ORM^O01 keeps the replacement.
 
 ## Worked examples
 

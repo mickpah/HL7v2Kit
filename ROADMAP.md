@@ -56,8 +56,6 @@ The Blocking items, in brief:
   parser cannot decode (sections A, C and E).
 - **Grammar gaps:** repeating TQ fields on v2.3 and v2.3.1, OM2-6 on v2.3 to v2.4, field-local
   table mentions on v2.3 to v2.4, blank printed optionality (sections A, C and D).
-- **The AU profile:** RXO, ODS or ODT in place of OBR in ORR^O02 and OSR^Q06 (HL7au:00060.1,
-  section B).
 
 The Permanent items (terminology membership, timezones, certificates and directories,
 cross-message history, the excluded versions v2.1, v2.2, v2.5 and v2.8.1) stay out of

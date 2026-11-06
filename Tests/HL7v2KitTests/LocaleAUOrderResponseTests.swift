@@ -2,7 +2,9 @@
 // P12 S1-3 and S1-2 (ADR-019 "HL7au:00060.1", amendment "P12 S1"): the order detail of the
 // ADRM-2021 order status response (OSR^Q06, section 5.3, p 281) and the order response
 // ORR^O02 (section 5.2, pp 280 to 281), each matched under .auLocalisation against its
-// profile structure in Resources/structures/profiles/au-adrm-2021/.
+// profile structure in Resources/structures/profiles/au-adrm-2021/. v2.9-T14a (owner decision,
+// 6 November): both responses take OBR alone after ORC, as printed; ORM^O01 keeps the p 280
+// replacement (LocaleAUStructureTests).
 
 import Foundation
 import Testing
@@ -37,33 +39,33 @@ struct LocaleAUOrderResponseTests {
 
     static let osrHead = ["MSA|AA|1", "QRD|20240101|R|I|Q1|||1^RD|ALL|OS|", "PID|1", "ORC|SC"]
 
-    @Test("AU OSR^Q06 with RQD or RQ1 in place of OBR: 00060.1 fires (no ADRM print or prose admits a requisition detail)",
-          arguments: ["RQD|1", "RQ1|1"])
-    func osrRequisitionDetail(_ detail: String) throws {
+    /// The base v2.4 order detail segments other than OBR: the requisition detail (RQD, RQ1) and
+    /// the medication and diet detail (RXO, ODS, ODT) that p 280 lets replace OBR in ORM^O01 only.
+    static let otherOrderDetail = ["RQD|1", "RQ1|1", "RXO|1", "ODS|D", "ODT|1"]
+
+    @Test("AU OSR^Q06 with RQD, RQ1, RXO, ODS or ODT in place of OBR: 00060.1 fires (p 281 prints OBR alone)",
+          arguments: otherOrderDetail)
+    func osrOtherOrderDetail(_ detail: String) throws {
         let all = try issues("OSR^Q06^OSR_Q06", Self.osrHead + [detail])
-        #expect(base(all).isEmpty, "base v2.4 accepts the requisition detail: \(base(all).map(\.message))")
+        #expect(base(all).isEmpty, "base v2.4 accepts the order detail: \(base(all).map(\.message))")
         let found = au(all)
         try #require(found.count == 1, "\(found.map(\.message))")
+        #expect(found[0].severity == .warning)
         #expect(found[0].message.contains("requires OBR in group ORDER after ORC[1] "), "\(found[0].message)")
         #expect(found[0].location.pathDescription == "\(detail.prefix(3))[1]")
-        #expect(au(try issues("OSR^Q06^OSR_Q06", Self.osrHead + [detail], locale: .international)).isEmpty)
+        let intl = try issues("OSR^Q06^OSR_Q06", Self.osrHead + [detail], locale: .international)
+        #expect(au(intl).isEmpty && base(intl).isEmpty, "\(intl.map(\.message))")
     }
 
-    @Test("AU OSR^Q06 with an OBX after a requisition detail: 00060.1 fires, OBR is required before the OBX",
-          arguments: ["RQD|1", "RQ1|1"])
-    func osrOBXAfterRequisitionDetail(_ detail: String) throws {
+    @Test("AU OSR^Q06 with an OBX after RQD, RQ1, RXO, ODS or ODT: 00060.1 fires, OBR is required before the OBX",
+          arguments: otherOrderDetail)
+    func osrOBXAfterOtherOrderDetail(_ detail: String) throws {
         let all = try issues("OSR^Q06^OSR_Q06", Self.osrHead + [detail, "OBX|1"])
         let found = au(all)
         try #require(found.count == 1, "\(found.map(\.message))")
+        #expect(found[0].severity == .warning)
         #expect(found[0].message.contains("requires OBR in group ORDER before OBX[1] "), "\(found[0].message)")
         #expect(found[0].location.pathDescription == "OBX[1]")
-    }
-
-    @Test("AU OSR^Q06 with a medication or diet detail and an OBX after it draws nothing (residual: p 281 does not settle it)",
-          arguments: ["RXO|1", "ODS|D", "ODT|1"])
-    func osrMedicationOrDietDetailWithOBX(_ detail: String) throws {
-        let all = try issues("OSR^Q06^OSR_Q06", Self.osrHead + [detail, "OBX|1"])
-        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
     }
 
     @Test("A conformant AU OSR^Q06 (OBR, OBX, CTI, two orders) stays clean")
@@ -90,14 +92,15 @@ struct LocaleAUOrderResponseTests {
         #expect(base(all).isEmpty, "\(base(all).map(\.message))")
     }
 
-    @Test("AU ORR^O02 with RQD or RQ1 in place of OBR: 00060.1 fires; the international locale accepts it as the base does",
-          arguments: ["RQD|1", "RQ1|1"])
-    func orrRequisitionDetail(_ detail: String) throws {
+    @Test("AU ORR^O02 with RQD, RQ1, RXO, ODS or ODT in place of OBR: 00060.1 fires (pp 280 to 281 print OBR alone); the international locale accepts it as the base does",
+          arguments: otherOrderDetail)
+    func orrOtherOrderDetail(_ detail: String) throws {
         let body = ["MSA|AA|1", "PID|1", "ORC|OK", detail]
         let all = try issues("ORR^O02^ORR_O02", body)
         #expect(base(all).isEmpty, "\(base(all).map(\.message))")
         let found = au(all)
         try #require(found.count == 1, "\(found.map(\.message))")
+        #expect(found[0].severity == .warning)
         #expect(found[0].message.contains("requires OBR in group ORDER after ORC[1] "), "\(found[0].message)")
         #expect(found[0].message.contains("erratum"), "\(found[0].message)")
         #expect(found[0].location.pathDescription == "\(detail.prefix(3))[1]")

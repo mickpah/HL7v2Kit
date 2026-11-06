@@ -2471,9 +2471,10 @@ struct AU00060_4PartialTests {
 }
 
 // P8b-4 — HL7au:00060.1 leaves BASE: its segment half is enforced through the ADRM-2021
-// structures (LocaleAUStructureTests). It is PARTIAL, not SHIPPED: RRI^I12, the Appendix 8
-// simplified REF structure, the ORR^O02 print and the prose-only PV1 mandate on ORU^R01 are
-// registered, not enforced (permanent-limitations register section E, P8b-4 addendum).
+// structures (LocaleAUStructureTests). It was PARTIAL while RRI^I12, the Appendix 8 simplified
+// REF structure, the ORR^O02 print, the prose-only PV1 mandate on ORU^R01 and last the response
+// order detail stayed open (permanent-limitations register section E, P8b-4 addendum); v2.9-T14a
+// closed the last (ORR^O02 and OSR^Q06 take OBR alone, owner decision), so it is SHIPPED.
 @Suite("AU HL7au:00060.1 register row (P8b-4)")
 struct AU00060_1RegisterRowTests {
 
@@ -2482,7 +2483,7 @@ struct AU00060_1RegisterRowTests {
     static let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         .deletingLastPathComponent().appendingPathComponent("private/design/m6-adrm-2021-conformance-register.md")
 
-    @Test("The generated conformance register classes HL7au:00060.1 PARTIAL with the P8b-4 note",
+    @Test("The generated conformance register classes HL7au:00060.1 SHIPPED with the P8b-4 note",
           .enabled(if: FileManager.default.fileExists(atPath: url.path), "the register is a private record, absent here"))
     func registerRow() throws {
         let url = Self.url
@@ -2497,8 +2498,9 @@ struct AU00060_1RegisterRowTests {
                 note = String(line)
             }
         }
-        #expect(verdict == "PARTIAL")
+        #expect(verdict == "SHIPPED")
         #expect(note.contains("P8b-4"))
+        #expect(note.contains("take OBR alone after ORC") && !note.contains("One residual"), "\(note)")
         #expect(note.contains("RRI^I12"))
         // P8b-4a: RRI^I12 is enforced, the base findings are governed, the narrowed maxima named.
         #expect(note.contains("P8b-4a"))

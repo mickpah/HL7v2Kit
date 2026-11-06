@@ -75,7 +75,7 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
   `Resources/structures/completeness.json`). The check reports warnings in `.default`,
   errors in `.strict` and is off in `.lenient`.
 - **AU profile:** `HL7Locale.auLocalisation` applies the ADRM-2021 rules; of its 263
-  conformance points, 79 are shipped, 17 partial and 5 registered; the rest are enforced by
+  conformance points, 80 are shipped, 16 partial and 5 registered; the rest are enforced by
   the base model, withdrawn, receiver behaviour or out of scope for a message validator
   (the conformance register, a private record). See the
   [Australian localisation](Sources/HL7v2Kit/HL7v2Kit.docc/AustralianLocalisation.md) article.
