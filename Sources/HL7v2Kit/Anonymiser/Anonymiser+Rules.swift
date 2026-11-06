@@ -9,10 +9,11 @@ extension Anonymiser {
         case identifier
         /// XPN: family and given names replaced, the middle name emptied.
         case name
-        /// TS or DTM: moved by one to four whole weeks.
+        /// TS or DTM: moved by one to four whole weeks, or whole months when given to the month; a
+        /// year is kept, and a value that is not a DTM, of any length, becomes `[REDACTED]`.
         case date
-        /// DR: each end of day precision or finer moved by the same one to four whole weeks; an end
-        /// of year or month precision is kept as it is, as by `date`.
+        /// DR: both ends moved as by `date`, by one shift at the coarser end's precision, so the range
+        /// keeps its order; beside a year end, a finer end is cut to its year.
         case dateRange
         /// EI: the entity identifier (component 1) replaced; components 2 to 4, its assigning
         /// authority (CH02A 2A.2.25), kept. No CX, so the caller's identifier closure is not asked.
@@ -183,11 +184,13 @@ extension Anonymiser {
             let raw = repetition.components.first?.stringValue ?? ""
             return raw.isEmpty ? repetition : setting(repetition, [0: scrubDOB(raw, salt: source.pick("date", raw).salt)])
         case .dateRange:
-            // One shift, chosen from the start (or the end when it stands alone), keeps a range of day
-            // precision in order; a year or month end is not moved, so a mixed range can invert.
+            // One shift, chosen from the start (or the end when it stands alone), at the coarser end's
+            // precision, keeps the range in order.
             let start = Self.value(repetition, 0) ?? "", end = Self.value(repetition, 1) ?? ""
             let salt = source.pick("date", start.isEmpty ? end : start).salt
-            return setting(repetition, [0: scrubDOB(start, salt: salt), 1: scrubDOB(end, salt: salt)])
+            let coarser = [start, end].compactMap(datePrecision).min() ?? .day
+            return setting(repetition, [0: scrubDOB(start, salt: salt, at: coarser),
+                                        1: scrubDOB(end, salt: salt, at: coarser)])
         case .entityIdentifier:
             let id = repetition.components.first.map(Self.text) ?? ""
             return setting(repetition, [0: syntheticIdentifier(matching: id, salt: source.pick("identifier", id, offset: i).salt)])

@@ -118,6 +118,46 @@ struct AnonymiseTests {
         #expect(out["PID-7.2"] == "D")
     }
 
+    @Test("TS.1's digits decide how it moves; the degree of precision is kept (v2.5.1 2.A.77.2)")
+    func precisionComponentKept() throws {
+        for (value, kept) in [("198006^L", false), ("1980^Y", true), ("19800615^Y", false), ("1980^D", true)] {
+            let out = try Self.scrubbed(Self.wire.replacingOccurrences(of: "|19800615|", with: "|\(value)|"))
+            let parts = value.split(separator: "^").map(String.init)
+            #expect((out["PID-7.1"] == parts[0]) == kept && out["PID-7.1"]?.count == parts[0].count, "\(value)")
+            #expect(out["PID-7.2"] == parts[1], "\(value)")
+        }
+    }
+
+    @Test("A month value moves by as many whole months as a day moves weeks; a year, the null, empty and [REDACTED] are kept")
+    func coarseDatesByPrecision() throws {
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = try #require(TimeZone(identifier: "UTC"))
+        let format = DateFormatter()
+        format.calendar = utc
+        format.timeZone = utc.timeZone
+        format.dateFormat = "yyyyMMdd"
+        let monthIndex = { (yyyymm: String) in Int(yyyymm.prefix(4)).flatMap { y in Int(yyyymm.suffix(2)).map { y * 12 + $0 } } }
+        for salt in [0, 1, 2, 3, 4, 5, 6, 7, 30, 1_234_567, 0x7FFF_FFFF] {
+            let from = try #require(format.date(from: "19800615"))
+            let to = try #require(format.date(from: scrubDOB("19800615", salt: salt)))
+            let weeks = try #require(utc.dateComponents([.day], from: from, to: to).day) / 7
+            for original in ["198006", "202112", "202101"] {
+                let moved = scrubDOB(original, salt: salt)
+                let months = try #require(monthIndex(moved)) - (try #require(monthIndex(original)))
+                #expect(moved.count == 6 && months == weeks && months != 0, "salt \(salt): \(original) became \(moved)")
+            }
+            // [REDACTED], what a value that is no date becomes, stays so on a second pass.
+            for kept in ["1980", "1980+1000", "\"\"", "", "[REDACTED]"] { #expect(scrubDOB(kept, salt: salt) == kept, "salt \(salt)") }
+            for malformed in ["SYNTEXT", "2021XX30", "1980-06-15", "15/06/1980", "UNKNOWNDATE", "20210230", "20210101+10"] {
+                #expect(scrubDOB(malformed, salt: salt) == "[REDACTED]", "salt \(salt): \(malformed)")
+            }
+            // A DTM with a time or an offset moves as its day does, the tail kept.
+            for tail in ["1230", "123045", "123045.1234", "+1000", "1230-0500", "123045.1-0000"] {
+                #expect(scrubDOB("19800615" + tail, salt: salt) == scrubDOB("19800615", salt: salt) + tail, "salt \(salt)")
+            }
+        }
+    }
+
     @Test("The same input gives byte-identical output")
     func sameInputSameOutput() throws {
         let first = try Self.scrubbed(Self.wire).serialize()

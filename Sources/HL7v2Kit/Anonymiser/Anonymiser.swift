@@ -29,8 +29,11 @@ import Foundation
 /// Every repetition of a covered field is replaced. Any other segment or field, Z-segments
 /// included, is kept as it is.
 ///
-/// A date given only to the year or month is kept as it is, in every date field. Under a key,
-/// a range's end moves by its start's shift, so it may not map as the same date elsewhere does.
+/// A date moves by one to four whole weeks, or as many whole months when given only to the
+/// month; one given only to the year is kept, and a value of any length that is not a date
+/// becomes `[REDACTED]`. A range moves both ends at its coarser end's precision, so it keeps
+/// its order: beside a year, the finer end is cut to its year. Under a key, a range's end moves
+/// by its start's shift, so it may not map as the same date elsewhere does.
 public struct Anonymiser: Sendable {
     /// What a caller-supplied replacement sees for one identifier: a CX, or an identifier
     /// held as text (PID-19).

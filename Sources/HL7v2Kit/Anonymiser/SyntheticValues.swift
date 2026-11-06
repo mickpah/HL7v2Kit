@@ -38,14 +38,36 @@ func anonymiserSeed(key: UInt64, kind: String, original: String) -> UInt64 {
     return hash
 }
 
-package func scrubDOB(_ raw: String, salt: Int) -> String {
-    // Shift by one to four whole weeks, either way: the day of the week holds,
-    // the age stays about right, and the shift is never zero.
-    guard raw.count >= 8 else { return raw }
+/// How finely a date is given: a DTM's digits before any `+/-ZZZZ` offset (CH02A 2A.2.22 p39).
+package enum DatePrecision: Comparable {
+    case year, month
+    /// A day or finer.
+    case day
+}
+
+/// `raw`'s precision, or nil for a value that is not a DTM, whatever its length.
+func datePrecision(_ raw: String) -> DatePrecision? {
+    guard PrimitiveFormat.isTimestamp(raw) else { return nil }
+    switch raw.prefix(while: \.isNumber).count {
+    case 4: return .year
+    case 6: return .month
+    default: return .day
+    }
+}
+
+/// `raw` moved at its own precision or `coarsest`, whichever is coarser. A month or day keeps the
+/// tail past its date (a time, an offset); a year is kept whole, and a finer value cut to its year
+/// loses its tail. Empty and the HL7 null `""` are kept, and any other value that is not a DTM is
+/// replaced whole by `[REDACTED]`, which a second pass therefore keeps.
+package func scrubDOB(_ raw: String, salt: Int, at coarsest: DatePrecision = .day) -> String {
+    guard let own = datePrecision(raw) else { return raw.isEmpty || raw == "\"\"" ? raw : "[REDACTED]" }
+    let precision = min(own, coarsest)
     let yyyy = Int(raw.prefix(4)) ?? 1980
+    // A year alone says no more than an age, so it is kept; a finer value beside it is cut to its year.
+    if precision == .year { return own == .year ? raw : String(format: "%04d", yyyy) }
     let mm = Int(raw.dropFirst(4).prefix(2)) ?? 1
-    let dd = Int(raw.dropFirst(6).prefix(2)) ?? 1
-    let tail = String(raw.dropFirst(8))   // time / timezone if present
+    let dd = own == .month ? 1 : Int(raw.dropFirst(6).prefix(2)) ?? 1
+    let tail = String(raw.dropFirst(own == .month ? 6 : 8))   // time / timezone if present
 
     var components = DateComponents()
     components.year = yyyy
@@ -53,10 +75,17 @@ package func scrubDOB(_ raw: String, salt: Int) -> String {
     components.day = dd
     let calendar = Calendar(identifier: .gregorian)
     guard let date = calendar.date(from: components) else { return raw }
+    // Shift by one to four whole weeks, or as many whole months, either way: the age stays about
+    // right and the shift is never zero. By weeks the day of the week holds; by months the day of
+    // the month is kept where the month has it, so the 31st becomes a shorter month's last day.
     let weeks = salt % 4 + 1
-    let shiftDays = 7 * (salt & 4 == 0 ? weeks : -weeks)
-    guard let shifted = calendar.date(byAdding: .day, value: shiftDays, to: date) else { return raw }
+    let shift = salt & 4 == 0 ? weeks : -weeks
+    guard let shifted = precision == .month ? calendar.date(byAdding: .month, value: shift, to: date)
+                                            : calendar.date(byAdding: .day, value: 7 * shift, to: date) else { return raw }
     let shiftedComponents = calendar.dateComponents([.year, .month, .day], from: shifted)
+    if own == .month {
+        return String(format: "%04d%02d%@", shiftedComponents.year ?? yyyy, shiftedComponents.month ?? mm, tail)
+    }
     return String(format: "%04d%02d%02d%@",
                   shiftedComponents.year ?? yyyy,
                   shiftedComponents.month ?? mm,

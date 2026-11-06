@@ -242,28 +242,111 @@ struct AnonymiserTests {
         return String(gsp.split(separator: "|", omittingEmptySubsequences: false)[6])
     }
 
-    @Test("A validity period with a missing or malformed end: what each rule writes today")
+    @Test("A validity period with a missing or malformed end: what each rule writes")
     func validityPeriodEdges() throws {
         for (range, keyed, tool) in [
-            ("20210101", "20201218", "20210115"),                             // no end: the start moves
-            ("^20210630", "^20210707", "^20210714"),                          // no start: the end, by its own shift
-            ("20210101^2021XX30", "20201218^20210116", "20210115^20210213"),  // 8 characters: read as 30 January
-            ("20210101^SYNTEXT", "20201218^SYNTEXT", "20210115^SYNTEXT"),     // under 8: kept in clear, as by `date`
+            ("20210101", "20201218", "20210115"),                               // no end: the start moves
+            ("^20210630", "^20210707", "^20210714"),                            // no start: the end, by its own shift
+            ("20210101^2021XX30", "20201218^[REDACTED]", "20210115^[REDACTED]"), // no DTM, whatever its length:
+            ("20210101^SYNTEXT", "20201218^[REDACTED]", "20210115^[REDACTED]"),  // replaced
         ] {
             #expect(try Self.validityPeriod(range, keyed: true) == keyed, "\(range), keyed")
             #expect(try Self.validityPeriod(range, keyed: false) == tool, "\(range), tool")
         }
     }
 
-    // A registered gap (permanent-limitations register, anonymiser): a DTM of year or month precision
-    // (CH02A 2A.2.22 p39) passes every date rule unchanged, PID-7 included, so a mixed range can invert
-    // under a key. The fix waits on the owner's decision; this pin holds until then, and a fix moves it.
-    @Test("A year or month value passes unchanged, and a mixed-precision range can invert under a key (registered gap)")
-    func validityPeriodCoarsePrecisionPinned() throws {
-        #expect(try Self.validityPeriod("2021^20210105", keyed: true) == "2021^20201222")   // end now before start
-        #expect(try Self.validityPeriod("2021^20210105", keyed: false) == "2021^20210119")
-        for keyed in [true, false] {
-            #expect(try Self.validityPeriod("202107^202112", keyed: keyed) == "202107^202112", "keyed \(keyed)")
+    // DTM may stop at the year or the month (CH02A 2A.2.22 p39). Key 7 moves a range from 202107 forward one
+    // month, from 202101 or 202112 forward three; salt 41 moves every range forward two weeks or two months.
+    @Test("A range moves both ends by one shift at its coarser end's precision, so it keeps its order")
+    func validityPeriodCoarsePrecision() throws {
+        // Each end's digits, the finer cut to the coarser's length, in order.
+        func ordered(_ range: String) -> Bool {
+            let ends = range.split(separator: "^").map { $0.prefix { $0.isNumber } }
+            let n = min(ends[0].count, ends[1].count)
+            return ends[0].prefix(n) <= ends[1].prefix(n)
+        }
+        for (range, keyed, tool) in [
+            ("202107^202112", "202108^202201", "202109^202202"),        // month ends: one shift, the length kept
+            ("202107^20210715", "202108^20210815", "202109^20210915"),  // a day end moves by the same months
+            ("202101^20210131", "202104^20210430", "202103^20210331"),  // the 31st: the month's last day
+            ("202112^20211231", "202203^20220331", "202202^20220228"),
+            ("2021^20210105", "2021^2021", "2021^2021"),                // beside a year, the finer end cut to its year
+            ("2021^2022", "2021^2022", "2021^2022"),                    // years are kept
+        ] {
+            #expect(try Self.validityPeriod(range, keyed: true) == keyed, "\(range), keyed")
+            #expect(try Self.validityPeriod(range, keyed: false) == tool, "\(range), tool")
+            #expect(ordered(keyed) && ordered(tool), "\(range)")
+        }
+    }
+
+    /// A 2.9.1 or 2.4 message holding `value` in every date field the anonymiser covers; GSP, GSR and GSC on 2.9.1.
+    static func everyDateField(_ value: String, version: String = "2.9.1") -> String {
+        func segment(_ id: String, _ values: [Int: String]) -> String {
+            ([id] + (1...(values.keys.max() ?? 1)).map { values[$0] ?? "" }).joined(separator: "|")
+        }
+        let v = value
+        var segments = ["MSH|^~\\&|SYNTH_APP|TESTFAC|SYNTH_RCV|TESTFAC|20240301120000||ADT^A01^ADT_A01|CTRLDT01|P|\(version)",
+                        segment("PID", [1: "1", 7: v, 29: v]), segment("NK1", [1: "1", 16: v])]
+        if version == "2.9.1" {
+            segments += [segment("GSP", [1: "1", 2: "U", 6: v]), segment("GSR", [1: "1", 2: "U", 8: v, 9: v]),
+                         segment("GSC", [1: "1", 2: "U", 5: v])]
+        }
+        segments += [segment("GT1", [1: "1", 8: v, 24: v]), segment("IN1", [1: "1", 18: v])]
+        return segments.joined(separator: "\r") + "\r"
+    }
+
+    static let dateFields = ["PID-7", "PID-29", "NK1-16", "IN1-18", "GT1-8", "GT1-24", "GSR-8",
+                             "GSP-6.1", "GSR-9.1", "GSC-5.1"]
+
+    @Test("A month value moves by whole months and keeps its precision, alike in every date field; a year is kept")
+    func coarseDateInEveryField() throws {
+        for (value, keyed, tool) in [
+            ("198007", "198005", "198009"),                 // key 7: back two months; salt 41: forward two
+            ("202107-0500", "202108-0500", "202109-0500"),  // the offset kept
+            ("1980", "1980", "1980"), ("2021+1000", "2021+1000", "2021+1000"),
+        ] {
+            let input = try Parser().parse(Self.everyDateField(value))
+            for (anonymiser, expected) in [(Anonymiser(key: 7), keyed), (Anonymiser(legacySalt: 41), tool)] {
+                let out = try Parser().parse(anonymiser.anonymise(input).serialize())
+                for path in Self.dateFields { #expect(out[path] == expected, "\(value) at \(path)") }
+            }
+        }
+    }
+
+    @Test("A value that is no DTM, of any length, becomes [REDACTED], and draws no finding the input did not")
+    func malformedDateReplaced() throws {
+        // Under eight characters, an ISO-style and a slashed date of birth, and text of eight or more.
+        for (malformed, version) in ["SYNTEXT", "1980-06-15", "15/06/1980", "UNKNOWNDATE"].flatMap({ m in
+            ["2.4", "2.9.1"].map { (m, $0) }
+        }) {
+            let input = try Parser().parse(Self.everyDateField(malformed, version: version))
+            for anonymiser in [Anonymiser(key: 7), Anonymiser(legacySalt: 41)] {
+                let output = try Parser().parse(anonymiser.anonymise(input).serialize())
+                #expect(!String(decoding: output.serialize(), as: UTF8.self).contains(malformed), "\(malformed), \(version)")
+                for path in Self.dateFields where version == "2.9.1" || !path.hasPrefix("GS") {
+                    #expect(output[path] == "[REDACTED]", "\(malformed) at \(path), \(version)")
+                }
+                for locale in HL7Locale.allCases {
+                    let validator = Validator(options: .strict, locale: locale)
+                    let before = validator.validate(input).issues, after = validator.validate(output).issues
+                    let formatAtPID7 = before.contains { issue in
+                        guard case .valueFormatInvalid = issue.code else { return false }
+                        return issue.location.segmentID == "PID" && issue.location.fieldIndex == 7
+                    }
+                    let key = { (issue: ValidationIssue) in "\(issue.code.number)@\(issue.location.pathDescription)" }
+                    #expect(formatAtPID7, "\(malformed), \(version), \(locale): the input draws its format finding")
+                    #expect(Set(after.map(key)).isSubset(of: Set(before.map(key))), "\(malformed), \(version), \(locale)")
+                }
+            }
+        }
+    }
+
+    @Test("The HL7 null is kept in every date field")
+    func nullDateKept() throws {
+        let input = try Parser().parse(Self.everyDateField("\"\""))
+        for anonymiser in [Anonymiser(key: 7), Anonymiser(legacySalt: 41)] {
+            let out = try Parser().parse(anonymiser.anonymise(input).serialize())
+            for path in Self.dateFields { #expect(out[path] == "\"\"", "\(path)") }
         }
     }
 
