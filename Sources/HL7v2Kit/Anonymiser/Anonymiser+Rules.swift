@@ -11,13 +11,20 @@ extension Anonymiser {
         case name
         /// TS or DTM: moved by one to four whole weeks.
         case date
+        /// DR: each end of day precision or finer moved by the same one to four whole weeks; an end
+        /// of year or month precision is kept as it is, as by `date`.
+        case dateRange
+        /// EI: the entity identifier (component 1) replaced; components 2 to 4, its assigning
+        /// authority (CH02A 2A.2.25), kept. No CX, so the caller's identifier closure is not asked.
+        case entityIdentifier
         /// XAD.
         case address
         /// XTN.
         case phone
         /// XCN: ID, family and given names.
         case provider
-        /// Free text that identifies (a birth place): replaced by `[REDACTED]`.
+        /// Free text that identifies (a birth place), or a coded value about the person (GSP-5):
+        /// replaced by `[REDACTED]`.
         case redact
     }
 
@@ -42,6 +49,11 @@ extension Anonymiser {
         "OBR": [(10, .provider), (16, .provider), (28, .provider), (32, .provider), (33, .provider),
                 (34, .provider), (35, .provider)],
         "OBX": [(16, .provider)],
+        // 2.9.1 CH03 3.4.19 to 3.4.21: all but the set ID, action code and GSC-6 and GSC-7 (ERL pointers).
+        "GSP": [(3, .entityIdentifier), (4, .redact), (5, .redact), (6, .dateRange), (7, .redact)],
+        "GSR": [(3, .entityIdentifier), (4, .redact), (5, .redact), (6, .redact), (7, .redact), (8, .date),
+                (9, .dateRange), (10, .redact)],
+        "GSC": [(3, .entityIdentifier), (4, .redact), (5, .dateRange), (8, .redact)],
     ]
 
     /// True under a caller's key; false under the tool's rule.
@@ -170,6 +182,15 @@ extension Anonymiser {
         case .date:
             let raw = repetition.components.first?.stringValue ?? ""
             return raw.isEmpty ? repetition : setting(repetition, [0: scrubDOB(raw, salt: source.pick("date", raw).salt)])
+        case .dateRange:
+            // One shift, chosen from the start (or the end when it stands alone), keeps a range of day
+            // precision in order; a year or month end is not moved, so a mixed range can invert.
+            let start = Self.value(repetition, 0) ?? "", end = Self.value(repetition, 1) ?? ""
+            let salt = source.pick("date", start.isEmpty ? end : start).salt
+            return setting(repetition, [0: scrubDOB(start, salt: salt), 1: scrubDOB(end, salt: salt)])
+        case .entityIdentifier:
+            let id = repetition.components.first.map(Self.text) ?? ""
+            return setting(repetition, [0: syntheticIdentifier(matching: id, salt: source.pick("identifier", id, offset: i).salt)])
         case .redact:
             return .scalar("[REDACTED]")
         }

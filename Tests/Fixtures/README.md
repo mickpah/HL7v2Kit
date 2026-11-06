@@ -176,7 +176,7 @@ Not messages: no fixture harness reads them, and they hold no patient data. `Seg
 The `anonymise-fixture.sh` script is deterministic but **one-shot**:
 
 - **Deterministic:** same input file → byte-identical output. The per-file salt is derived from MSH-10, so two runs on the same input produce the same output.
-- **One-shot:** running anonymise on an already-anonymised file produces *different* output. The DOB scrubber shifts the input date by `±(salt mod 60 / 2)` days; the second pass shifts again from the already-shifted date. All other fields (names, addresses, phones, IDs, facilities) are idempotent — only DOB drifts on repeated passes.
+- **One-shot:** running anonymise on an already-anonymised file produces *different* output. Each date of day precision or finer moves by one to four whole weeks, earlier or later, by one shift for the whole file (from its salt), and a second pass moves it again: PID-7, PID-29, NK1-16, IN1-18, GT1-8, GT1-24 and GSR-8, and both ends of GSP-6, GSR-9 and GSC-5. A date of year or month precision is not moved on any pass. All other fields (names, addresses, phones, IDs, facilities, `[REDACTED]` text) come out the same on a second pass; only those dates drift.
 
 The expected workflow is one anonymise pass per real-world input, then commit. If you accidentally re-anonymise, revert to the input and try again.
 

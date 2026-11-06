@@ -1,7 +1,7 @@
 // Anonymiser.swift
 // De-identifies a parsed message (spec section 10): the identifying fields of the patient,
-// next of kin, insured and providers become synthetic values. The HL7v2KitAnonymise tool
-// calls it with its per-file salt.
+// next of kin, insured and providers, and their gender and sex segments, become synthetic
+// values. The HL7v2KitAnonymise tool calls it with its per-file salt.
 
 import Foundation
 
@@ -23,8 +23,14 @@ import Foundation
 ///
 /// Covered: MSH-3 to MSH-6; the identifiers, names, dates of birth and death, addresses, phone
 /// numbers and birth places in PID, NK1, IN1 and GT1 (the guarantor), and PD1-10; the providers
-/// in PD1, PV1, ORC, OBR and OBX; free-text OBX-5 and NTE-3. Every repetition of a covered field is replaced. Any other segment or field,
-/// Z-segments included, is kept as it is.
+/// in PD1, PV1, ORC, OBR and OBX; free-text OBX-5 and NTE-3; and every field of GSP, GSR and GSC
+/// (gender and sex) but the set ID, the action code and GSC's context and evidence, which point
+/// into the message; a coded value there becomes `[REDACTED]` whole, its coding system included.
+/// Every repetition of a covered field is replaced. Any other segment or field, Z-segments
+/// included, is kept as it is.
+///
+/// A date given only to the year or month is kept as it is, in every date field. Under a key,
+/// a range's end moves by its start's shift, so it may not map as the same date elsewhere does.
 public struct Anonymiser: Sendable {
     /// What a caller-supplied replacement sees for one identifier: a CX, or an identifier
     /// held as text (PID-19).
@@ -50,7 +56,8 @@ public struct Anonymiser: Sendable {
     ///   - replacingIdentifier: Returns the replacement for one identifier. Without it, an
     ///     identifier is replaced by one of the same form: digits by as many digits, anything
     ///     else by `SYN-` and four digits. Supply it when identifiers must pass a check that
-    ///     form cannot, such as an IHI's check digit.
+    ///     form cannot, such as an IHI's check digit. GSP-3, GSR-3 and GSC-3, which are EI, are
+    ///     replaced without asking it, as providers are.
     public init(key: UInt64, replacingIdentifier: (@Sendable (Identifier) -> String)? = nil) {
         source = .keyed(key)
         self.replacingIdentifier = replacingIdentifier

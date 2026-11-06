@@ -144,6 +144,129 @@ struct AnonymiserTests {
         }
     }
 
+    /// GSP, GSR and GSC (2.9.1 CH03 3.4.19 to 3.4.21, pages 220 to 228) with every field populated.
+    /// GSP-7 and GSR-4 repeat, though the print does not let them, to show every repetition is replaced.
+    static let genderSex = [
+        "MSH|^~\\&|SYNTH_APP|TESTFAC|SYNTH_RCV|TESTFAC|20240301120000||ADT^A01^ADT_A01|CTRLGS01|P|2.9.1",
+        "PID|1||SYN-0291^^^TESTFAC^MR||Testpatient^Sample||19000101|U",
+        "GSP|1|U|SYN-GSP3^TESTFAC^2.999.1^ISO|76691-5^Gender identity^LN^^^^^^SYN-GSP4O|SYN-GSP5^SYN-GSP5T^L"
+            + "|20210101^20210630|SYN-GSP7~SYN-GSP7R",
+        "GSR|1|U|SYN-GSR3^TESTFAC|SYN-GSR4^SYN-GSR4T^L~SYN-GSR4R^^L|SYN-GSR5^SYN-GSR5T^L|SYN-GSR6^SYN-GSR6T^L"
+            + "|SYN-GSR7^SYN-GSR7T^L|20210102120000|20210103^20210704|SYN-GSR10",
+        "GSC|1|U|SYN-GSC3^TESTFAC|SYN-GSC4^SYN-GSC4T^L|20210105^20210706|OBR^1~ORC^1|OBX^1^5|SYN-GSC8",
+    ].joined(separator: "\r") + "\r"
+
+    /// The fields GSP, GSR and GSC keep: the set ID, the action code, and GSC-6 and GSC-7, which
+    /// point at a place in the message (ERL, CH02A 2A.2.28, page 44).
+    static let genderSexKept = ["GSP": [1, 2], "GSR": [1, 2], "GSC": [1, 2, 6, 7]]
+
+    /// `genderSex` anonymised under key 7, or under the tool's rule with salt 41.
+    static func genderSexAnonymised(keyed: Bool) throws -> String {
+        let anonymiser = keyed ? Anonymiser(key: 7) : Anonymiser(legacySalt: 41)
+        return String(decoding: anonymiser.anonymise(try Parser().parse(genderSex)).serialize(), as: UTF8.self)
+    }
+
+    @Test("GSP, GSR and GSC keep only the set ID, action code and pointers; every repetition of the rest is replaced",
+          arguments: [true, false])
+    func genderSexCovered(keyed: Bool) throws {
+        let fields = { (wire: String) in
+            wire.split(separator: "\r").map { $0.split(separator: "|", omittingEmptySubsequences: false).map(String.init) }
+        }
+        let text = try Self.genderSexAnonymised(keyed: keyed)
+        let input = fields(Self.genderSex), output = fields(text)
+        #expect(output.count == input.count)
+        for (before, after) in zip(input, output) {
+            guard let kept = Self.genderSexKept[before[0]] else { continue }
+            #expect(after.count == before.count, "\(before[0]) field count")
+            for n in 1..<min(before.count, after.count) {
+                let label = "\(before[0])-\(n), keyed \(keyed)"
+                if kept.contains(n) { #expect(after[n] == before[n], "\(label)"); continue }
+                let was = before[n].split(separator: "~"), now = after[n].split(separator: "~")
+                #expect(now.count == was.count, "\(label) repetitions")
+                for (a, b) in zip(was, now) { #expect(!b.isEmpty && b != a, "\(label): \(b)") }
+            }
+        }
+        for original in ["SYN-GS", "76691-5", "Gender identity", "20210101", "20210630", "20210102", "20210103",
+                         "20210704", "20210105", "20210706"] {
+            #expect(!text.contains(original), "\(original), keyed \(keyed)")
+        }
+    }
+
+    @Test("A day-precision validity period (DR) moves both ends by one shift, so it keeps its order and length",
+          arguments: [true, false])
+    func validityPeriodMovesAsOne(keyed: Bool) throws {
+        let out = try Parser().parse(Self.genderSexAnonymised(keyed: keyed))
+        let format = DateFormatter()
+        format.dateFormat = "yyyyMMdd"
+        format.timeZone = TimeZone(identifier: "UTC")
+        func days(_ start: String?, _ end: String?) throws -> Int {
+            let from = try #require(format.date(from: start ?? ""))
+            let to = try #require(format.date(from: end ?? ""))
+            return Int(to.timeIntervalSince(from) / 86_400)
+        }
+        for (path, start, end) in [("GSP-6", "20210101", "20210630"), ("GSR-9", "20210103", "20210704"),
+                                   ("GSC-5", "20210105", "20210706")] {
+            #expect(out["\(path).1"] != start, "\(path)")
+            #expect(try days(out["\(path).1"], out["\(path).2"]) == days(start, end), "\(path), keyed \(keyed)")
+        }
+    }
+
+    @Test("Under a key an instance identifier (EI) keeps its assigning authority and is not given to the closure")
+    func instanceIdentifierKeepsAuthority() throws {
+        final class Seen: @unchecked Sendable { var values: [String] = [] }
+        let seen = Seen()
+        let out = try Self.anonymised(Self.genderSex) { identifier in
+            seen.values.append(identifier.value)
+            return "REPLACED"
+        }
+        #expect(seen.values == ["SYN-0291"])   // PID-3, a CX
+        #expect(out["GSP-3.1"]?.hasPrefix("SYN-") == true && out["GSP-3.1"] != "SYN-GSP3")
+        #expect(out["GSP-3.2"] == "TESTFAC" && out["GSP-3.3"] == "2.999.1" && out["GSP-3.4"] == "ISO")
+        #expect(out["GSR-3.2"] == "TESTFAC" && out["GSC-3.2"] == "TESTFAC")
+    }
+
+    @Test("Under the tool's rule an instance identifier (EI) keeps its assigning authority too")
+    func instanceIdentifierKeepsAuthorityUnderTheToolRule() throws {
+        let out = try Parser().parse(Self.genderSexAnonymised(keyed: false))
+        #expect(out["GSP-3.1"]?.hasPrefix("SYN-") == true && out["GSP-3.1"] != "SYN-GSP3")
+        #expect(out["GSP-3.2"] == "TESTFAC" && out["GSP-3.3"] == "2.999.1" && out["GSP-3.4"] == "ISO")
+        #expect(out["GSR-3.2"] == "TESTFAC" && out["GSC-3.2"] == "TESTFAC")
+    }
+
+    /// GSP-6 as written, for a GSP holding `range`, under key 7 or the tool's rule with salt 41.
+    static func validityPeriod(_ range: String, keyed: Bool) throws -> String {
+        let wire = String(genderSex.prefix { $0 != "\r" }) + "\rGSP|1|U|SYN-GSPA|SYN-GSPC^^L|SYN-GSPV^^L|\(range)\r"
+        let anonymiser = keyed ? Anonymiser(key: 7) : Anonymiser(legacySalt: 41)
+        let gsp = String(decoding: anonymiser.anonymise(try Parser().parse(wire)).serialize(), as: UTF8.self)
+            .split(separator: "\r")[1]
+        return String(gsp.split(separator: "|", omittingEmptySubsequences: false)[6])
+    }
+
+    @Test("A validity period with a missing or malformed end: what each rule writes today")
+    func validityPeriodEdges() throws {
+        for (range, keyed, tool) in [
+            ("20210101", "20201218", "20210115"),                             // no end: the start moves
+            ("^20210630", "^20210707", "^20210714"),                          // no start: the end, by its own shift
+            ("20210101^2021XX30", "20201218^20210116", "20210115^20210213"),  // 8 characters: read as 30 January
+            ("20210101^SYNTEXT", "20201218^SYNTEXT", "20210115^SYNTEXT"),     // under 8: kept in clear, as by `date`
+        ] {
+            #expect(try Self.validityPeriod(range, keyed: true) == keyed, "\(range), keyed")
+            #expect(try Self.validityPeriod(range, keyed: false) == tool, "\(range), tool")
+        }
+    }
+
+    // A registered gap (permanent-limitations register, anonymiser): a DTM of year or month precision
+    // (CH02A 2A.2.22 p39) passes every date rule unchanged, PID-7 included, so a mixed range can invert
+    // under a key. The fix waits on the owner's decision; this pin holds until then, and a fix moves it.
+    @Test("A year or month value passes unchanged, and a mixed-precision range can invert under a key (registered gap)")
+    func validityPeriodCoarsePrecisionPinned() throws {
+        #expect(try Self.validityPeriod("2021^20210105", keyed: true) == "2021^20201222")   // end now before start
+        #expect(try Self.validityPeriod("2021^20210105", keyed: false) == "2021^20210119")
+        for keyed in [true, false] {
+            #expect(try Self.validityPeriod("202107^202112", keyed: keyed) == "202107^202112", "keyed \(keyed)")
+        }
+    }
+
     @Test("No synthetic value depends on Swift's per-process hashing")
     func noProcessHashing() throws {
         let directory = URL(fileURLWithPath: #filePath)
