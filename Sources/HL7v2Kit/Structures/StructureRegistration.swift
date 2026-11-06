@@ -20,8 +20,10 @@ public struct StructureRegistration: Sendable, Equatable {
     /// ``Version/v2_8`` reports ``Version/v2_8_2``).
     public let version: Version
     /// The `messageCode^triggerEvent` pairs the print's captions (or Table
-    /// 0354) give the structure; `CODE^*` accepts every trigger of the code.
-    /// Empty when the source lists no event.
+    /// 0354) give the structure; `CODE^*` reads as on
+    /// ``MessageStructure/triggers``. Empty when the source lists no event, and
+    /// for a query template whose printed event is only a default, which a
+    /// query may replace (``reason`` says which).
     public let triggers: [String]
     /// Why the structure is not modelled, cited to the print.
     public let reason: String

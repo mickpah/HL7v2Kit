@@ -220,7 +220,10 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// Every caption line printed for this structure, each as
     /// `"CODE^EVENT"` (MSH-9.1 and MSH-9.2, e.g. `"ADT^A04"`). `"CODE^*"`
     /// means any event with that message code: the print's "varies"
-    /// (`ACK^varies^ACK` is stored as `"ACK^*"`).
+    /// (`ACK^varies^ACK` is stored as `"ACK^*"`). On a query structure whose
+    /// ID names its default event (`RTB_K13`, printed "events vary"), it means
+    /// any event except a Z event, which is locally defined; an empty event is
+    /// not taken either.
     public let triggers: [String]
     /// Where the structure is printed, and where any group name the print
     /// omits was taken from.
@@ -299,10 +302,22 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
         self.requiresExactMatch = requiresExactMatch ?? !StructureMatcher.lint(elements).isDeterministic
     }
 
-    /// Whether the chapters print `messageCode^triggerEvent` for this structure.
+    /// Whether the chapters give this structure `messageCode^triggerEvent`:
+    /// a caption line prints it, or ``triggers`` holds `"CODE^*"` and that
+    /// takes the event.
     public func accepts(messageCode: String, triggerEvent: String) -> Bool {
-        triggers.contains("\(messageCode)^\(triggerEvent)") || triggers.contains("\(messageCode)^*")
+        triggers.contains("\(messageCode)^\(triggerEvent)")
+            || (triggers.contains("\(messageCode)^*") && wildcardTakes(structure: id, triggerEvent: triggerEvent))
     }
+}
+
+/// Whether `CODE^*` on structure `id` takes `event`. A general message, whose ID
+/// names no event (ACK, and MCF, EDR, ERP and TBR where printed), takes every
+/// event. A query structure whose ID names its default event (RTB_K13) takes the
+/// event a query specifies (CH05 5.4, "events vary"), but not a Z event, which is
+/// locally defined and so never a mismatch (P8b-10), and not an empty event.
+func wildcardTakes(structure id: String, triggerEvent event: String) -> Bool {
+    !id.contains("_") || !(event.isEmpty || event.hasPrefix("Z"))
 }
 
 /// The message structures each HL7 version defines, generated from
@@ -327,8 +342,9 @@ public enum MessageStructureTable {
         structures(for: version.grammarVersion)[id]
     }
 
-    /// The structures whose caption lines include `messageCode^triggerEvent`,
-    /// sorted by ID. More than one entry occurs only where the print shares
+    /// The structures that accept `messageCode^triggerEvent`
+    /// (``MessageStructure/accepts(messageCode:triggerEvent:)``), sorted by
+    /// ID. More than one entry occurs only where the print shares
     /// the trigger between structures (a declared shared trigger, ADR-019
     /// lookup rule 2); a test forbids any other.
     public static func structures(messageCode: String, triggerEvent: String, version: Version) -> [MessageStructure] {
@@ -385,7 +401,7 @@ public enum MessageStructureTable {
         guard let index = triggerIndex[version.grammarVersion] else { return ([], []) }
         func look(_ map: [String: [String]]) -> [String] {
             let exact = map["\(messageCode)^\(triggerEvent)"] ?? []
-            let any = map["\(messageCode)^*"] ?? []
+            let any = (map["\(messageCode)^*"] ?? []).filter { wildcardTakes(structure: $0, triggerEvent: triggerEvent) }
             return any.isEmpty ? exact : Array(Set(exact + any)).sorted()
         }
         return (look(index.modelled), look(index.registered))
@@ -427,8 +443,9 @@ struct NotModelledStructure: Sendable, Equatable {
     let triggers: [String]
     let reason: String
 
-    func accepts(messageCode: String, triggerEvent: String) -> Bool {
-        triggers.contains("\(messageCode)^\(triggerEvent)") || triggers.contains("\(messageCode)^*")
+    func accepts(structure id: String, messageCode: String, triggerEvent: String) -> Bool {
+        triggers.contains("\(messageCode)^\(triggerEvent)")
+            || (triggers.contains("\(messageCode)^*") && wildcardTakes(structure: id, triggerEvent: triggerEvent))
     }
 }
 

@@ -150,14 +150,14 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Table 0354 v2.4 (Appendix A; CH02 section 2.17.3, pp 2-136 to 2-141) lists ORU_W01 (event W01), and no v2.4 chapter prints its syntax; CH07 section 7.15.1 (p 7-117) says W01 'identifies ORU messages used to transmit waveform data', so ORU^W01 is folded onto ORU_R01 (overrides.json referencedTriggers) and ORU^W01^ORU_R01 is matched against ORU_R01. ORU^W01^ORU_W01, the table's ID, is not structure-checked. Permanent: the print gives no syntax for ORU_W01 (Table 0354 only; P8b-final F-I1 c; register section E, v2.4 not-modelled table)"),
                 "QBP_Q11": NotModelledStructure(
-                    triggers: ["QBP^Q11"],
-                    reason: "CH05 section 5.4.1 (p 5-41) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.4 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 5-41) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6). Q11 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Conformance Statement' (p 5-41), so a conformance statement may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.4 not-modelled table)"),
                 "QBP_Q13": NotModelledStructure(
-                    triggers: ["QBP^Q13"],
-                    reason: "CH05 section 5.4.2 (p 5-41) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.4 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.2 (p 5-41) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6). Q13 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Conformance Statement' (p 5-41), so a conformance statement may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.4 not-modelled table)"),
                 "QBP_Q15": NotModelledStructure(
-                    triggers: ["QBP^Q15"],
-                    reason: "CH05 section 5.4.3 (p 5-42) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.4 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.3 (p 5-42) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6). Q15 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Conformance Statement' (p 5-42), so a conformance statement may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.4 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.4 (Appendix A; CH02 section 2.17.3, pp 2-136 to 2-141) lists QRF_W02 (event W02), and no v2.4 chapter prints its syntax (Table 0354 only; register section E, v2.4 not-modelled table)"),
@@ -195,8 +195,8 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Table 0354 v2.4 (Appendix A; CH02 section 2.17.3, pp 2-136 to 2-141) lists RRE_O02 (event O02, 'backwards compatibility'), and no v2.4 chapter prints its syntax (Table 0354 only; register section E, v2.4 not-modelled table)"),
                 "RSP_K11": NotModelledStructure(
-                    triggers: ["RSP^K11"],
-                    reason: "CH05 section 5.4.1 (p 5-41) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.4 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 5-41) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6). K11 is its default event only: 'A standard or site-defined response may use this trigger event or may specify a unique trigger event value in its Conformance Statement' (p 5-41), so a conformance statement may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.4 not-modelled table)"),
                 "SUR_P09": NotModelledStructure(
                     triggers: ["SUR^P09"],
                     reason: "CH07 section 7.11.2 (p 7-83) prints a row 'ED Encapsulated Data' inside the facility group, and v2.4 defines no ED segment (ED is a data type, CH02), so the row names nothing a message can carry (unreadable print; register section E, v2.4 not-modelled table)"),
@@ -228,14 +228,14 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-105) gives W01 a structure ID of its own, ORU_W01, and no chapter prints its syntax; CH07 section 7.15.1 (p 7-130) says W01 'identifies ORU messages used to transmit waveform data' (the section 7.17 examples, pp 7-134 to 7-135, send ORU^W01), so ORU^W01 is folded onto ORU_R01 (overrides.json referencedTriggers) and ORU^W01^ORU_R01 is matched against ORU_R01. ORU^W01^ORU_W01, the table's ID, is not structure-checked. Permanent: the print gives no syntax for ORU_W01 (P8b-18, P8b-final F-I1 c; register section E, v2.5.1 not-modelled table)"),
                 "QBP_Q11": NotModelledStructure(
-                    triggers: ["QBP^Q11", "QBP^Q31"],
-                    reason: "CH05 section 5.4.1 (p 5-37) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 5-37) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6). Q11 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Conformance Statement' (p 5-37), so a conformance statement may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.5.1 not-modelled table)"),
                 "QBP_Q13": NotModelledStructure(
-                    triggers: ["QBP^Q13"],
-                    reason: "CH05 section 5.4.2 (p 5-38) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.2 (p 5-38) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6). Q13 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Conformance Statement' (p 5-38), so a conformance statement may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.5.1 not-modelled table)"),
                 "QBP_Q15": NotModelledStructure(
-                    triggers: ["QBP^Q15"],
-                    reason: "CH05 section 5.4.3 (p 5-39) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.3 (p 5-39) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6). Q15 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Conformance Statement' (p 5-39), so a conformance statement may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.5.1 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-105) lists QRF_W02 (event W02); CH07 section 7.15.2 (p 7-130) says only that W02 'identifies QRF messages which are a response to a QRY message', and no chapter prints a QRF message. Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (P8b-18; register section E, v2.5.1 not-modelled table)"),
@@ -252,8 +252,8 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Only the Appendix A listing of Table 0354 v2.5.1 (p A-109) lists RRA_O02 (event O02); the CH02 Table 0354 (pp 2-101 to 2-105) has no RRA_O02 row and no chapter prints an RRA^O02 message. Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (P8b-18; register section E, v2.5.1 not-modelled table)"),
                 "RSP_K11": NotModelledStructure(
-                    triggers: ["RSP^K11"],
-                    reason: "CH05 section 5.4.1 (p 5-37) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 5-37) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6). K11 is its default event only: 'A standard or site-defined response may use this trigger event or may specify a unique trigger event value in its Conformance Statement' (p 5-38), so a conformance statement may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.5.1 not-modelled table)"),
                 "RSP_K22": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-104) lists RSP_K22 (event K22); CH03 section 3.3.57 (pp 3-60 to 3-61) prints the event as RSP^K22^RSP_K21 (modelled under RSP_K21), so no print gives a structure RSP_K22 a syntax. Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (P8b-18; register section E, v2.5.1 not-modelled table)"),
@@ -276,14 +276,14 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 87) gives W01 a structure ID of its own, ORU_W01, and no chapter prints its syntax; CH07 section 7.15.1 (p 7-110) says W01 'identifies ORU messages used to transmit waveform data' and the section 7.17 examples (pp 7-114 to 7-115) send ORU^W01^ORU_R01, so ORU^W01 is folded onto ORU_R01 (overrides.json referencedTriggers). ORU^W01^ORU_W01, the table's ID, is not structure-checked. Permanent: the print gives no syntax for ORU_W01 (P8b-18, P8b-final F-I1 c; register section E, v2.6 not-modelled table)"),
                 "QBP_Q11": NotModelledStructure(
-                    triggers: ["QBP^Q11", "QBP^Q31"],
-                    reason: "CH05 section 5.4.1 (p 31) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.6 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 31) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q11 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 31), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.6 not-modelled table)"),
                 "QBP_Q13": NotModelledStructure(
-                    triggers: ["QBP^Q13"],
-                    reason: "CH05 section 5.4.2 (p 32) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.6 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.2 (p 32) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q13 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 32), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.6 not-modelled table)"),
                 "QBP_Q15": NotModelledStructure(
-                    triggers: ["QBP^Q15"],
-                    reason: "CH05 section 5.4.3 (p 32) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.6 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.3 (p 32) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q15 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 33), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.6 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 87) lists QRF_W02 (event W02); CH07 section 7.15.2 (p 7-110) says only that W02 'identifies QRF messages which are a response to a QRY message', and no chapter prints a QRF message. Permanent: the print gives neither a syntax nor an unambiguous reference to a printed structure (P8b-18; register section E, v2.6 not-modelled table)"),
@@ -291,8 +291,8 @@ extension MessageStructureTable {
                     triggers: ["QVR^Q17"],
                     reason: "CH05 section 5.4.5 (p 34) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.6 not-modelled table)"),
                 "RSP_K11": NotModelledStructure(
-                    triggers: ["RSP^K11"],
-                    reason: "CH05 section 5.4.1 (p 31) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.6 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 31) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). K11 is its default event only: 'A standard or site-defined response may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 31), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.6 not-modelled table)"),
                 "RSP_Q11": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 87) lists RSP_Q11 (event Q11); its only v2.6 print is the site-specific example RSP^Znn^RSP_Q11 in CH08 section 8.4.5.1 (p 8-8, a query profile example excluded under ruling G7), so no normative syntax is printed (register section E, v2.6 not-modelled table)"),
@@ -366,14 +366,14 @@ extension MessageStructureTable {
                     triggers: ["OUL^R21"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 104) lists OUL_R21 (events: R21), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "QBP_Q11": NotModelledStructure(
-                    triggers: ["QBP^Q11", "QBP^Q31"],
-                    reason: "CH05 section 5.4.1 (p 34), the structure for any query trigger a query profile assigns (CH04A 4A.3.20, p 22, declares 'Query Trigger (= MSH-9): QBP^Q31^QBP_Q11'), prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.7.1 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 34), the structure for any query trigger a query profile assigns (CH04A 4A.3.20, p 22, declares 'Query Trigger (= MSH-9): QBP^Q31^QBP_Q11'), prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q11 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 34), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.7.1 not-modelled table)"),
                 "QBP_Q13": NotModelledStructure(
-                    triggers: ["QBP^Q13"],
-                    reason: "CH05 section 5.4.2 (p 36) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.7.1 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.2 (p 36) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q13 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 36), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.7.1 not-modelled table)"),
                 "QBP_Q15": NotModelledStructure(
-                    triggers: ["QBP^Q15"],
-                    reason: "CH05 section 5.4.3 (p 37) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.7.1 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.3 (p 37) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q15 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 37), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.7.1 not-modelled table)"),
                 "QCK_Q02": NotModelledStructure(
                     triggers: ["QCK^Q02"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QCK_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
@@ -414,8 +414,8 @@ extension MessageStructureTable {
                     triggers: ["ROR^ROR"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists ROR_ROR (events: ROR), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
                 "RSP_K11": NotModelledStructure(
-                    triggers: ["RSP^K11"],
-                    reason: "CH05 section 5.4.1 (p 34) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.7.1 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 34) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). K11 is its default event only: 'A standard or site-defined response may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 35), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.7.1 not-modelled table)"),
                 "RSP_Q11": NotModelledStructure(
                     triggers: ["RSP^Q11"],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 106) lists RSP_Q11 (events: Q11), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
@@ -516,14 +516,14 @@ extension MessageStructureTable {
                     triggers: ["PTR^PCF"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PTR_PCF (events: PCF), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QBP_Q11": NotModelledStructure(
-                    triggers: ["QBP^Q11", "QBP^Q31"],
-                    reason: "CH05 section 5.4.1 (pp 34 to 35), the structure for any query trigger a query profile assigns (CH04A 4A.3.20, p 24, declares 'Query Trigger (= MSH-9): QBP^Q31^QBP_Q11'), prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (pp 34 to 35), the structure for any query trigger a query profile assigns (CH04A 4A.3.20, p 24, declares 'Query Trigger (= MSH-9): QBP^Q31^QBP_Q11'), prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q11 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 35), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.8.2 not-modelled table)"),
                 "QBP_Q13": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279) lists QBP_Q13 (event Q13). CH05 section 5.4.2 (pp 35 to 36) says the QBP_Q13 structure 'contains the MSH, RDF, RCP, and DSC segments' and that its message structure 'can be found in 5.3.1.2' (printed QBP^Q13^QPB_Q13); section 5.3.1.2 (pp 14 to 15) is an example query profile, and prints the grammar of the site-defined query Z99 (QBP^Z99^QBP_Q13: MSH [{SFT}] [UAC] QPD [PID] [RDF] RCP [RDF] [DSC]), whose PID is that query's own parameter segment ('neither the PID nor the RDF segments are used') and which disagrees with the 5.4.2 list (QPD, PID, SFT and UAC). The reference is explicit but gives only a query profile's grammar, so the print fixes no syntax for QBP_Q13 apart from a query profile, as the v2.4 to v2.7.1 5.4.2 template ('[...]', the segments a query profile defines). Permanent (template ID, ruling G6; the example itself is excluded under ruling G7), not modelled because a conformant QBP^Q13 for another query profile could draw a finding against the Z99 grammar (P8b-final F-I2; register section E, v2.8.2 not-modelled table)"),
                 "QBP_Q15": NotModelledStructure(
-                    triggers: ["QBP^Q15"],
-                    reason: "CH05 section 5.4.3 (pp 36 to 37) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.3 (pp 36 to 37) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). Q15 is its default event only: 'A standard or site-defined query may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 37), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.8.2 not-modelled table)"),
                 "QBP_Q33": NotModelledStructure(
                     triggers: [],
                     reason: "CH04 section 4.16.6 QBP - Get Donor Record Candidates (Event Q33) (p 157), a query profile, prints 'Query Trigger: QBP^Q33^QBP_Q33', while the section's caption and Table 0354 v2.8.2 (CH02C section 2.C.2.279) give QBP_O33 (QBP^Q33^QBP_O33, section 4.16.6) (modelled); no v2.8.2 chapter prints a syntax under QBP_Q33, so a message copying the profile row is not structure-checked under the printed ID and is never a mismatch. Permanent: the print gives no syntax for QBP_Q33 (P8b-final F-I1 d; register section E, v2.8.2 not-modelled table)"),
@@ -582,8 +582,8 @@ extension MessageStructureTable {
                     triggers: ["RQC^I05", "RQC^I06"],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RQC_I05 (events: I05, I06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RSP_K11": NotModelledStructure(
-                    triggers: ["RSP^K11"],
-                    reason: "CH05 section 5.4.1 (p 35) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
+                    triggers: [],
+                    reason: "CH05 section 5.4.1 (p 35) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6). K11 is its default event only: 'A standard or site-defined response may use this trigger event or may specify a unique trigger event value in its Query Profile' (p 35), so a query profile may give it any event: no list of triggers is true of it, and any event declaring it is reported as not modelled, never as a mismatch (register section E, v2.8.2 not-modelled table)"),
                 "RSP_K33": NotModelledStructure(
                     triggers: [],
                     reason: "CH04 section 4.16.6 QBP - Get Donor Record Candidates (Event Q33) (p 157), a query profile, prints 'Response Trigger: RSP^K33^RSP_K33', while the section's caption and Table 0354 v2.8.2 (CH02C section 2.C.2.279) give RSP_O33 (RSP^K33^RSP_O33, section 4.16.7) (modelled); no v2.8.2 chapter prints a syntax under RSP_K33, so a message copying the profile row is not structure-checked under the printed ID and is never a mismatch. Permanent: the print gives no syntax for RSP_K33 (P8b-final F-I1 d; register section E, v2.8.2 not-modelled table)"),

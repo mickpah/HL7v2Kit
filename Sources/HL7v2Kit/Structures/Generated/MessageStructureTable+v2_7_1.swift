@@ -5811,7 +5811,7 @@ extension MessageStructureTable {
     private static let v2_7_1_RDY_K15: MessageStructure = MessageStructure(
         id: "RDY_K15",
         version: "2.7.1",
-        triggers: ["RDY^K15"],
+        triggers: ["RDY^*"],
         citation: "HL7 v2.7.1 Chapter 5, section 5.4.3 QBP/RDY - query by parameter/display response (events vary), p 37.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(
@@ -6743,7 +6743,7 @@ extension MessageStructureTable {
     private static let v2_7_1_RTB_K13: MessageStructure = MessageStructure(
         id: "RTB_K13",
         version: "2.7.1",
-        triggers: ["RTB^K13"],
+        triggers: ["RTB^*"],
         citation: "HL7 v2.7.1 Chapter 5, section 5.4.2 QBP/RTB - query by parameter/tabular response (events vary), p 36.",
         requiresExactMatch: false,
         errorResponse: StructureErrorResponse(

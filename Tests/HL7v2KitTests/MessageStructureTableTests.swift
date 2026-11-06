@@ -210,9 +210,9 @@ struct MessageStructureTableTests {
             for key in keys {
                 let parts = key.split(separator: "^", maxSplits: 1, omittingEmptySubsequences: false).map(String.init)
                 let code = parts[0], event = parts.count > 1 ? parts[1] : ""
-                for event in event == "*" ? ["*", "Q99"] : [event] {
+                for event in event == "*" ? ["*", "Q99", "Z99", ""] : [event] {
                     let scan = (table.values.filter { $0.accepts(messageCode: code, triggerEvent: event) }.map(\.id).sorted(),
-                                gaps.filter { $0.value.accepts(messageCode: code, triggerEvent: event) }.keys.sorted())
+                                gaps.filter { $0.value.accepts(structure: $0.key, messageCode: code, triggerEvent: event) }.keys.sorted())
                     let index = MessageStructureTable.owners(messageCode: code, triggerEvent: event, version: version)
                     #expect(index.modelled == scan.0 && index.registered == scan.1, "\(version) \(code)^\(event)")
                 }

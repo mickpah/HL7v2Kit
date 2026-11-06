@@ -37,7 +37,8 @@ extension Validator {
     /// (for example `ParserOptions.versionOverride`) is not matched.
     /// Lookup (ADR-019 "Structure resolution and version", rules 1 to 4):
     /// MSH-9.3 when valued; else MSH-9.1^9.2 (a bare `ACK` as `ACK^`) through
-    /// the caption-line triggers, `ACK^*` matching any event. A trigger no
+    /// the caption-line triggers, `ACK^*` matching any event and `RTB^*` on
+    /// RTB_K13 any but a Z event (`wildcardTakes`). A trigger no
     /// loaded structure prints, or one printed under two (B6, ambiguous), is
     /// not modelled. An MSH-9.3 whose structure does not print MSH-9.1^9.2 is
     /// reported as a mismatch alone, with no body match. An MSH-9.3 ID that is
@@ -102,7 +103,7 @@ extension Validator {
             .filter { $0.accepts(messageCode: code, triggerEvent: event) }
             .map(\.id).sorted()
         let gapsByTrigger = indexed?.registered
-            ?? registered.filter { $0.value.accepts(messageCode: code, triggerEvent: event) }.keys.sorted()
+            ?? registered.filter { $0.value.accepts(structure: $0.key, messageCode: code, triggerEvent: event) }.keys.sorted()
         let ver = "v\(message.version.rawValue)"
         // A locally defined trigger (CH02 reserves message types and trigger events
         // beginning with Z for local definition) that the version prints under no
@@ -127,7 +128,7 @@ extension Validator {
         }
         if table[declared] == nil, let entry = registered[declared] {
             // Its captions print other triggers: the print gives this event another structure.
-            if !localTrigger, !entry.triggers.isEmpty, !entry.accepts(messageCode: code, triggerEvent: event) {
+            if !localTrigger, !entry.triggers.isEmpty, !entry.accepts(structure: declared, messageCode: code, triggerEvent: event) {
                 return (nil, [ValidationIssue(
                     severity: severity,
                     code: .messageStructureMismatch(declared: declared, trigger: trigger),

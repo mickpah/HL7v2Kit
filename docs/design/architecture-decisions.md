@@ -917,7 +917,10 @@ info `messageStructureNotModelled` (decision 4: no fallback grammar). Within the
    resolved and the info issue names both.
 3. v2.3 has no MSH-9.3: once MSH-12 reads as v2.3, a populated MSH-9.3 is ignored and the message
    resolves by trigger alone.
-4. `ACK^<any>` resolves to `ACK` through the `*` trigger.
+4. `ACK^<any>` resolves to `ACK` through the `*` trigger, as does any general message whose ID names
+   no event. RTB_K13 and RDY_K15 hold `RTB^*` and `RDY^*` too, since CH05 lets a query specify its own
+   event, but an ID that names an event takes no Z event and no empty one: a Z event is locally
+   defined, so the rules above treat it as printed under no structure.
 
 Message fragments (MSH-14 populated, or a trailing DSC with DSC-1 populated, or a trailing DSC the
 structure does not end with) are not structure-checked and get the info issue; reassembly is a
