@@ -1,7 +1,7 @@
 // FieldLengthValidationTests.swift
 // P6-6 (V231-C15): LEN is checked. Pre-v2.7 maximum lengths are site-negotiable
 // (v2.5.1 §2.5.3.2); v2.7+ normative lengths are binding (v2.8.2 §2.5.5.0). Both are
-// reported as warnings by default (owner gate G4) and switched off with nil.
+// reported as warnings by default (gate G4) and switched off with nil.
 
 import Testing
 import Foundation

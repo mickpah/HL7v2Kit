@@ -1,5 +1,5 @@
 // ExactStructureMatcher.swift
-// ADR-019 amendment (P8b-12, owner decision G15): exact matching for the
+// ADR-019 amendment (P8b-12, decision G15): exact matching for the
 // structures that fail the determinism lint, where the one-pass greedy
 // matcher can accept or reject the wrong messages. The codegen selects it
 // (`MessageStructure.requiresExactMatch`); the Validator never lints a message.

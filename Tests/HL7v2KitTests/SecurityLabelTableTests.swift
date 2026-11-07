@@ -261,7 +261,7 @@ struct SecurityLabelTableTests {
     func observationValueCost() throws {
         #expect(HL7TableRegistry.table("0953", version: .v2_9_1)?.contains("A0") == false)
         #expect(try Self.findings291("A0^x^HL70953").map(\.code) == [.valueNotInTable(table: "0953")])
-        // The way a site admits a code, by the owner's ruling.
+        // The way a site admits a code, by ruling.
         var options = ValidationOptions.default
         options.localTableExtensions["0953"] = ["A0"]
         #expect(try Self.findings(Self.msh("A0^x^HL70953", version: "2.9.1"), options: options).isEmpty)

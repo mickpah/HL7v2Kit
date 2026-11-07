@@ -2,7 +2,7 @@
 // P12 S1-3 and S1-2 (ADR-019 "HL7au:00060.1", amendment "P12 S1"): the order detail of the
 // ADRM-2021 order status response (OSR^Q06, section 5.3, p 281) and the order response
 // ORR^O02 (section 5.2, pp 280 to 281), each matched under .auLocalisation against its
-// profile structure in Resources/structures/profiles/au-adrm-2021/. v2.9-T14a (owner decision,
+// profile structure in Resources/structures/profiles/au-adrm-2021/. v2.9-T14a (decision,
 // 6 November): both responses take OBR alone after ORC, as printed; ORM^O01 keeps the p 280
 // replacement (LocaleAUStructureTests).
 
@@ -75,7 +75,7 @@ struct LocaleAUOrderResponseTests {
         #expect(base(all).isEmpty, "\(base(all).map(\.message))")
     }
 
-    // MARK: - ORR^O02 order response (ADRM-2021 section 5.2, pp 280 to 281; owner ruling G-AU2)
+    // MARK: - ORR^O02 order response (ADRM-2021 section 5.2, pp 280 to 281; ruling G-AU2)
 
     @Test("A conformant AU ORR^O02 (PID, ORC, OBR) is clean under AU")
     func orrConformant() throws {

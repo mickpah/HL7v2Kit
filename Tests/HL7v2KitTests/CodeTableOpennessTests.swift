@@ -127,7 +127,7 @@ struct CodeTableOpennessTests {
 
     // MARK: - Table 0104 (VID.1): closed on v2.9 and v2.9.1
 
-    /// The owner's ruling. v2.9 CH02 2.14.9.12 p70 and CH02A 2A.3.83.1 p86, v2.9.1 CH02 2.13.9.12 p71 and CH02A 2A.2.83.1 p87:
+    /// A ruling. v2.9 CH02 2.14.9.12 p70 and CH02A 2A.3.83.1 p86, v2.9.1 CH02 2.13.9.12 p71 and CH02A 2A.2.83.1 p87:
     /// "Refer to HL7 Table 0104 - Version ID ... for valid values", which ADR-016 reads as closed. v2.3 to v2.8.2 stay open on
     /// the reading recorded for them. MSH-12 also selects the grammar: a first repetition naming no version reads as v2.5.1
     /// (ADR-018), so on the wire these tables see such a value only at a later repetition, or through `versionOverride`.

@@ -611,7 +611,7 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// field OBR-24 ... must be valued and must have values from HL7 table 0074", ADRM p443). Such a rule reads a lone `""`
     /// as the field's value: ADRM p396 warns against `""` "as a dummy empty value for Required fields". `false` (default):
     /// a component rule, which skips a lone `""` on a data segment (`Validator.isDeleteIndicator`), since
-    /// the null has no components (the owner's ruling). Read by the field-override track only; every composite rule is a
+    /// the null has no components (a ruling). Read by the field-override track only; every composite rule is a
     /// component rule.
     let constrainsField: Bool
 

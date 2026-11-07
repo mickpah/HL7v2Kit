@@ -1,7 +1,7 @@
 // TrailingBlankComparisonTests.swift
 // ST, v2.9 CH02A 2A.3.76 p82 and v2.9.1 2A.2.76 p83: "String data is left justified (i.e., no leading blank space) with
 // trailing blanks optional, which may be trimmed, and SHOULD be ignored on string compare operations for 2 values of type
-// ST". ID "follows the formatting rules for an ST field" (p50 on each). By the owner's ruling, value comparisons ignore
+// ST". ID "follows the formatting rules for an ST field" (p50 on each). By ruling, value comparisons ignore
 // them on these two versions only. v2.3 to v2.8.2 keep the ruling of 7 October, on an ST sentence that stops at
 // "trailing blanks optional". Length still counts the blank, a leading blank stays a finding, and only U+0020 is a blank.
 
@@ -90,7 +90,7 @@ struct TrailingBlankComparisonTests {
         #expect(earlier.issues.map(\.code) == [.messageStructureMismatch(declared: "ACK ", trigger: "ACK^A01")])
     }
 
-    // The owner's ruling of 5 November, on 2.9.1's structures: Task 11 had none to pin it against.
+    // The ruling of 5 November, on 2.9.1's structures: Task 11 had none to pin it against.
     @Test("ACK with a trailing blank in MSH-9.3 resolves on 2.9.1 and is matched against the body")
     func paddedStructureOn291() throws {
         let padded = try Parser().parse(wire("2.9.1", type: "ACK^A01^ACK ", "MSA|AA|MSG0"))

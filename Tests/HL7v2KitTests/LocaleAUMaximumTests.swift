@@ -1,5 +1,5 @@
 // LocaleAUMaximumTests.swift
-// S6-3 (owner decision 1, ruled 2026-10-06; ADR-019 decision 7 as amended in S6): under
+// S6-3 (decision 1, ruled 2026-10-06; ADR-019 decision 7 as amended in S6): under
 // `.auLocalisation`, a segment beyond a maximum the ADRM-2021 narrows below the base v2.4
 // structure's draws one information issue per occurrence, naming the ADRM print and the
 // maximum. REF^I12 (ADRM-2021 section 7.2.1, pp 324 to 325) prints `[IN1]` where the base

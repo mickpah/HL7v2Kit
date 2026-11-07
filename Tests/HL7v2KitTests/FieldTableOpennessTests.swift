@@ -288,7 +288,7 @@ struct FieldTableOpennessTests {
         #expect(SegmentGrammarTable.v2_9_1["ARV"]?.field(2)?.tableOpen == false)
     }
 
-    /// Table 0953's four fields print "for suggested values" and are enforced anyway, by the owner's ruling R30, and R35 on 2.9.1.
+    /// Table 0953's four fields print "for suggested values" and are enforced anyway, by ruling R30, and R35 on 2.9.1.
     @Test("Table 0953 fields stay unmarked on v2.9 and v2.9.1", arguments: [("ARV", 8), ("BHS", 16), ("FHS", 16), ("MSH", 27)])
     func table0953FieldsStayUnmarked(segment: String, index: Int) {
         #expect(SegmentGrammarTable.v2_9[segment]?.field(index)?.tableOpen == false)

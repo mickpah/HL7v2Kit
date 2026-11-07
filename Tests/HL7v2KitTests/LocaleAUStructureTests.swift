@@ -310,7 +310,7 @@ struct LocaleAUStructureTests {
         // Base v2.4 REF_I12 (CH11 pp 11-16 to 11-17) prints [ PV1 [PV2] ] twice, so the base
         // accepts PV1 PV1 once PD1 is passed over; only the ADRM (p 324, PV1 once) rejects the
         // second, as a beyond-maximum finding, which decision 7 as amended in S6 reports at
-        // information (owner ruling 2026-10-06; LocaleAUMaximumTests).
+        // information (ruling 2026-10-06; LocaleAUMaximumTests).
         let all = try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "PD1|", "PV1|1", "PV1|2"])
         #expect(base(all).isEmpty, "\(base(all).map(\.message))")
         #expect(au(all).isEmpty, "\(au(all).map(\.message))")

@@ -1,5 +1,5 @@
 // ConditionNotEvaluatedTests.swift
-// S1-4 (owner decision 9, 2026-10-06): when the P8b-17 fallback gates the
+// S1-4 (decision 9, 2026-10-06): when the P8b-17 fallback gates the
 // order-number predicates off an OUL, OPU or OPL message with no group spans
 // (ADR-019), the message carries one information issue saying so.
 

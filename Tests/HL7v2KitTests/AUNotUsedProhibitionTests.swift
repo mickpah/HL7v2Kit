@@ -26,7 +26,7 @@
 // associated OBR."). See task-P4-27-report.md for the NEEDS_CONTEXT
 // write-up.
 //
-// Owner decision G7 (2026-10-01, P4-32) resolves that conflict in
+// Decision G7 (2026-10-01, P4-32) resolves that conflict in
 // favour of shipping the AU "not used" sentence anyway, as a warning,
 // matching OBR-26's mechanism and scope exactly. On a v2.3-v2.6 child
 // order sent without ORC-8 the AU warning and the base
@@ -146,7 +146,7 @@ struct AUP12ORC24ProhibitionTests {
     }
 }
 
-@Suite("AU ADRM-prose:P-13 — OBR-29 Parent not used in Australia (P4-32, owner decision G7)")
+@Suite("AU ADRM-prose:P-13 — OBR-29 Parent not used in Australia (P4-32, decision G7)")
 struct AUP13OBR29ProhibitionTests {
 
     private static func wire(_ messageType: String, obr29: String?) -> String {

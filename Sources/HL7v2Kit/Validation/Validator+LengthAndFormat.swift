@@ -15,7 +15,7 @@ extension Validator {
     /// Under a locale whose profile prints its own LEN for the field
     /// (`FieldOverride.length`, P12 S3-2: the AU ADRM-2021 variations from
     /// v2.4), that LEN is read instead, as a maximum, on a message of any
-    /// version, as every other profile rule is (owner ruling G-AU1; on the
+    /// version, as every other profile rule is (ruling G-AU1; on the
     /// messages it scopes, HL7au:000040.1 requires MSH-12.1 = 2.4).
     func checkFieldLength(
         _ grammar: FieldGrammar,

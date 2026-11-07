@@ -1936,7 +1936,7 @@ struct TypedSegmentTests {
 
     // v3.x cycle 1: the v2.5-only quartet CER/IPC/OVR/SFT — the last never-authored
     // segments on any AU-priority version. All four are v2.5+ additions: absent from
-    // v2.3/v2.3.1/v2.4 by spec, and their v2.6/v2.8.2 instances are the owner-deferred
+    // v2.3/v2.3.1/v2.4 by spec, and their v2.6/v2.8.2 instances are the deferred
     // class. CER-6 is the FIRST field on any modelled version to declare ED as its
     // static datatype (amends M6-O7's "no field declares ED" observation; the eight
     // OBX-5-targeted ED/RP points in permanent-limitations-register.md §D are
@@ -1987,7 +1987,7 @@ struct TypedSegmentTests {
     }
 
     // v3 cycle 2 (deferred-tier batch A): CH02 envelopes + CH05 queries on
-    // v2.6/v2.8.2 — the first bite of the owner-deferred backlog. BHS/FHS grow
+    // v2.6/v2.8.2 — the first bite of the deferred backlog. BHS/FHS grow
     // 12 → 14 (batch/file sending+receiving network address, HD); URD-4 rides
     // the v2.6 CE→CWE wave; URD/URS are withdrawn from v2.8.2 entirely
     // (present in v2.6, no attribute table in the v2.8.2 CH05).

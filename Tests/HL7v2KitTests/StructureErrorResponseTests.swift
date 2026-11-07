@@ -83,7 +83,7 @@ struct StructureErrorResponseTests {
               findings: ["missing RDF at the end", "missing RDT at the end"], note: "v2.3.1 keeps the full structure"),
         // 5.6.5 Situation 3 (v2.5.1 p 5-61): no data found, MSA-1 AA and QAK-2 NF; the response
         // "contains MSH, MSA, QAK, and query defining segment" and the rest is absent. ERR is not
-        // named, but ruling 6 (owner, 2026-10-07) allows an optional ERR after MSA: an AA reply may
+        // named, but ruling 6 (2026-10-07) allows an optional ERR after MSA: an AA reply may
         // carry a warning or informational ERR (ERR-4 severity W or I, v2.5.1 CH02 2.15.5).
         Probe(version: "2.5.1", msh9: "TBR^R08^TBR_R08", structure: "TBR_R08",
               body: ["MSA|AA|MSG00001", "QAK|TAG0001|NF"], findings: [], note: "no data found, TBR"),

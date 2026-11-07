@@ -30,7 +30,7 @@ struct RolePersonCorrelationTests {
             .filter { $0.code == .correlatedValueMismatch }
     }
 
-    static let versions = ["2.6", "2.7.1", "2.8.2"]   // v2.6 first (owner decision R6)
+    static let versions = ["2.6", "2.7.1", "2.8.2"]   // v2.6 first (decision R6)
 
     @Test("A ROL-4 with STF's values, from any repetitions, matches", arguments: versions)
     func matches(_ version: String) throws {

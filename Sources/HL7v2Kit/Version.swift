@@ -25,7 +25,7 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
     /// HL7 v2.7.1, modelled from its own text (plan P10, ADR-018).
     case v2_7_1 = "2.7.1"
     /// HL7 v2.7. HL7v2Kit has no v2.7 text and validates a `2.7` message against
-    /// the v2.7.1 grammar (``grammarVersion``; owner decision G11, ADR-018).
+    /// the v2.7.1 grammar (``grammarVersion``; decision G11, ADR-018).
     case v2_7   = "2.7"
     case v2_8_2 = "2.8.2"
     case v2_8   = "2.8"

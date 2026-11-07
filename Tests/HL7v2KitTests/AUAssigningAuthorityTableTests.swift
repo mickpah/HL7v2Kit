@@ -54,7 +54,7 @@ struct AUAssigningAuthorityTableTests {
         #expect(issues.count == 1, "got \(issues.map(\.message))")
     }
 
-    /// The owner's ruling: p 310 does not print IHI, so it passes only as a caller's declared authority.
+    /// A ruling: p 310 does not print IHI, so it passes only as a caller's declared authority.
     @Test("Asserted: IHI fires at PRD-7.2, and a caller's localTableExtensions[\"0363\"] admits it")
     func ihiNeedsDeclaring() throws {
         let issues = try findings(identifiers: "12345^IHI^VDI", asserted: true)

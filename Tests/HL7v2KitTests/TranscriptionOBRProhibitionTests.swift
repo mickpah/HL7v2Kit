@@ -1,7 +1,7 @@
 // TranscriptionOBRProhibitionTests.swift
 // ROL-4 sprint task 2: v2.8.2 CH09 TXA-22 and TXA-11 "Condition" paragraphs: "If TXA-22 [TXA-11]
 // is valued and the corresponding OBR segment is present in the message OBR-32 [OBR-35] must be
-// blank". A warning: the print tells receivers to ignore the OBR field (owner decision R3, R5).
+// blank". A warning: the print tells receivers to ignore the OBR field (decision R3, R5).
 
 import Testing
 @testable import HL7v2Kit

@@ -22,8 +22,8 @@ Licensed-content signatures:
   - xsd                   `<xsd:schema` or `<xs:schema`
   - v2xml                 the HL7 v2.xml bundle namespaces `urn:hl7-org:v2xml` and
                           `urn:com.sun:encoder-hl7-1.0`, or its `v2.xml Message Definitions` banner
-  - licensed-path         any path ending .pdf, .xsd or .xml, or under private/ (the owner's
-                          local, gitignored folder that holds the standards)
+  - licensed-path         any path ending .pdf, .xsd or .xml, or under private/ (the author-local,
+                          gitignored folder that holds the standards)
 
 Scope: PHI patterns and the text signatures apply to paths under Tests/Fixtures/ and to every
 *.hl7 and *.txt path (plus any licensed path); `%PDF-` and the form-feed check apply to every

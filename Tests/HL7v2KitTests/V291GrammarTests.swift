@@ -154,7 +154,7 @@ struct V291GrammarTests {
             let table = try #require(tables[number])
             #expect(table.kind == .userDefined && table.permitsLocalExtensions, "\(number)")
         }
-        // CH02 p71 and CH02A p87 say "for valid values", so closed, by the owner's ruling. v2.3 to v2.8.2 stay open.
+        // CH02 p71 and CH02A p87 say "for valid values", so closed, by ruling. v2.3 to v2.8.2 stay open.
         #expect(try #require(tables["0104"]).isClosed)
         #expect(try #require(tables["0391"]).entries.count == 132)      // Chapter 2C's rows stand, pp 389-393
         #expect(try #require(tables["0617"]).kind == .userDefined)   // XAD.18, CH02A p 92

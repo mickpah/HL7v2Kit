@@ -132,7 +132,7 @@ struct QueryEventTests {
         #expect(try Self.codes("RDY^R41^RDY_K15", "2.3.1", Self.rdy) == [.messageStructureMismatch(declared: "RDY_K15", trigger: "RDY^R41")])
     }
 
-    // CH05's route for a site-defined response is the default event or a Z event, and no print has this form. The owner
+    // CH05's route for a site-defined response is the default event or a Z event, and no print has this form. Its owner
     // yields only a Z event, so a Z structure ID on any other event is a mismatch, as on the two lines that were one already.
     @Test("A Z structure ID on an event that is not a Z event is a mismatch",
           arguments: printing)

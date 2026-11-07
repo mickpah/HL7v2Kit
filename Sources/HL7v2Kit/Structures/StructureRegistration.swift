@@ -1,6 +1,6 @@
 // StructureRegistration.swift
 // The public view of the not-modelled register (permanent-limitations
-// register section E): owner decision 8, ADR-019 amendment 2026-10-06.
+// register section E): decision 8, ADR-019 amendment 2026-10-06.
 
 /// A message structure that a version prints (or its Table 0354 lists) and
 /// that is registered as not modelled, with the reason (ADR-019,

@@ -594,7 +594,7 @@ extension Profile {
                 ],
                 specCitation: "ADRM-prose:P-11 — OBR-26 not used in Australia"
             ),
-            // ADRM-prose:P-13 (P4-32, owner decision G7, 2026-10-01) —
+            // ADRM-prose:P-13 (P4-32, decision G7, 2026-10-01) —
             // ADRM-2021 §4.4.1.29, p. 229: "Not used in Australian
             // messages. Use observation Sub-ID in OBX-4 to link results."
             // — the identical sentence as OBR-26 (item 00261 here,
@@ -606,8 +606,8 @@ extension Profile {
             // without ORC-8, mirroring ADRM §5.4.1.8 (ORC-8, unchanged
             // from base v2.4 §4.5.1.8), p. 295: "ORC-8-parent is the
             // same as OBR-29-parent. If the parent is not present in the
-            // ORC, it must be present in the associated OBR." Owner
-            // decision G7 resolves the conflict in favour of shipping
+            // ORC, it must be present in the associated OBR." Decision
+            // G7 resolves the conflict in favour of shipping
             // the AU "not used" sentence anyway, as a warning, matching
             // OBR-26's mechanism and scope exactly (unconditional on the
             // base requiredness — never negating a base "required when"
@@ -632,7 +632,7 @@ extension Profile {
                         specCitation: "ADRM-prose:P-13 — OBR-29 (Parent) should not be valued in Australian messages; use the OBX-4 Sub-ID to link results instead; AU ADRM-2021 §4.4.1.29 p. 229"
                     ),
                 ],
-                specCitation: "ADRM-prose:P-13 — OBR-29 not used in Australia (owner decision G7; conflicts with the base child-order requirement, accepted)"
+                specCitation: "ADRM-prose:P-13 — OBR-29 not used in Australia (decision G7; conflicts with the base child-order requirement, accepted)"
             ),
             FieldOverride(
                 segmentID: "ORC",
@@ -875,7 +875,7 @@ extension Profile {
                 // PRD-7.2 outside the printed Table 0363 (p. 310) requires
                 // VDI. The printed authorities without a printed pair
                 // (AUSDVA, AUSNATA, AUSLINK) still skip. IHI, which p. 310
-                // does not print, is one of the others (owner's ruling).
+                // does not print, is one of the others (a ruling).
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 2,
@@ -1841,7 +1841,7 @@ extension Profile {
         // "If the predicate is NOT satisfied: A conformant sending
         // application must NOT send the element." Applies only to the C
         // fields whose schema marks the stored condition as the full
-        // predicate (v2.4 OBX-2 only, owner ruling G9); every other stored
+        // predicate (v2.4 OBX-2 only, ruling G9); every other stored
         // condition is a "required when" trigger whose false branch the
         // spec leaves open. Must not: error.
         fullPredicateRule: FullPredicateRule(

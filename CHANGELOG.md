@@ -56,6 +56,8 @@ The entries are condensed; the git history carries the detail.
   (pp 280 to 281): an RXO, ODS or ODT in OBR's place, accepted before, draws HL7au:00060.1, as RQD
   and RQ1 do. ORM^O01 keeps the p 280 replacement for medication and diet orders, and HL7au:00060.1
   has no residual left (#32).
+- The citation text of ADRM-prose:P-13 and of the ORR_O02, OSR_Q06 and REF_I12 profile structures no longer names
+  who made the decision it cites; the decision and ruling references stay (#32).
 
 ### Fixed
 

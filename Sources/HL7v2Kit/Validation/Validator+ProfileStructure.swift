@@ -37,7 +37,7 @@ extension Validator {
         guard let structure = table[base.id], let rule = structure.rule, structure.baseVersion == base.version,
               structure.accepts(messageCode: code, triggerEvent: event),
               fragmentReason(message, structure: base) == nil else { return (baseFindings, []) }
-        // P12 S1-1 (owner ruling G-AU3): a print the message's declared profile selects
+        // P12 S1-1 (ruling G-AU3): a print the message's declared profile selects
         // (MSH-12.3.1, the ADRM-2021 Appendix 8 simplified REF profile) replaces the structure.
         let profile = structure.selectingVariant(messageCode: code, triggerEvent: event, declaredProfile: message["MSH-12.3.1"])
 
@@ -115,7 +115,7 @@ extension Validator {
         let lastMatched = ids.indices.last { !StructureMatcher.isTransparent(ids[$0]) && !passedOver.contains(ids[$0]) }
         let endPlace = lastMatched.flatMap { $0 < ids.count - 1 ? "after \(location($0).pathDescription)" : nil }
             ?? "at the end of the message"
-        // S6-3 (owner ruling 2026-10-06, decision 7 as amended): an occurrence beyond a
+        // S6-3 (ruling 2026-10-06, decision 7 as amended): an occurrence beyond a
         // maximum the profile narrows is information, once per occurrence, where the
         // base kept no finding of its own at that place (the base accepts it).
         let keptPlaces = Set(kept.map(\.location.pathDescription))
@@ -133,7 +133,7 @@ extension Validator {
                 location: anchor,
                 message: "\(rule): \(clause); the base v\(base.version) "
                     + "\(base.id) structure accepts it (\(profile.citation)). Reported at information (ADR-019 decision 7, "
-                    + "owner ruling 2026-10-06)."
+                    + "ruling 2026-10-06)."
             )
         }
         return (kept, beyond + match.findings.indices.compactMap { n in

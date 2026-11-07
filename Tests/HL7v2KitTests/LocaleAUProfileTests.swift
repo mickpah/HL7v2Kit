@@ -2474,7 +2474,7 @@ struct AU00060_4PartialTests {
 // structures (LocaleAUStructureTests). It was PARTIAL while RRI^I12, the Appendix 8 simplified
 // REF structure, the ORR^O02 print, the prose-only PV1 mandate on ORU^R01 and last the response
 // order detail stayed open (permanent-limitations register section E, P8b-4 addendum); v2.9-T14a
-// closed the last (ORR^O02 and OSR^Q06 take OBR alone, owner decision), so it is SHIPPED.
+// closed the last (ORR^O02 and OSR^Q06 take OBR alone, decision), so it is SHIPPED.
 @Suite("AU HL7au:00060.1 register row (P8b-4)")
 struct AU00060_1RegisterRowTests {
 

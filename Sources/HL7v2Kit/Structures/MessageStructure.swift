@@ -329,7 +329,7 @@ func wildcardTakes(structure id: String, triggerEvent event: String) -> Bool {
 /// is not a modelled structure of that version: it may be a registered one,
 /// or one the version does not print at all. ``registration(_:version:)``
 /// tells the two apart, returning a registered structure's triggers and
-/// reason and nil for an unprinted ID (owner decision 8, 2026-10-06). The
+/// reason and nil for an unprinted ID (decision 8, 2026-10-06). The
 /// ``Validator`` draws the same line, reporting a registered structure as
 /// ``IssueCode/messageStructureNotModelled(structure:)`` with its reason and
 /// an unprinted ID as ``IssueCode/messageStructureMismatch(declared:trigger:)``.

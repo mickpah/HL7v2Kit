@@ -106,7 +106,7 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// names the conformance point (`"HL7au:00060.1"`); the message names the
     /// profile print and the maximum. Always `.info`, one per occurrence,
     /// raised when ``ValidationOptions/messageStructureSeverity`` is set: the
-    /// conformance point is about required segments, and the owner ruled the
+    /// conformance point is about required segments, and a ruling set the
     /// narrowed maxima reported at information (2026-10-06; ADR-019 decision 7
     /// as amended in S6). Additive case; the enum is open per ADR-014.
     case profileMaximumExceeded(localeRule: String)
@@ -399,7 +399,7 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// The message text names the structure finding that withheld the
     /// spans. Always `.info`; raised once per message, at the first
     /// gated field of the first ORC or OBR, whatever
-    /// ``ValidationOptions/messageStructureSeverity`` is. Owner decision 9
+    /// ``ValidationOptions/messageStructureSeverity`` is. Decision 9
     /// (2026-10-06); additive case introduced in S1-4.
     case conditionNotEvaluated(fields: [String])
 

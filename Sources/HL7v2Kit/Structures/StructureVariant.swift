@@ -2,7 +2,7 @@
 // S6-1 (ADR-019 amendment 2026-10-06): per-trigger prints of one structure ID. Where two
 // normative prints of one ID differ by trigger, each governs the triggers it is printed for;
 // the Validator selects the print for MSH-9.1^9.2 before matching. P12 S1-1 (ADR-019 amendment
-// "P12 S1", owner ruling G-AU3): a profile structure's variant may instead be selected by the
+// "P12 S1", ruling G-AU3): a profile structure's variant may instead be selected by the
 // profile the message declares (the ADRM-2021 Appendix 8 simplified REF profile, MSH-12.3.1).
 
 /// One print of a structure ID that governs some of the structure's

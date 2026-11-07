@@ -124,7 +124,7 @@ extension Validator {
         }
     }
 
-    /// Owner decision 9 (S1-4): when the fallback gates the order-number
+    /// Decision 9 (S1-4): when the fallback gates the order-number
     /// predicates off (``GroupScoping/gated(_:)``) and the message carries an
     /// ORC or OBR, one `.info` issue at the first gated field of the first
     /// such segment, naming the gated fields and the structure finding that

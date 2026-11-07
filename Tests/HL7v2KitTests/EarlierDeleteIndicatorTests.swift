@@ -299,7 +299,7 @@ struct EarlierDeleteIndicatorTests {
 
     /// v2.4 2.15.4.1 p2-104, "for all fields", on the locale's own version: the AU rules run inside the field loop, so this wire skips
     /// them too. ADRM p396 warns that implementations "incorrectly use null ("") values, sometimes even as a dummy empty value for
-    /// Required fields". Registered for the owner.
+    /// Required fields". Registered as a known limit.
     @Test("Under the AU locale on v2.4, \"\" in all fields draws no field-level finding", arguments: ["PID", "OBR", "ORC", "PV1", "OBX"])
     func auAllFields(id: String) throws {
         let last = try #require(SegmentGrammarTable.v2_4[id]?.fields.map(\.index).max())
@@ -319,7 +319,7 @@ struct EarlierDeleteIndicatorTests {
     }
 
     /// ADRM p274 prints OBR-12 = "" on a delete message. A lone "" is the null, which has no components, so the profile's
-    /// component rules skip it, as the base grammar does (the owner's ruling). The identifiers of the printed line are left out;
+    /// component rules skip it, as the base grammar does (a ruling). The identifiers of the printed line are left out;
     /// only OBR-4 and OBR-12 matter here.
     @Test("ADRM p274's OBR-12 = \"\" draws no finding at OBR-12, under the locale or without it")
     func auPrintedOBR12() throws {

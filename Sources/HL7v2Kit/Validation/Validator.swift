@@ -183,7 +183,7 @@ public struct Validator: Sendable {
             checkMessageStructure(message: message, severity: severity, issues: &issues)
         }
 
-        // S1-4 (owner decision 9): say so when the P8b-17 fallback gate
+        // S1-4 (decision 9): say so when the P8b-17 fallback gate
         // skipped the order-number predicates.
         checkGatedConditions(message: message, issues: &issues)
 
@@ -894,7 +894,7 @@ public struct Validator: Sendable {
         }
 
         // A lone `""` is the null, which has no components: these rules skip it, as the base grammar's `checkComponents`
-        // does (the owner's ruling; ADRM p274 prints OBR-12 = "" on a delete message).
+        // does (a ruling; ADRM p274 prints OBR-12 = "" on a delete message).
         for repetition in field.repetitions
         where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID) {
             // Track 1: required-components (v0.5-S5-B-3).
@@ -1588,7 +1588,7 @@ public struct Validator: Sendable {
 
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
             // A lone `""` is the null, which has no components: of these rules, only a value set on the field's own
-            // value (`constrainsField`) reads it (the owner's ruling).
+            // value (`constrainsField`) reads it (a ruling).
             let isNull = isDeleteIndicator(repetition, segmentID: segmentID)
             // Track 1 (v0.5-S5-B-1): required-component narrowings.
             for componentIndex in requiredComponents where !isNull {

@@ -8,7 +8,7 @@
 // sec 2.6; v2.6 / v2.8.2 sec 2.5.3 "Null ... |""|" against "Not populated
 // ... empty, not present"), and v2.8.2 Chapter 2B adds "A required element
 // can have a null value". So R stands: `""` satisfies it, an empty RXA-4
-// does not. v2.9 and v2.9.1 part from this, by the owner's ruling: CH02 prints
+// does not. v2.9 and v2.9.1 part from this, by ruling: CH02 prints
 // "HL7 v2.x does not have an explicit concept for null values", so "If null"
 // can only mean empty, and both model O, each citing its own print.
 //

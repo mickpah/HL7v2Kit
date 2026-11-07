@@ -1,5 +1,5 @@
 // LocaleAUSimplifiedREFTests.swift
-// P12 S1-1 (ADR-019 "HL7au:00060.1", amendment "P12 S1"; owner ruling G-AU3): ADRM-2021
+// P12 S1-1 (ADR-019 "HL7au:00060.1", amendment "P12 S1"; ruling G-AU3): ADRM-2021
 // Appendix 8, the simplified REF profile. A REF^I12 whose MSH-12.3.1 declares the profile
 // (A8.3, p 483) is matched under .auLocalisation against the constrained REF_I12 of A8.5
 // (pp 484 to 485), a variant of the AU REF_I12 profile structure selected by the declaration;

@@ -235,7 +235,7 @@ struct CodeTableValidationTests {
         }
     }
 
-    // MARK: - P2-13: caller-declared local table extensions (owner gate G5)
+    // MARK: - P2-13: caller-declared local table extensions (gate G5)
 
     private func pid5NameType(_ nameTypeCode: String, version: String = "2.5.1") -> String {
         "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|\(version)\r"

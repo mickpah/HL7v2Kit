@@ -390,7 +390,7 @@ struct SignatureCompatibilityTests {
         #expect(try #require(MessageStructureTable.structure("ADT_A01", version: .v2_5_1)).variants.isEmpty)
     }
 
-    // Deliberate pin of new, unreleased API (P12 S1-1, owner ruling G-AU3, ADR-019 amendment
+    // Deliberate pin of new, unreleased API (P12 S1-1, ruling G-AU3, ADR-019 amendment
     // "P12 S1"): the declared-profile identifiers that select a profile structure's variant.
     @Test("StructureVariant.profileIdentifiers keeps its signature")
     func structureVariantProfileIdentifiers() throws {
@@ -399,7 +399,7 @@ struct SignatureCompatibilityTests {
         #expect(ack.variants.allSatisfy { $0.profileIdentifiers.isEmpty })
     }
 
-    // Deliberate pin of new, unreleased API (S1-3, owner decision 8, ADR-019
+    // Deliberate pin of new, unreleased API (S1-3, decision 8, ADR-019
     // amendment 2026-10-06): the public registration lookup that tells a
     // registered-not-modelled structure from an unknown ID.
     @Test("StructureRegistration and the registration lookups keep their signatures")

@@ -55,7 +55,7 @@ struct AUPRDVendorIdentifierTests {
         }
     }
 
-    /// The owner's ruling: p 310 prints five rows, AUSHIC, AUSDVA, AUSNATA, AUSLINK and AUSHICPR, and no IHI. So IHI is an
+    /// A ruling: p 310 prints five rows, AUSHIC, AUSDVA, AUSNATA, AUSLINK and AUSHICPR, and no IHI. So IHI is an
     /// authority outside the printed table, and p 334 asks `VDI` of it as of any other.
     @Test("IHI is no printed authority, so it requires VDI at PRD-7.3")
     func ihiRequiresVDI() throws {

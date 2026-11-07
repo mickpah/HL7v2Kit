@@ -41,7 +41,7 @@ struct AUFullPredicateTests {
 
     // MARK: - The marking
 
-    @Test("v2.4 OBX-2 is the one field marked as a full predicate (owner ruling G9)")
+    @Test("v2.4 OBX-2 is the one field marked as a full predicate (ruling G9)")
     func marking() {
         #expect(FullPredicateConditions.generated == ["2.4|OBX-2"])
         #expect(FullPredicateConditions.isMarked(version: "2.4", segmentID: "OBX", fieldIndex: 2))
@@ -51,7 +51,7 @@ struct AUFullPredicateTests {
         #expect(!FullPredicateConditions.isMarked(version: "2.5.1", segmentID: "OBX", fieldIndex: 2))
     }
 
-    // MARK: - PID-36 and CTI-2: trigger-only, never fire (owner ruling G9)
+    // MARK: - PID-36 and CTI-2: trigger-only, never fire (ruling G9)
 
     // PID-36 "must be valued if PID-37 - Strain is valued" (v2.4 §3.4.2.36)
     // is a parent required when its child is valued, the shape of PID-35;

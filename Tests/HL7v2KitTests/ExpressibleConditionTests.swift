@@ -187,7 +187,7 @@ struct ExpressibleConditionTests {
         #expect(try idHits(wire).isEmpty)
     }
 
-    // MARK: - ORC-8 child-order gate (owner decision G2-6, 2026-09-30)
+    // MARK: - ORC-8 child-order gate (decision G2-6, 2026-09-30)
 
     @Test("ORC-8: the OBR-absent leg does not misfire on OUL R22, whose OBR precedes the ORC",
           arguments: ["2.5.1", "2.6"])

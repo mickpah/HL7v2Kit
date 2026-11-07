@@ -55,7 +55,7 @@ struct MessageStructureValidationTests {
         #expect(Validator(options: .lenient).validate(message).issues.filter(\.code.isMessageStructure).isEmpty)
     }
 
-    @Test("Presets per owner decision G2 (b), P8b-18: .default warning, .strict error, .lenient off")
+    @Test("Presets per decision G2 (b), P8b-18: .default warning, .strict error, .lenient off")
     func presets() {
         #expect(ValidationOptions.default.messageStructureSeverity == .warning)
         #expect(ValidationOptions().messageStructureSeverity == .warning)

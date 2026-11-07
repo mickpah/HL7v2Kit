@@ -128,7 +128,7 @@ struct CharacterEncodingTests {
         ("8859/1~ISO IR87", CharacterEncoding.iso8859_1),
         ("UNICODE UTF-8~UNICODE UTF-8", .utf8),
         ("ASCII~8859/1", .ascii),
-        // An empty first repetition takes the empty-field default, UTF-8 (owner ruling; the
+        // An empty first repetition takes the empty-field default, UTF-8 (ruling; the
         // print reads it as ASCII).
         ("~ISO IR87", .utf8),
     ])

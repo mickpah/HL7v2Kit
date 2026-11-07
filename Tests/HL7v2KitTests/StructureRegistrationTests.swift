@@ -1,5 +1,5 @@
 // StructureRegistrationTests.swift
-// S1-3 (owner decision 8, 2026-10-06): a consumer can tell a structure a
+// S1-3 (decision 8, 2026-10-06): a consumer can tell a structure a
 // version registers as not modelled (register section E) from an ID the
 // version does not print, and read the registration's triggers and reason.
 

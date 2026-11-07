@@ -98,7 +98,7 @@ public struct ValidationOptions: Sendable {
     /// structure, plus an MSH-9.3 that names a structure its MSH-9.1^9.2 is
     /// not printed under. `.warning` in ``default`` (and for a memberwise
     /// `ValidationOptions()`), `.error` in ``strict`` and `nil`, the check
-    /// off, in ``lenient`` (owner decision G2 (b), P8b-18; before P8b-18 it
+    /// off, in ``lenient`` (decision G2 (b), P8b-18; before P8b-18 it
     /// was `nil` in every preset). Only the structures generated from `Resources/structures/`
     /// are modelled; a message with no structure applied (unmodelled
     /// structure or version, an MSH-12 that does not resolve or differs from
@@ -194,7 +194,7 @@ public struct ValidationOptions: Sendable {
     /// Severity for ``IssueCode/extraComponentsInPrimitiveField``: a primitive
     /// field repetition with content after its value, or a primitive component
     /// with a subcomponent after its value (every primitive since P6-14).
-    /// `.warning` by default (owner gate G4): the spec has the recipient ignore
+    /// `.warning` by default (gate G4): the spec has the recipient ignore
     /// the unexpected components (v2.5.1 and v2.8.2 section 2.6.2 a), and a field
     /// whose data type a later version widened (an `IS` to a `CE`, v2.5.1 section
     /// 2.8.2) may legitimately arrive with them. Whatever the setting, the
@@ -214,14 +214,14 @@ public struct ValidationOptions: Sendable {
     /// Severity for ``IssueCode/valueFormatInvalid(dataType:)``: a populated NM,
     /// SI, DT, TM, DTM or TS value that does not match the format its datatype
     /// section prints ("no non-numeric ASCII characters are allowed", v2.5.1
-    /// §2.A.47). `.warning` by default (owner gate G4), as are the length checks;
+    /// §2.A.47). `.warning` by default (gate G4), as are the length checks;
     /// set `.error` to make a malformed value fail validation, or `nil` to turn
     /// the check off. Not an init parameter. P6-7.
     public var valueFormatSeverity: IssueSeverity? = .warning
 
     /// Severity for the ``IssueCode/cardinalityExceeded`` bound check: a `.multiple`
     /// field carrying more `~`-repetitions than its printed RP/# bound
-    /// (``FieldGrammar/maxRepetitions``). `.warning` by default (owner gate G4): the
+    /// (``FieldGrammar/maxRepetitions``). `.warning` by default (gate G4): the
     /// bound is a new check, so it does not fail validation by default. Set `.error`
     /// to make an over-bound field fail validation, or `nil` to turn the bound check
     /// off. The single-cardinality check (a `.single` field carrying more than one
@@ -318,16 +318,16 @@ public struct ValidationOptions: Sendable {
     /// Grammar checks on; Z-segments silently tolerated. Suitable for
     /// general AU clinical traffic where Z-segments are routine.
     /// Message-structure findings are warnings (receiver-side use, v2.5.1
-    /// CH02 2.6.2; owner decision G2 (b), P8b-18).
+    /// CH02 2.6.2; decision G2 (b), P8b-18).
     public static let `default` = ValidationOptions()
 
     /// All checks on; Z-segments rejected. Useful for sender-side outgoing
     /// message validation where the senders shouldn't be emitting custom
     /// Z-segments. The length severities (`fieldLengthSeverity`,
     /// `normativeLengthSeverity`), `valueFormatSeverity` and
-    /// `repetitionBoundSeverity` stay `.warning` here as in `default` (owner gate G4).
+    /// `repetitionBoundSeverity` stay `.warning` here as in `default` (gate G4).
     /// Message-structure findings (`messageStructureSeverity`) are `.error`
-    /// here, sender-side conformance (owner decision G2 (b), P8b-18).
+    /// here, sender-side conformance (decision G2 (b), P8b-18).
     public static let strict: ValidationOptions = {
         var options = ValidationOptions(
             zSegmentPolicy: .reject,

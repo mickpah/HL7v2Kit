@@ -92,7 +92,7 @@ struct VersionHandlingTests {
         #expect(report.issues.filter { $0.code == Self.substitution }.count == 1)
     }
 
-    // MARK: - P10-6: 2.7 validated against the v2.7.1 grammar (owner decision G11)
+    // MARK: - P10-6: 2.7 validated against the v2.7.1 grammar (decision G11)
 
     static let substitution27 = IssueCode.versionGrammarSubstituted(declared: .v2_7, validatedAs: .v2_7_1)
 
