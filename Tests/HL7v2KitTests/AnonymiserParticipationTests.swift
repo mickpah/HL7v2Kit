@@ -16,34 +16,37 @@ struct AnonymiserParticipationTests {
     /// PRT (2.9.1 CH07 7.4.4, pp 89 to 99), ROL (2.9.1 CH15 15.4.7, p 38) and DEV (2.9.1 CH17 17.7.1,
     /// pp 66 to 70) with every field populated.
     /// A repeating field holds two repetitions; each identifying component holds an `ORIG...X` marker.
-    static let message = [
-        header,
-        "PID|1||SYN-0291^^^TESTFAC^MR||Testpatient^Sample||19000101|U",
-        "PRT|ORIGPRT1X^TESTFAC|UC|SYN-AR^Synthetic reason^L|OP^Ordering Provider^HL70912"
-            + "|ORIGPRT5X^ORIGPRT5FX^ORIGPRT5GX~ORIGPRT5RX^ORIGPRT5RFX^ORIGPRT5RGX"
-            + "|SYN-PT^Synthetic provider type^L|SYN-OU^Synthetic unit type^L"
-            + "|ORIGPRT8X^L^^^^TESTFAC^XX^^^ORIGPRT8IX~ORIGPRT8RX"
-            + "|ORIGPRT9X^ORIGPRT9RMX^ORIGPRT9BX^TESTFAC~ORIGPRT9RX"
-            + "|ORIGPRT10X^^2.16.840.1.113883.3.3719^ISO~ORIGPRT10RX"
-            + "|20240301101500|20240301113000|SYN-QD^Synthetic duration^L"
-            + "|ORIGPRT14X^^ORIGPRT14CX^NSW^2000^AU^B~ORIGPRT14RX^^ORIGPRT14RCX^NSW^2000^AU^O"
-            + "|ORIGPRT15X^WPN^PH~^NET^Internet^ORIGPRT15EX@example.invalid"
-            + "|ORIGPRT16X^^2.51.1.1^ISO|20200101|20300101|ORIGPRT19X|ORIGPRT20X"
-            + "|ORIGPRT21X^^2.16.840.1.113883.6.18.2.1^ISO|SYN-DT^Synthetic device type^L|E^Email^HL70185"
-            + "|ORIGPRT24X^SYN^NSW^20301231~ORIGPRT24RX^SYN",
-        "ROL|ORIGROL1X^TESTFAC|UC|PP^Primary Care Provider^HL70443"
-            + "|ORIGROL4X^ORIGROL4FX^ORIGROL4GX~ORIGROL4RX^ORIGROL4RFX^ORIGROL4RGX"
-            + "|20240101|20240301|SYN-RD^Synthetic duration^L|SYN-RR^Synthetic reason^L"
-            + "|SYN-PT^Synthetic provider type^L~SYN-PT2^Synthetic provider type^L|SYN-OU^Synthetic unit type^L"
-            + "|ORIGROL11X^^ORIGROL11CX^NSW^2000^AU^O~ORIGROL11RX^^ORIGROL11RCX^NSW^2000^AU^H"
-            + "|ORIGROL12X^WPN^PH~ORIGROL12RX^PRN^PH"
-            + "|ORIGROL13X^ORIGROL13RMX^ORIGROL13BX^TESTFAC|ORIGROL14X^L^^^^TESTFAC^XX^^^ORIGROL14IX",
-        "DEV|UC|ORIGDEV2X^^2.16.840.1.113883.3.3719^ISO|SYN-DT^Synthetic device type^L~SYN-DT2^Synthetic device type^L"
-            + "|SYN-ST^Synthetic status^L|ORIGDEV5X^L^^^^TESTFAC^XX^^^ORIGDEV5IX|ORIGDEV6X|ORIGDEV7X|ORIGDEV8X"
-            + "|ORIGDEV9X^^2.51.1.1^ISO|ORIGDEV10X|ORIGDEV11X|20200101|20300101"
-            + "|SYN-SC^Synthetic safety^L~SYN-SC2^Synthetic safety^L|ORIGDEV15X^^2.16.840.1.113883.6.18.2.1^ISO"
-            + "|ORIGDEV16X|SYN-IS^Synthetic implantation status^L",
-    ].joined(separator: "\r") + "\r"
+    static let message: String = {
+        let lines: [String] = [
+            header,
+            "PID|1||SYN-0291^^^TESTFAC^MR||Testpatient^Sample||19000101|U",
+            ["PRT|ORIGPRT1X^TESTFAC|UC|SYN-AR^Synthetic reason^L|OP^Ordering Provider^HL70912",
+             "|ORIGPRT5X^ORIGPRT5FX^ORIGPRT5GX~ORIGPRT5RX^ORIGPRT5RFX^ORIGPRT5RGX",
+             "|SYN-PT^Synthetic provider type^L|SYN-OU^Synthetic unit type^L",
+             "|ORIGPRT8X^L^^^^TESTFAC^XX^^^ORIGPRT8IX~ORIGPRT8RX",
+             "|ORIGPRT9X^ORIGPRT9RMX^ORIGPRT9BX^TESTFAC~ORIGPRT9RX",
+             "|ORIGPRT10X^^2.16.840.1.113883.3.3719^ISO~ORIGPRT10RX",
+             "|20240301101500|20240301113000|SYN-QD^Synthetic duration^L",
+             "|ORIGPRT14X^^ORIGPRT14CX^NSW^2000^AU^B~ORIGPRT14RX^^ORIGPRT14RCX^NSW^2000^AU^O",
+             "|ORIGPRT15X^WPN^PH~^NET^Internet^ORIGPRT15EX@example.invalid",
+             "|ORIGPRT16X^^2.51.1.1^ISO|20200101|20300101|ORIGPRT19X|ORIGPRT20X",
+             "|ORIGPRT21X^^2.16.840.1.113883.6.18.2.1^ISO|SYN-DT^Synthetic device type^L|E^Email^HL70185",
+             "|ORIGPRT24X^SYN^NSW^20301231~ORIGPRT24RX^SYN"].joined(),
+            ["ROL|ORIGROL1X^TESTFAC|UC|PP^Primary Care Provider^HL70443",
+             "|ORIGROL4X^ORIGROL4FX^ORIGROL4GX~ORIGROL4RX^ORIGROL4RFX^ORIGROL4RGX",
+             "|20240101|20240301|SYN-RD^Synthetic duration^L|SYN-RR^Synthetic reason^L",
+             "|SYN-PT^Synthetic provider type^L~SYN-PT2^Synthetic provider type^L|SYN-OU^Synthetic unit type^L",
+             "|ORIGROL11X^^ORIGROL11CX^NSW^2000^AU^O~ORIGROL11RX^^ORIGROL11RCX^NSW^2000^AU^H",
+             "|ORIGROL12X^WPN^PH~ORIGROL12RX^PRN^PH",
+             "|ORIGROL13X^ORIGROL13RMX^ORIGROL13BX^TESTFAC|ORIGROL14X^L^^^^TESTFAC^XX^^^ORIGROL14IX"].joined(),
+            ["DEV|UC|ORIGDEV2X^^2.16.840.1.113883.3.3719^ISO|SYN-DT^Synthetic device type^L~SYN-DT2^Synthetic device type^L",
+             "|SYN-ST^Synthetic status^L|ORIGDEV5X^L^^^^TESTFAC^XX^^^ORIGDEV5IX|ORIGDEV6X|ORIGDEV7X|ORIGDEV8X",
+             "|ORIGDEV9X^^2.51.1.1^ISO|ORIGDEV10X|ORIGDEV11X|20200101|20300101",
+             "|SYN-SC^Synthetic safety^L~SYN-SC2^Synthetic safety^L|ORIGDEV15X^^2.16.840.1.113883.6.18.2.1^ISO",
+             "|ORIGDEV16X|SYN-IS^Synthetic implantation status^L"].joined(),
+        ]
+        return lines.joined(separator: "\r") + "\r"
+    }()
 
     /// The fields kept: the action code, the coded fields and the event dates (CH07 7.4.4; CH15 15.4.7;
     /// CH17 17.7.1). PRT-22 and DEV-3 name a device type: a UDI there has no serial number (7.4.4.10, p 95).

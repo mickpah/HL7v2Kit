@@ -302,7 +302,8 @@ struct EarlierDeleteIndicatorTests {
     /// Required fields". Registered as a known limit.
     @Test("Under the AU locale on v2.4, \"\" in all fields draws no field-level finding", arguments: ["PID", "OBR", "ORC", "PV1", "OBX"])
     func auAllFields(id: String) throws {
-        let last = try #require(SegmentGrammarTable.v2_4[id]?.fields.map(\.index).max())
+        let grammar = try #require(SegmentGrammarTable.v2_4[id])
+        let last = try #require(grammar.fields.map(\.index).max())
         let found = try auIssues("2.4", id + String(repeating: "|\(delete)", count: last)).filter {
             $0.location.segmentID == id && $0.location.fieldIndex != nil
         }
