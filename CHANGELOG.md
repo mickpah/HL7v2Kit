@@ -77,6 +77,16 @@ The entries are condensed; the git history carries the detail.
 - `anyRepeat(X) != v` judges populated repetitions only, as `not in` does, so an empty repetition
   no longer satisfies it: on v2.9 and 2.9.1 an OBX-5 of `""~` draws neither OBX-2's
   `conditionalFieldMissing` nor OBX-32's `conditionalFieldProhibited`, as `""` draws neither (#32).
+- IPR-8 (v2.6 to v2.9.1) and DON-3 to DON-33 less DON-9 to DON-11 (v2.8.2 to v2.9.1) follow their
+  definitions, though the tables print `R`. `ADJ`, `ADJSUB`, `ADJZER` and `PAID` require IPR-8
+  (`conditionalFieldMissing`) and `REJECT` prohibits it (`conditionalFieldProhibited`); `ACK`,
+  `PEND` and `PRED` decide neither. The 28 DON fields are required on a DPR alone, as DON-1 and
+  DON-2 are on v2.9 and v2.9.1, and draw `conditionalFieldMissing` there; a DEL or RSP^K34
+  sending DON-9 to DON-11 alone draws none. On a DPR, 19 of them need another field to show their
+  fact: the needle (DON-3 to DON-6, DON-8, DON-22), blood drawn (DON-23, DON-24), an interruption
+  (DON-13), a phlebotomy issue (DON-14), an intended recipient (DON-16 to DON-20), an aphaeresis
+  machine (DON-25, DON-26) or a tube collected (DON-31); DON-15 is never required, so a walk-out
+  need not send what never happened (#32).
 - `IHI` is out of the AU Table 0363, which never printed it: a Referral's PRD-7.2 `IHI` needs `VDI`
   at PRD-7.3, and under `auAssigningAuthorityTable` draws HL7au:00104.7.2.1 unless listed in
   `localTableExtensions["0363"]` (#31).

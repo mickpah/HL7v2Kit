@@ -219,7 +219,8 @@ struct V29GrammarTests {
     }
 
     /// Fields printed C whose rule the condition language cannot state, or the print leaves
-    /// unstated. Each has a row in the permanent-limitations register.
+    /// unstated, and DON-15, printed R and read C from its definition. Each has a row in the
+    /// permanent-limitations register.
     static let registeredBareConditionals: Set<String> = [
         // The text states no predicate on the field.
         "ADJ-7", "AIS-5", "ARQ-24", "BHS-16", "BHS-17", "CSP-4", "DG1-22", "DMI-2", "DMI-3", "DMI-4", "DMI-5",
@@ -235,6 +236,9 @@ struct V29GrammarTests {
         "AIG-2", "AIL-2", "AIP-2", "AIS-2", "RGS-2",
         // Stated, but only approximately in this language: a predicate could misfire.
         "OBX-4", "PTH-6", "RXE-15",
+        // Printed R; "If this donation has an intended recipient (directed, dedicated, designated)", which no
+        // printed field shows (CH04 4.17.1.15).
+        "DON-15",
     ]
 
     @Test("v2.9 structures are complete; ADT_A01 is modelled")

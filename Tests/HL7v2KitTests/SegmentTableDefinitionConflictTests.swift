@@ -18,7 +18,14 @@
 // and CSR-10 carry as C, so `triggerEvent = C01`. ROL-4 (v2.6, v2.8.2):
 // "If both STF and ROL are present in the same message, populating this
 // field is optional", so `STF absent`; v2.3 to v2.5.1 print no such
-// sentence and keep R. Synthetic wires only.
+// sentence and keep R.
+//
+// IPR-8 (v2.6 to v2.9.1, CH16 16.4.9.8): "Conditional, if Status = "Accepted",
+// then Required, else Not Permitted". User-defined Table 0571 names no code
+// Accepted. The adjudicated and paid codes (ADJ, ADJSUB, ADJZER, PAID) are
+// Accepted on every reading the print supports, so they require IPR-8; REJECT
+// is Accepted on none, so it prohibits IPR-8; ACK, PEND and PRED decide
+// neither. DON-3 to DON-33 are in DonationConditionTests. Synthetic wires only.
 
 import Testing
 import Foundation
@@ -169,5 +176,41 @@ struct SegmentTableDefinitionConflictTests {
         let hits = try issues(staffWire("2.5.1"), "ROL", 4)
         #expect(hits.count == 1)
         #expect(hits.first?.code == .requiredFieldMissing)
+    }
+
+    // MARK: - IPR-8
+
+    /// Every finding at IPR-8 for an IPR whose status is `status` and whose checksum is `checksum`.
+    private func ipr8(_ version: String, status: String, checksum: String) throws -> [IssueCode] {
+        let ipr = TestWires.segment("IPR", [1: "IPR1", 2: "PRV1", 3: "PAY1", 4: status, 5: "20260101", 8: checksum])
+        return Validator().validate(try Parser().parse(TestWires.wire("EHC^E10^EHC_E10", version, ipr))).issues
+            .filter { $0.location.segmentID == "IPR" && $0.location.fieldIndex == 8 }.map(\.code)
+    }
+
+    @Test("An adjudicated or paid status requires IPR-8; ACK, PEND, PRED, REJECT and no status do not",
+          arguments: ["2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"])
+    func ipr8RequiredWhenAdjudicated(version: String) throws {
+        let release = try #require(Version(rawValue: version))
+        let codes = try #require(HL7TableRegistry.table("0571", version: release)).codes
+        #expect(Set(codes) == ["ACK", "REJECT", "PEND", "ADJZER", "ADJSUB", "ADJ", "PAID", "PRED"], "v\(version)")
+        for code in ["ADJ", "ADJSUB", "ADJZER", "PAID"] {
+            #expect(try ipr8(version, status: "\(code)^^HL70571", checksum: "") == [.conditionalFieldMissing],
+                    "v\(version) \(code)")
+        }
+        for code in ["ACK", "PEND", "PRED", "REJECT", ""] {
+            #expect(try ipr8(version, status: code.isEmpty ? "" : "\(code)^^HL70571", checksum: "").isEmpty,
+                    "v\(version) \(code)")
+        }
+    }
+
+    @Test("IPR-8 is not permitted with REJECT, and draws nothing beside any other status",
+          arguments: ["2.6", "2.7.1", "2.8.2", "2.9", "2.9.1"])
+    func ipr8ProhibitedWithReject(version: String) throws {
+        #expect(try ipr8(version, status: "REJECT^Reject^HL70571", checksum: "CHK1") == [.conditionalFieldProhibited],
+                "v\(version)")
+        for code in ["ACK", "PEND", "ADJZER", "ADJSUB", "ADJ", "PAID", "PRED", ""] {
+            #expect(try ipr8(version, status: code.isEmpty ? "" : "\(code)^^HL70571", checksum: "CHK1").isEmpty,
+                    "v\(version) \(code)")
+        }
     }
 }

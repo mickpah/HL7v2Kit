@@ -50,10 +50,10 @@ The Blocking items, in brief:
 - **Message structures:** v2.6 MFR_M01 with MFI-1 OMA to OME, a no-data query response without
   QAK, and the v2.3 event replay error example (register section E).
 - **Conditions awaiting a ruling:** RXE-15 on v2.3 to v2.4 (section A).
-- **Found in the v2.9 reading:** DON-3 to DON-33, the null in `populated` conditions, CON-20,
-  TXA-14, TXA-15, OMC-12 and IPR-8, rules not yet read on earlier versions, the CH12
-  participation groups, the other HL7-EXT tables, printed status, and character sets the
-  parser cannot decode (sections A, C and E).
+- **Found in the v2.9 reading:** the null in `populated` conditions, CON-20, TXA-14, TXA-15 and
+  OMC-12, rules not yet read on earlier versions, the CH12 participation groups, the other
+  HL7-EXT tables, printed status, and character sets the parser cannot decode (sections A, C
+  and E).
 - **Grammar gaps:** repeating TQ fields on v2.3 and v2.3.1, OM2-6 on v2.3 to v2.4, field-local
   table mentions on v2.3 to v2.4, blank printed optionality (sections A, C and D).
 

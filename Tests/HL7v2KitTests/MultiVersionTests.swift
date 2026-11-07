@@ -1074,6 +1074,10 @@ struct MultiVersionTests {
             "ADJ-7", "IVC-23", "PSL-10", "PSL-12", "PSL-13", "PSL-14",
             "PSL-15", "PSL-16", "DMI-2", "DMI-3", "DMI-4", "DMI-5", "REL-1",
             "DON-1", "DON-2", "PRT-1",
+            // Printed R; read C from "If this donation has an intended recipient
+            // (directed, dedicated, designated)", which no printed field shows
+            // (CH04 4.17.1.15 p168).
+            "DON-15",
             "RXV-20", "RXV-21",
         ]
         // A field whose conditionality is modelled by EITHER axis

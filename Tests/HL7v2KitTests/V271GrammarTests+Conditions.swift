@@ -146,9 +146,9 @@ extension V271GrammarTests {
     // MARK: - P10-5b: every other chapter (CH03, CH05, CH06, CH08 to CH12, CH15, CH16)
 
     /// The segments P10-5b audited: every v2.7.1 segment with a printed C outside P10-5a's
-    /// chapters, plus MFI and ROL for their table-versus-definition fields.
+    /// chapters, plus MFI, ROL and IPR for their table-versus-definition fields.
     static let p105bSegments: Set<String> = [
-        "ADJ", "AIG", "AIL", "AIP", "AIS", "ARQ", "AUT", "CER", "DG1", "DMI", "GOL", "IAM", "IVC",
+        "ADJ", "AIG", "AIL", "AIP", "AIS", "ARQ", "AUT", "CER", "DG1", "DMI", "GOL", "IAM", "IPR", "IVC",
         "LRL", "MFA", "MFE", "MFI", "PD1", "PID", "PR1", "PRA", "PRB", "PSL", "PTH", "PV2", "PYE",
         "QAK", "QPD", "RCP", "REL", "RGS", "ROL", "SCH", "STF", "TXA",
     ]
@@ -159,7 +159,8 @@ extension V271GrammarTests {
     /// The governing v2.7.1 sentence is v2.8.2's (word for word, or differing only in a
     /// cross-reference or an inline code table), so the stored rule is v2.8.2's. AIS-10,
     /// AIG-14, AIL-12 and AIP-12 take v2.8.2's filler set (SIU, SRR): CH10 section 10.5.3
-    /// (p. 22) withdraws SQM/SQR "as of v2.7". MFI-6 and ROL-4 are printed R (P4-30).
+    /// (p. 22) withdraws SQM/SQR "as of v2.7". MFI-6, ROL-4 and IPR-8 are printed R (P4-30);
+    /// IPR-8's CH16 section 16.4.9.8 (p. 66) prints v2.8.2's sentence.
     static let p105bFromV282 = [
         "AIG-3", "AIG-8", "AIG-9", "AIG-10", "AIG-13", "AIG-14",
         "AIL-3", "AIL-4", "AIL-6", "AIL-7", "AIL-8", "AIL-11", "AIL-12",
@@ -167,7 +168,7 @@ extension V271GrammarTests {
         "AIS-4", "AIS-6", "AIS-9", "AIS-10", "ARQ-25", "SCH-1", "SCH-2", "SCH-27",
         "DG1-20", "DG1-21", "PR1-19", "PR1-20", "PD1-15", "PV2-1", "PV2-45", "PV2-47",
         "LRL-5", "LRL-6", "MFA-2", "MFE-2", "MFI-6", "PRA-1", "PRA-12", "STF-1", "ROL-4",
-        "PYE-3", "PYE-4", "PYE-5", "PYE-6", "TXA-3", "TXA-5", "TXA-7", "TXA-13",
+        "PYE-3", "PYE-4", "PYE-5", "PYE-6", "TXA-3", "TXA-5", "TXA-7", "TXA-13", "IPR-8",
     ]
 
     /// PID-35 and PID-36 print v2.6's "Conditionality Rule" sentences (CH03 section 3.4.2.35
@@ -195,7 +196,7 @@ extension V271GrammarTests {
         }
         let expected = Set(Self.p105bFromV282 + Self.p105bFromV26
                            + Array(Self.p105bOwnConditions.keys) + Array(Self.p105bOwnProhibitions.keys))
-        #expect(expected.count == 57)
+        #expect(expected.count == 58)
         #expect(conditioned == expected, "got \(conditioned.sorted())")
         #expect(Self.p105aSegments.isDisjoint(with: Self.p105bSegments))
 

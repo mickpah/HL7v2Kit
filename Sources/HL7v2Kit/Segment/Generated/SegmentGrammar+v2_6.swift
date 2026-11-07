@@ -1479,7 +1479,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 5, name: "IPR Date/Time", dataType: "DTM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
             FieldGrammar(index: 6, name: "Adjudicated/Paid Amount", dataType: "CP", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "254"),
             FieldGrammar(index: 7, name: "Expected Payment Date/Time", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
-            FieldGrammar(index: 8, name: "IPR Checksum", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "10"),
+            FieldGrammar(index: 8, name: "IPR Checksum", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "IPR-4 in (ADJ, ADJSUB, ADJZER, PAID)", prohibitedWhen: "IPR-4 = REJECT", variableColumns: false, table: nil, length: "10"),
         ]
     )
 
