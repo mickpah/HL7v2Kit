@@ -39,7 +39,7 @@ not the boundary of the work.
 | 3.21 | The coding-system version ID: 18 opt-in rules on CNE, CWE, CF and CSU .7 and kin, with HL7-table and user-table terms in the component-condition language |
 | 3.22 | TXA-22's authentication person and time stamp, both or neither on every repetition, v2.3 to v2.8.2; range terms and group requirements in the component-condition language |
 | 3.23 | ROL-4 against STF-2 and STF-3 as a correlation, a default warning (correlatedValueMismatch, correlationSeverity); v2.8.2 OBR-32 and OBR-35 prohibited when TXA-22 or TXA-11 is valued |
-| 3.32 | HL7 v2.9 and v2.9.1 added, each from its own text, with ten new typed segments; the null and the delete segment read from each version's print; the anonymiser covers GSP, GSR and GSC and moves dates given to the month |
+| 3.32 | HL7 v2.9 and v2.9.1 added, each from its own text, with ten new typed segments; the null and the delete segment read from each version's print; IPR-8 and DON follow their definitions, PRT without ROL passes in the CH12 participation groups and the deferred RTB_K13 response may leave out MSA; the anonymiser covers GSP, GSR, GSC, PRT, ROL, DEV, MRG, SPM and IN2 and the identifying fields of the segments it already covered, and moves dates given to the month |
 
 ## What remains
 
@@ -57,7 +57,9 @@ The Blocking items, in brief:
   table mentions on v2.3 to v2.4, blank printed optionality (sections A, C and D).
 
 The Permanent items (terminology membership, timezones, certificates and directories,
-cross-message history, the excluded versions v2.1, v2.2, v2.5 and v2.8.1) stay out of
+cross-message history, facts no field shows, such as IPR-8 beside ACK, PEND and PRED and the
+DON facts left unread, an immediate RTB_K13 response without MSA, the excluded versions v2.1,
+v2.2, v2.5 and v2.8.1) stay out of
 the portable core by design (ADR-006).
 
 ## Possible directions (not commitments)

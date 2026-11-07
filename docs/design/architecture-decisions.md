@@ -560,7 +560,7 @@ and openness where the domain demands it.
 **Amended (R10):** the major-release lane was used for the first time at 2.0.0, removing dead
 public surface with no call sites (enumerated in `Migration.md`, "The 2.0 boundary").
 
-**Amended (M6-D5):** on the owner's direction, OBX-5's datatype was corrected from `ST` to the
+**Amended (M6-D5):** OBX-5's datatype was corrected from `ST` to the
 variable type every version prints, so `OBX.observationValue` became `Field?`. That was a
 breaking change, hence 3.0.0. It was a spec-fidelity fix under requirement 4, not a change of
 policy, and additive-only resumed for the 3.x line.
@@ -636,7 +636,7 @@ base table. Tables also change between versions, so one merged set would be wron
   where the field prose calls an HL7 table user-defined, the chapter wins and the kind becomes
   `User`. Where governing fields disagree, the table stays as printed and individual fields are
   opened with `tableOpen` plus a quoted `tableOpenCitation`. Table 0203 is open on v2.4 to
-  v2.9.1 (owner gate G5).
+  v2.9.1 (gate G5).
 - Pattern rows naming a family of codes (0203 `NNxxx`) are declared as `patterns` and matched in
   full.
 - Locale axis: `Resources/tables/locale/<locale-id>/` holds a localisation's own rendering, curated by hand from the localisation's print with the page cited (the locale axis has no extractor);
@@ -808,12 +808,12 @@ with the unverified differences stated in the info issue. AU v2.4 traffic meets 
 grammar; AU conformance points that relied on a v2.5.1 base component requirement are stated
 by the profile itself (`ComponentRequirement.yieldsToBase`). `2.8.1` falls back to v2.5.1
 while `2.8` is substituted, because `.v2_8` was already a public case and `.v2_8_1` is not.
-Whether to add it is an open question for the owner.
+Whether to add it is an open question.
 
 **Amended (P3 fix wave):** every populated MSH-12 from which no version resolves warns; none
 falls back silently.
 
-**Amended (P10-6):** v2.7.1 modelled; `2.7` substituted by v2.7.1 (owner gate G11), so
+**Amended (P10-6):** v2.7.1 modelled; `2.7` substituted by v2.7.1 (gate G11), so
 `Version` has nine cases, seven modelled and two substituted.
 
 **Amended (v2.9 cycle):** v2.9 and v2.9.1 modelled, each from its own text through an ADR-015
@@ -834,7 +834,7 @@ stays excluded, as the Consequences above explain. Two points where the versions
 
 ## ADR-019 Message-structure grammar
 
-**Status:** Accepted (owner gate G2, Option C hybrid). Rollout complete on all nine modelled
+**Status:** Accepted (gate G2, Option C hybrid). Rollout complete on all nine modelled
 versions; the check is on in the default and strict presets. Related: ADR-003, ADR-007, ADR-008,
 ADR-010, ADR-014, ADR-015, ADR-016, ADR-017, ADR-018.
 
@@ -925,7 +925,7 @@ initialiser.
 - Error-response heads: for each query response a version prints (v2.4 on), MSA-1 of AE or AR
   selects the CH05 5.6.5 head (MSH, the SFT and UAC printed after it, MSA, ERR, QAK, the query
   defining segments, DSC) and anything else is unexpected. MSA-1 of AA with QAK-2 of `NF` selects
-  the no-data head (no data segments; an optional ERR after MSA, owner ruling 6). Internal model
+  the no-data head (no data segments; an optional ERR after MSA, ruling 6). Internal model
   (`StructureErrorResponse`).
 - Prose fragments: a structure the print gives only in prose, or by cross-reference, is
   transcribed by hand into a cited `proseFragments` entry in bracket notation. There is no prose
@@ -967,7 +967,7 @@ transport concern (permanent).
   repeating element, that its FIRST set be disjoint from its FOLLOW set, with one exemption (the
   re-entry of an enclosing unbounded group reachable only through the element itself, the
   prefix condition); choice alternatives must have disjoint FIRST sets and none may be nullable.
-- A structure that fails the lint (owner gate G15), or holds a slot, carries
+- A structure that fails the lint (gate G15), or holds a slot, carries
   `requiresExactMatch` and is matched by `ExactStructureMatcher`: a nondeterministic automaton
   over the element tree, advanced one segment at a time in linear time. It reports at most one
   finding, at the furthest position any parse reached, naming what the structure accepts there.
@@ -986,7 +986,7 @@ transport concern (permanent).
   `messageStructureMismatch(declared:trigger:)` at `ValidationOptions.messageStructureSeverity`;
   `messageStructureNotModelled(structure:)` always info.
 - Decision 10: `messageStructureSeverity` is a stored property (nil leaves the check off). The
-  presets are `.strict` error, `.default` warning and `.lenient` off (owner gate G12).
+  presets are `.strict` error, `.default` warning and `.lenient` off (gate G12).
 
 ### Group spans (decision 5)
 
@@ -1002,7 +1002,7 @@ transport concern (permanent).
 - Otherwise the ORC walk is used, except for the message codes the former `messageCode not in
   (...)` gates covered (OUL, and OPU and OPL from v2.6), whose structures print OBR before ORC in
   one group: there the formerly gated conditions are not evaluated, and one info
-  `conditionNotEvaluated(fields:)` says so (rule R4, owner decision 9).
+  `conditionNotEvaluated(fields:)` says so (rule R4, decision 9).
 - A group-scope count keeps only the head's own segments, so an OBX in a specimen or order
   document group does not satisfy an OBR-to-OBX rule.
 
@@ -1018,7 +1018,7 @@ transport concern (permanent).
   `profileMaximumExceeded(localeRule:)`.
 - ORR_O02's unclosed `[PID` cell is read as the base v2.4 reading, PID optional (G-AU2).
 - ORR_O02 and OSR_Q06 take OBR alone after ORC, as printed (pp 280 to 281); the p 280
-  replacement by RXO, ODS or ODT is read for ORM_O01 only (owner decision, v2.9 cycle).
+  replacement by RXO, ODS or ODT is read for ORM_O01 only (decided in the v2.9 cycle).
 
 ### Acknowledgments (decision 9)
 
@@ -1029,7 +1029,7 @@ applications and facilities swapped; MSH-9 `ACK^<event>^ACK`; MSH-11, MSH-12 and
 MSH-18 echoed) and throws `BuilderError.acknowledgedMessageControlIDMissing` when there is no
 MSH-10. Enhanced-mode acknowledgment is receiving-application behaviour and a non-goal.
 
-### Decisions (owner gate G2, as they stand)
+### Decisions (gate G2, as they stand)
 
 | # | Choice | Decision |
 |---|---|---|
@@ -1084,16 +1084,16 @@ placeholders; the keyed choice and alias (S4); error-response heads (S4-3); pros
 per-trigger variants, the group-count fix and AU beyond-maxima at info (S6-1 to S6-3); fragments
 and version provenance re-classed permanent (S6-4).
 
-**Amended (P12):** owner ruling 6 allowed an optional ERR in the no-data head; the ADRM ORR_O02
+**Amended (P12):** ruling 6 allowed an optional ERR in the no-data head; the ADRM ORR_O02
 and the Appendix 8 simplified REF variant completed the AU profile structures (S1).
 
-**Amended (v2.9 cycle):** by the owner's decision, the AU ORR_O02 and OSR_Q06 take OBR alone after
+**Amended (v2.9 cycle):** the AU ORR_O02 and OSR_Q06 take OBR alone after
 ORC, as printed, so RXO, ODS or ODT there is a 00060.1 finding as RQD and RQ1 are; ORM_O01 keeps
 the p 280 replacement, and HL7au:00060.1 has no residual left.
 
 ## ADR-020 Composite views and version-union accessors
 
-**Status:** Accepted (Option B, owner gate G3). Related: ADR-001, ADR-004, ADR-013, ADR-014,
+**Status:** Accepted (Option B, gate G3). Related: ADR-001, ADR-004, ADR-013, ADR-014,
 ADR-017.
 
 **Context.** The typed API had been shaped by what common traffic populates and by one
@@ -1144,7 +1144,7 @@ earliest definer of IAR, PAC, PRT and SHP and re-based structs released on v2.8.
 
 ## ADR-021 Full-predicate conditions
 
-**Status:** Accepted (owner decisions G6 and G9, P4-31). Related: ADR-007, ADR-008, ADR-010.
+**Status:** Accepted (decisions G6 and G9, P4-31). Related: ADR-007, ADR-008, ADR-010.
 
 **Context.** HL7au:00060.4 says an element of usage C "must not be valued when the associated
 predicate is not satisfied". The validator could not enforce it: a stored `condition` is a
@@ -1174,7 +1174,7 @@ false. That is the right fail-safe for "required when" and exactly the wrong one
   prohibition already reports it.
 - Classification of every C field in v2.4 ORM^O01, ORU^R01 and REF^I12: (a) full predicate,
   marked; (b) trigger only, the text lets the field be valued while it is false; (c) not
-  determinable from the text (owner ruling G9: no derivable prohibition); (n) not decidable from
+  determinable from the text (ruling G9: no derivable prohibition); (n) not decidable from
   the message. Of 52 candidates, one is (a): v2.4 OBX-2 (`OBX-11 != X`). The per-field table and
   quotes are in `conditional-completeness-audit.md` (a private record, outside the repository).
 
