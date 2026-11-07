@@ -5910,7 +5910,7 @@ extension MessageStructureTable {
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
-            .segment("MSA", min: 1, max: 1),
+            .segment("MSA", min: 0, max: 1),
             .segment("ERR", min: 0, max: 1),
             .segment("QAK", min: 1, max: 1),
             .segment("QPD", min: 1, max: 1),

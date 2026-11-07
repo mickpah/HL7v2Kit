@@ -90,6 +90,10 @@ The entries are condensed; the git history carries the detail.
 - On v2.9 and v2.9.1 the participation groups of PGL_PC6, PPR_PC1, PPP_PCB and PPG_PCG take ROL,
   printed with status B, as optional: a group sending PRT alone, as CH12's examples do, no longer
   draws `messageStructureSegmentUnexpected` for PRT, and ROL alone still draws PRT missing (#32).
+- `RTB_K13` takes MSA as optional on v2.4 to v2.9.1: CH05 prints its deferred response with no
+  MSA, under the same MSH-9 as the immediate one, so it no longer draws
+  `messageStructureSegmentMissing`. Only the query's RCP-1 tells the modes apart, so an immediate
+  response without MSA passes too (#32).
 - `IHI` is out of the AU Table 0363, which never printed it: a Referral's PRD-7.2 `IHI` needs `VDI`
   at PRD-7.3, and under `auAssigningAuthorityTable` draws HL7au:00104.7.2.1 unless listed in
   `localTableExtensions["0363"]` (#31).

@@ -98,7 +98,7 @@ struct QueryEventTests {
     @Test("A Z event declaring RTB_K13 or RDY_K15 is matched against the body", arguments: printing)
     func zEventDeclaringPrinted(version: String) throws {
         #expect(try Self.codes("RTB^Z99^RTB_K13", version, Self.rtb) == [])
-        #expect(try Self.codes("RTB^Z99^RTB_K13", version, []) == [Self.missing("RTB_K13", "MSA"), Self.missing("RTB_K13", "QAK"), Self.missing("RTB_K13", "QPD")])
+        #expect(try Self.codes("RTB^Z99^RTB_K13", version, []) == [Self.missing("RTB_K13", "QAK"), Self.missing("RTB_K13", "QPD")])
         #expect(try Self.codes("RDY^Z99^RDY_K15", version, Self.rdy) == [])
         #expect(try Self.codes("RDY^Z99^RDY_K15", version, ["QAK|1|OK", "QPD|Q1"]) == [Self.missing("RDY_K15", "MSA")])
     }
@@ -168,11 +168,11 @@ struct QueryEventTests {
     // MARK: A query event the print allows
 
     // CH05 prints RTB^K42^RTB_K13 on every version from v2.4 (2.9.1 pp 58, 90), and RDY^R41^RDY_K15 from v2.7.1 (2.9.1 p 61).
-    // Its deferred response (2.9.1 p 58) prints no MSA, which the table requires, and draws what this no-MSA body draws.
+    // Its deferred response (2.9.1 p 58) prints no MSA, so RTB_K13 reads MSA as optional (DeferredQueryResponseTests).
     @Test("RTB^K42^RTB_K13 and RDY^R41^RDY_K15 draw no mismatch; the body is matched", arguments: printing)
     func namedEvent(version: String) throws {
         #expect(try Self.codes("RTB^K42^RTB_K13", version, Self.rtb) == [])
-        #expect(try Self.codes("RTB^K42^RTB_K13", version, ["QAK|1|OK", "QPD|Q1"]) == [Self.missing("RTB_K13", "MSA")])
+        #expect(try Self.codes("RTB^K42^RTB_K13", version, ["MSA|AA|1", "QPD|Q1"]) == [Self.missing("RTB_K13", "QAK")])
         #expect(try Self.codes("RDY^R41^RDY_K15", version, Self.rdy) == [])
         #expect(try Self.codes("RDY^R41^RDY_K15", version, ["QAK|1|OK", "QPD|Q1"]) == [Self.missing("RDY_K15", "MSA")])
     }
@@ -186,7 +186,7 @@ struct QueryEventTests {
     @Test("Bare RTB^K42 and RDY^R41 resolve to the one structure under the code", arguments: printing)
     func bareNamedEvent(version: String) throws {
         #expect(try Self.codes("RTB^K42", version, Self.rtb) == [])
-        #expect(try Self.codes("RTB^K42", version, ["QAK|1|OK", "QPD|Q1"]) == [Self.missing("RTB_K13", "MSA")])
+        #expect(try Self.codes("RTB^K42", version, ["MSA|AA|1", "QPD|Q1"]) == [Self.missing("RTB_K13", "QAK")])
         #expect(try Self.codes("RDY^R41", version, Self.rdy) == [])
         #expect(try Self.codes("RDY^R41", version, ["QAK|1|OK", "QPD|Q1"]) == [Self.missing("RDY_K15", "MSA")])
     }
