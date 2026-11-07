@@ -87,6 +87,9 @@ The entries are condensed; the git history carries the detail.
   (DON-13), a phlebotomy issue (DON-14), an intended recipient (DON-16 to DON-20), an aphaeresis
   machine (DON-25, DON-26) or a tube collected (DON-31); DON-15 is never required, so a walk-out
   need not send what never happened (#32).
+- On v2.9 and v2.9.1 the participation groups of PGL_PC6, PPR_PC1, PPP_PCB and PPG_PCG take ROL,
+  printed with status B, as optional: a group sending PRT alone, as CH12's examples do, no longer
+  draws `messageStructureSegmentUnexpected` for PRT, and ROL alone still draws PRT missing (#32).
 - `IHI` is out of the AU Table 0363, which never printed it: a Referral's PRD-7.2 `IHI` needs `VDI`
   at PRD-7.3, and under `auAssigningAuthorityTable` draws HL7au:00104.7.2.1 unless listed in
   `localTableExtensions["0363"]` (#31).

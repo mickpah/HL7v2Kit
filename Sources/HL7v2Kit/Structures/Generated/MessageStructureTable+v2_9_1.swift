@@ -6742,7 +6742,7 @@ extension MessageStructureTable {
                 .segment("NTE", min: 0, max: nil),
                 .segment("VAR", min: 0, max: nil),
                 .group("GOAL_PARTICIPATION", min: 0, max: nil, elements: [
-                    .segment("ROL", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: 1),
                     .segment("PRT", min: 1, max: 1),
                     .segment("VAR", min: 0, max: nil),
                 ]),
@@ -6760,7 +6760,7 @@ extension MessageStructureTable {
                     .segment("NTE", min: 0, max: nil),
                     .segment("VAR", min: 0, max: nil),
                     .group("PROBLEM_PARTICIPATION", min: 0, max: nil, elements: [
-                        .segment("ROL", min: 1, max: 1),
+                        .segment("ROL", min: 0, max: 1),
                         .segment("PRT", min: 1, max: 1),
                         .segment("VAR", min: 0, max: nil),
                     ]),
@@ -6915,7 +6915,7 @@ extension MessageStructureTable {
                 .segment("NTE", min: 0, max: nil),
                 .segment("VAR", min: 0, max: nil),
                 .group("PATHWAY_PARTICIPATION", min: 0, max: nil, elements: [
-                    .segment("ROL", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: 1),
                     .segment("PRT", min: 1, max: 1),
                     .segment("VAR", min: 0, max: nil),
                 ]),
@@ -6924,7 +6924,7 @@ extension MessageStructureTable {
                     .segment("NTE", min: 0, max: nil),
                     .segment("VAR", min: 0, max: nil),
                     .group("GOAL_PARTICIPATION", min: 0, max: nil, elements: [
-                        .segment("ROL", min: 1, max: 1),
+                        .segment("ROL", min: 0, max: 1),
                         .segment("PRT", min: 1, max: 1),
                         .segment("VAR", min: 0, max: nil),
                     ]),
@@ -6938,7 +6938,7 @@ extension MessageStructureTable {
                         .segment("NTE", min: 0, max: nil),
                         .segment("VAR", min: 0, max: nil),
                         .group("PROBLEM_PARTICIPATION", min: 0, max: nil, elements: [
-                            .segment("ROL", min: 1, max: 1),
+                            .segment("ROL", min: 0, max: 1),
                             .segment("PRT", min: 1, max: 1),
                             .segment("VAR", min: 0, max: nil),
                         ]),
@@ -6994,7 +6994,7 @@ extension MessageStructureTable {
                 .segment("NTE", min: 0, max: nil),
                 .segment("VAR", min: 0, max: nil),
                 .group("PATHWAY_PARTICIPATION", min: 0, max: nil, elements: [
-                    .segment("ROL", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: 1),
                     .segment("PRT", min: 1, max: 1),
                     .segment("VAR", min: 0, max: nil),
                 ]),
@@ -7003,7 +7003,7 @@ extension MessageStructureTable {
                     .segment("NTE", min: 0, max: nil),
                     .segment("VAR", min: 0, max: nil),
                     .group("PROBLEM_PARTICIPATION", min: 0, max: nil, elements: [
-                        .segment("ROL", min: 1, max: 1),
+                        .segment("ROL", min: 0, max: 1),
                         .segment("PRT", min: 1, max: 1),
                         .segment("VAR", min: 0, max: nil),
                     ]),
@@ -7017,7 +7017,7 @@ extension MessageStructureTable {
                         .segment("NTE", min: 0, max: nil),
                         .segment("VAR", min: 0, max: nil),
                         .group("GOAL_PARTICIPATION", min: 0, max: nil, elements: [
-                            .segment("ROL", min: 1, max: 1),
+                            .segment("ROL", min: 0, max: 1),
                             .segment("PRT", min: 1, max: 1),
                             .segment("VAR", min: 0, max: nil),
                         ]),
@@ -7073,7 +7073,7 @@ extension MessageStructureTable {
                 .segment("NTE", min: 0, max: nil),
                 .segment("VAR", min: 0, max: nil),
                 .group("PROBLEM_PARTICIPATION", min: 0, max: nil, elements: [
-                    .segment("ROL", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: 1),
                     .segment("PRT", min: 1, max: 1),
                     .segment("VAR", min: 0, max: nil),
                 ]),
@@ -7091,7 +7091,7 @@ extension MessageStructureTable {
                     .segment("NTE", min: 0, max: nil),
                     .segment("VAR", min: 0, max: nil),
                     .group("GOAL_PARTICIPATION", min: 0, max: nil, elements: [
-                        .segment("ROL", min: 1, max: 1),
+                        .segment("ROL", min: 0, max: 1),
                         .segment("PRT", min: 1, max: 1),
                         .segment("VAR", min: 0, max: nil),
                     ]),

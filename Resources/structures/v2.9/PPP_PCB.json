@@ -22,7 +22,7 @@
       { "segment": "NTE", "min": 0, "max": null },
       { "segment": "VAR", "min": 0, "max": null },
       { "group": "PATHWAY_PARTICIPATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
-        { "segment": "ROL", "min": 1, "max": 1 },
+        { "segment": "ROL", "min": 0, "max": 1 },
         { "segment": "PRT", "min": 1, "max": 1 },
         { "segment": "VAR", "min": 0, "max": null }
       ]},
@@ -31,7 +31,7 @@
         { "segment": "NTE", "min": 0, "max": null },
         { "segment": "VAR", "min": 0, "max": null },
         { "group": "PROBLEM_PARTICIPATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
-          { "segment": "ROL", "min": 1, "max": 1 },
+          { "segment": "ROL", "min": 0, "max": 1 },
           { "segment": "PRT", "min": 1, "max": 1 },
           { "segment": "VAR", "min": 0, "max": null }
         ]},
@@ -45,7 +45,7 @@
           { "segment": "NTE", "min": 0, "max": null },
           { "segment": "VAR", "min": 0, "max": null },
           { "group": "GOAL_PARTICIPATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
-            { "segment": "ROL", "min": 1, "max": 1 },
+            { "segment": "ROL", "min": 0, "max": 1 },
             { "segment": "PRT", "min": 1, "max": 1 },
             { "segment": "VAR", "min": 0, "max": null }
           ]},
