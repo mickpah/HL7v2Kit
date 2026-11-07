@@ -1,7 +1,7 @@
 # HL7v2Kit
 
 A Swift package for parsing, building and validating HL7 v2.x messages. It parses a message
-into a version-agnostic tree and serialises it back byte for byte, reads it by path
+into a version-agnostic tree and serialises it back byte for byte, reads and edits it by path
 (`message["PID-5.1"]`) or through 198 code-generated typed segments, builds messages and
 acknowledgements, and validates against the grammar each supported version prints: fields,
 components, code tables and message structures, each rule cited to the standard. An
@@ -61,6 +61,28 @@ Segments, fields, components and subcomponents against each version's printed gr
 HL7 code tables, escapes and encoding, message structures and batches, plus the AU layer.
 Each check has an issue code and an option that governs it; what is not checked, and why, is
 listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit.docc/Validation.md) article.
+
+## What else it does
+
+- **Paths:** read, write and enumerate a message by path, in the standard form (`PID-3.1`) or
+  the alternative path syntax (`PID-3[2].1`, with `[*]` wildcards): `Message.set(_:at:)`,
+  `clear(at:)`, `insertRepetition(_:at:)`, `values(at:)` and `populatedPaths()`.
+- **Batches and streams:** `BatchParser` reads FHS and BHS envelopes into files and batches,
+  `BatchValidator` checks them, and `StreamingBatchParser` yields one message at a time from
+  a stream.
+- **Transport:** `MLLP.frame(_:)` wraps a message for TCP, and `MLLPUnframer` reads frames
+  back from incremental byte chunks.
+- **Character sets:** MSH-18 names the character set a byte stream is decoded with; the
+  [Character Encoding](Sources/HL7v2Kit/HL7v2Kit.docc/CharacterEncodingGuide.md) guide lists
+  what is read.
+- **Z-segments:** `ZSegmentGrammar` lets a caller declare its own Z-segments, which are then
+  validated like the standard ones.
+- **Anonymiser:** `Anonymiser` and the `HL7v2KitAnonymise` tool replace the names,
+  identifiers, addresses, phone numbers and dates of birth and death in a message with
+  synthetic values chosen from a key, so under one key the same value gives the same output
+  in every message. Event dates are kept. Its documentation lists every segment and field
+  covered and what passes through; it prepares test fixtures and is not a certified
+  de-identification.
 
 ## Versions and the AU profile
 
