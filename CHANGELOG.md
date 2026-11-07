@@ -112,9 +112,28 @@ The entries are condensed; the git history carries the detail.
   PRT-10. The organisation, the location and a device's lot, serial number and product names
   become `[REDACTED]` whole. The dates are event dates and are kept, as MSH-7, ORC-9 and OBR-7
   are: the tool moves every date of a file by one shift, so a moved event date beside the same
-  instant in clear would give the shift away. Any other segment, Z-segments included, passes
-  through unchanged, as do the organisations and locations outside these three. Library and tool
-  alike (#32).
+  instant in clear would give the shift away. The organisations and locations outside these three
+  pass through, but for the employers and the place of worship (next entry). Library and tool alike
+  (#32).
+- The anonymiser passed through the fields of its segments whose types it replaces elsewhere, and
+  MRG, SPM and IN2 whole, so a patient-linked identifier or a person's name, address or phone could
+  reach its output in clear: the visit, pre-admit and alternate visit numbers (PV1-5, PV1-19,
+  PV1-50), the order and specimen numbers, a merge's prior patient identifiers and name (MRG), the
+  insured's social security, Medicare and employee numbers and mother's maiden name (IN2), the
+  call-back phones, and providers such as ORC-19, OBX-25, IN1-30, NTE-5 and EVN-5. Each such field
+  now takes the rule its type takes elsewhere: a CX, or an identifier held as text, as PID-3; an XCN
+  as ORC-12; an XPN, XAD or XTN as in PID; an EI as PRT-10; an EIP as two EIs; an HD as MSH-4.
+  Linked values map alike: a parent or specimen reference (OBR-29, ORC-8, OBX-33) names what the
+  same number becomes, at every repetition; MRG-1 matches PID-3, and TXA-14 matches ORC-2, under
+  the tool only at the same repetition. The patient's place of worship (PD1-14), an employer that
+  is an organisation (NK1-13, IN1-11, GT1-51, IN2-70), a military unit and station (IN2-12,
+  IN2-13), the county (PID-12), the pre-admission certification (IN1-28) and the referral's contact
+  (RF1-21) become `[REDACTED]` whole. Of EVN, DG1, PR1, PV2, TXA, RF1 and PRD, the providers, RF1's
+  source and the order numbers TXA-14 and TXA-15 are covered; their unlinked identifiers (DG1-20,
+  PR1-19, TXA-12, RF1-6 and the like) pass through. Every other segment, Z-segments included,
+  passes through unchanged; ACC, CTD, FT1, IN3, RXA, RXO, SCH and STF are among those that carry
+  identifiers.
+  Library and tool alike (#32).
 
 ## [3.31.0]
 

@@ -5,7 +5,7 @@
 extension Anonymiser {
     /// How a covered field is replaced.
     enum Rule: Sendable {
-        /// CX, or an identifier held as text: the ID (component 1) replaced.
+        /// CX, or an identifier held as text (PID-19, IN2-2): the ID (component 1) replaced.
         case identifier
         /// XPN: family and given names replaced, the middle name emptied.
         case name
@@ -20,8 +20,17 @@ extension Anonymiser {
         case dateRange
         /// EI: the entity identifier (component 1) replaced; components 2 to 4, its assigning
         /// authority (CH02A 2A.2.25), kept. No CX, so the caller's identifier closure is not asked.
-        /// PRT-24, a PLN, takes it too: its ID number replaced, its type, qualifier and expiry date kept.
+        /// PRT-24 and PRD-7, a PLN, take it too: the ID number replaced, its type, qualifier and expiry date
+        /// kept; and IN1-14, an AUI: the authorisation number replaced, its date and source kept. On a version
+        /// that types the field EIP (ORC-4 on v2.8.2), `entityIdentifierPair`.
         case entityIdentifier
+        /// EIP: the placer's and the filler's EI (components 1 and 2), each held as subcomponents, each with its
+        /// entity identifier (subcomponent 1) replaced as `entityIdentifier` replaces it, so a parent or
+        /// specimen reference still names what the same order number or specimen ID becomes.
+        case entityIdentifierPair
+        /// HD: as MSH-3 to MSH-6 are, but only when populated. Under the tool, MSH-4's slot, so a facility
+        /// equal to the sending facility is written as it is.
+        case facility
         /// XAD.
         case address
         /// XTN.
@@ -29,32 +38,72 @@ extension Anonymiser {
         /// XCN: ID, family and given names.
         case provider
         /// Free text that identifies (a birth place, a device's lot or serial number, its brand, model,
-        /// catalogue or software version), a coded value about the person (GSP-5), or a participating
-        /// organisation (XON) or location (PL), which no other rule covers: replaced by `[REDACTED]`.
+        /// catalogue or software version, a certification code, a county, a military unit), a coded value
+        /// about the person (GSP-5), a participating organisation (XON) or location (PL), or an employer or
+        /// place of worship (XON), which no other rule covers: replaced by `[REDACTED]`.
         case redact
     }
 
-    /// The covered fields of each segment, besides MSH-3 to MSH-6, OBX-5 and NTE-3.
+    /// The covered fields of each segment, besides MSH-3 to MSH-6, OBX-5 and NTE-3. Each field takes the
+    /// rule its type takes elsewhere. XON and PL are kept outside PRT, ROL and DEV, but for an employer or
+    /// place of worship (NK1-13, PD1-14, IN1-11, GT1-51, IN2-70), which ties the organisation to a person.
     static let coverage: [String: [(field: Int, rule: Rule)]] = [
+        // Network addresses (2.9.1 CH02 2.13.9.24 and 25, pp 75 to 76), as the facilities.
+        "MSH": [(24, .facility), (25, .facility)],
+        // PID-12, the county of PID-11's address (CH03 3.4.2.12 p 122); PID-34, a facility (p 128).
         "PID": [(2, .identifier), (3, .identifier), (4, .identifier), (5, .name), (6, .name),
-                (7, .date), (9, .name), (11, .address), (13, .phone), (14, .phone),
+                (7, .date), (9, .name), (11, .address), (12, .redact), (13, .phone), (14, .phone),
                 (18, .identifier), (19, .identifier), (20, .identifier), (21, .identifier),
-                (23, .redact), (29, .date), (40, .phone)],
-        "PD1": [(4, .provider), (10, .identifier)],
-        "NK1": [(2, .name), (4, .address), (5, .phone), (6, .phone), (12, .identifier), (16, .date),
+                (23, .redact), (29, .date), (34, .facility), (40, .phone)],
+        "PD1": [(4, .provider), (10, .identifier), (14, .redact)],
+        "NK1": [(2, .name), (4, .address), (5, .phone), (6, .phone), (12, .identifier), (13, .redact), (16, .date),
                 (26, .name), (30, .name), (31, .phone), (32, .address), (33, .identifier),
                 (37, .identifier), (38, .redact), (40, .phone), (41, .phone)],
-        "PV1": [(7, .provider), (8, .provider), (9, .provider), (17, .provider), (52, .provider)],
-        "IN1": [(16, .name), (18, .date), (19, .address), (36, .identifier), (44, .address),
-                (49, .identifier), (52, .redact)],
+        "PV1": [(5, .identifier), (7, .provider), (8, .provider), (9, .provider), (17, .provider),
+                (19, .identifier), (50, .identifier), (52, .provider), (54, .identifier)],
+        "PV2": [(13, .provider)],
+        // 2.9.1 CH03 3.4.10, pp 193 to 196: the prior identifiers and name, as PID-3, PV1-19 and PID-5.
+        "MRG": [(1, .identifier), (2, .identifier), (3, .identifier), (4, .identifier), (5, .identifier),
+                (6, .identifier), (7, .name)],
+        // IN1-28, an admission's certification code held as text (CH06 6.5.6.28 p 91).
+        "IN1": [(3, .identifier), (5, .address), (6, .name), (7, .phone), (10, .identifier), (11, .redact),
+                (14, .entityIdentifier), (16, .name), (18, .date), (19, .address), (28, .redact), (30, .provider),
+                (36, .identifier), (44, .address), (49, .identifier), (52, .redact), (54, .identifier),
+                (56, .identifier)],
+        // 2.9.1 CH06 6.5.7, pp 100 to 120: the identifiers, held as CX or text (the social security, Medicare,
+        // Medicaid and military numbers), names, phones, the employer, and the military unit and station.
+        "IN2": [(1, .identifier), (2, .identifier), (3, .provider), (6, .identifier), (7, .name), (8, .identifier),
+                (9, .name), (10, .identifier), (12, .redact), (13, .redact), (22, .name), (25, .identifier),
+                (26, .identifier), (40, .name), (49, .name), (50, .phone), (52, .name), (53, .phone), (58, .phone),
+                (61, .identifier), (63, .phone), (64, .phone), (70, .redact)],
         "GT1": [(2, .identifier), (3, .name), (4, .name), (5, .address), (6, .phone), (7, .phone),
                 (8, .date), (12, .identifier), (16, .name), (17, .address), (18, .phone),
                 (19, .identifier), (24, .date), (29, .identifier), (42, .name), (45, .name),
-                (46, .phone), (56, .redact)],
-        "ORC": [(10, .provider), (11, .provider), (12, .provider)],
-        "OBR": [(10, .provider), (16, .provider), (28, .provider), (32, .provider), (33, .provider),
-                (34, .provider), (35, .provider)],
-        "OBX": [(16, .provider)],
+                (46, .phone), (51, .redact), (56, .redact)],
+        // The providers of EVN, DG1, PR1, PV2, TXA and RF1, and PRD's provider. RF1-21 and RF1-23 name and reach
+        // the person contacted (2.9.1 CH11 11.8.1.21 p 59); TXA-14 and TXA-15 are ORC-2 and ORC-3 (CH09 9.7.3.14
+        // p 38). Their other fields pass through.
+        "EVN": [(5, .provider)],
+        "DG1": [(16, .provider)],
+        "PR1": [(8, .provider), (11, .provider), (12, .provider)],
+        "TXA": [(5, .provider), (9, .provider), (10, .provider), (11, .provider), (14, .entityIdentifier),
+                (15, .entityIdentifier), (22, .provider), (23, .provider)],
+        "RF1": [(20, .provider), (21, .redact), (23, .phone)],
+        "PRD": [(2, .name), (3, .address), (5, .phone), (7, .entityIdentifier), (11, .address), (13, .phone)],
+        // The order numbers (2.9.1 CH04 4.5.1, pp 59 to 69) and their parents, as PRT-10 is.
+        "ORC": [(2, .entityIdentifier), (3, .entityIdentifier), (4, .entityIdentifier), (8, .entityIdentifierPair),
+                (10, .provider), (11, .provider), (12, .provider), (14, .phone), (19, .provider), (22, .address),
+                (23, .phone), (24, .address), (33, .identifier), (38, .entityIdentifier)],
+        "OBR": [(2, .entityIdentifier), (3, .entityIdentifier), (10, .provider), (16, .provider), (17, .phone),
+                (28, .provider), (29, .entityIdentifierPair), (32, .provider), (33, .provider), (34, .provider),
+                (35, .provider), (51, .entityIdentifier), (52, .entityIdentifier), (53, .identifier),
+                (54, .entityIdentifierPair)],
+        // OBX-33 names the specimen as SPM-2 does (2.9.1 CH07 7.4.2.33 p 78).
+        "OBX": [(16, .provider), (18, .entityIdentifier), (21, .entityIdentifier), (24, .address), (25, .provider),
+                (33, .entityIdentifierPair)],
+        "SPM": [(2, .entityIdentifierPair), (3, .entityIdentifierPair), (30, .identifier), (31, .identifier),
+                (32, .entityIdentifier)],
+        "NTE": [(5, .provider)],
         // An event date is kept, as MSH-7, ORC-9 and OBR-7 are: the tool moves every date of a file by one
         // shift, so a moved event date beside the same instant in clear would give away every date of birth.
         // 2.9.1 CH03 3.4.19 to 3.4.21: all but the set ID, action code, GSR-8 (acquisition date) and GSC-6
@@ -234,6 +283,20 @@ extension Anonymiser {
         case .entityIdentifier:
             let id = repetition.components.first.map(Self.text) ?? ""
             return setting(repetition, [0: syntheticIdentifier(matching: id, salt: source.pick("identifier", id, offset: i).salt)])
+        case .entityIdentifierPair:
+            // Each EI as `setting` treats a component: under a key only a populated entity identifier. Under the
+            // tool, at the first repetition's offset, so every repetition names what the same ID becomes in a
+            // field that does not repeat (OBX-33's second as the second specimen's SPM-2).
+            return Repetition(components: repetition.components.enumerated().map { k, component in
+                let id = component.subcomponents.first?.value ?? ""
+                guard k < 2, !keyed || !id.isEmpty else { return component }
+                let replacement = syntheticIdentifier(matching: id, salt: source.pick("identifier", id).salt)
+                return Component(subcomponents: [Subcomponent(replacement)] + component.subcomponents.dropFirst())
+            })
+        case .facility:
+            let pick = source.pick("facility", Self.text(repetition), slot: 1)
+            let facility = syntheticFacility(salt: pick.salt, slot: pick.slot)
+            return keyed ? setting(repetition, [0: facility]) : .scalar(facility)
         case .redact:
             return .scalar("[REDACTED]")
         }
