@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.32.0]
+
 ### Added
 
 - HL7 v2.9 and v2.9.1 as the eighth and ninth versions, each modelled from its own text (ADR-018):
