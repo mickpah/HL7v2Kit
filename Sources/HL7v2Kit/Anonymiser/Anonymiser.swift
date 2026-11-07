@@ -1,7 +1,8 @@
 // Anonymiser.swift
 // De-identifies a parsed message (spec section 10): the identifying fields of the patient,
-// next of kin, insured and providers, and their gender and sex segments, become synthetic
-// values. The HL7v2KitAnonymise tool calls it with its per-file salt.
+// next of kin, insured and providers, their gender and sex segments, and the participations,
+// roles and devices of an order or result, become synthetic values. The HL7v2KitAnonymise tool
+// calls it with its per-file salt.
 
 import Foundation
 
@@ -24,15 +25,32 @@ import Foundation
 /// Covered: MSH-3 to MSH-6; the identifiers, names, dates of birth and death, addresses, phone
 /// numbers and birth places in PID, NK1, IN1 and GT1 (the guarantor), and PD1-10; the providers
 /// in PD1, PV1, ORC, OBR and OBX; free-text OBX-5 and NTE-3; and every field of GSP, GSR and GSC
-/// (gender and sex) but the set ID, the action code and GSC's context and evidence, which point
-/// into the message; a coded value there becomes `[REDACTED]` whole, its coding system included.
-/// Every repetition of a covered field is replaced. Any other segment or field, Z-segments
-/// included, is kept as it is.
+/// (gender and sex) but the set ID, the action code, GSR-8 (the acquisition date) and GSC's
+/// context and evidence, which point into the message; a coded value there becomes `[REDACTED]`
+/// whole, its coding system included.
 ///
-/// A date moves by one to four whole weeks, or as many whole months when given only to the
-/// month; one given only to the year is kept, and so is the HL7 null `""`. A date moves only in
-/// the shape its type defines: its first component a date and, where the version types the field
-/// TS (v2.3 to v2.5.1), a degree of precision that is empty or one of its codes, which is kept.
+/// PRT, ROL and DEV, the participations, roles and devices (on v2.9 and v2.9.1, where ORC-12 and
+/// OBR-16 are withdrawn, the ordering provider travels only in PRT), have every field replaced but
+/// the action code, the coded fields and the dates: the person as a provider, the address and
+/// phone as elsewhere, and the instance, device, donation and contact identifiers as an EI's
+/// identifier, its other components kept, so DEV-2 still matches PRT-10. Their organisation and
+/// location, and a device's lot and serial number, brand, model, catalogue and software version,
+/// become `[REDACTED]` whole. Every repetition of a covered field is replaced.
+///
+/// Passed through unchanged: every other segment, Z-segments included, and every other field of
+/// a covered segment. Among them are the event dates (MSH-7, EVN-2, ORC-9, OBR-7, OBX-14, GSR-8,
+/// PRT-11, PRT-12, ROL-5 and ROL-6, and the device dates PRT-17, PRT-18, DEV-12 and DEV-13): the
+/// tool moves every date of a file by one shift, so a moved event date beside the same instant in
+/// clear would give that shift away, and with it every date of birth. Organisations and locations
+/// outside PRT, ROL and DEV pass through too (XON in PD1-3, NK1-13, IN1-4, GT1-51 and OBX-23, for
+/// example; PL in PV1-3, PV1-6, PV1-11, PV1-42 and PV1-43), and so does a device type (PRT-22,
+/// DEV-3), whose UDI can hold a lot number.
+///
+/// A covered date, of birth or death, moves by one to four whole weeks, or as many whole months
+/// when given only to the month; one given only to the year is kept, and so is the HL7 null `""`.
+/// A date moves only in the shape its type defines: its first component a date and, where the
+/// version types the field TS (v2.3 to v2.5.1), a degree of precision that is empty or one of its
+/// codes, which is kept.
 /// Any other repetition becomes `[REDACTED]` whole: a value of any length that is not a date, and
 /// one with a subcomponent or a further component. A range moves both ends at its coarser end's
 /// precision, so it keeps its order: beside a year, the finer end is cut to its year. A range
@@ -65,7 +83,8 @@ public struct Anonymiser: Sendable {
     ///     identifier is replaced by one of the same form: digits by as many digits, anything
     ///     else by `SYN-` and four digits. Supply it when identifiers must pass a check that
     ///     form cannot, such as an IHI's check digit. GSP-3, GSR-3 and GSC-3, which are EI, are
-    ///     replaced without asking it, as providers are.
+    ///     replaced without asking it, as providers are, and so are the identifiers of PRT, ROL
+    ///     and DEV.
     public init(key: UInt64, replacingIdentifier: (@Sendable (Identifier) -> String)? = nil) {
         source = .keyed(key)
         self.replacingIdentifier = replacingIdentifier

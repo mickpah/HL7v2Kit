@@ -156,9 +156,11 @@ struct AnonymiserTests {
         "GSC|1|U|SYN-GSC3^TESTFAC|SYN-GSC4^SYN-GSC4T^L|20210105^20210706|OBR^1~ORC^1|OBX^1^5|SYN-GSC8",
     ].joined(separator: "\r") + "\r"
 
-    /// The fields GSP, GSR and GSC keep: the set ID, the action code, and GSC-6 and GSC-7, which
-    /// point at a place in the message (ERL, CH02A 2A.2.28, page 44).
-    static let genderSexKept = ["GSP": [1, 2], "GSR": [1, 2], "GSC": [1, 2, 6, 7]]
+    /// The fields GSP, GSR and GSC keep: the set ID, the action code, GSC-6 and GSC-7, which point at a
+    /// place in the message (ERL, CH02A 2A.2.28, page 44), and GSR-8, the acquisition date: an event date,
+    /// kept as the others are, since under the tool's one shift per file a moved one beside the same instant
+    /// in clear would give the shift away.
+    static let genderSexKept = ["GSP": [1, 2], "GSR": [1, 2, 8], "GSC": [1, 2, 6, 7]]
 
     /// `genderSex` anonymised under key 7, or under the tool's rule with salt 41.
     static func genderSexAnonymised(keyed: Bool) throws -> String {
@@ -166,7 +168,7 @@ struct AnonymiserTests {
         return String(decoding: anonymiser.anonymise(try Parser().parse(genderSex)).serialize(), as: UTF8.self)
     }
 
-    @Test("GSP, GSR and GSC keep only the set ID, action code and pointers; every repetition of the rest is replaced",
+    @Test("GSP, GSR and GSC keep only the set ID, action code, pointers and GSR-8; every repetition of the rest is replaced",
           arguments: [true, false])
     func genderSexCovered(keyed: Bool) throws {
         let fields = { (wire: String) in
@@ -186,7 +188,7 @@ struct AnonymiserTests {
                 for (a, b) in zip(was, now) { #expect(!b.isEmpty && b != a, "\(label): \(b)") }
             }
         }
-        for original in ["SYN-GS", "76691-5", "Gender identity", "20210101", "20210630", "20210102", "20210103",
+        for original in ["SYN-GS", "76691-5", "Gender identity", "20210101", "20210630", "20210103",
                          "20210704", "20210105", "20210706"] {
             #expect(!text.contains(original), "\(original), keyed \(keyed)")
         }
@@ -288,15 +290,14 @@ struct AnonymiserTests {
         var segments = ["MSH|^~\\&|SYNTH_APP|TESTFAC|SYNTH_RCV|TESTFAC|20240301120000||ADT^A01^ADT_A01|CTRLDT01|P|\(version)",
                         segment("PID", [1: "1", 7: v, 29: v]), segment("NK1", [1: "1", 16: v])]
         if version == "2.9.1" {
-            segments += [segment("GSP", [1: "1", 2: "U", 6: v]), segment("GSR", [1: "1", 2: "U", 8: v, 9: v]),
+            segments += [segment("GSP", [1: "1", 2: "U", 6: v]), segment("GSR", [1: "1", 2: "U", 9: v]),
                          segment("GSC", [1: "1", 2: "U", 5: v])]
         }
         segments += [segment("GT1", [1: "1", 8: v, 24: v]), segment("IN1", [1: "1", 18: v])]
         return segments.joined(separator: "\r") + "\r"
     }
 
-    static let dateFields = ["PID-7", "PID-29", "NK1-16", "IN1-18", "GT1-8", "GT1-24", "GSR-8",
-                             "GSP-6.1", "GSR-9.1", "GSC-5.1"]
+    static let dateFields = ["PID-7", "PID-29", "NK1-16", "IN1-18", "GT1-8", "GT1-24", "GSP-6.1", "GSR-9.1", "GSC-5.1"]
 
     @Test("A month value moves by whole months and keeps its precision, alike in every date field; a year is kept")
     func coarseDateInEveryField() throws {

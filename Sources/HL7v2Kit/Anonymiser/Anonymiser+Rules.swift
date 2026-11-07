@@ -20,6 +20,7 @@ extension Anonymiser {
         case dateRange
         /// EI: the entity identifier (component 1) replaced; components 2 to 4, its assigning
         /// authority (CH02A 2A.2.25), kept. No CX, so the caller's identifier closure is not asked.
+        /// PRT-24, a PLN, takes it too: its ID number replaced, its type, qualifier and expiry date kept.
         case entityIdentifier
         /// XAD.
         case address
@@ -27,8 +28,9 @@ extension Anonymiser {
         case phone
         /// XCN: ID, family and given names.
         case provider
-        /// Free text that identifies (a birth place), or a coded value about the person (GSP-5):
-        /// replaced by `[REDACTED]`.
+        /// Free text that identifies (a birth place, a device's lot or serial number, its brand, model,
+        /// catalogue or software version), a coded value about the person (GSP-5), or a participating
+        /// organisation (XON) or location (PL), which no other rule covers: replaced by `[REDACTED]`.
         case redact
     }
 
@@ -53,11 +55,29 @@ extension Anonymiser {
         "OBR": [(10, .provider), (16, .provider), (28, .provider), (32, .provider), (33, .provider),
                 (34, .provider), (35, .provider)],
         "OBX": [(16, .provider)],
-        // 2.9.1 CH03 3.4.19 to 3.4.21: all but the set ID, action code and GSC-6 and GSC-7 (ERL pointers).
+        // An event date is kept, as MSH-7, ORC-9 and OBR-7 are: the tool moves every date of a file by one
+        // shift, so a moved event date beside the same instant in clear would give away every date of birth.
+        // 2.9.1 CH03 3.4.19 to 3.4.21: all but the set ID, action code, GSR-8 (acquisition date) and GSC-6
+        // and GSC-7 (ERL pointers). A validity range moves: it may start at the date of birth.
         "GSP": [(3, .entityIdentifier), (4, .redact), (5, .redact), (6, .dateRange), (7, .redact)],
-        "GSR": [(3, .entityIdentifier), (4, .redact), (5, .redact), (6, .redact), (7, .redact), (8, .date),
+        "GSR": [(3, .entityIdentifier), (4, .redact), (5, .redact), (6, .redact), (7, .redact),
                 (9, .dateRange), (10, .redact)],
         "GSC": [(3, .entityIdentifier), (4, .redact), (5, .dateRange), (8, .redact)],
+        // 2.9.1 CH07 7.4.4, pp 89 to 99: all but the action code, the coded fields (PRT-3, 4, 6, 7, 13, 22
+        // and 23) and the event dates (PRT-11, 12, 17 and 18; the device dates must match the UDI, p 95).
+        // PRT-22 is a device type: a UDI with a serial number goes in PRT-10 (7.4.4.10, p 95). Kept, its UDI
+        // can still hold the lot number PRT-19 must match (p 95).
+        "PRT": [(1, .entityIdentifier), (5, .provider), (8, .redact), (9, .redact), (10, .entityIdentifier),
+                (14, .address), (15, .phone), (16, .entityIdentifier), (19, .redact), (20, .redact),
+                (21, .entityIdentifier), (24, .entityIdentifier)],
+        // 2.8.2 CH15 15.4.7, pp 31 to 36 (2.9.1 p 38 prints the same fields): all but the action code, the
+        // coded fields (ROL-3 and ROL-7 to ROL-10) and the event dates (ROL-5 and ROL-6).
+        "ROL": [(1, .entityIdentifier), (4, .provider), (11, .address), (12, .phone), (13, .redact), (14, .redact)],
+        // 2.9.1 CH17 17.7.1, pp 66 to 70: all but the action code, the coded fields (DEV-3, 4, 14 and 17) and
+        // the device dates (DEV-12 and 13), as in PRT. DEV-2 must equal PRT-10 (p 67), and the same value
+        // maps alike, so the two still match. DEV-3, kept as PRT-22 is, can hold a UDI's lot number.
+        "DEV": [(2, .entityIdentifier), (5, .redact), (6, .redact), (7, .redact), (8, .redact),
+                (9, .entityIdentifier), (10, .redact), (11, .redact), (15, .entityIdentifier), (16, .redact)],
     ]
 
     /// True under a caller's key; false under the tool's rule.

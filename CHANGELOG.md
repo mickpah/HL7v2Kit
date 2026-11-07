@@ -26,10 +26,10 @@ The entries are condensed; the git history carries the detail.
 - Table 0953 on v2.9 and v2.9.1, which prints no rows, takes the 140 codes of the value set the
   print names: MSH-27, ARV-8, BHS-16 and FHS-16 draw `valueNotInTable` for a tuple naming `HL70953`
   (on v2.9.1 also by the table's OID) or a first tuple naming no coding system (#30, #31).
-- The anonymiser covers GSP, GSR and GSC: every field but the set ID, the action code and GSC's
-  context and evidence, a coded value becoming `[REDACTED]` whole, its coding system included. A
-  date range moves both ends by one shift at the coarser end's precision, so it keeps its order.
-  PRT and ROL stay uncovered. Library and tool alike (#31).
+- The anonymiser covers GSP, GSR and GSC: every field but the set ID, the action code, GSR-8 (the
+  acquisition date, an event date, kept as the others are) and GSC's context and evidence, a coded
+  value becoming `[REDACTED]` whole, its coding system included. A date range moves both ends by one
+  shift at the coarser end's precision, so it keeps its order. Library and tool alike (#31, #32).
 
 ### Changed
 
@@ -103,6 +103,18 @@ The entries are condensed; the git history carries the detail.
   `^19800615` passed unchanged and `19800615^19800615` kept its second copy. A range (GSP-6, GSR-9,
   GSC-5) becomes `[REDACTED]` whole when an end is not a DTM, `""` or empty, or when it holds a third
   component. The HL7 null `""` is kept (#31, #32).
+- The anonymiser passed PRT, ROL and DEV through unchanged, so the people, organisations, places
+  and devices they carry reached its output in clear, on v2.9 and v2.9.1 the ordering provider and
+  a device's UDI and serial number among them. It now replaces every field of the three but the
+  action code, the coded fields and the dates, each by the rule its type takes elsewhere: the
+  person as a provider, the address and phone as in PID, and the instance, device, donation and
+  contact identifiers as an EI's identifier, its other components kept, so DEV-2 still matches
+  PRT-10. The organisation, the location and a device's lot, serial number and product names
+  become `[REDACTED]` whole. The dates are event dates and are kept, as MSH-7, ORC-9 and OBR-7
+  are: the tool moves every date of a file by one shift, so a moved event date beside the same
+  instant in clear would give the shift away. Any other segment, Z-segments included, passes
+  through unchanged, as do the organisations and locations outside these three. Library and tool
+  alike (#32).
 
 ## [3.31.0]
 

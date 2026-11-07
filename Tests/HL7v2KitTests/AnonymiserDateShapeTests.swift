@@ -9,7 +9,7 @@ import Testing
 @Suite("Anonymiser date shapes")
 struct AnonymiserDateShapeTests {
     /// The covered date fields that are no range, and the ranges (DR); GSP, GSR and GSC on 2.9.1 only.
-    static let dates = [("PID", 7), ("PID", 29), ("NK1", 16), ("IN1", 18), ("GT1", 8), ("GT1", 24), ("GSR", 8)]
+    static let dates = [("PID", 7), ("PID", 29), ("NK1", 16), ("IN1", 18), ("GT1", 8), ("GT1", 24)]
     static let ranges = [("GSP", 6), ("GSR", 9), ("GSC", 5)]
 
     /// What a rule writes for `raw` alone: key 7, or the tool's rule with salt 41.
@@ -52,7 +52,7 @@ struct AnonymiserDateShapeTests {
                 ("19800615~19800615&1200", m + "~[REDACTED]", m + "~[REDACTED]"),  // every repetition alike
             ] {
                 let out = try Self.written(value, version: version, keyed: keyed)
-                for (id, index) in Self.dates where version == "2.9.1" || id != "GSR" {
+                for (id, index) in Self.dates {
                     #expect(out["\(id)-\(index)"] == (date ?? "[REDACTED]"),
                             "\(value) at \(id)-\(index), \(version), keyed \(keyed)")
                 }
@@ -72,7 +72,7 @@ struct AnonymiserDateShapeTests {
     func degreeOfPrecisionKept(code: String) throws {
         for keyed in [true, false] {
             let out = try Self.written("19800615^" + code, version: "2.4", keyed: keyed)
-            for (id, index) in Self.dates where id != "GSR" {
+            for (id, index) in Self.dates {
                 #expect(out["\(id)-\(index)"] == Self.moved("19800615", keyed: keyed) + "^" + code,
                         "\(code) at \(id)-\(index), keyed \(keyed)")
             }
