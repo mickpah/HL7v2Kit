@@ -8,6 +8,12 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Fixed
+
+- `LICENSE` carries the full Apache License 2.0 text. The earlier copy was abridged: section 3 had
+  no patent-termination clause, and sections 7 and 8 lost most of their warranty and liability
+  wording. The package was always offered under Apache 2.0; the file now holds all of it.
+
 ## [3.32.0]
 
 ### Added
