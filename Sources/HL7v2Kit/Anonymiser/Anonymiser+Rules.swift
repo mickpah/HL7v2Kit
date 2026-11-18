@@ -235,7 +235,7 @@ extension Anonymiser {
             let seed = anonymiserSeed(key: key, kind: "identifier", original: id)
             let replacement = replacingIdentifier?(Identifier(
                 value: id, typeCode: Self.value(repetition, 4), assigningAuthority: Self.value(repetition, 3), seed: seed))
-                ?? syntheticIdentifier(matching: id, salt: Int(truncatingIfNeeded: seed & 0x7FFF_FFFF))
+                ?? syntheticIdentifier(matching: id, salt: source.pick("identifier", id).salt)
             return setting(repetition, [0: replacement, 1: ""])   // CX-2: the original's check digit
         case .name:
             let family = source.pick("family", repetition.components.first.map(Self.text) ?? "", offset: i)

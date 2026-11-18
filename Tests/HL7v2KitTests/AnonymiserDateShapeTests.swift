@@ -78,4 +78,15 @@ struct AnonymiserDateShapeTests {
             }
         }
     }
+
+    // Without the key, a set of dates moved under it must not give the key away: were the shift read
+    // from bits only some of the key's bits reach, a few keys' worth of maps would cover every key.
+    @Test("A date's shift depends on the whole key: 100 keys move 12 dates in 100 different ways")
+    func shiftUsesTheWholeKey() {
+        let dates = (1...12).map { "1975" + ($0 < 10 ? "0" : "") + "\($0)15" }
+        let maps = Set((1...100 as ClosedRange<UInt64>).map { key in
+            dates.map { scrubDOB($0, salt: SyntheticSource.keyed(key).pick("date", $0).salt) }
+        })
+        #expect(maps.count == 100)
+    }
 }

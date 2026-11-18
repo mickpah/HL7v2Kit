@@ -27,14 +27,14 @@ struct AnonymiserTests {
         let a = try Self.anonymised(Self.wire(control: "CTRL1", Self.pid))
         let b = try Self.anonymised(Self.wire(control: "CTRL2", Self.pid))
         #expect(a["PID-3.1"] == b["PID-3.1"] && a["PID-3.1"] != "MRN12345")
-        #expect(a["PID-5.1"] == "Edwards" && a["PID-5.2"] == "Taylor")   // key 7, from the seed rule
-        #expect(b["PID-5.1"] == "Edwards" && b["PID-5.2"] == "Taylor")
+        #expect(a["PID-5.1"] == "Foster" && a["PID-5.2"] == "Robin")   // key 7, from the seed rule
+        #expect(b["PID-5.1"] == "Foster" && b["PID-5.2"] == "Robin")
     }
 
     @Test("A different key gives a different name")
     func differentKeyDifferentOutput() throws {
         let eight = try Self.anonymised(Self.wire(control: "CTRL1", Self.pid), key: 8)
-        #expect(eight["PID-5.1"] == "Jensen" && eight["PID-5.2"] == "Casey")
+        #expect(eight["PID-5.1"] == "Edwards" && eight["PID-5.2"] == "Sam")
     }
 
     @Test("A covered segment stays typed, so typed access needs no re-parse (#12)")
@@ -42,7 +42,7 @@ struct AnonymiserTests {
         let input = try Parser().parse(Self.wire(control: "CTRL1", Self.pid))
         let output = Anonymiser(key: 7).anonymise(input)
         let pid = try #require(output.firstSegment(PID.self))
-        #expect(pid.patientName?.familyName == "Edwards")   // key 7, as in sameValueSameOutputUnderOneKey
+        #expect(pid.patientName?.familyName == "Foster")   // key 7, as in sameValueSameOutputUnderOneKey
         let reparsed = try Parser().parse(output.serialize())
         #expect(output == reparsed)
     }
@@ -247,7 +247,7 @@ struct AnonymiserTests {
     @Test("A validity period with a missing or malformed end: what each rule writes")
     func validityPeriodEdges() throws {
         for (range, keyed, tool) in [
-            ("20210101", "20201218", "20210115"),                               // no end: the start moves
+            ("20210101", "20210115", "20210115"),                               // no end: the start moves
             ("^20210630", "^20210707", "^20210714"),                            // no start: the end, by its own shift
             ("20210101^2021XX30", "[REDACTED]", "[REDACTED]"),                  // an end no DTM, whatever its length:
             ("20210101^SYNTEXT", "[REDACTED]", "[REDACTED]"),                   // the range replaced whole
@@ -257,8 +257,8 @@ struct AnonymiserTests {
         }
     }
 
-    // DTM may stop at the year or the month (CH02A 2A.2.22 p39). Key 7 moves a range from 202107 forward one
-    // month, from 202101 or 202112 forward three; salt 41 moves every range forward two weeks or two months.
+    // DTM may stop at the year or the month (CH02A 2A.2.22 p39). Key 7 moves a range from 202107 back three
+    // months, from 202112 forward one; salt 41 moves every range forward two weeks or two months.
     @Test("A range moves both ends by one shift at its coarser end's precision, so it keeps its order")
     func validityPeriodCoarsePrecision() throws {
         // Each end's digits, the finer cut to the coarser's length, in order.
@@ -268,10 +268,10 @@ struct AnonymiserTests {
             return ends[0].prefix(n) <= ends[1].prefix(n)
         }
         for (range, keyed, tool) in [
-            ("202107^202112", "202108^202201", "202109^202202"),        // month ends: one shift, the length kept
-            ("202107^20210715", "202108^20210815", "202109^20210915"),  // a day end moves by the same months
-            ("202101^20210131", "202104^20210430", "202103^20210331"),  // the 31st: the month's last day
-            ("202112^20211231", "202203^20220331", "202202^20220228"),
+            ("202107^202112", "202104^202109", "202109^202202"),        // month ends: one shift, the length kept
+            ("202107^20210715", "202104^20210415", "202109^20210915"),  // a day end moves by the same months
+            ("202107^20210731", "202104^20210430", "202109^20210930"),  // the 31st: the month's last day
+            ("202112^20211231", "202201^20220131", "202202^20220228"),
             ("2021^20210105", "2021^2021", "2021^2021"),                // beside a year, the finer end cut to its year
             ("2021^2022", "2021^2022", "2021^2022"),                    // years are kept
         ] {
@@ -302,8 +302,8 @@ struct AnonymiserTests {
     @Test("A month value moves by whole months and keeps its precision, alike in every date field; a year is kept")
     func coarseDateInEveryField() throws {
         for (value, keyed, tool) in [
-            ("198007", "198005", "198009"),                 // key 7: back two months; salt 41: forward two
-            ("202107-0500", "202108-0500", "202109-0500"),  // the offset kept
+            ("198007", "198003", "198009"),                 // key 7: back four months; salt 41: forward two
+            ("202107-0500", "202109-0500", "202109-0500"),  // the offset kept
             ("1980", "1980", "1980"), ("2021+1000", "2021+1000", "2021+1000"),
         ] {
             let input = try Parser().parse(Self.everyDateField(value))

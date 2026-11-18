@@ -110,6 +110,8 @@ public struct Anonymiser: Sendable {
     ///
     /// - Parameters:
     ///   - key: The caller's key. Use one key for the messages whose linkage should survive.
+    ///     The key is a secret: anyone who holds it can anonymise candidate originals and compare.
+    ///     Draw it once with `UInt64.random(in: .min ... .max)` and keep it apart from the output.
     ///   - replacingIdentifier: Returns the replacement for one identifier. Without it, an
     ///     identifier is replaced by one of the same form: digits by as many digits, anything
     ///     else by `SYN-` and four digits. Supply it when identifiers must pass a check that

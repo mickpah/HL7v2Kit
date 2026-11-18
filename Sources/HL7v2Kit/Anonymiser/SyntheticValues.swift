@@ -20,9 +20,19 @@ enum SyntheticSource: Sendable {
     func pick(_ kind: String, _ original: String, offset: Int = 0, slot: Int = 0) -> (salt: Int, slot: Int) {
         switch self {
         case .legacy(let salt): (salt &+ offset, slot)
-        case .keyed(let key): (Int(truncatingIfNeeded: anonymiserSeed(key: key, kind: kind, original: original) & 0x7FFF_FFFF), 0)
+        case .keyed(let key): (Int(truncatingIfNeeded: mixed(anonymiserSeed(key: key, kind: kind, original: original)) & 0x7FFF_FFFF), 0)
         }
     }
+}
+
+/// `seed` through SplitMix64's step, as the FHIR counterpart's generator draws it, so every bit of
+/// the result depends on every bit of the key. FNV-1a's prime is 3 mod 8, so the seed's three low bits,
+/// which pick a date's shift, took only 8 values over every key.
+func mixed(_ seed: UInt64) -> UInt64 {
+    var z = seed &+ 0x9E37_79B9_7F4A_7C15
+    z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+    z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+    return z ^ (z >> 31)
 }
 
 /// FNV-1a 64 over the key's eight little-endian bytes, then `kind`'s UTF-8 bytes, a 0x00 byte

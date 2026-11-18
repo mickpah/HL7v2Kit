@@ -14,6 +14,15 @@ The entries are condensed; the git history carries the detail.
   no patent-termination clause, and sections 7 and 8 lost most of their warranty and liability
   wording. The package was always offered under Apache 2.0; the file now holds all of it.
 
+### Security
+
+- Under a key, a date's shift took only 8 values over every key: it was read from the low bits of
+  the FNV-1a seed, which only the low bits of each key byte reach. A few dates moved under one key
+  narrowed each original to a handful without the key. A keyed salt is now the seed mixed through
+  SplitMix64's step, so every value a keyed anonymiser writes changes once (see Migration). The seed
+  handed to `replacingIdentifier`, and with it identifiers matching the FHIR counterpart's, and the
+  output of `HL7v2KitAnonymise` are unchanged. The `key:` documentation says the key is a secret.
+
 ## [3.32.0]
 
 ### Added
