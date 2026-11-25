@@ -1,7 +1,7 @@
 {
   "segmentID": "SPM",
   "version": "2.6",
-  "description": "SPM",
+  "description": "Specimen",
   "fields": [
     { "index": 1, "swiftName": "setIdSpm", "name": "Set ID - SPM", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "specimenId", "name": "Specimen ID", "dataType": "EIP", "length": "855", "optionality": "O", "repeatability": "1" },

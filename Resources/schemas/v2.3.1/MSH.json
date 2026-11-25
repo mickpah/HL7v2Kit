@@ -1,7 +1,7 @@
 {
   "segmentID": "MSH",
   "version": "2.3.1",
-  "description": "Message Header",
+  "description": "Message header",
   "fields": [
     {
       "index": 1,

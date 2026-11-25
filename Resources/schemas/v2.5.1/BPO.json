@@ -1,7 +1,7 @@
 {
   "segmentID": "BPO",
   "version": "2.5.1",
-  "description": "Blood Product Order",
+  "description": "Blood product order",
   "fields": [
     { "index": 1, "swiftName": "setIdBpo", "name": "Set ID – BPO", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "bpUniversalServiceId", "name": "BP Universal Service ID", "dataType": "CWE", "length": "250", "optionality": "R", "repeatability": "1" },

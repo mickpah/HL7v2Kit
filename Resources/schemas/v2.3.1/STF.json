@@ -1,7 +1,7 @@
 {
   "segmentID": "STF",
   "version": "2.3.1",
-  "description": "Staff Identification",
+  "description": "Staff identification",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueStf", "name": "Primary Key Value - STF", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "staffIdentifierList", "name": "Staff ID Code", "dataType": "CX", "length": "60", "optionality": "O", "repeatability": "*" },

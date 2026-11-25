@@ -1,7 +1,7 @@
 {
   "segmentID": "PCR",
   "version": "2.3.1",
-  "description": "Possible Causal Relationship",
+  "description": "Possible causal relationship",
   "fields": [
     { "index": 1, "swiftName": "implicatedProduct", "name": "Implicated Product", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "genericProduct", "name": "Generic Product", "dataType": "IS", "length": "1", "table": "0249", "optionality": "O", "repeatability": "1", "tables": ["0249"] },

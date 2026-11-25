@@ -429,6 +429,10 @@ struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
 /// Grammar for one segment within an HL7 v2.x version.
 public struct SegmentGrammar: Sendable, Equatable, Hashable {
     public let segmentID: String
+    /// The segment's name as the version's print gives it ("Patient Identification"): its
+    /// Appendix A segment list, or the chapter heading where Appendix A is defective.
+    /// Empty for a grammar built with ``init(segmentID:version:fields:)``.
+    public let name: String
     public let version: String
     public let fields: [FieldGrammar]
 
@@ -441,6 +445,16 @@ public struct SegmentGrammar: Sendable, Equatable, Hashable {
 
     public init(segmentID: String, version: String, fields: [FieldGrammar]) {
         self.segmentID = segmentID
+        self.name = ""
+        self.version = version
+        self.fields = fields
+        self.segmentCardinalityRules = []
+    }
+
+    /// A grammar that carries the segment's name.
+    public init(segmentID: String, name: String, version: String, fields: [FieldGrammar]) {
+        self.segmentID = segmentID
+        self.name = name
         self.version = version
         self.fields = fields
         self.segmentCardinalityRules = []
@@ -452,11 +466,13 @@ public struct SegmentGrammar: Sendable, Equatable, Hashable {
     /// need to know about it.
     init(
         segmentID: String,
+        name: String = "",
         version: String,
         fields: [FieldGrammar],
         segmentCardinalityRules: [SegmentCardinalityRule]
     ) {
         self.segmentID = segmentID
+        self.name = name
         self.version = version
         self.fields = fields
         self.segmentCardinalityRules = segmentCardinalityRules

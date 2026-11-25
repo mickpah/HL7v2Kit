@@ -1,7 +1,7 @@
 {
   "segmentID": "DPS",
   "version": "2.9.1",
-  "description": "Diagnosis and Procedure Code",
+  "description": "Diagnosis and Procedure Code Segment",
   "fields": [
     { "index": 1, "swiftName": "diagnosisCodeMcp", "name": "Diagnosis Code - MCP", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0051"] },
     { "index": 2, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CWE", "optionality": "R", "repeatability": "*", "tables": ["0941"] },

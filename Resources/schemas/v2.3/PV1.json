@@ -1,7 +1,7 @@
 {
   "segmentID": "PV1",
   "version": "2.3",
-  "description": "Patient Visit",
+  "description": "Patient visit",
   "fields": [
     { "index": 1, "swiftName": "setID", "name": "Set ID - PV1", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "patientClass", "name": "Patient Class", "dataType": "IS", "length": "1", "table": "0004", "optionality": "R", "repeatability": "1", "tables": ["0004"] },

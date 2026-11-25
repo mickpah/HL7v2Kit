@@ -1,7 +1,7 @@
 {
   "segmentID": "BUI",
   "version": "2.8.2",
-  "description": "Blood Unit information",
+  "description": "Blood Unit Information",
   "fields": [
     { "index": 1, "swiftName": "setIdBui", "name": "Set ID – BUI", "dataType": "SI", "length": "1..4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "bloodUnitIdentifier", "name": "Blood Unit Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },

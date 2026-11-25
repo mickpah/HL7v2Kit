@@ -1,7 +1,7 @@
 {
   "segmentID": "TXA",
   "version": "2.3.1",
-  "description": "TXA",
+  "description": "Transcription document header",
   "fields": [
     { "index": 1, "swiftName": "setIdTxa", "name": "Set ID- TXA", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "documentType", "name": "Document Type", "dataType": "IS", "length": "30", "table": "0270", "optionality": "R", "repeatability": "1", "tables": ["0270"] },

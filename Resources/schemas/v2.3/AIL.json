@@ -1,7 +1,7 @@
 {
   "segmentID": "AIL",
   "version": "2.3",
-  "description": "AIL",
+  "description": "Appointment information - location resource",
   "fields": [
     { "index": 1, "swiftName": "setIdAil", "name": "Set ID - AIL", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "length": "1", "table": "0206", "optionality": "C", "repeatability": "1", "tables": ["0206"] },

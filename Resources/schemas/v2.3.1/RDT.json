@@ -1,7 +1,7 @@
 {
   "segmentID": "RDT",
   "version": "2.3.1",
-  "description": "Table Row Data",
+  "description": "Table row data",
   "fields": [
     { "index": 1, "swiftName": "columnValue", "name": "Column Value", "dataType": "Variable", "optionality": "R", "repeatability": "1", "variableColumns": "columnValues" }
   ]

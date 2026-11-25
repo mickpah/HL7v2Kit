@@ -1,7 +1,7 @@
 {
   "segmentID": "REL",
   "version": "2.7.1",
-  "description": "Clinical Relationship",
+  "description": "Clinical Relationship Segment",
   "fields": [
     { "index": 1, "swiftName": "setIdRel", "name": "Set ID –REL", "dataType": "SI", "length": "1..4", "optionality": "C", "repeatability": "1" },
     { "index": 2, "swiftName": "relationshipType", "name": "Relationship Type", "dataType": "CWE", "optionality": "R", "repeatability": "1" },

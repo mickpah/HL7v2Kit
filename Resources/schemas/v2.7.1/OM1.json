@@ -1,7 +1,7 @@
 {
   "segmentID": "OM1",
   "version": "2.7.1",
-  "description": "OM1",
+  "description": "General Segment",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "length": "4=", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "producerSServiceTestObservationId", "name": "Producer's Service/Test/Observation ID", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },

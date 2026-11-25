@@ -1,7 +1,7 @@
 {
   "segmentID": "OBX",
   "version": "2.4",
-  "description": "Observation/Result",
+  "description": "Observation Segment",
   "fields": [
     {
       "index": 1,

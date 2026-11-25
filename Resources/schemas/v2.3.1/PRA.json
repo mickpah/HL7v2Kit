@@ -1,7 +1,7 @@
 {
   "segmentID": "PRA",
   "version": "2.3.1",
-  "description": "Practitioner Detail",
+  "description": "Practitioner detail",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValuePra", "name": "Primary Key Value - PRA", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "practitionerGroup", "name": "Practitioner Group", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*", "tables": ["0358"] },

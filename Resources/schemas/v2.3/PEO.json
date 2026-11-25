@@ -1,7 +1,7 @@
 {
   "segmentID": "PEO",
   "version": "2.3",
-  "description": "Product Experience Observation",
+  "description": "Product experience observation",
   "fields": [
     { "index": 1, "swiftName": "eventIdentifiersUsed", "name": "Event Identifiers Used", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*" },
     { "index": 2, "swiftName": "eventSymptomDiagnosisCode", "name": "Event Symptom/Diagnosis Code", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*" },

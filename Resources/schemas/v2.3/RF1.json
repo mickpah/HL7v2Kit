@@ -1,7 +1,7 @@
 {
   "segmentID": "RF1",
   "version": "2.3",
-  "description": "RF1",
+  "description": "Referral information",
   "fields": [
     { "index": 1, "swiftName": "referralStatus", "name": "Referral Status", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "1", "tables": ["0283"] },
     { "index": 2, "swiftName": "referralPriority", "name": "Referral Priority", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "1", "tables": ["0280"] },

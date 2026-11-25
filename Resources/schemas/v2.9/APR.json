@@ -1,7 +1,7 @@
 {
   "segmentID": "APR",
   "version": "2.9",
-  "description": "APR",
+  "description": "Appointment Preferences",
   "fields": [
     { "index": 1, "swiftName": "timeSelectionCriteria", "name": "Time Selection Criteria", "dataType": "SCV", "optionality": "O", "repeatability": "*", "tables": ["0294"] },
     { "index": 2, "swiftName": "resourceSelectionCriteria", "name": "Resource Selection Criteria", "dataType": "SCV", "optionality": "O", "repeatability": "*", "tables": ["0294"] },

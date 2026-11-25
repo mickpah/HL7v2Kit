@@ -13,6 +13,13 @@ The entries are condensed; the git history carries the detail.
 - `SegmentGrammarTable.table(for:)` and `grammar(_:version:)`: the segment grammars the validator
   applies to a version, v2.7 and v2.8 included. The `MessageViewer` example calls them instead of
   its own copy of the switch. (#35)
+- `SegmentGrammar.name`, the segment's name as its version's print gives it: its Appendix A
+  segment list, or the chapter heading where Appendix A is defective. Also
+  `init(segmentID:name:version:fields:)`. The 505 schemas that carried the segment ID as their
+  description now carry the printed name, and 201 more whose description differed from their
+  version's print now match it (76 in wording, 125 in letter case only). A trailing "segment"
+  printed in lower case, the generic noun, is not part of the name; a capitalised one, as in
+  "General Segment", is. (#36)
 
 ### Fixed
 

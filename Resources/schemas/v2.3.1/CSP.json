@@ -1,7 +1,7 @@
 {
   "segmentID": "CSP",
   "version": "2.3.1",
-  "description": "Clinical Study Phase",
+  "description": "Clinical study phase",
   "fields": [
     { "index": 1, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "dateTimeStudyPhaseBegan", "name": "Date/time Study Phase Began", "dataType": "TS", "length": "26", "optionality": "R", "repeatability": "1" },

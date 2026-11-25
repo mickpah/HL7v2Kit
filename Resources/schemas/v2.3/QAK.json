@@ -1,7 +1,7 @@
 {
   "segmentID": "QAK",
   "version": "2.3",
-  "description": "QAK",
+  "description": "Query acknowledgment",
   "fields": [
     { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "C", "repeatability": "1" },
     { "index": 2, "swiftName": "queryResponseStatus", "name": "Query Response Status", "dataType": "ID", "length": "2", "table": "0208", "optionality": "O", "repeatability": "1", "tables": ["0208"] }

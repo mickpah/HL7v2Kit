@@ -1,7 +1,7 @@
 {
   "segmentID": "UB1",
   "version": "2.8.2",
-  "description": "UB82",
+  "description": "Uniform Billing 1",
   "fields": [
     { "index": 1, "swiftName": "setIdUb1", "name": "Set ID - UB1", "dataType": "SI", "optionality": "W", "repeatability": "1" },
     { "index": 2, "swiftName": "bloodDeductible43", "name": "Blood Deductible", "dataType": "", "optionality": "W", "repeatability": "1" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "BPX",
   "version": "2.7.1",
-  "description": "BPX",
+  "description": "Blood product dispense status",
   "fields": [
     { "index": 1, "swiftName": "setIdBpx", "name": "Set ID – BPX", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "bpDispenseStatus", "name": "BP Dispense Status", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0510"] },

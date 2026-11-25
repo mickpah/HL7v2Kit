@@ -1,7 +1,7 @@
 {
   "segmentID": "URD",
   "version": "2.6",
-  "description": "Results/Update Definition",
+  "description": "Results/update Definition",
   "fields": [
     { "index": 1, "swiftName": "ruDateTime", "name": "R/U Date/Time", "dataType": "DTM", "length": "24", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "reportPriority", "name": "Report Priority", "dataType": "ID", "length": "1", "table": "0109", "optionality": "O", "repeatability": "1", "tables": ["0109"] },

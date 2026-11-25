@@ -1,7 +1,7 @@
 {
   "segmentID": "OM3",
   "version": "2.3.1",
-  "description": "OM3",
+  "description": "Categorical test/observation",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number – Test/Observation Master File", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "preferredCodingSystem", "name": "Preferred Coding System", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1" },

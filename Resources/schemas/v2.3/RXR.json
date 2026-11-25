@@ -1,7 +1,7 @@
 {
   "segmentID": "RXR",
   "version": "2.3",
-  "description": "RXR",
+  "description": "Pharmacy/treatment route",
   "fields": [
     { "index": 1, "swiftName": "route", "name": "Route", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1", "tables": ["0162"] },
     { "index": 2, "swiftName": "site", "name": "Site", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1", "tables": ["0163"] },

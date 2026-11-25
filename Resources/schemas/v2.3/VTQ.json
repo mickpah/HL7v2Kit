@@ -1,7 +1,7 @@
 {
   "segmentID": "VTQ",
   "version": "2.3",
-  "description": "Virtual Table Query Request",
+  "description": "Virtual table query request",
   "fields": [
     { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "queryResponseFormatCode", "name": "Query/Response Format Code", "dataType": "ID", "length": "1", "table": "0106", "optionality": "R", "repeatability": "1", "tables": ["0106"] },

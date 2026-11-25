@@ -1,7 +1,7 @@
 {
   "segmentID": "NST",
   "version": "2.4",
-  "description": "Application Control Level Statistics",
+  "description": "Application control level statistics",
   "fields": [
     { "index": 1, "swiftName": "statisticsAvailable", "name": "Statistics Available", "dataType": "ID", "length": "1", "table": "0136", "optionality": "R", "repeatability": "1", "tables": ["0136"] },
     { "index": 2, "swiftName": "sourceIdentifier", "name": "Source Identifier", "dataType": "ST", "length": "30", "optionality": "", "repeatability": "1" },

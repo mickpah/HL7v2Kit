@@ -1,7 +1,7 @@
 {
   "segmentID": "SCH",
   "version": "2.7.1",
-  "description": "SCH",
+  "description": "Scheduling Activity Information",
   "fields": [
     { "index": 1, "swiftName": "placerAppointmentId", "name": "Placer Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "SCH-2 empty" },
     { "index": 2, "swiftName": "fillerAppointmentId", "name": "Filler Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "SCH-1 empty" },

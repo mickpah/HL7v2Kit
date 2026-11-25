@@ -1,7 +1,7 @@
 {
   "segmentID": "AL1",
   "version": "2.3.1",
-  "description": "Patient Allergy Information",
+  "description": "Patient allergy information",
   "fields": [
     {
       "index": 1,

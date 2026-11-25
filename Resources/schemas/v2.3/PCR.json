@@ -1,7 +1,7 @@
 {
   "segmentID": "PCR",
   "version": "2.3",
-  "description": "Possible Causal Relationship",
+  "description": "Possible causal relationship",
   "fields": [
     { "index": 1, "swiftName": "implicatedProduct", "name": "Implicated Product", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "genericProduct", "name": "Generic Product", "dataType": "IS", "length": "1", "table": "0239", "optionality": "O", "repeatability": "1", "tables": ["0239"], "tableOpen": true, "tableOpenCitation": "v2.3 Chapter 7 section 7.11.3.2 PCR-2: \"Refer to user-defined table 0239 - Event expected for suggested values.\"" },

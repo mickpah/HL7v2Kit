@@ -1,7 +1,7 @@
 {
   "segmentID": "RXC",
   "version": "2.3",
-  "description": "RXC",
+  "description": "Pharmacy/treatment component order",
   "fields": [
     { "index": 1, "swiftName": "rxComponentType", "name": "RX Component Type", "dataType": "ID", "length": "1", "table": "0166", "optionality": "R", "repeatability": "1", "tables": ["0166"] },
     { "index": 2, "swiftName": "componentCode", "name": "Component Code", "dataType": "CE", "length": "100", "optionality": "R", "repeatability": "1" },

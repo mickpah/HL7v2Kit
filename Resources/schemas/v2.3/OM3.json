@@ -1,7 +1,7 @@
 {
   "segmentID": "OM3",
   "version": "2.3",
-  "description": "OM3",
+  "description": "Categorical test/observation",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumber", "name": "Sequence Number", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "preferredCodingSystem", "name": "Preferred Coding System", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1" },

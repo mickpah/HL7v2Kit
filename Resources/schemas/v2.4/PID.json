@@ -1,7 +1,7 @@
 {
   "segmentID": "PID",
   "version": "2.4",
-  "description": "Patient Identification",
+  "description": "Patient identification",
   "fields": [
     {
       "index": 1,

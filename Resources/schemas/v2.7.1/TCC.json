@@ -1,7 +1,7 @@
 {
   "segmentID": "TCC",
   "version": "2.7.1",
-  "description": "TCC",
+  "description": "Test Code Configuration",
   "fields": [
     { "index": 1, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
     { "index": 2, "swiftName": "equipmentTestApplicationIdentifier", "name": "Equipment Test Application Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },

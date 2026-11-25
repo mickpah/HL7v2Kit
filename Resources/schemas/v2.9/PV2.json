@@ -1,7 +1,7 @@
 {
   "segmentID": "PV2",
   "version": "2.9",
-  "description": "PV2",
+  "description": "Patient Visit - Additional Information",
   "fields": [
     { "index": 1, "swiftName": "priorPendingLocation", "name": "Prior Pending Location", "dataType": "PL", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = A26" },
     { "index": 2, "swiftName": "accommodationCode", "name": "Accommodation Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0129"] },

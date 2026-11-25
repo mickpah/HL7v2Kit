@@ -1,7 +1,7 @@
 {
   "segmentID": "IN2",
   "version": "2.9.1",
-  "description": "IN2",
+  "description": "Insurance Additional Information",
   "fields": [
     { "index": 1, "swiftName": "insuredSEmployeeId", "name": "Insured's Employee ID", "dataType": "CX", "optionality": "O", "repeatability": "*" },
     { "index": 2, "swiftName": "insuredSSocialSecurityNumber", "name": "Insured's Social Security Number", "dataType": "ST", "length": "11=", "optionality": "O", "repeatability": "1" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "VAR",
   "version": "2.4",
-  "description": "VAR",
+  "description": "Variance",
   "fields": [
     { "index": 1, "swiftName": "varianceInstanceId", "name": "Variance Instance ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "documentedDateTime", "name": "Documented Date/Time", "dataType": "TS", "length": "26", "optionality": "R", "repeatability": "1" },

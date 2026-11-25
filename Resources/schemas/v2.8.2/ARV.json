@@ -1,7 +1,7 @@
 {
   "segmentID": "ARV",
   "version": "2.8.2",
-  "description": "ARV",
+  "description": "Access Restriction",
   "fields": [
     { "index": 1, "swiftName": "setId", "name": "Set ID", "dataType": "SI", "length": "1..4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "accessRestrictionActionCode", "name": "Access Restriction Action Code", "dataType": "CNE", "optionality": "R", "repeatability": "1", "tables": ["0206"], "tableOpen": true, "tableOpenCitation": "v2.8.2 Chapter 3 section 3.3.14.2 ARV-2: \"Refer to HL7 Table 0206 - Segment Action Code in Chapter 2C, Code Tables, for suggested values.\"" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "SAC",
   "version": "2.9.1",
-  "description": "SAC",
+  "description": "Specimen Container detail",
   "fields": [
     { "index": 1, "swiftName": "externalAccessionIdentifier", "name": "External Accession Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "accessionIdentifier", "name": "Accession Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },

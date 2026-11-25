@@ -1,7 +1,7 @@
 {
   "segmentID": "LDP",
   "version": "2.6",
-  "description": "LDP",
+  "description": "Location Department",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueLdp", "name": "Primary Key Value - LDP", "dataType": "PL", "length": "200", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "locationDepartment", "name": "Location Department", "dataType": "CWE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0264"] },

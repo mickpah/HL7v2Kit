@@ -1,7 +1,7 @@
 {
   "segmentID": "NSC",
   "version": "2.4",
-  "description": "Application Status Change",
+  "description": "Application status change",
   "fields": [
     { "index": 1, "swiftName": "applicationChangeType", "name": "Application Change Type", "dataType": "IS", "length": "4", "table": "0409", "optionality": "R", "repeatability": "1", "tables": ["0409"] },
     { "index": 2, "swiftName": "currentCpu", "name": "Current CPU", "dataType": "ST", "length": "30", "optionality": "", "repeatability": "1" },

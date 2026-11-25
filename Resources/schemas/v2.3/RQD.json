@@ -1,7 +1,7 @@
 {
   "segmentID": "RQD",
   "version": "2.3",
-  "description": "Requisition Detail",
+  "description": "Requisition detail",
   "fields": [
     { "index": 1, "swiftName": "requisitionLineNumber", "name": "Requisition Line Number", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "itemCodeInternal", "name": "Item Code - Internal", "dataType": "CE", "length": "60", "optionality": "C", "repeatability": "1", "condition": "RQD-3 empty AND RQD-4 empty" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "DSP",
   "version": "2.3",
-  "description": "Display Data",
+  "description": "Display data",
   "fields": [
     { "index": 1, "swiftName": "setIdDsp", "name": "Set ID - DSP", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "displayLevel", "name": "Display Level", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },

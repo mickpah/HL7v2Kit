@@ -1,7 +1,7 @@
 {
   "segmentID": "CDM",
   "version": "2.9",
-  "description": "CDM",
+  "description": "Charge Description Master",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueCdm", "name": "Primary Key Value - CDM", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0132"] },
     { "index": 2, "swiftName": "chargeCodeAlias", "name": "Charge Code Alias", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0132"] },

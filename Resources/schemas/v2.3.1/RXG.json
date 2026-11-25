@@ -1,7 +1,7 @@
 {
   "segmentID": "RXG",
   "version": "2.3.1",
-  "description": "RXG",
+  "description": "Pharmacy/treatment give",
   "fields": [
     { "index": 1, "swiftName": "giveSubIdCounter", "name": "Give Sub-ID Counter", "dataType": "NM", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "dispenseSubIdCounter", "name": "Dispense Sub-ID Counter", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },

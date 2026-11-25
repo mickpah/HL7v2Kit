@@ -1,7 +1,7 @@
 {
   "segmentID": "URS",
   "version": "2.3.1",
-  "description": "Unsolicited Selection",
+  "description": "Unsolicited selection",
   "fields": [
     { "index": 1, "swiftName": "ruWhereSubjectDefinition", "name": "R/U Where Subject Definition", "dataType": "ST", "length": "20", "optionality": "R", "repeatability": "*" },
     { "index": 2, "swiftName": "ruWhenDataStartDateTime", "name": "R/U When Data Start Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "SCP",
   "version": "2.7.1",
-  "description": "Sterilizer Configuration",
+  "description": "Sterilizer Configuration (Anti-Microbial Devices)",
   "fields": [
     { "index": 1, "swiftName": "numberOfDecontaminationSterilizationDevices", "name": "Number Of Decontamination/Sterilization Devices", "dataType": "NM", "length": "2=", "optionality": "", "repeatability": "1" },
     { "index": 2, "swiftName": "laborCalculationType", "name": "Labor Calculation Type", "dataType": "CWE", "optionality": "", "repeatability": "1", "tables": ["0651"] },

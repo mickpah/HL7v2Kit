@@ -1,7 +1,7 @@
 {
   "segmentID": "PRC",
   "version": "2.3",
-  "description": "PRC",
+  "description": "Pricing",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValuePrc", "name": "Primary Key Value - PRC", "dataType": "CE", "length": "200", "optionality": "R", "repeatability": "1", "tables": ["0132"] },
     { "index": 2, "swiftName": "facilityId", "name": "Facility ID", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*" },

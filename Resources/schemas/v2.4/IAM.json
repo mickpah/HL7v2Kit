@@ -1,7 +1,7 @@
 {
   "segmentID": "IAM",
   "version": "2.4",
-  "description": "Patient Adverse Reaction Information",
+  "description": "patient adverse reaction information segment - unique identifier",
   "fields": [
     { "index": 1, "swiftName": "setIdIam", "name": "Set ID – IAM", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "allergenTypeCode", "name": "Allergen Type Code", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0127"] },

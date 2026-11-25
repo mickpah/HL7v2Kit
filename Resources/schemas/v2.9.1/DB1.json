@@ -1,7 +1,7 @@
 {
   "segmentID": "DB1",
   "version": "2.9.1",
-  "description": "DB1",
+  "description": "Disability",
   "fields": [
     { "index": 1, "swiftName": "setIdDb1", "name": "Set ID - DB1", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "disabledPersonCode", "name": "Disabled Person Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0334"] },

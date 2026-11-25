@@ -1,7 +1,7 @@
 {
   "segmentID": "FHS",
   "version": "2.3",
-  "description": "File Header",
+  "description": "File header",
   "fields": [
     { "index": 1, "swiftName": "fileFieldSeparator", "name": "File Field Separator", "dataType": "ST", "length": "1", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "fileEncodingCharacters", "name": "File Encoding Characters", "dataType": "ST", "length": "4", "optionality": "R", "repeatability": "1" },

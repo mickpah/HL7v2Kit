@@ -1,7 +1,7 @@
 {
   "segmentID": "PD1",
   "version": "2.4",
-  "description": "Patient Additional Demographic",
+  "description": "patient additional demographic",
   "fields": [
     {
       "index": 1,

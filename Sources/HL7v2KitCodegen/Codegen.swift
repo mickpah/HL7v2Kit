@@ -395,6 +395,7 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
         return """
             private static let \(versionSwiftName)_\(schema.segmentID): SegmentGrammar = SegmentGrammar(
                 segmentID: "\(schema.segmentID)",
+                name: \(escapeStringLiteral(schema.description)),
                 version: "\(schema.version)",
                 fields: [
         \(fields)

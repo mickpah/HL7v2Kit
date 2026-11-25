@@ -1,7 +1,7 @@
 {
   "segmentID": "TCD",
   "version": "2.9",
-  "description": "TCD",
+  "description": "Test Code Detail",
   "fields": [
     { "index": 1, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0789"] },
     { "index": 2, "swiftName": "autoDilutionFactor", "name": "Auto-Dilution Factor", "dataType": "SN", "optionality": "O", "repeatability": "1" },

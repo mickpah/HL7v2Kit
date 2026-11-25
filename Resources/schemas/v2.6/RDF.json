@@ -1,7 +1,7 @@
 {
   "segmentID": "RDF",
   "version": "2.6",
-  "description": "RDF",
+  "description": "Table Row Definition",
   "fields": [
     { "index": 1, "swiftName": "numberOfColumnsPerRow", "name": "Number of Columns per Row", "dataType": "NM", "length": "3", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "columnDescription", "name": "Column Description", "dataType": "RCD", "length": "40", "optionality": "R", "repeatability": "*", "tables": ["0440"] }

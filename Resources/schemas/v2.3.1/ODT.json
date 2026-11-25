@@ -1,7 +1,7 @@
 {
   "segmentID": "ODT",
   "version": "2.3.1",
-  "description": "Diet Tray Instructions",
+  "description": "Diet tray instructions",
   "fields": [
     { "index": 1, "swiftName": "trayType", "name": "Tray Type", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1", "tables": ["0160"] },
     { "index": 2, "swiftName": "servicePeriod", "name": "Service Period", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "10" },

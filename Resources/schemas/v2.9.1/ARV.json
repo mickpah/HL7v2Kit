@@ -1,7 +1,7 @@
 {
   "segmentID": "ARV",
   "version": "2.9.1",
-  "description": "ARV",
+  "description": "Access Restriction",
   "fields": [
     { "index": 1, "swiftName": "setId", "name": "Set ID", "dataType": "SI", "length": "1..4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "accessRestrictionActionCode", "name": "Access Restriction Action Code", "dataType": "CNE", "length": "1..1", "optionality": "R", "repeatability": "1", "tables": ["0206"] },

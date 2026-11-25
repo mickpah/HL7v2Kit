@@ -1,7 +1,7 @@
 {
   "segmentID": "UB1",
   "version": "2.3.1",
-  "description": "UB82",
+  "description": "UB82 data",
   "fields": [
     { "index": 1, "swiftName": "setIdUb1", "name": "Set ID - UB1", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "bloodDeductible43", "name": "Blood Deductible (43)", "dataType": "NM", "length": "1", "optionality": "B", "repeatability": "1" },

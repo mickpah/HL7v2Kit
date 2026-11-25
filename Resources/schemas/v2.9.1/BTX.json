@@ -1,7 +1,7 @@
 {
   "segmentID": "BTX",
   "version": "2.9.1",
-  "description": "BTX",
+  "description": "Blood Product Transfusion/Disposition",
   "fields": [
     { "index": 1, "swiftName": "setIdBtx", "name": "Set ID – BTX", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "bcDonationId", "name": "BC Donation ID", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "BTX-3 populated", "prohibitedWhen": "BTX-5 populated", "prohibitedSeverity": "warning" },

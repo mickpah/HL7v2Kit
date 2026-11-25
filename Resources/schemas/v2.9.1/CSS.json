@@ -1,7 +1,7 @@
 {
   "segmentID": "CSS",
   "version": "2.9.1",
-  "description": "Clinical Study Data Schedule",
+  "description": "Clinical Study Data Schedule Segment",
   "fields": [
     { "index": 1, "swiftName": "studyScheduledTimePoint", "name": "Study Scheduled Time Point", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0595"] },
     { "index": 2, "swiftName": "studyScheduledPatientTimePoint", "name": "Study Scheduled Patient Time Point", "dataType": "DTM", "optionality": "O", "repeatability": "1" },

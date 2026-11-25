@@ -1,7 +1,7 @@
 {
   "segmentID": "TQ1",
   "version": "2.9",
-  "description": "TQ1",
+  "description": "Timing/Quantity",
   "fields": [
     { "index": 1, "swiftName": "setIdTq1", "name": "Set ID - TQ1", "dataType": "SI", "length": "1..4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "quantity", "name": "Quantity", "dataType": "CQ", "optionality": "O", "repeatability": "1" },

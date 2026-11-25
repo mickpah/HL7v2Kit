@@ -1,7 +1,7 @@
 {
   "segmentID": "EQU",
   "version": "2.6",
-  "description": "EQU",
+  "description": "Equipment Detail",
   "fields": [
     { "index": 1, "swiftName": "equipmentInstanceIdentifier", "name": "Equipment Instance Identifier", "dataType": "EI", "length": "427", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "eventDateTime", "name": "Event Date/Time", "dataType": "DTM", "length": "24", "optionality": "R", "repeatability": "1" },

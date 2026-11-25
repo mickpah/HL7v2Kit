@@ -1,7 +1,7 @@
 {
   "segmentID": "PSH",
   "version": "2.3.1",
-  "description": "Product Summary Header",
+  "description": "Product summary header",
   "fields": [
     { "index": 1, "swiftName": "reportType", "name": "Report Type", "dataType": "ST", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "reportFormIdentifier", "name": "Report Form Identifier", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "1" },

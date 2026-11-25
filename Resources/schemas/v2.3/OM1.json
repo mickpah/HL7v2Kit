@@ -1,7 +1,7 @@
 {
   "segmentID": "OM1",
   "version": "2.3",
-  "description": "OM1",
+  "description": "General segment - fields that apply to most observations",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumber", "name": "Sequence Number", "dataType": "NM", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "producerTestObservationId", "name": "Producer's Test/Observation ID", "dataType": "CE", "length": "200", "optionality": "R", "repeatability": "1" },

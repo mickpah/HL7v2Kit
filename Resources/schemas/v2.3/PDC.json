@@ -1,7 +1,7 @@
 {
   "segmentID": "PDC",
   "version": "2.3",
-  "description": "Product Detail Country",
+  "description": "Product detail country",
   "fields": [
     { "index": 1, "swiftName": "manufacturerDistributor", "name": "Manufacturer/Distributor", "dataType": "XON", "length": "80", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "country", "name": "Country", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },

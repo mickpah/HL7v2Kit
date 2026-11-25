@@ -1,7 +1,7 @@
 {
   "segmentID": "ROL",
   "version": "2.3",
-  "description": "ROL",
+  "description": "role",
   "fields": [
     { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "length": "2", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },

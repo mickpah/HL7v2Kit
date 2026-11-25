@@ -1,7 +1,7 @@
 {
   "segmentID": "MRG",
   "version": "2.6",
-  "description": "MRG",
+  "description": "Merge Patient Information",
   "fields": [
     { "index": 1, "swiftName": "priorPatientIdentifierList", "name": "Prior Patient Identifier List", "dataType": "CX", "length": "250", "optionality": "R", "repeatability": "*" },
     { "index": 2, "swiftName": "priorAlternatePatientId", "name": "Prior Alternate Patient ID", "dataType": "CX", "length": "250", "optionality": "B", "repeatability": "*" },

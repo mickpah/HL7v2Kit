@@ -1,7 +1,7 @@
 {
   "segmentID": "OM5",
   "version": "2.3",
-  "description": "OM5",
+  "description": "Observation batteries (sets)",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumber", "name": "Sequence Number", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "testObservationsIncludedWAnOrderedTestBattery", "name": "Test/Observations Included w/an Ordered Test Battery", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "*" },

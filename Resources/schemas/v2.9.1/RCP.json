@@ -1,7 +1,7 @@
 {
   "segmentID": "RCP",
   "version": "2.9.1",
-  "description": "RCP",
+  "description": "Response Control Parameter",
   "fields": [
     { "index": 1, "swiftName": "queryPriority", "name": "Query Priority", "dataType": "ID", "table": "0091", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0091"] },
     { "index": 2, "swiftName": "quantityLimitedRequest", "name": "Quantity Limited Request", "dataType": "CQ", "optionality": "O", "repeatability": "1", "tables": ["0126"] },

@@ -3,7 +3,7 @@
 // Version union (P9-5, ADR-020) with: v2.3, v2.3.1, v2.4, v2.6, v2.7.1, v2.8.2, v2.9, v2.9.1
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-/// Categorical Test/Observation segment (HL7 v2.5.1).
+/// Categorical Service/Test/Observation segment (HL7 v2.5.1).
 ///
 /// Defined in HL7 v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2, v2.9, v2.9.1.
 /// Accessors read by field position, so one whose DocC names fewer versions returns

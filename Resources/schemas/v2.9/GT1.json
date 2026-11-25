@@ -1,7 +1,7 @@
 {
   "segmentID": "GT1",
   "version": "2.9",
-  "description": "GT1",
+  "description": "Guarantor",
   "fields": [
     { "index": 1, "swiftName": "setIdGt1", "name": "Set ID - GT1", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "guarantorNumber", "name": "Guarantor Number", "dataType": "CX", "optionality": "O", "repeatability": "*" },

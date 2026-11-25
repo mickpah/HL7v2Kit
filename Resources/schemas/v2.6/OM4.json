@@ -1,7 +1,7 @@
 {
   "segmentID": "OM4",
   "version": "2.6",
-  "description": "OM4",
+  "description": "Observations that Require Specimens",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "derivedSpecimen", "name": "Derived Specimen", "dataType": "ID", "length": "1", "table": "0170", "optionality": "O", "repeatability": "1", "tables": ["0170"] },

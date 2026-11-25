@@ -1,7 +1,7 @@
 {
   "segmentID": "OM2",
   "version": "2.8.2",
-  "description": "OM2",
+  "description": "Numeric Observation",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "length": "4=", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "unitsOfMeasure", "name": "Units of Measure", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },

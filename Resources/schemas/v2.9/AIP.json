@@ -1,7 +1,7 @@
 {
   "segmentID": "AIP",
   "version": "2.9",
-  "description": "AIP",
+  "description": "Appointment Information - Personnel Resource",
   "fields": [
     { "index": 1, "swiftName": "setIdAip", "name": "Set ID - AIP", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action code", "dataType": "ID", "table": "0206", "length": "1..1", "optionality": "C", "repeatability": "1", "tables": ["0206"] },

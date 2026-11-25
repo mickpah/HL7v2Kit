@@ -1,7 +1,7 @@
 {
   "segmentID": "ODS",
   "version": "2.4",
-  "description": "Dietary Orders",
+  "description": "Dietary Orders, Supplements, and Preferences",
   "fields": [
     { "index": 1, "swiftName": "type", "name": "Type", "dataType": "ID", "length": "1", "table": "0159", "optionality": "R", "repeatability": "1", "tables": ["0159"] },
     { "index": 2, "swiftName": "servicePeriod", "name": "Service Period", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "10" },

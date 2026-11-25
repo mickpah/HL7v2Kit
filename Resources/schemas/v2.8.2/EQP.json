@@ -1,7 +1,7 @@
 {
   "segmentID": "EQP",
   "version": "2.8.2",
-  "description": "EQP",
+  "description": "Equipment/log Service",
   "fields": [
     { "index": 1, "swiftName": "eventType", "name": "Event type", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0450"] },
     { "index": 2, "swiftName": "fileName", "name": "File Name", "dataType": "ST", "length": "20=", "optionality": "O", "repeatability": "1" },

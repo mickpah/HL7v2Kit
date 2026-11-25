@@ -1,7 +1,7 @@
 {
   "segmentID": "CTI",
   "version": "2.3.1",
-  "description": "Clinical Trial Identification",
+  "description": "Clinical trial identification",
   "fields": [
     { "index": 1, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CE", "length": "60", "optionality": "C", "repeatability": "1", "condition": "CTI-3 populated" },

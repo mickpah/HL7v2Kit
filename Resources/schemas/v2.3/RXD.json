@@ -1,7 +1,7 @@
 {
   "segmentID": "RXD",
   "version": "2.3",
-  "description": "RXD",
+  "description": "Pharmacy/treatment dispense",
   "fields": [
     { "index": 1, "swiftName": "dispenseSubIdCounter", "name": "Dispense Sub-ID Counter", "dataType": "NM", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "dispenseGiveCode", "name": "Dispense/Give Code", "dataType": "CE", "length": "100", "optionality": "R", "repeatability": "1", "tables": ["0292"] },

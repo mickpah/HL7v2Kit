@@ -1,7 +1,7 @@
 {
   "segmentID": "LCC",
   "version": "2.4",
-  "description": "LCC",
+  "description": "Location Charge Code",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueLcc", "name": "Primary Key Value - LCC", "dataType": "PL", "length": "200", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "locationDepartment", "name": "Location Department", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0264"] },

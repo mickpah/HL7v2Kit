@@ -1,7 +1,7 @@
 {
   "segmentID": "EVN",
   "version": "2.3",
-  "description": "Event Type",
+  "description": "Event type",
   "fields": [
     {
       "index": 1,

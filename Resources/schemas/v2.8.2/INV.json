@@ -1,7 +1,7 @@
 {
   "segmentID": "INV",
   "version": "2.8.2",
-  "description": "INV",
+  "description": "Inventory Detail",
   "fields": [
     { "index": 1, "swiftName": "substanceIdentifier", "name": "Substance Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0451"] },
     { "index": 2, "swiftName": "substanceStatus", "name": "Substance Status", "dataType": "CWE", "optionality": "R", "repeatability": "*", "tables": ["0383"] },

@@ -1,7 +1,7 @@
 {
   "segmentID": "PRB",
   "version": "2.7.1",
-  "description": "PRB",
+  "description": "Problem Details",
   "fields": [
     { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "length": "2..2", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 2, "swiftName": "actionDateTime", "name": "Action Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },

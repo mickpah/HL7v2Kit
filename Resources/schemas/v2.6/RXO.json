@@ -1,7 +1,7 @@
 {
   "segmentID": "RXO",
   "version": "2.6",
-  "description": "RXO",
+  "description": "Pharmacy/Treatment Order",
   "fields": [
     { "index": 1, "swiftName": "requestedGiveCode", "name": "Requested Give Code", "dataType": "CWE", "length": "250", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "RXO-6 empty OR noRepeat(RXO-6.1) empty" },
     { "index": 2, "swiftName": "requestedGiveAmountMinimum", "name": "Requested Give Amount - Minimum", "dataType": "NM", "length": "20", "optionality": "C", "repeatability": "1", "condition": "RXO-6 empty OR noRepeat(RXO-6.1) empty" },

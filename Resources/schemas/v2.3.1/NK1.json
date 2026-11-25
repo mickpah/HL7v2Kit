@@ -1,7 +1,7 @@
 {
   "segmentID": "NK1",
   "version": "2.3.1",
-  "description": "Next of Kin / Associated Parties",
+  "description": "Next of kin / associated parties",
   "fields": [
     { "index": 1, "swiftName": "setID", "name": "Set ID - NK1", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "name", "name": "Name", "dataType": "XPN", "length": "48", "optionality": "O", "repeatability": "*" },

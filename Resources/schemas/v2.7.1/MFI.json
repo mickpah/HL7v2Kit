@@ -1,7 +1,7 @@
 {
   "segmentID": "MFI",
   "version": "2.7.1",
-  "description": "MFI",
+  "description": "Master File Identification",
   "fields": [
     { "index": 1, "swiftName": "masterFileIdentifier", "name": "Master File Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0175"] },
     { "index": 2, "swiftName": "masterFileApplicationIdentifier", "name": "Master File Application Identifier", "dataType": "HD", "optionality": "O", "repeatability": "*", "tables": ["0361"] },

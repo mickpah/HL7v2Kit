@@ -1,7 +1,7 @@
 {
   "segmentID": "ARQ",
   "version": "2.8.2",
-  "description": "ARQ",
+  "description": "Appointment Request",
   "fields": [
     { "index": 1, "swiftName": "placerAppointmentId", "name": "Placer Appointment ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "fillerAppointmentId", "name": "Filler Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },

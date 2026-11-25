@@ -1,7 +1,7 @@
 {
   "segmentID": "RXV",
   "version": "2.8.2",
-  "description": "RXV",
+  "description": "Pharmacy/Treatment Infusion",
   "fields": [
     { "index": 1, "swiftName": "setIdRxv", "name": "Set ID - RXV", "dataType": "SI", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "bolusType", "name": "Bolus Type", "dataType": "ID", "length": "1..1", "table": "0917", "optionality": "R", "repeatability": "1", "tables": ["0917"], "tableOpen": true, "tableOpenCitation": "v2.8.2 Chapter 4A section 4A.4.8.2 RXV-2 (p95): \"See HL7 Defined Table 0917 – Bolus Type in Chapter 2C, Code Tables, for example values.\"" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "OM7",
   "version": "2.6",
-  "description": "OM7",
+  "description": "Additional Basic Attributes",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "1" },

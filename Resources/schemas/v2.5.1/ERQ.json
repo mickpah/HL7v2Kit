@@ -1,7 +1,7 @@
 {
   "segmentID": "ERQ",
   "version": "2.5.1",
-  "description": "Event Replay Query",
+  "description": "Event replay query",
   "fields": [
     { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "eventIdentifier", "name": "Event Identifier", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" },

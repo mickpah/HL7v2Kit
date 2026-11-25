@@ -1,7 +1,7 @@
 {
   "segmentID": "QRF",
   "version": "2.4",
-  "description": "QRF",
+  "description": "Original Style Query Filter",
   "fields": [
     { "index": 1, "swiftName": "whereSubjectFilter", "name": "Where Subject Filter", "dataType": "ST", "length": "20", "optionality": "R", "repeatability": "*" },
     { "index": 2, "swiftName": "whenDataStartDateTime", "name": "When Data Start Date/Time", "dataType": "TS", "length": "26", "optionality": "B", "repeatability": "1" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "RGS",
   "version": "2.3",
-  "description": "RGS",
+  "description": "resource group",
   "fields": [
     { "index": 1, "swiftName": "setIdRgs", "name": "Set ID - RGS", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "length": "3", "optionality": "C", "repeatability": "1" },

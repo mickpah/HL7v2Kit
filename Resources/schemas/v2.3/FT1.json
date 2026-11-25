@@ -1,7 +1,7 @@
 {
   "segmentID": "FT1",
   "version": "2.3",
-  "description": "Financial Transaction",
+  "description": "Financial transaction",
   "fields": [
     { "index": 1, "swiftName": "setIdFt1", "name": "Set ID -FT1", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "transactionId", "name": "Transaction ID", "dataType": "ST", "length": "12", "optionality": "O", "repeatability": "1" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "CSR",
   "version": "2.3.1",
-  "description": "Clinical Study Registration",
+  "description": "Clinical study registration",
   "fields": [
     { "index": 1, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "alternateStudyId", "name": "Alternate Study ID", "dataType": "EI", "length": "60", "optionality": "O", "repeatability": "1" },

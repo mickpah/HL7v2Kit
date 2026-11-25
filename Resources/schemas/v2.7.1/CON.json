@@ -1,7 +1,7 @@
 {
   "segmentID": "CON",
   "version": "2.7.1",
-  "description": "CON",
+  "description": "Consent Segment",
   "fields": [
     { "index": 1, "swiftName": "setIdCon", "name": "Set ID - CON", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "consentType", "name": "Consent Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0496"] },

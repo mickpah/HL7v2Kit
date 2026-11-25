@@ -1,7 +1,7 @@
 {
   "segmentID": "UB2",
   "version": "2.3.1",
-  "description": "UB92 Data",
+  "description": "UB92 data",
   "fields": [
     { "index": 1, "swiftName": "setIdUb2", "name": "Set ID - UB2", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "coInsuranceDays9", "name": "Co-Insurance Days (9)", "dataType": "ST", "length": "3", "optionality": "O", "repeatability": "1" },

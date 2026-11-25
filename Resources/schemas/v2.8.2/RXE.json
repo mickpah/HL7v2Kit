@@ -1,7 +1,7 @@
 {
   "segmentID": "RXE",
   "version": "2.8.2",
-  "description": "RXE",
+  "description": "Pharmacy/Treatment Encoded Order",
   "fields": [
     { "index": 1, "swiftName": "quantityTiming", "name": "Quantity/Timing", "dataType": "", "optionality": "W", "repeatability": "1" },
     { "index": 2, "swiftName": "giveCode", "name": "Give Code", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0292", "0479"] },

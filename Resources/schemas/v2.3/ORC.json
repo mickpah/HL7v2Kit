@@ -1,7 +1,7 @@
 {
   "segmentID": "ORC",
   "version": "2.3",
-  "description": "Common Order",
+  "description": "Common order",
   "fields": [
     {
       "index": 1,

@@ -1,7 +1,7 @@
 {
   "segmentID": "PTH",
   "version": "2.3",
-  "description": "PTH",
+  "description": "pathway",
   "fields": [
     { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "length": "2", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 2, "swiftName": "pathwayId", "name": "Pathway ID", "dataType": "CE", "length": "80", "optionality": "R", "repeatability": "1" },

@@ -1,7 +1,7 @@
 {
   "segmentID": "LOC",
   "version": "2.9",
-  "description": "LOC",
+  "description": "Location Identification",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueLoc", "name": "Primary Key Value - LOC", "dataType": "PL", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "locationDescription", "name": "Location Description", "dataType": "ST", "length": "48#", "optionality": "O", "repeatability": "1" },

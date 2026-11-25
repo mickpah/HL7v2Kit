@@ -12,4 +12,11 @@ extension SignatureCompatibilityTests {
         let grammar: (String, Version) -> SegmentGrammar? = SegmentGrammarTable.grammar(_:version:)
         _ = (table, grammar)
     }
+
+    @Test("P01 R3: SegmentGrammar.name and the naming initialiser keep their signatures")
+    func segmentNameSignatures() {
+        let name: KeyPath<SegmentGrammar, String> = \.name
+        let make: (String, String, String, [FieldGrammar]) -> SegmentGrammar = SegmentGrammar.init(segmentID:name:version:fields:)
+        _ = (name, make)
+    }
 }

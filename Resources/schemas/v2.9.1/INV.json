@@ -1,7 +1,7 @@
 {
   "segmentID": "INV",
   "version": "2.9.1",
-  "description": "INV",
+  "description": "Inventory Detail",
   "fields": [
     { "index": 1, "swiftName": "substanceIdentifier", "name": "Substance Identifier", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0451"], "condition": "messageCode != INR OR triggerEvent != U14" },
     { "index": 2, "swiftName": "substanceStatus", "name": "Substance Status", "dataType": "CWE", "optionality": "C", "repeatability": "*", "tables": ["0383"], "condition": "messageCode != INR OR triggerEvent != U14", "tableOpen": true, "tableOpenCitation": "v2.9.1 Chapter 13 section 13.3.4.2 INV-2: \"Refer to HL7 Table 0383 – Substance Status in Chapter 2C, Code Tables, for suggested values.\"" },

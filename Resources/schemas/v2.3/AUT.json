@@ -1,7 +1,7 @@
 {
   "segmentID": "AUT",
   "version": "2.3",
-  "description": "AUT",
+  "description": "Authorization information",
   "fields": [
     { "index": 1, "swiftName": "authorizingPayorPlanId", "name": "Authorizing Payor, Plan ID", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "1", "tables": ["0072"] },
     { "index": 2, "swiftName": "authorizingPayorCompanyId", "name": "Authorizing Payor, Company ID", "dataType": "CE", "length": "200", "optionality": "R", "repeatability": "1", "tables": ["0285"] },

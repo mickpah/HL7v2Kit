@@ -1,7 +1,7 @@
 {
   "segmentID": "RQ1",
   "version": "2.3.1",
-  "description": "Requisition Detail-1",
+  "description": "Requisition detail-1",
   "fields": [
     { "index": 1, "swiftName": "anticipatedPrice", "name": "Anticipated Price", "dataType": "ST", "length": "10", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "manufacturerIdentifier", "name": "Manufacturer ID", "dataType": "CE", "length": "60", "optionality": "C", "repeatability": "1", "condition": "RQ1-4 empty OR RQ1-5 empty" },

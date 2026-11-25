@@ -223,6 +223,7 @@ public struct Validator: Sendable {
         let mergedCardinality = base.segmentCardinalityRules + profileCardinality
         return SegmentGrammar(
             segmentID: base.segmentID,
+            name: base.name,
             version: base.version,
             fields: mergedFields,
             segmentCardinalityRules: mergedCardinality

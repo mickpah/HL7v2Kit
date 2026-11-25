@@ -1,7 +1,7 @@
 {
   "segmentID": "QRD",
   "version": "2.4",
-  "description": "QRD",
+  "description": "Original-Style Query Definition",
   "fields": [
     { "index": 1, "swiftName": "queryDateTime", "name": "Query Date/Time", "dataType": "TS", "length": "26", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "queryFormatCode", "name": "Query Format Code", "dataType": "ID", "length": "1", "table": "0106", "optionality": "R", "repeatability": "1", "tables": ["0106"] },

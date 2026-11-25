@@ -1,7 +1,7 @@
 {
   "segmentID": "MSA",
   "version": "2.3",
-  "description": "Message Acknowledgment",
+  "description": "Message acknowledgment",
   "fields": [
     {
       "index": 1,

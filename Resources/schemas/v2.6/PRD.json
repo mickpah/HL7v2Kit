@@ -1,7 +1,7 @@
 {
   "segmentID": "PRD",
   "version": "2.6",
-  "description": "PRD",
+  "description": "Provider Data",
   "fields": [
     { "index": 1, "swiftName": "providerRole", "name": "Provider Role", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "*", "tables": ["0286"] },
     { "index": 2, "swiftName": "providerName", "name": "Provider Name", "dataType": "XPN", "length": "250", "optionality": "O", "repeatability": "*" },

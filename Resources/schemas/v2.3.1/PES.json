@@ -1,7 +1,7 @@
 {
   "segmentID": "PES",
   "version": "2.3.1",
-  "description": "Product Experience Sender",
+  "description": "Product experience sender",
   "fields": [
     { "index": 1, "swiftName": "senderOrganizationName", "name": "Sender Organization Name", "dataType": "XON", "length": "80", "optionality": "O", "repeatability": "*" },
     { "index": 2, "swiftName": "senderIndividualName", "name": "Sender Individual Name", "dataType": "XCN", "length": "60", "optionality": "O", "repeatability": "*" },

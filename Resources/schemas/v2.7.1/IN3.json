@@ -1,7 +1,7 @@
 {
   "segmentID": "IN3",
   "version": "2.7.1",
-  "description": "IN3",
+  "description": "Insurance Additional Information, Certification",
   "fields": [
     { "index": 1, "swiftName": "setIdIn3", "name": "Set ID - IN3", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "certificationNumber", "name": "Certification Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
