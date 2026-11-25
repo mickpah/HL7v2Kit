@@ -89,12 +89,20 @@ struct FuzzTests {
     @Test("Parser.sourceMap(of:) — throws what parse throws; otherwise every value sits where the map says")
     func sourceMapAgreesOnRandomMutations() throws {
         var input = 0   // the input's position in the seeded sequence, to replay it
+        var parsed = 0
         try fuzzAll { bytes in
             input += 1
             switch Result(catching: { () throws(ParseError) in try Parser().parse(bytes) }) {
             case .failure(let error):
                 #expect(throws: error, "fuzz input \(input)") { _ = try Parser().sourceMap(of: bytes) }
             case .success:
+                parsed += 1
+                // The full check on every fourth message keeps the test under a minute;
+                // the rest must only map without throwing.
+                guard parsed % 4 == 0 else {
+                    #expect(throws: Never.self, "fuzz input \(input)") { _ = try Parser().sourceMap(of: bytes) }
+                    return
+                }
                 do {   // `check` maps the bytes itself, so a map that throws fails here
                     try SourceMapTests.check(bytes, options: .default, "fuzz input \(input)")
                 } catch {

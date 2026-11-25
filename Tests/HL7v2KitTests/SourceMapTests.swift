@@ -265,4 +265,25 @@ struct SourceMapTests {
         // A subcomponent without a component names the field, as `range(of:)` reads it.
         #expect(WireLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, subcomponentIndex: 2).path?.description == "PID[1]-3")
     }
+
+    @Test("One parse: parseWithSourceMap gives parse's message and sourceMap(of:)'s map; scanning bytes changes no range")
+    func parseWithSourceMapAgrees() throws {
+        for url in try FixtureCorpus.validFixtureURLs() {
+            let data = try Data(contentsOf: url)
+            let parser = Parser()
+            let both = try parser.parseWithSourceMap(data)
+            #expect(both.message == (try parser.parse(data)), "\(url.lastPathComponent)")
+            #expect(both.sourceMap.segments == (try parser.sourceMap(of: data)).segments, "\(url.lastPathComponent)")
+            let characters = try SourceMap(mapping: data, encoding: both.message.encodingCharacters,
+                                           policy: parser.options.lineTerminator, scanBytes: false)
+            #expect(characters.segments == both.sourceMap.segments, "\(url.lastPathComponent)")
+            // After a byte-order mark every range is three bytes on, by either route.
+            let marked = Data([0xEF, 0xBB, 0xBF]) + data
+            let scanned = try parser.sourceMap(of: marked).segments
+            #expect(scanned.first?.range.lowerBound == 3, "\(url.lastPathComponent)")
+            #expect(scanned == (try SourceMap(mapping: marked, encoding: both.message.encodingCharacters,
+                                              policy: parser.options.lineTerminator, scanBytes: false)).segments,
+                    "\(url.lastPathComponent) after a byte-order mark")
+        }
+    }
 }

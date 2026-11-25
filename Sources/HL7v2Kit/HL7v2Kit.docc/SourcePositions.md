@@ -4,16 +4,19 @@ Where in the input each parsed value sits, so an issue can be shown in the text 
 
 ## Overview
 
-``Parser/sourceMap(of:)`` returns a ``SourceMap``: the byte range in the input of every segment, field, repetition, component and subcomponent ``Parser/parse(_:)-(Data)`` produces from it, and it throws what `parse(_:)` throws. A ``WireLocation`` names a place. ``SourceMap/range(of:)`` gives its bytes, or nil for a place the parse did not produce, such as a required field the message leaves out.
+``Parser/sourceMap(of:)`` returns a ``SourceMap``: the byte range in the input of every segment, field, repetition, component and subcomponent ``Parser/parse(_:)-(Data)`` produces from it, and it throws what `parse(_:)` throws. A ``WireLocation`` names a place. ``SourceMap/range(of:)`` gives its bytes, or nil for a place the parse did not produce. An empty field between two separators has an empty range at its offset; a field numbered beyond the line's last field has none, so an issue on a required field the line stops short of selects the segment instead. ``Parser/parseWithSourceMap(_:)`` returns the message and its map from one parse.
 
 ```swift
 let parser = Parser()
 let data = Parser.wire(fromCarried: pasted)             // text a person pasted, as bytes
-let message = try parser.parse(data)
-let map = try parser.sourceMap(of: data)
-if let issue = Validator().validate(message).issues.first,
-   let bytes = map.range(of: WireLocation(issue.location)) {
-    let selection = NSRange(map.utf16Range(bytes))      // in map.text, for a text view
+let (message, map) = try parser.parseWithSourceMap(data)
+if let issue = Validator().validate(message).issues.first {
+    let place = WireLocation(issue.location)
+    // A field the line stops short of has no bytes: select its segment.
+    let segment = WireLocation(segmentID: place.segmentID, segmentIndex: place.segmentIndex)
+    if let bytes = map.range(of: place) ?? map.range(of: segment) {
+        let selection = NSRange(map.utf16Range(bytes))  // in map.text, for a text view
+    }
 }
 ```
 
@@ -35,4 +38,4 @@ MSH-1 is the line's fourth character, the field separator, and MSH-2 the encodin
 
 ## Cost
 
-``Parser/sourceMap(of:)`` runs the parse itself, then decodes and tokenises the data again to build the map, and keeps nothing between calls: after a `parse(_:)` of the same data, it decodes and tokenises the data twice more. A caller that never asks for positions pays nothing. Make both calls on the same ``Parser`` value, so both read the input under the same options.
+``Parser/sourceMap(of:)`` runs the parse itself, then decodes and tokenises the data again to build the map, and keeps nothing between calls. A caller that wants the message as well calls ``Parser/parseWithSourceMap(_:)``, which parses once; `parse(_:)` followed by `sourceMap(of:)` parses twice. A caller that never asks for positions pays nothing.

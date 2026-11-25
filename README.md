@@ -70,7 +70,8 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
 - **Pasted text:** `Parser.wire(fromCarried:)` turns text with LF or CRLF line endings, a
   byte-order mark, blank lines or an MLLP frame into wire form.
 - **Source positions:** `Parser.sourceMap(of:)` gives the byte range in the input of every value
-  a parse produces, so an issue's location can be shown in the text it came from, and
+  a parse produces, so an issue's location can be shown in the text it came from
+  (`Parser.parseWithSourceMap(_:)` returns the message with it), and
   `SourceMap.utf16Range(_:)` converts a range for a text view
   ([Source Positions](Sources/HL7v2Kit/HL7v2Kit.docc/SourcePositions.md)).
 - **Cancellation:** `Validator.validate(_:isCancelled:)` and the `BatchValidator` equivalent

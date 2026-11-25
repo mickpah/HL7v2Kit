@@ -19,7 +19,7 @@ public struct SourceMap: Sendable {
 
     // A value's byte range and the values it splits into: a segment's fields, a field's
     // repetitions, a repetition's components, a component's subcomponents.
-    struct Node: Sendable {
+    struct Node: Sendable, Equatable {
         let range: Range<Int>
         let children: [Node]
     }
@@ -138,6 +138,23 @@ public struct SourceMap: Sendable {
         }
     }
 
+    /// The same tree as `nodes(in:at:splits:width:)` gives below a field, for ASCII text split at
+    /// ASCII delimiters: there a character is a byte, so the bytes are scanned. `range` is in
+    /// `bytes`; a node's range is `shift` further on, in the input.
+    static func nodes(in bytes: [UInt8], _ range: Range<Int>, shift: Int, delimiters: ArraySlice<UInt8>) -> [Node] {
+        guard let delimiter = delimiters.first else { return [] }
+        var nodes: [Node] = []
+        var start = range.lowerBound
+        func close(at end: Int) {
+            let children = Self.nodes(in: bytes, start..<end, shift: shift, delimiters: delimiters.dropFirst())
+            nodes.append(Node(range: (start + shift)..<(end + shift), children: children))
+            start = end + 1
+        }
+        for i in range where bytes[i] == delimiter { close(at: i) }
+        close(at: range.upperBound)
+        return nodes
+    }
+
     /// A value the parse keeps whole (MSH-1, MSH-2): one repetition, component and subcomponent,
     /// each with the value's range.
     static func literal(_ range: Range<Int>, depth: Int = 3) -> Node {
@@ -149,21 +166,41 @@ extension Parser {
     /// The byte range in `data` of every segment, field, repetition, component and subcomponent
     /// ``parse(_:)-(Data)`` produces from it.
     ///
-    /// It parses `data` first, so it throws what `parse(_:)` throws for the same input and options.
-    /// Offsets count the bytes of `data` as given: one per character in ASCII and ISO 8859-1, a
-    /// character's UTF-8 length under UTF-8. A segment's range is its line without the terminator.
+    /// It parses `data` first, so it throws what `parse(_:)` throws for the same input and options;
+    /// ``parseWithSourceMap(_:)`` returns that message as well. Offsets count the bytes of `data`
+    /// as given: one per character in ASCII and ISO 8859-1, a character's UTF-8 length under
+    /// UTF-8. A segment's range is its line without the terminator.
     public func sourceMap(of data: Data) throws(ParseError) -> SourceMap {
-        try SourceMap(mapping: data, encoding: parse(data).encodingCharacters, policy: options.lineTerminator)
+        try parseWithSourceMap(data).sourceMap
+    }
+
+    /// The message ``parse(_:)-(Data)`` produces from `data` and its ``sourceMap(of:)``, from one
+    /// parse. Throws what `parse(_:)` throws.
+    public func parseWithSourceMap(_ data: Data) throws(ParseError) -> (message: Message, sourceMap: SourceMap) {
+        let message = try parse(data)
+        let map = try SourceMap(mapping: data, encoding: message.encodingCharacters, policy: options.lineTerminator)
+        return (message, map)
     }
 }
 
 extension SourceMap {
     /// The map of `data`, which `parse` has accepted with `encoding` under `policy`.
-    init(mapping data: Data, encoding: EncodingCharacters, policy: LineTerminatorPolicy) throws(ParseError) {
+    /// `scanBytes: false` keeps to the character splits where bytes could be scanned, for the
+    /// test that the two agree.
+    init(mapping data: Data, encoding: EncodingCharacters, policy: LineTerminatorPolicy,
+         scanBytes: Bool = true) throws(ParseError) {
         var (text, characterEncoding) = try Parser.decodeWirePayload(data)
         // A string Foundation bridged would make each `utf16Range` call walk the text.
         text.makeContiguousUTF8()
-        let width: (Substring) -> Int = characterEncoding == .utf8 ? { $0.utf8.count } : { $0.unicodeScalars.count }
+        // In ASCII text a character is a byte, in a line too: no line holds a "\r\n". With ASCII
+        // delimiters the values below a field are then split by scanning bytes, about twice as
+        // fast as the parser's character splits, which everything else keeps.
+        let ascii = text.utf8.allSatisfy { $0 < 0x80 }
+        let delimiters = [encoding.repetitionSeparator, encoding.componentSeparator, encoding.subcomponentSeparator]
+            .compactMap(\.asciiValue)
+        let bytes = scanBytes && ascii && delimiters.count == 3 ? Array(text.utf8) : nil
+        let width: (Substring) -> Int = characterEncoding == .utf8 || ascii
+            ? { $0.utf8.count } : { $0.unicodeScalars.count }
         let below: [(Substring) -> [Substring]] = [
             { Parser.repetitionSlices(of: $0, encoding: encoding) },
             { Parser.componentSlices(of: $0, encoding: encoding) },
@@ -185,11 +222,14 @@ extension SourceMap {
                 continue
             }
             let fieldRanges = SourceMap.ranges(of: slices.fields, in: line, at: range.lowerBound, width: width)
+            let shift = textBytes.lowerBound
             let fields = zip(slices.fields, fieldRanges).enumerated().map { f, pair in
-                separatorSegment && f < 2
-                    ? SourceMap.literal(pair.1)
-                    : SourceMap.Node(range: pair.1, children: SourceMap.nodes(in: pair.0, at: pair.1.lowerBound,
-                                                                               splits: below[...], width: width))
+                if separatorSegment && f < 2 { return SourceMap.literal(pair.1) }
+                let children = bytes.map {
+                    SourceMap.nodes(in: $0, (pair.1.lowerBound - shift)..<(pair.1.upperBound - shift), shift: shift,
+                                    delimiters: delimiters[...])
+                } ?? SourceMap.nodes(in: pair.0, at: pair.1.lowerBound, splits: below[...], width: width)
+                return SourceMap.Node(range: pair.1, children: children)
             }
             let id = String(slices.id)
             segmentsByID[id, default: []].append(segments.count)
