@@ -1,4 +1,4 @@
-// swift-tools-version: 6.4
+// swift-tools-version: 6.3
 // HL7v2Kit — HL7 v2.x parser, builder, and validator for Swift.
 // Apache 2.0 licensed. See LICENSE.
 import PackageDescription

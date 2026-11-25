@@ -33,9 +33,10 @@ jobs:
           xcodebuild -version
           swift --version
 
-      # Package.swift declares swift-tools-version 6.4, so an older toolchain fails here, by name.
-      - name: Require Swift 6.4 or later
-        run: bash scripts/check-swift-version.sh 6.4
+      # Package.swift declares swift-tools-version 6.3, so an older toolchain fails here, by name.
+      # The runners carry Swift 6.4; 6.3 itself is not tested.
+      - name: Require Swift 6.3 or later
+        run: bash scripts/check-swift-version.sh 6.3
 
       - name: Build
         run: swift build -v

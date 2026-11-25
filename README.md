@@ -11,7 +11,7 @@ is set out in [SUPPORT.md](SUPPORT.md).
 
 ## Requirements
 
-- Swift 6.4 or later (Xcode 27.1).
+- Swift 6.3 or later. CI builds and tests with Swift 6.4 (Xcode 27.1); 6.3 itself is not tested.
 - macOS 12 or later. Linux is not supported.
 
 ## Install

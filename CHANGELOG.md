@@ -11,8 +11,9 @@ The entries are condensed; the git history carries the detail.
 ### Changed
 
 - **Not additive: Linux is no longer supported and the Swift floor rises.** CI builds and tests on
-  macOS only, and `Package.swift` declares swift-tools-version 6.4 (Xcode 27.1); a consumer on an
-  older toolchain, or on Linux, stays on 3.33.0. No API change. (#45)
+  macOS only, with Swift 6.4 (Xcode 27.1), and `Package.swift` declares swift-tools-version 6.3,
+  which CI does not test; a consumer on an older toolchain, or on Linux, stays on 3.33.0. No API
+  change. (#45)
 
 ## [3.33.0]
 
