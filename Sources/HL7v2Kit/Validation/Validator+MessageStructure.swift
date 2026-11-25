@@ -132,7 +132,7 @@ extension Validator {
                 return (nil, [ValidationIssue(
                     severity: severity,
                     code: .messageStructureMismatch(declared: declared, trigger: trigger),
-                    location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9, componentIndex: 3),
+                    location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9, componentIndex: 3).repetition(1),
                     message: "MSH-9.3 \(declared) is not printed for \(trigger) in \(ver) (it is printed for "
                         + "\(entry.triggers.joined(separator: ", ")) and not modelled); segment order and groups were not checked (ADR-019)."
                 )])
@@ -163,7 +163,7 @@ extension Validator {
                 return (nil, [ValidationIssue(
                     severity: severity,
                     code: .messageStructureMismatch(declared: declared, trigger: trigger),
-                    location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9, componentIndex: 3),
+                    location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9, componentIndex: 3).repetition(1),
                     message: "MSH-9.3 \(declared) is not an abstract message structure of \(ver), whose structures are all modelled\(hint); segment order and groups were not checked (ADR-019 lookup rule 1)."
                 )])
             }
@@ -188,7 +188,7 @@ extension Validator {
             return (nil, [ValidationIssue(
                 severity: severity,
                 code: .messageStructureMismatch(declared: declared, trigger: trigger),
-                location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9, componentIndex: 3),
+                location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9, componentIndex: 3).repetition(1),
                 message: "MSH-9.3 \(declared) is not printed for \(trigger) in v\(message.version.rawValue) (\(structure.citation)); segment order and groups were not checked (ADR-019)."
             )])
         }

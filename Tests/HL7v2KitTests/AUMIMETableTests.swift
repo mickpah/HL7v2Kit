@@ -41,7 +41,7 @@ struct AUMIMETableTests {
         #expect(try tableFindings(pdf, locale: .auLocalisation).isEmpty)
         let international = try tableFindings(pdf, locale: .international)
         #expect(international.map(\.code) == [.valueNotInTable(table: "0191"), .valueNotInTable(table: "0291")])
-        #expect(international.map(\.location.pathDescription) == ["OBX[1]-5.2", "OBX[1]-5.3"])
+        #expect(international.map(\.location.pathDescription) == ["OBX[1]-5~1.2", "OBX[1]-5~1.3"])
     }
 
     @Test("The AU Table 0191 carries every printed row, the IANA MIME types among them")

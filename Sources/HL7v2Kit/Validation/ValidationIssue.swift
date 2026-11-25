@@ -28,15 +28,19 @@ public struct IssueLocation: Sendable, Equatable, Hashable {
     public let segmentIndex: Int
     /// 1-based v2 field index, or nil for a segment-level issue.
     public let fieldIndex: Int?
+    /// 1-based repetition of the field, set when the issue concerns one repetition (a value
+    /// outside its table, a missing component, a length or format fault) and nil when it
+    /// concerns the field as a whole (a required field that is absent, too many repetitions).
+    public let repetitionIndex: Int?
     /// 1-based component index within a composite-typed field, or nil for
     /// a field-level issue. Set by ``IssueCode/requiredComponentMissing``
     /// when a composite is populated but a required sub-component is
     /// missing — e.g. PID-3 (CX) populated with no CX-1 ID number
-    /// renders as `"PID[1]-3.1"`. v0.2-V2.
+    /// in its first repetition renders as `"PID[1]-3~1.1"`. v0.2-V2.
     public let componentIndex: Int?
     /// 1-based subcomponent index within a component that is itself a
     /// composite, or nil. Set by ``IssueCode/valueNotInTable(table:)`` when
-    /// the offending value is one level further down — `PID[1]-3.4.3` is the
+    /// the offending value is one level further down — `PID[1]-3~1.4.3` is the
     /// universal ID type (`HD.3`) of the assigning authority in `CX.4`. M11.
     public let subcomponentIndex: Int?
 
@@ -50,14 +54,41 @@ public struct IssueLocation: Sendable, Equatable, Hashable {
         self.segmentID = segmentID
         self.segmentIndex = segmentIndex
         self.fieldIndex = fieldIndex
+        self.repetitionIndex = nil
         self.componentIndex = componentIndex
         self.subcomponentIndex = subcomponentIndex
     }
 
-    /// Human-readable v2 path (e.g. `"PID[1]-3"`, `"PID[1]-5.1"`, `"ZAU[1]"`).
+    /// A location that names the repetition of the field.
+    public init(
+        segmentID: String,
+        segmentIndex: Int,
+        fieldIndex: Int?,
+        repetitionIndex: Int?,
+        componentIndex: Int?,
+        subcomponentIndex: Int?
+    ) {
+        self.segmentID = segmentID
+        self.segmentIndex = segmentIndex
+        self.fieldIndex = fieldIndex
+        self.repetitionIndex = repetitionIndex
+        self.componentIndex = componentIndex
+        self.subcomponentIndex = subcomponentIndex
+    }
+
+    /// This location, naming repetition `index` (1-based) of its field.
+    func repetition(_ index: Int) -> IssueLocation {
+        IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
+                      repetitionIndex: index, componentIndex: componentIndex,
+                      subcomponentIndex: subcomponentIndex)
+    }
+
+    /// Human-readable v2 path in the package's path form (e.g. `"PID[1]-3"`, `"PID[1]-3~2.1"`,
+    /// `"ZAU[1]"`); `~N` names the repetition when the issue concerns one.
     public var pathDescription: String {
         var s = "\(segmentID)[\(segmentIndex)]"
         if let fieldIndex { s += "-\(fieldIndex)" }
+        if fieldIndex != nil, let repetitionIndex { s += "~\(repetitionIndex)" }
         if let componentIndex { s += ".\(componentIndex)" }
         if componentIndex != nil, let subcomponentIndex { s += ".\(subcomponentIndex)" }
         return s

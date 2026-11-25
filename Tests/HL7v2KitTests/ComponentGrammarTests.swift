@@ -59,7 +59,7 @@ struct ComponentGrammarTests {
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 3 })
         #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "PID[1]-3.1")
+        #expect(issue.location.pathDescription == "PID[1]-3~1.1")
         #expect(issue.message.contains("ID Number"))
         #expect(issue.message.contains("CX"))
     }
@@ -121,7 +121,7 @@ struct ComponentGrammarTests {
         let wire = TestWires.adt("PID|1||^^^HOSP^MR||Smith^John^A||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator(options: .strict).validate(message)
-        #expect(report.errors.contains { $0.code == .requiredComponentMissing && $0.location.pathDescription == "PID[1]-3.1" })
+        #expect(report.errors.contains { $0.code == .requiredComponentMissing && $0.location.pathDescription == "PID[1]-3~1.1" })
     }
 
     // MARK: - Composites with empty requiredComponents (OR-rule design choice)
@@ -233,7 +233,7 @@ struct ComponentGrammarTests {
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 9 })
         #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "MSH[1]-9.1")
+        #expect(issue.location.pathDescription == "MSH[1]-9~1.1")
         #expect(issue.message.contains("Message Code"))
         #expect(issue.message.contains("MSG"))
     }
@@ -288,7 +288,7 @@ struct ComponentGrammarTests {
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 30 })
         #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "ORC[1]-30.1")
+        #expect(issue.location.pathDescription == "ORC[1]-30~1.1")
         #expect(issue.message.contains("Identifier"))
         #expect(issue.message.contains("CNE"))
     }
@@ -377,6 +377,6 @@ struct ComponentGrammarTests {
         let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|^T|^AUS\r"
         let v282 = wire.replacingOccurrences(of: "|^T|^AUS", with: "|^T|2.8.2")
         let report = Validator().validate(try Parser().parse(v282 + "PID|1||123^^^HOSP^MR||Smith^John\r"))
-        #expect(report.errors.contains { $0.code == .requiredComponentMissing && $0.location.pathDescription == "MSH[1]-11.1" })
+        #expect(report.errors.contains { $0.code == .requiredComponentMissing && $0.location.pathDescription == "MSH[1]-11~1.1" })
     }
 }

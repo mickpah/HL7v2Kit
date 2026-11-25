@@ -34,8 +34,8 @@ struct ComponentDeprecationValidationTests {
             + "PV1|1|I|\(pv1)\r"
     }
 
-    func at(_ segment: String, _ field: Int, _ component: Int) -> IssueLocation {
-        IssueLocation(segmentID: segment, segmentIndex: 1, fieldIndex: field,
+    func at(_ segment: String, _ field: Int, _ component: Int, repetition: Int = 1) -> IssueLocation {
+        IssueLocation(segmentID: segment, segmentIndex: 1, fieldIndex: field, repetitionIndex: repetition,
                       componentIndex: component, subcomponentIndex: nil)
     }
 
@@ -61,7 +61,7 @@ struct ComponentDeprecationValidationTests {
     func secondRepetition() throws {
         let found = try componentIssues(adt("2.8.2", pv1: "||||123^Smith~456^Jones^^^^^MD"))
         try #require(found.count == 1)
-        #expect(found[0].location == at("PV1", 7, 7))
+        #expect(found[0].location == at("PV1", 7, 7, repetition: 2))
         #expect(found[0].message.contains("repetition 2"))
     }
 
@@ -129,9 +129,9 @@ struct ComponentDeprecationValidationTests {
         try #require(found.count == 1)
         #expect(found[0].code == .componentNotSupported(optionality: "B"))
         #expect(found[0].severity == .warning)
-        #expect(found[0].location == IssueLocation(segmentID: "FT1", segmentIndex: 1, fieldIndex: 4,
+        #expect(found[0].location == IssueLocation(segmentID: "FT1", segmentIndex: 1, fieldIndex: 4, repetitionIndex: 1,
                                                    componentIndex: 1, subcomponentIndex: 2))
-        #expect(found[0].message.contains("Subcomponent FT1[1]-4.1.2"))
+        #expect(found[0].message.contains("Subcomponent FT1[1]-4~1.1.2"))
         #expect(found[0].message.contains("component 1 ('"))
         #expect(found[0].message.contains("repetition 1"))
     }
@@ -141,7 +141,7 @@ struct ComponentDeprecationValidationTests {
         let wire = adt("2.5.1", pid: "Doe^John||||||1 Main St^^City^^^^^^^^^^20200101&Y")
         let found = try componentIssues(wire)
         try #require(found.count == 1)
-        #expect(found[0].location == IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 11,
+        #expect(found[0].location == IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 11, repetitionIndex: 1,
                                                    componentIndex: 13, subcomponentIndex: 2))
         for address in ["1 Main St^^City^^^^^^^^^^20200101", "1 Main St^^City^^^^^^^^^^20200101&"] {
             #expect(try componentIssues(adt("2.5.1", pid: "Doe^John||||||\(address)")).isEmpty, "\(address)")

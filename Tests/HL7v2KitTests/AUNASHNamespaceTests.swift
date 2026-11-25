@@ -34,14 +34,14 @@ struct AUNASHNamespaceTests {
     func sendingFacilityWithoutNameFires() throws {
         let issues = try findings(sending: "^\(oid)^ISO", nash: true)
         #expect(issues.count == 1, "got \(issues.map(\.message))")
-        #expect(issues.first?.location == IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 4, componentIndex: 1))
+        #expect(issues.first?.location == IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 4, repetitionIndex: 1, componentIndex: 1, subcomponentIndex: nil))
     }
 
     @Test("Asserted: MSH-6 without the organisation name fires at MSH-6.1")
     func receivingFacilityWithoutNameFires() throws {
         let issues = try findings(sending: "ACME Pathology^\(oid)^ISO", receiving: "^\(oid)^ISO", nash: true)
         #expect(issues.count == 1, "got \(issues.map(\.message))")
-        #expect(issues.first?.location == IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 6, componentIndex: 1))
+        #expect(issues.first?.location == IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 6, repetitionIndex: 1, componentIndex: 1, subcomponentIndex: nil))
     }
 
     @Test("Asserted: the ADRM's own shape is silent")

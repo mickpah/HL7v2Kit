@@ -268,11 +268,12 @@ extension Validator {
                 let shape = limit == 1 ? "after its first value \(options.quoted(first))"
                     : limit == 2 ? "beyond the two components a v\(grammarVersion.rawValue) \(dataType) carries"
                     : "in subcomponents a \(dataType) value does not have"
+                let at = location.repetition(offset + 1)
                 issues.append(ValidationIssue(
                     severity: severity,
                     code: .extraComponentsInPrimitiveField,
-                    location: location,
-                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), a primitive data type, but carries \(quoted(extras)) \(shape); a recipient ignores parts it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and a separator inside a value is escaped as \\S\\ or \\T\\"
+                    location: at,
+                    message: "Field \(at.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), a primitive data type, but carries \(quoted(extras)) \(shape); a recipient ignores parts it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and a separator inside a value is escaped as \\S\\ or \\T\\"
                 ))
             }
             return
@@ -291,11 +292,12 @@ extension Validator {
             let beyond = !closed ? [] : Self.extraParts(repetition.components.map { $0.subcomponents.map(\.value) },
                                                         limit: composite.components.count)
             if !beyond.isEmpty {
+                let at = location.repetition(offset + 1)
                 issues.append(ValidationIssue(
                     severity: severity,
                     code: .extraComponentsInCompositeField,
-                    location: location,
-                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), \(printedBy) \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \(options.quoted($0.value))" }.joined(separator: ", ")); a recipient ignores components it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and \(Self.componentExtensionRule(grammarVersion))"
+                    location: at,
+                    message: "Field \(at.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), \(printedBy) \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \(options.quoted($0.value))" }.joined(separator: ", ")); a recipient ignores components it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and \(Self.componentExtensionRule(grammarVersion))"
                 ))
             }
             for entry in composite.components where repetition.components.count >= entry.index {
@@ -306,6 +308,7 @@ extension Validator {
                     guard !over.isEmpty else { continue }
                     let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                            fieldIndex: location.fieldIndex, componentIndex: entry.index)
+                        .repetition(offset + 1)
                     issues.append(ValidationIssue(
                         severity: severity,
                         code: .extraComponentsInCompositeField,
@@ -325,6 +328,7 @@ extension Validator {
                 guard !extras.isEmpty else { continue }
                 let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                        fieldIndex: location.fieldIndex, componentIndex: entry.index)
+                    .repetition(offset + 1)
                 let first = component.subcomponents.first?.value ?? ""
                 let shape = limit == 1 ? "after its first value \(options.quoted(first))"
                     : "beyond the \(limit) subcomponents this component allows"

@@ -60,7 +60,8 @@ struct EscapeSequenceCheckTests {
         #expect(issues.count == 1)
         let issue = try #require(issues.first)
         #expect(issue.severity == .warning)
-        #expect(issue.location == IssueLocation(segmentID: "NTE", segmentIndex: 1, fieldIndex: 3))
+        #expect(issue.location == IssueLocation(segmentID: "NTE", segmentIndex: 1, fieldIndex: 3, repetitionIndex: 1,
+                                                componentIndex: nil, subcomponentIndex: nil))
         #expect(issue.message == "Escape sequence \"\(row.sequence)\" is not defined by HL7 v2.5.1 (section 2.7)")
     }
 
@@ -136,7 +137,7 @@ struct EscapeSequenceCheckTests {
             #"ZAU|\Q\"#,
         ])
         #expect(issues.map(\.location.pathDescription)
-                == ["PID[1]-3.4.2", "PID[1]-5.2", "NTE[2]-3", "NTE[2]-3", "ZAU[1]-1"])
+                == ["PID[1]-3~1.4.2", "PID[1]-5~1.2", "NTE[2]-3~1", "NTE[2]-3~2", "ZAU[1]-1~1"])
     }
 
     @Test("A value written in code: the encoder escapes an undefined run, but copies \\P\\ on every version",
@@ -156,6 +157,6 @@ struct EscapeSequenceCheckTests {
     @Test("A BHS or FHS line in a message: fields 1 and 2 are skipped, the rest are read")
     func envelopeHeadersInAMessage() throws {
         let issues = try Self.issues([#"BHS|^~\&|APP|\Q\"#, #"FHS|^~\&|APP"#])
-        #expect(issues.map(\.location.pathDescription) == ["BHS[1]-4"])
+        #expect(issues.map(\.location.pathDescription) == ["BHS[1]-4~1"])
     }
 }

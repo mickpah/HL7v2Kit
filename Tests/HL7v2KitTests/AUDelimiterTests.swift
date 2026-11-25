@@ -44,7 +44,7 @@ struct AUDelimiterTests {
         let issues = try messageFindings(
             "MSH|#~\\&|GP|CLINIC|SPEC|HOSP|20240101||REF#I12#REF_I12|MSG|P|2.4\rPID|1||X###F#MR\r")
         #expect(issues.count == 1, "got \(issues.map(\.message))")
-        #expect(issues.first?.location == IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 2, componentIndex: 1))
+        #expect(issues.first?.location == IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 2, repetitionIndex: 1, componentIndex: 1, subcomponentIndex: nil))
         #expect(rule(issues.first)?.hasPrefix("HL7au:000024.2 ") == true)
     }
 

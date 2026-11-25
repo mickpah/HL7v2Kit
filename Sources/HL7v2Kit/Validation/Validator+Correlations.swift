@@ -7,7 +7,7 @@ extension Validator {
     /// peer is the segment group scoping associates (``Message`` `associatedSegment`, as the
     /// `STF absent` condition reads it); no peer, an empty peer field, or a part this repetition
     /// leaves empty compares nothing. Reported as ``IssueCode/correlatedValueMismatch`` at the
-    /// field, at ``ValidationOptions/correlationSeverity``.
+    /// field's repetition, at ``ValidationOptions/correlationSeverity``.
     func checkCorrelations(_ grammar: FieldGrammar, field: Field, segmentIndex: Int, message: Message,
                            location: IssueLocation, severity: IssueSeverity, issues: inout [ValidationIssue]) {
         for correlation in grammar.correlations {
@@ -24,11 +24,12 @@ extension Validator {
                 let differing = valued.first { Self.correlationValue(first, $0.1) != $0.2 } ?? valued[0]
                 let theirs = Self.correlationValue(first, differing.1)?.joined(separator: "&") ?? ""
                 let own = "\(location.segmentID)-\(location.fieldIndex ?? 0).\(differing.0)"
+                let at = location.repetition(offset + 1)
                 issues.append(ValidationIssue(
                     severity: severity,
                     code: .correlatedValueMismatch,
-                    location: location,
-                    message: "\(location.pathDescription) repetition \(offset + 1): its \(correlation.part) matches no \(correlation.segment)-\(correlation.field) repetition (\(own) \(options.quoted(differing.2.joined(separator: "&"))) against \(correlation.segment)-\(correlation.field).\(differing.1) \(options.quoted(theirs)))."
+                    location: at,
+                    message: "\(at.pathDescription) repetition \(offset + 1): its \(correlation.part) matches no \(correlation.segment)-\(correlation.field) repetition (\(own) \(options.quoted(differing.2.joined(separator: "&"))) against \(correlation.segment)-\(correlation.field).\(differing.1) \(options.quoted(theirs)))."
                 ))
             }
         }

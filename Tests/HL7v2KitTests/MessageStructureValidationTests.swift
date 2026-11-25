@@ -183,7 +183,7 @@ struct MessageStructureValidationTests {
     func declaredForAnotherTrigger() throws {
         let issues = try structureIssues(Self.wire("ADT^A02^ADT_A01", [Self.pid]), severity: .warning)
         #expect(issues.map(\.code) == [.messageStructureMismatch(declared: "ADT_A01", trigger: "ADT^A02")])
-        #expect(issues.first?.location.pathDescription == "MSH[1]-9.3")
+        #expect(issues.first?.location.pathDescription == "MSH[1]-9~1.3")
         #expect(issues.first?.severity == .warning)
     }
 

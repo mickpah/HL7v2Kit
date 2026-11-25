@@ -34,7 +34,7 @@ struct BatchEnvelopeFieldTests {
     func overLongBatchName() throws {
         let issues = try Self.batchIssues(["BHS|^~\\&|APP||||||SYN-BATCH-NAME-LONGER-THAN-20", Self.msh("F1"), "BTS|1"])
         let length = issues.filter { $0.code.number == IssueCode.fieldLengthOutOfRange(length: "", actual: 0).number }
-        #expect(length.map(\.location.pathDescription) == ["BHS[1]-9"])
+        #expect(length.map(\.location.pathDescription) == ["BHS[1]-9~1"])
         #expect(length.first?.severity == .warning)
     }
 

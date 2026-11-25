@@ -33,10 +33,11 @@ extension Validator {
                               dataType: dataType, version: grammarVersion),
               let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
                                                 dataType: dataType, version: grammarVersion) else { return }
-        func report(_ code: String, _ state: String, component: Int, subcomponent: Int?, _ text: String) {
+        func report(_ code: String, _ state: String, component: Int, subcomponent: Int?, repetition: Int,
+                    _ text: String) {
             let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
-                                   fieldIndex: location.fieldIndex, componentIndex: component,
-                                   subcomponentIndex: subcomponent)
+                                   fieldIndex: location.fieldIndex, repetitionIndex: repetition,
+                                   componentIndex: component, subcomponentIndex: subcomponent)
             issues.append(ValidationIssue(
                 severity: .warning,
                 code: .componentNotSupported(optionality: code),
@@ -54,7 +55,7 @@ extension Validator {
                 for (offset, repetition) in repetitions
                 where repetition.components.count >= entry.index
                     && repetition.components[entry.index - 1].subcomponents.contains(where: { !$0.value.isEmpty }) {
-                    report(code, state, component: entry.index, subcomponent: nil,
+                    report(code, state, component: entry.index, subcomponent: nil, repetition: offset + 1,
                            "('\(entry.name)') repetition \(offset + 1)")
                 }
                 continue
@@ -67,6 +68,7 @@ extension Validator {
                     let parts = repetition.components[entry.index - 1].subcomponents
                     guard parts.count >= sub.index, !parts[sub.index - 1].value.isEmpty else { continue }
                     report(sub.optionalityCode, state, component: entry.index, subcomponent: sub.index,
+                           repetition: offset + 1,
                            "('\(sub.name)') of component \(entry.index) ('\(entry.name)') repetition \(offset + 1)")
                 }
             }

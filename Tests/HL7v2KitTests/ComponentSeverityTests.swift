@@ -27,7 +27,7 @@ struct ComponentSeverityTests {
         options.requiredComponentSeverity = .warning
         let r = try report(options)
         let missing = r.issues.filter { $0.code == .requiredComponentMissing }
-        #expect(missing.map(\.location.pathDescription) == ["MSH[1]-9.3", "PID[1]-3.1"])
+        #expect(missing.map(\.location.pathDescription) == ["MSH[1]-9~1.3", "PID[1]-3~1.1"])
         #expect(missing.allSatisfy { $0.severity == .warning })
         #expect(r.isValid, "no error-severity issue remains")
     }

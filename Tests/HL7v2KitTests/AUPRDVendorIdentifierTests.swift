@@ -39,7 +39,7 @@ struct AUPRDVendorIdentifierTests {
     func vendorWithoutVDIFires() throws {
         let issues = try findings(identifiers: "JD455600041^Medical-Objects^UPIN")
         #expect(issues.count == 1, "got \(issues.map(\.message))")
-        #expect(issues.first?.location == IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, componentIndex: 3))
+        #expect(issues.first?.location == IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, repetitionIndex: 1, componentIndex: 3, subcomponentIndex: nil))
     }
 
     @Test("Each repetition pairs its own authority and qualifier")
@@ -61,7 +61,7 @@ struct AUPRDVendorIdentifierTests {
     func ihiRequiresVDI() throws {
         #expect(HL7CodeTables.table0363 == ["AUSHIC", "AUSDVA", "AUSNATA", "AUSLINK", "AUSHICPR"])
         let issues = try findings(identifiers: "12345^IHI^NPI")
-        #expect(issues.map(\.location) == [IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, componentIndex: 3)])
+        #expect(issues.map(\.location) == [IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, repetitionIndex: 1, componentIndex: 3, subcomponentIndex: nil)])
         #expect(try findings(identifiers: "12345^IHI^VDI").isEmpty)
     }
 

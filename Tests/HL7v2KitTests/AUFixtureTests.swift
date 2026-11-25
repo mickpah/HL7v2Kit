@@ -96,7 +96,7 @@ struct AUFixtureTests {
         let rest = found.filter { !expectedAU(name, $0) }
         #expect(rest.isEmpty, "\(name):\n\(describe(rest))")
         if name == "au_ref_i12.hl7" {
-            #expect(found.filter { expectedAU(name, $0) }.map(\.location.pathDescription) == ["MSH[1]-12.3", "MSH[1]-12.3"])
+            #expect(found.filter { expectedAU(name, $0) }.map(\.location.pathDescription) == ["MSH[1]-12~1.3", "MSH[1]-12~1.3"])
         }
     }
 
@@ -123,7 +123,7 @@ struct AUFixtureTests {
     /// locale: the ADRM's PDF display form is in the ADRM's Tables 0191 and 0291
     /// (pp 167 to 170), not in v2.4's.
     static let internationalTableFindings: [String: [String]] = [
-        "au_oru_r01_pathology_pdf.hl7": ["error OBX[3]-5.2 0191", "error OBX[3]-5.3 0291"],
+        "au_oru_r01_pathology_pdf.hl7": ["error OBX[3]-5~1.2 0191", "error OBX[3]-5~1.3 0291"],
     ]
 
     @Test("Under the international locale each AU fixture draws only the v2.4 findings the ADRM varies",
@@ -159,25 +159,25 @@ struct AUFixtureTests {
     static let pairs: [RulePair] = [
         RulePair(family: "NASH transport", fixture: "au_oru_r01_radiology.hl7",
                  old: "SYNTH_IMAGING^\(h1)^ISO|SYNTH_CIS", new: "SYNTH_IMAGING^\(h1)^DNS|SYNTH_CIS",
-                 rule: "HL7au:00044.2.3", path: "MSH[1]-4.3"),
+                 rule: "HL7au:00044.2.3", path: "MSH[1]-4~1.3"),
         RulePair(family: "identifier components (CX)", fixture: "au_oru_r01_pathology.hl7",
                  old: "&ISO^MR||Synthetic^Alex", new: "&ISO^||Synthetic^Alex",
-                 rule: "HL7au:00044.1.3", path: "PID[1]-3.5"),
+                 rule: "HL7au:00044.1.3", path: "PID[1]-3~1.5"),
         RulePair(family: "display OBX", fixture: "au_oru_r01_pathology.hl7",
                  old: "OBX|3|ED|HTML", new: "OBX|3|FT|HTML",
-                 rule: "HL7au:000008.1.3", path: "OBX[3]-2.1"),
+                 rule: "HL7au:000008.1.3", path: "OBX[3]-2~1.1"),
         RulePair(family: "coding-system precedence", fixture: "au_oru_r01_pathology.hl7",
                  old: "OBX|1|NM|718-7^Haemoglobin^LN|", new: "OBX|1|NM|HB^Haemoglobin^L^718-7^Haemoglobin^LN|",
-                 rule: "HL7au:00044.4.4", path: "OBX[1]-3.6"),
+                 rule: "HL7au:00044.4.4", path: "OBX[1]-3~1.6"),
         RulePair(family: "separators (MSH-2 escape)", fixture: "au_oru_r01_pathology.hl7",
                  old: "MSH|^~\\&|", new: "MSH|^~#&|",
-                 rule: "HL7au:000024", path: "MSH[1]-2.1"),
+                 rule: "HL7au:000024", path: "MSH[1]-2~1.1"),
         RulePair(family: "MSH-6 on orders", fixture: "au_orm_o01.hl7",
                  old: "|SYNTH_LIS|SYNTH_LAB^\(h1)^ISO|", new: "|SYNTH_LIS||",
                  rule: "HL7au:000001", path: "MSH[1]-6"),
         RulePair(family: "UCUM", fixture: "au_oru_r01_pathology.hl7",
                  old: "|140|g/L^g/L^UCUM|", new: "|140|g/L^g/L^ISO+|",
-                 rule: "HL7au:00050.1.5", path: "OBX[1]-6.3"),
+                 rule: "HL7au:00050.1.5", path: "OBX[1]-6~1.3"),
     ]
 
     static func mutated(_ pair: RulePair) throws -> String {

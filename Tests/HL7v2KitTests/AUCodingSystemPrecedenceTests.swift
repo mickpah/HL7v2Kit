@@ -28,7 +28,7 @@ struct AUCodingSystemPrecedenceTests {
     }
 
     private func at(_ field: Int) -> IssueLocation {
-        IssueLocation(segmentID: "OBX", segmentIndex: 1, fieldIndex: field, componentIndex: 3)
+        IssueLocation(segmentID: "OBX", segmentIndex: 1, fieldIndex: field, repetitionIndex: 1, componentIndex: 3, subcomponentIndex: nil)
     }
 
     @Test("Two public systems (ICD-10 primary, SNOMED CT alternate) on OBX-3 are silent")

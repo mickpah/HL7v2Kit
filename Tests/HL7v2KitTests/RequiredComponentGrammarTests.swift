@@ -30,9 +30,11 @@ struct RequiredComponentGrammarTests {
 
     @Test("Components the spec prints as R are required: CX.1 everywhere, CX.5 from v2.8.2")
     func printedRequiredIsRequired() throws {
-        #expect(try missing(wire(pid3: "^^^AUTH^MR")) == ["PID[1]-3.1"])
+        let noID = try missing(wire(pid3: "^^^AUTH^MR"))
+        #expect(noID == ["PID[1]-3~1.1"])
         #expect(try missing(wire(version: "2.5.1", pid3: "123^^^AUTH")).isEmpty, "CX.5 is O in v2.5.1")
-        #expect(try missing(wire(version: "2.8.2", pid3: "123^^^AUTH")) == ["PID[1]-3.5"], "CX.5 is R in v2.8.2")
+        let noType = try missing(wire(version: "2.8.2", pid3: "123^^^AUTH"))
+        #expect(noType == ["PID[1]-3~1.5"], "CX.5 is R in v2.8.2")
     }
 
     @Test("The grammar, not a fixed list, decides per version")

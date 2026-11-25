@@ -31,7 +31,7 @@ struct ComponentCodeTableTests {
         let issue = try #require(issues.first)
         #expect(issue.code == .valueNotInTable(table: "0200"))
         #expect(issue.severity == .error)
-        #expect(issue.location.pathDescription == "PID[1]-5.7")
+        #expect(issue.location.pathDescription == "PID[1]-5~1.7")
     }
 
     @Test("A printed code, an empty component and the HL7 null are all silent")
@@ -111,7 +111,8 @@ struct ComponentCodeTableTests {
             #expect(try tableIssues(w).isEmpty, "MSH-3 HD.3 = \(type)")
         }
         let bad = wire().replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^QQQ|FAC|")
-        #expect(try tableIssues(bad).first?.location.pathDescription == "MSH[1]-3.3")
+        let path = try tableIssues(bad).first?.location.pathDescription
+        #expect(path == "MSH[1]-3~1.3")
     }
 
     @Test("A component that is itself composite is descended into: CX.4 is an HD, so CX.4.3 is checked")
@@ -122,7 +123,7 @@ struct ComponentCodeTableTests {
         #expect(issue.code == .valueNotInTable(table: "0301"))
         #expect(issue.location.componentIndex == 4)
         #expect(issue.location.subcomponentIndex == 3)
-        #expect(issue.location.pathDescription == "PID[1]-3.4.3")
+        #expect(issue.location.pathDescription == "PID[1]-3~1.4.3")
         #expect(try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&ISO^MR")).isEmpty)
         #expect(try tableIssues(wire(pid3: "123^^^AUTH&1.2.3^MR")).isEmpty, "absent subcomponent")
         #expect(try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&\"\"^MR")).isEmpty, "HL7 null")
@@ -131,7 +132,7 @@ struct ComponentCodeTableTests {
     @Test("Component and subcomponent levels report independently")
     func bothLevels() throws {
         let issues = try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&QQQ^MR", pid5: "DOE^JOHN^^^^^QQQ"))
-        #expect(Set(issues.map(\.location.pathDescription)) == ["PID[1]-3.4.3", "PID[1]-5.7"])
+        #expect(Set(issues.map(\.location.pathDescription)) == ["PID[1]-3~1.4.3", "PID[1]-5~1.7"])
     }
 
     @Test("OBX-5 is checked under the datatype OBX-2 declares")
@@ -144,7 +145,7 @@ struct ComponentCodeTableTests {
         }
         // XTN.2 Telecommunication Use Code is ID / 0201 (closed).
         let bad = try tableIssues(oru("XTN", "^QQQ^PH"))
-        #expect(bad.map(\.location.pathDescription) == ["OBX[1]-5.2"])
+        #expect(bad.map(\.location.pathDescription) == ["OBX[1]-5~1.2"])
         #expect(try tableIssues(oru("XTN", "^PRN^PH")).isEmpty)
         #expect(try tableIssues(oru("ST", "QQQ")).isEmpty, "a primitive OBX-2 has no component grammar")
         #expect(try tableIssues(oru("", "^QQQ^PH")).isEmpty, "no OBX-2, no datatype, no check")
@@ -156,7 +157,7 @@ struct ComponentCodeTableTests {
         let au = wire(version: "2.4").replacingOccurrences(of: "|HIS|FAC|", with: "|HIS|QML^2184^AUSNATA|")
         #expect(try tableIssues(au, locale: .auLocalisation).isEmpty, "ADRM-2021 Table 0301 p. 161 prints AUSNATA")
         let base = try tableIssues(au)
-        #expect(base.map(\.location.pathDescription) == ["MSH[1]-4.3"], "base v2.4 Table 0301 does not print it")
+        #expect(base.map(\.location.pathDescription) == ["MSH[1]-4~1.3"], "base v2.4 Table 0301 does not print it")
         let t = try #require(HL7TableRegistry.table("0301", locale: .auLocalisation))
         for code in ["AUSHICPR", "AUSHIC", "AUSDVA", "AUSNATA", "AUSLSPN", "L", "M", "N", "ISO"] { #expect(t.contains(code)) }
     }
@@ -170,7 +171,8 @@ struct ComponentCodeTableTests {
         #expect(t.contains("L") && t.contains("ISO") && t.isClosed)
         #expect(DataTypeGrammarTable.grammar("HD", version: .v2_3)?.component(3)?.tables == ["0301"])
         let bad = wire(version: "2.3").replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^QQQ|FAC|")
-        #expect(try tableIssues(bad).first?.location.pathDescription == "MSH[1]-3.3")
+        let path = try tableIssues(bad).first?.location.pathDescription
+        #expect(path == "MSH[1]-3~1.3")
         #expect(try tableIssues(wire(version: "2.3").replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^ISO|FAC|")).isEmpty)
     }
 
@@ -197,7 +199,8 @@ struct ComponentCodeTableTests {
         #expect(DataTypeGrammarTable.grammar("PT", version: .v2_4)?.component(2)?.tables == ["0207"])
         #expect(DataTypeGrammarTable.grammar("PL", version: .v2_3_1)?.component(6)?.tables == ["0305"])
         let bad = wire(version: "2.3.1").replacingOccurrences(of: "|P|2.3.1", with: "|P^X|2.3.1")
-        #expect(try tableIssues(bad).map(\.location.pathDescription) == ["MSH[1]-11.2"])
+        let paths = try tableIssues(bad).map(\.location.pathDescription)
+        #expect(paths == ["MSH[1]-11~1.2"])
         let good = wire(version: "2.3.1").replacingOccurrences(of: "|P|2.3.1", with: "|P^T|2.3.1")
         #expect(try tableIssues(good).isEmpty)
     }
@@ -212,7 +215,7 @@ struct ComponentCodeTableTests {
     func fieldLocalClosedTable(version: String) throws {
         let issues = try tableIssues(in3Wire(version: version, in3_20: "ER^X"))
         #expect(issues.map(\.code) == [.valueNotInTable(table: "0136")], "IN3-20.2 is HL7 Table 0136 (Y, N)")
-        #expect(issues.first?.location.pathDescription == "IN3[1]-20.2")
+        #expect(issues.first?.location.pathDescription == "IN3[1]-20~1.2")
         #expect(try tableIssues(in3Wire(version: version, in3_20: "ER^Y")).isEmpty)
         #expect(try tableIssues(in3Wire(version: version, in3_20: "ZZ^N")).isEmpty, "IN3-20.1 is IS: never enforced")
     }

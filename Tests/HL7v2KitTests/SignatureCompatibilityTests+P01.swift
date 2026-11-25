@@ -26,4 +26,14 @@ extension SignatureCompatibilityTests {
         let text: (String) -> String = Parser.wire(fromCarried:)
         _ = (bytes, text)
     }
+
+    @Test("P01 R6: IssueLocation.repetitionIndex and both initialisers keep their signatures")
+    func issueRepetitionSignatures() {
+        let repetition: KeyPath<IssueLocation, Int?> = \.repetitionIndex
+        let older: (String, Int, Int?, Int?, Int?) -> IssueLocation =
+            IssueLocation.init(segmentID:segmentIndex:fieldIndex:componentIndex:subcomponentIndex:)
+        let naming: (String, Int, Int?, Int?, Int?, Int?) -> IssueLocation =
+            IssueLocation.init(segmentID:segmentIndex:fieldIndex:repetitionIndex:componentIndex:subcomponentIndex:)
+        _ = (repetition, older, naming)
+    }
 }

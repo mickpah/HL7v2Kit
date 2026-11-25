@@ -174,9 +174,9 @@ struct ComponentLengthValidationTests {
         try #require(issues.count == 1)
         #expect(issues[0].code == .componentLengthOutOfRange(length: "1..6", actual: 7))
         #expect(issues[0].severity == .warning)
-        #expect(issues[0].location == IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3,
+        #expect(issues[0].location == IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, repetitionIndex: 1,
                                                     componentIndex: 4, subcomponentIndex: 3))
-        #expect(issues[0].message.contains("Subcomponent PID[1]-3.4.3 ('Universal ID Type')"))
+        #expect(issues[0].message.contains("Subcomponent PID[1]-3~1.4.3 ('Universal ID Type')"))
         #expect(issues[0].message.contains("component 4 ('Assigning Authority')"))
         #expect(issues[0].message.contains("repetition 1"))
         #expect(issues[0].message.contains("HD component table prints LEN 1..6"))
@@ -223,7 +223,7 @@ struct ComponentLengthValidationTests {
         let issues = try componentLengthIssues(wire)
         try #require(issues.count == 1)
         #expect(issues[0].code == .componentLengthOutOfRange(length: "3..3", actual: 2))
-        #expect(issues[0].location == IssueLocation(segmentID: "OBX", segmentIndex: 1, fieldIndex: 5,
+        #expect(issues[0].location == IssueLocation(segmentID: "OBX", segmentIndex: 1, fieldIndex: 5, repetitionIndex: 1,
                                                     componentIndex: 6, subcomponentIndex: nil))
         let fine = wire.replacingOccurrences(of: "^^^AU|", with: "^^^AUS|")
         #expect(try componentLengthIssues(fine).isEmpty)

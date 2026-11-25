@@ -75,7 +75,8 @@ struct CodeTableOpennessTests {
     @Test("On the same wire a closed table still raises: ED.4 draws 0299", arguments: ["2.9", "2.9.1"])
     func subtypeWireControl(version: String) throws {
         let wire = oru(obx5: "^application^pdf^NOTANENCODING^JVBERi0xLjQK", type: "ED", version)
-        #expect(try issues(wire, table: "0299").map(\.location.pathDescription) == ["OBX[1]-5.4"])
+        let encoding = try issues(wire, table: "0299").map(\.location.pathDescription)
+        #expect(encoding == ["OBX[1]-5~1.4"])
         #expect(try issues(wire, table: "0291").isEmpty)
     }
 
@@ -149,7 +150,7 @@ struct CodeTableOpennessTests {
     @Test("A value outside Table 0104 draws valueNotInTable on v2.9 and v2.9.1, at MSH-12.1", arguments: [Version.v2_9, .v2_9_1])
     func versionOutsideTheTable(version: Version) throws {
         let found = try versionIssues("9.9", under: version)
-        #expect(found.map(\.location.pathDescription) == ["MSH[1]-12.1"])
+        #expect(found.map(\.location.pathDescription) == ["MSH[1]-12~1.1"])
         #expect(try versionIssues("9.9^AUS", under: version).count == 1)
     }
 

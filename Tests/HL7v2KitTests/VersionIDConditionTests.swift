@@ -53,8 +53,10 @@ struct VersionIDConditionTests {
             try Self.versionIDIssues("PID|1||1^^^H^MR||DOE^J|||\(pid8)", version: "2.7.1")
                 .filter { $0.location.fieldIndex == 8 && $0.location.componentIndex == 7 }.map(\.location.pathDescription)
         }
-        #expect(try at7("F^Female^LN") == ["PID[1]-8.7"])
-        #expect(try at7("F^Female^HL7\(user)") == ["PID[1]-8.7"])
+        let external = try at7("F^Female^LN")
+        #expect(external == ["PID[1]-8~1.7"])
+        let userTable = try at7("F^Female^HL7\(user)")
+        #expect(userTable == ["PID[1]-8~1.7"])
         #expect(try at7("F^Female^HL7\(hl7)").isEmpty)
         #expect(try at7("F^Female^HL79999").isEmpty)
         #expect(try at7("F^Female").isEmpty)

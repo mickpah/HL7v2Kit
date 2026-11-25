@@ -23,9 +23,9 @@ struct SpecExampleMessageTests {
         let mshVersionElided: Bool
     }
 
-    /// `SEG[N]-F` or `SEG[N]-F.C` (a component-level issue) — the segment ID, its
-    /// repetition and the HL7 field number, ignoring any component suffix, since a
-    /// truncated field has no components to distinguish.
+    /// `SEG[N]-F`, `SEG[N]-F~R` or `SEG[N]-F~R.C` (a component-level issue) — the segment ID,
+    /// its repetition and the HL7 field number, ignoring any field repetition or component
+    /// suffix, since a truncated field has no repetitions or components to distinguish.
     private static let locationField = try! NSRegularExpression(pattern: #"^([A-Z][A-Z0-9]{2})\[(\d+)\]-(\d+)"#)
 
     /// True when `location` names a field that `truncatedSegments` records as absent only

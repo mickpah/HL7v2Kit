@@ -32,26 +32,33 @@ struct AuthenticationPersonTimeTests {
 
     @Test("v2.8.2: a person without a time stamp, or a time stamp without a person, is reported")
     func newerWording() throws {
-        #expect(try Self.paths(Self.ppn([1: "1", 2: "DOE", 3: "J"]), version: "2.8.2") == ["TXA[1]-22.15"])
-        #expect(try Self.paths(Self.ppn([15: Self.time]), version: "2.8.2") == ["TXA[1]-22"])
+        let person = try Self.paths(Self.ppn([1: "1", 2: "DOE", 3: "J"]), version: "2.8.2")
+        #expect(person == ["TXA[1]-22~1.15"])
+        let stamp = try Self.paths(Self.ppn([15: Self.time]), version: "2.8.2")
+        #expect(stamp == ["TXA[1]-22~1"])
         #expect(try Self.paths(Self.ppn([1: "1", 2: "DOE", 15: Self.time]), version: "2.8.2").isEmpty)
-        #expect(try Self.paths(Self.ppn([16: "A"]), version: "2.8.2") == ["TXA[1]-22.15"])
-        #expect(try Self.paths(Self.ppn([1: "1", 15: "\"\""]), version: "2.8.2") == ["TXA[1]-22.15"])
+        let other = try Self.paths(Self.ppn([16: "A"]), version: "2.8.2")
+        #expect(other == ["TXA[1]-22~1.15"])
+        let null = try Self.paths(Self.ppn([1: "1", 15: "\"\""]), version: "2.8.2")
+        #expect(null == ["TXA[1]-22~1.15"])
     }
 
     @Test("Every repetition is checked; the group's message names the repetition")
     func repetitions() throws {
         let found = try Self.issues(Self.ppn([1: "1", 15: Self.time]) + "~" + Self.ppn([15: Self.time]), version: "2.8.2")
-        #expect(found.map(\.location.pathDescription) == ["TXA[1]-22"])
-        #expect(found.first?.message == "Conditional component group 'Performing person' (PPN 1-14, 16-26) in TXA[1]-22 repetition 2 is empty while its condition holds: 15 populated.")
-        #expect(try Self.paths("~" + Self.ppn([1: "1"]), version: "2.8.2") == ["TXA[1]-22.15"])
+        #expect(found.map(\.location.pathDescription) == ["TXA[1]-22~2"])
+        #expect(found.first?.message == "Conditional component group 'Performing person' (PPN 1-14, 16-26) in TXA[1]-22~2 repetition 2 is empty while its condition holds: 15 populated.")
+        let second = try Self.paths("~" + Self.ppn([1: "1"]), version: "2.8.2")
+        #expect(second == ["TXA[1]-22~2.15"])
     }
 
     @Test("Each newer version carries the rule over its own PPN",
           arguments: [("2.5.1", 24), ("2.6", 24), ("2.7.1", 26), ("2.8.2", 26)] as [(version: String, last: Int)])
     func newerVersions(_ row: (version: String, last: Int)) throws {
-        #expect(try Self.paths(Self.ppn([row.last: "X"]), version: row.version) == ["TXA[1]-22.15"])
-        #expect(try Self.paths(Self.ppn([15: Self.time]), version: row.version) == ["TXA[1]-22"])
+        let person = try Self.paths(Self.ppn([row.last: "X"]), version: row.version)
+        #expect(person == ["TXA[1]-22~1.15"])
+        let stamp = try Self.paths(Self.ppn([15: Self.time]), version: row.version)
+        #expect(stamp == ["TXA[1]-22~1"])
     }
 
     @Test("Default tier: reported at requiredComponentSeverity wherever component grammar is checked (not .lenient)")
@@ -78,9 +85,11 @@ struct AuthenticationPersonTimeTests {
           arguments: [("2.3", 15), ("2.3.1", 16), ("2.4", 19)] as [(version: String, count: Int)])
     func olderWording(_ row: (version: String, count: Int)) throws {
         let time = "19990101"
-        #expect(try Self.paths(Self.ppn([1: "1"]), version: row.version) == ["TXA[1]-22.15"])
+        let person = try Self.paths(Self.ppn([1: "1"]), version: row.version)
+        #expect(person == ["TXA[1]-22~1.15"])
         #expect(try Self.paths(Self.ppn([11: "5"]), version: row.version).isEmpty)
-        #expect(try Self.paths(Self.ppn([15: time]), version: row.version) == ["TXA[1]-22"])
+        let stamp = try Self.paths(Self.ppn([15: time]), version: row.version)
+        #expect(stamp == ["TXA[1]-22~1"])
         #expect(try Self.paths(Self.ppn([1: "1", 15: time]), version: row.version).isEmpty)
         if row.count > 15 { #expect(try Self.paths(Self.ppn([16: "A"]), version: row.version).isEmpty) }
     }

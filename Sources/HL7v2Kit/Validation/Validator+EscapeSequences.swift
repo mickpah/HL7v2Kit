@@ -7,9 +7,9 @@ extension Validator {
     /// once for each value whose text, as the serialiser writes it, holds an undefined or unclosed
     /// escape, quoting the first. Every segment is read, whatever its grammar: the escape rules
     /// are Chapter 2 encoding rules, as the character-set check's are. MSH-1 and MSH-2 (and their
-    /// BHS and FHS twins) hold the delimiters and are skipped. The location names the component
-    /// when the repetition has more than one or the component has subcomponents, and the
-    /// subcomponent when there are several.
+    /// BHS and FHS twins) hold the delimiters and are skipped. The location names the repetition,
+    /// the component when the repetition has more than one or the component has subcomponents,
+    /// and the subcomponent when there are several.
     func checkEscapeSequences(message: Message, issues: inout [ValidationIssue]) {
         guard let severity = options.escapeSequenceSeverity else { return }
         let encoding = message.encodingCharacters
@@ -35,7 +35,7 @@ extension Validator {
             let separatorSegment = Parser.isSeparatorSegment(segment.segmentID)
             for (fieldIndex, field) in segment.fields.enumerated() where fieldIndex >= 1 {
                 if separatorSegment, fieldIndex <= 2 { continue }
-                for repetition in field.repetitions {
+                for (offset, repetition) in field.repetitions.enumerated() {
                     for (componentOffset, component) in repetition.components.enumerated() {
                         for (subcomponentOffset, subcomponent) in component.subcomponents.enumerated() {
                             if subcomponent.wire == nil, let escapeByte,
@@ -49,6 +49,7 @@ extension Validator {
                                 segmentID: segment.segmentID, segmentIndex: occurrence, fieldIndex: fieldIndex,
                                 componentIndex: single ? nil : componentOffset + 1,
                                 subcomponentIndex: component.subcomponents.count > 1 ? subcomponentOffset + 1 : nil)
+                                .repetition(offset + 1)
                             issues.append(ValidationIssue(
                                 severity: severity,
                                 code: .escapeSequenceUndefined,

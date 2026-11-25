@@ -85,11 +85,12 @@ extension Validator {
             }
             let measured = literalDelimiters ? whole.stringValue?.count : Self.occupiedLength(repetition, encoding: encoding)
             guard let length = measured, !rule.admits(length) else { continue }
+            let at = location.repetition(offset + 1)
             issues.append(ValidationIssue(
                 severity: severity,
                 code: .fieldLengthOutOfRange(length: printed, actual: length),
-                location: location,
-                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) has length \(length); \(source)"
+                location: at,
+                message: "Field \(at.pathDescription) ('\(grammar.name)') repetition \(offset + 1) has length \(length); \(source)"
             ))
         }
     }
@@ -200,10 +201,11 @@ extension Validator {
               let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
                                                 dataType: dataType, version: grammarVersion) else { return }
         let reduce = Self.rank(options.extraComponentsSeverity) >= Self.rank(severity)
-        func report(_ printed: String, _ length: Int, component: Int, subcomponent: Int?, _ text: String) {
+        func report(_ printed: String, _ length: Int, component: Int, subcomponent: Int?, repetition: Int,
+                    _ text: String) {
             let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
-                                   fieldIndex: location.fieldIndex, componentIndex: component,
-                                   subcomponentIndex: subcomponent)
+                                   fieldIndex: location.fieldIndex, repetitionIndex: repetition,
+                                   componentIndex: component, subcomponentIndex: subcomponent)
             issues.append(ValidationIssue(
                 severity: severity,
                 code: .componentLengthOutOfRange(length: printed, actual: length),
@@ -228,6 +230,7 @@ extension Validator {
                               let length = Self.occupiedLength(parts[(sub.index - 1)..<sub.index], encoding: encoding),
                               !rule.admits(length) else { continue }
                         report(printed, length, component: entry.index, subcomponent: sub.index,
+                               repetition: offset + 1,
                                "('\(sub.name)') of component \(entry.index) ('\(entry.name)') repetition \(offset + 1) "
                                    + "has length \(length); the v\(grammarVersion.rawValue) \(inner.dataType) "
                                    + "component table prints LEN \(printed)")
@@ -245,7 +248,7 @@ extension Validator {
                 }
                 guard let length = Self.occupiedLength(parts, encoding: encoding),
                       !rule.admits(length) else { continue }
-                report(printed, length, component: entry.index, subcomponent: nil,
+                report(printed, length, component: entry.index, subcomponent: nil, repetition: offset + 1,
                        "('\(entry.name)') repetition \(offset + 1) has length \(length); the "
                            + "v\(grammarVersion.rawValue) \(composite.dataType) component table prints LEN \(printed)")
             }
@@ -331,7 +334,7 @@ extension Validator {
                   PrimitiveFormat.isValid(value, dataType: type, version: version) == false else { return }
             let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                    fieldIndex: location.fieldIndex, componentIndex: component,
-                                   subcomponentIndex: subcomponent)
+                                   subcomponentIndex: subcomponent).repetition(repetition)
             issues.append(ValidationIssue(
                 severity: severity,
                 code: .valueFormatInvalid(dataType: type),

@@ -107,7 +107,7 @@ PID typed given name: Alex
 == Validate (ValidationOptions.default, international rules)
 valid: true, 0 error(s), 1 warning(s), 0 info
   warning (1)
-    warning valueFormatInvalid(dataType: "TS") at PID[1]-7: PID[1]-7 repetition 1 value "1980-01-01" does not match the v2.4 TS format
+    warning valueFormatInvalid(dataType: "TS") at PID[1]-7~1: PID[1]-7~1 repetition 1 value "1980-01-01" does not match the v2.4 TS format
 
 == Validate (ValidationOptions.strict, HL7Locale.auLocalisation)
 valid: false, 16 error(s), 1 warning(s), 0 info

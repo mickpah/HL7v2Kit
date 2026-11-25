@@ -82,8 +82,10 @@ struct EitherOrComponentAuditTests {
             #expect(try issues("LAB1", version).isEmpty, "v\(version): local identifier")
             #expect(try issues("LAB1^1.2.3^ISO", version).isEmpty, "v\(version): all three")
             #expect(try issues("^1.2.3^ISO", version).isEmpty, "v\(version): a UID")
-            #expect(try issues("LAB1^1.2.3", version) == ["MSH[1]-4"], "v\(version): universal ID without its type")
-            #expect(try issues("LAB1^^ISO", version) == ["MSH[1]-4"], "v\(version): a type without its universal ID")
+            let noType = try issues("LAB1^1.2.3", version)
+            #expect(noType == ["MSH[1]-4~1"], "v\(version): universal ID without its type")
+            let noID = try issues("LAB1^^ISO", version)
+            #expect(noID == ["MSH[1]-4~1"], "v\(version): a type without its universal ID")
         }
     }
 
@@ -98,7 +100,7 @@ struct EitherOrComponentAuditTests {
         func orRuleIssue(_ msh4: String) throws -> ValidationIssue? {
             let wire = base.replacingOccurrences(of: "|HIS|FAC|HOSPITAL", with: "|HIS|\(msh4)|HOSPITAL")
             return Validator().validate(try Parser().parse(wire)).issues
-                .first { $0.code == .requiredComponentMissing && $0.location.pathDescription == "MSH[1]-4" }
+                .first { $0.code == .requiredComponentMissing && $0.location.pathDescription == "MSH[1]-4~1" }
         }
 
         // HD-1 valued, HD-2 only: the pair rule fired, not the OR — HD-1 already satisfies
@@ -107,13 +109,13 @@ struct EitherOrComponentAuditTests {
         #expect(hd2Only.message.contains("HD-2 and HD-3 must both be valued or both be empty"))
         #expect(!hd2Only.message.contains("Namespace ID"), "should not restate the OR alternatives once the pair rule is named")
         #expect(hd2Only.code == .requiredComponentMissing)
-        #expect(hd2Only.location.pathDescription == "MSH[1]-4")
+        #expect(hd2Only.location.pathDescription == "MSH[1]-4~1")
 
         // HD-1 valued, HD-3 only: same partial pair, same wording.
         let hd3Only = try #require(try orRuleIssue("LAB1^^ISO"))
         #expect(hd3Only.message.contains("HD-2 and HD-3 must both be valued or both be empty"))
         #expect(hd3Only.code == .requiredComponentMissing)
-        #expect(hd3Only.location.pathDescription == "MSH[1]-4")
+        #expect(hd3Only.location.pathDescription == "MSH[1]-4~1")
     }
 
     /// Direct unit coverage of the shared renderer (`RequiredComponentSet.violationMessage`),

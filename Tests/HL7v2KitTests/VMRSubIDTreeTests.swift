@@ -46,7 +46,7 @@ struct VMRSubIDTreeTests {
     func unknownPathUnderRoot() throws {
         let issues = try vmrIssues(referral(["OBX|2|ST|1234-5^Something^LN|1.99.7|x||||||F"]))
         #expect(issues.count == 1)
-        #expect(issues.first?.location.pathDescription == "OBX[2]-4")
+        #expect(issues.first?.location.pathDescription == "OBX[2]-4~1")
         if case .profileConstraintViolation(let rule)? = issues.first?.code { #expect(rule.hasPrefix("ADRM-prose:P-8")) }
     }
 
@@ -77,7 +77,7 @@ struct VMRSubIDTreeTests {
     func headerSubIDShape() throws {
         let issues = try vmrIssues(referral(root: "A1", []))
         #expect(issues.count == 1)
-        #expect(issues.first?.location.pathDescription == "OBX[1]-4")
+        #expect(issues.first?.location.pathDescription == "OBX[1]-4~1")
         #expect(try vmrIssues(referral(root: "3.1", [])).isEmpty)
     }
 

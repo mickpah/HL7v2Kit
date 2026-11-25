@@ -15,7 +15,7 @@ struct ConditionalComponentTests {
     func rptPeriodUnits() throws {
         // TQ2-... no: RPT appears in TQ1-3 Repeat Pattern (v2.5.1).
         let bad = try issues("TQ1|1||Q1H^^^^1")           // RPT.5 = 1, RPT.6 empty
-        #expect(bad.map(\.location.pathDescription) == ["TQ1[1]-3.6"])
+        #expect(bad.map(\.location.pathDescription) == ["TQ1[1]-3~1.6"])
         #expect(bad.first?.message.contains("Period Units") == true)
         #expect(try issues("TQ1|1||Q1H^^^^1^h").isEmpty)  // RPT.6 = h
         #expect(try issues("TQ1|1||Q1H").isEmpty, "the condition does not hold: RPT.5 empty")
@@ -35,10 +35,11 @@ struct ConditionalComponentTests {
         // OBR-32 is NDL on v2.5.1; NDL.1 is a CNN, so its components are SUBcomponents here.
         let obr = "OBR|1|||GLU^Glucose^L" + String(repeating: "|", count: 28)   // next value lands in OBR-32
         let got = try issues(obr + "1234&Smith")
-        #expect(got.map(\.location.pathDescription) == ["OBR[1]-32.1.8"], Comment(rawValue: got.map(\.message).joined(separator: " // ")))
+        #expect(got.map(\.location.pathDescription) == ["OBR[1]-32~1.1.8"], Comment(rawValue: got.map(\.message).joined(separator: " // ")))
         #expect(try issues(obr + "1234&Smith&&&&&&&AUTH").isEmpty, "CNN.9 satisfies it")
         #expect(try issues(obr + "1234&Smith&&&&&&&&1.2.3&ISO").isEmpty, "CNN.10 and 11 satisfy it")
-        #expect(try issues(obr + "1234&Smith&&&&&&&&1.2.3").map(\.location.pathDescription) == ["OBR[1]-32.1.8", "OBR[1]-32.1.11"], "10 without 11 satisfies neither")
+        let neither = try issues(obr + "1234&Smith&&&&&&&&1.2.3").map(\.location.pathDescription)
+        #expect(neither == ["OBR[1]-32~1.1.8", "OBR[1]-32~1.1.11"], "10 without 11 satisfies neither")
         #expect(try issues(obr + "&Smith").isEmpty, "component 1 empty: the rule does not apply")
     }
 

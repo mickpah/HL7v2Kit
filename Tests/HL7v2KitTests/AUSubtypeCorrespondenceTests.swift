@@ -36,7 +36,7 @@ struct AUSubtypeCorrespondenceTests {
     func rpMismatchFires() throws {
         let tiff = try rpFindings("ptr^APP^AP^TIFF")
         #expect(tiff.count == 1, "got \(tiff.map(\.message))")
-        #expect(tiff.first?.location == IssueLocation(segmentID: "OBX", segmentIndex: 1, fieldIndex: 5, componentIndex: 3))
+        #expect(tiff.first?.location == IssueLocation(segmentID: "OBX", segmentIndex: 1, fieldIndex: 5, repetitionIndex: 1, componentIndex: 3, subcomponentIndex: nil))
         #expect(try rpFindings("ptr^APP^IM^PDF").count == 1)
     }
 

@@ -58,7 +58,7 @@ struct AUIdentifierComponentTests {
         let found = hits(report, "HL7au:00044.1.1")
         #expect(found.count == 1)
         #expect(found.first?.location == IssueLocation(segmentID: "PID", segmentIndex: 1,
-                                                       fieldIndex: 3, componentIndex: 1))
+                                                       fieldIndex: 3, repetitionIndex: 1, componentIndex: 1, subcomponentIndex: nil))
     }
 
     @Test("HL7au:00044.1.1 is silent when CX-1 is valued")
@@ -83,7 +83,7 @@ struct AUIdentifierComponentTests {
         let found = hits(report, "HL7au:00044.3.1")
         #expect(found.count == 1)
         #expect(found.first?.location == IssueLocation(segmentID: "OBR", segmentIndex: 1,
-                                                       fieldIndex: 3, componentIndex: 1))
+                                                       fieldIndex: 3, repetitionIndex: 1, componentIndex: 1, subcomponentIndex: nil))
     }
 
     @Test("HL7au:00044.3.1 is silent when EI-1 is valued")
@@ -101,7 +101,7 @@ struct AUIdentifierComponentTests {
         let found = hits(report, "HL7au:00044.7.1")
         #expect(found.count == 1)
         #expect(found.first?.location == IssueLocation(segmentID: "OBR", segmentIndex: 1,
-                                                       fieldIndex: 16, componentIndex: 1))
+                                                       fieldIndex: 16, repetitionIndex: 1, componentIndex: 1, subcomponentIndex: nil))
     }
 
     @Test("HL7au:00044.7.1 is silent when XCN-1 is valued")

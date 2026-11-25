@@ -51,9 +51,11 @@ struct FieldLocalCompositeTests {
 
     @Test("P6-7: a field-local TS component stays format-checked as a primitive", arguments: ["2.3", "2.3.1", "2.4"])
     func tsFormat(version: String) throws {
-        #expect(try issues(wire(version, "IN3", 20, "ER^Y^19991301"), at: "IN3[1]-20.3") == [.valueFormatInvalid(dataType: "TS")])
+        let date = try issues(wire(version, "IN3", 20, "ER^Y^19991301"), at: "IN3[1]-20~1.3")
+        #expect(date == [.valueFormatInvalid(dataType: "TS")])
         #expect(try issues(wire(version, "IN3", 20, "ER^Y^19991231"), at: "IN3[1]-20").isEmpty)
-        #expect(try issues(wire(version, "IN3", 5, "AA^abc"), at: "IN3[1]-5.2") == [.valueFormatInvalid(dataType: "NM")])
+        let number = try issues(wire(version, "IN3", 5, "AA^abc"), at: "IN3[1]-5~1.2")
+        #expect(number == [.valueFormatInvalid(dataType: "NM")])
     }
 
     @Test("Prose-defined components print no optionality, so nothing is required of them")
@@ -105,7 +107,7 @@ struct FieldLocalCompositeTests {
             let bad = Validator().validate(try Parser().parse(wire(version, "OBR", 15, "BLD^^^LA&Left arm&SCT&QQ&Bad&HL70163")))
                 .issues.filter { if case .valueNotInTable = $0.code { return true } else { return false } }
             #expect(bad.map(\.code) == [.valueNotInTable(table: "0163")], "v\(version)")
-            #expect(bad.first?.location.pathDescription == "OBR[1]-15.4.4", "v\(version)")
+            #expect(bad.first?.location.pathDescription == "OBR[1]-15~1.4.4", "v\(version)")
             #expect(try tableCodes(wire(version, "OBR", 15, "BLD^^^LA&Left arm&HL70163&RA&Right arm&hl70163")).isEmpty)
             #expect(try tableCodes(wire(version, "OBR", 15, "BLD^^^LA&&HL70163&QQ")).isEmpty, "CE.6 empty")
             #expect(try tableCodes(wire(version, "OBR", 15, "BLD^^^LA&&HL70163&QQ&&SCT")).isEmpty, "CE.6 non-HL7")

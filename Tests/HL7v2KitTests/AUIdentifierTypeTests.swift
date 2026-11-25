@@ -28,7 +28,7 @@ struct AUIdentifierTypeTests {
     func cx5OutsideTableFires() throws {
         let issues = try findings("PID|1||12345678^^^AUSHIC^ZZ", point: "HL7au:00044.1.3")
         #expect(issues.count == 1, "got \(issues.map(\.message))")
-        #expect(issues.first?.location == IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, componentIndex: 5))
+        #expect(issues.first?.location == IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, repetitionIndex: 1, componentIndex: 5, subcomponentIndex: nil))
     }
 
     @Test("CX-5 values from Table 0203, including the NNxxx family, are silent")

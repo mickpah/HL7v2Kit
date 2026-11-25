@@ -23,6 +23,17 @@ The entries are condensed; the git history carries the detail.
 - `Parser.wire(fromCarried:)` for `Data` and `String`: wire form from pasted or saved text (line
   endings, a byte-order mark, blank lines, an MLLP frame). The `MessageViewer` example calls it.
   (#41)
+- `IssueLocation.repetitionIndex` and an initialiser that takes it. (#38)
+
+### Changed
+
+- The 1007 message for an MSH-12 whose version ID is empty quotes MSH-12 as written
+  (`MSH-12 '^AUS' is populated but ...`). The code and its payload are unchanged. A change to
+  default output. (#42)
+- A value-level issue names its repetition, so `pathDescription` and every message that quotes it
+  read `PID[1]-3~2.1` where they read `PID[1]-3.1`. Field-level issues are unchanged. An
+  `IssueLocation`'s equality and hash include the repetition, so a value-level location no longer
+  equals one built with the older initialiser. A change to default output. (#38)
 
 ### Fixed
 
@@ -96,9 +107,6 @@ The entries are condensed; the git history carries the detail.
   has no residual left (#32).
 - The citation text of ADRM-prose:P-13 and of the ORR_O02, OSR_Q06 and REF_I12 profile structures no longer names
   who made the decision it cites; the decision and ruling references stay (#32).
-- The 1007 message for an MSH-12 whose version ID is empty quotes MSH-12 as written
-  (`MSH-12 '^AUS' is populated but ...`). The code and its payload are unchanged. A change to
-  default output. (#42)
 
 ### Fixed
 

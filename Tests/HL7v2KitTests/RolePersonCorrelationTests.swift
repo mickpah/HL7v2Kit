@@ -43,7 +43,7 @@ struct RolePersonCorrelationTests {
     func identifierMismatch(_ version: String) throws {
         var rol4 = Self.rol4; rol4[9] = "HOSP&9.9.9&ISO"
         let found = try Self.findings(Self.pmu(Self.stf2, Self.stf3, Self.composite(rol4), version: version))
-        #expect(found.map(\.location.pathDescription) == ["ROL[1]-4"], "\(version)")
+        #expect(found.map(\.location.pathDescription) == ["ROL[1]-4~1"], "\(version)")
         #expect(found.first?.severity == .warning)
         #expect(found.first?.message.contains("identifier") == true && found.first?.message.contains("ROL-4.9") == true
                 && found.first?.message.contains("STF-2.4") == true)
@@ -82,7 +82,7 @@ struct RolePersonCorrelationTests {
             + "CER|1|C1\rROL|1|AD|PP^Primary^HL70443|\(Self.composite(Self.rol4))\r"
             + "CER|2|C2\rROL|2|AD|PP^Primary^HL70443|\(Self.composite(other))\r"
         let found = try Self.findings(wire)
-        #expect(found.map(\.location.pathDescription) == ["ROL[2]-4"])
+        #expect(found.map(\.location.pathDescription) == ["ROL[2]-4~1"])
     }
 
     @Test("RSP_K25: each STAFF group's ROL is compared with its own STF")

@@ -39,7 +39,7 @@ struct AUAssigningAuthorityTableTests {
     func undeclaredAuthorityFires() throws {
         let issues = try findings(identifiers: "X0012345^Argus^VDI", asserted: true)
         #expect(issues.count == 1, "got \(issues.map(\.message))")
-        #expect(issues.first?.location == IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, componentIndex: 2))
+        #expect(issues.first?.location == IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, repetitionIndex: 1, componentIndex: 2, subcomponentIndex: nil))
     }
 
     @Test("Asserted: a declared vendor authority and a printed one are silent")
@@ -58,7 +58,7 @@ struct AUAssigningAuthorityTableTests {
     @Test("Asserted: IHI fires at PRD-7.2, and a caller's localTableExtensions[\"0363\"] admits it")
     func ihiNeedsDeclaring() throws {
         let issues = try findings(identifiers: "12345^IHI^VDI", asserted: true)
-        #expect(issues.map(\.location) == [IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, componentIndex: 2)])
+        #expect(issues.map(\.location) == [IssueLocation(segmentID: "PRD", segmentIndex: 2, fieldIndex: 7, repetitionIndex: 1, componentIndex: 2, subcomponentIndex: nil)])
         #expect(try findings(identifiers: "12345^IHI^VDI", asserted: true, extensions: ["IHI"]).isEmpty)
     }
 

@@ -893,7 +893,7 @@ public struct Validator: Sendable {
 
         // A lone `""` is the null, which has no components: these rules skip it, as the base grammar's `checkComponents`
         // does (a ruling; ADRM p274 prints OBR-12 = "" on a delete message).
-        for repetition in field.repetitions
+        for (offset, repetition) in field.repetitions.enumerated()
         where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID) {
             // Track 1: required-components (v0.5-S5-B-3).
             for requirement in composite.requiredComponents {
@@ -935,7 +935,7 @@ public struct Validator: Sendable {
                     segmentIndex: segmentIndex,
                     fieldIndex: fieldIndex,
                     componentIndex: requirement.component
-                )
+                ).repetition(offset + 1)
                 let citation = requirement.specCitation
                     ?? "\(profile.locale.rawValue):\(effectiveDataType).\(requirement.component)"
                 appendProfileIssue(
@@ -960,7 +960,7 @@ public struct Validator: Sendable {
                     segmentIndex: segmentIndex,
                     fieldIndex: fieldIndex,
                     componentIndex: rule.thenComponent
-                )
+                ).repetition(offset + 1)
                 let citation = rule.specCitation
                     ?? "\(profile.locale.rawValue):\(effectiveDataType).\(rule.thenComponent)"
                 let condDesc = rule.condition == .populated ? "is populated" : "is empty"
@@ -987,7 +987,7 @@ public struct Validator: Sendable {
                     segmentIndex: segmentIndex,
                     fieldIndex: fieldIndex,
                     componentIndex: rule.componentB
-                )
+                ).repetition(offset + 1)
                 let citation = rule.specCitation
                     ?? "\(profile.locale.rawValue):\(effectiveDataType).\(rule.componentA)!=\(rule.componentB)"
                 appendProfileIssue(
@@ -1017,7 +1017,7 @@ public struct Validator: Sendable {
                     segmentIndex: segmentIndex,
                     fieldIndex: fieldIndex,
                     componentIndex: rule.component
-                )
+                ).repetition(offset + 1)
                 let citation = rule.specCitation
                     ?? "\(profile.locale.rawValue):\(effectiveDataType).\(rule.component)"
                 appendProfileIssue(
@@ -1043,7 +1043,7 @@ public struct Validator: Sendable {
                     segmentIndex: segmentIndex,
                     fieldIndex: fieldIndex,
                     componentIndex: pattern.component
-                )
+                ).repetition(offset + 1)
                 let citation = pattern.specCitation
                     ?? "\(profile.locale.rawValue):\(effectiveDataType).\(pattern.component)"
                 appendProfileIssue(
@@ -1082,7 +1082,7 @@ public struct Validator: Sendable {
                     segmentIndex: segmentIndex,
                     fieldIndex: fieldIndex,
                     componentIndex: valueSet.component
-                )
+                ).repetition(offset + 1)
                 let citation = valueSet.specCitation
                     ?? "\(profile.locale.rawValue):\(effectiveDataType).\(valueSet.component)"
                 appendProfileIssue(
@@ -1096,6 +1096,7 @@ public struct Validator: Sendable {
             checkCorrespondences(
                 composite.componentCorrespondences,
                 repetition: repetition,
+                repetitionIndex: offset + 1,
                 dataTypeLabel: effectiveDataType,
                 segment: segment,
                 segmentArrayIndex: segmentArrayIndex,
@@ -1123,7 +1124,7 @@ public struct Validator: Sendable {
                         segmentIndex: segmentIndex,
                         fieldIndex: fieldIndex,
                         componentIndex: 1
-                    )
+                    ).repetition(offset + 1)
                     appendProfileIssue(
                         citation: citation,
                         location: location,
@@ -1163,12 +1164,13 @@ public struct Validator: Sendable {
                 if let firstOccurrence = seen[key] {
                     let citation = rule.specCitation
                         ?? "\(profile.locale.rawValue):unique:\(rule.segmentID)-\(rule.fieldIndex)"
+                    // The key is read from the first repetition (`rep`), so that is the one named.
                     let location = IssueLocation(
                         segmentID: rule.segmentID,
                         segmentIndex: occurrence,
                         fieldIndex: rule.fieldIndex,
                         componentIndex: rule.component
-                    )
+                    ).repetition(1)
                     appendProfileIssue(
                         citation: citation,
                         location: location,
@@ -1351,8 +1353,10 @@ public struct Validator: Sendable {
                     $0.segment.field(3)?.first?.components.first?.stringValue == rule.headerObservationID
                 }) else { continue }
                 let root = subID(header.segment)
+                // subID reads OBX-4's first repetition (Field.stringValue), so that is the one named.
                 func at(_ occurrence: Int) -> IssueLocation {
                     IssueLocation(segmentID: "OBX", segmentIndex: occurrence, fieldIndex: 4, componentIndex: nil)
+                        .repetition(1)
                 }
                 guard isDottedDecimal(root) else {
                     appendProfileIssue(
@@ -1415,7 +1419,7 @@ public struct Validator: Sendable {
             occurrenceBySegmentID[segment.segmentID] = occurrence
             for (fieldIndex, field) in segment.fields.enumerated() where fieldIndex >= 1 {
                 if segment.segmentID == "MSH", fieldIndex <= 2 { continue }
-                for repetition in field.repetitions {
+                for (offset, repetition) in field.repetitions.enumerated() {
                     for component in repetition.components {
                         for subcomponent in component.subcomponents {
                             let wireValue = EscapeSequences.wireForm(
@@ -1432,7 +1436,7 @@ public struct Validator: Sendable {
                                     segmentIndex: occurrence,
                                     fieldIndex: fieldIndex,
                                     componentIndex: nil
-                                )
+                                ).repetition(offset + 1)
                                 appendProfileIssue(
                                     citation: citation,
                                     location: location,
@@ -1475,9 +1479,11 @@ public struct Validator: Sendable {
     /// required-component / membership rules, and firing here as well
     /// would double-report). Case-insensitive on both sides: the
     /// ADRM's own examples mix `TEXT^RTF` and `text^html`.
+    /// `repetitionIndex` is the 1-based repetition the issue names.
     private func checkCorrespondences(
         _ rules: [ComponentCorrespondence],
         repetition: Repetition,
+        repetitionIndex: Int,
         dataTypeLabel: String,
         segment: Segment,
         segmentArrayIndex: Int,
@@ -1531,7 +1537,7 @@ public struct Validator: Sendable {
                 segmentIndex: occurrence,
                 fieldIndex: fieldIndex,
                 componentIndex: rule.valueComponent
-            )
+            ).repetition(repetitionIndex)
             let citation = rule.specCitation
                 ?? "\(profile.locale.rawValue):\(dataTypeLabel).\(rule.keyComponent)=>\(rule.valueComponent)"
             appendProfileIssue(
@@ -1584,7 +1590,7 @@ public struct Validator: Sendable {
             requiredComponents = override.requiredComponents
         }
 
-        for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+        for (offset, repetition) in field.repetitions.enumerated() where isRepetitionPopulated(repetition) {
             // A lone `""` is the null, which has no components: of these rules, only a value set on the field's own
             // value (`constrainsField`) reads it (a ruling).
             let isNull = isDeleteIndicator(repetition, segmentID: segmentID)
@@ -1598,7 +1604,7 @@ public struct Validator: Sendable {
                     segmentIndex: occurrence,
                     fieldIndex: fieldIndex,
                     componentIndex: componentIndex
-                )
+                ).repetition(offset + 1)
                 let citation = override.specCitation
                     ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(componentIndex)"
                 appendProfileIssue(
@@ -1643,7 +1649,7 @@ public struct Validator: Sendable {
                     segmentIndex: occurrence,
                     fieldIndex: fieldIndex,
                     componentIndex: valueSet.component
-                )
+                ).repetition(offset + 1)
                 let citation = valueSet.specCitation
                     ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(valueSet.component)"
                 let allowedList = (valueSet.allowedValues + extended).map { "\"\($0)\"" }.joined(separator: ", ")
@@ -1678,7 +1684,7 @@ public struct Validator: Sendable {
                     segmentIndex: occurrence,
                     fieldIndex: fieldIndex,
                     componentIndex: pattern.component
-                )
+                ).repetition(offset + 1)
                 let citation = pattern.specCitation
                     ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(pattern.component)"
                 appendProfileIssue(
@@ -1692,6 +1698,7 @@ public struct Validator: Sendable {
             checkCorrespondences(
                 override.componentCorrespondences,
                 repetition: repetition,
+                repetitionIndex: offset + 1,
                 dataTypeLabel: "\(segmentID)-\(fieldGrammar.index)",
                 segment: segment,
                 segmentArrayIndex: segmentArrayIndex,
@@ -1929,7 +1936,7 @@ public struct Validator: Sendable {
                   options.localTableExtensions[table.number]?.contains(compared) != true else { return }
             let where_ = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                        fieldIndex: location.fieldIndex, componentIndex: component,
-                                       subcomponentIndex: subcomponent)
+                                       subcomponentIndex: subcomponent).repetition(repetition)
             issues.append(ValidationIssue(
                 severity: .error,
                 code: .valueNotInTable(table: table.number),
@@ -2048,12 +2055,14 @@ public struct Validator: Sendable {
             // HL7 table to be extended locally (v2.3 / v2.3.1 CH2 sec 2.6.6, v2.4 CH02 sec 2.7.6,
             // v2.5.1 / v2.6 CH02 sec 2.5.3.6, v2.8.2 CH02C 2.C.1.2).
             if options.localTableExtensions[tableNumber]?.contains(compared) == true { continue }
+            let at = location.repetition(offset + 1)
             issues.append(ValidationIssue(
                 severity: .error,
                 code: .valueNotInTable(table: table.number),
                 location: partial ? IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
-                                                  fieldIndex: location.fieldIndex, componentIndex: 1) : location,
-                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) \(partial ? "first component " : "")value \(options.quoted(value)) is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
+                                                  fieldIndex: location.fieldIndex, repetitionIndex: offset + 1,
+                                                  componentIndex: 1, subcomponentIndex: nil) : at,
+                message: "Field \(at.pathDescription) ('\(grammar.name)') repetition \(offset + 1) \(partial ? "first component " : "")value \(options.quoted(value)) is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
             ))
         }
     }
@@ -2120,7 +2129,7 @@ public struct Validator: Sendable {
                                                    tableKind: tableKind) else { continue }
                     let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
                                                  componentIndex: component ?? entry.index,
-                                                 subcomponentIndex: subcomponent(entry.index))
+                                                 subcomponentIndex: subcomponent(entry.index)).repetition(repetition)
                     issues.append(ValidationIssue(
                         severity: severity,
                         code: code,
@@ -2134,7 +2143,7 @@ public struct Validator: Sendable {
                 guard let members = group.members, !members.contains(where: populated),
                       ComponentCondition.holds(group.condition, populated: populated, repeated: repeated) else { continue }
                 let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
-                                             componentIndex: component)
+                                             componentIndex: component).repetition(repetition)
                 let list = group.components.replacingOccurrences(of: ",", with: ", ")
                 issues.append(ValidationIssue(
                     severity: options.requiredComponentSeverity,
@@ -2176,7 +2185,7 @@ public struct Validator: Sendable {
                                           fieldIndex: fieldIndex, version: version)
         let requiredSet = requiredComponentSet(forCompositeCode: grammar.dataType)
         guard !required.isEmpty || requiredSet != nil else { return }
-        for repetition in field.repetitions
+        for (offset, repetition) in field.repetitions.enumerated()
         where isRepetitionPopulated(repetition) && !isDeleteIndicator(repetition, segmentID: segmentID) {
             // (1) Flat required-component check.
             for spec in required {
@@ -2186,7 +2195,7 @@ public struct Validator: Sendable {
                         segmentIndex: segmentIndex,
                         fieldIndex: fieldIndex,
                         componentIndex: spec.index
-                    )
+                    ).repetition(offset + 1)
                     issues.append(ValidationIssue(
                         severity: options.requiredComponentSeverity,
                         code: .requiredComponentMissing,
@@ -2203,7 +2212,7 @@ public struct Validator: Sendable {
                         segmentID: segmentID,
                         segmentIndex: segmentIndex,
                         fieldIndex: fieldIndex
-                    )
+                    ).repetition(offset + 1)
                     issues.append(ValidationIssue(
                         severity: options.requiredComponentSeverity,
                         code: .requiredComponentMissing,
