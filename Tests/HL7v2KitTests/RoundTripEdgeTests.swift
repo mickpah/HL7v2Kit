@@ -113,6 +113,28 @@ struct RoundTripEdgeTests {
         #expect(kept["NTE-3"] == "see\nABC x")
     }
 
+    @Test("#33: under .strict a line feed as the last byte of the input is rejected")
+    func strictRejectsFinalLineFeed() {
+        let msh = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1"
+        let strict = Parser(options: ParserOptions(lineTerminator: .strict))
+        #expect(throws: ParseError.lineFeedAfterSegmentTerminator(position: 2)) {
+            try strict.parse(msh + "\n")
+        }
+        #expect(throws: ParseError.lineFeedAfterSegmentTerminator(position: 3)) {
+            try strict.parse(msh + "\rPID|1||X\n")
+        }
+    }
+
+    @Test("#33: under .strict a line feed ending a field that does not end the input is data")
+    func strictKeepsLineFeedEndingField() throws {
+        let msh = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\r"
+        let strict = Parser(options: ParserOptions(lineTerminator: .strict))
+        let beforeField = try strict.parse(msh + "NTE|1||see\n|more")
+        #expect(beforeField["NTE-3"] == "see\n")
+        let beforeTerminator = try strict.parse(msh + "NTE|1||see\n\r")
+        #expect(beforeTerminator["NTE-3"] == "see\n")
+    }
+
     @Test("#33 (pinned, not fixed here): the batch parser folds line feeds under .strict")
     func batchParserFoldsLineFeeds() throws {
         let wire = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\nPID|1||X\n"

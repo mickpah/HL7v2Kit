@@ -131,6 +131,10 @@ public struct Parser: Sendable {
             if let position = Parser.segmentAfterBareLineFeed(in: segmentStrings) {
                 throw ParseError.lineFeedAfterSegmentTerminator(position: position)
             }
+            // So is a line feed as the last byte of the input: it ends the last segment.
+            if normalised.unicodeScalars.last == "\n" {
+                throw ParseError.lineFeedAfterSegmentTerminator(position: segmentStrings.count + 1)
+            }
         }
 
         guard !segmentStrings.isEmpty else { throw ParseError.missingMSH }

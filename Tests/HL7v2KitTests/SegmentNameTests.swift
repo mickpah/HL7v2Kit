@@ -14,15 +14,19 @@ struct SegmentNameTests {
         }
     }
 
-    static let printed: [(String, String)] = [
-        ("MSH", "Message Header"), ("PID", "Patient Identification"), ("PV1", "Patient Visit"),
-        ("OBR", "Observation Request"), ("OBX", "Observation/Result"),
+    static let printed: [(Version, String, String)] = [
+        (.v2_5_1, "MSH", "Message Header"), (.v2_5_1, "PID", "Patient Identification"),
+        (.v2_5_1, "PV1", "Patient Visit"), (.v2_5_1, "OBR", "Observation Request"),
+        (.v2_5_1, "OBX", "Observation/Result"), (.v2_3, "PID", "Patient identification"),
+        (.v2_4, "OM1", "General Segment"), (.v2_4, "RXA", "pharmacy/treatment administration"),
+        (.v2_8_2, "UB1", "Uniform Billing 1"), (.v2_9_1, "GSP", "Person Gender and Sex"),
     ]
 
-    @Test("Names match the v2.5.1 print (chapters 2, 3, 4 and 7)")
+    @Test("Names match the print, across versions")
     func sampleNames() {
-        for (segmentID, name) in Self.printed {
-            #expect(SegmentGrammarTable.grammar(segmentID, version: .v2_5_1)?.name == name)
+        for (version, segmentID, name) in Self.printed {
+            #expect(SegmentGrammarTable.grammar(segmentID, version: version)?.name == name,
+                    "\(version.rawValue) \(segmentID)")
         }
     }
 

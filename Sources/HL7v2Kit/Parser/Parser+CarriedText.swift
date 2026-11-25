@@ -15,8 +15,8 @@ extension Parser {
     /// itself. Every line break is taken as a segment boundary, as
     /// ``LineTerminatorPolicy/lenient`` takes it, so a line feed inside a value becomes a segment boundary.
     /// A message that ends every segment with `\r` and holds no line feed and no blank line
-    /// comes back unchanged; do not pass input that is already wire form, and read under
-    /// `.strict`, through it.
+    /// comes back unchanged. Input read under `.strict` that may hold a line feed inside a
+    /// value should not be passed through this function.
     public static func wire(fromCarried data: Data) -> Data {
         var bytes = data[...]
         func isBreak(_ byte: UInt8) -> Bool { byte == 0x0D || byte == 0x0A }

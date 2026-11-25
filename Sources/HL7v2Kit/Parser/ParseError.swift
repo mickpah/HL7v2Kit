@@ -24,9 +24,10 @@ public enum ParseError: Error, Equatable, Sendable, CustomStringConvertible {
     /// A streamed message passed the byte limit it was read under.
     case messageTooLarge(limit: Int)
     /// Under ``LineTerminatorPolicy/strict``, a line feed stands where a segment terminator
-    /// would be: segment `position` (1-based) starts with a line feed (`\r\n` endings) or
-    /// follows a bare one (`\n` endings, a line feed followed by a segment ID and the field
-    /// separator). Only ``LineTerminatorPolicy/lenient`` reads either as a terminator. The
+    /// would be: segment `position` (1-based) starts with a line feed (`\r\n` endings), follows
+    /// a bare one (`\n` endings, a line feed followed by a segment ID and the field separator),
+    /// or would follow a line feed that is the last byte of the input. Only
+    /// ``LineTerminatorPolicy/lenient`` reads any of these as a terminator. The
     /// check reads bytes, not meaning: a value that holds a line feed directly before text
     /// shaped like a segment ID and the field separator is rejected too.
     case lineFeedAfterSegmentTerminator(position: Int)

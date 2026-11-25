@@ -31,6 +31,20 @@ struct IssueRepetitionTests {
         }
     }
 
+    @Test("A format fault and a length fault on the second repetition name repetition 2")
+    func formatAndLengthNameTheRepetition() throws {
+        // Repetition 2: 271 characters against PID-3's LEN 250, and CX.7 (DT) not a date.
+        let long = String(repeating: "A", count: 251)
+        let wire = TestWires.adt("PID|1||MRN12345^^^HOSP^MR~\(long)^^^HOSP^MR^^NOTADATE||MARKER^ONE")
+        let issues = Validator().validate(try Parser().parse(wire)).issues
+        let format = issues.first { $0.code == .valueFormatInvalid(dataType: "DT") }
+        #expect(format?.location.repetitionIndex == 2)
+        #expect(format?.location.pathDescription == "PID[1]-3~2.7")
+        let length = issues.first { $0.code == .fieldLengthOutOfRange(length: "250", actual: 271) }
+        #expect(length?.location.repetitionIndex == 2)
+        #expect(length?.location.pathDescription == "PID[1]-3~2")
+    }
+
     @Test("A field-level issue names no repetition")
     func fieldIssuesNameNone() throws {
         let message = try Parser().parse(TestWires.adt("PID|1||||MARKER^ONE"))

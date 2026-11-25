@@ -11,6 +11,7 @@ struct SegmentGrammarLookupTests {
         let table = SegmentGrammarTable.table(for: version)
         #expect(!table.isEmpty)
         #expect(table == Validator.grammarTable(for: version))
+        #expect(table.values.allSatisfy { $0.version == version.grammarVersion.rawValue })
         for (segmentID, grammar) in table {
             #expect(SegmentGrammarTable.grammar(segmentID, version: version) == grammar)
         }

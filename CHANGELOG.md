@@ -17,9 +17,11 @@ The entries are condensed; the git history carries the detail.
   segment list, or the chapter heading where Appendix A is defective. Also
   `init(segmentID:name:version:fields:)`. The 505 schemas that carried the segment ID as their
   description now carry the printed name, and 201 more whose description differed from their
-  version's print now match it (76 in wording, 125 in letter case only). A trailing "segment"
-  printed in lower case, the generic noun, is not part of the name; a capitalised one, as in
-  "General Segment", is. (#36)
+  version's print now match it (76 in wording, 125 in letter case only). In a name taken from
+  Appendix A, a trailing "segment" printed in lower case, the generic noun, is not part of the
+  name; a capitalised one, as in "General Segment", is. A chapter heading used as the fallback
+  loses the "segment" or "Segment" it appends. A `SegmentGrammar`'s equality and hash include its
+  name. (#36)
 - `Parser.wire(fromCarried:)` for `Data` and `String`: wire form from pasted or saved text (line
   endings, a byte-order mark, blank lines, an MLLP frame). The `MessageViewer` example calls it.
   (#41)
@@ -46,10 +48,13 @@ The entries are condensed; the git history carries the detail.
 ### Fixed
 
 - Under `ParserOptions.strict` a message whose segments end in `\n` alone throws
-  `lineFeedAfterSegmentTerminator`, as `\r\n` endings do. It was read as a single MSH segment. Any
+  `lineFeedAfterSegmentTerminator`, as `\r\n` endings do. It was read as a single MSH segment. Three
+  shapes throw: a segment that starts with `\n` (`\r\n` endings), a line feed followed by a segment
+  ID and the field separator (`\n` endings), and a line feed as the last byte of the input. Any
   other line feed is kept; a value that holds a line feed directly before text shaped like a
-  segment ID and the field separator is rejected too. A change to default behaviour under
-  `.strict`. (#33)
+  segment ID and the field separator is rejected too. `BatchParser` and `StreamingBatchParser`
+  still read `\r\n` and `\n` as terminators under any preset (#43). A change to default behaviour
+  under `.strict`. (#33)
 - `LICENSE` carries the full Apache License 2.0 text. The earlier copy was abridged: section 3 had
   no patent-termination clause, and sections 7 and 8 lost most of their warranty and liability
   wording. The package was always offered under Apache 2.0; the file now holds all of it.

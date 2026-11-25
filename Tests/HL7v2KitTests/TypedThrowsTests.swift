@@ -12,8 +12,13 @@ struct TypedThrowsTests {
     func parser() {
         do throws(ParseError) {
             _ = try Parser().parse("")
-            _ = try Parser().parse(Data())
             Issue.record("empty input parsed")
+        } catch {
+            #expect(error == .emptyInput)
+        }
+        do throws(ParseError) {
+            _ = try Parser().parse(Data())
+            Issue.record("empty data parsed")
         } catch {
             #expect(error == .emptyInput)
         }
@@ -33,15 +38,13 @@ struct TypedThrowsTests {
             _ = try streaming.finish()
             Issue.record("a NUL byte parsed")
         } catch {
-            let typed: ParseError = error
-            _ = typed
+            #expect(error == .truncatedMessage(atByte: 0))
         }
         do throws(ParseError) {
             _ = try CharacterEncoding.detect(in: "MSH|^~\\&|A|B|C|D|||ADT^A01|1|P|2.5.1||||||KLINGON\r")
             Issue.record("an unknown character set was accepted")
         } catch {
-            let typed: ParseError = error
-            _ = typed
+            #expect(error == .unsupportedCharacterEncoding(declared: "KLINGON"))
         }
     }
 
@@ -51,8 +54,7 @@ struct TypedThrowsTests {
             _ = try Path("not a path")
             Issue.record("a malformed path parsed")
         } catch {
-            let typed: PathError = error
-            _ = typed
+            #expect(error == .malformed(input: "not a path", position: 3))
         }
     }
 }
