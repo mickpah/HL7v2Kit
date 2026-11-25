@@ -14,7 +14,9 @@ The entries are condensed; the git history carries the detail.
   field, repetition, component and subcomponent the parse produces, as written (an escape sequence
   is covered as its wire text, an empty value has an empty range). Offsets count from the first
   byte of the `Data` as given, a byte-order mark included. `WireLocation` names a place, and
-  converts from an `IssueLocation` and to a `Path`. (#37)
+  converts from an `IssueLocation` and to a `Path`. `SourceMap.location(at:)` gives the deepest
+  value at a byte, a delimiter answering the value that encloses it, and `utf16Range(_:)` converts
+  a byte range to UTF-16 offsets of the decoded text. (#37)
 
 ### Changed
 

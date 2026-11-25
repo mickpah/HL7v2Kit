@@ -6,7 +6,7 @@ import Testing
 import HL7v2Kit
 
 extension SignatureCompatibilityTests {
-    @Test("R4: WireLocation, SourceMap.range(of:) and Parser.sourceMap(of:) keep their signatures")
+    @Test("R4: WireLocation, SourceMap (range(of:), location(at:), utf16Range(_:)) and Parser.sourceMap(of:) keep their signatures")
     func sourceMapSignatures() {
         let make: (String, Int, Int?, Int?, Int?, Int?) -> WireLocation =
             WireLocation.init(segmentID:segmentIndex:fieldIndex:repetitionIndex:componentIndex:subcomponentIndex:)
@@ -15,7 +15,9 @@ extension SignatureCompatibilityTests {
         let text: KeyPath<SourceMap, String> = \.text
         let range: (SourceMap) -> (WireLocation) -> Range<Int>? = SourceMap.range(of:)
         let build: (Parser) -> (Data) throws(ParseError) -> SourceMap = Parser.sourceMap(of:)
-        _ = (make, fromIssue, path, text, range, build)
+        let place: (SourceMap) -> (Int) -> WireLocation? = SourceMap.location(at:)
+        let utf16: (SourceMap) -> (Range<Int>) -> Range<Int> = SourceMap.utf16Range(_:)
+        _ = (make, fromIssue, path, text, range, build, place, utf16)
     }
 
     @Test("R4: WireLocation's six properties keep their names and types")

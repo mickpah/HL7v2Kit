@@ -29,9 +29,13 @@ struct SourceMapTests {
         return result
     }
 
-    /// The bytes of `data` at `range`, decoded as the message's character set decodes them.
+    /// The bytes of `data` at `range`, decoded as the message's character set decodes them; nil
+    /// when `range` is not inside `data`.
     static func text(_ data: Data, _ range: Range<Int>, _ encoding: CharacterEncoding) -> String? {
-        encoding.decode(data.subdata(in: (data.startIndex + range.lowerBound)..<(data.startIndex + range.upperBound)))
+        guard range.lowerBound >= 0, range.upperBound <= data.count else { return nil }
+        let bytes = data.subdata(in: (data.startIndex + range.lowerBound)..<(data.startIndex + range.upperBound))
+        // Not `decode` under UTF-8: Foundation's drops a leading U+FEFF, which a value may start with.
+        return encoding == .utf8 ? String(decoding: bytes, as: UTF8.self) : encoding.decode(bytes)
     }
 
     /// The place `indices` names (field, repetition, component, subcomponent, as many as given) in
@@ -42,21 +46,33 @@ struct SourceMapTests {
                             componentIndex: at(2), subcomponentIndex: at(3))
     }
 
-    /// The map has a range for the value at `parent` and for each of its `count` children, each
-    /// inside it and after the one before, and none for a child after the last.
-    static func checkChildren(_ map: SourceMap, _ id: String, _ n: Int, _ parent: [Int], count: Int, _ name: String) {
+    /// The map has a range for the value at `parent` and for each of its `count` children, and none
+    /// for a child after the last. The bytes from the parent's start to child 1 read `lead`, those
+    /// between child k - 1 and child k read `gap(k)`, and the parent ends where its last child
+    /// ends, or where `lead` ends when it has none.
+    static func checkChildren(_ map: SourceMap, _ data: Data, _ encoding: CharacterEncoding, _ id: String, _ n: Int,
+                              _ parent: [Int], count: Int, lead: String, gap: (Int) -> String, _ name: String) {
+        let label = "\(name) \(id)[\(n)] \(parent)"
         guard let outer = map.range(of: place(id, n, parent)) else {
-            Issue.record("\(name) \(id)[\(n)] \(parent): no range")
+            Issue.record("\(label): no range")
             return
         }
-        var end = outer.lowerBound
-        for k in 1..<(count + 1) {
-            let inner = map.range(of: place(id, n, parent + [k]))
-            #expect(inner.map { $0.lowerBound >= end && $0.upperBound <= outer.upperBound } == true,
-                    "\(name) \(id)[\(n)] \(parent + [k])")
-            end = inner?.upperBound ?? end
+        // The text from byte `lower` to byte `upper`; nil when they are out of order or outside the parent.
+        func read(_ lower: Int, _ upper: Int) -> String? {
+            outer.lowerBound <= lower && lower <= upper && upper <= outer.upperBound
+                ? text(data, lower..<upper, encoding) : nil
         }
-        #expect(map.range(of: place(id, n, parent + [count + 1])) == nil, "\(name) \(id)[\(n)] \(parent + [count + 1])")
+        var end = outer.lowerBound
+        for k in stride(from: 1, through: count, by: 1) {
+            guard let inner = map.range(of: place(id, n, parent + [k])) else {
+                Issue.record("\(label) child \(k): no range")
+                continue
+            }
+            #expect(read(end, inner.lowerBound) == (k == 1 ? lead : gap(k)), "\(label) before child \(k)")
+            end = inner.upperBound
+        }
+        #expect(count == 0 ? read(end, outer.upperBound) == lead : end == outer.upperBound, "\(label) end")
+        #expect(map.range(of: place(id, n, parent + [count + 1])) == nil, "\(label) child \(count + 1)")
     }
 
     static func check(_ data: Data, options: ParserOptions, _ name: String) throws {
@@ -64,7 +80,10 @@ struct SourceMapTests {
         let message = try parser.parse(data)
         let map = try parser.sourceMap(of: data)
         let encoding = message.characterEncoding
-        // The shape: the map has every value the parse has and no other, each inside its parent.
+        let delimiters = message.encodingCharacters
+        let separator = String(delimiters.fieldSeparator)
+        // The shape: the map has every value the parse has and no other, each child where the
+        // one before it ends plus one delimiter, and each parent ending where its last child ends.
         var occurrence: [String: Int] = [:]
         var end = 0
         for segment in message.segments {
@@ -75,13 +94,22 @@ struct SourceMapTests {
             #expect(line.map { $0.lowerBound >= end && Self.text(data, $0, encoding)?.hasPrefix(id) == true } == true,
                     "\(name) \(id)[\(n)]")
             end = line?.upperBound ?? end
-            checkChildren(map, id, n, [], count: segment.fields.count - 1, name)
+            let fields = max(segment.fields.count - 1, 0)
+            // A separator segment's field 1 is the line's fourth character, with field 2 right after it.
+            let separatorSegment = Parser.isSeparatorSegment(id)
+            checkChildren(map, data, encoding, id, n, [], count: fields,
+                          lead: separatorSegment || fields == 0 ? id : id + separator,
+                          gap: { separatorSegment && $0 == 2 ? "" : separator }, name)
             for (f, field) in segment.fields.enumerated() where f >= 1 {
-                checkChildren(map, id, n, [f], count: field.repetitions.count, name)
+                checkChildren(map, data, encoding, id, n, [f], count: field.repetitions.count, lead: "",
+                              gap: { _ in String(delimiters.repetitionSeparator) }, name)
                 for (r, repetition) in field.repetitions.enumerated() {
-                    checkChildren(map, id, n, [f, r + 1], count: repetition.components.count, name)
+                    checkChildren(map, data, encoding, id, n, [f, r + 1], count: repetition.components.count,
+                                  lead: "", gap: { _ in String(delimiters.componentSeparator) }, name)
                     for (c, component) in repetition.components.enumerated() {
-                        checkChildren(map, id, n, [f, r + 1, c + 1], count: component.subcomponents.count, name)
+                        checkChildren(map, data, encoding, id, n, [f, r + 1, c + 1],
+                                      count: component.subcomponents.count, lead: "",
+                                      gap: { _ in String(delimiters.subcomponentSeparator) }, name)
                     }
                 }
             }
@@ -161,10 +189,10 @@ struct SourceMapTests {
         #expect(try Parser().sourceMap(of: slice).range(of: WireLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 3)) == 9..<12)
     }
 
-    @Test("Header lines inside a message: a later MSH, an MSHX line, BHS, and FHS with its own separator")
+    @Test("Header lines inside a message: a later MSH, an MSHX line, BHS, bare lines, and FHS with its own separator")
     func headerLines() throws {
         let tail = "FHS#^~\\&#F\r"
-        let data = Data((Self.msh + "\rMSH|^~\\&|X|Y\rMSHX|1|2\rBHS|^~\\&|B\rFHS|^~\\&\r" + tail).utf8)
+        let data = Data((Self.msh + "\rMSH|^~\\&|X|Y\rMSHX|1|2\rBHS|^~\\&|B\rFHS|^~\\&\rBHS\rZZZ\r" + tail).utf8)
         try Self.check(data, options: .default, "header lines")
         let map = try Parser().sourceMap(of: data)
         // The last FHS spells `#` in FHS-1: the map covers it, though the parse reads `|` there.
@@ -184,6 +212,7 @@ struct SourceMapTests {
         try Self.check(Data([0xEF, 0xBB, 0xBF]) + utf8, options: .default, "bom")
         // Foundation's UTF-8 decode drops a second mark the parse does not strip.
         try Self.check(Data([0xEF, 0xBB, 0xBF, 0xEF, 0xBB, 0xBF]) + utf8, options: .default, "two marks")
+        try Self.check(Data((Self.msh + "||||||UNICODE UTF-8\rNTE|1||\u{FEFF}x\r").utf8), options: .default, "U+FEFF")
         let bom = try Parser().sourceMap(of: Data([0xEF, 0xBB, 0xBF]) + utf8)
         #expect(bom.range(of: WireLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 1)) == 6..<7)
         let custom = Data("MSH#$~\\&#APP#FAC#RCV#FAC#20260101120000##ADT$A01$ADT_A01#CTRL1#P#2.5.1\rNTE#1##a\\F\\b\r".utf8)
