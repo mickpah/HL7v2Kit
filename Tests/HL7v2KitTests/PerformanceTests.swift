@@ -156,6 +156,20 @@ struct PerformanceTests {
         #expect(elapsed < 0.5, "Parse took \(elapsed)s; budget 0.5 s (X1 task 1)")
     }
 
+    @Test("Map a 2 MB ORU^R01 (400 TX OBX) under 0.5 s; the time is reported")
+    func sourceMapLargeORU() throws {
+        let data = try Self.largeORU()
+        let elapsed = try Self.median { _ = try Self.parser.sourceMap(of: data) }
+        print("perf sourceMapLargeORU \(elapsed)")
+        // The map alone, without the parse `sourceMap(of:)` runs first: reported, not a budget.
+        let encoding = try Self.parser.parse(data).encodingCharacters
+        let mapOnly = try Self.median {
+            _ = try SourceMap(mapping: data, encoding: encoding, policy: Self.parser.options.lineTerminator)
+        }
+        print("perf sourceMapOnly \(mapOnly)")
+        #expect(elapsed < 0.5, "Source map took \(elapsed)s; budget 0.5 s (R4)")
+    }
+
     /// The median of five timed runs of `block`, after one warm-up run.
     private static func median(_ block: () throws -> Void) rethrows -> TimeInterval {
         try block()

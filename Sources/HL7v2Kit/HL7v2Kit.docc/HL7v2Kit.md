@@ -20,6 +20,7 @@ The library has four pillars:
 - <doc:GettingStarted>
 - <doc:RoundTripGuarantee>
 - <doc:TypedSegments>
+- <doc:SourcePositions>
 
 ### Validation and conformance
 

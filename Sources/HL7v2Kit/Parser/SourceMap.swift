@@ -82,8 +82,8 @@ public struct SourceMap: Sendable {
     ///
     /// A character here is a Unicode scalar: a bound inside one's UTF-8 bytes moves back, so a
     /// range never splits a surrogate pair; a bound between a letter and its combining mark
-    /// stays. A bound in a byte-order mark or before the input moves to the text's start, one
-    /// past the input to its end.
+    /// stays. A bound in a byte-order mark or before the input moves to the text's start; a bound
+    /// past the input's end moves to the text's end.
     public func utf16Range(_ byteRange: Range<Int>) -> Range<Int> {
         let bytes = byteRange.clamped(to: textBytes)
         return utf16Offset(bytes.lowerBound)..<utf16Offset(bytes.upperBound)

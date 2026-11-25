@@ -86,6 +86,24 @@ struct FuzzTests {
         }
     }
 
+    @Test("Parser.sourceMap(of:) — throws what parse throws; otherwise every value sits where the map says")
+    func sourceMapAgreesOnRandomMutations() throws {
+        var input = 0   // the input's position in the seeded sequence, to replay it
+        try fuzzAll { bytes in
+            input += 1
+            switch Result(catching: { () throws(ParseError) in try Parser().parse(bytes) }) {
+            case .failure(let error):
+                #expect(throws: error, "fuzz input \(input)") { _ = try Parser().sourceMap(of: bytes) }
+            case .success:
+                do {   // `check` maps the bytes itself, so a map that throws fails here
+                    try SourceMapTests.check(bytes, options: .default, "fuzz input \(input)")
+                } catch {
+                    Issue.record("fuzz input \(input): \(error)")
+                }
+            }
+        }
+    }
+
     @Test("MLLPUnframer.feed(_:) — never crashes on random mutations (no throw API)")
     func mllpUnframerSurvivesRandomMutations() throws {
         try fuzzAll { bytes in

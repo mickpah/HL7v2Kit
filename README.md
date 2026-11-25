@@ -69,6 +69,10 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
   segment grammars the validator applies to a version, each with its printed name.
 - **Pasted text:** `Parser.wire(fromCarried:)` turns text with LF or CRLF line endings, a
   byte-order mark, blank lines or an MLLP frame into wire form.
+- **Source positions:** `Parser.sourceMap(of:)` gives the byte range in the input of every value
+  a parse produces, so an issue's location can be shown in the text it came from, and
+  `SourceMap.utf16Range(_:)` converts a range for a text view
+  ([Source Positions](Sources/HL7v2Kit/HL7v2Kit.docc/SourcePositions.md)).
 - **Cancellation:** `Validator.validate(_:isCancelled:)` and the `BatchValidator` equivalent
   stop between segments (between messages, for a batch) and throw `CancellationError`.
 - **Batches and streams:** `BatchParser` reads FHS and BHS envelopes into files and batches,

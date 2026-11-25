@@ -30,12 +30,19 @@ struct SourceMapTests {
     }
 
     /// The bytes of `data` at `range`, decoded as the message's character set decodes them; nil
-    /// when `range` is not inside `data`.
+    /// when `range` is not inside `data` or cuts a character.
     static func text(_ data: Data, _ range: Range<Int>, _ encoding: CharacterEncoding) -> String? {
         guard range.lowerBound >= 0, range.upperBound <= data.count else { return nil }
         let bytes = data.subdata(in: (data.startIndex + range.lowerBound)..<(data.startIndex + range.upperBound))
         // Not `decode` under UTF-8: Foundation's drops a leading U+FEFF, which a value may start with.
-        return encoding == .utf8 ? String(decoding: bytes, as: UTF8.self) : encoding.decode(bytes)
+        guard encoding == .utf8 else { return encoding.decode(bytes) }
+        let decoded = String(decoding: bytes, as: UTF8.self)
+        return decoded.utf8.elementsEqual(bytes) ? decoded : nil   // a cut character decodes as U+FFFD
+    }
+
+    /// Whether `text` is `expected` byte for byte: `String ==` takes two spellings of a character as one.
+    static func same(_ text: String?, _ expected: String) -> Bool {
+        text?.utf8.elementsEqual(expected.utf8) == true
     }
 
     /// The place `indices` names (field, repetition, component, subcomponent, as many as given) in
@@ -68,10 +75,10 @@ struct SourceMapTests {
                 Issue.record("\(label) child \(k): no range")
                 continue
             }
-            #expect(read(end, inner.lowerBound) == (k == 1 ? lead : gap(k)), "\(label) before child \(k)")
+            #expect(same(read(end, inner.lowerBound), k == 1 ? lead : gap(k)), "\(label) before child \(k)")
             end = inner.upperBound
         }
-        #expect(count == 0 ? read(end, outer.upperBound) == lead : end == outer.upperBound, "\(label) end")
+        #expect(count == 0 ? same(read(end, outer.upperBound), lead) : end == outer.upperBound, "\(label) end")
         #expect(map.range(of: place(id, n, parent + [count + 1])) == nil, "\(label) child \(count + 1)")
     }
 
@@ -91,8 +98,8 @@ struct SourceMapTests {
             occurrence[id, default: 0] += 1
             let n = occurrence[id] ?? 1
             let line = map.range(of: place(id, n, []))
-            #expect(line.map { $0.lowerBound >= end && Self.text(data, $0, encoding)?.hasPrefix(id) == true } == true,
-                    "\(name) \(id)[\(n)]")
+            #expect(line.map { $0.lowerBound >= end && Self.text(data, $0, encoding)?.utf8.starts(with: id.utf8) == true }
+                    == true, "\(name) \(id)[\(n)]")
             end = line?.upperBound ?? end
             let fields = max(segment.fields.count - 1, 0)
             // A separator segment's field 1 is the line's fourth character, with field 2 right after it.
@@ -132,9 +139,10 @@ struct SourceMapTests {
             let range = map.range(of: location)
             #expect(range != nil, "\(name) \(location)")
             if let range {
-                #expect(Self.text(data, range, encoding) == wire, "\(name) \(location)")
+                #expect(same(Self.text(data, range, encoding), wire), "\(name) \(location)")
             }
         }
+        checkLocations(map, data, message, name)
     }
 
     @Test("Every value of every valid fixture sits where the map says, under both presets")
@@ -209,6 +217,8 @@ struct SourceMapTests {
         try Self.check(Data(latin), options: .default, "latin1")
         let utf8 = Data((Self.msh + "||||||UNICODE UTF-8\rPID|1||A\u{1F600}B^C\r").utf8)
         try Self.check(utf8, options: .default, "utf8")
+        let emoji = try #require(utf8.firstIndex(of: 0xF0))                // the first of U+1F600's four bytes
+        #expect(Self.text(utf8, emoji..<(emoji + 2), .utf8) == nil)       // a range that cuts it reads nothing
         try Self.check(Data([0xEF, 0xBB, 0xBF]) + utf8, options: .default, "bom")
         // Foundation's UTF-8 decode drops a second mark the parse does not strip.
         try Self.check(Data([0xEF, 0xBB, 0xBF, 0xEF, 0xBB, 0xBF]) + utf8, options: .default, "two marks")

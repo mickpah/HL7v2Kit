@@ -6,6 +6,44 @@ import Testing
 import HL7v2Kit
 
 extension SourceMapTests {
+    /// `location(at:)` at every byte of `data`, and one before and one past it, is the deepest value
+    /// of `message` whose `range(of:)` holds the byte, and nil where none does: so a byte of a
+    /// segment the parse does not have answers nil.
+    static func checkLocations(_ map: SourceMap, _ data: Data, _ message: Message, _ name: String) {
+        // Each value marks its bytes, children after their parent, so a byte ends holding the deepest.
+        var deepest = [WireLocation?](repeating: nil, count: data.count)
+        func mark(_ id: String, _ n: Int, _ indices: [Int]) {
+            let location = place(id, n, indices)
+            for byte in map.range(of: location)?.clamped(to: 0..<data.count) ?? 0..<0 { deepest[byte] = location }
+        }
+        var occurrence: [String: Int] = [:]
+        for segment in message.segments {
+            let id = segment.segmentID
+            occurrence[id, default: 0] += 1
+            let n = occurrence[id] ?? 1
+            mark(id, n, [])
+            for (f, field) in segment.fields.enumerated() where f >= 1 {
+                mark(id, n, [f])
+                for (r, repetition) in field.repetitions.enumerated() {
+                    mark(id, n, [f, r + 1])
+                    for (c, component) in repetition.components.enumerated() {
+                        mark(id, n, [f, r + 1, c + 1])
+                        for s in component.subcomponents.indices { mark(id, n, [f, r + 1, c + 1, s + 1]) }
+                    }
+                }
+            }
+        }
+        for byte in -1...data.count {
+            let expected = deepest.indices.contains(byte) ? deepest[byte] : nil
+            let found = map.location(at: byte)
+            if found != expected {   // the first difference only, not one issue per byte
+                let wanted = String(describing: expected)
+                Issue.record("\(name) byte \(byte): location(at:) \(String(describing: found)), deepest \(wanted)")
+                return
+            }
+        }
+    }
+
     @Test("Round trip: the location at the start of every non-empty leaf is that leaf")
     func roundTrip() throws {
         for url in try FixtureCorpus.validFixtureURLs() {
