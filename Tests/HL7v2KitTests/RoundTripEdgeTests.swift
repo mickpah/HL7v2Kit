@@ -82,6 +82,44 @@ struct RoundTripEdgeTests {
         }
     }
 
+    @Test("#33: under .strict an all-LF message is rejected, not read as one MSH segment")
+    func strictRejectsLineFeedTerminators() throws {
+        let url = FixtureCorpus.fixtureURL(named: "au_oru_r01_pathology.hl7")
+        let wire = try String(contentsOf: url, encoding: .utf8).replacingOccurrences(of: "\r", with: "\n")
+        #expect(throws: ParseError.lineFeedAfterSegmentTerminator(position: 2)) {
+            try Parser(options: ParserOptions(lineTerminator: .strict)).parse(wire)
+        }
+        let lenient = try Parser().parse(wire)
+        #expect(lenient.segments.count > 1)
+    }
+
+    @Test("#33: the position is the segment that follows the first bare line feed")
+    func strictLineFeedPosition() {
+        let wire = ["MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\r",
+                    "PID|1||X\nPV1|1|I\r"].joined()
+        #expect(throws: ParseError.lineFeedAfterSegmentTerminator(position: 3)) {
+            try Parser(options: ParserOptions(lineTerminator: .strict)).parse(wire)
+        }
+    }
+
+    @Test("#33: the check reads bytes: a value shaped like a segment start is rejected, others kept")
+    func strictLineFeedInValueByShape() throws {
+        let msh = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\r"
+        let strict = Parser(options: ParserOptions(lineTerminator: .strict))
+        #expect(throws: ParseError.lineFeedAfterSegmentTerminator(position: 3)) {
+            try strict.parse(msh + "NTE|1||see\nOBX|x\r")
+        }
+        let kept = try strict.parse(msh + "NTE|1||see\nABC x\r")
+        #expect(kept["NTE-3"] == "see\nABC x")
+    }
+
+    @Test("#33 (pinned, not fixed here): the batch parser folds line feeds under .strict")
+    func batchParserFoldsLineFeeds() throws {
+        let wire = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\nPID|1||X\n"
+        let file = try BatchParser(options: ParserOptions(lineTerminator: .strict)).parse(wire)
+        #expect(file.allMessages.first?.segments.count == 2)
+    }
+
     @Test("P00 S1-3: under .lenient the same CRLF message parses into its segments")
     func lenientSplitsCRLF() throws {
         let message = try Parser().parse(Self.crlf)

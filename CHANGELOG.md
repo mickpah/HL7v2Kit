@@ -23,6 +23,11 @@ The entries are condensed; the git history carries the detail.
 
 ### Fixed
 
+- Under `ParserOptions.strict` a message whose segments end in `\n` alone throws
+  `lineFeedAfterSegmentTerminator`, as `\r\n` endings do. It was read as a single MSH segment. Any
+  other line feed is kept; a value that holds a line feed directly before text shaped like a
+  segment ID and the field separator is rejected too. A change to default behaviour under
+  `.strict`. (#33)
 - `LICENSE` carries the full Apache License 2.0 text. The earlier copy was abridged: section 3 had
   no patent-termination clause, and sections 7 and 8 lost most of their warranty and liability
   wording. The package was always offered under Apache 2.0; the file now holds all of it.

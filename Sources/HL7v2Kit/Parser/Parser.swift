@@ -122,9 +122,15 @@ public struct Parser: Sendable {
 
         // Under .strict only \r ends a segment, so a line starting with \n is a CRLF line
         // ending, not a segment (.lenient has already rewritten it).
-        if options.lineTerminator == .strict,
-           let index = segmentStrings.firstIndex(where: { $0.unicodeScalars.first == "\n" }) {
-            throw ParseError.lineFeedAfterSegmentTerminator(position: index + 1)
+        if options.lineTerminator == .strict {
+            if let index = segmentStrings.firstIndex(where: { $0.unicodeScalars.first == "\n" }) {
+                throw ParseError.lineFeedAfterSegmentTerminator(position: index + 1)
+            }
+            // #33: a line feed followed by a segment ID and the field separator is a line
+            // ending too. Any other line feed is data and is kept.
+            if let position = Parser.segmentAfterBareLineFeed(in: segmentStrings) {
+                throw ParseError.lineFeedAfterSegmentTerminator(position: position)
+            }
         }
 
         guard !segmentStrings.isEmpty else { throw ParseError.missingMSH }
@@ -356,6 +362,26 @@ public struct Parser: Sendable {
                 .replacingOccurrences(of: "\r\n", with: "\r")
                 .replacingOccurrences(of: "\n", with: "\r")
         }
+    }
+
+    /// The 1-based position the segment after the first bare line feed would have: a `\n`
+    /// followed by three ASCII letters or digits and the field separator (the fourth byte
+    /// of the first line). Nil when no line feed stands where a terminator would.
+    static func segmentAfterBareLineFeed(in lines: [String]) -> Int? {
+        guard let first = lines.first, first.utf8.count > 3 else { return nil }
+        let separator = first.utf8[first.utf8.index(first.utf8.startIndex, offsetBy: 3)]
+        func isIDByte(_ byte: UInt8) -> Bool {
+            (byte >= 0x41 && byte <= 0x5A) || (byte >= 0x30 && byte <= 0x39)
+        }
+        for (index, line) in lines.enumerated() where line.utf8.contains(0x0A) {
+            let bytes = Array(line.utf8)
+            for at in bytes.indices where bytes[at] == 0x0A && at + 4 < bytes.count {
+                if bytes[at + 4] == separator, bytes[(at + 1)...(at + 3)].allSatisfy(isIDByte) {
+                    return index + 2
+                }
+            }
+        }
+        return nil
     }
 }
 
