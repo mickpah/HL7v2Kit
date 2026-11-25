@@ -472,4 +472,30 @@ public struct SegmentGrammar: Sendable, Equatable, Hashable {
 
 /// Versioned lookup table mapping segment ID → `SegmentGrammar`.
 /// Populated by the codegen-emitted `SegmentGrammar+Generated.swift`.
-public enum SegmentGrammarTable {}
+public enum SegmentGrammarTable {
+    /// The segment grammars the validator applies to a message of `version`. Pass the
+    /// message's own version: v2.7 and v2.8 read the tables of v2.7.1 and v2.8.2
+    /// (``Version/grammarVersion``, ADR-018).
+    ///
+    /// Caller-supplied Z-segment grammars are not in this table; they travel in
+    /// ``ValidationOptions/zSegmentGrammars``.
+    public static func table(for version: Version) -> [String: SegmentGrammar] {
+        switch version.grammarVersion {
+        case .v2_3: return v2_3
+        case .v2_3_1: return v2_3_1
+        case .v2_4: return v2_4
+        case .v2_5_1: return v2_5_1
+        case .v2_6: return v2_6
+        case .v2_7, .v2_7_1: return v2_7_1
+        case .v2_8, .v2_8_2: return v2_8_2
+        case .v2_9: return v2_9
+        case .v2_9_1: return v2_9_1
+        }
+    }
+
+    /// The grammar of segment `segmentID` in the tables ``table(for:)`` gives for `version`,
+    /// or nil when that version does not define the segment.
+    public static func grammar(_ segmentID: String, version: Version) -> SegmentGrammar? {
+        table(for: version)[segmentID]
+    }
+}

@@ -8,6 +8,12 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- `SegmentGrammarTable.table(for:)` and `grammar(_:version:)`: the segment grammars the validator
+  applies to a version, v2.7 and v2.8 included. The `MessageViewer` example calls them instead of
+  its own copy of the switch. (#35)
+
 ### Fixed
 
 - `LICENSE` carries the full Apache License 2.0 text. The earlier copy was abridged: section 3 had

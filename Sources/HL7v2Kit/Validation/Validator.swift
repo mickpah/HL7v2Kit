@@ -482,19 +482,7 @@ public struct Validator: Sendable {
     /// table list from `Version.allCases` instead of hand-maintaining one
     /// (P4-15, folded from the P4-25 review).
     static func grammarTable(for version: Version) -> [String: SegmentGrammar] {
-        switch version {
-        case .v2_3:   return SegmentGrammarTable.v2_3
-        case .v2_3_1: return SegmentGrammarTable.v2_3_1
-        case .v2_4:   return SegmentGrammarTable.v2_4
-        case .v2_5_1: return SegmentGrammarTable.v2_5_1
-        case .v2_6:   return SegmentGrammarTable.v2_6     // v0.14 (ADR-012)
-        case .v2_7_1: return SegmentGrammarTable.v2_7_1   // plan P10 (ADR-018)
-        case .v2_7:   return SegmentGrammarTable.v2_7_1   // ADR-018 substitution (G11)
-        case .v2_8_2: return SegmentGrammarTable.v2_8_2   // v0.15 (ADR-013)
-        case .v2_8:   return SegmentGrammarTable.v2_8_2   // ADR-018 substitution
-        case .v2_9:   return SegmentGrammarTable.v2_9     // ADR-018
-        case .v2_9_1: return SegmentGrammarTable.v2_9_1   // ADR-018
-        }
+        SegmentGrammarTable.table(for: version)
     }
 
     /// ADR-018: at most one MSH-12 issue describing how the declared

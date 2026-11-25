@@ -46,7 +46,7 @@ struct CellGrid: Equatable, Sendable {
 
     init(message: Message, report: ValidationReport) {
         let chars = message.encodingCharacters
-        let grammar = Self.grammar(for: message.version)
+        let grammar = SegmentGrammarTable.table(for: message.version)
         // Key: segment ID, 1-based occurrence among segments with that ID (IssueLocation.segmentIndex),
         // field index (0 for a segment-level issue).
         var byCell: [String: [ValidationIssue]] = [:]
@@ -95,22 +95,6 @@ struct CellGrid: Equatable, Sendable {
     var issuesText: String {
         (rows.flatMap { row in row.cells.flatMap { cell in cell.notes.map { "\(cell.title): \($0)" } } } + unplaced)
             .joined(separator: "\n")
-    }
-
-    /// The segment grammars the validator applies to `version` (v2.7 and v2.8 read the next
-    /// point release's tables, as the validator does).
-    static func grammar(for version: Version) -> [String: SegmentGrammar] {
-        switch version {
-        case .v2_3: return SegmentGrammarTable.v2_3
-        case .v2_3_1: return SegmentGrammarTable.v2_3_1
-        case .v2_4: return SegmentGrammarTable.v2_4
-        case .v2_5_1: return SegmentGrammarTable.v2_5_1
-        case .v2_6: return SegmentGrammarTable.v2_6
-        case .v2_7, .v2_7_1: return SegmentGrammarTable.v2_7_1
-        case .v2_8, .v2_8_2: return SegmentGrammarTable.v2_8_2
-        case .v2_9: return SegmentGrammarTable.v2_9
-        case .v2_9_1: return SegmentGrammarTable.v2_9_1
-        }
     }
 
     /// Pasted text may carry LF or CRLF line endings and trailing blank lines; HL7 wants one CR
