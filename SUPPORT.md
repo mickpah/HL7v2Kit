@@ -36,8 +36,8 @@ These are explicitly **not** commitments.
 - **Bug fixes.** Confirmed bugs in the latest release *will probably* be fixed. Bugs in
   anything older will not be.
 - **Backports.** None. Fixes land on `main` and ship in the next release only.
-- **Platform support.** CI builds and tests on macOS and Linux. Other platforms may work;
-  reports from them are welcome, fixes are not guaranteed.
+- **Platform support.** CI builds and tests on macOS; Linux is not supported. Other platforms
+  may work; reports from them are welcome, fixes are not guaranteed.
 - **Toolchain floor.** There are no runtime dependencies; the minimum Swift version moves
   when convenient or when a security advisory makes it necessary.
 

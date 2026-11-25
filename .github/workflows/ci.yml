@@ -11,8 +11,7 @@ permissions:
   contents: read
 
 # Every job runs on local self-hosted runners: macOS VMs labelled macos-current and
-# macos-previous, and a Linux container built on swift:6.2-jammy. A pull request from a fork
-# runs nothing on them.
+# macos-previous. A pull request from a fork runs nothing on them.
 jobs:
   test-macos:
     name: Test on ${{ matrix.os }}
@@ -34,16 +33,19 @@ jobs:
           xcodebuild -version
           swift --version
 
-      # CI requires 6.2 so the one exit test (#expect(processExitsWith:)) runs; the test target
-      # also builds and runs on 6.0, which the rehearsal proves (test-linux-swift60).
-      - name: Require Swift 6.2 or later
-        run: bash scripts/check-swift-version.sh 6.2
+      # Package.swift declares swift-tools-version 6.4, so an older toolchain fails here, by name.
+      - name: Require Swift 6.4 or later
+        run: bash scripts/check-swift-version.sh 6.4
 
       - name: Build
         run: swift build -v
 
       - name: Test
         run: swift test -v
+
+      # Deterministic seed. The rehearsal reads `run:` only, hence the inline variable, not `env:`.
+      - name: Fuzz tests
+        run: RUN_FUZZ_TESTS=1 swift test --filter FuzzTests
 
       # Budgets were set on the current macOS runner, so the previous one skips them. The
       # rehearsal does not read `if:` and runs the step once.
@@ -58,36 +60,10 @@ jobs:
       - name: Run the QuickStart example
         run: swift run QuickStart
 
-  test-linux:
-    name: Test on Linux
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, Linux, ARM64, swift-6.2]
-    timeout-minutes: 30
-    # Swift 6.2 is CI's floor so the exit test runs; scripts/ci-rehearsal.sh also runs the suite
-    # in swift:6.0-jammy.
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Show Swift version
-        run: swift --version
-
-      - name: Build
-        run: swift build -v
-
-      - name: Test
-        run: swift test -v
-
-      # Deterministic seed. The rehearsal reads `run:` only, hence the inline variable, not `env:`.
-      - name: Fuzz tests
-        run: RUN_FUZZ_TESTS=1 swift test --filter FuzzTests
-
-      - name: Run the QuickStart example
-        run: swift run QuickStart
-
   fixture-safety:
     name: PHI scan
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, Linux, ARM64, swift-6.2]
+    runs-on: [self-hosted, macOS, ARM64, macos-current]
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5

@@ -1,4 +1,3 @@
-#if os(macOS)
 import Foundation
 import Testing
 @testable import HL7v2Kit
@@ -146,4 +145,3 @@ struct MessageViewerExampleTests {
         #expect(CellState([issue(.warning), issue(.error), issue(.info)]) == .error)
     }
 }
-#endif

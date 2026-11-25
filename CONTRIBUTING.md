@@ -46,7 +46,7 @@ The repository's own working rules, for anyone building on it:
 
 The four project requirements and the reading order for the design records are in
 `docs/design/architecture-decisions.md`. Before pushing, `bash scripts/ci-rehearsal.sh` runs every CI step on a
-clean clone of `HEAD` (the Linux job through Docker).
+clean clone of `HEAD`. CI builds and tests on macOS; Linux is not supported.
 
 ## Licence
 

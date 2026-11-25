@@ -1,7 +1,6 @@
 # Maintenance tasks. `just` lists them; `just <task>` runs one.
-# Needs: just, Xcode (Swift 6.0 or later builds the library and tests; CI requires 6.2), python3
-# (the scripts are standard library only), uv for the optional virtual environment, Docker for the
-# Linux step of the rehearsal.
+# Needs: just, Xcode 27.1 or later (Swift 6.4), python3 (the scripts are standard library only),
+# uv for the optional virtual environment.
 
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
@@ -55,7 +54,7 @@ docc:
     if grep -E '^[^ ]+\.(swift|md):[0-9]+(:[0-9]+)?: warning:|^warning: ' "$scratch/docc.log" | grep -vE "^warning: '[^']+': "; then echo "docc: warnings"; exit 1; fi
     echo "docc: 0 warnings"
 
-# Every CI step on a clean clone of HEAD (committed work only; Linux through Docker).
+# Every CI step on a clean clone of HEAD (committed work only).
 rehearsal:
     bash scripts/ci-rehearsal.sh --hide-tmp-binaries
 

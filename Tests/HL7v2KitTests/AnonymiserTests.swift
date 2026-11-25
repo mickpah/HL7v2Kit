@@ -114,7 +114,7 @@ struct AnonymiserTests {
         #expect(!String(decoding: out, as: UTF8.self).contains(AnonymiseTests.marker(field)))
     }
 
-    @Test("Key 42 output for two fixtures matches the committed baseline (every run, macOS and Linux)")
+    @Test("Key 42 output for two fixtures matches the committed baseline (every run, macOS)")
     func pinnedOutputForKey42() throws {
         var lines: [String] = []
         for name in ["adt_a01_with_insurance.hl7", "adt_a01_with_nk1.hl7"] {
