@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.34.0]
+
 ### Added
 
 - `Parser.sourceMap(of:)` returns a `SourceMap`: the byte range in the input of every segment,

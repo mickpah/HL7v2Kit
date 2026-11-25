@@ -41,6 +41,7 @@ not the boundary of the work.
 | 3.23 | ROL-4 against STF-2 and STF-3 as a correlation, a default warning (correlatedValueMismatch, correlationSeverity); v2.8.2 OBR-32 and OBR-35 prohibited when TXA-22 or TXA-11 is valued |
 | 3.32 | HL7 v2.9 and v2.9.1 added, each from its own text, with ten new typed segments; the null and the delete segment read from each version's print; IPR-8 and DON follow their definitions, PRT without ROL passes in the CH12 participation groups and the deferred RTB_K13 response may leave out MSA; the anonymiser covers GSP, GSR, GSC, PRT, ROL, DEV, MRG, SPM and IN2 and the identifying fields of the segments it already covered, and moves dates given to the month |
 | 3.33 | A public segment grammar lookup by version and each segment's printed name; strict parsing rejects a line feed standing as a segment terminator; wire form from carried text; a value-level issue names its repetition; cancellable validation; typed throws on the parsers |
+| 3.34 | Source positions: the byte range in the input of every parsed value, a lookup from a byte to its value, and UTF-16 offsets for a text view; the batch parsers follow strict line endings; macOS only, Linux no longer supported |
 
 ## What remains
 
