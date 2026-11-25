@@ -159,6 +159,20 @@ struct VersionHandlingTests {
         #expect(try Parser().parse(adt(version: "^AUS")).version == .v2_5_1)
     }
 
+    @Test("R11: a 1007 for an empty VID.1 quotes MSH-12 as written")
+    func emptyVID1QuotesMSH12() throws {
+        let message = try Parser().parse(adt(version: "^AUS"))
+        let issues = Validator().validate(message).issues.filter { $0.code == .versionNotRecognised(wireValue: "") }
+        #expect(issues.count == 1)
+        #expect(issues.first?.severity == .warning)
+        #expect(issues.first?.message.contains("'^AUS'") == true)
+        let subdivided = try Parser().parse(adt(version: "2.4&X"))
+        let named = Validator().validate(subdivided).issues.filter { $0.code == .versionNotRecognised(wireValue: "2.4&X") }
+        #expect(named.count == 1)
+        let quiet = try Parser().parse(adt(version: "2.5.1^AUS"))
+        #expect(Validator().validate(quiet).issues.filter(VersionMatrixTests.isVersionIssue).isEmpty)
+    }
+
     // AU v2.4 traffic now meets the v2.4 grammar, not v2.5.1. v2.4 types
     // MSH-9 as CM with no component optionality, and "the second component
     // is not required on response or acknowledgment messages" (HL7 v2.4

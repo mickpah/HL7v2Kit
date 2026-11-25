@@ -96,6 +96,9 @@ The entries are condensed; the git history carries the detail.
   has no residual left (#32).
 - The citation text of ADRM-prose:P-13 and of the ORR_O02, OSR_Q06 and REF_I12 profile structures no longer names
   who made the decision it cites; the decision and ruling references stay (#32).
+- The 1007 message for an MSH-12 whose version ID is empty quotes MSH-12 as written
+  (`MSH-12 '^AUS' is populated but ...`). The code and its payload are unchanged. A change to
+  default output. (#42)
 
 ### Fixed
 

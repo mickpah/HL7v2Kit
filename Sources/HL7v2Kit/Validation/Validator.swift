@@ -498,8 +498,17 @@ public struct Validator: Sendable {
             msh12: msh12, subcomponentSeparator: message.encodingCharacters.subcomponentSeparator
         )
         if case .unresolved(let vid1) = reading {
+            let encoding = message.encodingCharacters
+            // MSH-12 as written, so the reader sees what carried no version (R11).
+            let written = (msh12?.repetitions ?? []).map { repetition in
+                repetition.components.map { component in
+                    component.subcomponents
+                        .map { EscapeSequences.wireForm(of: $0, encoding: encoding) }
+                        .joined(separator: String(encoding.subcomponentSeparator))
+                }.joined(separator: String(encoding.componentSeparator))
+            }.joined(separator: String(encoding.repetitionSeparator))
             let what = vid1.isEmpty
-                ? "MSH-12 is populated but its version ID (VID.1) is empty"
+                ? "MSH-12 '\(written)' is populated but its version ID (VID.1) is empty"
                 : "MSH-12 version '\(vid1)' is not a version HL7v2Kit models"
             issues.append(ValidationIssue(
                 severity: .warning,
