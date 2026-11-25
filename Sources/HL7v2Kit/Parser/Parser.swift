@@ -167,12 +167,7 @@ public struct Parser: Sendable {
         var segments: [Segment] = []
         for (i, segLine) in segmentStrings.enumerated() {
             if segLine.isEmpty { continue }   // tolerate blank lines mid-message
-            // A later line starting MSH is a header only when its fourth character is the
-            // message's field separator (MSH-1, v2.5.1 section 2.5.4); `MSHX|1|2` is an ordinary
-            // line. BHS and FHS name their own separator in theirs (BHS-1, FHS-1).
-            let id = String(segLine.prefix(3))
-            let separatorSegment = i == 0 || id == "BHS" || id == "FHS"
-                || id == "MSH" && segLine.dropFirst(3).first?.isDelimiter(fieldSep) == true
+            let separatorSegment = Parser.isSeparatorLine(segLine[...], at: i, fieldSeparator: fieldSep)
             let segment = try parseSegment(segLine, encoding: encoding, separatorSegment: separatorSegment)
             // Enforce strict mode: if the registry returned `.unknown`, the
             // segment ID is not in the codegen-emitted typed-segment table.
@@ -293,6 +288,16 @@ public struct Parser: Sendable {
         let fields = afterSeparator.split(omittingEmptySubsequences: false) { $0.isDelimiter(separator) }
         // MSH-1 (BHS-1, FHS-1) is the separator itself, the fourth character; MSH-2 follows.
         return separatorSegment ? (id, [line[idEnd..<afterSeparator.startIndex]] + fields) : (id, fields)
+    }
+
+    /// Whether line `index` (0-based, blank lines counted) of a message is a separator segment:
+    /// the first line, a BHS or FHS line, or a later line starting MSH whose fourth character is
+    /// the message's field separator (MSH-1, v2.5.1 section 2.5.4); `MSHX|1|2` is an ordinary line.
+    /// BHS and FHS name their own separator in theirs (BHS-1, FHS-1).
+    static func isSeparatorLine(_ line: Substring, at index: Int, fieldSeparator: Character) -> Bool {
+        let id = line.prefix(3)
+        return index == 0 || id == "BHS" || id == "FHS"
+            || id == "MSH" && line.dropFirst(3).first?.isDelimiter(fieldSeparator) == true
     }
 
     /// A field's repetitions, empty ones kept: an empty field is one empty repetition.

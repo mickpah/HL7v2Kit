@@ -8,6 +8,14 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- `Parser.sourceMap(of:)` returns a `SourceMap`: the byte range in the input of every segment,
+  field, repetition, component and subcomponent the parse produces, as written (an escape sequence
+  is covered as its wire text, an empty value has an empty range). Offsets count from the first
+  byte of the `Data` as given, a byte-order mark included. `WireLocation` names a place, and
+  converts from an `IssueLocation` and to a `Path`. (#37)
+
 ### Changed
 
 - **Not additive: Linux is no longer supported and the Swift floor rises.** CI builds and tests on

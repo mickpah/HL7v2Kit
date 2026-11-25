@@ -47,6 +47,8 @@ The library has four pillars:
 - ``ParserOptions``
 - ``ParseError``
 - ``LineTerminatorPolicy``
+- ``SourceMap``
+- ``WireLocation``
 
 ### Validator surface
 
