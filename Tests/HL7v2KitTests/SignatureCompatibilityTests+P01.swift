@@ -19,4 +19,11 @@ extension SignatureCompatibilityTests {
         let make: (String, String, String, [FieldGrammar]) -> SegmentGrammar = SegmentGrammar.init(segmentID:name:version:fields:)
         _ = (name, make)
     }
+
+    @Test("P01 R9: Parser.wire(fromCarried:) keeps both signatures")
+    func carriedTextSignatures() {
+        let bytes: (Data) -> Data = Parser.wire(fromCarried:)
+        let text: (String) -> String = Parser.wire(fromCarried:)
+        _ = (bytes, text)
+    }
 }

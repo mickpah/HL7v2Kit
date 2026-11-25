@@ -68,7 +68,7 @@ final class Document: ObservableObject {
 
     nonisolated private static func compute(_ text: String, strict: Bool) -> Outcome {
         do {
-            let message = try Parser().parse(CellGrid.wire(from: text))
+            let message = try Parser().parse(Parser.wire(fromCarried: text))
             let validator = strict
                 ? Validator(options: .strict, locale: .auLocalisation)
                 : Validator(options: .default)

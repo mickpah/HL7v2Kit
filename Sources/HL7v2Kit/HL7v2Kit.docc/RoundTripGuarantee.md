@@ -42,6 +42,17 @@ The library guarantees byte equality across:
 - **Batch headers inside one message.** ``Parser`` reads a BHS or FHS line inside a message with the message's delimiters, so one that declares others (`BHS#^~\&#APP`, or `BHSX|1`, in a message whose field separator is `|`) comes back with the message's field separator. ``BatchParser`` keeps each envelope line as written.
 - **Raw control characters.** A control character inside a value, such as an `\n` read under `.strict`, is written back as a hex escape (`\X0A\`); a raw one cannot stand inside a field on the wire. The decoded value is unchanged. This holds inside a locally defined escape too: `\Za<TAB>b\` comes back as `\E\Za\X09\b\E\`, the same text written escaped.
 
+## Carried text
+
+Text pasted from an email or a log, or saved by an interface engine, often carries LF or CRLF
+line endings, a byte-order mark, blank lines or an MLLP frame. ``Parser/wire(fromCarried:)-(Data)``
+(and its `String` overload) turns it into wire form. The result is not the original bytes, so the
+guarantee runs from the result, not from the carried text. ``Parser`` never applies it itself.
+A message that ends every segment with a carriage return and holds no line feed and no blank line
+comes back unchanged; a line feed inside a value becomes a segment boundary, so wire form that
+`.strict` accepts should not be passed through it. An MLLP start byte at the start and an end byte
+at the end are each dropped where present.
+
 ## How to debug a failed round trip
 
 If you find a real-world fixture where `parse(bytes).serialize() != bytes`:

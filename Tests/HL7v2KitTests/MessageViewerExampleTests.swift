@@ -99,10 +99,10 @@ struct MessageViewerExampleTests {
 
     @Test("pasted text with LF, CRLF or trailing blank lines becomes CR-terminated segments")
     func wireNormalisation() {
-        #expect(CellGrid.wire(from: "MSH|a\nPID|b") == "MSH|a\rPID|b\r")
-        #expect(CellGrid.wire(from: "MSH|a\r\nPID|b\r\n\r\n") == "MSH|a\rPID|b\r")
-        #expect(CellGrid.wire(from: "MSH|a\r") == "MSH|a\r")
-        #expect(CellGrid.wire(from: "\n\n") == "")
+        #expect(Parser.wire(fromCarried: "MSH|a\nPID|b") == "MSH|a\rPID|b\r")
+        #expect(Parser.wire(fromCarried: "MSH|a\r\nPID|b\r\n\r\n") == "MSH|a\rPID|b\r")
+        #expect(Parser.wire(fromCarried: "MSH|a\r") == "MSH|a\r")
+        #expect(Parser.wire(fromCarried: "\n\n") == "")
     }
 
     @Test("a cell is titled with its segment, field number and the field's name for the message version")

@@ -20,6 +20,9 @@ The entries are condensed; the git history carries the detail.
   version's print now match it (76 in wording, 125 in letter case only). A trailing "segment"
   printed in lower case, the generic noun, is not part of the name; a capitalised one, as in
   "General Segment", is. (#36)
+- `Parser.wire(fromCarried:)` for `Data` and `String`: wire form from pasted or saved text (line
+  endings, a byte-order mark, blank lines, an MLLP frame). The `MessageViewer` example calls it.
+  (#41)
 
 ### Fixed
 

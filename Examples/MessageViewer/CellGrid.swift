@@ -97,14 +97,6 @@ struct CellGrid: Equatable, Sendable {
             .joined(separator: "\n")
     }
 
-    /// Pasted text may carry LF or CRLF line endings and trailing blank lines; HL7 wants one CR
-    /// after every segment.
-    static func wire(from text: String) -> String {
-        let lines = text.replacingOccurrences(of: "\r\n", with: "\r").replacingOccurrences(of: "\n", with: "\r")
-            .split(separator: "\r", omittingEmptySubsequences: true)
-        return lines.map { $0 + "\r" }.joined()
-    }
-
     // Values are shown decoded (no re-escaping); the kit keeps its encoder internal.
     private static func text(of field: Field, _ chars: EncodingCharacters) -> String {
         field.repetitions.map { repetition in
