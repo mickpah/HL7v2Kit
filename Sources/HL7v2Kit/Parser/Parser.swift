@@ -103,25 +103,13 @@ public struct Parser: Sendable {
     private func parse(_ raw: String, characterEncoding: CharacterEncoding) throws(ParseError) -> Message {
         guard !raw.isEmpty else { throw ParseError.emptyInput }
 
-        // Normalise line terminators per policy. Whether the input ended with \r is
-        // recorded on the message so serialise() can put it back (P00 S1-1).
-        let normalised = normaliseLineTerminators(raw)
-
-        // Split on the carriage-return scalar (the HL7 segment terminator), not on
-        // Characters: "\r\n" is one Character in Swift, so a Character split would fold a
-        // CRLF line into the segment before it (P00 S1-3). Keep empty trailing entries
-        // out — they represent the final \r after the last segment. Each line is copied
-        // whole through a `Substring`, not rebuilt one scalar at a time.
-        var segmentStrings = normalised.unicodeScalars
-            .split(separator: "\r", omittingEmptySubsequences: false)
-            .map { String(Substring($0)) }
-        // Trailing empty string after final \r is expected; drop it for parsing.
-        if segmentStrings.last == "" {
-            segmentStrings.removeLast()
-        }
+        // The lines as the policy ends them, each copied whole through a `Substring`. Whether
+        // the input ended with a terminator is recorded on the message so serialise() can put
+        // it back (P00 S1-1).
+        let segmentStrings = Parser.lineSlices(of: raw, policy: options.lineTerminator).map(String.init)
 
         // Under .strict only \r ends a segment, so a line starting with \n is a CRLF line
-        // ending, not a segment (.lenient has already rewritten it).
+        // ending, not a segment (.lenient has already ended the line there).
         if options.lineTerminator == .strict {
             if let index = segmentStrings.firstIndex(where: { $0.unicodeScalars.first == "\n" }) {
                 throw ParseError.lineFeedAfterSegmentTerminator(position: index + 1)
@@ -132,7 +120,7 @@ public struct Parser: Sendable {
                 throw ParseError.lineFeedAfterSegmentTerminator(position: position)
             }
             // So is a line feed as the last byte of the input: it ends the last segment.
-            if normalised.unicodeScalars.last == "\n" {
+            if raw.unicodeScalars.last == "\n" {
                 throw ParseError.lineFeedAfterSegmentTerminator(position: segmentStrings.count + 1)
             }
         }
@@ -229,9 +217,97 @@ public struct Parser: Sendable {
             characterEncoding: characterEncoding,
             locale: locale
         )
-        // Unicode scalars, not Characters: "\r\n" is one Character in Swift.
-        message.trailingSegmentTerminator = normalised.unicodeScalars.last == "\r"
+        message.trailingSegmentTerminator = Parser.endsWithTerminator(raw, policy: options.lineTerminator)
         return message
+    }
+
+    // MARK: - Shared slices
+
+    /// The lines of `text` as slices of it. Under `.strict` a line ends at `\r`; under
+    /// `.lenient` at `\r\n` (one terminator), `\n` or `\r`. Empty lines are kept; the empty
+    /// entry after a final terminator is not. The walk is over scalars, not Characters:
+    /// `"\r\n"` is one Character in Swift, so a Character split would fold a CRLF line into
+    /// the segment before it (P00 S1-3).
+    static func lineSlices(of text: String, policy: LineTerminatorPolicy) -> [Substring] {
+        let scalars = text.unicodeScalars
+        let lenient = policy == .lenient
+        var lines: [Substring] = []
+        var start = scalars.startIndex
+        var i = start
+        while i < scalars.endIndex {
+            let scalar = scalars[i]
+            if scalar == "\r" || lenient && scalar == "\n" {
+                lines.append(text[start..<i])
+                i = scalars.index(after: i)
+                if lenient, scalar == "\r", i < scalars.endIndex, scalars[i] == "\n" {
+                    i = scalars.index(after: i)
+                }
+                start = i
+            } else {
+                i = scalars.index(after: i)
+            }
+        }
+        if start < scalars.endIndex { lines.append(text[start...]) }
+        return lines
+    }
+
+    /// Whether `text` ends with a line terminator: its last scalar is `\r`, or under
+    /// `.lenient` `\r` or `\n`.
+    static func endsWithTerminator(_ text: String, policy: LineTerminatorPolicy) -> Bool {
+        let last = text.unicodeScalars.last
+        return last == "\r" || policy == .lenient && last == "\n"
+    }
+
+    /// The segment ID and the fields of `line`, as slices of it; nil when the line has fewer
+    /// than three characters. `fields` excludes the ID. For a separator segment `fields[0]` is
+    /// the line's fourth character and `fields[1]` the encoding characters, then the rest; a
+    /// line with no field separator after its ID has no fields.
+    static func fieldSlices(
+        of line: Substring,
+        encoding: EncodingCharacters,
+        separatorSegment: Bool
+    ) -> (id: Substring, fields: [Substring])? {
+        // The fourth character's index, or the end index when the line is three characters long.
+        guard let fourth = line.index(line.startIndex, offsetBy: 3, limitedBy: line.endIndex) else {
+            return nil
+        }
+
+        // A segment ID is three characters (v2.5.1 section 2.5.2, p. 2-6) and the site picks the
+        // delimiters (section 2.5.4, p. 2-11). A separator segment's ID is its first three. With
+        // any other line the ID runs to the first field separator (the whole line when there is
+        // none), so a malformed line keeps every character and the validator reports it (1014).
+        // A letter or digit can stand inside an ID, so with one as the separator the ID is the
+        // first three characters when the line is three long or its fourth is the separator.
+        // ASCII only: Appendix A's IDs are ASCII letters and digits, so `é` cannot stand in one.
+        let separator = encoding.fieldSeparator
+        let alphanumericSeparator = separator.isASCII && (separator.isLetter || separator.isNumber)
+        let threeCharacterID = separatorSegment
+            || alphanumericSeparator && (fourth == line.endIndex || line[fourth].isDelimiter(separator))
+        let idEnd = threeCharacterID ? fourth : (line.firstIndex { $0.isDelimiter(separator) } ?? line.endIndex)
+        let id = line[..<idEnd]
+
+        // No field separator after the ID ("BHS" alone, or a line without one): no fields.
+        guard idEnd < line.endIndex else { return (id, []) }
+        // Slices of `line`, not copies: each value is copied once, as a subcomponent's String.
+        let afterSeparator = line[line.index(after: idEnd)...]
+        let fields = afterSeparator.split(omittingEmptySubsequences: false) { $0.isDelimiter(separator) }
+        // MSH-1 (BHS-1, FHS-1) is the separator itself, the fourth character; MSH-2 follows.
+        return separatorSegment ? (id, [line[idEnd..<afterSeparator.startIndex]] + fields) : (id, fields)
+    }
+
+    /// A field's repetitions, empty ones kept: an empty field is one empty repetition.
+    static func repetitionSlices(of field: Substring, encoding: EncodingCharacters) -> [Substring] {
+        field.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.repetitionSeparator) }
+    }
+
+    /// A repetition's components, empty ones kept.
+    static func componentSlices(of repetition: Substring, encoding: EncodingCharacters) -> [Substring] {
+        repetition.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.componentSeparator) }
+    }
+
+    /// A component's subcomponents, empty ones kept.
+    static func subcomponentSlices(of component: Substring, encoding: EncodingCharacters) -> [Substring] {
+        component.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.subcomponentSeparator) }
     }
 
     // MARK: - Segment parsing
@@ -249,57 +325,19 @@ public struct Parser: Sendable {
         encoding: EncodingCharacters,
         separatorSegment: Bool
     ) throws(ParseError) -> Segment {
-        // The fourth character's index, or the end index when the line is three characters long.
-        guard let fourth = line.index(line.startIndex, offsetBy: 3, limitedBy: line.endIndex) else {
+        guard let slices = Parser.fieldSlices(of: line[...], encoding: encoding, separatorSegment: separatorSegment) else {
             throw ParseError.invalidMSH(reason: "segment too short: '\(line)'")
         }
+        let segmentID = String(slices.id)
 
-        // A segment ID is three characters (v2.5.1 section 2.5.2, p. 2-6) and the site picks the
-        // delimiters (section 2.5.4, p. 2-11). A separator segment's ID is its first three. With
-        // any other line the ID runs to the first field separator (the whole line when there is
-        // none), so a malformed line keeps every character and the validator reports it (1014).
-        // A letter or digit can stand inside an ID, so with one as the separator the ID is the
-        // first three characters when the line is three long or its fourth is the separator.
-        // ASCII only: Appendix A's IDs are ASCII letters and digits, so `é` cannot stand in one.
-        let separator = encoding.fieldSeparator
-        let alphanumericSeparator = separator.isASCII && (separator.isLetter || separator.isNumber)
-        let threeCharacterID = separatorSegment
-            || alphanumericSeparator && (fourth == line.endIndex || line[fourth].isDelimiter(separator))
-        let idEnd = threeCharacterID ? fourth : (line.firstIndex { $0.isDelimiter(separator) } ?? line.endIndex)
-        let segmentID = String(line[..<idEnd])
-
-        // Split into raw field strings.
-        // MSH / BHS / FHS are special: the field separator IS field 1, so the raw split
-        // looks like ["MSH", "^~\\&", ...] but the SEMANTIC fields are:
-        //   fields[0] = "MSH"  (segment ID)
-        //   fields[1] = fieldSeparator (single character)
-        //   fields[2] = encoding chars
-        //   fields[3] = sending application
+        // MSH / BHS / FHS are special: the field separator IS field 1, so the fields are
+        //   rawFields[0] = "MSH"  (segment ID)
+        //   rawFields[1] = fieldSeparator (single character)
+        //   rawFields[2] = encoding chars
+        //   rawFields[3] = sending application
         //   ...
-        // Slices of `line`, not copies: each value is copied once, as a subcomponent's String.
-        var rawFields: [Substring]
-        if separatorSegment {
-            if fourth == line.endIndex {
-                // "BHS" or "FHS" alone: no separator, so no fields.
-                rawFields = [line[..<idEnd]]
-            } else {
-                // Slice off the ID + field separator. Reconstruct fields[1] and [2] manually.
-                // line == "MSH|^~\\&|sendingApp|..."
-                let afterPrefix = line[line.index(after: fourth)...]   // everything after "MSH|"
-                let rest = afterPrefix.split(omittingEmptySubsequences: false) { $0.isDelimiter(separator) }
-                // The first element of `rest` is "^~\\&" (field 2), then the actual fields.
-                // Build the canonical array:
-                rawFields = [line[..<idEnd], Substring(String(encoding.fieldSeparator))] + rest
-            }
-        } else if idEnd == line.endIndex {
-            // No field separator after the ID: no field, so the line is written back as its ID.
-            rawFields = [line[..<idEnd]]
-        } else {
-            // Everything after the ID and its separator.
-            let afterSeparator = line[line.index(after: idEnd)...]
-            let parts = afterSeparator.split(omittingEmptySubsequences: false) { $0.isDelimiter(separator) }
-            rawFields = [line[..<idEnd]] + parts
-        }
+        // A line with no field separator after its ID is written back as its ID.
+        let rawFields = [slices.id] + slices.fields
 
         // Parse each field. Index 0 (segment ID) stays as a placeholder empty field.
         var fields: [Field] = []
@@ -308,8 +346,9 @@ public struct Parser: Sendable {
                 // Segment ID slot — not a real field, but keep array indices 1-based.
                 fields.append(Field(repetitions: []))
             } else if separatorSegment && i == 1 {
-                // MSH-1 (BHS-1, FHS-1) is the field separator as a single character.
-                fields.append(.scalar(String(rawField)))
+                // MSH-1 (BHS-1, FHS-1) is the message's field separator as a single character:
+                // a BHS or FHS line inside a message may spell another one there.
+                fields.append(.scalar(String(encoding.fieldSeparator)))
             } else if separatorSegment && i == 2 {
                 // MSH-2 (BHS-2, FHS-2) is the encoding characters (four, or five with the truncation character) as one literal value (no internal split).
                 fields.append(.scalar(String(rawField)))
@@ -326,19 +365,19 @@ public struct Parser: Sendable {
         if raw.isEmpty {
             return .scalar("")
         }
-        let reps = raw.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.repetitionSeparator) }
+        let reps = Parser.repetitionSlices(of: raw, encoding: encoding)
                        .map { parseRepetition($0, encoding: encoding) }
         return Field(repetitions: reps)
     }
 
     private func parseRepetition(_ raw: Substring, encoding: EncodingCharacters) -> Repetition {
-        let comps = raw.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.componentSeparator) }
+        let comps = Parser.componentSlices(of: raw, encoding: encoding)
                         .map { parseComponent($0, encoding: encoding) }
         return Repetition(components: comps)
     }
 
     private func parseComponent(_ raw: Substring, encoding: EncodingCharacters) -> Component {
-        let subs = raw.split(omittingEmptySubsequences: false) { $0.isDelimiter(encoding.subcomponentSeparator) }
+        let subs = Parser.subcomponentSlices(of: raw, encoding: encoding)
                        .map { part -> Subcomponent in
                            let text = String(part)
                            // #13: keep the wire text of an escaped value. One scan finds the escape
@@ -352,21 +391,7 @@ public struct Parser: Sendable {
         return Component(subcomponents: subs)
     }
 
-    // MARK: - Line terminator normalisation
-
-    private func normaliseLineTerminators(_ raw: String) -> String {
-        switch options.lineTerminator {
-        case .strict:
-            // No normalisation — input must use \r already.
-            return raw
-        case .lenient:
-            // Accept any combination. Order matters: \r\n must become \r before
-            // standalone \n becomes \r, otherwise \r\n becomes \r\r.
-            return raw
-                .replacingOccurrences(of: "\r\n", with: "\r")
-                .replacingOccurrences(of: "\n", with: "\r")
-        }
-    }
+    // MARK: - Line feeds under .strict
 
     /// The 1-based position the segment after the first bare line feed would have: a `\n`
     /// followed by three ASCII letters or digits and the field separator (the fourth byte

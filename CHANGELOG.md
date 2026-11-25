@@ -15,6 +15,15 @@ The entries are condensed; the git history carries the detail.
   which CI does not test; a consumer on an older toolchain, or on Linux, stays on 3.33.0. No API
   change. (#45)
 
+### Fixed
+
+- Under `LineTerminatorPolicy.lenient` (the default) every `\n` and `\r\n` ends a segment. The text
+  replacement this supersedes missed a line feed directly followed by a character that extends the
+  one before it (such as a nonspacing or enclosing mark, some spacing marks, a zero-width
+  non-joiner, an emoji skin-tone modifier or a tag character): a lone `\n` there stayed in the
+  value, and the `\n` of a `\r\n` stayed at the start of the next segment. A change to default
+  behaviour. (#37)
+
 ## [3.33.0]
 
 ### Added
