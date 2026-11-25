@@ -204,6 +204,14 @@ Each line gives the reason. **Blocking** means the rule is decidable from the wi
 - **Where the print is silent**: no component optionality before v2.5 and no component normative length before v2.7, so neither is checked there; no table prints a normative length on a composite-typed component, and no grammar reaches below the subcomponent.
 - **Typed API shape**: not a validation gap. Typed accessors are not gated by the message's version, pre-v2.5.1 spellings have no accessor, and a composite retyped between versions is reached through `viewed(as:)`; path access reaches every position.
 
+## Stopping a validation
+
+`validate(_:isCancelled:)`, on `Validator` and on `BatchValidator`, asks before each segment (each message, for a batch) whether to stop, and once more before the message-wide checks (for a batch, before the envelope checks). It throws `CancellationError` when told to and never returns a part of a report. The package starts no task of its own.
+
+```swift
+let report = try validator.validate(message, isCancelled: { Task.isCancelled })
+```
+
 ## Filtering issues
 
 ```swift

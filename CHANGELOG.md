@@ -24,6 +24,9 @@ The entries are condensed; the git history carries the detail.
   endings, a byte-order mark, blank lines, an MLLP frame). The `MessageViewer` example calls it.
   (#41)
 - `IssueLocation.repetitionIndex` and an initialiser that takes it. (#38)
+- `Validator.validate(_:isCancelled:)` and `BatchValidator.validate(_:isCancelled:)`: validation
+  that asks before each segment (each message, for a batch) whether to stop, and throws
+  `CancellationError` when told to. `validate(_:)` is unchanged. (#39)
 
 ### Changed
 

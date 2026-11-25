@@ -36,4 +36,11 @@ extension SignatureCompatibilityTests {
             IssueLocation.init(segmentID:segmentIndex:fieldIndex:repetitionIndex:componentIndex:subcomponentIndex:)
         _ = (repetition, older, naming)
     }
+
+    @Test("P01 R7: the cancellable validation entry points keep their signatures")
+    func cancellableValidationSignatures() {
+        let one: (Validator) -> (Message, () -> Bool) throws(CancellationError) -> ValidationReport = Validator.validate(_:isCancelled:)
+        let many: (BatchValidator) -> (BatchFile, () -> Bool) throws(CancellationError) -> BatchValidationReport = BatchValidator.validate(_:isCancelled:)
+        _ = (one, many)
+    }
 }

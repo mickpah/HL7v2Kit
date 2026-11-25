@@ -131,7 +131,7 @@ struct PerformanceTests {
 
     /// A ~2 MB ORU^R01: the PID of `au_oru_r01_pathology.hl7`, one OBR, and 400 TX OBX
     /// segments of 5,002 characters each. Built here so no large fixture is committed.
-    private static func largeORU() throws -> Data {
+    static func largeORU() throws -> Data {
         let fixture = try String(contentsOf: FixtureCorpus.fixtureURL(named: "au_oru_r01_pathology.hl7"), encoding: .utf8)
         let pid = try #require(fixture.split(whereSeparator: \.isNewline).first { $0.hasPrefix("PID|") })
         let text = String(repeating: "Synthetic narrative line of report text. ", count: 122)

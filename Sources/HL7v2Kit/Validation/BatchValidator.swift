@@ -85,10 +85,28 @@ public struct BatchValidator: Sendable {
     /// rules. Never throws — like `Validator`, all findings are
     /// collected into the report.
     public func validate(_ file: BatchFile) -> BatchValidationReport {
+        // `{ false }` never cancels, so the report is always there.
+        report(for: file, isCancelled: { false })
+            ?? BatchValidationReport(batchIssues: [], messageReports: [], locale: locale)
+    }
+
+    /// Validate a batch file, stopping when `isCancelled` answers true. It is asked before each
+    /// message and once before the envelope checks. A cancelled validation throws; it never
+    /// returns part of a report. Pass `{ Task.isCancelled }` to follow the calling task.
+    public func validate(_ file: BatchFile, isCancelled: () -> Bool) throws(CancellationError) -> BatchValidationReport {
+        guard let report = report(for: file, isCancelled: isCancelled) else { throw CancellationError() }
+        return report
+    }
+
+    /// The checks behind both entry points; nil when `isCancelled` answered true.
+    func report(for file: BatchFile, isCancelled: () -> Bool) -> BatchValidationReport? {
         let validator = Validator(options: options, locale: locale)
-        let messageReports = file.batches.flatMap { group in
-            group.messages.map { validator.validate($0) }
+        var messageReports: [ValidationReport] = []
+        for message in file.allMessages {
+            guard let report = validator.report(for: message, isCancelled: isCancelled) else { return nil }
+            messageReports.append(report)
         }
+        if isCancelled() { return nil }
 
         var batchIssues = envelopeIssues(file, validator: validator)
         if locale == .auLocalisation {

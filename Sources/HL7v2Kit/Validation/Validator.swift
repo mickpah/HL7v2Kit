@@ -38,6 +38,22 @@ public struct Validator: Sendable {
     /// Validate a message. Returns a non-empty report only when at least
     /// one check produced an issue.
     public func validate(_ message: Message) -> ValidationReport {
+        // `{ false }` never cancels, so the report is always there.
+        report(for: message, isCancelled: { false }) ?? ValidationReport(issues: [], locale: locale)
+    }
+
+    /// Validate a message, stopping when `isCancelled` answers true. It is asked before each
+    /// segment, never inside one. A cancelled validation throws; it never returns part of a
+    /// report. The package starts no task of its own: pass `{ Task.isCancelled }` to follow
+    /// the calling task.
+    public func validate(_ message: Message, isCancelled: () -> Bool) throws(CancellationError) -> ValidationReport {
+        guard let report = report(for: message, isCancelled: isCancelled) else { throw CancellationError() }
+        return report
+    }
+
+    /// The checks behind both entry points. Asks `isCancelled` before each segment and once
+    /// before the message-wide checks; nil when it answered true.
+    func report(for message: Message, isCancelled: () -> Bool) -> ValidationReport? {
         var issues: [ValidationIssue] = []
         // ADR-018: report how MSH-12 relates to the grammar applied, then
         // validate a copy that declares the grammar version, so every
@@ -74,6 +90,7 @@ public struct Validator: Sendable {
         // predicate evaluators; the evaluator productions stay
         // single-segment in S1 and gain cross-segment grammar in S2.
         for (segmentIndex, segment) in message.segments.enumerated() {
+            if isCancelled() { return nil }
             let id = segment.segmentID
             let occurrence = (segmentOccurrence[id] ?? 0) + 1
             segmentOccurrence[id] = occurrence
@@ -154,6 +171,8 @@ public struct Validator: Sendable {
                 issues: &issues
             )
         }
+
+        if isCancelled() { return nil }
 
         // M6-B-9: message-wide field-uniqueness rules (HL7au:000028/.2).
         if let profile {
