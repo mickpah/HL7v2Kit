@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.33.0]
+
 ### Added
 
 - `SegmentGrammarTable.table(for:)` and `grammar(_:version:)`: the segment grammars the validator
