@@ -111,14 +111,14 @@ public struct Path: Sendable, Equatable, Hashable {
     }
 
     /// Parses a path string in either spelling (see ``Path``). Throws ``PathError`` on malformed input.
-    public init(_ string: String) throws {
+    public init(_ string: String) throws(PathError) {
         let parsed = try Path.parse(string)
         self = parsed
     }
 
     // MARK: - Parser
 
-    private static func parse(_ input: String) throws -> Path {
+    private static func parse(_ input: String) throws(PathError) -> Path {
         guard !input.isEmpty else {
             throw PathError.malformed(input: input, position: 0)
         }
@@ -212,7 +212,7 @@ public struct Path: Sendable, Equatable, Hashable {
     }
 
     /// Reads `N]` or `*]` after a consumed `[`. Returns the index, or `nil` for `*`.
-    private static func bracketIndex(_ scanner: inout Scanner, input: String) throws -> Int? {
+    private static func bracketIndex(_ scanner: inout Scanner, input: String) throws(PathError) -> Int? {
         var index: Int? = nil
         if scanner.peek() == "*" {
             scanner.advance()

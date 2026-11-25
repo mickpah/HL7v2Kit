@@ -143,17 +143,17 @@ public struct BatchParser: Sendable {
     /// detection. The MSH-18 detection probes the *first* message in
     /// the stream (the first MSH after any FHS / BHS) — all messages
     /// in a single batch file are expected to share the same charset.
-    public func parse(_ data: Data) throws -> BatchFile {
+    public func parse(_ data: Data) throws(ParseError) -> BatchFile {
         let (decoded, _) = try Parser.decodeWirePayload(data)
         return try parseString(decoded)
     }
 
     /// Parse a batch from an already-decoded string.
-    public func parse(_ raw: String) throws -> BatchFile {
+    public func parse(_ raw: String) throws(ParseError) -> BatchFile {
         try parseString(raw)
     }
 
-    private func parseString(_ raw: String) throws -> BatchFile {
+    private func parseString(_ raw: String) throws(ParseError) -> BatchFile {
         // Normalise line terminators — accept any of `\r\n`, `\n`, `\r`.
         // Per-message parsing then runs through `Parser` which enforces
         // its own line-terminator policy.
@@ -174,7 +174,7 @@ public struct BatchParser: Sendable {
         var currentMessageSegments: [String] = []
         let parser = Parser(options: options)
 
-        func closeMessage() throws {
+        func closeMessage() throws(ParseError) {
             guard !currentMessageSegments.isEmpty else { return }
             let wire = currentMessageSegments.joined(separator: "\r") + "\r"
             let message = try parser.parse(wire)
@@ -182,7 +182,7 @@ public struct BatchParser: Sendable {
             currentMessageSegments.removeAll(keepingCapacity: true)
         }
 
-        func closeBatch(trailer: String? = nil) throws {
+        func closeBatch(trailer: String? = nil) throws(ParseError) {
             try closeMessage()
             let hasContent = currentBHS != nil || !currentMessages.isEmpty || trailer != nil
             if hasContent {

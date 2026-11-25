@@ -86,7 +86,7 @@ public struct StreamingBatchParser: Sendable {
     /// call to ``feed(_:)`` or ``finish()`` returns those messages first
     /// and carries on reading. After a NUL, the message it falls in is
     /// dropped up to the next MSH or batch marker.
-    public mutating func feed(_ bytes: Data) throws -> [Message] {
+    public mutating func feed(_ bytes: Data) throws(ParseError) -> [Message] {
         unread.append(contentsOf: bytes)
         return try read(finishing: false)
     }
@@ -95,7 +95,7 @@ public struct StreamingBatchParser: Sendable {
     /// and emits any in-flight message. Call after the last
     /// ``feed(_:)``; if it throws, call it again to collect the
     /// messages that follow the failure.
-    public mutating func finish() throws -> [Message] {
+    public mutating func finish() throws(ParseError) -> [Message] {
         try read(finishing: true)
     }
 
@@ -111,7 +111,7 @@ public struct StreamingBatchParser: Sendable {
     /// Reads `unread` and, at the end of the stream, closes the open
     /// message. On a failure, keeps the messages completed so far and
     /// the input after the failing byte for the next call.
-    private mutating func read(finishing: Bool) throws -> [Message] {
+    private mutating func read(finishing: Bool) throws(ParseError) -> [Message] {
         var emitted = ready
         ready = []
         var index = 0
@@ -139,7 +139,7 @@ public struct StreamingBatchParser: Sendable {
         return emitted
     }
 
-    private mutating func step(_ byte: UInt8) throws -> Message? {
+    private mutating func step(_ byte: UInt8) throws(ParseError) -> Message? {
         defer { bytesConsumed += 1 }
         switch byte {
         case 0x00:
@@ -161,14 +161,14 @@ public struct StreamingBatchParser: Sendable {
         }
     }
 
-    private mutating func flushPendingSegment() throws -> Message? {
+    private mutating func flushPendingSegment() throws(ParseError) -> Message? {
         guard !segmentBuffer.isEmpty else { return nil }
         let line = segmentBuffer
         segmentBuffer.removeAll(keepingCapacity: true)
         return try classify(line)
     }
 
-    private mutating func classify(_ line: [UInt8]) throws -> Message? {
+    private mutating func classify(_ line: [UInt8]) throws(ParseError) -> Message? {
         if line.count > 3, ["MSH", "BHS", "FHS"].contains(where: { line.starts(with: $0.utf8) }) {
             separators[line[0]] = line[3]
         }
@@ -195,7 +195,7 @@ public struct StreamingBatchParser: Sendable {
         return nil
     }
 
-    private mutating func drainOpenMessage() throws -> Message? {
+    private mutating func drainOpenMessage() throws(ParseError) -> Message? {
         let closed = messageSegments
         messageSegments.removeAll(keepingCapacity: true)
         messageBytes = 0
@@ -204,7 +204,7 @@ public struct StreamingBatchParser: Sendable {
 
     /// Parses one message's raw lines through ``Parser/parse(_:)-(Data)``,
     /// which decodes them by the message's own MSH-18.
-    private func parse(_ segments: [[UInt8]]) throws -> Message? {
+    private func parse(_ segments: [[UInt8]]) throws(ParseError) -> Message? {
         guard !segments.isEmpty else { return nil }
         var wire = Data()
         for segment in segments {

@@ -37,6 +37,11 @@ The entries are condensed; the git history carries the detail.
   read `PID[1]-3~2.1` where they read `PID[1]-3.1`. Field-level issues are unchanged. An
   `IssueLocation`'s equality and hash include the repetition, so a value-level location no longer
   equals one built with the older initialiser. A change to default output. (#38)
+- `Parser.parse`, `BatchParser.parse`, `StreamingBatchParser.feed` and `finish`, and
+  `CharacterEncoding.detect(in:)` are `throws(ParseError)`; `Path.init(_:)` is `throws(PathError)`.
+  They threw nothing else before. Code that catches generally is unaffected; a
+  `catch let error as ParseError` may now warn that the cast always succeeds. ADR-014 records the
+  rule. (#40)
 
 ### Fixed
 

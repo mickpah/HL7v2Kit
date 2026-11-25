@@ -47,7 +47,7 @@ public struct Parser: Sendable {
     /// honest: every accepted message is NUL-free, so no carve-out is
     /// needed for serialise round-trips. The reported byte offset is into
     /// the post-BOM-strip payload, not the original buffer.
-    public func parse(_ data: Data) throws -> Message {
+    public func parse(_ data: Data) throws(ParseError) -> Message {
         let (decoded, characterEncoding) = try Parser.decodeWirePayload(data)
         return try parse(decoded, characterEncoding: characterEncoding)
     }
@@ -60,7 +60,7 @@ public struct Parser: Sendable {
     /// charset, and refuse text the charset cannot encode. Shared by ``Parser`` and ``BatchParser`` so the two Data
     /// entry points cannot drift (pinned by the BatchParserTests R5-C3
     /// rows).
-    static func decodeWirePayload(_ data: Data) throws -> (decoded: String, characterEncoding: CharacterEncoding) {
+    static func decodeWirePayload(_ data: Data) throws(ParseError) -> (decoded: String, characterEncoding: CharacterEncoding) {
         guard !data.isEmpty else { throw ParseError.emptyInput }
         let payload: Data = data.starts(with: [0xEF, 0xBB, 0xBF])
             ? data.dropFirst(3)
@@ -92,7 +92,7 @@ public struct Parser: Sendable {
     /// encode (an `é` under `ASCII`, a `€` under `8859/1`), with the declared
     /// set's ``CharacterEncoding/wireValue``: as bytes the same message would
     /// not decode, and serialised it would be written in UTF-8 (#16).
-    public func parse(_ raw: String) throws -> Message {
+    public func parse(_ raw: String) throws(ParseError) -> Message {
         let characterEncoding = try CharacterEncoding.detect(in: raw)
         guard characterEncoding.encodes(raw) else {
             throw ParseError.unsupportedCharacterEncoding(declared: characterEncoding.wireValue)
@@ -100,7 +100,7 @@ public struct Parser: Sendable {
         return try parse(raw, characterEncoding: characterEncoding)
     }
 
-    private func parse(_ raw: String, characterEncoding: CharacterEncoding) throws -> Message {
+    private func parse(_ raw: String, characterEncoding: CharacterEncoding) throws(ParseError) -> Message {
         guard !raw.isEmpty else { throw ParseError.emptyInput }
 
         // Normalise line terminators per policy. Whether the input ended with \r is
@@ -244,7 +244,7 @@ public struct Parser: Sendable {
         _ line: String,
         encoding: EncodingCharacters,
         separatorSegment: Bool
-    ) throws -> Segment {
+    ) throws(ParseError) -> Segment {
         // The fourth character's index, or the end index when the line is three characters long.
         guard let fourth = line.index(line.startIndex, offsetBy: 3, limitedBy: line.endIndex) else {
             throw ParseError.invalidMSH(reason: "segment too short: '\(line)'")

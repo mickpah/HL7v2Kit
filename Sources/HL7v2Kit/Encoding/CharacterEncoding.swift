@@ -134,7 +134,7 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
     /// only enough of the leading bytes to find the field-separator and
     /// MSH-18 slot. Callers building byte-level workflows can pass a Latin-1
     /// 1:1 decode of the input bytes.
-    public static func detect(in raw: String) throws -> CharacterEncoding {
+    public static func detect(in raw: String) throws(ParseError) -> CharacterEncoding {
         guard let declared = probeMSH18(raw), !isUnvalued(declared) else {
             return .utf8
         }

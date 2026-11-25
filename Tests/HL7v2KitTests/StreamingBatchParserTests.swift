@@ -212,7 +212,7 @@ struct StreamingBatchParserTests {
         for byte in Data((first + broken + second).utf8) {
             do {
                 messages += try parser.feed(Data([byte]))
-            } catch let error as ParseError {
+            } catch {
                 errors.append(error)
             }
         }

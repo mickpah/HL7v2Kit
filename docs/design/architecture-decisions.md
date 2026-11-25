@@ -546,7 +546,10 @@ SemVer contract and the `@unknown default` guidance.
 - Within a major line, changes are additive only: new cases on open enums, new types, methods
   and overloads. Removing or renaming a symbol, changing a signature or raw value, tightening
   access, or dropping a `Sendable`, `Equatable` or `Hashable` conformance waits for the next
-  major.
+  major. One narrowing is allowed within a major line (ruled 25 Nov 2026): an untyped `throws`
+  may become `throws(E)` where `E` is the only error the function has ever thrown. A caller that
+  catches generally compiles unchanged; a caller that casts the caught error to `E` may see a
+  warning that the cast always succeeds.
 - House style: a parameter is never added to an existing public initialiser. A new option is a
   stored property set by mutation; a new construction input is a separate overload, pinned in
   `SignatureCompatibilityTests`.

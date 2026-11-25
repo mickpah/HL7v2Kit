@@ -43,4 +43,15 @@ extension SignatureCompatibilityTests {
         let many: (BatchValidator) -> (BatchFile, () -> Bool) throws(CancellationError) -> BatchValidationReport = BatchValidator.validate(_:isCancelled:)
         _ = (one, many)
     }
+
+    @Test("P01 R8: the parsers and Path.init keep their typed throws")
+    func typedThrowsSignatures() {
+        let data: (Parser) -> (Data) throws(ParseError) -> Message = Parser.parse
+        let text: (Parser) -> (String) throws(ParseError) -> Message = Parser.parse
+        let batchData: (BatchParser) -> (Data) throws(ParseError) -> BatchFile = BatchParser.parse
+        let batchText: (BatchParser) -> (String) throws(ParseError) -> BatchFile = BatchParser.parse
+        let detect: (String) throws(ParseError) -> CharacterEncoding = CharacterEncoding.detect(in:)
+        let path: (String) throws(PathError) -> Path = Path.init(_:)
+        _ = (data, text, batchData, batchText, detect, path)
+    }
 }
