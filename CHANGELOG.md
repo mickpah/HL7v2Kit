@@ -25,15 +25,24 @@ The entries are condensed; the git history carries the detail.
   macOS only, with Swift 6.4 (Xcode 27.1), and `Package.swift` declares swift-tools-version 6.3,
   which CI does not test; a consumer on an older toolchain, or on Linux, stays on 3.33.0. No API
   change. (#45)
+- **Not additive, under `LineTerminatorPolicy.strict` only:** `BatchParser` and
+  `StreamingBatchParser` follow the policy. They read `\r\n` and `\n` as segment terminators
+  whatever the options said; under `.strict` they now throw
+  `ParseError.lineFeedAfterSegmentTerminator(position:)` where `Parser` throws it, and keep any
+  other line feed as data. A caller that passed `.strict` to a batch parser and fed it line feed
+  endings gets the error; `.lenient`, the default, reads them as before. (#43)
 
 ### Fixed
 
+- `DataTypeGrammarTable.grammar(_:version:)` resolves `Version.grammarVersion`, as
+  `grammar(segment:field:version:)` does: for `.v2_7` and `.v2_8` it answered nil and now gives
+  the v2.7.1 and v2.8.2 component tables. (#44)
 - Under `LineTerminatorPolicy.lenient` (the default) every `\n` and `\r\n` ends a segment. The text
   replacement this supersedes missed a line feed directly followed by a character that extends the
   one before it (such as a nonspacing or enclosing mark, some spacing marks, a zero-width
   non-joiner, an emoji skin-tone modifier or a tag character): a lone `\n` there stayed in the
-  value, and the `\n` of a `\r\n` stayed at the start of the next segment. A change to default
-  behaviour. (#37)
+  value, and the `\n` of a `\r\n` stayed at the start of the next segment. `BatchParser` splits
+  the same way. A change to default behaviour. (#37)
 
 ## [3.33.0]
 

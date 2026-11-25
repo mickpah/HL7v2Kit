@@ -135,11 +135,65 @@ struct RoundTripEdgeTests {
         #expect(beforeTerminator["NTE-3"] == "see\n")
     }
 
-    @Test("#33 (pinned, not fixed here): the batch parser folds line feeds under .strict")
-    func batchParserFoldsLineFeeds() throws {
-        let wire = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\nPID|1||X\n"
-        let file = try BatchParser(options: ParserOptions(lineTerminator: .strict)).parse(wire)
-        #expect(file.allMessages.first?.segments.count == 2)
+    // #43: one message, then the same message inside a file and batch envelope.
+    static let batchMSH = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1"
+    static let batchLines = [batchMSH, "PID|1||X"]
+    static let envelopeLines = ["FHS|^~\\&|SND", "BHS|^~\\&|SND", batchMSH, "PID|1||X", "BTS|1", "FTS|1"]
+
+    static func isLineFeedError(_ body: () throws -> Void) -> Bool {
+        do { try body() } catch ParseError.lineFeedAfterSegmentTerminator { return true } catch { return false }
+        return false
+    }
+
+    @Test("#43: under .strict the batch parsers reject a line feed standing as a segment terminator",
+          arguments: ["\n", "\r\n"], [batchLines, envelopeLines])
+    func batchParsersRejectLineFeeds(ending: String, lines: [String]) throws {
+        let wire = lines.joined(separator: ending) + ending
+        let strict = ParserOptions(lineTerminator: .strict)
+        #expect(Self.isLineFeedError { _ = try BatchParser(options: strict).parse(wire) })
+        #expect(Self.isLineFeedError { _ = try BatchParser(options: strict).parse(Data(wire.utf8)) })
+        #expect(Self.isLineFeedError {
+            var parser = StreamingBatchParser(options: strict)
+            _ = try parser.feed(Data(wire.utf8))
+            _ = try parser.finish()
+        })
+        // Under .lenient, the default, both still read the message.
+        #expect(try BatchParser().parse(wire).allMessages.first?.segments.count == 2)
+        var lenient = StreamingBatchParser()
+        let messages = try lenient.feed(Data(wire.utf8)) + lenient.finish()
+        #expect(messages.first?.segments.count == 2)
+    }
+
+    @Test("#43: under .strict the batch parsers keep a line feed that is data, and reject one ending the input")
+    func batchParsersKeepDataLineFeeds() throws {
+        let strict = ParserOptions(lineTerminator: .strict)
+        let wire = Self.envelopeLines.joined(separator: "\r").replacingOccurrences(of: "PID|1||X", with: "NTE|1||see\n|more") + "\r"
+        #expect(try BatchParser(options: strict).parse(wire).allMessages.first?["NTE-3"] == "see\n")
+        var parser = StreamingBatchParser(options: strict)
+        let messages = try parser.feed(Data(wire.utf8)) + parser.finish()
+        #expect(messages.first?["NTE-3"] == "see\n")
+
+        // An envelope line is checked against its own separator and a message's lines against
+        // the message's, so `ABC#` after a line feed is data in a `|` message under an FHS# file.
+        let mixed = "FHS#^~\\&#SND\r" + Self.batchMSH + "\rNTE|1||a\nABC#x\r"
+        #expect(try BatchParser(options: strict).parse(mixed).allMessages.first?["NTE-3"] == "a\nABC#x")
+
+        // A marker line with line feed endings is rejected, and the message before it survives.
+        for tail in ["BTS|1\n", "BTS|1\nFTS|1\r"] {
+            var stream = StreamingBatchParser(options: strict)
+            let wire = Self.batchLines.joined(separator: "\r") + "\r" + tail
+            #expect(Self.isLineFeedError { _ = try stream.feed(Data(wire.utf8)) + stream.finish() }, "\(tail.debugDescription)")
+            #expect(try stream.finish().first?.segments.count == 2, "\(tail.debugDescription)")
+        }
+
+        let unterminated = Self.batchLines.joined(separator: "\r") + "\n"   // `Parser` throws here too
+        #expect(Self.isLineFeedError { _ = try Parser(options: strict).parse(unterminated) })
+        #expect(Self.isLineFeedError { _ = try BatchParser(options: strict).parse(unterminated) })
+        #expect(Self.isLineFeedError {
+            var parser = StreamingBatchParser(options: strict)
+            _ = try parser.feed(Data(unterminated.utf8))
+            _ = try parser.finish()
+        })
     }
 
     @Test("P00 S1-3: under .lenient the same CRLF message parses into its segments")

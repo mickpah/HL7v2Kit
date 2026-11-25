@@ -781,7 +781,8 @@ read as a scalar and fell back too.
   another modelled version, and every report says so), or excluded (no case; it parses, falls back
   to the v2.5.1 grammar and warns).
 - MSH-12 is read as a VID: the version is VID.1. `Version.grammarVersion` is the single mapping;
-  the public registries stay version-literal.
+  the generated tables stay version-literal and every public lookup resolves it
+  (`DataTypeGrammarTable.grammar(_:version:)` since #44).
 - A non-`Z` segment with no entry in the applied grammar is `segmentNotInVersionGrammar`
   (warning), never a Z-segment.
 - An excluded or unresolvable populated MSH-12 (whitespace, empty VID.1 with VID.2 valued, a

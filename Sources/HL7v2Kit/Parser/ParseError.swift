@@ -108,7 +108,8 @@ public struct ParserOptions: Sendable {
 public enum LineTerminatorPolicy: Sendable, Equatable, Hashable {
     /// Only `\r` ends a segment, as HL7 v2 specifies. A segment that starts with `\n` (a
     /// `\r\n` line ending) is rejected with ``ParseError/lineFeedAfterSegmentTerminator(position:)``;
-    /// an `\n` elsewhere is data.
+    /// an `\n` elsewhere is data. ``BatchParser`` and ``StreamingBatchParser`` read a file the
+    /// same way.
     case strict
     /// `\r`, `\n` and `\r\n` each end a segment; the serialiser writes `\r`.
     case lenient

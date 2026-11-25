@@ -32,7 +32,7 @@ public struct StreamingBatchParser: Sendable {
     public let maxMessageBytes: Int
 
     /// Byte-level buffer for the in-progress segment. Drained on every
-    /// CR/LF.
+    /// CR, and on every LF under `.lenient`.
     private var segmentBuffer: [UInt8]
     /// Raw bytes of the terminated segment lines of the open message,
     /// decoded by its MSH-18 when an MSH / batch marker closes the run.
@@ -116,7 +116,7 @@ public struct StreamingBatchParser: Sendable {
         ready = []
         var index = 0
         defer { unread.removeFirst(index) }
-        do {
+        do throws(ParseError) {
             while index < unread.count {
                 let byte = unread[index]
                 index += 1
@@ -125,6 +125,20 @@ public struct StreamingBatchParser: Sendable {
                 }
             }
             if finishing {
+                // A line feed as the stream's last byte ends its last segment, as in `Parser`;
+                // the `\r` added when the message closes would hide it.
+                if options.lineTerminator == .strict, segmentBuffer.last == 0x0A {
+                    // The line after a `\r\n` is the one that starts with the line feed.
+                    let position = messageSegments.count + (segmentBuffer.count == 1 ? 1 : 2)
+                    // A body line takes its message with it; a line that starts a run does
+                    // not, and the open message is returned by the next call.
+                    if !startsMessageRun(segmentBuffer) {
+                        messageSegments.removeAll(keepingCapacity: true)
+                        messageBytes = 0
+                    }
+                    segmentBuffer.removeAll(keepingCapacity: true)
+                    throw ParseError.lineFeedAfterSegmentTerminator(position: position)
+                }
                 if let message = try flushPendingSegment() {
                     emitted.append(message)
                 }
@@ -133,7 +147,7 @@ public struct StreamingBatchParser: Sendable {
                 }
             }
         } catch {
-            ready = emitted
+            ready = emitted + ready   // `classify` may have closed a message before throwing
             throw error
         }
         return emitted
@@ -145,7 +159,11 @@ public struct StreamingBatchParser: Sendable {
         case 0x00:
             dropFailingMessage()
             throw ParseError.truncatedMessage(atByte: bytesConsumed)
-        case 0x0D, 0x0A:
+        case 0x0D:
+            return try flushPendingSegment()
+        // Under `.strict` a line feed is not a terminator: it stays in its line, where
+        // `Parser` or `classify` rejects one that stands as a terminator (#43).
+        case 0x0A where options.lineTerminator == .lenient:
             return try flushPendingSegment()
         default:
             // While skipping, a segment ID is enough to spot the next run.
@@ -186,6 +204,14 @@ public struct StreamingBatchParser: Sendable {
             // marker line itself is intentionally discarded — streaming
             // mode flattens to messages only.
             skippingMessage = false
+            // Under `.strict` a marker line holding the lines after it (line feed endings) is
+            // rejected, not discarded with them; `Parser` checks a message's own lines. The
+            // open message is not the marker's: it closes first and the next call returns it.
+            if options.lineTerminator == .strict,
+               let position = Parser.segmentAfterBareLineFeed(in: [String(decoding: line, as: UTF8.self)]) {
+                if let message = try drainOpenMessage() { ready.append(message) }
+                throw ParseError.lineFeedAfterSegmentTerminator(position: position)
+            }
             return try drainOpenMessage()
         }
         if !skippingMessage {

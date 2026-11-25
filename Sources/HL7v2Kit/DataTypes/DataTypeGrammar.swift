@@ -142,9 +142,10 @@ public enum DataTypeGrammarTable {
     /// M13 and P5 addenda). Validator code never calls this directly:
     /// `Validator.componentGrammar(_:version:)` wraps it, returning `nil` first for any type
     /// its own `primitiveComponentLimit(_:version:)` bounds instead — TS's two-component count
-    /// on v2.3 to v2.4 is documented there, not restated here.
+    /// on v2.3 to v2.4 is documented there, not restated here. `version` resolves through
+    /// ``Version/grammarVersion``, so `2.8` reads the v2.8.2 tables and `2.7` the v2.7.1 ones.
     public static func grammar(_ dataType: String, version: Version) -> DataTypeGrammar? {
-        grammars(for: version)[dataType]
+        grammars(for: version.grammarVersion)[dataType]
     }
 
     /// Every datatype component table printed by `version`, keyed by code.

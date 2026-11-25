@@ -29,7 +29,13 @@ struct DataTypeGrammarTests {
         #expect(cx24.component(5)?.tables == ["0203"])
         #expect(cx24.component(5)?.optionalityCode == "", "prose gives no optionality")
         #expect(cx24.components.count == 8, "v2.4 CX has eight components; v2.5.1 added two")
-        #expect(DataTypeGrammarTable.grammar("CX", version: .v2_8) == nil, "the registry stays version-literal: .v2_8 owns no grammar; the Validator substitutes v2.8.2 (ADR-018)")
+        #expect(DataTypeGrammarTable.grammars(for: .v2_8).isEmpty, "the tables stay version-literal: .v2_8 owns no grammar (ADR-018)")
+        // #44: the public lookup answers for every version, as grammar(segment:field:version:) does.
+        for version in Version.allCases {
+            #expect(DataTypeGrammarTable.grammar("CX", version: version)
+                    == DataTypeGrammarTable.grammar("CX", version: version.grammarVersion), "\(version)")
+            #expect(DataTypeGrammarTable.grammar("CX", version: version) != nil, "\(version)")
+        }
     }
 
     @Test("The printed optionality code is kept verbatim, including RE and W")
@@ -213,7 +219,7 @@ struct DataTypeGrammarTests {
                     == DataTypeGrammarTable.grammar(segment: segment, field: field, version: .v2_8_2), "\(key)")
         }
         #expect(DataTypeGrammarTable.grammar(segment: "IN3", field: 20, version: .v2_8) == nil, "v2.8.2 prints tables")
-        #expect(DataTypeGrammarTable.grammar("CX", version: .v2_7) == nil, "the registry stays version-literal: .v2_7 owns no grammar")
+        #expect(DataTypeGrammarTable.grammars(for: .v2_7).isEmpty, "the tables stay version-literal: .v2_7 owns no grammar")
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_4).count == 43)
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3_1).count == 41)
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3).count == 46)

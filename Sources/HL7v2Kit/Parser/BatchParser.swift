@@ -154,17 +154,26 @@ public struct BatchParser: Sendable {
     }
 
     private func parseString(_ raw: String) throws(ParseError) -> BatchFile {
-        // Normalise line terminators — accept any of `\r\n`, `\n`, `\r`.
-        // Per-message parsing then runs through `Parser` which enforces
-        // its own line-terminator policy.
-        let normalised = raw
-            .replacingOccurrences(of: "\r\n", with: "\r")
-            .replacingOccurrences(of: "\n", with: "\r")
-
-        let lines = normalised
-            .split(separator: "\r", omittingEmptySubsequences: true)
+        // The lines as `Parser` ends them under the same policy (#43): `\r\n`, `\n` and `\r`
+        // under `.lenient`, `\r` alone under `.strict`.
+        let lines = Parser.lineSlices(of: raw, policy: options.lineTerminator)
+            .filter { !$0.isEmpty }
             .map(String.init)
         guard !lines.isEmpty else { throw ParseError.emptyInput }
+        // Under `.strict` a line feed standing as a terminator is rejected as `Parser` rejects
+        // it. `Parser` checks each message's lines against the message's own separator; here,
+        // a line starting with one, an envelope line (against its own fourth character) and
+        // the file's last byte, which the `\r` added to each message would hide.
+        if options.lineTerminator == .strict {
+            let envelope = ["FHS", "BHS", "BTS", "FTS"]
+            let line = lines.firstIndex { line in
+                line.unicodeScalars.first == "\n"
+                    || envelope.contains { line.hasPrefix($0) } && Parser.segmentAfterBareLineFeed(in: [line]) != nil
+            }
+            if let position = line ?? (raw.unicodeScalars.last == "\n" ? lines.count : nil) {
+                throw ParseError.lineFeedAfterSegmentTerminator(position: position + 1)
+            }
+        }
 
         var fileHeader: String? = nil
         var fileTrailer: String? = nil
