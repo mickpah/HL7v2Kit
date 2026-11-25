@@ -67,6 +67,12 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
 - **Paths:** read, write and enumerate a message by path, in the standard form (`PID-3.1`) or
   the alternative path syntax (`PID-3[2].1`, with `[*]` wildcards): `Message.set(_:at:)`,
   `clear(at:)`, `insertRepetition(_:at:)`, `values(at:)` and `populatedPaths()`.
+- **Grammar lookup:** `SegmentGrammarTable.table(for:)` and `grammar(_:version:)` return the
+  segment grammars the validator applies to a version, each with its printed name.
+- **Pasted text:** `Parser.wire(fromCarried:)` turns text with LF or CRLF line endings, a
+  byte-order mark, blank lines or an MLLP frame into wire form.
+- **Cancellation:** `Validator.validate(_:isCancelled:)` and the `BatchValidator` equivalent
+  stop between segments (between messages, for a batch) and throw `CancellationError`.
 - **Batches and streams:** `BatchParser` reads FHS and BHS envelopes into files and batches,
   `BatchValidator` checks them, and `StreamingBatchParser` yields one message at a time from
   a stream.

@@ -58,6 +58,8 @@ The library has four pillars:
 - ``IssueCode``
 - ``ZSegmentPolicy``
 - ``ZSegmentGrammar``
+- ``SegmentGrammar``
+- ``SegmentGrammarTable``
 - ``ConditionIssue``
 
 ### AST nodes

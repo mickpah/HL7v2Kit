@@ -4,7 +4,7 @@ What the validator checks, what it does not, and the options that govern each ch
 
 ## Overview
 
-``Validator`` checks a parsed ``Message`` and returns a ``ValidationReport``. It never throws: parsing is fatal (a structural failure throws ``ParseError``), validation is not (every finding is collected).
+``Validator`` checks a parsed ``Message`` and returns a ``ValidationReport``. `validate(_:)` never throws: parsing is fatal (a structural failure throws ``ParseError``), validation is not (every finding is collected).
 
 ```swift
 let message = try Parser().parse(bytes)
@@ -302,7 +302,7 @@ For example, `PID-37 populated` on PID-36 (v2.4 to v2.7.1): breed is required wh
 - **`anyRepeat` and `noRepeat`** apply the predicate to each repetition. `anyRepeat(X) != v` judges populated repetitions only, as `not in` does, so an empty repetition (`""~`) changes nothing.
 - **Three-state evaluation.** True, false or unknown, with Kleene AND and OR; a rule fires only on a definite true, so a malformed or unresolvable atom never makes an accepted message non-conformant.
 
-Conditions live in the schemas under `Resources/schemas/<version>/` and are generated into ``SegmentGrammarTable``. See <doc:AddingASegment>. A caller's ``ZSegmentGrammar`` carries its own: ``SegmentGrammar/conditionIssues()`` lists each atom of a grammar's conditions that does not parse, with its field, its source and a ``ConditionIssue/Reason``.
+Conditions live in the schemas under `Resources/schemas/<version>/` and are generated into ``SegmentGrammarTable``; ``SegmentGrammarTable/table(for:)`` and ``SegmentGrammarTable/grammar(_:version:)`` return the grammars the validator applies to a version, and ``SegmentGrammar/name`` the segment's name as that version prints it. See <doc:AddingASegment>. A caller's ``ZSegmentGrammar`` carries its own: ``SegmentGrammar/conditionIssues()`` lists each atom of a grammar's conditions that does not parse, with its field, its source and a ``ConditionIssue/Reason``.
 
 ## Message structures
 
