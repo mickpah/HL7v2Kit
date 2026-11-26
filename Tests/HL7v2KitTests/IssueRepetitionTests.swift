@@ -65,4 +65,17 @@ struct IssueRepetitionTests {
         let parsed = try Path(named.pathDescription)
         #expect(parsed.description == named.pathDescription)
     }
+
+    @Test("A location naming a repetition needs no component or subcomponent argument")
+    func repetitionInitialiserDefaults() {
+        let full = IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, repetitionIndex: 2,
+                                 componentIndex: nil, subcomponentIndex: nil)
+        #expect(IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, repetitionIndex: 2) == full)
+        let component = IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, repetitionIndex: 2,
+                                      componentIndex: 4)
+        #expect(component.componentIndex == 4 && component.subcomponentIndex == nil)
+        // The older initialiser's calls still resolve to it: no repetition.
+        #expect(IssueLocation(segmentID: "PID", segmentIndex: 1).repetitionIndex == nil)
+        #expect(IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, componentIndex: 1).repetitionIndex == nil)
+    }
 }

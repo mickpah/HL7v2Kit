@@ -14,6 +14,9 @@ The entries are condensed; the git history carries the detail.
   rule of `segment(at:)` (the occurrence the path gives, or the first), so a caller that needs
   the position need not repeat the scan. It counts from 0; a path's `segmentIndex` counts
   occurrences of one segment ID from 1. (#48)
+- `IssueLocation`'s initialiser that names a repetition defaults `componentIndex` and
+  `subcomponentIndex` to nil, so `IssueLocation(segmentID:segmentIndex:fieldIndex:repetitionIndex:)`
+  is a whole call. Existing calls to either initialiser compile as before. (#50)
 
 ### Changed
 
