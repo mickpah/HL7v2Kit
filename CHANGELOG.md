@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.36.0]
+
 ### Added
 
 - `Message.indexOfSegment(at:)`: the index in `segments` of the segment a path names, by the
