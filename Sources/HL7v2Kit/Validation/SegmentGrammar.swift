@@ -96,7 +96,8 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// Resolve it with ``HL7TableRegistry/table(_:version:)``. Only an
     /// `ID`-typed field whose table ``HL7Table/isClosed`` is enforced;
     /// `IS` fields and open tables are informational (req #4). M6-O6.
-    /// A `CWE` field carries `nil` here. The exception to the sentence above
+    /// A `CWE` field carries `nil` here; ``tables`` carries the `TBL#` cell of
+    /// every field, coded types included. The exception to the sentence above
     /// is the `CWE` fields bound to a closed Table 0953 (MSH-27, ARV-8, BHS-16,
     /// FHS-16), which are enforced although this is `nil`.
     public let table: String?
@@ -143,6 +144,15 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// `.cardinalityExceeded` at `.warning`. Not set by the released
     /// initialisers; `nil` by default. P6-4.
     public let maxRepetitions: Int?
+    /// The HL7 code tables the version's attribute table names for this field: its `TBL#`
+    /// cell, with a table the field's own definition names where that differs or the cell is
+    /// blank. Recorded for a field of any data type, the coded types (`CE`, `CWE`, `CNE`)
+    /// included, where ``table`` is `nil`. Empty for an uncoded field; more than one where
+    /// the field draws on more than one table. Where ``table`` is set, this list holds it.
+    /// Metadata only: the Validator enforces what ``table`` describes, not this list.
+    /// Resolve a number with ``HL7TableRegistry/table(_:resolving:)``. Not set by the
+    /// released initialisers; empty by default.
+    public let tables: [String]
     /// Cited cross-segment correlations (internal; ROL-4, 3.23.0). Empty for nearly every field.
     let correlations: [FieldCorrelation]
 
@@ -259,6 +269,33 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
                   maxRepetitions: maxRepetitions, correlations: [])
     }
 
+    /// Creates a field grammar that also carries the table numbers of its `TBL#` cell (see
+    /// ``tables``). A separate overload so the released initialisers keep their signatures
+    /// (ADR-014).
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool = false,
+        prohibitedSeverity: IssueSeverity = .error,
+        additionalProhibitions: [FieldProhibition] = [],
+        maxRepetitions: Int? = nil,
+        tables: [String]
+    ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: tableOpen,
+                  prohibitedSeverity: prohibitedSeverity, additionalProhibitions: additionalProhibitions,
+                  maxRepetitions: maxRepetitions, tables: tables, correlations: [])
+    }
+
     /// Creates a field grammar with cited cross-segment correlations (see ``correlations``).
     /// Internal: codegen emits it for ROL-4 only (3.23.0).
     init(
@@ -276,6 +313,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         prohibitedSeverity: IssueSeverity = .error,
         additionalProhibitions: [FieldProhibition] = [],
         maxRepetitions: Int? = nil,
+        tables: [String] = [],
         correlations: [FieldCorrelation]
     ) {
         // P6-4: a bound only means something on a repeating field, and a bound of 1 is
@@ -299,6 +337,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.prohibitedSeverity = prohibitedSeverity
         self.additionalProhibitions = additionalProhibitions
         self.maxRepetitions = maxRepetitions
+        self.tables = tables
         self.correlations = correlations
     }
 }

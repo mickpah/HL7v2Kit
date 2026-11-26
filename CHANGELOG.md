@@ -25,6 +25,12 @@ The entries are condensed; the git history carries the detail.
 - `HL7TableRegistry.table(_:resolving:)`: the code table a message of the given version is
   checked against, read under the version's grammar version, so `.v2_7` and `.v2_8` find the
   v2.7.1 and v2.8.2 tables. `table(_:version:)` stays literal and returns nil for those two. (#52)
+- `FieldGrammar.tables`: the table numbers a field's attribute table names (its `TBL#` cell,
+  as the schemas record it), for a field of any data type. A coded field (`CE`, `CWE`, `CNE`)
+  now names its table through the public grammar: PID-10 gives `["0005"]`, where
+  `FieldGrammar.table` is nil for it and stays nil. Metadata only: `table` keeps its value and
+  the validator checks what it checked before. A `FieldGrammar` initialiser overload takes
+  `tables`; equality and hashing of a `FieldGrammar` now include it. (#53)
 
 ### Changed
 

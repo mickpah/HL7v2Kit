@@ -26,4 +26,13 @@ extension SignatureCompatibilityTests {
         let lookup: (String, Version) -> HL7Table? = HL7TableRegistry.table(_:resolving:)
         _ = lookup
     }
+
+    @Test("FieldGrammar.tables and the initialiser that takes it keep their signatures")
+    func fieldGrammarTablesSignature() {
+        let tables: KeyPath<FieldGrammar, [String]> = \.tables
+        let field = FieldGrammar(index: 10, name: "Race", dataType: "CWE", optionality: .optional,
+                                 repeatability: .multiple, tables: ["0005"])
+        #expect(field.tables == ["0005"] && field.table == nil)
+        _ = tables
+    }
 }

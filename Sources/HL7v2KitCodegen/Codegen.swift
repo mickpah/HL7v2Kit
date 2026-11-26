@@ -43,6 +43,9 @@ struct FieldSchema: Decodable {
     /// column, e.g. `"0074"`), or `nil` for uncoded fields. See
     /// `FieldGrammar.table`. M6-O6.
     let table: String?
+    /// The verified record of the `TBL#` cell, for a field of any data type (ADR-016). See
+    /// `FieldGrammar.tables`.
+    let tables: [String]?
     /// The printed LEN cell, verbatim ("250"; v2.7+ "2..2", "32=", "250#"). M25.
     let length: String?
     /// `true` when the field's own prose leaves its bound table open ("for suggested
@@ -377,6 +380,11 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
                 field.additionalProhibitions, context: "\(schema.segmentID)-\(field.index)")
             // Last in the shared tail, so it is accepted after any of the arguments above (P6-4).
             let bound = maxRepetitions.map { ", maxRepetitions: \($0)" } ?? ""
+            // Emitted only when set, after the bound and before the correlations.
+            let tables: String = {
+                guard let list = field.tables, !list.isEmpty else { return "" }
+                return ", tables: [\(list.map { escapeStringLiteral($0) }.joined(separator: ", "))]"
+            }()
             // Emitted only when set, so every other field keeps the released initialisers (3.23.0).
             let correlations: String = {
                 guard let list = field.correlations, !list.isEmpty else { return "" }
@@ -388,7 +396,7 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
                 }
                 return ", correlations: [\(items.joined(separator: ", "))]"
             }()
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)\(additionalProhibitions)\(bound)\(correlations)),"
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)\(additionalProhibitions)\(bound)\(tables)\(correlations)),"
         }.joined(separator: "\n")
         // One typed constant per segment. The whole version used to be a single dictionary
         // literal, which the type checker solves as ONE expression: once fields carried a
