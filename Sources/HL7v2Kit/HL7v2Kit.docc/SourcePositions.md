@@ -26,6 +26,7 @@ A range covers the bytes of the input as written: an escape sequence as its wire
 
 - **Kept in step with edits.** It describes the bytes it was built from. After an edit, map ``Message/serialize()``'s output again.
 - **A map of a batch.** It maps one message, as ``Parser`` reads it; ``BatchParser`` and ``StreamingBatchParser`` input is not mapped.
+- **A refusal of two messages.** Two messages in one `Data` map as ``Parser`` reads them: one message whose later header is `MSH[2]`. The call throws only what `parse` throws. To map each message on its own, split the input with ``Parser/messageRanges(inCarried:)`` and map each range; add the range's lower bound to an offset to place it in the input.
 - **A map of text.** Its offsets are bytes of a `Data`. Text a person pasted goes through ``Parser/wire(fromCarried:)-(Data)`` first, and the offsets are into its output, not the pasted text: a view shows ``SourceMap/text``, which the UTF-16 offsets index.
 
 ## Delimiters

@@ -43,6 +43,13 @@ import Foundation
 /// in the alternative syntax only, every repetition (`PID-3[*].1`); read such a path with
 /// ``Message/values(at:)``.
 ///
+/// The segment ID is read for its shape alone: two to four letters or digits, of any case.
+/// It is not checked against the segments the package knows or against a message, so `ZAU-3`
+/// parses, and so do `pid-5`, `PI` and, as a segment alone, a plain word such as `Help`. This
+/// is deliberate: a path must name local segments and whatever a lenient parse kept. A caller
+/// that takes a path beside free text tests the shape it wants, or asks
+/// ``Message/segment(at:)`` whether the message holds the segment.
+///
 /// ```
 /// path        := segment-ref ( "-" field-spec )?
 /// segment-ref := SEGMENT-ID ( "[" index "]" )?

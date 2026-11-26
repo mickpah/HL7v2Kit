@@ -113,6 +113,16 @@ struct PathTests {
         #expect(try three.segment(at: Path("OBX[*]-5")) == nil)
     }
 
+    @Test("A segment ID is read for its shape alone: any two to four letters or digits")
+    func segmentIDShapeOnly() throws {
+        #expect(try Path("Help").isSegmentOnly)
+        #expect(try Path("adt").segmentID == "adt")
+        #expect(try Path("PI").isSegmentOnly)
+        #expect(try Path("pid-5").field == 5)
+        #expect(throws: PathError.self) { try Path("P") }
+        #expect(throws: PathError.self) { try Path("HELLO") }
+    }
+
     @Test("A message gives the index in its segments of the segment a path names")
     func indexOfSegmentAtPath() throws {
         let msh = "MSH|^~\\&|APP|FAC|||||ORU^R01|MSG1|P|2.5.1\rPID|1||12345\r"

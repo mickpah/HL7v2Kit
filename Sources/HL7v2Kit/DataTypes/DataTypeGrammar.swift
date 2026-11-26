@@ -9,7 +9,12 @@
 public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// 1-based position within the datatype (`CX.5` is `5`).
     public let index: Int
-    /// The printed component name.
+    /// The printed component name. Where a version defines a type by a format line and not a
+    /// component table, the name is that line's text for the component: on v2.3, v2.3.1 and
+    /// v2.4, `TS.1` is `YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ]`, from
+    /// "Format: YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ]^<degree of precision>" (v2.3
+    /// section 2.8.42, v2.3.1 section 2.8.44, v2.4 section 2.9.47), which gives it no other
+    /// name; v2.5.1 and v2.6 print a component table, and there it is "Time".
     public let name: String
     /// The component's own datatype code, or `""` for a withdrawn component,
     /// which the spec prints without one, and for a v2.3 to v2.4 component

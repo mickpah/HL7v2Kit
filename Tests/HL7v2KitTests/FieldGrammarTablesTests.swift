@@ -63,4 +63,14 @@ struct FieldGrammarTablesTests {
         }
         #expect(coded > 0)
     }
+
+    @Test("TS.1 carries the format line as its name where the version prints no component table")
+    func timeStampComponentName() {
+        let formatLine = "YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ]"
+        for version in [Version.v2_3, .v2_3_1, .v2_4] {
+            #expect(DataTypeGrammarTable.grammar("TS", version: version)?.component(1)?.name == formatLine, "\(version)")
+        }
+        #expect(DataTypeGrammarTable.grammar("TS", version: .v2_5_1)?.component(1)?.name == "Time")
+        #expect(DataTypeGrammarTable.grammar("TS", version: .v2_6)?.component(1)?.name == "Time")
+    }
 }

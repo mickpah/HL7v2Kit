@@ -170,6 +170,11 @@ extension Parser {
     /// ``parseWithSourceMap(_:)`` returns that message as well. Offsets count the bytes of `data`
     /// as given: one per character in ASCII and ISO 8859-1, a character's UTF-8 length under
     /// UTF-8. A segment's range is its line without the terminator.
+    ///
+    /// Two messages in one `Data` are mapped as `parse(_:)` reads them: one message whose later
+    /// header is a second `MSH` segment (`MSH[2]`), and the map covers all of it. To map each
+    /// on its own, split the input with ``messageRanges(inCarried:)`` and map `data[range]`;
+    /// an offset in the input is then the range's lower bound plus the offset in that map.
     public func sourceMap(of data: Data) throws(ParseError) -> SourceMap {
         try parseWithSourceMap(data).sourceMap
     }

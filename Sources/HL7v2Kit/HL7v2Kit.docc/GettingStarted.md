@@ -137,7 +137,7 @@ let identifiers = message.values(at: try Path("PID-3[*].1"))
 
 A whole-field read of a structured value (a CX, an XPN) returns `nil` from the subscript and is skipped by `values(at:)`: read a component (`PID-3[*].1`) or walk `populatedPaths()`. For the value as one string, `wireText(at:)` returns the text as the serialiser writes it, escapes kept (`A\S\B^C`); for `PID-3` it is the whole field, every repetition.
 
-A path may name a segment alone: `PID`, or `OBX[3]` for the third. `isSegmentOnly` says so, and `segment(at:)` returns the segment a path names, with or without a field; `indexOfSegment(at:)` returns its index in `segments`. Such a path holds no value, so the subscript returns `nil` for it and an edit throws.
+A path may name a segment alone: `PID`, or `OBX[3]` for the third. `isSegmentOnly` says so, and `segment(at:)` returns the segment a path names, with or without a field; `indexOfSegment(at:)` returns its index in `segments`. Such a path holds no value, so the subscript returns `nil` for it and an edit throws. A segment ID is read for its shape alone (two to four letters or digits, of any case) and is not checked against known segments, so a plain word such as `Help` parses as a segment-only path; where a path is typed beside free text, test the shape or ask `segment(at:)`.
 
 ```swift
 let third = message.segment(at: try Path("OBX[3]"))

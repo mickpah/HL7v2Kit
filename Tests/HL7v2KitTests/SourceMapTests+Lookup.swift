@@ -115,4 +115,25 @@ extension SourceMapTests {
             #expect(map.utf16Range(-4..<(data.count + 4)) == 0..<map.text.utf16.count)
         }
     }
+
+    @Test("Two messages in one Data map as parse reads them: one message, the second header MSH[2]")
+    func twoMessagesInOneData() throws {
+        let first = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120000||ADT^A01^ADT_A01|M1|P|2.5.1\rPID|1||MRN12345\r"
+        let second = "MSH|^~\\&|SND|FAC|RCV|FAC|20260101120100||ADT^A08^ADT_A01|M2|P|2.5.1\rPID|1||MRN67890\r"
+        let data = Data((first + second).utf8)
+        let (message, map) = try Parser().parseWithSourceMap(data)
+        #expect(message.segments.map(\.segmentID) == ["MSH", "PID", "MSH", "PID"])
+        let header = try #require(map.range(of: WireLocation(segmentID: "MSH", segmentIndex: 2)))
+        #expect(header.lowerBound == first.utf8.count)
+        let controlID = try #require(map.range(of: WireLocation(segmentID: "MSH", segmentIndex: 2, fieldIndex: 10)))
+        #expect(String(decoding: data[controlID], as: UTF8.self) == "M2")
+
+        // Split first, and each message maps on its own; an offset in the input is the
+        // range's lower bound plus the offset in the message's map.
+        let ranges = Parser.messageRanges(inCarried: data)
+        #expect(ranges.count == 2)
+        let own = try Parser().sourceMap(of: data[ranges[1]])
+        let ownControlID = try #require(own.range(of: WireLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 10)))
+        #expect(ranges[1].lowerBound + ownControlID.lowerBound == controlID.lowerBound)
+    }
 }

@@ -39,6 +39,18 @@ The entries are condensed; the git history carries the detail.
   range. It does not parse; `Parser.wire(fromCarried:)` and `Parser.parse` read such input
   as one message, as before. (#54)
 
+### Documentation
+
+- `Path`: the segment ID is read for its shape alone and is not checked against known
+  segments, so a plain word parses as a segment-only path; what a caller taking a path
+  beside free text should test.
+- `Parser.sourceMap(of:)` and Source Positions: two messages in one `Data` map as `parse`
+  reads them, one message with a second `MSH` segment; how to map each on its own.
+- `Parser.wire(fromCarried:)`: a line feed inside a value becomes a segment break, so a
+  strict read of the result no longer sees it.
+- `ComponentGrammar.name`: a type defined by a format line carries that line as the
+  component's name (`TS.1` on v2.3 to v2.4), as printed. (#55)
+
 ### Changed
 
 - Typed throws on the remaining single-error calls: `Message.set(_:at:)`, `clear(at:)` and
