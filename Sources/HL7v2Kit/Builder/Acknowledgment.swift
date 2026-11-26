@@ -111,7 +111,7 @@ public extension MessageBuilder {
         code: AcknowledgmentCode,
         messageControlID: String,
         dateTime: String
-    ) throws -> Message {
+    ) throws(BuilderError) -> Message {
         guard let msh = original.segments.first, msh.segmentID == "MSH",
               let controlID = msh.field(10), controlID.isPopulated else {
             throw BuilderError.acknowledgedMessageControlIDMissing

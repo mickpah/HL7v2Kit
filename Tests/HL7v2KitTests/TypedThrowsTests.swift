@@ -1,5 +1,6 @@
 // TypedThrowsTests.swift
-// The parsers throw ParseError and nothing else; Path.init throws PathError (P01 R8).
+// The parsers throw ParseError and nothing else; Path.init throws PathError (P01 R8). The
+// editing functions throw MessageEditError and the builders BuilderError (P02 R17).
 // Each `do throws(E)` below compiles only while the call inside it is typed.
 
 import Foundation
@@ -55,6 +56,49 @@ struct TypedThrowsTests {
             Issue.record("a malformed path parsed")
         } catch {
             #expect(error == .malformed(input: "not a path", position: 3))
+        }
+    }
+
+    @Test("Message.set, clear and insertRepetition throw MessageEditError")
+    func editing() throws {
+        var message = try Parser().parse("MSH|^~\\&|A|B|C|D|||ADT^A01|1|P|2.5.1\rPID|1||12345\r")
+        let missing = try Path("ZZZ-1")
+        do throws(MessageEditError) {
+            try message.set("x", at: missing)
+            Issue.record("a missing segment was set")
+        } catch {
+            #expect(error == .segmentNotFound(segmentID: "ZZZ", occurrence: 1))
+        }
+        do throws(MessageEditError) {
+            try message.clear(at: missing)
+            Issue.record("a missing segment was cleared")
+        } catch {
+            #expect(error == .segmentNotFound(segmentID: "ZZZ", occurrence: 1))
+        }
+        let field = try Path("PID-3")
+        do throws(MessageEditError) {
+            try message.insertRepetition("x", at: field)
+            Issue.record("a repetition was inserted at a path naming none")
+        } catch {
+            #expect(error == .notARepetition(field))
+        }
+    }
+
+    @Test("MessageBuilder.build and the acknowledgment builder throw BuilderError")
+    func builders() throws {
+        do throws(BuilderError) {
+            _ = try MessageBuilder(version: .v2_5_1).build()
+            Issue.record("a message with no MSH was built")
+        } catch {
+            #expect(error == .missingMSH)
+        }
+        let noControlID = try Parser().parse("MSH|^~\\&|A|B|C|D|||ADT^A01||P|2.5.1\r")
+        do throws(BuilderError) {
+            _ = try MessageBuilder.acknowledgment(to: noControlID, code: .applicationAccept,
+                                                  messageControlID: "ACK1", dateTime: "20260101")
+            Issue.record("a message with no MSH-10 was acknowledged")
+        } catch {
+            #expect(error == .acknowledgedMessageControlIDMissing)
         }
     }
 }

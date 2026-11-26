@@ -81,7 +81,7 @@ extension Message {
     ///   refusal, is not applied); an unknown character set is refused.
     ///
     /// - Throws: ``MessageEditError``; the message is then unchanged.
-    public mutating func set(_ value: String, at path: Path) throws {
+    public mutating func set(_ value: String, at path: Path) throws(MessageEditError) {
         let index = try editTarget(path)
         guard characterEncoding.encodes(value) else {
             throw MessageEditError.characterNotEncodable(characterEncoding)
@@ -96,7 +96,7 @@ extension Message {
     /// path with no repetition empties every repetition.
     ///
     /// - Throws: ``MessageEditError``; the message is then unchanged.
-    public mutating func clear(at path: Path) throws {
+    public mutating func clear(at path: Path) throws(MessageEditError) {
         try set("", at: path)
     }
 
@@ -105,7 +105,7 @@ extension Message {
     /// that is empty on the wire counts as having no repetitions.
     ///
     /// - Throws: ``MessageEditError``; the message is then unchanged.
-    public mutating func insertRepetition(_ value: String, at path: Path) throws {
+    public mutating func insertRepetition(_ value: String, at path: Path) throws(MessageEditError) {
         let index = try editTarget(path)
         guard let position = path.repetition, path.component == nil else {
             throw MessageEditError.notARepetition(path)
@@ -124,7 +124,7 @@ extension Message {
 
     /// The index in `segments` of the segment `path` edits, after the checks every edit
     /// shares.
-    private func editTarget(_ path: Path) throws -> Int {
+    private func editTarget(_ path: Path) throws(MessageEditError) -> Int {
         if path.segmentWildcard || path.repetitionWildcard {
             throw MessageEditError.wildcardPath(path)
         }
@@ -149,7 +149,7 @@ extension Message {
     /// Replaces the segment's fields and re-hydrates it, so a typed segment stays typed. An
     /// edit to MSH-12 or MSH-18 of the message header re-reads the version or the character
     /// set, as the parser does; an unknown character set throws before anything changes.
-    private mutating func commit(_ fields: [Field], at index: Int, field: Int) throws {
+    private mutating func commit(_ fields: [Field], at index: Int, field: Int) throws(MessageEditError) {
         let id = segments[index].segmentID
         let header = index == 0 && id == "MSH"
         var encoding = characterEncoding

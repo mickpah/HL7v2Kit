@@ -56,7 +56,7 @@ public struct MessageBuilder: Sendable {
     }
 
     /// Build the message. Throws if MSH is missing.
-    public func build() throws -> Message {
+    public func build() throws(BuilderError) -> Message {
         guard let first = segments.first, first.segmentID == "MSH" else {
             throw BuilderError.missingMSH
         }

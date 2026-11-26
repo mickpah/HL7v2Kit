@@ -15,6 +15,17 @@ The entries are condensed; the git history carries the detail.
   the position need not repeat the scan. It counts from 0; a path's `segmentIndex` counts
   occurrences of one segment ID from 1. (#48)
 
+### Changed
+
+- Typed throws on the remaining single-error calls: `Message.set(_:at:)`, `clear(at:)` and
+  `insertRepetition(_:at:)` are `throws(MessageEditError)`; `MessageBuilder.build()` and
+  `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` are
+  `throws(BuilderError)`. Each threw only that error before, so what a call does is
+  unchanged, and a `do`/`catch` around one needs no general `catch`. A
+  `catch let error as MessageEditError` (or `as BuilderError`) now warns that the cast always
+  succeeds: a build that treats warnings as errors must remove the cast and any general
+  `catch` after it. (#49)
+
 ## [3.35.0]
 
 ### Added
