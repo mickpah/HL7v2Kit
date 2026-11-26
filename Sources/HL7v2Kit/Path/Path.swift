@@ -7,9 +7,9 @@
 // Path.swift
 // Parses HL7 v2 path strings into a structural representation.
 //
-// Grammar (P00 S2-1 adds the bracketed repetition and the wildcard):
+// Grammar (P00 S2-1 adds the bracketed repetition and the wildcard; P01 R12 the segment alone):
 //
-//   path        := segment-ref "-" field-spec
+//   path        := segment-ref ( "-" field-spec )?
 //   segment-ref := SEGMENT-ID ( "[" index "]" )?
 //   field-spec  := INT ( "[" index "]" | "~" INT )? ( "." INT ( "." INT )? )?
 //   index       := INT (1 or more) | "*"
@@ -28,13 +28,15 @@
 //   "OBX[*]-5[*]"      → every OBX, field 5, every repetition
 //   "OBX[2]-5"         → segment=OBX (2nd), field=5
 //   "ZAU-3"            → segment=ZAU, field=3
+//   "OBX[3]"           → segment=OBX (3rd), no field (field=0)
 
 import Foundation
 
 /// A parsed, structurally validated HL7 v2 path.
 ///
 /// A path names a segment, a field and, optionally, a repetition, a component and a
-/// subcomponent, all 1-based. Two spellings parse to the same value: the native one
+/// subcomponent, all 1-based. A path may also name a segment alone (`PID`, `OBX[3]`): see
+/// ``isSegmentOnly`` and ``Message/segment(at:)``. Two spellings parse to the same value: the native one
 /// (`PID-3~2.1`, `OBX[2]-5`) and the alternative path syntax, which puts the repetition in
 /// brackets after the field (`PID-3[2].1`). A path spells its repetition one way or the
 /// other; `PID-3[2]~1` is malformed. `[*]` names every segment occurrence (`OBX[*]-5`) or,
@@ -42,7 +44,7 @@ import Foundation
 /// ``Message/values(at:)``.
 ///
 /// ```
-/// path        := segment-ref "-" field-spec
+/// path        := segment-ref ( "-" field-spec )?
 /// segment-ref := SEGMENT-ID ( "[" index "]" )?
 /// field-spec  := INT ( "[" index "]" | "~" INT )? ( "." INT ( "." INT )? )?
 /// index       := INT (1 or more) | "*"
@@ -56,7 +58,7 @@ public struct Path: Sendable, Equatable, Hashable {
     /// occurrence", unless ``segmentWildcard`` is true, when the path names every occurrence.
     public let segmentIndex: Int?
 
-    /// 1-based field index. Always present.
+    /// 1-based field index, or 0 for a path that names a segment alone (``isSegmentOnly``).
     public let field: Int
 
     /// 1-based repetition. `nil` means "the first repetition", unless ``repetitionWildcard`` is
@@ -89,6 +91,16 @@ public struct Path: Sendable, Equatable, Hashable {
                   field: field, repetition: repetition, repetitionWildcard: false,
                   component: component, subcomponent: subcomponent)
     }
+
+    /// A path that names a segment alone: `PID`, or `OBX[3]` with an occurrence.
+    public init(segmentID: String, segmentIndex: Int? = nil) {
+        self.init(segmentID: segmentID, segmentIndex: segmentIndex, field: 0)
+    }
+
+    /// True when the path names a segment and no field (`PID`, `OBX[3]`). Such a path holds no
+    /// value: the path subscript gives nil for it and an edit throws. Resolve it with
+    /// ``Message/segment(at:)``.
+    public var isSegmentOnly: Bool { field == 0 }
 
     private init(
         segmentID: String,
@@ -139,6 +151,12 @@ public struct Path: Sendable, Equatable, Hashable {
             scanner.advance()
             segIndex = try bracketIndex(&scanner, input: input)
             segWildcard = segIndex == nil
+        }
+
+        // A segment alone: no field (R12).
+        if scanner.isAtEnd {
+            return Path(segmentID: segID, segmentIndex: segIndex, segmentWildcard: segWildcard, field: 0,
+                        repetition: nil, repetitionWildcard: false, component: nil, subcomponent: nil)
         }
 
         // "-" separator.

@@ -39,12 +39,12 @@ public struct WireLocation: Sendable, Equatable, Hashable {
                   componentIndex: issue.componentIndex, subcomponentIndex: issue.subcomponentIndex)
     }
 
-    /// The same place as a path, or nil for a segment alone. A subcomponent named without a
-    /// component is left out, as the place stops above it.
+    /// The same place as a path; a segment alone is a segment-only path (`OBX[3]`), so this is
+    /// never nil. A subcomponent named without a component is left out, as the place stops
+    /// above it.
     public var path: Path? {
-        fieldIndex.map {
-            Path(segmentID: segmentID, segmentIndex: segmentIndex, field: $0, repetition: repetitionIndex,
-                 component: componentIndex, subcomponent: componentIndex == nil ? nil : subcomponentIndex)
-        }
+        guard let fieldIndex else { return Path(segmentID: segmentID, segmentIndex: segmentIndex) }
+        return Path(segmentID: segmentID, segmentIndex: segmentIndex, field: fieldIndex, repetition: repetitionIndex,
+                    component: componentIndex, subcomponent: componentIndex == nil ? nil : subcomponentIndex)
     }
 }

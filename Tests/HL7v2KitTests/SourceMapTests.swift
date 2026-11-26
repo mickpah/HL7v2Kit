@@ -261,7 +261,8 @@ struct SourceMapTests {
         #expect(place.path?.description == "PID[1]-3~2.4")
         let noRepetition = WireLocation(IssueLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, componentIndex: 4))
         #expect(noRepetition.repetitionIndex == 1)
-        #expect(WireLocation(segmentID: "PID", segmentIndex: 1).path == nil)
+        #expect(WireLocation(segmentID: "PID", segmentIndex: 2).path?.description == "PID[2]")
+        #expect(WireLocation(segmentID: "PID", segmentIndex: 2).path?.isSegmentOnly == true)
         // A subcomponent without a component names the field, as `range(of:)` reads it.
         #expect(WireLocation(segmentID: "PID", segmentIndex: 1, fieldIndex: 3, subcomponentIndex: 2).path?.description == "PID[1]-3")
     }

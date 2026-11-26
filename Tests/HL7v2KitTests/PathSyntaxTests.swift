@@ -97,7 +97,7 @@ struct PathSyntaxTests {
     }
 
     @Test("A condition field reference takes no segment index, repetition or wildcard", arguments: [
-        "PID-3[2]", "PID-3[*]", "OBX[*]-5", "PID-3~2", "OBX[2]-5",
+        "PID-3[2]", "PID-3[*]", "OBX[*]-5", "PID-3~2", "OBX[2]-5", "PID", "OBX[2]",
     ])
     func conditionReferenceRejects(_ referent: String) {
         #expect(ConditionLanguage.fieldRef(referent) == nil)

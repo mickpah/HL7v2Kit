@@ -102,19 +102,26 @@ public struct Message: Sendable, Equatable, Hashable {
     /// Read a value by parsed `Path`, in either syntax. A wildcard path (`[*]`) names more
     /// than one location: read it with ``values(at:)``; here it returns `nil`.
     public subscript(path: Path) -> String? {
-        guard !path.segmentWildcard, !path.repetitionWildcard else { return nil }
-        // Find the matching segment: the scan stops at the requested
-        // occurrence (P12 S3-2: it filtered the whole message, so every
-        // `MSH-9.1` read cost one pass over the segments).
+        guard !path.repetitionWildcard, let segment = segment(at: path) else { return nil }
+        return Self.value(in: segment, at: path, repetition: path.repetition ?? 1)
+    }
+
+    /// The segment `path` names: the occurrence it gives, or the first when it gives none. The
+    /// path may name a segment alone (`OBX[3]`) or a place inside one (`OBX[3]-5.1`). `nil`
+    /// when the message has no such occurrence, or for a segment wildcard (`OBX[*]`), which
+    /// names more than one.
+    public func segment(at path: Path) -> Segment? {
+        guard !path.segmentWildcard else { return nil }
+        // The scan stops at the requested occurrence (P12 S3-2: it filtered the whole
+        // message, so every `MSH-9.1` read cost one pass over the segments).
         let segmentIndex = path.segmentIndex ?? 1
         guard segmentIndex >= 1 else { return nil }
         var seen = 0
-        guard let segment = segments.first(where: { seg in
+        return segments.first { seg in
             guard seg.segmentID == path.segmentID else { return false }
             seen += 1
             return seen == segmentIndex
-        }) else { return nil }
-        return Self.value(in: segment, at: path, repetition: path.repetition ?? 1)
+        }
     }
 
     /// The scalar at `path` inside `segment`, reading repetition `repIndex`; `nil` when the
