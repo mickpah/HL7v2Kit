@@ -11,9 +11,20 @@ public enum HL7TableRegistry {
     /// `nil` when that version does not define it. `.v2_8` and `.v2_7` own no
     /// tables; the ``Validator`` checks a `2.8` message against the v2.8.2
     /// tables and a `2.7` message against the v2.7.1 tables via
-    /// ``Version/grammarVersion`` (ADR-018).
+    /// ``Version/grammarVersion`` (ADR-018). For the table a message of
+    /// `version` is checked against, use ``table(_:resolving:)``.
     public static func table(_ number: String, version: Version) -> HL7Table? {
         tables(for: version)[number]
+    }
+
+    /// The table `number` a message of `version` is checked against: the
+    /// table of ``Version/grammarVersion``, so `.v2_7` reads the v2.7.1
+    /// tables and `.v2_8` the v2.8.2 tables, as
+    /// ``SegmentGrammarTable/grammar(_:version:)`` does for segments. For
+    /// every other version it is ``table(_:version:)``. Use this one with a
+    /// message's own ``Message/version``.
+    public static func table(_ number: String, resolving version: Version) -> HL7Table? {
+        table(number, version: version.grammarVersion)
     }
 
     /// A locale's own printed rendering of table `number`, or `nil` when the

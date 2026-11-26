@@ -2120,7 +2120,7 @@ public struct Validator: Sendable {
         // code-table check reads tables.
         let tableKind: (String) -> HL7Table.Kind? = { number in
             (HL7TableRegistry.table(number, locale: locale)
-                ?? HL7TableRegistry.table(number, version: version.grammarVersion))?.kind
+                ?? HL7TableRegistry.table(number, resolving: version))?.kind
         }
         func check(_ entries: [ComponentGrammar], groups: [ComponentGroupRequirement], values: [String?],
                    typeName: String, repetition: Int, component: Int?, subcomponent: (Int) -> Int?) {

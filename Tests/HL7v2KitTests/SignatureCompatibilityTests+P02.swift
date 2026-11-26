@@ -20,4 +20,10 @@ extension SignatureCompatibilityTests {
         let sendable: any Sendable = cases
         _ = (reading, sendable)
     }
+
+    @Test("HL7TableRegistry.table(_:resolving:) keeps its signature")
+    func resolvingTableLookupSignature() {
+        let lookup: (String, Version) -> HL7Table? = HL7TableRegistry.table(_:resolving:)
+        _ = lookup
+    }
 }

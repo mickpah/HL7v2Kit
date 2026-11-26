@@ -22,6 +22,9 @@ The entries are condensed; the git history carries the detail.
   rendered), known as soon as the message is parsed. It is the reading issue 1007 is raised
   from; the issue and its payload are unchanged. `Message.version` alone cannot say whether
   v2.5.1 was declared or fallen back to. (#51)
+- `HL7TableRegistry.table(_:resolving:)`: the code table a message of the given version is
+  checked against, read under the version's grammar version, so `.v2_7` and `.v2_8` find the
+  v2.7.1 and v2.8.2 tables. `table(_:version:)` stays literal and returns nil for those two. (#52)
 
 ### Changed
 
