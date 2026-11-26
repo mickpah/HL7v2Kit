@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.35.0]
+
 ### Added
 
 - A path may name a segment alone: `Path("PID")` and `Path("OBX[3]")` parse, with
