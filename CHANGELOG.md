@@ -8,6 +8,8 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+## [3.37.0]
+
 ### Added
 
 - A public read of a field's usage under a locale. `HL7Locale.fieldUsage(segment:field:)`

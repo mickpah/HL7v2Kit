@@ -44,6 +44,7 @@ not the boundary of the work.
 | 3.34 | Source positions: the byte range in the input of every parsed value, a lookup from a byte to its value, and UTF-16 offsets for a text view; the batch parsers follow strict line endings; macOS only, Linux no longer supported |
 | 3.35 | A path may name a segment alone; the text of a field, repetition or component as written, escapes kept |
 | 3.36 | The messages in pasted or saved input; the table numbers of coded fields; how MSH-12 names the version; typed throws on the editing functions and builders |
+| 3.37 | A public read of the usage a localisation prints for a field, from the ADRM attribute tables |
 
 ## What remains
 
