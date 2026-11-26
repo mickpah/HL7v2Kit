@@ -70,7 +70,8 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
 - **Grammar lookup:** `SegmentGrammarTable.table(for:)` and `grammar(_:version:)` return the
   segment grammars the validator applies to a version, each with its printed name.
 - **Pasted text:** `Parser.wire(fromCarried:)` turns text with LF or CRLF line endings, a
-  byte-order mark, blank lines or an MLLP frame into wire form.
+  byte-order mark, blank lines or an MLLP frame into wire form, and
+  `Parser.messageRanges(inCarried:)` says where each message lies when the text holds several.
 - **Source positions:** `Parser.sourceMap(of:)` gives the byte range in the input of every value
   a parse produces, so an issue's location can be shown in the text it came from
   (`Parser.parseWithSourceMap(_:)` returns the message with it), and

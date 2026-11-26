@@ -53,6 +53,9 @@ comes back unchanged; a line feed inside a value becomes a segment boundary, so 
 `.strict` accepts should not be passed through it. An MLLP start byte at the start and an end byte
 at the end are each dropped where present.
 
+Carried text may hold more than one message. ``Parser/messageRanges(inCarried:)`` gives the byte
+range of each without changing a byte, so each can be parsed, or normalised, on its own.
+
 ## How to debug a failed round trip
 
 If you find a real-world fixture where `parse(bytes).serialize() != bytes`:

@@ -35,4 +35,10 @@ extension SignatureCompatibilityTests {
         #expect(field.tables == ["0005"] && field.table == nil)
         _ = tables
     }
+
+    @Test("Parser.messageRanges(inCarried:) keeps its signature")
+    func messageRangesSignature() {
+        let ranges: (Data) -> [Range<Int>] = Parser.messageRanges(inCarried:)
+        _ = ranges
+    }
 }
