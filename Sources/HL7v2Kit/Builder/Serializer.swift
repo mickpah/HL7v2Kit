@@ -83,13 +83,13 @@ enum Serializer {
             .joined(separator: String(enc.repetitionSeparator))
     }
 
-    private static func serializeRepetition(_ rep: Repetition, encoding enc: EncodingCharacters) -> String {
+    static func serializeRepetition(_ rep: Repetition, encoding enc: EncodingCharacters) -> String {
         rep.components
             .map { serializeComponent($0, encoding: enc) }
             .joined(separator: String(enc.componentSeparator))
     }
 
-    private static func serializeComponent(_ comp: Component, encoding enc: EncodingCharacters) -> String {
+    static func serializeComponent(_ comp: Component, encoding enc: EncodingCharacters) -> String {
         comp.subcomponents
             .map { EscapeSequences.wireForm(of: $0, encoding: enc) }
             .joined(separator: String(enc.subcomponentSeparator))
