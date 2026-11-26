@@ -8,6 +8,16 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- A public read of a field's usage under a locale. `HL7Locale.fieldUsage(segment:field:)`
+  returns the usage the localisation's own segment attribute table prints for a field, with
+  its page; `HL7Locale.fieldUsage(at:in:)` also applies a conformance statement that holds for
+  the given message, as the validator does (MSH-6 is O in the ADRM's table and required in an
+  ORM). New public types `FieldUsage` (R, RE, O, C, CE, X and B) and `LocaleFieldUsage`. The
+  ADRM 2021.1 prints its 23 attribute tables (397 rows) with the v2.4 OPT column: its fields
+  carry R, O, C, B and X, and none carries RE or CE. Read-only: validation is unchanged. (#34)
+
 ## [3.36.0]
 
 ### Added

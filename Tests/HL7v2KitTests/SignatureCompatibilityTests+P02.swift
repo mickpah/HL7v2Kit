@@ -41,4 +41,15 @@ extension SignatureCompatibilityTests {
         let ranges: (Data) -> [Range<Int>] = Parser.messageRanges(inCarried:)
         _ = ranges
     }
+
+    @Test("#34: the usage read keeps its signatures")
+    func fieldUsageSignatures() {
+        let table: (HL7Locale) -> (String, Int) -> LocaleFieldUsage? = HL7Locale.fieldUsage(segment:field:)
+        let inMessage: (HL7Locale) -> (Path, Message) -> LocaleFieldUsage? = HL7Locale.fieldUsage(at:in:)
+        let usage: KeyPath<LocaleFieldUsage, FieldUsage> = \.usage
+        let source: KeyPath<LocaleFieldUsage, LocaleFieldUsage.Source> = \.source
+        let citation: KeyPath<LocaleFieldUsage, String> = \.citation
+        #expect(FieldUsage(rawValue: "B") == .backwardCompatible)
+        _ = (table, inMessage, usage, source, citation)
+    }
 }

@@ -299,6 +299,15 @@ schema tree per profile and the copies drift.
 without adding public surface. Generating profiles from JSON can wait until a second
 localisation makes shared tooling worth the effort.
 
+**Amended (the usage read):** a field's usage under a locale is public and read-only:
+`HL7Locale.fieldUsage(segment:field:)` returns what the localisation's own segment attribute
+table prints, and `fieldUsage(at:in:)` applies a conformance statement that holds for a given
+message. The usage type is the public `FieldUsage`: the six profile codes and `B`, because the
+ADRM prints its attribute tables with the base standard's OPT column (R, O, C, B, X) and
+assigns `RE` and `CE` to no field. The attribute tables are extracted from the ADRM into
+`Resources/profiles/au-adrm-2021/attribute-tables.json` and generated, as the VMR table is.
+`Profile` and its rule types stay internal.
+
 **Superseded (v0.14):** the original design loaded JSON overlays from
 `Resources/profiles/au-adrm-2021/` at run time. The profile shipped as Swift instead, nothing
 ever read the JSON, it drifted, and we deleted it.

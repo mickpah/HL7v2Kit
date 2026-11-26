@@ -141,6 +141,37 @@ the AU locale though the base Table 0191 of those versions does not list it (fou
 validation digest over the v2.7.1 and v2.8.2 Chapter 9 examples). That is the ruling's effect,
 kept by decision (below).
 
+## Reading a field's usage
+
+``HL7Locale/fieldUsage(segment:field:)`` returns the usage the ADRM's own segment attribute table
+prints for a field, with the page, without running the validator:
+
+```swift
+let usage = HL7Locale.auLocalisation.fieldUsage(segment: "MSH", field: 15)
+usage?.usage.rawValue    // "R"
+usage?.citation          // "HL7AUSD-STD-OO-ADRM-2021.1, MSH attribute table, p 37"
+```
+
+The ADRM defines six usage codes (R, RE, O, C, CE, X) but prints its 23 segment attribute tables
+with the OPT column of HL7 v2.4, so a field carries R, O, C, B or X: 397 rows, none of them RE or
+CE, and twelve of them B. The read returns the cell as printed whether or not it differs from
+v2.4 (``FieldGrammar/optionality`` gives the base standard's). It returns `nil` for a segment the
+ADRM prints no table for, and for the six rows it prints with no code (the reserved MSH-22 to
+MSH-26, and PV2-39).
+
+A conformance statement can give a field another usage in particular messages: MSH-6 is O in the
+attribute table and required in an ORM. ``HL7Locale/fieldUsage(at:in:)`` takes the message and
+applies the statements the validator enforces, so the two agree:
+
+```swift
+let inThisMessage = HL7Locale.auLocalisation.fieldUsage(at: try Path("MSH-6"), in: message)
+inThisMessage?.source    // .conformanceStatement in an ORM, .attributeTable otherwise
+```
+
+The read is what the document prints, which is more than the validator checks. Of the 21 cells
+where the ADRM's table differs from v2.4, the profile enforces seven (MSH-15, MSH-16, MSH-17,
+MSH-19, PID-1, OBR-24, PRD-7).
+
 ## Coverage
 
 The generated conformance register (a private record, 302 rows

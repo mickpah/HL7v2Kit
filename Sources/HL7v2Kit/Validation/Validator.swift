@@ -1747,7 +1747,7 @@ public struct Validator: Sendable {
     /// where MSH-17 / MSH-19 were enforced for VALUE when populated
     /// but not enforced for PRESENCE.
     ///
-    /// `.requiredEmpty` (RE) is treated as informational: the spec
+    /// `.requiredOrEmpty` (RE) is treated as informational: the spec
     /// says the sender must be able to provide the value if it has
     /// one, but receivers must accept absence — so no violation when
     /// empty. `.notUsed` (X) flags presence (the base

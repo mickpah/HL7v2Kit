@@ -390,7 +390,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     ///
     /// AU profile supports `R` / `RE` / `O` / `C` / `CE` / `X`. See
     /// ADR-007 for the extended-usage semantics.
-    let profileUsage: ProfileUsage?
+    let profileUsage: FieldUsage?
 
     /// Message-context predicate gating this override's `profileUsage`
     /// and `requiredComponents` narrowings. When set, they apply only to
@@ -466,7 +466,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     init(
         segmentID: String,
         fieldIndex: Int,
-        profileUsage: ProfileUsage? = nil,
+        profileUsage: FieldUsage? = nil,
         condition: String? = nil,
         requiredComponents: [Int] = [],
         componentValueSets: [ComponentValueSet] = [],
@@ -869,16 +869,4 @@ struct ComponentCorrespondence: Sendable, Equatable, Hashable {
 enum CorrespondenceValueRule: Sendable, Equatable, Hashable {
     case allowed
     case forbidden(prefixes: [String])
-}
-
-/// Profile usage codes from the AU ADRM spec. The base HL7 v2 set is
-/// `R / O / C / X / B`; AU profile adds `RE` (Required, can be empty)
-/// and `CE` (Conditional, may be empty). See ADR-007.
-enum ProfileUsage: String, Sendable, Equatable, Hashable {
-    case required        = "R"
-    case requiredEmpty   = "RE"
-    case optional        = "O"
-    case conditional     = "C"
-    case conditionalEmpty = "CE"
-    case notUsed         = "X"
 }
