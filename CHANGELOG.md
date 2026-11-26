@@ -8,6 +8,13 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- `Message.indexOfSegment(at:)`: the index in `segments` of the segment a path names, by the
+  rule of `segment(at:)` (the occurrence the path gives, or the first), so a caller that needs
+  the position need not repeat the scan. It counts from 0; a path's `segmentIndex` counts
+  occurrences of one segment ID from 1. (#48)
+
 ## [3.35.0]
 
 ### Added

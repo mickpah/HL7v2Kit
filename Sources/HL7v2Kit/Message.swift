@@ -111,13 +111,22 @@ public struct Message: Sendable, Equatable, Hashable {
     /// when the message has no such occurrence, or for a segment wildcard (`OBX[*]`), which
     /// names more than one.
     public func segment(at path: Path) -> Segment? {
+        indexOfSegment(at: path).map { segments[$0] }
+    }
+
+    /// The index in ``segments`` of the segment `path` names, by the rule of ``segment(at:)``:
+    /// the occurrence the path gives, or the first when it gives none, for a path with or
+    /// without a field. It counts from 0, as an array index does; a path's own
+    /// ``Path/segmentIndex`` counts occurrences of one segment ID from 1. `nil` when the
+    /// message has no such occurrence, or for a segment wildcard.
+    public func indexOfSegment(at path: Path) -> Int? {
         guard !path.segmentWildcard else { return nil }
         // The scan stops at the requested occurrence (P12 S3-2: it filtered the whole
         // message, so every `MSH-9.1` read cost one pass over the segments).
         let segmentIndex = path.segmentIndex ?? 1
         guard segmentIndex >= 1 else { return nil }
         var seen = 0
-        return segments.first { seg in
+        return segments.firstIndex { seg in
             guard seg.segmentID == path.segmentID else { return false }
             seen += 1
             return seen == segmentIndex

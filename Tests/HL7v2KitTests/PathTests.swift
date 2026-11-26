@@ -1,6 +1,7 @@
 // PathTests.swift
 // Path string parsing.
 
+import Foundation
 import Testing
 @testable import HL7v2Kit
 
@@ -110,6 +111,35 @@ struct PathTests {
         #expect(try three.segment(at: Path("OBX[*]")) == nil)
         #expect(try three.segment(at: Path("ZZZ")) == nil)
         #expect(try three.segment(at: Path("OBX[*]-5")) == nil)
+    }
+
+    @Test("A message gives the index in its segments of the segment a path names")
+    func indexOfSegmentAtPath() throws {
+        let msh = "MSH|^~\\&|APP|FAC|||||ORU^R01|MSG1|P|2.5.1\rPID|1||12345\r"
+        let two = try Parser().parse(msh + "OBX|1|ST|A||one\rOBX|2|ST|B||two\r")
+        let three = try Parser().parse(msh + "OBX|1|ST|A||one\rOBX|2|ST|B||two\rOBX|3|ST|C||three\r")
+        #expect(try three.indexOfSegment(at: Path("OBX[3]")) == 4)
+        #expect(try three.indexOfSegment(at: Path("OBX[3]-5.1")) == 4)
+        #expect(try three.indexOfSegment(at: Path("OBX")) == 2)
+        #expect(try three.indexOfSegment(at: Path("MSH")) == 0)
+        #expect(try two.indexOfSegment(at: Path("OBX[3]")) == nil)
+        #expect(try three.indexOfSegment(at: Path("OBX[*]")) == nil)
+        #expect(try three.indexOfSegment(at: Path("ZZZ")) == nil)
+        #expect(three.indexOfSegment(at: Path(segmentID: "OBX", segmentIndex: 0)) == nil)
+    }
+
+    @Test("In every fixture the index a path gives holds the segment the path names")
+    func indexOfSegmentAgreesWithSegment() throws {
+        for url in try FixtureCorpus.validFixtureURLs() {
+            let message = try Parser().parse(Data(contentsOf: url))
+            var seen: [String: Int] = [:]
+            for (index, segment) in message.segments.enumerated() {
+                seen[segment.segmentID, default: 0] += 1
+                let path = Path(segmentID: segment.segmentID, segmentIndex: seen[segment.segmentID])
+                #expect(message.indexOfSegment(at: path) == index, "\(url.lastPathComponent) \(path)")
+                #expect(message.segment(at: path) == segment, "\(url.lastPathComponent) \(path)")
+            }
+        }
     }
 
     @Test("A segment-only path reads no value and cannot be edited")

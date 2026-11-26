@@ -139,16 +139,11 @@ extension Message {
         if path.field <= 2, path.segmentID == "MSH" || path.segmentID == "BHS" || path.segmentID == "FHS" {
             throw MessageEditError.delimiterField(segmentID: path.segmentID, field: path.field)
         }
-        let occurrence = path.segmentIndex ?? 1
-        var seen = 0
-        for (index, segment) in segments.enumerated() where segment.segmentID == path.segmentID {
-            seen += 1
-            if seen == occurrence {
-                if Self.padsPastCap(path, in: segment) { throw MessageEditError.invalidPath(path) }
-                return index
-            }
+        guard let index = indexOfSegment(at: path) else {
+            throw MessageEditError.segmentNotFound(segmentID: path.segmentID, occurrence: path.segmentIndex ?? 1)
         }
-        throw MessageEditError.segmentNotFound(segmentID: path.segmentID, occurrence: occurrence)
+        if Self.padsPastCap(path, in: segments[index]) { throw MessageEditError.invalidPath(path) }
+        return index
     }
 
     /// Replaces the segment's fields and re-hydrates it, so a typed segment stays typed. An
