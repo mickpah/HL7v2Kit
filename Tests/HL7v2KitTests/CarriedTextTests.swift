@@ -132,4 +132,37 @@ struct CarriedTextTests {
         #expect(ranges.map { String(decoding: slice[$0], as: UTF8.self) } == [Self.plain, Self.second])
         #expect(ranges.first?.lowerBound == 4)
     }
+
+    @Test("An MLLP start or end byte ends the message before it, wherever it stands")
+    func framingEndsAMessage() {
+        let framed = "\u{0B}" + Self.plain + "\u{1C}\rreceived ok\n" + "\u{0B}" + Self.second + "\u{1C}\r"
+        #expect(Self.messages(in: framed) == [Self.plain, Self.second])     // text between frames is no message's
+        #expect(Self.messages(in: Self.plain + "\u{0B}PID|2\r") == [Self.plain])
+        #expect(Self.messages(in: Self.plain + "BTS|1\rPID|2\r") == [Self.plain])       // after an envelope line too
+        let unterminated = String(Self.plain.dropLast())
+        #expect(Self.messages(in: "\u{0B}" + unterminated + "\u{1C}\r") == [unterminated])
+    }
+
+    @Test("A byte-order mark at the start of any line is skipped")
+    func byteOrderMarkAnywhere() {
+        let bom = "\u{FEFF}"
+        #expect(Self.messages(in: bom + Self.plain + bom + Self.second) == [Self.plain, Self.second])
+        #expect(Self.messages(in: "\n" + bom + Self.plain) == [Self.plain])
+        #expect(Self.messages(in: "\u{0B}" + bom + Self.plain + "\u{1C}\r") == [Self.plain])
+        let whole = Data(("xx" + bom + Self.plain).utf8)
+        let slice = whole[2...]
+        #expect(Parser.messageRanges(inCarried: slice).map { String(decoding: slice[$0], as: UTF8.self) } == [Self.plain])
+    }
+
+    @Test("Mixed endings, bytes above 0x7F, a bare envelope ID and a line of spaces")
+    func edgesOfALine() {
+        let mixed = "MSH|^~\\&|A\rPID|1\nPV1|1\r\n"
+        #expect(Self.messages(in: mixed + Self.second) == [mixed, Self.second])
+        var latin1 = Data(Self.plain.utf8)
+        latin1.insert(0xFC, at: latin1.count - 1)                             // u-umlaut in ISO 8859-1
+        #expect(Parser.messageRanges(inCarried: latin1 + Data(Self.second.utf8))
+                == [0..<latin1.count, latin1.count..<(latin1.count + Self.second.utf8.count)])
+        #expect(Self.messages(in: Self.plain + "FTS\rnot a segment\r") == [Self.plain])   // an envelope line ends it
+        #expect(Self.messages(in: Self.plain + "   \r") == [Self.plain + "   \r"])        // only an empty line is blank
+    }
 }

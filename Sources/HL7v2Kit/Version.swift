@@ -62,7 +62,7 @@ extension Version {
     /// How an MSH-12 field names the message's version (ADR-018): what
     /// ``Message/msh12Reading`` returns. MSH-12 as written is
     /// `message.wireText(at:)` for `MSH-12`. Open to new cases per ADR-014.
-    public enum MSH12Reading: Equatable, Sendable {
+    public enum MSH12Reading: Equatable, Hashable, Sendable {
         /// MSH-12 is absent or carries no content at all. MSH-12 is
         /// required, so the Validator's required-field check reports it.
         case empty

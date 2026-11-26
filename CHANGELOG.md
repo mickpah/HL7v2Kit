@@ -34,9 +34,10 @@ The entries are condensed; the git history carries the detail.
 - `Parser.messageRanges(inCarried:)`: the byte range of each message in pasted or saved
   input that may hold several (a log, captured MLLP traffic, messages one after another).
   The ranges index the input, so each message's bytes are untouched, line endings included.
-  A message starts at a line beginning `MSH` and a punctuation character; a byte-order mark,
-  MLLP bytes, blank lines, text before the first message and batch envelope lines fall in no
-  range. It does not parse; `Parser.wire(fromCarried:)` and `Parser.parse` read such input
+  A message starts at a line beginning `MSH` and a punctuation character, and ends at the
+  next start, at an MLLP start or end byte, or at a batch envelope line; a byte-order mark
+  before a message start, MLLP bytes, empty lines around a message, text before the first
+  message or after a frame or envelope line, and envelope lines fall in no range. It does not parse; `Parser.wire(fromCarried:)` and `Parser.parse` read such input
   as one message, as before. (#54)
 
 ### Documentation

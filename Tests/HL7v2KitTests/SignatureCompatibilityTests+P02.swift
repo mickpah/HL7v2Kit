@@ -17,7 +17,7 @@ extension SignatureCompatibilityTests {
     func msh12ReadingSignature() {
         let reading: KeyPath<Message, Version.MSH12Reading> = \.msh12Reading
         let cases: [Version.MSH12Reading] = [.empty, .recognised(.v2_5_1), .unresolved(vid1: "")]
-        let sendable: any Sendable = cases
+        let sendable: any Sendable = Set(cases)
         _ = (reading, sendable)
     }
 

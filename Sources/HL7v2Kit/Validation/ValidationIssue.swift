@@ -59,8 +59,9 @@ public struct IssueLocation: Sendable, Equatable, Hashable {
         self.subcomponentIndex = subcomponentIndex
     }
 
-    /// A location that names the repetition of the field. `fieldIndex` and `repetitionIndex`
-    /// have no default, which is what tells a call to this initialiser from one to the other.
+    /// A location that names the repetition of the field. `repetitionIndex` has no default: a
+    /// call that passes it is a call to this initialiser, and one that does not is a call to
+    /// the other.
     public init(
         segmentID: String,
         segmentIndex: Int,

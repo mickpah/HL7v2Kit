@@ -55,14 +55,23 @@ extension Parser {
     ///
     /// A message starts at a line that begins `MSH` followed by a punctuation character, its
     /// own field separator (MSH-1); `MSHX|1` and a line of text starting `MSH is` do not start
-    /// one. It runs to the end of its last non-blank line, that line's terminator included. A
-    /// byte-order mark, MLLP start and end bytes, blank lines around a message and anything
-    /// before the first message fall in no range. A batch envelope line (FHS, BHS, BTS, FTS)
-    /// ends the message before it and falls in no range; read a batch file with
-    /// ``BatchParser``. A line that follows a message and starts neither a message nor an
-    /// envelope is taken as part of that message, as `parse` would read it, so a line feed
-    /// inside a value does not end a message unless the text after it starts `MSH` and a
-    /// separator. Input with no such line gives no range.
+    /// one. It runs to the end of its last non-empty line, that line's terminator included.
+    /// Only an empty line is blank: a line of spaces is a line.
+    ///
+    /// Three things end a message: the start of the next, an MLLP start or end byte wherever
+    /// it stands, and a batch envelope line (FHS, BHS, BTS or FTS, alone on its line or
+    /// followed by a punctuation character). A framing byte and an envelope line fall in no
+    /// range. Nor does an empty line around a message, anything before the first message, or
+    /// a byte-order mark that stands before a message start. Read a batch file with
+    /// ``BatchParser``.
+    ///
+    /// While a message is open, any other line is taken as part of it, as `parse` would read
+    /// it. So a line feed inside a value does not end a message, unless the text after it
+    /// starts `MSH` and a punctuation character or is an envelope line; and a range is one
+    /// run of bytes, so a byte-order mark between two lines of the same message stays inside
+    /// it. Once a framing byte or an envelope line has ended a message, the lines after it
+    /// fall in no range until the next message starts. Input with no message start gives no
+    /// range.
     public static func messageRanges(inCarried data: Data) -> [Range<Int>] {
         func isLineBreak(_ byte: UInt8) -> Bool { byte == 0x0D || byte == 0x0A }
         func isBreak(_ byte: UInt8) -> Bool {
@@ -81,9 +90,15 @@ extension Parser {
             open = nil
         }
         var i = data.startIndex
-        if data.starts(with: [0xEF, 0xBB, 0xBF]) { i += 3 }
         while i < data.endIndex {
-            guard !isBreak(data[i]) else { i += 1; continue }
+            if isBreak(data[i]) {
+                // A frame boundary ends the message before it; what follows is not its text.
+                if !isLineBreak(data[i]) { close() }
+                i += 1
+                continue
+            }
+            // A byte-order mark at the start of a line: files joined end to end each bring one.
+            if data[i...].starts(with: [0xEF, 0xBB, 0xBF]) { i += 3; continue }
             let start = i
             while i < data.endIndex, !isBreak(data[i]) { i += 1 }
             let line = data[start..<i]
