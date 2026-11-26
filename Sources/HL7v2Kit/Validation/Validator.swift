@@ -513,9 +513,7 @@ public struct Validator: Sendable {
         // A populated MSH-12 from which no version resolves is reported here
         // (an empty one is the required-field check's business).
         let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
-        let reading = Version.reading(
-            msh12: msh12, subcomponentSeparator: message.encodingCharacters.subcomponentSeparator
-        )
+        let reading = message.msh12Reading
         if case .unresolved(let vid1) = reading {
             // MSH-12 as written, so the reader sees what carried no version (R11).
             let written = msh12.map { Serializer.serializeField($0, encoding: message.encodingCharacters) } ?? ""

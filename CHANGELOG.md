@@ -17,6 +17,11 @@ The entries are condensed; the git history carries the detail.
 - `IssueLocation`'s initialiser that names a repetition defaults `componentIndex` and
   `subcomponentIndex` to nil, so `IssueLocation(segmentID:segmentIndex:fieldIndex:repetitionIndex:)`
   is a whole call. Existing calls to either initialiser compile as before. (#50)
+- `Message.msh12Reading` and `Version.MSH12Reading`: how the message's own MSH-12 names its
+  version (empty, a modelled version, or content from which none resolves, with VID.1 as
+  rendered), known as soon as the message is parsed. It is the reading issue 1007 is raised
+  from; the issue and its payload are unchanged. `Message.version` alone cannot say whether
+  v2.5.1 was declared or fallen back to. (#51)
 
 ### Changed
 

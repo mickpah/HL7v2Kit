@@ -245,7 +245,9 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// severity: the findings may not reflect the declared release. The
     /// payload is VID.1 as rendered, trimmed, with subcomponents joined by
     /// the message's subcomponent separator; it is empty when VID.1 is
-    /// empty. An empty MSH-12 is not reported here: MSH-12 is required, so
+    /// empty; ``Message/msh12Reading`` gives the same reading without
+    /// validating, and `Message.wireText(at:)` gives MSH-12 as written.
+    /// An empty MSH-12 is not reported here: MSH-12 is required, so
     /// the required-field check reports it. Excluded versions are listed in the
     /// permanent-limitations register, section F (ADR-018). Additive case;
     /// the enum is open per ADR-014.

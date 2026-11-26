@@ -81,8 +81,7 @@ extension Validator {
         let printedID = message.version.comparisonValue(message.messageStructure ?? "")
         let name = printedID.isEmpty ? trigger : printedID
 
-        let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
-        let reading = Version.reading(msh12: msh12, subcomponentSeparator: message.encodingCharacters.subcomponentSeparator)
+        let reading = message.msh12Reading
         guard case .recognised(let wire) = reading, wire.grammarVersion == message.version.grammarVersion else {
             let why = reading == .empty
                 ? "MSH-12 is empty"

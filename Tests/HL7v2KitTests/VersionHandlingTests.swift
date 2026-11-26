@@ -159,6 +159,27 @@ struct VersionHandlingTests {
         #expect(try Parser().parse(adt(version: "^AUS")).version == .v2_5_1)
     }
 
+    @Test("A message says how its MSH-12 names the version")
+    func msh12Reading() throws {
+        let unnamed = try Parser().parse(adt(version: "^AUS"))
+        #expect(unnamed.msh12Reading == .unresolved(vid1: ""))
+        #expect(try unnamed.wireText(at: Path("MSH-12")) == "^AUS")        // MSH-12 as written
+        #expect(try Parser().parse(adt(version: "2.4&X")).msh12Reading == .unresolved(vid1: "2.4&X"))
+        #expect(try Parser().parse(adt(version: "9.9.9")).msh12Reading == .unresolved(vid1: "9.9.9"))
+        #expect(try Parser().parse(adt(version: "2.5.1^AUS")).msh12Reading == .recognised(.v2_5_1))
+        #expect(try Parser().parse(adt(version: "2.7")).msh12Reading == .recognised(.v2_7))
+        #expect(try Parser().parse(adt(version: "")).msh12Reading == .empty)
+    }
+
+    @Test("The reading is of MSH-12 itself, whatever version the parser was told to apply")
+    func msh12ReadingIgnoresTheOverride() throws {
+        var options = ParserOptions()
+        options.versionOverride = .v2_4
+        let message = try Parser(options: options).parse(adt(version: "2.6"))
+        #expect(message.version == .v2_4)
+        #expect(message.msh12Reading == .recognised(.v2_6))
+    }
+
     @Test("R11: a 1007 for an empty VID.1 quotes MSH-12 as written")
     func emptyVID1QuotesMSH12() throws {
         let message = try Parser().parse(adt(version: "^AUS"))
