@@ -22,6 +22,14 @@ struct LocaleFieldUsageTests {
             ("OBR", 1, .conditional, 207),           // p 207: OBR-1 C
             ("OBR", 5, .notUsed, 207),               // p 207: OBR-5 X (v2.4 prints B)
             ("RF1", 1, .required, 326),              // p 326: RF1-1 R (v2.4 prints O)
+            // Rows on a table's later pages, and the last row of a table.
+            ("MSH", 27, .optional, 38),              // p 38: MSH-27 O, the last MSH row
+            ("PV1", 52, .backwardCompatible, 75),    // p 75: PV1-52 B, the last PV1 row
+            ("OBR", 26, .optional, 208),             // p 208: OBR-26 O
+            ("OBX", 5, .conditional, 235),           // p 235: OBX-5 C
+            ("OBX", 11, .required, 236),             // p 236: OBX-11 R
+            ("ORC", 12, .conditional, 283),          // p 283: ORC-12 C (v2.4 prints O)
+            ("RXC", 7, .optional, 359),              // p 359: RXC-7 O, the last RXC row
         ]
         for (segment, field, usage, page) in cases {
             let read = Self.au.fieldUsage(segment: segment, field: field)
@@ -112,5 +120,39 @@ struct LocaleFieldUsageTests {
             }
         }
         #expect(reported >= 8)
+    }
+
+    @Test("The message read names the segment occurrence, and reads nothing for a wildcard")
+    func segmentOccurrence() throws {
+        let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Fixtures/au_oru_r01_pathology.hl7")
+        let wire = try String(decoding: Data(contentsOf: url), as: UTF8.self)
+        let message = try Parser(locale: .auLocalisation).parse(Parser.wire(fromCarried: wire) + "OBR|2\r")
+        // OBR-24 is R in the table (p 208); in an ORU its statement applies, on every OBR.
+        #expect(Self.au.fieldUsage(segment: "OBR", field: 24)?.usage == .required)       // p 208: printed R
+        #expect(Self.au.fieldUsage(at: try Path("OBR[2]-24"), in: message)?.source == .conformanceStatement)
+        #expect(Self.au.fieldUsage(at: try Path("OBR[3]-24"), in: message) == nil)       // no third OBR
+        #expect(Self.au.fieldUsage(at: try Path("OBX[2]-11"), in: message)?.usage == .required)
+        #expect(Self.au.fieldUsage(at: try Path("OBX[*]-11"), in: message) == nil)
+        // A repetition or component in the path does not change the field asked about.
+        #expect(Self.au.fieldUsage(at: try Path("PID-3~2.1"), in: message) == Self.au.fieldUsage(at: try Path("PID-3"), in: message))
+    }
+
+    @Test("A statement that a field should not be valued is not a usage: the read keeps the table's code")
+    func prohibitionsAreNotUsage() throws {
+        // ADRM p 228: OBR-26 "should not be valued"; the validator warns, and the table prints O (p 208).
+        let result = try Self.fixture("au_oru_r01_pathology")
+        let read = Self.au.fieldUsage(at: try Path("OBR-26"), in: result)
+        #expect(read?.usage == .optional)
+        #expect(read?.source == .attributeTable)
+    }
+
+    @Test("The attribute table's R is read where no statement applies, though the validator checks it only where one does")
+    func tableRequiredOutsideTheStatement() throws {
+        // p 37: MSH-15 R. Its statement names ORM, ORU and REF; in an ORR the read is the table's.
+        let response = try Self.fixture("au_orr_o02")
+        let read = Self.au.fieldUsage(at: try Path("MSH-15"), in: response)
+        #expect(read?.usage == .required)
+        #expect(read?.source == .attributeTable)
     }
 }

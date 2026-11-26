@@ -113,6 +113,9 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
   the base model, withdrawn, receiver behaviour or out of scope for a message validator
   (the conformance register, a private record). See the
   [Australian localisation](Sources/HL7v2Kit/HL7v2Kit.docc/AustralianLocalisation.md) article.
+- **Field usage under a locale:** `HL7Locale.fieldUsage(segment:field:)` reads the usage the
+  ADRM's own attribute table prints for a field (R, O, C, B or X, with its page), and
+  `fieldUsage(at:in:)` applies the profile's usage statements that hold for a message.
 
 ## Documentation
 

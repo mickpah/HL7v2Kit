@@ -161,16 +161,28 @@ MSH-26, and PV2-39).
 
 A conformance statement can give a field another usage in particular messages: MSH-6 is O in the
 attribute table and required in an ORM. ``HL7Locale/fieldUsage(at:in:)`` takes the message and
-applies the statements the validator enforces, so the two agree:
+applies the usage statements of the profile, with the validator's own reading of when each
+holds, so a field the validator reports as profile-required reads as required:
 
 ```swift
 let inThisMessage = HL7Locale.auLocalisation.fieldUsage(at: try Path("MSH-6"), in: message)
 inThisMessage?.source    // .conformanceStatement in an ORM, .attributeTable otherwise
 ```
 
-The read is what the document prints, which is more than the validator checks. Of the 21 cells
-where the ADRM's table differs from v2.4, the profile enforces seven (MSH-15, MSH-16, MSH-17,
-MSH-19, PID-1, OBR-24, PRD-7).
+The read and the validator are not the same thing, in two ways.
+
+- **A usage statement is the only kind the read applies.** The profile also enforces statements
+  that a field should not be valued (OBR-26 and OBR-29 in orders, results and referrals; ORC-24
+  in referrals).
+  Those are not usage codes, so the read keeps the table's code for them (OBR-26 reads O) while
+  the validator warns when one is valued.
+- **The table read is what the document prints, which is more than the validator checks.** Of the
+  21 cells where the ADRM's table differs from v2.4, seven carry a usage statement the validator
+  enforces, each in the messages its statement names and nowhere else: MSH-15 and MSH-16 (ORM,
+  ORU, REF), MSH-17 and MSH-19 (ORM, ORU, REF, RRI, ACK), PID-1 (ORM, ORU, REF, RRI), OBR-24
+  (ORU, REF), and PRD-7, printed C and required in a REF when PRD-1 is `IR`. So MSH-15 reads R
+  in an ORR, from the table, and the validator does not report it missing there. The other
+  cells are read and not checked.
 
 ## Coverage
 

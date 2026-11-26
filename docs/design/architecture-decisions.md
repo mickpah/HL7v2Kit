@@ -301,7 +301,7 @@ localisation makes shared tooling worth the effort.
 
 **Amended (the usage read):** a field's usage under a locale is public and read-only:
 `HL7Locale.fieldUsage(segment:field:)` returns what the localisation's own segment attribute
-table prints, and `fieldUsage(at:in:)` applies a conformance statement that holds for a given
+table prints, and `fieldUsage(at:in:)` applies a usage statement (not a prohibition) that holds for a given
 message. The usage type is the public `FieldUsage`: the six profile codes and `B`, because the
 ADRM prints its attribute tables with the base standard's OPT column (R, O, C, B, X) and
 assigns `RE` and `CE` to no field. The attribute tables are extracted from the ADRM into

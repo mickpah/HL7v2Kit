@@ -71,12 +71,18 @@ extension HL7Locale {
     /// this localisation gives it when the statement applies to this message and segment, and
     /// otherwise the attribute table's (``fieldUsage(segment:field:)``).
     ///
-    /// The statements are the ones the ``Validator`` enforces under this locale, read with
-    /// its own condition evaluator, so a field it reports as profile-required reads as
+    /// Only a statement of usage is applied, read with the ``Validator``'s own condition
+    /// evaluator: a field the validator reports as profile-required reads as
     /// ``FieldUsage/required`` here with ``LocaleFieldUsage/Source/conformanceStatement``. In
-    /// the ADRM, MSH-6 is `O` in the attribute table and required in an ORM. `nil` when the
-    /// path names no field or a segment the message does not hold, and where the table read
-    /// gives `nil` and no statement applies.
+    /// the ADRM, MSH-6 is `O` in the attribute table and required in an ORM. A statement that
+    /// a field should not be valued is not a usage, so such a field keeps its table code
+    /// though the validator may warn about it; and a table code is returned whether or not
+    /// the validator checks it in this message.
+    ///
+    /// The path's segment occurrence is used (`OBR[2]-24`); its repetition, component and
+    /// subcomponent are ignored. `nil` when the path names no field, a segment wildcard, or a
+    /// segment the message does not hold, and where the table read gives `nil` and no
+    /// statement applies.
     public func fieldUsage(at path: Path, in message: Message) -> LocaleFieldUsage? {
         guard !path.isSegmentOnly, let index = message.indexOfSegment(at: path) else { return nil }
         let segment = message.segments[index]
