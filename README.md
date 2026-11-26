@@ -64,7 +64,9 @@ listed too. All of it is on one page: the [Validation](Sources/HL7v2Kit/HL7v2Kit
 
 - **Paths:** read, write and enumerate a message by path, in the standard form (`PID-3.1`) or
   the alternative path syntax (`PID-3[2].1`, with `[*]` wildcards): `Message.set(_:at:)`,
-  `clear(at:)`, `insertRepetition(_:at:)`, `values(at:)` and `populatedPaths()`.
+  `clear(at:)`, `insertRepetition(_:at:)`, `values(at:)` and `populatedPaths()`. A path may
+  name a segment alone (`OBX[3]`, read with `segment(at:)`), and `wireText(at:)` gives a value
+  with parts as one string, escapes kept.
 - **Grammar lookup:** `SegmentGrammarTable.table(for:)` and `grammar(_:version:)` return the
   segment grammars the validator applies to a version, each with its printed name.
 - **Pasted text:** `Parser.wire(fromCarried:)` turns text with LF or CRLF line endings, a

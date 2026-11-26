@@ -76,6 +76,10 @@ The print defines the escapes above and the forms of their bodies, and says noth
 
 The check reads what the serialiser writes. A parsed value is read as it was sent; a value built in code is read as encoded, and the encoder escapes any run the standard does not define, so only `\P\`, which it copies on every version, can draw the warning. Where a sequence may sit by data type (formatting commands in FT, highlighting and `\X..\` in TX, FT and CF) is not checked.
 
+## The text as written
+
+A value read by path is decoded, so a component that held `\S\` reads as a `^` that was never a separator. For a value with parts, ``Message/wireText(at:)`` returns the encoded text instead: the parts joined by their separators and every escape kept (`A\S\B^C`), which parses back to the same value. The package offers no decoded form of a composite, since a decoded `A^B^C` cannot be told from three components.
+
 ## Customising the escape character
 
 The escape character is itself a sender-configured delimiter (the third character of MSH-2). Most senders use the default `\`, but if your traffic uses (say) `#` instead, HL7v2Kit picks that up from MSH-2 automatically — the escape grammar adapts. See ``EncodingCharacters``.

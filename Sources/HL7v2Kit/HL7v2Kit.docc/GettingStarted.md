@@ -135,7 +135,14 @@ let identifiers = message.values(at: try Path("PID-3[*].1"))
 
 `populatedPaths()` lists every non-empty value with its fully indexed path (`PID[1]-5~1.1.1`), in document order: the starting point for an index or field statistics.
 
-A whole-field read of a structured value (a CX, an XPN) returns `nil` from the subscript and is skipped by `values(at:)`: read a component (`PID-3[*].1`) or walk `populatedPaths()`.
+A whole-field read of a structured value (a CX, an XPN) returns `nil` from the subscript and is skipped by `values(at:)`: read a component (`PID-3[*].1`) or walk `populatedPaths()`. For the value as one string, `wireText(at:)` returns the text as the serialiser writes it, escapes kept (`A\S\B^C`); for `PID-3` it is the whole field, every repetition.
+
+A path may name a segment alone: `PID`, or `OBX[3]` for the third. `isSegmentOnly` says so, and `segment(at:)` returns the segment a path names, with or without a field. Such a path holds no value, so the subscript returns `nil` for it and an edit throws.
+
+```swift
+let third = message.segment(at: try Path("OBX[3]"))
+let asWritten = message.wireText(at: try Path("PID-3"))
+```
 
 ## See Also
 

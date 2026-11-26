@@ -8,6 +8,23 @@ The entries are condensed; the git history carries the detail.
 
 ## [Unreleased]
 
+### Added
+
+- A path may name a segment alone: `Path("PID")` and `Path("OBX[3]")` parse, with
+  `Path.isSegmentOnly` true and `field` 0, and print back as written.
+  `Path(segmentID:segmentIndex:)` builds one, and `Message.segment(at:)` returns the segment a
+  path names, with or without a field. Such a path holds no value: the path subscript gives nil
+  and an edit throws `MessageEditError.invalidPath`. Both forms threw `PathError` before. (#46)
+- `Message.wireText(at:)`: the text the serialiser writes for the field, repetition, component
+  or subcomponent a path names, escapes kept (`A\S\B^C`), so a value with parts can be shown
+  or copied as one string that parses back. A field path gives the whole field, every
+  repetition. (#47)
+
+### Changed
+
+- `WireLocation.path` gives a segment-only path (`OBX[3]`) for a place that names a segment
+  alone. It gave nil in 3.34.0. A change to default output. (#46)
+
 ## [3.34.0]
 
 ### Added
